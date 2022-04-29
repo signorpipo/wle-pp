@@ -1,0 +1,268 @@
+{
+    "objects": {
+        "18": {
+            "name": "Scene"
+        },
+        "19": {
+            "name": "Player",
+            "parent": "18"
+        },
+        "20": {
+            "name": "Pivot",
+            "parent": "19"
+        },
+        "21": {
+            "name": "Non VR Camera",
+            "parent": "20",
+            "components": [
+                {
+                    "type": "view"
+                }
+            ]
+        },
+        "22": {
+            "name": "Eyes",
+            "parent": "20"
+        },
+        "23": {
+            "name": "Eye Left",
+            "parent": "22",
+            "components": [
+                {
+                    "type": "view"
+                },
+                {
+                    "type": "input",
+                    "input": {
+                        "type": "eye left"
+                    }
+                }
+            ]
+        },
+        "24": {
+            "name": "Eye Right",
+            "parent": "22",
+            "components": [
+                {
+                    "type": "view"
+                },
+                {
+                    "type": "input",
+                    "input": {
+                        "type": "eye right"
+                    }
+                }
+            ]
+        }
+    },
+    "meshes": {
+        "p0": {
+            "link": {
+                "name": "PrimitivePlane",
+                "file": "default"
+            }
+        },
+        "p1": {
+            "link": {
+                "name": "PrimitiveCube",
+                "file": "default"
+            }
+        },
+        "p2": {
+            "link": {
+                "name": "PrimitiveSphere",
+                "file": "default"
+            }
+        },
+        "p3": {
+            "link": {
+                "name": "PrimitiveCone",
+                "file": "default"
+            }
+        },
+        "p4": {
+            "link": {
+                "name": "PrimitiveCylinder",
+                "file": "default"
+            }
+        },
+        "p5": {
+            "link": {
+                "name": "PrimitiveCircle",
+                "file": "default"
+            }
+        }
+    },
+    "textures": {
+        "t0": {
+            "link": {
+                "name": "DefaultFont",
+                "file": "default"
+            }
+        }
+    },
+    "images": {
+        "f0": {
+            "link": {
+                "name": "DefaultFontImage",
+                "file": "default"
+            }
+        }
+    },
+    "materials": {
+        "DefaultFontMaterial": {
+            "link": {
+                "name": "DefaultFontMaterial",
+                "file": "default"
+            }
+        }
+    },
+    "shaders": {
+        "1": {
+            "link": {
+                "name": "Depth",
+                "file": "default"
+            }
+        },
+        "3": {
+            "link": {
+                "name": "DistanceFieldVector",
+                "file": "default"
+            }
+        },
+        "5": {
+            "link": {
+                "name": "Dynamic",
+                "file": "default"
+            }
+        },
+        "6": {
+            "link": {
+                "name": "Flat",
+                "file": "default"
+            }
+        },
+        "9": {
+            "link": {
+                "name": "MeshVisualizer",
+                "file": "default"
+            }
+        },
+        "11": {
+            "link": {
+                "name": "Skinning",
+                "file": "default"
+            }
+        },
+        "12": {
+            "link": {
+                "name": "Phong",
+                "file": "default"
+            }
+        },
+        "15": {
+            "link": {
+                "name": "Particle",
+                "file": "default"
+            }
+        }
+    },
+    "animations": {},
+    "skins": {},
+    "pipelines": {
+        "2": {
+            "link": {
+                "name": "Depth",
+                "file": "default"
+            }
+        },
+        "4": {
+            "link": {
+                "name": "DistanceFieldVector",
+                "file": "default"
+            }
+        },
+        "7": {
+            "link": {
+                "name": "Flat Opaque",
+                "file": "default"
+            }
+        },
+        "8": {
+            "link": {
+                "name": "Flat Opaque Textured",
+                "file": "default"
+            }
+        },
+        "10": {
+            "link": {
+                "name": "MeshVisualizer",
+                "file": "default"
+            }
+        },
+        "13": {
+            "link": {
+                "name": "Phong Opaque",
+                "file": "default"
+            }
+        },
+        "14": {
+            "link": {
+                "name": "Phong Opaque Textured",
+                "file": "default"
+            }
+        },
+        "16": {
+            "link": {
+                "name": "Foliage",
+                "file": "default"
+            }
+        },
+        "17": {
+            "link": {
+                "name": "Particle",
+                "file": "default"
+            }
+        }
+    },
+    "settings": {
+        "project": {
+            "name": "wle_pp_bundler",
+            "version": [
+                0,
+                8,
+                10
+            ]
+        },
+        "scripting": {
+            "useInternalBundler": false
+        },
+        "runtime": {
+            "webxr": {
+                "optionalFeatures": {
+                    "hand-tracking": false,
+                    "hit-test": false
+                }
+            },
+            "xrButtonColor": "black"
+        },
+        "editor": {
+            "camera": {
+                "near": 0.0099999,
+                "far": 1000.0
+            }
+        },
+        "vr": {
+            "leftEyeObject": "23",
+            "rightEyeObject": "24"
+        },
+        "rendering": {
+            "clearColor": [
+                0.9215686,
+                0.9215686,
+                0.9215686,
+                1.0
+            ]
+        }
+    }
+}
