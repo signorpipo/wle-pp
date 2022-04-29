@@ -1,5 +1,3 @@
-import * as glMatrix from 'gl-matrix';
-
 /*
     How to use
 
@@ -39,6 +37,8 @@ import * as glMatrix from 'gl-matrix';
 
         CREATION (u can call these functions without any object):
             - PP.vec3_create
+
+            - PP.vec4_create
 
             - PP.quat_create
 
@@ -91,6 +91,7 @@ import * as glMatrix from 'gl-matrix';
             - quat_length
             - quat_mul
             - quat_getAxis  / quat_getAngle
+            - quat_getAxes
             ○ quat_fromRadians      / quat_fromDegrees      / quat_fromAxis
             - quat_toRadians        / quat_toDegrees        / quat_toMatrix
             - quat_rotate           / quat_rotateAxis       / quat_addRotation      / quat_subRotation
@@ -122,6 +123,8 @@ import * as glMatrix from 'gl-matrix';
             - mat4_toQuat
             ○ mat4_fromQuat
 */
+
+import * as glMatrix from 'gl-matrix';
 
 //ARRAY
 
@@ -239,11 +242,11 @@ Float32Array.prototype.pp_unshiftUnique = function (element, hasElementCallback 
 };
 
 Float32Array.prototype.pp_copy = function (array) {
-    while (this.length > Float32Array.length) {
+    while (this.length > array.length) {
         this.pop();
     }
 
-    for (let i = 0; i < Float32Array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
         this[i] = array[i];
     }
 
@@ -257,7 +260,7 @@ Float32Array.prototype.pp_clone = function () {
 Float32Array.prototype.pp_equals = function (array, elementEqualsCallback = null) {
     let equals = true;
 
-    if (array != null && this.length == Float32Array.length) {
+    if (array != null && this.length == array.length) {
         for (let i = 0; i < this.length; i++) {
             if ((elementEqualsCallback != null && !elementEqualsCallback(this[i], array[i])) ||
                 (elementEqualsCallback == null && this[i] != array[i])) {
@@ -882,6 +885,23 @@ Float32Array.prototype.quat_getAngle = function () {
     return function () {
         let angle = glMatrix.quat.getAxisAngle(vector, this);
         return angle;
+    };
+}();
+
+Float32Array.prototype.quat_getAxes = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
+        glMatrix.mat3.fromQuat(rotationMatrix, this);
+
+        glMatrix.vec3.set(out[0], rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
+        glMatrix.vec3.set(out[1], rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
+        glMatrix.vec3.set(out[2], rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
+
+        glMatrix.vec3.normalize(out[0], out[0]);
+        glMatrix.vec3.normalize(out[1], out[1]);
+        glMatrix.vec3.normalize(out[2], out[2]);
+
+        return out;
     };
 }();
 

@@ -203,7 +203,7 @@ WL.registerComponent('pp-gamepad-animator', {
 
         let angleToRotate = Math.pp_toRadians(15 * buttonInfo.myValue);
         let tiltDirection = [0, 0, 1];
-        tiltDirection.vec3_rotateAxis(angleToRotate, [1, 0, 0], tiltDirection);
+        tiltDirection.vec3_rotateAxisRadians(angleToRotate, [1, 0, 0], tiltDirection);
         tiltDirection.vec3_normalize(tiltDirection);
 
         this._copyAlignRotation(this._mySelect, [0, 0, 1], tiltDirection);

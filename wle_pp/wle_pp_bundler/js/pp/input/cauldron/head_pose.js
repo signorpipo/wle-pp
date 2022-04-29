@@ -18,6 +18,13 @@ PP.HeadPose = class HeadPose {
         this._myIsValid = false;
         this._myIsLinearVelocityEmulated = true;
         this._myIsAngularVelocityEmulated = true;
+
+        // Out Data
+        this._myOutAxes = [PP.vec3_create(), PP.vec3_create(), PP.vec3_create()];
+        this._myOutRotationQuat = PP.quat_create();
+
+        this._myOutRotationRadians = PP.vec3_create();
+        this._myOutPrevRotationRadians = PP.vec3_create();
     }
 
     getReferenceSpace() {
@@ -25,7 +32,7 @@ PP.HeadPose = class HeadPose {
     }
 
     getPosition() {
-        return this._myPosition.slice(0);
+        return this._myPosition;
     }
 
     getRotation() {
@@ -41,10 +48,12 @@ PP.HeadPose = class HeadPose {
     }
 
     getRotationQuat() {
-        let out = this._myRotation.slice(0);
+        let out = this._myRotation;
 
         if (this._myFixForward) {
-            out.quat_rotateAxisRadians(Math.PI, [0, 1, 0], out);
+            this._myOutRotationQuat.pp_copy(this._myRotation);
+            out = this._myOutRotationQuat;
+            out.quat_rotateAxisRadians(Math.PI, out.quat_getAxes(this._myOutAxes)[1], out);
         }
 
         return out;
@@ -63,7 +72,7 @@ PP.HeadPose = class HeadPose {
     }
 
     getLinearVelocity() {
-        return this._myLinearVelocity.slice(0);
+        return this._myLinearVelocity;
     }
 
     getAngularVelocity() {
@@ -75,7 +84,7 @@ PP.HeadPose = class HeadPose {
     }
 
     getAngularVelocityRadians() {
-        return this._myAngularVelocity.slice(0);
+        return this._myAngularVelocity;
     }
 
     isValid() {
@@ -198,8 +207,8 @@ PP.HeadPose = class HeadPose {
 
     _computeEmulatedAngularVelocity(dt) {
         if (dt > 0) {
-            let rotationRadians = this._myRotation.quat_toRadians();
-            let prevRotationRadians = this._myPrevRotation.quat_toRadians();
+            let rotationRadians = this._myRotation.quat_toRadians(this._myOutRotationRadians);
+            let prevRotationRadians = this._myPrevRotation.quat_toRadians(this._myOutPrevRotationRadians);
             rotationRadians.vec3_sub(prevRotationRadians, this._myAngularVelocity);
             this._myAngularVelocity.vec3_scale(1 / dt, this._myAngularVelocity);
         } else {

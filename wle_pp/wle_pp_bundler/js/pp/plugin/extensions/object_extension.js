@@ -1,5 +1,3 @@
-import * as glMatrix from 'gl-matrix';
-
 /*
     How to use
 
@@ -78,11 +76,7 @@ import * as glMatrix from 'gl-matrix';
         - pp_destroy
 */
 
-/* #NPM
-if (!PP) {
-    var PP = {};
-}
-*/
+import * as glMatrix from 'gl-matrix';
 
 if (WL && WL.Object) {
 

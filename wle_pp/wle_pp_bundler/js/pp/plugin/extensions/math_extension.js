@@ -23,12 +23,6 @@
         - pp_isInsideAngleRange
 */
 
-/* #NPM
-if (!PP) {
-    var PP = {};
-}
-*/
-
 Math.pp_clamp = function (value, start, end) {
     let fixedStart = (start != null) ? start : Number.MIN_VALUE;
     let fixedEnd = (end != null) ? end : Number.MAX_VALUE;
