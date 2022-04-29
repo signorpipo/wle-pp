@@ -12,6 +12,13 @@ if (_WL && _WL._componentTypes) {
         this.multipleClickDelay = 0.3;
 
         this.visible = false;
+
+        const sceneLoaded = this.onDestroy.bind(this);
+        WL.onSceneLoaded.push(sceneLoaded);
+        this.onDestroyCallbacks = [() => {
+            const index = WL.onSceneLoaded.indexOf(sceneLoaded);
+            if (index >= 0) WL.onSceneLoaded.splice(index, 1);
+        }];
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.update = function (dt) {
@@ -212,14 +219,27 @@ if (_WL && _WL._componentTypes) {
         /* If this object also has a view component, we will enable inverse-projected mouse clicks,
          * otherwise just use the objects transformation */
         if (this.viewComponent != null) {
-            WL.canvas.addEventListener("click", this.onClick.bind(this));
-            WL.canvas.addEventListener("pointermove", this.onPointerMove.bind(this));
-            WL.canvas.addEventListener("pointerdown", this.onPointerDown.bind(this));
-            WL.canvas.addEventListener("pointerup", this.onPointerUp.bind(this));
+            const onClick = this.onClick.bind(this);
+            WL.canvas.addEventListener("click", onClick);
+            const onPointerMove = this.onPointerMove.bind(this);
+            WL.canvas.addEventListener("pointermove", onPointerMove);
+            const onPointerDown = this.onPointerDown.bind(this);
+            WL.canvas.addEventListener("pointerdown", onPointerDown);
+            const onPointerUp = this.onPointerUp.bind(this);
+            WL.canvas.addEventListener("pointerup", onPointerUp);
 
             this.projectionMatrix = new Float32Array(16);
             mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
-            window.addEventListener("resize", this.onViewportResize.bind(this));
+            const onViewportResize = this.onViewportResize.bind(this);
+            window.addEventListener("resize", onViewportResize);
+
+            this.onDestroyCallbacks.push(() => {
+                WL.canvas.removeEventListener("click", onClick);
+                WL.canvas.removeEventListener("pointermove", onPointerMove);
+                WL.canvas.removeEventListener("pointerdown", onPointerDown);
+                WL.canvas.removeEventListener("pointerup", onPointerUp);
+                window.removeEventListener("resize", onViewportResize);
+            });
         }
         this.isHovering = false;
         this.visible = true;
@@ -231,7 +251,13 @@ if (_WL && _WL._componentTypes) {
         this.cursorPos = new Float32Array(3);
         this.hoveringObject = null;
 
-        WL.onXRSessionStart.push(this.setupVREvents.bind(this));
+        const onXRSessionStart = this.setupVREvents.bind(this);
+        WL.onXRSessionStart.push(onXRSessionStart);
+
+        this.onDestroyCallbacks.push(() => {
+            const index = WL.onXRSessionStart.indexOf(onXRSessionStart);
+            if (index >= 0) WL.onXRSessionStart.splice(index, 1);
+        });
 
         this.showRay = true;
         if (this.cursorRayObject) {

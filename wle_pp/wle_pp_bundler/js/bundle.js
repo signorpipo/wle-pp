@@ -110,3 +110,7 @@ require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_widget_setup.js');
 
 require('./pp/tool/easy_tune/easy_tune_variables.js');
 require('./pp/tool/easy_tune/easy_tune.js');
+
+require('./pp/tool/widget_frame/widget_frame_setup.js');
+require('./pp/tool/widget_frame/widget_frame_ui.js');
+require('./pp/tool/widget_frame/widget_frame.js');
