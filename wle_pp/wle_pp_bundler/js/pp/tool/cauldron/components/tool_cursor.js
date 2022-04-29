@@ -15,7 +15,7 @@ WL.registerComponent('pp-tool-cursor', {
         }
 
         this._myCursorRotation = [-0.382, 0, 0, 0.924];
-        this._myCursorRotation = glMatrix.quat.normalize(this._myCursorRotation, this._myCursorRotation);
+        this._myCursorRotation.quat_normalize(this._myCursorRotation);
         this._myCursorMeshScale = [0.0025, 0.0025, 0.0025];
 
         this._myCursorColor = [255 / 255, 255 / 255, 255 / 255, 1];

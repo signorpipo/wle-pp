@@ -62,7 +62,7 @@ WL.registerComponent('pp-grabbable', {
         }
     },
     getLinearVelocity() {
-        let linearVelocity = vec3_create();
+        let linearVelocity = PP.vec3_create();
 
         this._myPhysX.linearVelocity.vec3_clone(linearVelocity);
 
@@ -72,14 +72,14 @@ WL.registerComponent('pp-grabbable', {
         return this.getAngularVelocityDegrees();
     },
     getAngularVelocityDegrees() {
-        let angularVelocityDegrees = vec3_create();
+        let angularVelocityDegrees = PP.vec3_create();
 
         this._myPhysX.angularVelocity.vec3_toDegrees(angularVelocityDegrees);
 
         return angularVelocityDegrees;
     },
     getAngularVelocityRadians() {
-        let angularVelocityRadians = vec3_create();
+        let angularVelocityRadians = PP.vec3_create();
 
         this._myPhysX.angularVelocity.vec3_clone(angularVelocityRadians);
 

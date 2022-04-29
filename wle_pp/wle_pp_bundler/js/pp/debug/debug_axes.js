@@ -8,7 +8,7 @@ PP.DebugAxes = class DebugAxes {
         this._myDebugForward = new PP.DebugLine();
         this._myDebugForward.setColor([0, 0, 1, 1]);
 
-        this._myTransform = glMatrix.mat4.create();
+        this._myTransform = PP.mat4_create();
         this._myAxesLength = 0.1;
         this._myPositionOffset = [0, 0, 0];
 

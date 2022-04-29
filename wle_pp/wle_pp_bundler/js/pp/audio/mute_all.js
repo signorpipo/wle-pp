@@ -1,3 +1,5 @@
+import { Howler } from 'howler';
+
 WL.registerComponent('pp-mute-all', {
 }, {
     init: function () {

@@ -219,9 +219,9 @@ WL.registerComponent('pp-grabber-hand', {
     },
     _computeReleaseLinearVelocity(linearVelocityHistory) {
         //speed
-        let speed = glMatrix.vec3.length(linearVelocityHistory[0]);
+        let speed = linearVelocityHistory[0].vec3_length();
         for (let i = 1; i < this._myLinearVelocityHistorySpeedAverageSamplesFromStart; i++) {
-            speed += glMatrix.vec3.length(linearVelocityHistory[i]);
+            speed += linearVelocityHistory[i].vec3_length();
         }
         speed /= this._myLinearVelocityHistorySpeedAverageSamplesFromStart;
 
@@ -246,14 +246,14 @@ WL.registerComponent('pp-grabber-hand', {
         let direction = [0, 0, 0];
         for (let i = this._myLinearVelocityHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
             let currentDirection = linearVelocityHistory[i];
-            glMatrix.vec3.scale(currentDirection, currentDirection, directionCurrentWeight);
-            glMatrix.vec3.add(direction, direction, currentDirection);
+            currentDirection.vec3_scale(directionCurrentWeight, currentDirection);
+            direction.vec3_add(currentDirection, direction);
 
             directionCurrentWeight--;
         }
-        glMatrix.vec3.normalize(direction, direction);
+        direction.vec3_normalize(direction);
 
-        glMatrix.vec3.scale(direction, direction, speed);
+        direction.vec3_scale(speed, direction);
 
         return direction;
     },
@@ -261,15 +261,15 @@ WL.registerComponent('pp-grabber-hand', {
         let angularVelocity = angularVelocityHistory[0];
 
         //speed
-        let speed = glMatrix.vec3.length(angularVelocity);
+        let speed = angularVelocity.vec3_length();
 
         speed = Math.pp_clamp(speed * this._myThrowAngularVelocityMultiplier, 0, this._myThrowMaxAngularSpeedRadians);
 
         //direction
         let direction = angularVelocity;
-        glMatrix.vec3.normalize(direction, direction);
+        direction.vec3_normalize(direction);
 
-        glMatrix.vec3.scale(direction, direction, speed);
+        direction.vec3_scale(speed, direction);
 
         return direction;
     },
@@ -281,12 +281,12 @@ WL.registerComponent('pp-grabber-hand', {
             let direction = [0, 0, 0];
             for (let i = this._myLinearVelocityHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
                 let currentDirection = linearVelocityHistory[i].pp_clone();
-                glMatrix.vec3.scale(currentDirection, currentDirection, directionCurrentWeight);
-                glMatrix.vec3.add(direction, direction, currentDirection);
+                currentDirection.vec3_scale(directionCurrentWeight, currentDirection);
+                direction.vec3_add(currentDirection, direction);
 
                 directionCurrentWeight--;
             }
-            glMatrix.vec3.normalize(direction, direction);
+            direction.vec3_normalize(direction);
 
             this._myDebugLines[j - 1].setStartDirectionLength(this.object.pp_getPosition(), direction, 0.2);
             let color = 1 / j;

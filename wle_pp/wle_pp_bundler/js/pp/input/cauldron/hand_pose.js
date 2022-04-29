@@ -51,7 +51,7 @@ PP.HandPose = class HandPose {
         let out = this._myRotation.slice(0);
 
         if (this._myFixForward) {
-            out = glMatrix.quat.rotateY(out, out, Math.PI);
+            out.quat_rotateAxisRadians(Math.PI, [0, 1, 0], out);
         }
 
         return out;
@@ -62,11 +62,11 @@ PP.HandPose = class HandPose {
     }
 
     getTransformMatrix() {
-        return mat4_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
+        return PP.mat4_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
     }
 
     getTransformQuat() {
-        return quat2_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
+        return PP.quat2_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
     }
 
     getLinearVelocity() {
@@ -114,8 +114,8 @@ PP.HandPose = class HandPose {
     }
 
     update(dt) {
-        glMatrix.vec3.copy(this._myPrevPosition, this._myPosition);
-        glMatrix.quat.copy(this._myPrevRotation, this._myRotation);
+        this._myPrevPosition.vec3_copy(this._myPosition);
+        this._myPrevRotation.quat_copy(this._myRotation);
 
         let xrFrame = Module['webxr_frame'];
         if (xrFrame && this._myInputSource) {
@@ -194,8 +194,8 @@ PP.HandPose = class HandPose {
 
     _computeEmulatedLinearVelocity(dt) {
         if (dt > 0) {
-            glMatrix.vec3.subtract(this._myLinearVelocity, this._myPosition, this._myPrevPosition);
-            glMatrix.vec3.scale(this._myLinearVelocity, this._myLinearVelocity, 1 / dt);
+            this._myPosition.vec3_sub(this._myPrevPosition, this._myLinearVelocity);
+            this._myLinearVelocity.vec3_scale(1 / dt, this._myLinearVelocity);
         } else {
             this._myLinearVelocity[0] = 0;
             this._myLinearVelocity[1] = 0;
@@ -205,8 +205,10 @@ PP.HandPose = class HandPose {
 
     _computeEmulatedAngularVelocity(dt) {
         if (dt > 0) {
-            glMatrix.vec3.subtract(this._myAngularVelocity, this._myRotation.quat_toRadians(), this._myPrevRotation.quat_toRadians());
-            glMatrix.vec3.scale(this._myAngularVelocity, this._myAngularVelocity, 1 / dt);
+            let rotationRadians = this._myRotation.quat_toRadians();
+            let prevRotationRadians = this._myPrevRotation.quat_toRadians();
+            rotationRadians.vec3_sub(prevRotationRadians, this._myAngularVelocity);
+            this._myAngularVelocity.vec3_scale(1 / dt, this._myAngularVelocity);
         } else {
             this._myAngularVelocity[0] = 0;
             this._myAngularVelocity[1] = 0;

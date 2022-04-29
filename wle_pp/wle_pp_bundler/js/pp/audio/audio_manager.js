@@ -1,3 +1,5 @@
+import { Howler } from 'howler';
+
 PP.AudioManager = class AudioManager {
     constructor() {
         this._myAudioSetupMap = new Map();

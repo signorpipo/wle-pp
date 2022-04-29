@@ -59,7 +59,7 @@ PP.EasyTuneVariableType = {
     NONE: 0,
     NUMBER: 1,
     BOOL: 2,
-    EASY_TRANSFORM: 3
+    TRANSFORM: 3
 };
 
 PP.EasyTuneVariable = class EasyTuneVariable {
@@ -252,9 +252,9 @@ PP.EasyTuneBool = class EasyTuneBool extends PP.EasyTuneBoolArray {
 
 //EASY TUNE EASY TRANSFORM
 
-PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVariable {
+PP.EasyTuneTransform = class EasyTuneTransform extends PP.EasyTuneVariable {
     constructor(name, value, scaleAsOne = true, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1) {
-        super(name, PP.EasyTuneVariableType.EASY_TRANSFORM);
+        super(name, PP.EasyTuneVariableType.TRANSFORM);
 
         this.myDecimalPlaces = 3;
 
@@ -281,10 +281,10 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
         this.myInitialRotationStepPerSecond = this.myRotationStepPerSecond;
         this.myInitialScaleStepPerSecond = this.myScaleStepPerSecond;
 
-        this.myTransform = mat4_create();
+        this.myTransform = PP.mat4_create();
         this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
 
-        this.myTempTransform = mat4_create();
+        this.myTempTransform = PP.mat4_create();
     }
 
     getValue() {
@@ -302,7 +302,7 @@ PP.EasyTuneSimpleTransform = class EasyTuneSimpleTransform extends PP.EasyTuneVa
         this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
 
         if (resetInitialValue) {
-            PP.EasyTuneSimpleTransform.prototype.setInitialValue.call(this, value);
+            PP.EasyTuneTransform.prototype.setInitialValue.call(this, value);
         }
 
         PP.refreshEasyTuneWidget();

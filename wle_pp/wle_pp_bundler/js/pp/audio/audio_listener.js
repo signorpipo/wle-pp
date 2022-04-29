@@ -1,3 +1,5 @@
+import { Howler } from 'howler';
+
 WL.registerComponent("pp-audio-listener", {
     _mySpatial: { type: WL.Type.Bool, default: true },
 }, {

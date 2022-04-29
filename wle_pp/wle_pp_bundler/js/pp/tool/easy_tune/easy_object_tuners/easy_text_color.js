@@ -63,7 +63,7 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
     }
 
     _getDefaultValue() {
-        return vec4_create();
+        return PP.vec4_create();
     }
 
     _updateObjectValue(object, value) {

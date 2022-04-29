@@ -56,7 +56,7 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
     }
 
     _getDefaultValue() {
-        return vec3_create();
+        return PP.vec3_create();
     }
 
     _updateObjectValue(object, value) {

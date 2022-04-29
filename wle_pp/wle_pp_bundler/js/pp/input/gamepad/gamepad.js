@@ -591,7 +591,8 @@ PP.Gamepad = class Gamepad {
         }
 
         //AXES CHANGED
-        if (!glMatrix.vec2.exactEquals(this._myAxesInfo.myAxes, this._myAxesInfo.myPrevAxes)) {
+        if (this._myAxesInfo.myAxes[0] != this._myAxesInfo.myPrevAxes[0] ||
+            this._myAxesInfo.myAxes[1] != this._myAxesInfo.myPrevAxes[1]) {
             let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.AXES_CHANGED];
             this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }

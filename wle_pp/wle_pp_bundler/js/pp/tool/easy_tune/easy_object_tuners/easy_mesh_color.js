@@ -72,7 +72,7 @@ PP.EasyMeshColor = class EasyMeshColor extends PP.EasyObjectTuner {
             return [0];
         }
 
-        return vec4_create();
+        return PP.vec4_create();
     }
 
     _updateObjectValue(object, value) {

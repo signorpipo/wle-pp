@@ -1,7 +1,5 @@
 /* Doesn't support
     - Placeholder like %d and other similar kind of way to build strings
-    - Object to string will result in [Object object]
-    - Some messages are not intercepted, like the error from glMatrix.mat4.invert(null, null)
 */
 
 PP.ConsoleVRWidget = class ConsoleVRWidget {

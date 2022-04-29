@@ -115,13 +115,13 @@ WL.registerComponent('pp-gamepad-animator', {
     },
     _thumbstickPressedStart: function (buttonInfo, gamepad) {
         //since thumbstick object rotate I need to specifically use its initial forward
-        let tempVector = glMatrix.vec3.create();
-        glMatrix.vec3.scale(tempVector, this._myThumbstickInitialLocalForward, 0.0015);
+        let tempVector = PP.vec3_create();
+        this._myThumbstickInitialLocalForward.vec3_scale(0.0015, tempVector);
         this._myThumbstick.translate(tempVector);
     },
     _thumbstickPressedEnd: function (buttonInfo, gamepad) {
-        let tempVector = glMatrix.vec3.create();
-        glMatrix.vec3.scale(tempVector, this._myThumbstickInitialLocalForward, -0.0015);
+        let tempVector = PP.vec3_create();
+        this._myThumbstickInitialLocalForward.vec3_scale(-0.0015, tempVector);
         this._myThumbstick.translate(tempVector);
     },
     _bottomButtonPressedStart: function (buttonInfo, gamepad) {
@@ -201,10 +201,10 @@ WL.registerComponent('pp-gamepad-animator', {
         //first reset rotation to start position
         this._copyAlignRotation(this._mySelect, this._mySelectForward, [0, 0, 1]);
 
-        let angleToRotate = glMatrix.glMatrix.toRadian(15 * buttonInfo.myValue);
+        let angleToRotate = Math.pp_toRadians(15 * buttonInfo.myValue);
         let tiltDirection = [0, 0, 1];
-        glMatrix.vec3.rotateX(tiltDirection, tiltDirection, [0, 0, 0], angleToRotate);
-        glMatrix.vec3.normalize(tiltDirection, tiltDirection);
+        tiltDirection.vec3_rotateAxis(angleToRotate, [1, 0, 0], tiltDirection);
+        tiltDirection.vec3_normalize(tiltDirection);
 
         this._copyAlignRotation(this._mySelect, [0, 0, 1], tiltDirection);
 
@@ -223,8 +223,9 @@ WL.registerComponent('pp-gamepad-animator', {
         this._copyAlignRotation(this._myThumbstick, this._myThumbstickForward, [0, 0, 1]);
 
         let tiltDirection = new Float32Array(3);
-        glMatrix.vec3.add(tiltDirection, [0, 0, 1], [axesInfo.myAxes[0], -axesInfo.myAxes[1], 0.0]);
-        glMatrix.vec3.normalize(tiltDirection, tiltDirection);
+        let forward = [0, 0, 1];
+        forward.vec3_add([axesInfo.myAxes[0], -axesInfo.myAxes[1], 0.0], tiltDirection);
+        tiltDirection.vec3_normalize(tiltDirection);
 
         this._copyAlignRotation(this._myThumbstick, [0, 0, 1], tiltDirection);
 
@@ -233,10 +234,10 @@ WL.registerComponent('pp-gamepad-animator', {
     //Couldn't find a better name, basically find the rotation to align start axis to end, and apply that to object
     _copyAlignRotation: function (object, startAxis, endAxis) {
         let rotationAxis = new Float32Array(3);
-        glMatrix.vec3.cross(rotationAxis, startAxis, endAxis);
-        glMatrix.vec3.normalize(rotationAxis, rotationAxis);
+        startAxis.vec3_cross(endAxis, rotationAxis);
+        rotationAxis.vec3_normalize(rotationAxis);
 
-        let angleToRotate = glMatrix.vec3.angle(startAxis, endAxis);
+        let angleToRotate = startAxis.vec3_angleRadians(endAxis);
 
         if (angleToRotate > 0.0001) {
             object.rotateAxisAngleRadObject(rotationAxis, angleToRotate);
@@ -244,13 +245,13 @@ WL.registerComponent('pp-gamepad-animator', {
     },
     _translateLocalAxis(object, axis, amount) {
         let tempVector = this._getLocalAxis(object, axis);
-        glMatrix.vec3.scale(tempVector, tempVector, amount);
+        tempVector.vec3_scale(amount, tempVector);
         object.translate(tempVector);
     },
     _getLocalAxis(object, axis) {
-        let tempVector = glMatrix.vec3.create();
-        glMatrix.vec3.transformQuat(tempVector, axis, object.transformLocal);
-        glMatrix.vec3.normalize(tempVector, tempVector);
+        let tempVector = PP.vec3_create();
+        axis.vec3_transformQuat(object.transformLocal, tempVector);
+        tempVector.vec3_normalize(tempVector);
         return tempVector;
     },
     _enableMeshInSession: function () {

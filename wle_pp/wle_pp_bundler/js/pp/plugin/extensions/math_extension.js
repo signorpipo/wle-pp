@@ -23,9 +23,11 @@
         - pp_isInsideAngleRange
 */
 
+/* #NPM
 if (!PP) {
     var PP = {};
 }
+*/
 
 Math.pp_clamp = function (value, start, end) {
     let fixedStart = (start != null) ? start : Number.MIN_VALUE;
@@ -49,7 +51,7 @@ Math.pp_toDegrees = function (angle) {
 };
 
 Math.pp_toRadians = function (angle) {
-    return glMatrix.glMatrix.toRadian(angle);
+    return angle * (Math.PI / 180);
 };
 
 Math.pp_roundDecimal = function (number, decimalPlaces) {

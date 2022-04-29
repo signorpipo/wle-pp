@@ -34,9 +34,9 @@ PP.DebugLine = class DebugLine {
 
     setStartEnd(start, end) {
         let direction = [];
-        glMatrix.vec3.sub(direction, end, start);
-        let length = glMatrix.vec3.length(direction);
-        glMatrix.vec3.normalize(direction, direction);
+        end.vec3_sub(start, direction);
+        let length = direction.vec3_length();
+        direction.vec3_normalize(direction);
 
         this.setStartDirectionLength(start, direction, length);
     }
@@ -50,7 +50,7 @@ PP.DebugLine = class DebugLine {
     }
 
     setColor(color) {
-        glMatrix.vec4.copy(this._myColor, color);
+        this._myColor.vec4_copy(color);
 
         this._markDirty();
     }
@@ -77,23 +77,23 @@ PP.DebugLine = class DebugLine {
         this._myLineObject.scale([this._myThickness / 2, this._myThickness / 2, this._myLength / 2]);
 
         let forward = this._myLineObject.pp_getForward();
-        let angle = glMatrix.vec3.angle(forward, this._myDirection);
+        let angle = forward.vec3_angleRadians(this._myDirection);
         if (angle > 0.0001) {
             let rotationAxis = [];
-            glMatrix.vec3.cross(rotationAxis, forward, this._myDirection);
-            glMatrix.vec3.normalize(rotationAxis, rotationAxis);
+            forward.vec3_cross(forward, this._myDirection, rotationAxis);
+            rotationAxis.vec3_normalize(rotationAxis);
             let rotationQuat = [];
-            glMatrix.quat.setAxisAngle(rotationQuat, rotationAxis, angle);
+            rotationQuat.quat_fromAxis(rotationAxis, angle);
 
-            glMatrix.quat.mul(rotationQuat, rotationQuat, this._myLineObject.transformWorld);
-            glMatrix.quat.normalize(rotationQuat, rotationQuat);
+            rotationQuat.quat_mul(this._myLineObject.transformWorld, rotationQuat);
+            rotationQuat.quat_normalize(rotationQuat);
             this._myLineObject.rotateObject(rotationQuat);
         }
 
         forward = this._myLineObject.pp_getForward();
         let position = this._myLineObject.pp_getPosition();
-        glMatrix.vec3.scale(forward, forward, this._myLength / 2);
-        glMatrix.vec3.add(position, forward, position);
+        forward.vec3_scale(this._myLength / 2, forward);
+        forward.vec3_add(position, position);
         this._myLineObject.setTranslationWorld(position);
 
         this._myLineMesh.material.color = this._myColor;

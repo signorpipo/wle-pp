@@ -1,5 +1,5 @@
 
-PP.EasyTuneSimpleTransformWidgetUI = class EasyTuneSimpleTransformWidgetUI {
+PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
 
     build(parentObject, setup, additionalSetup) {
         this._myParentObject = parentObject;

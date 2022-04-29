@@ -113,7 +113,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         this._myWidgets[PP.EasyTuneVariableType.NONE] = new PP.EasyTuneNoneWidget();
         this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberWidget(this._myGamepad);
         this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolWidget(this._myGamepad);
-        this._myWidgets[PP.EasyTuneVariableType.EASY_TRANSFORM] = new PP.EasyTuneSimpleTransformWidget(this._myGamepad);
+        this._myWidgets[PP.EasyTuneVariableType.TRANSFORM] = new PP.EasyTuneTransformWidget(this._myGamepad);
 
         for (let item of this._myWidgets) {
             item.start(this._myWidgetFrame.getWidgetObject(), this._myAdditionalSetup);
