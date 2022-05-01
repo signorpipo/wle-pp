@@ -235,7 +235,36 @@
             ]
         },
         "scripting": {
-            "useInternalBundler": false
+            "useInternalBundler": false,
+            "sourcePaths": [
+                "js/bundle.js",
+                "js/pp",
+                "js/pp/audio",
+                "js/pp/cauldron",
+                "js/pp/cauldron/cauldron",
+                "js/pp/cauldron/components",
+                "js/pp/cauldron/fsm",
+                "js/pp/cauldron/utils",
+                "js/pp/debug",
+                "js/pp/debug/components",
+                "js/pp/gameplay",
+                "js/pp/gameplay/grab_throw",
+                "js/pp/input",
+                "js/pp/input/cauldron",
+                "js/pp/input/gamepad",
+                "js/pp/plugin",
+                "js/pp/plugin/component_mods",
+                "js/pp/plugin/extensions",
+                "js/pp/tool",
+                "js/pp/tool/cauldron",
+                "js/pp/tool/cauldron/cauldron",
+                "js/pp/tool/cauldron/components",
+                "js/pp/tool/console_vr",
+                "js/pp/tool/easy_tune",
+                "js/pp/tool/easy_tune/easy_object_tuners",
+                "js/pp/tool/easy_tune/easy_tune_widgets",
+                "js/pp/tool/widget_frame"
+            ]
         },
         "runtime": {
             "webxr": {
