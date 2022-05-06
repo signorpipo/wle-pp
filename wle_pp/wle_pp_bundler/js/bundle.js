@@ -1,7 +1,7 @@
 //WLE
 
-require('@wonderlandengine/components/cursor');
-require('@wonderlandengine/components/cursor-target');
+//require('@wonderlandengine/components/cursor');
+//require('@wonderlandengine/components/cursor-target');
 
 //PP
 
