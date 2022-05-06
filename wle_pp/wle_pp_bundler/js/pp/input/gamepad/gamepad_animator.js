@@ -108,7 +108,7 @@ WL.registerComponent('pp-gamepad-animator', {
         //AXES CHANGED
         this._myGamepad.registerAxesEventListener(PP.AxesEvent.AXES_CHANGED, this, this._axesValueChanged.bind(this));
 
-        this.object.scale([0, 0, 0]);
+        this.object.pp_setScaleLocal([0.00001, 0.00001, 0.00001]);
     },
     update: function (dt) {
         this._enableMeshInSession();
@@ -257,13 +257,8 @@ WL.registerComponent('pp-gamepad-animator', {
     _enableMeshInSession: function () {
         if (!this._myIsMeshEnabled) {
             if (WL.xrSession) {
-                this.object.resetScaling();
+                this.object.pp_resetScaleLocal();
                 this._myIsMeshEnabled = true;
-            }
-        } else {
-            if (!WL.xrSession) {
-                this.object.scale([0, 0, 0]);
-                this._myIsMeshEnabled = false;
             }
         }
     }
