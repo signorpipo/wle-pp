@@ -1,8 +1,3 @@
-//WLE
-
-//require('@wonderlandengine/components/cursor');
-//require('@wonderlandengine/components/cursor-target');
-
 //PP
 
 require('./pp/pp.js');
