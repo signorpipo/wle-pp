@@ -1,11 +1,11 @@
 /*
     How to use
 
-    Warning: The extension is a WIP so not all the methods are available for all kinds of vector.
+    Warning: The extension is a WIP so not all the functions are available for all kinds of vector.
 
     By default rotations are in Degrees and transforms are Matrix 4 (and not Quat 2)    
-    For methods that work with rotations, Matrix means Matrix 3 and Quat means Quat
-    For methods that work with transforms, Matrix means Matrix 4 and Quat means Quat 2
+    For functions that work with rotations, Matrix means Matrix 3 and Quat means Quat
+    For functions that work with transforms, Matrix means Matrix 4 and Quat means Quat 2
     
     For rotations u can add a suffix like Degrees/Radians/Quat/Matrix to use a specific version, example:
         - vec3_rotateAroundRadians
@@ -15,7 +15,7 @@
         - vec3_convertPositionToWorldMatrix
         - vec3_convertDirectionToWorldQuat
 
-    Some vec3 methods let u add a prefix to specify if the vec3 represent a rotation in degrees or radians, where degrees is the default:
+    Some vec3 functions let u add a prefix to specify if the vec3 represent a rotation in degrees or radians, where degrees is the default:
         - vec3_toQuat
         - vec3_degreesToQuat
         - vec3_radiansToQuat
@@ -25,14 +25,14 @@
         - vec3_degreesAddRotationQuat   -> returns a rotation in degrees
         - quat_rotationToDegrees        -> returns a rotation in quat
 
-    The methods leave u the choice of forwarding an out parameter or just get the return value, example:
+    The functions leave u the choice of forwarding an out parameter or just get the return value, example:
         - let quat = this.vec3_toQuat()
         - this.vec3_toQuat(quat)
         - the out parameter is always the last one
 
-    List of methods:
+    List of functions:
         Notes:
-            - If a group of methods starts with ○ it means it modifies the variable itself
+            - If a group of functions starts with ○ it means it modifies the variable itself
             - The suffixes (like Matrix or Radians) or prefixes (like degrees) are omitted 
 
         CREATION (u can call these functions without any object):
@@ -127,6 +127,8 @@
 import * as glMatrix from 'gl-matrix';
 
 //ARRAY
+
+//New Functions
 
 Float32Array.prototype.pp_has = function (callback) {
     return this.pp_find(callback) != undefined;
@@ -277,6 +279,8 @@ Float32Array.prototype.pp_equals = function (array, elementEqualsCallback = null
 
 // GENERIC VECTOR
 
+//New Functions
+
 Float32Array.prototype.vec_toString = function (decimalPlaces = 4) {
     let message = this._vec_buildConsoleMessage(decimalPlaces);
     return message;
@@ -364,7 +368,7 @@ Float32Array.prototype.vec_equals = function (vector) {
 
 // VECTOR 3
 
-//glMatrix Bridge
+// glMatrix Bridge
 
 Float32Array.prototype.vec3_normalize = function (out = glMatrix.vec3.create()) {
     glMatrix.vec3.normalize(out, this);
@@ -455,7 +459,7 @@ Float32Array.prototype.vec3_transformQuat = function (quat, out = glMatrix.vec3.
     return out;
 };
 
-//New Methods
+// New Functions
 
 Float32Array.prototype.vec3_angleSigned = function (vector, axis) {
     return this.vec3_angleSignedDegrees(vector, axis);
@@ -817,7 +821,7 @@ Float32Array.prototype.vec3_radiansToMatrix = function () {
 
 // VECTOR 4
 
-//glMatrix Bridge
+// glMatrix Bridge
 
 Float32Array.prototype.vec4_set = function (x, y = null, z = null, w = null) {
     if (y == null) {
@@ -835,7 +839,7 @@ Float32Array.prototype.vec4_copy = function (vector) {
 
 //QUAT
 
-//glMatrix Bridge
+// glMatrix Bridge
 
 Float32Array.prototype.quat_normalize = function (out = glMatrix.quat.create()) {
     glMatrix.quat.normalize(out, this);
@@ -919,7 +923,7 @@ Float32Array.prototype.quat_fromAxisRadians = function (angle, axis) {
     return this;
 };
 
-//New Methods
+// New Functions
 
 Float32Array.prototype.quat_fromRadians = function () {
     let vector = glMatrix.vec3.create();
@@ -1077,7 +1081,7 @@ Float32Array.prototype.quat_rotateAxisRadians = function () {
 
 //QUAT 2
 
-//glMatrix Bridge
+// glMatrix Bridge
 
 Float32Array.prototype.quat2_normalize = function (out = glMatrix.quat2.create()) {
     glMatrix.quat2.normalize(out, this);
@@ -1152,7 +1156,7 @@ Float32Array.prototype.quat2_setPositionRotationQuat = function (position, rotat
     return this;
 };
 
-//New Methods
+// New Functions
 
 Float32Array.prototype.quat2_getAxes = function () {
     let rotationMatrix = glMatrix.mat3.create();
@@ -1197,9 +1201,9 @@ Float32Array.prototype.quat2_fromMatrix = function (transformMatrix) {
 
 //MATRIX 3
 
-//glMatrix Bridge
+// glMatrix Bridge
 
-//New Methods
+// New Functions
 
 Float32Array.prototype.mat3_toDegrees = function () {
     let quat = glMatrix.quat.create();
@@ -1226,7 +1230,7 @@ Float32Array.prototype.mat3_toQuat = function (out = glMatrix.quat.create()) {
 
 //MATRIX 4
 
-//glMatrix Bridge
+// glMatrix Bridge
 
 Float32Array.prototype.mat4_copy = function (mat4) {
     glMatrix.mat4.copy(this, mat4);
@@ -1296,7 +1300,7 @@ Float32Array.prototype.mat4_getScale = function (out = glMatrix.vec3.create()) {
     return out;
 };
 
-//New Methods
+// New Functions
 
 Float32Array.prototype.mat4_setPosition = function (position) {
     this[12] = position[0];

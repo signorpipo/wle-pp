@@ -7,7 +7,7 @@
         - pp_angleDistanceSignedDegrees
         - pp_isInsideAngleRangeRadians
 
-    List of methods:
+    List of functions:
         Notes:
             - The suffixes (like Degrees or Radians) are omitted 
 

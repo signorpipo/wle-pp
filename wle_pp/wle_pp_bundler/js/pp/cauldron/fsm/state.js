@@ -2,7 +2,7 @@
     There is no need to inherit from this state, especially since states can be only functions
     It's more like an example of what is needed
     
-    If you don't specify some methods the fsm will just skip them
+    If you don't specify some functions the fsm will just skip them
     Or consider them always valid
 
     The param state is of type PP.StateData and can be used to retrieve the stateID and other data

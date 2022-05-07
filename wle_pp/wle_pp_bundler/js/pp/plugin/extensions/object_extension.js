@@ -1,11 +1,11 @@
 /*
     How to use
 
-    By default the methods work on World space, rotations are in Degrees and transforms are Matrix (and not Quat 2) 
-    For methods that work with rotations, Matrix means Matrix 3 and Quat means Quat
-    For methods that work with transforms, Matrix means Matrix 4 and Quat means Quat 2
+    By default the functions work on World space, rotations are in Degrees and transforms are Matrix (and not Quat 2) 
+    For functions that work with rotations, Matrix means Matrix 3 and Quat means Quat
+    For functions that work with transforms, Matrix means Matrix 4 and Quat means Quat 2
 
-    You can add a suffix like World/Local/Object at the end of some methods to specify the space, example:
+    You can add a suffix like World/Local/Object at the end of some functions to specify the space, example:
         - pp_getPositionLocal to get the position in local space (parent space)
         - pp_translateObject to translate in object space
 
@@ -18,22 +18,22 @@
         - pp_getTransformQuat
         - pp_setTransformWorldMatrix
         
-    Some methods let you specify if u want them to work on the Hierarchy/Descendants/Children where:
+    Some functions let you specify if u want them to work on the Hierarchy/Descendants/Children where:
         - Children: direct children of the object
         - Descendants: all the children of the object, including child of child and so on 
         - Hierarchy: Descendants plus the current object
-    By default the methods work on the current object alone:
+    By default the functions work on the current object alone:
         - pp_getComponent
         - pp_getComponentHierarchy
         - pp_getComponentAmountMapDescendants
         - pp_setActiveChildren
 
-    The methods leave u the choice of forwarding an out parameter or just get the return value, example:
+    The functions leave u the choice of forwarding an out parameter or just get the return value, example:
         - let position = this.object.pp_getPosition()
         - this.object.pp_getPosition(position)
         - the out parameter is always the last one
 
-    List of methods:
+    List of functions:
         Notes:
             - The suffixes (like World or Radians) are omitted 
 
@@ -50,7 +50,7 @@
         - pp_rotate         / pp_rotateAxis     / pp_rotateAround    / pp_rotateAroundAxis
         - pp_scaleObject (for now scale only have this variant) (u can specify a single number instead of a vector to uniform scale easily)
 
-        - pp_lookAt         / pp_lookTo (u can avoid to specify up and the method will pickup the object up by default)
+        - pp_lookAt         / pp_lookTo (u can avoid to specify up and the function will pickup the object up by default)
 
         - pp_getParent      / pp_setParent (let u specify if u want to keep the transform or not)
 
