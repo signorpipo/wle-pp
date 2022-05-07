@@ -4,6 +4,20 @@ A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp).
 
+Some of the features you can get with this library:
+  - Object Extension
+    * add to the WLE object lots of functions that make the object interface more cohesive and complete
+  - Gamepad
+    * manages the input from the gamepads, like reading the state of a button or the value of the thumbstick
+  - Grab & Throw
+    * a ready to use gameplay feature to grab and throw objects
+  - FSM
+    * a simple but powerful finite state machine, your best friend when developing a game
+  - Console VR
+    * a tool that let you see the console even when u are inside the VR session
+  - Easy Tune
+    * a tool that makes it easier to tune design values at runtime
+
 # How To Import
 
 To import this library into your own projects you have to get the `wle_pp_bundle.js` file, that you can find [here](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundle.js), and add it to your project.  
