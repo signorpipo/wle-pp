@@ -1,43 +1,48 @@
 # Overview
 
-A library for the [Wonderland Engine](https://wonderlandengine.com/).
-
-To import it into your own projects, just get the `wle_pp_bundle.js` file that you can find [here](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundle.js) and add it to your project.  
-If your project is a standard one (not `NPM`), the file must be added in the `Javascript source paths` section that can be found under the `Project Settings`, as any other javascript file u want to use in the project.  
-If your project is an `NPM` one, the file must be required in your bundle, just like any other dependency.
+A library for the [Wonderland Engine](https://wonderlandengine.com/).  
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp).
+
+# How To Import
+
+To import this library into your own projects you have to get the `wle_pp_bundle.js` file, that you can find [here](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundle.js), and add it to your project.  
+
+If your project is a standard one (not `NPM`), the file must be added in the `Javascript source paths` section that can be found under the `Project Settings`, as any other javascript file u want to use in the project. 
+
+If your project is an `NPM` one, the file must be required in your bundle, just like any other dependency.  
+You also have to require, before the `wle_pp_bundle.js` file, the `cursor` and `cursor-target` WLE components.  
+You can find an official tutorial on how to setup an `NPM` project and add the required WLE components [here](https://wonderlandengine.com/tutorials/npm-project/).
+
+You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle_ppefault).
 
 # License
 You are free to use this in your projects, just remember to credit me somewhere!
 
-# Table of Contents  
-- [Documentation](#documentation)
-  * [Audio](#audio)
-  * [Cauldron](#cauldron-1)
-    + [Components](#components)
-    + [FSM](#fsm)
-    + [Utils](#utils)
-  * [Debug](#debug)
-  * [Gameplay](#gameplay)
-    + [Grab & Throw](#grab--throw)
-  * [Input](#input)
-    + [Gamepad](#gamepad)
-  * [Plugin](#plugin)
-    + [Component Mods](#component-mods)
-    + [Extensions](#extensions)
-  * [Tool](#tool)
-    + [Console VR](#console-vr)
-    + [Easy Tune](#easy-tune)
-
 # Documentation
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp)
-
-This library includes various APIs and components that integrates the one alredy included with the Wonderland Engine, and let you have an easier time with your development.
 
 I will explain more or less everything but without going too much into details.  
 Each folder under the `pp` folder will be a main section of this documentation.  
 `Cauldron` is a tag name for a folder that contains a bunch of features that don't belong anywhere else.
+
+## Table Of Contents  
+- [Audio](#audio)
+- [Cauldron](#cauldron-1)
+  * [Components](#components)
+  * [FSM](#fsm)
+  * [Utils](#utils)
+- [Debug](#debug)
+- [Gameplay](#gameplay)
+  * [Grab & Throw](#grab--throw)
+- [Input](#input)
+  * [Gamepad](#gamepad)
+- [Plugin](#plugin)
+  * [Component Mods](#component-mods)
+  * [Extensions](#extensions)
+- [Tool](#tool)
+  * [Console VR](#console-vr)
+  * [Easy Tune](#easy-tune)
 
 ## Audio
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/audio)
