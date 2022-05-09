@@ -317,12 +317,14 @@ List of features:
 
 #### How To
 The configuration is pretty straight forward:
-1. Add a `pp-grabber-hand` to one of the hands of the player
-	  * It can also be a child of the hand if you want the detection to have an offset from the hand position
-2. Add a `physx` component on the same object
-	  * The `physx` must be kinematic (if you select trigger, be sure to select kinematic first if it disappear)
-	  * The `physx` should be set as trigger for the hand, but is not necessary
-3. Add a `pp-grabbable` on the object you want to grab
+1. Enable the `Physics` feature, that u can find under the `Project Settings`
+2. Add a `pp-grabber-hand` component to one of the hands of the player
+	  * Make sure the `handedness` parameter of the component matches the hand one
+	  * The component can also be added to a child of the hand if you want the grab detection to have an offset from the hand position
+3. Add a `physx` component on the same object
+	  * The `physx` must be `kinematic` (if you select `trigger`, be sure to select `kinematic` first if it disappear, otherwise the object will fall)
+	  * The `physx` should be set as `trigger` for the hand, otherwise it will push the objects that collide with it
+4. Add a `pp-grabbable` component on the object you want to grab
 	  * In this case, the component must be added on the object itself, it can't be a child
 5. Add a `physx` component on the same object
 	  * Be sure that the groups/block flags match the one u used for the hand
