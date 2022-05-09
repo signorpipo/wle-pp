@@ -40,6 +40,10 @@ I will explain more or less everything but without going too much into details.
 Each folder under the `pp` folder will be a main section of this documentation.  
 `Cauldron` is a tag name for a folder that contains a bunch of features that don't belong anywhere else.
 
+As you will notice, everything in this bundle (classes, functions, variables) can be found under the `PP` object, that works as a sort of namespace.  
+The components names always start with a `pp-` prefix.  
+For the extensions (functions added to already existing objects), the names usually start with a `pp_` prefix, or, for array extensions, with something like `vec_`, `vec3_`, `quat2_` based on how you want to intepret the array value.
+
 ## Table Of Contents  
 - [Audio](#audio)
 - [Cauldron](#cauldron-1)
@@ -313,15 +317,15 @@ List of features:
 
 #### How To
 The configuration is pretty straight forward:
-1. Add a `pp-grabber-hand` to one of the hand of the player
-  * It can also be a child of the hand if you want the detection to have an offset from the hand position
+1. Add a `pp-grabber-hand` to one of the hands of the player
+	  * It can also be a child of the hand if you want the detection to have an offset from the hand position
 2. Add a `physx` component on the same object
-  * The `physx` must be kinematic (if you select trigger, be sure to select kinematic first if it disappear)
-  * The `physx` should be set as trigger for the hand, but is not necessary
+	  * The `physx` must be kinematic (if you select trigger, be sure to select kinematic first if it disappear)
+	  * The `physx` should be set as trigger for the hand, but is not necessary
 3. Add a `pp-grabbable` on the object you want to grab
-  * In this case, the component must be added on the object itself, it can't be a child
+	  * In this case, the component must be added on the object itself, it can't be a child
 5. Add a `physx` component on the same object
-  * Be sure that the groups/block flags match the one u used for the hand
+	  * Be sure that the groups/block flags match the one u used for the hand
 
 ## Input
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input)
