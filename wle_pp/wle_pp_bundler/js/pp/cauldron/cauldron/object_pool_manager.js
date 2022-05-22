@@ -43,12 +43,17 @@ PP.ObjectPoolParams = class ObjectPoolParams {
     constructor() {
         this.myInitialPoolSize = 0;
         this.myAmountToAddWhenEmpty = 1;        //If all the objects are busy, this amount will be added to the pool
-        this.myPercentageToAddWhenEmpty = 0.5;  //If all the objects are busy, this percentage of the current pool size will be added to the pool
+        this.myPercentageToAddWhenEmpty = 0.5;  //If all the objects are busy, this percentage of the current pool size will be added to the pool        
 
         this.myCloneParams = undefined;
-        this.myCloneFunctionName = undefined;
-        this.mySetActiveFunctionName = undefined;
-        this.myEqualsFunctionName = undefined;
+
+        this.myOptimizeObjectsAllocation = true;    //If true it will pre-allocate the memory before adding new objects to the pool
+
+        //These extra functions can be used if u want to use the pool with objects that are not from WLE (WL.Object)
+        this.myCloneCallback = undefined;                       //Signature: callback(object, cloneParams) -> clonedObject
+        this.mySetActiveCallback = undefined;                   //Signature: callback(object)
+        this.myEqualsCallback = undefined;                      //Signature: callback(firstObject, secondObject) -> bool
+        this.myOptimizeObjectsAllocationCallback = undefined;   //Signature: callback(object, numberOfObjectsToAllocate)
 
         this.myEnableDebugLog = true;
     }
@@ -105,6 +110,14 @@ PP.ObjectPool = class ObjectPool {
             return;
         }
 
+        if (this._myObjectPoolParams.myOptimizeObjectsAllocation) {
+            if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback) {
+                this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myPrototype, size);
+            } else {
+                this._myPrototype.pp_reserveObjectsHierarchy(size);
+            }
+        }
+
         for (let i = 0; i < size; i++) {
             this._myAvailableObjects.push(this._clone(this._myPrototype));
         }
@@ -117,8 +130,8 @@ PP.ObjectPool = class ObjectPool {
     _clone(object) {
         let clone = null;
 
-        if (this._myObjectPoolParams.myCloneFunctionName != null) {
-            clone = object[this._myObjectPoolParams.myCloneFunctionName](this._myObjectPoolParams.myCloneParams);
+        if (this._myObjectPoolParams.myCloneCallback != null) {
+            clone = this._myObjectPoolParams.myCloneCallback(object, this._myObjectPoolParams.myCloneParams);
         } else if (object.pp_clone != null) {
             clone = object.pp_clone(this._myObjectPoolParams.myCloneParams);
         } else if (object.clone != null) {
@@ -135,8 +148,8 @@ PP.ObjectPool = class ObjectPool {
     }
 
     _setActive(object, active) {
-        if (this._myObjectPoolParams.mySetActiveFunctionName != null) {
-            object[this._myObjectPoolParams.mySetActiveFunctionName](active);
+        if (this._myObjectPoolParams.mySetActiveCallback != null) {
+            this._myObjectPoolParams.mySetActiveCallback(object, active);
         } else if (object.pp_setActive != null) {
             object.pp_setActive(active);
         } else if (object.setActive != null) {
@@ -147,8 +160,8 @@ PP.ObjectPool = class ObjectPool {
     _equals(first, second) {
         let equals = false;
 
-        if (this._myObjectPoolParams.myEqualsFunctionName != null) {
-            equals = first[this._myObjectPoolParams.myEqualsFunctionName](second);
+        if (this._myObjectPoolParams.myEqualsCallback != null) {
+            equals = this._myObjectPoolParams.myEqualsCallback(first, second);
         } else if (first.pp_equals != null) {
             equals = first.pp_equals(second);
         } else if (first.equals != null) {

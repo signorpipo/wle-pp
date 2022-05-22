@@ -1,14 +1,33 @@
 if (WL && WL.Object) {
 
-    //Overall Deep Clone not implemented
     WL.MeshComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
-        if (deepCloneParams.shouldDeepCloneComponentVariable("mesh", "material")) {
+        if (deepCloneParams.isDeepCloneComponentVariable("mesh", "material")) {
             clone.material = this.material.clone();
         } else {
             clone.material = this.material;
         }
 
-        clone.mesh = this.mesh;
+        if (deepCloneParams.isDeepCloneComponentVariable("mesh", "mesh")) {
+            let vertexData = new Float32Array(this.mesh.vertexData.length);
+            let indexData = new Uint32Array(this.mesh.indexData.length);
+
+            for (let i = 0; i < this.mesh.vertexData.length; i++) {
+                vertexData[i] = this.mesh.vertexData[i];
+            }
+
+            for (let i = 0; i < this.mesh.indexData.length; i++) {
+                indexData[i] = this.mesh.indexData[i];
+            }
+
+            clone.mesh = new WL.Mesh({
+                indexData: indexData,
+                indexType: WL.MeshIndexType.UnsignedInt,
+                vertexData: vertexData
+            });
+        } else {
+            clone.mesh = this.mesh;
+        }
+
         clone.skin = this.skin;
     };
 
@@ -19,13 +38,13 @@ if (WL && WL.Object) {
     };
 
     WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
-        if (deepCloneParams.shouldDeepCloneComponent("text")) {
+        if (deepCloneParams.isDeepCloneComponent("text")) {
             clone.text = this.text.slice(0);
         } else {
             clone.text = this.text;
         }
 
-        if (deepCloneParams.shouldDeepCloneComponentVariable("text", "material")) {
+        if (deepCloneParams.isDeepCloneComponentVariable("text", "material")) {
             clone.material = this.material.clone();
         } else {
             clone.material = this.material;
@@ -35,7 +54,7 @@ if (WL && WL.Object) {
         clone.justification = this.justification;
     };
 
-    //TEMP not complete
+    // #TODO not completed
     WL.PhysXComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
         clone.angularDamping = this.angularDamping;
         clone.angularVelocity = this.angularVelocity.slice(0);

@@ -50,7 +50,7 @@
 
         ARRAY:
             - pp_has        / pp_hasEqual
-            - pp_find       / pp_findAll        / pp_findEquals / pp_findAllEqual
+            - pp_find       / pp_findAll        / pp_findEqual / pp_findAllEqual
             ○ pp_remove     / pp_removeIndex    / pp_removeAll  / pp_removeEqual    / pp_removeAllEqual
             ○ pp_pushUnique / pp_unshiftUnique
             ○ pp_copy    
@@ -134,7 +134,7 @@ Float32Array.prototype.pp_has = function (callback) {
     return this.pp_find(callback) != undefined;
 };
 
-Float32Array.prototype.pp_hasEquals = function (elementToFind) {
+Float32Array.prototype.pp_hasEqual = function (elementToFind) {
     return this.pp_findEqual(elementToFind) != undefined;
 };
 
@@ -216,7 +216,7 @@ Float32Array.prototype.pp_pushUnique = function (element, hasElementCallback = n
     if (hasElementCallback != null) {
         hasElement = this.pp_has(hasElementCallback);
     } else {
-        hasElement = this.pp_hasEquals(element);
+        hasElement = this.pp_hasEqual(element);
     }
 
     if (!hasElement) {
@@ -233,7 +233,7 @@ Float32Array.prototype.pp_unshiftUnique = function (element, hasElementCallback 
     if (hasElementCallback != null) {
         hasElement = this.pp_has(hasElementCallback);
     } else {
-        hasElement = this.pp_hasEquals(element);
+        hasElement = this.pp_hasEqual(element);
     }
 
     if (!hasElement) {

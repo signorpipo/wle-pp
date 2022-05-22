@@ -6,7 +6,7 @@ PP.MeshUtils = {
         let vertexData = new Float32Array(vertexCount * vertexDataSize);
         let indexData = new Uint32Array(vertexCount + 2); // +2 repeated vertexes
 
-        for (let i = 0; i < 4; ++i) {
+        for (let i = 0; i < vertexCount; ++i) {
             vertexData[i * vertexDataSize + WL.Mesh.POS.X] = -1 + (i & 1) * 2;
             vertexData[i * vertexDataSize + WL.Mesh.POS.Y] = -1 + ((i & 2) >> 1) * 2; // this is a quick way to have positions (-1,-1) (1,-1) (1,-1) (1,1)
             vertexData[i * vertexDataSize + WL.Mesh.POS.Z] = 0;

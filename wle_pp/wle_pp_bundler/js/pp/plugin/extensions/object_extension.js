@@ -70,6 +70,7 @@
         - pp_getName    / pp_setName
         - pp_getID
         - pp_getHierarchy / pp_getDescendants / pp_getChildren
+        - pp_reserveObjects / pp_reserveObjectsHierarchy / pp_reserveObjectsDescendants / pp_reserveObjectsChildren
         - pp_getComponentAmountMap / pp_getComponentAmountMapHierarchy / pp_getComponentAmountMapDescendants / pp_getComponentAmountMapChildren
         - pp_markDirty
         - pp_equals
@@ -1845,19 +1846,19 @@ if (WL && WL.Object) {
         }
 
         // The implementation is component dependant, not every component implements the deep clone
-        deepCloneObject(deepClone) {
+        setDeepCloneObject(deepClone) {
             this._myDeepCloneObject = deepClone;
         }
 
         // This value override the deep clone object value
         // The implementation is component dependant, not every component implements the deep clone
-        deepCloneComponent(componentName, deepClone) {
+        setDeepCloneComponent(componentName, deepClone) {
             this._myOverrideDeepCloneComponentMap.set(componentName, deepClone);
         }
 
         // This value override both the deep clone object value and the deep clone component one
         // The implementation is component dependant, not every component variable override is taken into consideration
-        deepCloneComponentVariable(componentName, variableName, deepClone) {
+        setDeepCloneComponentVariable(componentName, variableName, deepClone) {
             let componentMap = null;
 
             if (!this._myOverrideDeepCloneComponentVariableMap.has(componentName)) {
@@ -1869,7 +1870,7 @@ if (WL && WL.Object) {
             componentMap.set(variableName, deepClone);
         }
 
-        shouldDeepCloneComponent(componentName) {
+        isDeepCloneComponent(componentName) {
             let overrideValue = this._myOverrideDeepCloneComponentMap.get(componentName);
 
             if (overrideValue != null) {
@@ -1879,7 +1880,7 @@ if (WL && WL.Object) {
             return this._myDeepCloneObject;
         }
 
-        shouldDeepCloneComponentVariable(componentName, variableName) {
+        isDeepCloneComponentVariable(componentName, variableName) {
             let componentMap = this._myOverrideDeepCloneComponentVariableMap.get(componentName);
             if (componentMap != null) {
                 let overrideValue = componentMap.get(variableName);
@@ -1888,7 +1889,7 @@ if (WL && WL.Object) {
                 }
             }
 
-            return this.shouldDeepCloneComponent(componentName);
+            return this.isDeepCloneComponent(componentName);
         }
     };
 
@@ -2097,6 +2098,26 @@ if (WL && WL.Object) {
         return this.destroy();
     };
 
+    WL.Object.prototype.pp_reserveObjects = function (count) {
+        let componentAmountMap = this.pp_getComponentAmountMap();
+        this._pp_reserveObjects(count, componentAmountMap);
+    };
+
+    WL.Object.prototype.pp_reserveObjectsHierarchy = function (count) {
+        let componentAmountMap = this.pp_getComponentAmountMapHierarchy();
+        this._pp_reserveObjects(count, componentAmountMap);
+    };
+
+    WL.Object.prototype.pp_reserveObjectsDescendants = function (count) {
+        let componentAmountMap = this.pp_getComponentAmountMapDescendants();
+        this._pp_reserveObjects(count, componentAmountMap);
+    };
+
+    WL.Object.prototype.pp_reserveObjectsChildren = function (count) {
+        let componentAmountMap = this.pp_getComponentAmountMapChildren();
+        this._pp_reserveObjects(count, componentAmountMap);
+    };
+
     WL.Object.prototype.pp_getComponentAmountMap = function (amountMap = new Map()) {
         let objectAmount = amountMap.get("object");
         if (objectAmount == null) {
@@ -2187,6 +2208,18 @@ if (WL && WL.Object) {
 
     WL.Object.prototype._pp_clamp = function (value, min, max) {
         return Math.min(Math.max(value, min), max);
+    };
+
+    WL.Object.prototype._pp_reserveObjects = function (count, componentAmountMap) {
+        let objectsToReserve = componentAmountMap.get("object") * count;
+        componentAmountMap.delete("object");
+
+        let componentsToReserve = {};
+        for (let [componentName, componentCount] of componentAmountMap.entries()) {
+            componentsToReserve[componentName] = componentCount * count;
+        }
+
+        WL.scene.reserveObjects(objectsToReserve, componentsToReserve);
     };
 
     for (let key in WL.Object.prototype) {
