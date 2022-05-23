@@ -19,12 +19,13 @@ PP.DebugLine = class DebugLine {
         this._myAutoRefresh = autoRefresh;
 
         this._buildLine();
+        this.setVisible(false);
     }
 
     setVisible(visible) {
         if (this._myVisible != visible) {
             this._myVisible = visible;
-            this._myLineRootObject.pp_setActiveHierarchy(visible);
+            this._myLineRootObject.pp_setActive(visible);
         }
     }
 
@@ -70,31 +71,14 @@ PP.DebugLine = class DebugLine {
     }
 
     _refreshLine(dt) {
-        this._myLineRootObject.setTranslationWorld(this._myStartPosition);
-        this._myLineObject.resetTranslationRotation();
-        this._myLineObject.resetScaling();
+        this._myLineRootObject.pp_setPosition(this._myStartPosition);
 
-        this._myLineObject.scale([this._myThickness / 2, this._myThickness / 2, this._myLength / 2]);
+        this._myLineObject.pp_resetTransformLocal();
 
-        let forward = this._myLineObject.pp_getForward();
-        let angle = forward.vec3_angleRadians(this._myDirection);
-        if (angle > 0.0001) {
-            let rotationAxis = [];
-            forward.vec3_cross(forward, this._myDirection, rotationAxis);
-            rotationAxis.vec3_normalize(rotationAxis);
-            let rotationQuat = [];
-            rotationQuat.quat_fromAxis(rotationAxis, angle);
+        this._myLineObject.pp_scaleObject([this._myThickness / 2, this._myThickness / 2, this._myLength / 2]);
 
-            rotationQuat.quat_mul(this._myLineObject.transformWorld, rotationQuat);
-            rotationQuat.quat_normalize(rotationQuat);
-            this._myLineObject.rotateObject(rotationQuat);
-        }
-
-        forward = this._myLineObject.pp_getForward();
-        let position = this._myLineObject.pp_getPosition();
-        forward.vec3_scale(this._myLength / 2, forward);
-        forward.vec3_add(position, position);
-        this._myLineObject.setTranslationWorld(position);
+        this._myLineObject.pp_lookTo(this._myDirection);
+        this._myLineObject.pp_translateObject([0, 0, this._myLength / 2]);
 
         this._myLineMesh.material.color = this._myColor;
     }

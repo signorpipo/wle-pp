@@ -1,3 +1,6 @@
+// HandPose transform is local to the player
+// you can use setPlayerObject if you want the HandPose to return the transform in world space
+
 PP.HandPose = class HandPose {
 
     constructor(handedness, fixForward = true, forceEmulatedVelocities = false) {
@@ -22,12 +25,33 @@ PP.HandPose = class HandPose {
         this._myIsLinearVelocityEmulated = true;
         this._myIsAngularVelocityEmulated = true;
 
-        // Out Data
+        this._myPlayerObject = null;
+
+        // out data
+        this._myOutPosition = PP.vec3_create();
+
+        this._myOutTransformMatrix = PP.mat4_create();
+        this._myOutTransformQuat = PP.quat2_create();
+
+        this._myOutPlayerTransformMatrix = PP.mat4_create();
+        this._myOutPlayerTransformQuat = PP.quat2_create();
+        this._myOutPlayerRotationQuat = PP.quat_create();
+
         this._myOutAxes = [PP.vec3_create(), PP.vec3_create(), PP.vec3_create()];
         this._myOutRotationQuat = PP.quat_create();
 
+        this._myOutRotationDegrees = PP.vec3_create();
         this._myOutRotationRadians = PP.vec3_create();
         this._myOutPrevRotationRadians = PP.vec3_create();
+    }
+
+    // if the player object is set, the transform will be converted using it as a parent, otherwise the transform will be local to the player
+    setPlayerObject(playerObject) {
+        this._myPlayerObject = playerObject;
+    }
+
+    getPlayerObject() {
+        return this._myPlayerObject;
     }
 
     getReferenceSpace() {
@@ -39,7 +63,11 @@ PP.HandPose = class HandPose {
     }
 
     getPosition() {
-        return this._myPosition;
+        if (this._myPlayerObject == null) {
+            return this._myPosition;
+        }
+
+        return this._myPosition.vec3_convertPositionToWorld(this._myPlayerObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutPosition);
     }
 
     getRotation() {
@@ -48,6 +76,7 @@ PP.HandPose = class HandPose {
 
     getRotationDegrees() {
         return this.getRotationQuat().quat_toDegrees();
+
     }
 
     getRotationRadians() {
@@ -63,7 +92,11 @@ PP.HandPose = class HandPose {
             out.quat_rotateAxisRadians(Math.PI, out.quat_getAxes(this._myOutAxes)[1], out);
         }
 
-        return out;
+        if (this._myPlayerObject == null) {
+            return out;
+        }
+
+        return out.quat_toWorld(this._myPlayerObject.pp_getRotationQuat(this._myOutPlayerRotationQuat), out);
     }
 
     getTransform() {
@@ -71,15 +104,25 @@ PP.HandPose = class HandPose {
     }
 
     getTransformMatrix() {
-        return PP.mat4_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
+        return this.getTransformQuat().quat2_toMatrix(this._myOutTransformMatrix);
     }
 
     getTransformQuat() {
-        return PP.quat2_fromPositionRotationQuat(this._myPosition, this.getRotationQuat());
+        this._myOutTransformQuat.quat2_setPositionRotationQuat(this._myPosition, this.getRotationQuat());
+
+        if (this._myPlayerObject == null) {
+            return this._myOutTransformQuat;
+        }
+
+        return this._myOutTransformQuat.pp_toWorld(this._myPlayerObject.pp_getTransformQuat(this._myOutPlayerTransformQuat), this._myOutTransformQuat);
     }
 
     getLinearVelocity() {
-        return this._myLinearVelocity.pp_clone();
+        if (this._myPlayerObject == null) {
+            return this._myLinearVelocity;
+        }
+
+        return this._myLinearVelocity.vec3_convertDirectionToWorld(this._myPlayerObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutPosition);
     }
 
     getAngularVelocity() {
@@ -87,11 +130,15 @@ PP.HandPose = class HandPose {
     }
 
     getAngularVelocityDegrees() {
-        return this._myAngularVelocity.vec3_toDegrees();
+        this.getAngularVelocityRadians().vec3_toDegrees(this._myOutRotationDegrees);
     }
 
     getAngularVelocityRadians() {
-        return this._myAngularVelocity.pp_clone();
+        if (this._myPlayerObject == null) {
+            return this._myAngularVelocity;
+        }
+
+        return this._myAngularVelocity.vec3_convertDirectionToWorld(this._myPlayerObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutRotationRadians);
     }
 
     isValid() {
@@ -170,7 +217,7 @@ PP.HandPose = class HandPose {
 
                 this._myIsValid = true;
             } else {
-                //keep previous position and rotation but reset velocity because reasons
+                // keep previous position and rotation but reset velocity because reasons
 
                 this._myLinearVelocity[0] = 0;
                 this._myLinearVelocity[1] = 0;
@@ -185,7 +232,7 @@ PP.HandPose = class HandPose {
                 this._myIsAngularVelocityEmulated = true;
             }
         } else {
-            //keep previous position and rotation but reset velocity because reasons
+            // keep previous position and rotation but reset velocity because reasons
 
             this._myLinearVelocity[0] = 0;
             this._myLinearVelocity[1] = 0;

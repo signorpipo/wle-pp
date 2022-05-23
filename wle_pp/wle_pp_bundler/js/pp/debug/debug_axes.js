@@ -16,9 +16,7 @@ PP.DebugAxes = class DebugAxes {
         this._myDirty = false;
         this._myAutoRefresh = autoRefresh;
 
-        this._myDebugRight.setVisible(this._myVisible);
-        this._myDebugUp.setVisible(this._myVisible);
-        this._myDebugForward.setVisible(this._myVisible);
+        this.setVisible(false);
 
         this._myDebugRight.setAutoRefresh(false);
         this._myDebugUp.setAutoRefresh(false);

@@ -1,4 +1,5 @@
 WL.registerComponent('pp-grabber-hand', {
+    _myPlayerObject: { type: WL.Type.Object }, // this is needed to convert the hand velocity in world space, actually not needed if _myThrowVelocitySource is grabbable
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both', 'both_exclusive'], default: 'squeeze' }, // both_exclusive means u can use both buttons but you have to use the same button you grabbed with to throw
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
@@ -15,6 +16,7 @@ WL.registerComponent('pp-grabber-hand', {
 }, {
     init: function () {
         this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
+        this._myHandPose.setPlayerObject(this._myPlayerObject);
 
         this._myGrabbables = [];
 
@@ -40,6 +42,7 @@ WL.registerComponent('pp-grabber-hand', {
         this._myThrowCallbacks = new Map();     // Signature: callback(grabber, grabbable)
 
         this._myDebugActive = false;
+        this._myDebugLines = [];
     },
     start: function () {
         if (this._myHandedness == PP.HandednessIndex.LEFT) {
@@ -54,10 +57,8 @@ WL.registerComponent('pp-grabber-hand', {
         this._myHandPose.start();
 
         if (this._myDebugActive) {
-            this._myDebugLines = [];
             for (let i = 0; i < this._myLinearVelocityHistorySize; i++) {
                 let line = new PP.DebugLine();
-                line.setVisible(false);
                 this._myDebugLines.push(line);
             }
         }
@@ -202,7 +203,7 @@ WL.registerComponent('pp-grabber-hand', {
         }
     },
     _updateLinearVelocityHistory() {
-        this._myHandLinearVelocityHistory.unshift(this._myHandPose.getLinearVelocity());
+        this._myHandLinearVelocityHistory.unshift(this._myHandPose.getLinearVelocity().pp_clone());
         this._myHandLinearVelocityHistory.pop();
 
         for (let grabbable of this._myGrabbables) {
@@ -210,7 +211,7 @@ WL.registerComponent('pp-grabber-hand', {
         }
     },
     _updateAngularVelocityHistory() {
-        this._myHandAngularVelocityHistory.unshift(this._myHandPose.getAngularVelocityRadians());
+        this._myHandAngularVelocityHistory.unshift(this._myHandPose.getAngularVelocityRadians().pp_clone());
         this._myHandAngularVelocityHistory.pop();
 
         for (let grabbable of this._myGrabbables) {

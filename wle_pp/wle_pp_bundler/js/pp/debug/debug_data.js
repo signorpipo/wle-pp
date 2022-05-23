@@ -6,7 +6,7 @@ WL.registerComponent('pp-debug-data', {
         PP.myDebugData.myRootObject = WL.scene.addObject(null);
 
         PP.myDebugData.myCubeMesh = this._myCubeMesh;
-        PP.myDebugData.myFlatMaterial = this._myFlatMaterial;
+        PP.myDebugData.myFlatMaterial = this._myFlatMaterial.clone();
     },
 });
 

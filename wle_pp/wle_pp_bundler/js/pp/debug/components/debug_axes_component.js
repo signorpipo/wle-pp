@@ -4,6 +4,7 @@ WL.registerComponent("pp-debug-axes", {
     },
     start: function () {
         this._myDebugAxes = new PP.DebugAxes();
+        this._myDebugAxes.setVisible(true);
     },
     update: function (dt) {
         this._myDebugAxes.setTransform(this.object.transformWorld);

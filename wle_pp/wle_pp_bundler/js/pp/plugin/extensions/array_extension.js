@@ -90,8 +90,8 @@
             - quat_isNormalized
             - quat_length
             - quat_mul
-            - quat_getAxis  / quat_getAngle
-            - quat_getAxes
+            - quat_getAxis          / quat_getAxes          /  quat_getAngle
+            - quat_toWorld          / quat_toLocal
             ○ quat_fromRadians      / quat_fromDegrees      / quat_fromAxis
             - quat_toRadians        / quat_toDegrees        / quat_toMatrix
             - quat_rotate           / quat_rotateAxis       / quat_addRotation      / quat_subRotation
@@ -909,6 +909,20 @@ Array.prototype.quat_getAxes = function () {
     };
 }();
 
+Array.prototype.quat_toWorld = function (parentQuat, out = glMatrix.quat.create()) {
+    glMatrix.quat.mul(out, parentQuat, this);
+    return out;
+};
+
+Array.prototype.quat_toLocal = function () {
+    let invertQuat = glMatrix.quat.create();
+    return function (parentQuat, out = glMatrix.quat.create()) {
+        glMatrix.quat.conjugate(invertQuat, parentQuat);
+        glMatrix.quat.mul(out, invertQuat, this);
+        return out;
+    };
+}();
+
 Array.prototype.quat_fromAxis = function (angle, axis) {
     return this.quat_fromAxisDegrees(angle, axis);
 };
@@ -1175,19 +1189,19 @@ Array.prototype.quat2_getAxes = function () {
     };
 }();
 
+Array.prototype.quat2_toWorld = function (parentTransformQuat, out = glMatrix.quat2.create()) {
+    glMatrix.quat2.mul(out, parentTransformQuat, this);
+    return out;
+};
+
 Array.prototype.quat2_toLocal = function () {
     let invertQuat = glMatrix.quat2.create();
-    return function (parentTransform, out = glMatrix.quat2.create()) {
-        glMatrix.quat2.conjugate(invertQuat, parentTransform);
+    return function (parentTransformQuat, out = glMatrix.quat2.create()) {
+        glMatrix.quat2.conjugate(invertQuat, parentTransformQuat);
         glMatrix.quat2.mul(out, invertQuat, this);
         return out;
     };
 }();
-
-Array.prototype.quat2_toWorld = function (parentTransform, out = glMatrix.quat2.create()) {
-    glMatrix.quat2.mul(out, parentTransform, this);
-    return out;
-};
 
 Array.prototype.quat2_toMatrix = function (out = glMatrix.mat4.create()) {
     glMatrix.mat4.fromQuat2(out, this);
@@ -1422,16 +1436,16 @@ Array.prototype.mat4_toWorld = function () {
     let inverseScale = glMatrix.vec3.create();
     let one = glMatrix.vec3.create();
     glMatrix.vec3.set(one, 1, 1, 1);
-    return function (parentTransform, out = glMatrix.mat4.create()) {
-        if (parentTransform.mat4_hasUniformScale()) {
-            glMatrix.mat4.mul(out, parentTransform, this);
+    return function (parentTransformMatrix, out = glMatrix.mat4.create()) {
+        if (parentTransformMatrix.mat4_hasUniformScale()) {
+            glMatrix.mat4.mul(out, parentTransformMatrix, this);
         } else {
             glMatrix.vec3.set(position, this[12], this[13], this[14]);
-            position.vec3_convertPositionToWorldMatrix(parentTransform, position);
+            position.vec3_convertPositionToWorldMatrix(parentTransformMatrix, position);
 
-            glMatrix.mat4.getScaling(scale, parentTransform);
+            glMatrix.mat4.getScaling(scale, parentTransformMatrix);
             glMatrix.vec3.divide(inverseScale, one, scale);
-            glMatrix.mat4.scale(convertTransform, parentTransform, inverseScale);
+            glMatrix.mat4.scale(convertTransform, parentTransformMatrix, inverseScale);
 
             glMatrix.mat4.mul(out, convertTransform, this);
             glMatrix.mat4.scale(out, out, scale);
@@ -1452,17 +1466,17 @@ Array.prototype.mat4_toLocal = function () {
     let inverseScale = glMatrix.vec3.create();
     let one = glMatrix.vec3.create();
     glMatrix.vec3.set(one, 1, 1, 1);
-    return function (parentTransform, out = glMatrix.mat4.create()) {
-        if (parentTransform.mat4_hasUniformScale()) {
-            glMatrix.mat4.invert(convertTransform, parentTransform);
+    return function (parentTransformMatrix, out = glMatrix.mat4.create()) {
+        if (parentTransformMatrix.mat4_hasUniformScale()) {
+            glMatrix.mat4.invert(convertTransform, parentTransformMatrix);
             glMatrix.mat4.mul(out, convertTransform, this);
         } else {
             glMatrix.vec3.set(position, this[12], this[13], this[14]);
-            position.vec3_convertPositionToLocalMatrix(parentTransform, position);
+            position.vec3_convertPositionToLocalMatrix(parentTransformMatrix, position);
 
-            glMatrix.mat4.getScaling(scale, parentTransform);
+            glMatrix.mat4.getScaling(scale, parentTransformMatrix);
             glMatrix.vec3.divide(inverseScale, one, scale);
-            glMatrix.mat4.scale(convertTransform, parentTransform, inverseScale);
+            glMatrix.mat4.scale(convertTransform, parentTransformMatrix, inverseScale);
 
             glMatrix.mat4.invert(convertTransform, convertTransform);
             glMatrix.mat4.mul(out, convertTransform, this);
