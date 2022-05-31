@@ -1,3 +1,5 @@
+import { vec3, mat4 } from 'gl-matrix';
+
 if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices["cursor"]]) {
 
     // Modified Functions
@@ -368,6 +370,9 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             if (!e.isPrimary || e.button !== 0) return;
             const bounds = e.target.getBoundingClientRect();
             const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
+
+            this.hoverBehaviour(rayHit, false); //simulate a move before the click, to clean previous hover/unhover
+
             this.isDown = true;
             this.isRealDown = true;
 
@@ -383,6 +388,8 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             if (!e.isPrimary || e.button !== 0) return;
             const bounds = e.target.getBoundingClientRect();
             const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
+
+            this.hoverBehaviour(rayHit, false); //simulate a move before the click, to clean previous hover/unhover
 
             if (!this.isDown) {
                 this.isUpWithNoDown = true;
