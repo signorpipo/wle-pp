@@ -62,6 +62,9 @@
             - vec_round     / vec_floor         / vec_ceil      / vec_clamp
             - vec_log       / vec_error         / vec_warn      
 
+        VECTOR 2:
+            - vec3_length
+
         VECTOR 3:
             ○ vec3_set      / vec3_copy     / vec3_zero
             - vec3_clone 
@@ -71,13 +74,14 @@
             - vec3_distance
             - vec3_add      / vec3_sub          / vec3_mul      / vec3_div      / vec3_scale
             - vec3_transformQuat
-            - vec3_componentAlongAxis           / vec3_removeComponentAlongAxis
+            - vec3_componentAlongAxis           / vec3_removeComponentAlongAxis / vec3_valueAlongAxis  
             - vec3_isConcordant
             - vec3_convertPositionToWorld       / vec3_convertPositionToLocal 
             - vec3_convertDirectionToWorld      / vec3_convertDirectionToLocal   
             - vec3_angle
             - vec3_toRadians        / vec3_toDegrees            / vec3_toQuat       / vec3_toMatrix
             - vec3_rotate           / vec3_rotateAxis           / vec3_rotateAround / vec3_rotateAroundAxis
+            - vec3_lookTo           / vec3_lookToPivoted
             - vec3_addRotation
             - vec3_log       / vec3_error         / vec3_warn     
             
@@ -90,9 +94,10 @@
             - quat_isNormalized
             - quat_length
             - quat_mul
-            - quat_getAxis          / quat_getAxes          /  quat_getAngle
+            - quat_getAxis          /  quat_getAngle
+            - quat_getAxes          / quat_getRight    / quat_getUp   / quat_getForward  / quat_getLeft    / quat_getDown   / quat_getBackward
             - quat_toWorld          / quat_toLocal
-            ○ quat_fromRadians      / quat_fromDegrees      / quat_fromAxis
+            ○ quat_fromRadians      / quat_fromDegrees      / quat_fromAxis / quat_fromAxes
             - quat_toRadians        / quat_toDegrees        / quat_toMatrix
             - quat_rotate           / quat_rotateAxis       / quat_addRotation      / quat_subRotation
             - quat_rotationTo
@@ -102,13 +107,14 @@
             - quat2_normalize
             - quat2_getPosition     / quat2_getRotation
             ○ quat2_setPositionRotation
-            - quat2_getAxes
+            - quat2_getAxes     / quat2_getRight    / quat2_getUp   / quat2_getForward  / quat2_getLeft    / quat2_getDown   / quat2_getBackward
             - quat2_toWorld     / quat2_toLocal
             - quat2_toMatrix
             ○ quat2_fromMatrix
 
         MATRIX 3:
             - mat3_toDegrees    / mat3_toRadians    / mat3_toQuat
+            - mat3_fromAxes
 
         MATRIX 4:
             ○ mat4_copy         / mat4_identity
@@ -117,7 +123,7 @@
             - mat4_getPosition  / mat4_getRotation  / mat4_getScale
             ○ mat4_setPosition  / mat4_setRotation  / mat4_setScale
             ○ mat4_setPositionRotation      / mat4_setPositionRotationScale
-            - mat4_getAxes
+            - mat4_getAxes     / mat4_getRight    / mat4_getUp   / mat4_getForward  / mat4_getLeft    / mat4_getDown   / mat4_getBackward
             - mat4_toWorld      / mat4_toLocal
             - mat4_hasUniformScale
             - mat4_toQuat
@@ -366,13 +372,21 @@ Float32Array.prototype.vec_equals = function (vector) {
     return equals;
 };
 
-// VECTOR 3
+// VECTOR 2
 
 // glMatrix Bridge
 
 Float32Array.prototype.vec3_normalize = function (out = glMatrix.vec3.create()) {
     glMatrix.vec3.normalize(out, this);
     return out;
+};
+
+// VECTOR 3
+
+// glMatrix Bridge
+
+Float32Array.prototype.vec2_length = function () {
+    return glMatrix.vec2.length(this);
 };
 
 Float32Array.prototype.vec3_copy = function (vector) {
@@ -518,6 +532,18 @@ Float32Array.prototype.vec3_componentAlongAxis = function (axis, out = glMatrix.
     glMatrix.vec3.scale(out, out, length);
     return out;
 };
+
+Float32Array.prototype.vec3_valueAlongAxis = function () {
+    let componentAlong = glMatrix.vec3.create();
+    return function (axis) {
+        this.vec3_componentAlongAxis(axis, componentAlong);
+        let value = componentAlong.vec3_length();
+        if (!componentAlong.vec3_isConcordant(axis)) {
+            value = -value;
+        }
+        return value;
+    };
+}();
 
 Float32Array.prototype.vec3_removeComponentAlongAxis = function () {
     let componentAlong = glMatrix.vec3.create();
@@ -819,6 +845,79 @@ Float32Array.prototype.vec3_radiansToMatrix = function () {
     };
 }();
 
+Float32Array.prototype.vec3_lookTo = function (direction, out) {
+    return this.vec3_lookToDegrees(direction, out);
+};
+
+Float32Array.prototype.vec3_lookToDegrees = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (direction, out = glMatrix.vec3.create()) {
+        this.vec3_lookToQuat(direction, rotationQuat);
+        rotationQuat.quat_toDegrees(out);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_lookToRadians = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (direction, out = glMatrix.vec3.create()) {
+        this.vec3_lookToQuat(direction, rotationQuat);
+        rotationQuat.quat_toRadians(out);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_lookToQuat = function () {
+    let rotationAxis = glMatrix.vec3.create();
+    return function (direction, out = glMatrix.quat.create()) {
+        this.vec3_cross(direction, rotationAxis);
+        rotationAxis.vec3_normalize(rotationAxis);
+        let signedAngle = this.vec3_angleSigned(direction, rotationAxis);
+        out.quat_fromAxis(signedAngle, rotationAxis);
+        out.quat_normalize(out);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_lookToPivoted = function (direction, pivotAxis, out) {
+    return this.vec3_lookToPivotedDegrees(direction, pivotAxis, out);
+};
+
+Float32Array.prototype.vec3_lookToPivotedDegrees = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (direction, pivotAxis, out = glMatrix.vec3.create()) {
+        this.vec3_lookToPivotedQuat(direction, pivotAxis, rotationQuat);
+        rotationQuat.quat_toDegrees(out);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_lookToPivotedRadians = function () {
+    let rotationQuat = glMatrix.quat.create();
+    return function (direction, pivotAxis, out = glMatrix.vec3.create()) {
+        this.vec3_lookToPivotedQuat(direction, pivotAxis, rotationQuat);
+        rotationQuat.quat_toRadians(out);
+        return out;
+    };
+}();
+
+Float32Array.prototype.vec3_lookToPivotedQuat = function () {
+    let thisFlat = glMatrix.vec3.create();
+    let directionFlat = glMatrix.vec3.create();
+    let rotationAxis = glMatrix.vec3.create();
+    return function (direction, pivotAxis, out = glMatrix.quat.create()) {
+        this.vec3_removeComponentAlongAxis(pivotAxis, thisFlat);
+        direction.vec3_removeComponentAlongAxis(pivotAxis, directionFlat);
+
+        thisFlat.vec3_cross(directionFlat, rotationAxis);
+        rotationAxis.vec3_normalize(rotationAxis);
+        let signedAngle = thisFlat.vec3_angleSigned(directionFlat, rotationAxis);
+        out.quat_fromAxis(signedAngle, rotationAxis);
+        out.quat_normalize(out);
+        return out;
+    };
+}();
+
 // VECTOR 4
 
 // glMatrix Bridge
@@ -892,22 +991,67 @@ Float32Array.prototype.quat_getAngle = function () {
     };
 }();
 
-Float32Array.prototype.quat_getAxes = function () {
+Float32Array.prototype.quat_getAxes = function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
+    this.quat_getLeft(out[0]);
+    this.quat_getUp(out[1]);
+    this.quat_getForward(out[2]);
+
+    return out;
+};
+
+Float32Array.prototype.quat_getForward = function () {
     let rotationMatrix = glMatrix.mat3.create();
-    return function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
+    return function (out = glMatrix.vec3.create()) {
         glMatrix.mat3.fromQuat(rotationMatrix, this);
 
-        glMatrix.vec3.set(out[0], rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
-        glMatrix.vec3.set(out[1], rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
-        glMatrix.vec3.set(out[2], rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
-
-        glMatrix.vec3.normalize(out[0], out[0]);
-        glMatrix.vec3.normalize(out[1], out[1]);
-        glMatrix.vec3.normalize(out[2], out[2]);
+        glMatrix.vec3.set(out, rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
+        glMatrix.vec3.normalize(out, out);
 
         return out;
     };
 }();
+
+Float32Array.prototype.quat_getBackward = function (out) {
+    out = this.quat_getForward(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.quat_getLeft = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function (out = glMatrix.vec3.create()) {
+        glMatrix.mat3.fromQuat(rotationMatrix, this);
+
+        glMatrix.vec3.set(out, rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
+        glMatrix.vec3.normalize(out, out);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_getRight = function (out) {
+    out = this.quat_getLeft(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.quat_getUp = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function (out = glMatrix.vec3.create()) {
+        glMatrix.mat3.fromQuat(rotationMatrix, this);
+
+        glMatrix.vec3.set(out, rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
+        glMatrix.vec3.normalize(out, out);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat_getDown = function (out) {
+    out = this.quat_getUp(out);
+    out.vec3_negate(out);
+    return out;
+};
 
 Float32Array.prototype.quat_toWorld = function (parentQuat, out = glMatrix.quat.create()) {
     glMatrix.quat.mul(out, parentQuat, this);
@@ -936,6 +1080,14 @@ Float32Array.prototype.quat_fromAxisRadians = function (angle, axis) {
     glMatrix.quat.setAxisAngle(this, axis, angle);
     return this;
 };
+
+Float32Array.prototype.quat_fromAxes = function () {
+    let mat3 = glMatrix.mat3.create();
+    return function (leftAxis, upAxis, forwardAxis) {
+        mat3.mat3_fromAxes(leftAxis, upAxis, forwardAxis);
+        return mat3.mat3_toQuat(this);
+    };
+}();
 
 // New Functions
 
@@ -1114,7 +1266,7 @@ Float32Array.prototype.quat2_identity = function () {
 
 Float32Array.prototype.quat2_getPosition = function (out = glMatrix.vec3.create()) {
     glMatrix.quat2.getTranslation(out, this);
-    return this;
+    return out;
 };
 
 Float32Array.prototype.quat2_getRotation = function (out) {
@@ -1138,7 +1290,7 @@ Float32Array.prototype.quat2_getRotationRadians = function () {
 
 Float32Array.prototype.quat2_getRotationQuat = function (out = glMatrix.quat.create()) {
     glMatrix.quat.copy(out, this);
-    return this;
+    return out;
 };
 
 Float32Array.prototype.quat2_setPositionRotation = function (position, rotation) {
@@ -1172,22 +1324,67 @@ Float32Array.prototype.quat2_setPositionRotationQuat = function (position, rotat
 
 // New Functions
 
-Float32Array.prototype.quat2_getAxes = function () {
+Float32Array.prototype.quat2_getAxes = function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
+    this.quat2_getLeft(out[0]);
+    this.quat2_getUp(out[1]);
+    this.quat2_getForward(out[2]);
+
+    return out;
+};
+
+Float32Array.prototype.quat2_getForward = function () {
     let rotationMatrix = glMatrix.mat3.create();
-    return function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
+    return function (out = glMatrix.vec3.create()) {
         glMatrix.mat3.fromQuat(rotationMatrix, this);
 
-        glMatrix.vec3.set(out[0], rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
-        glMatrix.vec3.set(out[1], rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
-        glMatrix.vec3.set(out[2], rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
-
-        glMatrix.vec3.normalize(out[0], out[0]);
-        glMatrix.vec3.normalize(out[1], out[1]);
-        glMatrix.vec3.normalize(out[2], out[2]);
+        glMatrix.vec3.set(out, rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
+        glMatrix.vec3.normalize(out, out);
 
         return out;
     };
 }();
+
+Float32Array.prototype.quat2_getBackward = function (out) {
+    out = this.quat2_getForward(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.quat2_getLeft = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function (out = glMatrix.vec3.create()) {
+        glMatrix.mat3.fromQuat(rotationMatrix, this);
+
+        glMatrix.vec3.set(out, rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
+        glMatrix.vec3.normalize(out, out);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat2_getRight = function (out) {
+    out = this.quat2_getLeft(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.quat2_getUp = function () {
+    let rotationMatrix = glMatrix.mat3.create();
+    return function (out = glMatrix.vec3.create()) {
+        glMatrix.mat3.fromQuat(rotationMatrix, this);
+
+        glMatrix.vec3.set(out, rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
+        glMatrix.vec3.normalize(out, out);
+
+        return out;
+    };
+}();
+
+Float32Array.prototype.quat2_getDown = function (out) {
+    out = this.quat2_getUp(out);
+    out.vec3_negate(out);
+    return out;
+};
 
 Float32Array.prototype.quat2_toWorld = function (parentTransformQuat, out = glMatrix.quat2.create()) {
     glMatrix.quat2.mul(out, parentTransformQuat, this);
@@ -1240,6 +1437,14 @@ Float32Array.prototype.mat3_toRadians = function () {
 Float32Array.prototype.mat3_toQuat = function (out = glMatrix.quat.create()) {
     glMatrix.quat.fromMat3(out, this);
     return out;
+};
+
+Float32Array.prototype.mat3_fromAxes = function (leftAxis, upAxis, forwardAxis) {
+    glMatrix.mat3.set(this,
+        leftAxis[0], leftAxis[1], leftAxis[2],
+        upAxis[0], upAxis[1], upAxis[2],
+        forwardAxis[0], forwardAxis[1], forwardAxis[2]);
+    return this;
 };
 
 //MATRIX 4
@@ -1418,14 +1623,46 @@ Float32Array.prototype.mat4_setPositionRotationQuat = function (position, rotati
 };
 
 Float32Array.prototype.mat4_getAxes = function (out = [glMatrix.vec3.create(), glMatrix.vec3.create(), glMatrix.vec3.create()]) {
-    glMatrix.vec3.set(out[0], this[0], this[1], this[2]);
-    glMatrix.vec3.set(out[1], this[4], this[5], this[6]);
-    glMatrix.vec3.set(out[2], this[8], this[9], this[10]);
+    this.mat4_getLeft(out[0]);
+    this.mat4_getUp(out[1]);
+    this.mat4_getForward(out[2]);
 
-    glMatrix.vec3.normalize(out[0], out[0]);
-    glMatrix.vec3.normalize(out[1], out[1]);
-    glMatrix.vec3.normalize(out[2], out[2]);
+    return out;
+};
 
+Float32Array.prototype.mat4_getForward = function (out = glMatrix.vec3.create()) {
+    glMatrix.vec3.set(out, this[8], this[9], this[10]);
+    glMatrix.vec3.normalize(out, out);
+    return out;
+};
+
+Float32Array.prototype.mat4_getBackward = function (out) {
+    out = this.mat4_getForward(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.mat4_getLeft = function (out = glMatrix.vec3.create()) {
+    glMatrix.vec3.set(out, this[0], this[1], this[2]);
+    glMatrix.vec3.normalize(out, out);
+    return out;
+};
+
+Float32Array.prototype.mat4_getRight = function (out) {
+    out = this.mat4_getLeft(out);
+    out.vec3_negate(out);
+    return out;
+};
+
+Float32Array.prototype.mat4_getUp = function (out = glMatrix.vec3.create()) {
+    glMatrix.vec3.set(out, this[4], this[5], this[6]);
+    glMatrix.vec3.normalize(out, out);
+    return out;
+};
+
+Float32Array.prototype.mat4_getDown = function (out) {
+    out = this.mat4_getUp(out);
+    out.vec3_negate(out);
     return out;
 };
 

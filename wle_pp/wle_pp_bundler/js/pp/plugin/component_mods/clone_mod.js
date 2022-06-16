@@ -1,10 +1,13 @@
 if (WL && WL.Object) {
 
-    WL.MeshComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
+    WL.MeshComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
+        let clonedComponent = clonedObject.pp_addComponent(this.type);
+        clonedComponent.active = this.active;
+
         if (deepCloneParams.isDeepCloneComponentVariable("mesh", "material")) {
-            clone.material = this.material.clone();
+            clonedComponent.material = this.material.clone();
         } else {
-            clone.material = this.material;
+            clonedComponent.material = this.material;
         }
 
         if (deepCloneParams.isDeepCloneComponentVariable("mesh", "mesh")) {
@@ -19,60 +22,79 @@ if (WL && WL.Object) {
                 indexData[i] = this.mesh.indexData[i];
             }
 
-            clone.mesh = new WL.Mesh({
+            clonedComponent.mesh = new WL.Mesh({
                 indexData: indexData,
                 indexType: WL.MeshIndexType.UnsignedInt,
                 vertexData: vertexData
             });
         } else {
-            clone.mesh = this.mesh;
+            clonedComponent.mesh = this.mesh;
         }
 
-        clone.skin = this.skin;
+        clonedComponent.skin = this.skin;
+
+        return clonedComponent;
     };
 
-    WL.CollisionComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
-        clone.collider = this.collider;
-        clone.extents = this.extents.slice(0);
-        clone.group = this.group;
+    WL.CollisionComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
+        let clonedComponent = clonedObject.pp_addComponent(this.type);
+        clonedComponent.active = this.active;
+
+        clonedComponent.collider = this.collider;
+        clonedComponent.extents = this.extents.slice(0);
+        clonedComponent.group = this.group;
+
+        return clonedComponent;
     };
 
-    WL.TextComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
+    WL.TextComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
+        let clonedComponent = clonedObject.pp_addComponent(this.type);
+        clonedComponent.active = this.active;
+
         if (deepCloneParams.isDeepCloneComponent("text")) {
-            clone.text = this.text.slice(0);
+            clonedComponent.text = this.text.slice(0);
         } else {
-            clone.text = this.text;
+            clonedComponent.text = this.text;
         }
 
         if (deepCloneParams.isDeepCloneComponentVariable("text", "material")) {
-            clone.material = this.material.clone();
+            clonedComponent.material = this.material.clone();
         } else {
-            clone.material = this.material;
+            clonedComponent.material = this.material;
         }
 
-        clone.alignment = this.alignment;
-        clone.justification = this.justification;
+        clonedComponent.alignment = this.alignment;
+        clonedComponent.justification = this.justification;
+
+        return clonedComponent;
     };
 
     // #TODO not completed
-    WL.PhysXComponent.prototype.pp_clone = function (clone, deepCloneParams, extraData) {
-        clone.angularDamping = this.angularDamping;
-        clone.angularVelocity = this.angularVelocity.slice(0);
+    WL.PhysXComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
+        let clonedComponent = clonedObject.pp_addComponent(this.type);
+        clonedComponent.active = this.active;
 
-        clone.dynamicFriction = this.dynamicFriction;
+        clonedComponent.angularDamping = this.angularDamping;
+        clonedComponent.angularVelocity = this.angularVelocity.slice(0);
 
-        clone.extents = this.extents.slice(0);
+        clonedComponent.dynamicFriction = this.dynamicFriction;
 
-        clone.kinematic = this.kinematic;
+        clonedComponent.extents = this.extents.slice(0);
 
-        clone.linearDamping = this.linearDamping;
-        clone.linearVelocity = this.linearVelocity.slice(0);
+        clonedComponent.kinematic = this.kinematic;
 
-        clone.mass = this.mass;
-        clone.restitution = this.restitution;
-        clone.shape = this.shape;
-        clone.static = this.static;
-        clone.staticFriction = this.staticFriction;
+        clonedComponent.linearDamping = this.linearDamping;
+        clonedComponent.linearVelocity = this.linearVelocity.slice(0);
+
+        clonedComponent.mass = this.mass;
+        clonedComponent.restitution = this.restitution;
+        clonedComponent.static = this.static;
+        clonedComponent.staticFriction = this.staticFriction;
+
+        clonedComponent.shape = this.shape;
+        clonedComponent.shapeData = this.shapeData;
+
+        return clonedComponent;
     };
 
     Object.defineProperty(WL.MeshComponent.prototype, "pp_clone", { enumerable: false });

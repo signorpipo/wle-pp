@@ -32,15 +32,15 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
     }
 
     getCollisions() {
-        return this._myCollisions.pp_clone();
+        return this._myCollisions;
     }
 
     getCollisionsStart() {
-        return this._myCollisionsStart.pp_clone();
+        return this._myCollisionsStart;
     }
 
     getCollisionsEnd() {
-        return this._myCollisionsEnd.pp_clone();
+        return this._myCollisionsEnd;
     }
 
     setActive(active) {

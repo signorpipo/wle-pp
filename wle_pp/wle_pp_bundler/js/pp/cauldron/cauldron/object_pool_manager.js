@@ -30,8 +30,16 @@ PP.ObjectPoolManager = class ObjectPoolManager {
         return this._myPoolMap.get(poolID);
     }
 
+    hasPool(poolID) {
+        return this._myPoolMap.has(poolID);
+    }
+
     getObject(poolID) {
-        return this._myPoolMap.get(poolID).get();
+        if (this._myPoolMap.has(poolID)) {
+            return this._myPoolMap.get(poolID).get();
+        }
+
+        return null;
     }
 
     releaseObject(poolID, object) {
@@ -51,7 +59,7 @@ PP.ObjectPoolParams = class ObjectPoolParams {
 
         //These extra functions can be used if u want to use the pool with objects that are not from WLE (WL.Object)
         this.myCloneCallback = undefined;                       //Signature: callback(object, cloneParams) -> clonedObject
-        this.mySetActiveCallback = undefined;                   //Signature: callback(object)
+        this.mySetActiveCallback = undefined;                   //Signature: callback(object, active)
         this.myEqualsCallback = undefined;                      //Signature: callback(firstObject, secondObject) -> bool
         this.myOptimizeObjectsAllocationCallback = undefined;   //Signature: callback(object, numberOfObjectsToAllocate)
 
@@ -113,7 +121,7 @@ PP.ObjectPool = class ObjectPool {
         if (this._myObjectPoolParams.myOptimizeObjectsAllocation) {
             if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback) {
                 this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myPrototype, size);
-            } else {
+            } else if (this._myPrototype.pp_reserveObjectsHierarchy != null) {
                 this._myPrototype.pp_reserveObjectsHierarchy(size);
             }
         }
@@ -166,6 +174,8 @@ PP.ObjectPool = class ObjectPool {
             equals = first.pp_equals(second);
         } else if (first.equals != null) {
             equals = first.equals(second);
+        } else {
+            equals = first == second;
         }
 
         return equals;

@@ -41,4 +41,12 @@ PP.TimerState = class TimerState extends PP.State {
             this._myTransitionArgs = transitionArgs;
         }
     }
+
+    init(fsm, state, duration = null, transitionToPerformOnEnd = null, ...transitionArgs) {
+        this._myTimer.start(duration);
+        if (transitionToPerformOnEnd != null) {
+            this._myTransitionToPerformOnEnd = transitionToPerformOnEnd;
+            this._myTransitionArgs = transitionArgs;
+        }
+    }
 };

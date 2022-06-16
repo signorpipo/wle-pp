@@ -1,6 +1,5 @@
-// HeadPose transform is local to the player
-// you can use setPlayerObject if you want the HandPose to return the transform in world space
-
+// HeadPose transform is local by default (as if the parent/reference object was the identity transform)
+// you can use setReferenceObject if you want the HandPose to return the transform in world space
 PP.HeadPose = class HeadPose {
 
     constructor(fixForward = true, forceEmulatedVelocities = false) {
@@ -8,6 +7,7 @@ PP.HeadPose = class HeadPose {
         this._myForceEmulatedVelocities = forceEmulatedVelocities;
 
         this._myReferenceSpace = null;
+        this._myReferenceObject = null;
 
         this._myPosition = [0, 0, 0];
         this._myRotation = [0, 0, 0, 1];
@@ -21,8 +21,6 @@ PP.HeadPose = class HeadPose {
         this._myIsValid = false;
         this._myIsLinearVelocityEmulated = true;
         this._myIsAngularVelocityEmulated = true;
-
-        this._myPlayerObject = null;
 
         // out data
         this._myOutPosition = PP.vec3_create();
@@ -42,13 +40,14 @@ PP.HeadPose = class HeadPose {
         this._myOutPrevRotationRadians = PP.vec3_create();
     }
 
-    // if the player object is set, the transform will be converted using it as a parent, otherwise the transform will be local to the player
-    setPlayerObject(playerObject) {
-        this._myPlayerObject = playerObject;
+    // if the reference object is set, the transform will be converted using it as a parent,
+    // otherwise the transform will be local, as if the parent/reference object was the identity transform
+    setReferenceObject(referenceObject) {
+        this._myReferenceObject = referenceObject;
     }
 
-    getPlayerObject() {
-        return this._myPlayerObject;
+    getReferenceObject() {
+        return this._myReferenceObject;
     }
 
     getReferenceSpace() {
@@ -60,11 +59,11 @@ PP.HeadPose = class HeadPose {
     }
 
     getPosition() {
-        if (this._myPlayerObject == null) {
+        if (this._myReferenceObject == null) {
             return this._myPosition;
         }
 
-        return this._myPosition.vec3_convertPositionToWorld(this._myPlayerObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutPosition);
+        return this._myPosition.vec3_convertPositionToWorld(this._myReferenceObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutPosition);
     }
 
     getRotation() {
@@ -89,11 +88,11 @@ PP.HeadPose = class HeadPose {
             out.quat_rotateAxisRadians(Math.PI, out.quat_getAxes(this._myOutAxes)[1], out);
         }
 
-        if (this._myPlayerObject == null) {
+        if (this._myReferenceObject == null) {
             return out;
         }
 
-        return out.quat_toWorld(this._myPlayerObject.pp_getRotationQuat(this._myOutPlayerRotationQuat), out);
+        return out.quat_toWorld(this._myReferenceObject.pp_getRotationQuat(this._myOutPlayerRotationQuat), out);
     }
 
     getTransform() {
@@ -107,19 +106,19 @@ PP.HeadPose = class HeadPose {
     getTransformQuat() {
         this._myOutTransformQuat.quat2_setPositionRotationQuat(this._myPosition, this.getRotationQuat());
 
-        if (this._myPlayerObject == null) {
+        if (this._myReferenceObject == null) {
             return this._myOutTransformQuat;
         }
 
-        return this._myOutTransformQuat.pp_toWorld(this._myPlayerObject.pp_getTransformQuat(this._myOutPlayerTransformQuat), this._myOutTransformQuat);
+        return this._myOutTransformQuat.pp_toWorld(this._myReferenceObject.pp_getTransformQuat(this._myOutPlayerTransformQuat), this._myOutTransformQuat);
     }
 
     getLinearVelocity() {
-        if (this._myPlayerObject == null) {
+        if (this._myReferenceObject == null) {
             return this._myLinearVelocity;
         }
 
-        return this._myLinearVelocity.vec3_convertDirectionToWorld(this._myPlayerObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutPosition);
+        return this._myLinearVelocity.vec3_convertDirectionToWorld(this._myReferenceObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutPosition);
     }
 
     getAngularVelocity() {
@@ -131,11 +130,11 @@ PP.HeadPose = class HeadPose {
     }
 
     getAngularVelocityRadians() {
-        if (this._myPlayerObject == null) {
+        if (this._myReferenceObject == null) {
             return this._myAngularVelocity;
         }
 
-        return this._myAngularVelocity.vec3_convertDirectionToWorld(this._myPlayerObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutRotationRadians);
+        return this._myAngularVelocity.vec3_convertDirectionToWorld(this._myReferenceObject.pp_getTransform(this._myOutPlayerTransformMatrix), this._myOutRotationRadians);
     }
 
     isValid() {

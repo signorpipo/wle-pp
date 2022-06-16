@@ -1,24 +1,40 @@
+PP.DebugLineParams = class DebugLineParams {
+
+    constructor() {
+        this.myStart = [0, 0, 0];
+        this.myDirection = [0, 0, 1];
+        this.myLength = 0;
+
+        this.myThickness = 0.005;
+
+        this.myColor = [0.7, 0.7, 0.7, 1];
+
+        this.myType = PP.DebugDrawObjectType.LINE;
+    }
+
+    setStartEnd(start, end) {
+        end.vec3_sub(start, this.myDirection);
+        this.myLength = this.myDirection.vec3_length();
+        this.myDirection.vec3_normalize(this.myDirection);
+        this.myStart = start;
+
+        return this;
+    }
+};
+
 PP.DebugLine = class DebugLine {
 
-    constructor(autoRefresh = true) {
+    constructor(params = new PP.DebugLineParams()) {
+        this._myParams = params;
+
         this._myLineRootObject = null;
-        this._myLineObject = null;
-
-        this._myStartPosition = [0, 0, 0];
-        this._myDirection = [0, 0, 1];
-        this._myLength = 0;
-
-        this._myThickness = 0.005;
-
-        this._myColor = [0.7, 0.7, 0.7, 1];
 
         this._myVisible = true;
-
         this._myDirty = false;
+        this._myAutoRefresh = true;
 
-        this._myAutoRefresh = autoRefresh;
-
-        this._buildLine();
+        this._build();
+        this._refresh();
         this.setVisible(false);
     }
 
@@ -33,57 +49,63 @@ PP.DebugLine = class DebugLine {
         this._myAutoRefresh = autoRefresh;
     }
 
-    setStartEnd(start, end) {
-        let direction = [];
-        end.vec3_sub(start, direction);
-        let length = direction.vec3_length();
-        direction.vec3_normalize(direction);
+    getParams() {
+        return this._myParams;
+    }
 
-        this.setStartDirectionLength(start, direction, length);
+    setParams(params) {
+        this._myParams = params;
+        this._markDirty();
+    }
+
+    setStartEnd(start, end) {
+        this._myParams.setStartEnd(start, end);
+        this._markDirty();
     }
 
     setStartDirectionLength(start, direction, length) {
-        this._myStartPosition.vec3_copy(start);
-        this._myDirection.vec3_copy(direction);
-        this._myLength = length;
+        this._myParams.myStart = start;
+        this._myParams.myDirection = direction;
+        this._myParams.myLength = length;
 
         this._markDirty();
     }
 
     setColor(color) {
-        this._myColor.vec4_copy(color);
+        this._myParams.myColor = color;
 
         this._markDirty();
     }
 
     setThickness(thickness) {
-        this._myThickness = thickness;
+        this._myParams.myThickness = thickness;
 
         this._markDirty();
     }
 
     update(dt) {
         if (this._myDirty) {
-            this._refreshLine(dt);
+            this._refresh();
 
             this._myDirty = false;
         }
     }
 
-    _refreshLine(dt) {
-        this._myLineRootObject.pp_setPosition(this._myStartPosition);
+    _refresh() {
+        this._myLineRootObject.pp_setPosition(this._myParams.myStart);
 
-        this._myLineObject.pp_resetTransformLocal();
+        this._myLineObject.pp_resetPositionLocal();
+        this._myLineObject.pp_resetScaleLocal();
 
-        this._myLineObject.pp_scaleObject([this._myThickness / 2, this._myThickness / 2, this._myLength / 2]);
+        this._myLineObject.pp_scaleObject([this._myParams.myThickness / 2, this._myParams.myThickness / 2, this._myParams.myLength / 2]);
 
-        this._myLineObject.pp_lookTo(this._myDirection);
-        this._myLineObject.pp_translateObject([0, 0, this._myLength / 2]);
+        this._myLineObject.pp_lookTo(this._myParams.myDirection);
+        this._myLineObject.pp_translateObject([0, 0, this._myParams.myLength / 2]);
 
-        this._myLineMesh.material.color = this._myColor;
+        this._myLineMesh.material.color = this._myParams.myColor;
     }
 
-    _buildLine() {
+    _build() {
         this._myLineRootObject = WL.scene.addObject(PP.myDebugData.myRootObject);
         this._myLineObject = WL.scene.addObject(this._myLineRootObject);
         this._myLineObject.scale([0.01, 0.01, 0.01]);
@@ -97,7 +119,23 @@ PP.DebugLine = class DebugLine {
         this._myDirty = true;
 
         if (this._myAutoRefresh) {
-            this._refreshLine(0);
+            this.update(0);
         }
+    }
+
+    clone() {
+        let clonedParams = new PP.DebugLineParams();
+        clonedParams.myStart.pp_copy(this._myParams.myStart);
+        clonedParams.myDirection.pp_copy(this._myParams.myDirection);
+        clonedParams.myLength = this._myParams.myLength;
+        clonedParams.myThickness = this._myParams.myThickness;
+        clonedParams.myColor.pp_copy(this._myParams.myColor);
+
+        let clone = new PP.DebugLine(clonedParams);
+        clone.setAutoRefresh(this._myAutoRefresh);
+        clone.setVisible(this._myVisible);
+        clone._myDirty = this._myDirty;
+
+        return clone;
     }
 };

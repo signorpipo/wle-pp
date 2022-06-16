@@ -3,7 +3,7 @@
 require('./pp/pp.js');
 
 //	AUDIO
-require('./pp/audio/audio_listener.js');
+require('./pp/audio/spatial_audio_listener.js');
 require('./pp/audio/audio_manager_component.js');
 require('./pp/audio/audio_manager.js');
 require('./pp/audio/audio_player.js');
@@ -11,6 +11,9 @@ require('./pp/audio/audio_setup.js');
 require('./pp/audio/mute_all.js');
 
 //	CAULDRON
+require('./pp/cauldron/benchmarks/max_physx.js');
+require('./pp/cauldron/benchmarks/max_visible_triangles.js');
+
 require('./pp/cauldron/cauldron/number_over_value.js');
 require('./pp/cauldron/cauldron/object_pool_manager.js');
 require('./pp/cauldron/cauldron/physx_collision_collector.js');
@@ -18,9 +21,6 @@ require('./pp/cauldron/cauldron/save_manager.js');
 require('./pp/cauldron/cauldron/timer.js');
 
 require('./pp/cauldron/components/clear_console_on_session.js');
-require('./pp/cauldron/components/player_height.js');
-require('./pp/cauldron/components/set_hand_transform.js');
-require('./pp/cauldron/components/set_head_transform.js');
 require('./pp/cauldron/components/set_hierarchy_active.js');
 
 require('./pp/cauldron/fsm/fsm.js');
@@ -36,10 +36,13 @@ require('./pp/cauldron/utils/text_utils.js');
 require('./pp/cauldron/utils/xr_utils.js');
 
 //	DEBUG
-require('./pp/debug/components/debug_axes_component.js');
-require('./pp/debug/debug_axes.js');
-require('./pp/debug/debug_data.js');
+require('./pp/debug/debug_manager.js');
+require('./pp/debug/debug_transform.js');
 require('./pp/debug/debug_line.js');
+require('./pp/debug/debug_arrow.js');
+require('./pp/debug/debug_raycast.js');
+require('./pp/debug/components/debug_transform_component.js');
+require('./pp/debug/components/debug_manager_component.js');
 
 //	GAMEPLAY
 require('./pp/gameplay/grab_throw/grabbable.js');
@@ -47,8 +50,6 @@ require('./pp/gameplay/grab_throw/grabber_hand.js');
 
 //	INPUT
 require('./pp/input/cauldron/finger_cursor.js');
-require('./pp/input/cauldron/hand_pose.js');
-require('./pp/input/cauldron/head_pose.js');
 require('./pp/input/cauldron/input_types.js');
 require('./pp/input/cauldron/input_utils.js');
 
@@ -58,10 +59,22 @@ require('./pp/input/gamepad/gamepad_manager.js');
 require('./pp/input/gamepad/gamepad_utils.js');
 require('./pp/input/gamepad/gamepad.js');
 
+require('./pp/input/pose/hand_pose.js');
+require('./pp/input/pose/head_pose.js');
+require('./pp/input/pose/components/set_player_height.js');
+require('./pp/input/pose/components/set_hand_local_transform.js');
+require('./pp/input/pose/components/set_head_local_transform.js');
+require('./pp/input/pose/components/set_non_vr_head_local_transform.js');
+require('./pp/input/pose/components/get_player_objects.js');
+require('./pp/input/pose/components/copy_hand_transform.js');
+require('./pp/input/pose/components/copy_head_transform.js');
+require('./pp/input/pose/components/copy_non_vr_head_transform.js');
+
 //	PLUGIN
 require('./pp/plugin/component_mods/clone_mod.js');
 require('./pp/plugin/component_mods/cursor_mod.js');
 require('./pp/plugin/component_mods/cursor_target_mod.js');
+require('./pp/plugin/component_mods/mouse_look_mod.js');
 
 require('./pp/plugin/extensions/object_extension.js');
 require('./pp/plugin/extensions/array_extension.js');

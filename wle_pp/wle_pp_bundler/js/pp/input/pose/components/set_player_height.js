@@ -1,4 +1,4 @@
-WL.registerComponent("pp-player-height", {
+WL.registerComponent("pp-set-player-height", {
     _myEyesHeight: { type: WL.Type.Float, default: 1.65 }
 }, {
     start: function () {

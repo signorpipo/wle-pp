@@ -1,4 +1,4 @@
-WL.registerComponent('pp-set-hand-transform', {
+WL.registerComponent('pp-set-hand-local-transform', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myFixForward: { type: WL.Type.Bool, default: true }
 }, {

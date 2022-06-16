@@ -757,13 +757,13 @@ if (WL && WL.Object) {
 
     //Translate Axis
 
-    WL.Object.prototype.pp_translateAxis = function (direction, amount) {
-        this.pp_translateAxisWorld(direction, amount);
+    WL.Object.prototype.pp_translateAxis = function (amount, direction) {
+        this.pp_translateAxisWorld(amount, direction);
     };
 
     WL.Object.prototype.pp_translateAxisWorld = function () {
         let translation = glMatrix.vec3.create();
-        return function (direction, amount) {
+        return function (amount, direction) {
             glMatrix.vec3.scale(translation, direction, amount);
             this.pp_translateWorld(translation);
         };
@@ -771,7 +771,7 @@ if (WL && WL.Object) {
 
     WL.Object.prototype.pp_translateAxisLocal = function () {
         let translation = glMatrix.vec3.create();
-        return function (direction, amount) {
+        return function (amount, direction) {
             glMatrix.vec3.scale(translation, direction, amount);
             this.pp_translateLocal(translation);
         };
@@ -779,7 +779,7 @@ if (WL && WL.Object) {
 
     WL.Object.prototype.pp_translateAxisObject = function () {
         let translation = glMatrix.vec3.create();
-        return function (direction, amount) {
+        return function (amount, direction) {
             glMatrix.vec3.scale(translation, direction, amount);
             this.pp_translateObject(translation);
         };
@@ -1903,7 +1903,7 @@ if (WL && WL.Object) {
                 let objectsToCloneData = [];
                 objectsToCloneData.push([this.parent, this]);
 
-                //Create object hierarchy
+                // Create the object hierarchy
                 let objectsToCloneComponentsData = [];
                 while (objectsToCloneData.length > 0) {
                     let cloneData = objectsToCloneData.shift();
@@ -1944,7 +1944,7 @@ if (WL && WL.Object) {
                     }
                 }
 
-                //Create components
+                // Get the components to clone
                 let componentsToCloneData = [];
                 while (objectsToCloneComponentsData.length > 0) {
                     let cloneData = objectsToCloneComponentsData.shift();
@@ -1966,22 +1966,33 @@ if (WL && WL.Object) {
                             }
 
                             if (cloneComponent) {
-                                //Not managing the fact that inactive components from editor haven't called start yet, but clones do, since there is no way to know
-                                let clonedComponent = currentClonedObject.pp_addComponent(component.type);
-                                clonedComponent.active = component.active;
-                                componentsToCloneData.push([component, clonedComponent]);
+                                componentsToCloneData.push([component, currentClonedObject]);
                             }
                         }
                     }
                 }
 
-                //Now that all the hierarchy is completed (with components) we can clone them
+                // Clone the components
+                let componentsToPostProcessData = [];
+                while (componentsToCloneData.length > 0) {
+                    let cloneData = componentsToCloneData.shift();
+                    let componentToClone = cloneData[0];
+                    let currentClonedObject = cloneData[1];
+
+                    let clonedComponent = componentToClone.pp_clone(currentClonedObject, params.myDeepCloneParams, params.myExtraData);
+                    if (componentToClone.pp_clonePostProcess != null) {
+                        componentsToPostProcessData.push([componentToClone, clonedComponent]);
+                    }
+                }
+
+                // Clone post process
+                // Can be useful if you have to get some data from other components in the hierarchy which have now been created
                 while (componentsToCloneData.length > 0) {
                     let cloneData = componentsToCloneData.shift();
                     let componentToClone = cloneData[0];
                     let currentClonedComponent = cloneData[1];
 
-                    componentToClone.pp_clone(currentClonedComponent, params.myDeepCloneParams, params.myExtraData);
+                    componentToClone.pp_clonePostProcess(currentClonedComponent, params.myDeepCloneParams, params.myExtraData);
                 }
             }
 
