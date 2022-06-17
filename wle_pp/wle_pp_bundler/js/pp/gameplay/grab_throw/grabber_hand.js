@@ -16,7 +16,7 @@ WL.registerComponent('pp-grabber-hand', {
 }, {
     init: function () {
         this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
-        this._myHandPose.setPlayerObject(this._myPlayerObject);
+        this._myHandPose.setReferenceObject(this._myPlayerObject);
 
         this._myGrabbables = [];
 
