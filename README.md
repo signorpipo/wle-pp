@@ -47,6 +47,7 @@ For the extensions (functions added to already existing objects), the names usua
 ## Table Of Contents  
 - [Audio](#audio)
 - [Cauldron](#cauldron-1)
+  * [Benchmarks](#benchmarks)
   * [Components](#components)
   * [FSM](#fsm)
   * [Utils](#utils)
@@ -68,8 +69,8 @@ For the extensions (functions added to already existing objects), the names usua
 A collection of classes and components to manage audio files, creating audio players for a specific audio file, adding an audio listener and some other utilities.
 
 List of features:
-- [`pp-audio-listener`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/audio/audio_listener.js)
-  * component that will work as an audio listener in the scene
+- [`pp-spatial-audio-listener`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/audio/spatial_audio_listener.js)
+  * component that will work as a spatial audio listener in the scene
   * usually added on the player head 
 - [`PP.AudioSetup`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/audio/audio_setup.js)
   * class that let you specify which audio file to load and its settings like volume or pitch
@@ -120,6 +121,17 @@ audioPlayer.play();
 
 A generic collection of features.
 
+### Benchmarks
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/benchmarks)
+
+A set of utilities to test the performance and capabilities of the Wonderland Engine.
+
+List of features:
+- [`pp-benchmark-max-physx`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/benchmarks/max_physx.js)
+  * test how many physx objects/raycasts u can have/perform in the scene at the same time
+- [`pp-benchmark-max-visible-triangles`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/benchmarks/max_visible_triangles.js)
+  * test how many visible triangles u can have in the scene at the same time
+
 ### Cauldron
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/cauldron)
 
@@ -169,16 +181,9 @@ List of components:
 - [`pp-clear-console-on-session`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/clear_console_on_session.js)
   * u can add this to the scene so that when u press VR and enter the session, the console is cleared
   * useful to clear the console from everything related to the initialization that you may have already checked before entering
-- [`pp-player-height`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/player_height.js)
-  * used on the pivot of the player let you specify its height, when the feature `local-floor` is disabled or not supported
-  * the component does nothing if `local-floor` is enabled and supported
-  * this let you fallback on a default height if not supported or when testing
 - [`pp-set-hierarchy-active`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/set_hierarchy_active.js)
   * component that let you specify if the hierarchy of an object should be set active or not
   * useful to deactive a tree of objects that you prefer to be visible in the editor
-- [`pp-set-head-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/set_head_transform.js) / [`pp-set-hand-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/set_hand_transform.js)
-  * component the set the transform of its object to the one of the head/hand
-  * fix forward can be used to make it so that the head/hands have the forward in the direction they look at since WebXR by default make it so the forward is in the opposite direction
 
 ### FSM
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm)
@@ -268,18 +273,35 @@ List of features:
 A collection of classes and components to help with debugging, like showing in real time the position and orientation of an object.
 
 List of features:
+- [`PP.DebugManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_manager.js)
+  * let you easily display debug objects in the scene with the draw functionalities
 - [`PP.DebugLine`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_line.js)
   * you can specify a start and end position and it will visualize it as a line
-  * useful to show the direction of an object, or as a base building block to build more complex debugs
-- [`PP.DebugAxes`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_axes.js)
-  * show the position and orientation of a transform
-  * useful to know if an object is in the right place and it is looking toward the right direction
-- [`pp-debug-data`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_data.js)
+- [`PP.DebugArrow`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_arrow.js)
+  * you can specify a start and end position and it will visualize it as an arrow toward the end position
+- [`PP.DebugPoint`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_point.js)
+  * you can specify a position and it will display a point on it with a given radius
+- [`PP.DebugTransform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_transform.js)
+  * show the position, orientation and scale of a transform
+- [`PP.DebugRaycast`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_raycast.js)
+  * display the result of a raycast
+
+#### Components
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug/components)
+  
+List of components:
+- [`pp-debug-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/components/debug_manager_component.js)
   * a component that takes care of initializing the debug data used by the debug features
+  * it creates and updates a debug manager
+- [`pp-debug-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/components/debug_transform_component.js)
+  * a handy component to add the debug transform debug to an existing object in the scene  
   
 ### How To
-The main thing to do is to initialize the `PP.myDebugData` field, needed to get the materials and meshes used to create the debugs.  
-You can easily do that with the `pp-debug-data` component, already added to the Scene in this project.
+You first need to:
+- initialize the `PP.myDebugData` field, needed to get the materials and meshes used to create the debugs
+- create and update a `PP.DebugManager`
+
+You can easily do that by using the `pp-debug-manager` component.
 
 Beside that, u just have to create the debug u want and set the data for it:
 ```js
@@ -288,12 +310,20 @@ debugLine.setColor([1, 0, 0, 1]);
 debugLine.setStartEnd([0, 0, 0],[0, 0, 1]); 
 ```
 
-#### Components
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug/components)
-  
-List of components:
-- [`pp-debug-axes`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/components/debug_axes_component.js)
-  * a handy component to add the debug axes debug to an existing object in the scene
+You can also use the draw feature of the `PP.DebugManager` to quickly draw a debug with a given lifetime, so that it will be automatically removed:
+```js
+let debugLineParams = new PP.debugLineParams();
+debugLineParams.myStart = [0,0,0];
+debugLineParams.myDirection = [0,0,1];
+debugLineParams.myLength = 0.1;
+debugLineParams.myColor = [0, 0, 1, 1];
+
+let lifetime = 1; // 1 second
+
+PP.myDebugManager.draw(debugLineParams, lifetime); // PP.myDebugManager is setup by the pp-debug-manager component
+```
+
+By default the `lifetime` is set to 0, so that the debug will be displayed for just 1 frame.
 
 ## Gameplay
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay)
@@ -318,16 +348,20 @@ List of features:
 #### How To
 The configuration is pretty straight forward:
 1. Enable the `Physics` feature, that u can find under the `Project Settings`
-2. Add a `pp-grabber-hand` component to one of the hands of the player
-	  * Make sure the `handedness` parameter of the component matches the hand one
-	  * The component can also be added to a child of the hand if you want the grab detection to have an offset from the hand position
-3. Add a `physx` component on the same object
-	  * The `physx` must be `kinematic` (if you select `trigger`, be sure to select `kinematic` first if it disappear, otherwise the object will fall)
-	  * The `physx` should be set as `trigger` for the hand, otherwise it will push the objects that collide with it
-4. Add a `pp-grabbable` component on the object you want to grab
-	  * In this case, the component must be added on the object itself, it can't be a child
-5. Add a `physx` component on the same object
-	  * Be sure that the groups/block flags match the one u used for the hand
+1. Add the following components somewhere in your scene:
+	- [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_manager_component.js)
+	- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/get_player_objects.js)
+	- If you are using one of the [wle_ppefault](https://github.com/SignorPipo/wle_ppefault) default projects you will find these components already setup in the scene
+3. Add a `pp-grabber-hand` component to one of the hands of the player
+	  - Make sure the `handedness` parameter of the component matches the hand one
+	  - The component can also be added to a child of the hand if you want the grab detection to have an offset from the hand position
+4. Add a `physx` component on the same object
+	  - The `physx` must be `kinematic` (if you select `trigger`, be sure to select `kinematic` first if it disappear, otherwise the object will fall)
+	  - The `physx` should be set as `trigger` for the hand, otherwise it will push the objects that collide with it
+5. Add a `pp-grabbable` component on the object you want to grab
+	  - In this case, the component must be added on the object itself, it can't be a child
+6. Add a `physx` component on the same object
+	  - Be sure that the groups/block flags match the one u used for the hand
 
 ## Input
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input)
@@ -340,8 +374,6 @@ A collection of classes and component to read inputs like head/hand transform or
 List of features:
 - [`pp-finger-cursor`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/finger_cursor.js)
   * u can use this component to add a cursor on the tip of the index finger that can interact with WLE `cursor-target`
-- [`PP.HeadPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/head_pose.js) / [`PP.HandPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/hand_pose.js)
-  * two classes that let you retrieve the pose of the head/hand, that is their transform and their linear and angular velocities
 - [`Input Types`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_types.js)
   * a collection of enums used to specify the type of the input, like the handedness or if it is a gamepad or a hand
 - [`PP.InputUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_utils.js)
@@ -376,6 +408,26 @@ List of features:
 - [`pp-gamepad-animator`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_animator.js)
   * component that let you animate a controller, that is buttons and axes move in the game like the one in real life
   * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
+
+### Pose
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/pose)
+
+List of features:
+- [`PP.HeadPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/head_pose.js) / [`PP.HandPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/hand_pose.js)
+  * two classes that let you retrieve the pose of the head/hand, that is their transform and their linear and angular velocities
+- [`pp-set-player-height`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_player_height.js)
+  * used on the pivot of the player let you specify its height, when the feature `local-floor` is disabled or not supported
+  * the component does nothing if `local-floor` is enabled and supported
+  * this let you fallback on a default height if not supported or when testing
+- [`pp-set-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_vr_head_local_transform.js) / [`pp-set-non-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_non_vr_head_local_transform.js) / [`pp-set-hand-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_hand_local_transform.js)
+  * component that set the local transform of its object to the one of the head/hand, relative to the real space (reference space)
+  * fix forward can be used to make it so that the head/hand has the forward in the direction they look at since WebXR by default make it so the forward is in the opposite direction
+- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/inpacut/pose/components/get_player_objects.js)
+  * Setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
+  * This variable can be used to easily obtain the player objects/transforms in the code
+- [`pp-copy-head-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_head_transform.js) / [`pp-copy-hand-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_hand_transform.js)
+  * component that set the world transform of its object to the one of the head/hand
+  * it needs a head/hand to be already setup in the scene
 
 ## Plugin
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/plugin)
@@ -499,10 +551,10 @@ If you click on the `P` button on the bottom left u can pin the easy tune so tha
 
 These are the variables that you can edit with the easy tune widget.
 You can find different types:
-	- Bool / Array of Bool
-	- Number / Array of Number
-	- Int / Array of Int
-	- Transform
+- Bool / Array of Bool
+- Number / Array of Number
+- Int / Array of Int
+- Transform
   
 The easy tune variables are basically just a wrapper of their own type, but also offer some extra functionalities like a callback triggered when the variable change.
 
@@ -526,6 +578,17 @@ PP.myEasyTuneVariables.set("Speed", 9.25);
 You can also set a specific variable as the active one in the widget (the one displayed when the widget is active):
 ```js
 PP.setEasyTuneWidgetActiveVariable("Speed");
+```
+
+Easy Tune Variables examples:
+```js
+/* Number */        PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 1.00, 0.01, 3));
+/* Number Array */  PP.myEasyTuneVariables.add(new PP.EasyTuneNumberArray("Float Array", [1.00,2.00,3.00], 0.01, 3));
+/* Int */           PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 1, 1));
+/* Int Array */     PP.myEasyTuneVariables.add(new PP.EasyTuneIntArray("Int Array", [1,2,3], 1));
+/* Bool */          PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
+/* Bool Array */    PP.myEasyTuneVariables.add(new PP.EasyTuneBoolArray("Bool Array", [false, true, false]));
+/* Transform */     PP.myEasyTuneVariables.add(new PP.EasyTuneTransform("Transform", PP.mat4_create(), true));
 ```
 
 #### Easy Object Tuners
