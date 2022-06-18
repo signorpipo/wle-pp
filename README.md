@@ -4,7 +4,9 @@ A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp).
 
-Some of the features you can get with this library:
+A collection of Wonderland Engine default projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
+
+Some of the features that you can get with this library:
   - Object Extension
     * add to the WLE object lots of functions that make the object interface more cohesive and complete
   - Gamepad
@@ -56,6 +58,7 @@ For the extensions (functions added to already existing objects), the names usua
   * [Grab & Throw](#grab--throw)
 - [Input](#input)
   * [Gamepad](#gamepad)
+  * [Pose](#pose)
 - [Plugin](#plugin)
   * [Component Mods](#component-mods)
   * [Extensions](#extensions)
