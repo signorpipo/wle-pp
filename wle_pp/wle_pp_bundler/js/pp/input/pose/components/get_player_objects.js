@@ -2,10 +2,11 @@ WL.registerComponent("pp-get-player-objects", {
     _myPlayer: { type: WL.Type.Object },
     _myPlayerPivot: { type: WL.Type.Object },   // if u don't have a pivot under the player you set this to null, by default will be the same as the player
     _myNonVRCamera: { type: WL.Type.Object },
-    _myNonVRHead: { type: WL.Type.Object },
-    _myVRHead: { type: WL.Type.Object },
     _myEyeLeft: { type: WL.Type.Object },
     _myEyeRight: { type: WL.Type.Object },
+    _myHead: { type: WL.Type.Object },
+    _myNonVRHead: { type: WL.Type.Object },
+    _myVRHead: { type: WL.Type.Object },
     _myHandLeft: { type: WL.Type.Object },
     _myHandRight: { type: WL.Type.Object }
 }, {

@@ -263,7 +263,10 @@
                 "js/pp/tool/easy_tune",
                 "js/pp/tool/easy_tune/easy_object_tuners",
                 "js/pp/tool/easy_tune/easy_tune_widgets",
-                "js/pp/tool/widget_frame"
+                "js/pp/tool/widget_frame",
+                "js/pp/cauldron/benchmarks",
+                "js/pp/input/pose",
+                "js/pp/input/pose/components"
             ]
         },
         "runtime": {

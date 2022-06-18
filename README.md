@@ -419,8 +419,8 @@ List of features:
   * used on the pivot of the player let you specify its height, when the feature `local-floor` is disabled or not supported
   * the component does nothing if `local-floor` is enabled and supported
   * this let you fallback on a default height if not supported or when testing
-- [`pp-set-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_vr_head_local_transform.js) / [`pp-set-non-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_non_vr_head_local_transform.js) / [`pp-set-hand-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_hand_local_transform.js)
-  * component that set the local transform of its object to the one of the head/hand, relative to the real space (reference space)
+- [`pp-set-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_head_local_transform.js) / [`pp-set-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_vr_head_local_transform.js) / [`pp-set-non-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_non_vr_head_local_transform.js) / [`pp-set-hand-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_hand_local_transform.js)
+  * components that set the local transform of their object to the one of the head/hand, relative to the real space (reference space)
   * fix forward can be used to make it so that the head/hand has the forward in the direction they look at since WebXR by default make it so the forward is in the opposite direction
 - [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/inpacut/pose/components/get_player_objects.js)
   * Setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
