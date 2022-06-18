@@ -16,8 +16,10 @@ WL.registerComponent("pp-set-player-height", {
             let localPosition = this.object.pp_getPositionLocal();
             if (PP.XRUtils.isReferenceSpaceLocalFloor()) {
                 this.object.pp_setPositionLocal([localPosition[0], 0, localPosition[2]]);
-            } else {
+            } else if (!PP.XRUtils.isDeviceEmulated()) {
                 this.object.pp_setPositionLocal([localPosition[0], this._myEyesHeight, localPosition[2]]);
+            } else {
+                this.object.pp_setPositionLocal([localPosition[0], 0, localPosition[2]]);
             }
         }
     },

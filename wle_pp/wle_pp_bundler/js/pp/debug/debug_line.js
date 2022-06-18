@@ -108,7 +108,6 @@ PP.DebugLine = class DebugLine {
     _build() {
         this._myLineRootObject = WL.scene.addObject(PP.myDebugData.myRootObject);
         this._myLineObject = WL.scene.addObject(this._myLineRootObject);
-        this._myLineObject.scale([0.01, 0.01, 0.01]);
 
         this._myLineMesh = this._myLineObject.addComponent('mesh');
         this._myLineMesh.mesh = PP.myDebugData.myCubeMesh;

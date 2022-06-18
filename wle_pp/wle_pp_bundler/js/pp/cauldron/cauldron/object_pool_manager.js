@@ -109,8 +109,20 @@ PP.ObjectPool = class ObjectPool {
     }
 
     increasePercentage(percentage) {
-        let amount = Math.ceil((this._myBusyObjects.length + this._myAvailableObjects.length) * percentage);
+        let amount = Math.ceil((this.getSize()) * percentage);
         this._addToPool(amount, false);
+    }
+
+    getSize() {
+        return this._myBusyObjects.length + this._myAvailableObjects.length;
+    }
+
+    getAvailableSize() {
+        return this._myAvailableObjects.length;
+    }
+
+    getBusySize() {
+        return this._myAvailableObjects.length;
     }
 
     _addToPool(size, log) {

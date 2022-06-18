@@ -8,9 +8,10 @@ WL.registerComponent('pp-easy-tune', {
 }, {
     init: function () {
         //Examples
-        //Number: PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Speed", 10.32, 0.01, 3));
-        //Int: PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Lives", 3, 1));
-        //Bool: PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Run", false));
+        //Number: PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 1.00, 0.01, 3));
+        //Int: PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 1, 1));
+        //Bool: PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
+        //Transform: PP.myEasyTuneVariables.add(new PP.EasyTuneTransform("Transform", PP.mat4_create(), true));
 
         PP.myEasyTuneVariables = new PP.EasyTuneVariables();
 

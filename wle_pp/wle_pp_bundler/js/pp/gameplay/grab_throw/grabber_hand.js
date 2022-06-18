@@ -1,5 +1,4 @@
 WL.registerComponent('pp-grabber-hand', {
-    _myPlayerObject: { type: WL.Type.Object }, // this is needed to convert the hand velocity in world space, actually not needed if _myThrowVelocitySource is grabbable
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myGrabButton: { type: WL.Type.Enum, values: ['select', 'squeeze', 'both', 'both_exclusive'], default: 'squeeze' }, // both_exclusive means u can use both buttons but you have to use the same button you grabbed with to throw
     _mySnapOnPivot: { type: WL.Type.Bool, default: false },
@@ -16,7 +15,6 @@ WL.registerComponent('pp-grabber-hand', {
 }, {
     init: function () {
         this._myHandPose = new PP.HandPose(PP.InputUtils.getHandednessByIndex(this._myHandedness));
-        this._myHandPose.setReferenceObject(this._myPlayerObject);
 
         this._myGrabbables = [];
 
@@ -54,6 +52,7 @@ WL.registerComponent('pp-grabber-hand', {
         this._myPhysX = this.object.pp_getComponent('physx');
         this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysX, true);
 
+        this._myHandPose.setReferenceObject(PP.myPlayerObjects.myPlayerPivot);
         this._myHandPose.start();
 
         if (this._myDebugActive) {

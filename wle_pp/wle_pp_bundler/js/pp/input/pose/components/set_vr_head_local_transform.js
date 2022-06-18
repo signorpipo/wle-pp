@@ -1,4 +1,4 @@
-WL.registerComponent('pp-set-head-local-transform', {
+WL.registerComponent('pp-set-vr-head-local-transform', {
     _myFixForward: { type: WL.Type.Bool, default: true }
 }, {
     init: function () {

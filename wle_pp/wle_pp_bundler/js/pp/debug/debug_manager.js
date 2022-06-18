@@ -2,7 +2,8 @@ PP.DebugDrawObjectType = {
     LINE: 0,
     TRANSFORM: 1,
     ARROW: 2,
-    RAYCAST: 3
+    POINT: 3,
+    RAYCAST: 4
 };
 
 PP.DebugManager = class DebugManager {
@@ -91,6 +92,19 @@ PP.DebugManager = class DebugManager {
         }
     }
 
+    allocateDraw(debugDrawObjectType, amount) {
+        if (!this._myDebugDrawPool.hasPool(debugDrawObjectType)) {
+            this._addDebugDrawObjectTypeToPool(debugDrawObjectType);
+        }
+
+        let pool = this._myDebugDrawPool.getPool(debugDrawObjectType);
+
+        let difference = pool.getAvailableSize() - amount;
+        if (difference < 0) {
+            pool.increase(-difference);
+        }
+    }
+
     _updateDraw(dt) {
         for (let debugDrawObject of this._myDebugDrawObjectToShow) {
             debugDrawObject.setVisible(true);
@@ -119,35 +133,7 @@ PP.DebugManager = class DebugManager {
         let object = null;
 
         if (!this._myDebugDrawPool.hasPool(params.myType)) {
-            let objectPoolParams = new PP.ObjectPoolParams();
-            objectPoolParams.myInitialPoolSize = 10;
-            objectPoolParams.myPercentageToAddWhenEmpty = 1;
-            objectPoolParams.myEnableDebugLog = false;
-            objectPoolParams.mySetActiveCallback = function (object, active) {
-                object.setVisible(active);
-            };
-
-            let debugDrawObject = null;
-            switch (params.myType) {
-                case PP.DebugDrawObjectType.LINE:
-                    debugDrawObject = new PP.DebugLine();
-                    break;
-                case PP.DebugDrawObjectType.TRANSFORM:
-                    debugDrawObject = new PP.DebugTransform();
-                    break;
-                case PP.DebugDrawObjectType.ARROW:
-                    debugDrawObject = new PP.DebugArrow();
-                    break;
-                case PP.DebugDrawObjectType.RAYCAST:
-                    debugDrawObject = new PP.DebugRaycast();
-                    break;
-            }
-
-            if (debugDrawObject != null) {
-                this._myDebugDrawPool.addPool(params.myType, debugDrawObject, objectPoolParams);
-            } else {
-                console.error("Debug draw object type not supported");
-            }
+            this._addDebugDrawObjectTypeToPool(params.myType);
         }
 
         object = this._myDebugDrawPool.getObject(params.myType);
@@ -157,5 +143,40 @@ PP.DebugManager = class DebugManager {
         }
 
         return object;
+    }
+
+    _addDebugDrawObjectTypeToPool(type) {
+        let objectPoolParams = new PP.ObjectPoolParams();
+        objectPoolParams.myInitialPoolSize = 10;
+        objectPoolParams.myPercentageToAddWhenEmpty = 1;
+        objectPoolParams.myEnableDebugLog = false;
+        objectPoolParams.mySetActiveCallback = function (object, active) {
+            object.setVisible(active);
+        };
+
+        let debugDrawObject = null;
+        switch (type) {
+            case PP.DebugDrawObjectType.LINE:
+                debugDrawObject = new PP.DebugLine();
+                break;
+            case PP.DebugDrawObjectType.TRANSFORM:
+                debugDrawObject = new PP.DebugTransform();
+                break;
+            case PP.DebugDrawObjectType.ARROW:
+                debugDrawObject = new PP.DebugArrow();
+                break;
+            case PP.DebugDrawObjectType.POINT:
+                debugDrawObject = new PP.DebugPoint();
+                break;
+            case PP.DebugDrawObjectType.RAYCAST:
+                debugDrawObject = new PP.DebugRaycast();
+                break;
+        }
+
+        if (debugDrawObject != null) {
+            this._myDebugDrawPool.addPool(type, debugDrawObject, objectPoolParams);
+        } else {
+            console.error("Debug draw object type not supported");
+        }
     }
 };
