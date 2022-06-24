@@ -39,7 +39,7 @@
 
         - pp_getPosition    / pp_setPosition    / pp_resetPosition
         - pp_getRotation    / pp_setRotation    / pp_resetRotation
-        - pp_getScale       / pp_setScale (u can specify a single number instead of a vector to uniform scale easily)   / pp_resetScale 
+        - pp_getScale       / pp_setScale       (u can specify a single number instead of a vector to uniform scale easily) / pp_resetScale 
         - pp_getTransform   / pp_setTransform   / pp_resetTransform
 
         - pp_getLeft        / pp_getRight
@@ -48,7 +48,7 @@
 
         - pp_translate      / pp_translateAxis
         - pp_rotate         / pp_rotateAxis     / pp_rotateAround    / pp_rotateAroundAxis
-        - pp_scaleObject (for now scale only have this variant) (u can specify a single number instead of a vector to uniform scale easily)
+        - pp_scaleObject    (for now scale only have this variant) (u can specify a single number instead of a vector to uniform scale easily)
 
         - pp_lookAt         / pp_lookTo (u can avoid to specify up and the function will pickup the object up by default)
 
@@ -67,6 +67,7 @@
 
         - pp_clone      / pp_isCloneable
 
+        - pp_addObject
         - pp_getName    / pp_setName
         - pp_getID
         - pp_getHierarchy / pp_getDescendants / pp_getChildren
@@ -2056,6 +2057,10 @@ if (WL && WL.Object) {
     };
 
     //Cauldron
+
+    WL.Object.prototype.pp_addObject = function () {
+        return WL.scene.addObject(this);
+    };
 
     WL.Object.prototype.pp_getName = function () {
         return this.name;

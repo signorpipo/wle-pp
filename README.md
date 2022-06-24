@@ -396,7 +396,7 @@ List of features:
     PP.myLeftGamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
     PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isTouchEnd();    
     PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressStart(2); // fast pressed 2 times     
-    PP.myGamepads[PP.Handedness.LEFT].getAxesInfo().myAxes;    
+    PP.myGamepads[PP.Handedness.LEFT].getAxesInfo().getAxes();    
     PP.myRightGamepad.pulse(0.5, 1);    
     ```
 - [`PP.GamepadUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_utils.js)
@@ -411,6 +411,11 @@ List of features:
 - [`pp-gamepad-animator`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_animator.js)
   * component that let you animate a controller, that is buttons and axes move in the game like the one in real life
   * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
+    * you can use [this 3D model](https://github.com/SignorPipo/wle_ppefault/blob/main/wle_ppefault/wle_ppefault/assets/models/quest_controllers_credits_Jezza3D.fbx) as a reference
+- [`pp-gamepad-control-scheme`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_control_scheme.js)
+  * component that let you add a visual control scheme on the gamepad
+  * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
+    * you can use [this 3D model](https://github.com/SignorPipo/wle_ppefault/blob/main/wle_ppefault/wle_ppefault/assets/models/quest_controllers_credits_Jezza3D.fbx) as a reference
 
 ### Pose
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/pose)
@@ -441,11 +446,14 @@ A set of features that extends what WLE and Javascript already offer.
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods)
 
 These files change some of the functions of WLE components, or add to them new ones:
-- [`clone_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/clone_mod.js)
+- [`clone_component_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/clone_component_mod.js)
   * adds a clone function to some built int component like mesh, text and collision
-- [`cursor_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/cursor_mod.js) / [`cursor_target_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/cursor_target_mod.js)
+- [`cursor_component_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/cursor_component_mod.js) / [`cursor_target_component_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/cursor_target_component_mod.js)
   * adds double and triple click
   * bunch of fixes
+- [`mouse_look_component_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/mouse_look_component_mod.js)
+  * adds support for oculus quest controller as a pointer to move the view
+  * improves how the view is rotated based on the pointer movement
 
 ### Extensions
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions)

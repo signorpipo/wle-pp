@@ -268,7 +268,11 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     _formatArgs(...args) {
         let stringifiedArgs = [];
         for (let i = 0; i < args.length; i++) {
-            stringifiedArgs.push(this._stringifyItem(args[i]));
+            if (args[i] === undefined) {
+                stringifiedArgs.push("undefined");
+            } else {
+                stringifiedArgs.push(this._stringifyItem(args[i]));
+            }
         }
 
         let formattedString = stringifiedArgs.join(" ");
@@ -279,20 +283,13 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     _stringifyItem(item) {
         if (typeof item === 'object') {
             let stringifiedItem = null;
-            let linesBetweenItems = this._isArray(item) ? 0 : 2;
+            let linesBetweenItems = 2;
 
             try {
-                if (!this._isFloat32Array(item)) {
-                    stringifiedItem = JSON.stringify(item, null, linesBetweenItems); //first try with default replacer
-                } else {
-                    let arrayCopy = []; // I do this just cause Float32Array does not print like normal Array
-                    for (let i = 0; i < item.length; i++) {
-                        arrayCopy[i] = item[i];
-                    }
-                    stringifiedItem = JSON.stringify(arrayCopy, null, linesBetweenItems); //first try with default replacer
-                }
+                stringifiedItem = JSON.stringify(item, this._jsonReplacer.bind(this), linesBetweenItems);
             } catch (error) {
                 let cache = new WeakSet();
+
                 stringifiedItem = JSON.stringify(item, function (key, value) {
                     if (typeof value === 'object' && value !== null) {
                         if (cache.has(value)) {
@@ -300,13 +297,15 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
                         }
                         cache.add(value);
                     }
-                    return value;
-                }, linesBetweenItems);
+
+                    return this._jsonReplacer(key, value);
+                }.bind(this), linesBetweenItems);
             }
 
-            if (this._isArray(item)) {
-                stringifiedItem = stringifiedItem.split(",").join(", ");
-            }
+            stringifiedItem = stringifiedItem.replace('"[', '[');
+            stringifiedItem = stringifiedItem.replace("'[", "[");
+            stringifiedItem = stringifiedItem.replace(']"', ']');
+            stringifiedItem = stringifiedItem.replace("]'", "]");
 
             return stringifiedItem;
         }
@@ -714,11 +713,25 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         }
     }
 
-    _isArray(item) {
-        return Array.isArray(item) || this._isFloat32Array(item);
+    _isSimpleArray(array) {
+        if (this._isSpecialSimpleArray(array)) {
+            return true;
+        } else if (Array.isArray(array)) {
+            let isBuiltIn = true;
+            for (let element of array) {
+                if (element instanceof Object) {
+                    isBuiltIn = false;
+                    break;
+                }
+            }
+
+            return isBuiltIn;
+        }
+
+        return false;
     }
 
-    _isFloat32Array(item) {
+    _isSpecialSimpleArray(item) {
         return item && item.constructor && item.constructor.name == "Float32Array";
     }
 
@@ -727,6 +740,28 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
         if (!this._mySetup.myGamepadScrollOnlyOnHover) {
             this._myGamepadScrollActive = true;
+        }
+    }
+
+    _jsonReplacer(key, value) {
+        if (value instanceof Map) {
+            return Array.from(value.entries());
+        } else if (this._isSimpleArray(value)) {
+            let array = value;
+            if (this._isSpecialSimpleArray(array)) {
+                let arrayCopy = []; // Special arrays like Float32Array do not print like Array
+                for (let i = 0; i < array.length; i++) {
+                    arrayCopy[i] = array[i];
+                }
+
+                array = arrayCopy;
+            }
+
+            let stringifiedArray = JSON.stringify(array);
+            stringifiedArray = stringifiedArray.split(",").join(", ");
+            return stringifiedArray;
+        } else {
+            return value;
         }
     }
 };

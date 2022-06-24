@@ -165,11 +165,11 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
     }
 
     _initializeRuntimeSetup() {
-        this.myTabString = "    ";
+        this.myTabString = "     ";
         this.myAssertStartString = "Assertion failed:";
 
         this.myMaxCharactersPerLine = 100;
-        this.myMaxLineSplits = 10; //prevent infinite splitting
+        this.myMaxLineSplits = 50; //prevent infinite splitting
         this.myMaxLines = 22;
         this.myMaxMessages = 2000;
         this.myMaxMessagesDeletePad = 2000; // to prevent deleting at every message, delay the delete after the limit is exceed by this value

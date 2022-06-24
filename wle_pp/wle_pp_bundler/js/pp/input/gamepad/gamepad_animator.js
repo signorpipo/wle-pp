@@ -17,9 +17,9 @@ WL.registerComponent('pp-gamepad-animator', {
         this._myIsTouchedDiffuseButtonColor = null;
         this._myIsTouchedAmbientButtonColor = null;
 
-        this._myThumbstickInitialLocalForward = this._getLocalAxis(this._myThumbstick, [0, 0, 1]);
-        this._myThumbstickForward = [0, 0, 1];
-        this._mySelectForward = [0, 0, 1];
+        this._myThumbstickInitialLocalUp = this._getLocalAxis(this._myThumbstick, [0, 1, 0]);
+        this._myThumbstickUp = [0, 1, 0];
+        this._mySelectUp = [0, 1, 0];
 
         this._myIsMeshEnabled = false;
     },
@@ -108,33 +108,38 @@ WL.registerComponent('pp-gamepad-animator', {
         //AXES CHANGED
         this._myGamepad.registerAxesEventListener(PP.AxesEvent.AXES_CHANGED, this, this._axesValueChanged.bind(this));
 
-        this.object.pp_setScaleLocal([0.00001, 0.00001, 0.00001]);
+        this._myFirstUpdate = true;
     },
     update: function (dt) {
+        if (this._myFirstUpdate) {
+            this._myFirstUpdate = false;
+            this.object.pp_setScaleLocal([0.00001, 0.00001, 0.00001]);
+        }
+
         this._enableMeshInSession();
     },
     _thumbstickPressedStart: function (buttonInfo, gamepad) {
-        //since thumbstick object rotate I need to specifically use its initial forward
+        //since thumbstick object rotate I need to specifically use its initial up
         let tempVector = PP.vec3_create();
-        this._myThumbstickInitialLocalForward.vec3_scale(0.0015, tempVector);
+        this._myThumbstickInitialLocalUp.vec3_scale(-0.0015, tempVector);
         this._myThumbstick.translate(tempVector);
     },
     _thumbstickPressedEnd: function (buttonInfo, gamepad) {
         let tempVector = PP.vec3_create();
-        this._myThumbstickInitialLocalForward.vec3_scale(-0.0015, tempVector);
+        this._myThumbstickInitialLocalUp.vec3_scale(0.0015, tempVector);
         this._myThumbstick.translate(tempVector);
     },
     _bottomButtonPressedStart: function (buttonInfo, gamepad) {
-        this._translateLocalAxis(this._myBottomButton, [0, 0, 1], 0.002);
+        this._translateLocalAxis(this._myBottomButton, [0, 1, 0], -0.002);
     },
     _bottomButtonPressedEnd: function (buttonInfo, gamepad) {
-        this._translateLocalAxis(this._myBottomButton, [0, 0, 1], -0.002);
+        this._translateLocalAxis(this._myBottomButton, [0, 1, 0], 0.002);
     },
     _topButtonPressedStart: function (buttonInfo, gamepad) {
-        this._translateLocalAxis(this._myTopButton, [0, 0, 1], 0.002);
+        this._translateLocalAxis(this._myTopButton, [0, 1, 0], -0.002);
     },
     _topButtonPressedEnd: function (buttonInfo, gamepad) {
-        this._translateLocalAxis(this._myTopButton, [0, 0, 1], -0.002);
+        this._translateLocalAxis(this._myTopButton, [0, 1, 0], 0.002);
     },
     //TOUCHED
     _selectTouchedStart: function (buttonInfo, gamepad) {
@@ -199,16 +204,16 @@ WL.registerComponent('pp-gamepad-animator', {
     },
     _selectValueChanged: function (buttonInfo, gamepad) {
         //first reset rotation to start position
-        this._copyAlignRotation(this._mySelect, this._mySelectForward, [0, 0, 1]);
+        this._copyAlignRotation(this._mySelect, this._mySelectUp, [0, 1, 0]);
 
         let angleToRotate = Math.pp_toRadians(15 * buttonInfo.myValue);
-        let tiltDirection = [0, 0, 1];
+        let tiltDirection = [0, 1, 0];
         tiltDirection.vec3_rotateAxisRadians(angleToRotate, [1, 0, 0], tiltDirection);
         tiltDirection.vec3_normalize(tiltDirection);
 
-        this._copyAlignRotation(this._mySelect, [0, 0, 1], tiltDirection);
+        this._copyAlignRotation(this._mySelect, [0, 1, 0], tiltDirection);
 
-        this._mySelectForward = tiltDirection;
+        this._mySelectUp = tiltDirection;
     },
     _squeezeValueChanged: function (buttonInfo, gamepad) {
         this._mySqueeze.setTranslationLocal(this._mySqueezePosition);
@@ -220,16 +225,16 @@ WL.registerComponent('pp-gamepad-animator', {
     },
     _axesValueChanged: function (axesInfo, gamepad) {
         //first reset rotation to start position
-        this._copyAlignRotation(this._myThumbstick, this._myThumbstickForward, [0, 0, 1]);
+        this._copyAlignRotation(this._myThumbstick, this._myThumbstickUp, [0, 1, 0]);
 
         let tiltDirection = new Float32Array(3);
-        let forward = [0, 0, 1];
-        forward.vec3_add([axesInfo.myAxes[0], -axesInfo.myAxes[1], 0.0], tiltDirection);
+        let up = [0, 1, 0];
+        up.vec3_add([-axesInfo.myAxes[0], 0.0, axesInfo.myAxes[1]], tiltDirection);
         tiltDirection.vec3_normalize(tiltDirection);
 
-        this._copyAlignRotation(this._myThumbstick, [0, 0, 1], tiltDirection);
+        this._copyAlignRotation(this._myThumbstick, [0, 1, 0], tiltDirection);
 
-        this._myThumbstickForward = tiltDirection;
+        this._myThumbstickUp = tiltDirection;
     },
     //Couldn't find a better name, basically find the rotation to align start axis to end, and apply that to object
     _copyAlignRotation: function (object, startAxis, endAxis) {

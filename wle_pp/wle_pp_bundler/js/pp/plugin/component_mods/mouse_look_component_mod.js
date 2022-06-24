@@ -1,5 +1,3 @@
-import { vec3 } from 'gl-matrix';
-
 if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices["mouse-look"]]) {
 
     // Modified Functions

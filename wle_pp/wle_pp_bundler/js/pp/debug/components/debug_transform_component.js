@@ -5,12 +5,12 @@ WL.registerComponent("pp-debug-transform", {
     init: function () {
     },
     start: function () {
-        this._myDebugTransform = new PP.DebugTransform();
-        this._myDebugTransform.setLength(this._myLength);
-        this._myDebugTransform.setThickness(this._myThickness);
-        this._myDebugTransform.setVisible(true);
+        this._myDebugTransformParams = new PP.DebugTransformParams();
+        this._myDebugTransformParams.myLength = this._myLength;
+        this._myDebugTransformParams.myThickness = this._myThickness;
     },
     update: function (dt) {
-        this._myDebugTransform.setTransform(this.object.pp_getTransform());
+        this.object.pp_getTransform(this._myDebugTransformParams.myTransform);
+        PP.myDebugManager.draw(this._myDebugTransformParams);
     }
 });

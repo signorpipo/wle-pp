@@ -50,7 +50,7 @@
 
         ARRAY:
             - pp_has        / pp_hasEqual
-            - pp_find       / pp_findAll        / pp_findEqual / pp_findAllEqual
+            - pp_find       / pp_findAll        / pp_findEqual / pp_findAllEqual    / pp_findIndexEqual
             ○ pp_remove     / pp_removeIndex    / pp_removeAll  / pp_removeEqual    / pp_removeAllEqual
             ○ pp_pushUnique / pp_unshiftUnique
             ○ pp_copy    
@@ -167,6 +167,10 @@ Array.prototype.pp_findEqual = function (elementToFind) {
 
 Array.prototype.pp_findAllEqual = function (elementToFind) {
     return this.pp_findAll(element => element === elementToFind);
+};
+
+Array.prototype.pp_findIndexEqual = function (elementToFind) {
+    return this.findIndex(element => element === elementToFind);
 };
 
 Array.prototype.pp_removeIndex = function (index) {
