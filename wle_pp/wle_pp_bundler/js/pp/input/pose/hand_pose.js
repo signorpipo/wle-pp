@@ -1,16 +1,24 @@
+PP.HandPoseParams = class HandPoseParams {
+    constructor() {
+        this.myReferenceObject = null;
+        this.myFixForward = true;
+        this.myForceEmulatedVelocities = false;
+    }
+};
+
 // HandPose transform is local by default (as if the parent/reference object was the identity transform)
 // you can use setReferenceObject if you want the HandPose to return the transform in world space 
 PP.HandPose = class HandPose {
 
-    constructor(handedness, fixForward = true, forceEmulatedVelocities = false) {
+    constructor(handedness, handPoseParams = new PP.HandPoseParams()) {
         this._myInputSource = null;
 
         this._myHandedness = handedness;
-        this._myFixForward = fixForward;
-        this._myForceEmulatedVelocities = forceEmulatedVelocities;
+        this._myFixForward = handPoseParams.myFixForward;
+        this._myForceEmulatedVelocities = handPoseParams.myForceEmulatedVelocities;
 
         this._myReferenceSpace = null;
-        this._myReferenceObject = null;
+        this._myReferenceObject = handPoseParams.myReferenceObject;
 
         this._myPosition = [0, 0, 0];
         this._myRotation = [0, 0, 0, 1];
@@ -158,6 +166,12 @@ PP.HandPose = class HandPose {
 
     setForceEmulatedVelocities(forceEmulatedVelocities) {
         this._myForceEmulatedVelocities = forceEmulatedVelocities;
+    }
+
+    setHandPoseParams(handPoseParams) {
+        this.setReferenceObject(handPoseParams.myReferenceObject);
+        this.setFixForward(handPoseParams.myFixForward);
+        this.setForceEmulatedVelocities(handPoseParams.myForceEmulatedVelocities);
     }
 
     start() {

@@ -17,9 +17,7 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
 
         this.myTextAlignment = 2; // center
         this.myTextJustification = 2; // middle
-        this.myTextOutlineRange = [0.45, 0.45];
         this.myTextColor = this.myDefaultTextColor;
-        this.myTextOutlineColor = this.myDefaultTextColor;
 
         this.myMessageTypeColors = [];
         this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.LOG] = this.myDefaultTextColor;
@@ -44,7 +42,6 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myMessagesTextStartString = ".\n"; // to avoid issue with text component padding
         this.myMessagesTextAlignment = 1; // left
         this.myMessagesTextJustification = 3; // top
-        this.myMessagesTextOutlineRange = [0.45, 0.45];
 
         this.myMessagesTextPositions = [];
         this.myMessagesTextPositions[PP.ConsoleVRWidget.MessageType.LOG] = [0, 0, 0.00001];
@@ -58,12 +55,6 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myMessagesTextColors[PP.ConsoleVRWidget.MessageType.WARN] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.WARN];
         this.myMessagesTextColors[PP.ConsoleVRWidget.MessageType.INFO] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.INFO];
 
-        this.myMessagesTextOutlineColors = [];
-        this.myMessagesTextOutlineColors[PP.ConsoleVRWidget.MessageType.LOG] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.LOG];
-        this.myMessagesTextOutlineColors[PP.ConsoleVRWidget.MessageType.ERROR] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.ERROR];
-        this.myMessagesTextOutlineColors[PP.ConsoleVRWidget.MessageType.WARN] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.WARN];
-        this.myMessagesTextOutlineColors[PP.ConsoleVRWidget.MessageType.INFO] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.INFO];
-
         //Buttons     
         this.myButtonsPanelPosition = [0, -0.11, 0.015];
 
@@ -71,11 +62,6 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
 
         this.myButtonTextPosition = [0, 0, 0.0065];
         this.myButtonTextScale = [0.18, 0.18, 0.18];
-        this.myButtonTextAlignment = this.myTextAlignment;
-        this.myButtonTextJustification = this.myTextJustification;
-        this.myButtonTextOutlineRange = this.myTextOutlineRange;
-        this.myButtonTextColor = this.myTextColor;
-        this.myButtonTextOutlineColor = this.myTextOutlineColor;
 
         this.myButtonCursorTargetPosition = [0, 0, 0];
         this.myButtonCursorTargetPosition[2] = this.myButtonTextPosition[2];
@@ -94,12 +80,6 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
         this.myFilterButtonsTextColors[PP.ConsoleVRWidget.MessageType.ERROR] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.ERROR];
         this.myFilterButtonsTextColors[PP.ConsoleVRWidget.MessageType.WARN] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.WARN];
         this.myFilterButtonsTextColors[PP.ConsoleVRWidget.MessageType.INFO] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.INFO];
-
-        this.myFilterButtonsTextOutlineColors = [];
-        this.myFilterButtonsTextOutlineColors[PP.ConsoleVRWidget.MessageType.LOG] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.LOG];
-        this.myFilterButtonsTextOutlineColors[PP.ConsoleVRWidget.MessageType.ERROR] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.ERROR];
-        this.myFilterButtonsTextOutlineColors[PP.ConsoleVRWidget.MessageType.WARN] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.WARN];
-        this.myFilterButtonsTextOutlineColors[PP.ConsoleVRWidget.MessageType.INFO] = this.myMessageTypeColors[PP.ConsoleVRWidget.MessageType.INFO];
 
         this.myFilterButtonsTextLabel = [];
         this.myFilterButtonsTextLabel[PP.ConsoleVRWidget.MessageType.LOG] = "log";

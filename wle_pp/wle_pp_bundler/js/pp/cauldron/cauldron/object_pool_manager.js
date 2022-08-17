@@ -60,7 +60,7 @@ PP.ObjectPoolParams = class ObjectPoolParams {
         //These extra functions can be used if u want to use the pool with objects that are not from WLE (WL.Object)
         this.myCloneCallback = undefined;                       //Signature: callback(object, cloneParams) -> clonedObject
         this.mySetActiveCallback = undefined;                   //Signature: callback(object, active)
-        this.myEqualsCallback = undefined;                      //Signature: callback(firstObject, secondObject) -> bool
+        this.myEqualCallback = undefined;                      //Signature: callback(firstObject, secondObject) -> bool
         this.myOptimizeObjectsAllocationCallback = undefined;   //Signature: callback(object, numberOfObjectsToAllocate)
 
         this.myEnableDebugLog = true;
@@ -180,8 +180,8 @@ PP.ObjectPool = class ObjectPool {
     _equals(first, second) {
         let equals = false;
 
-        if (this._myObjectPoolParams.myEqualsCallback != null) {
-            equals = this._myObjectPoolParams.myEqualsCallback(first, second);
+        if (this._myObjectPoolParams.myEqualCallback != null) {
+            equals = this._myObjectPoolParams.myEqualCallback(first, second);
         } else if (first.pp_equals != null) {
             equals = first.pp_equals(second);
         } else if (first.equals != null) {

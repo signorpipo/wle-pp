@@ -801,9 +801,7 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
         textComponent.alignment = this._mySetup.myTextAlignment;
         textComponent.justification = this._mySetup.myTextJustification;
         textComponent.material = this._myAdditionalSetup.myTextMaterial.clone();
-        textComponent.material.outlineRange = this._mySetup.myTextOutlineRange;
         textComponent.material.color = this._mySetup.myTextColor;
-        textComponent.material.outlineColor = this._mySetup.myTextOutlineColor;
         textComponent.text = "";
     }
 };

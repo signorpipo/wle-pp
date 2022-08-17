@@ -416,8 +416,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.object.getTranslationWorld(this.origin);
 
         /* Reverse-project the direction into view space */
-        vec3.transformMat4(this.direction, this.direction,
-            this.projectionMatrix);
+        vec3.transformMat4(this.direction, this.direction, this.projectionMatrix);
         vec3.normalize(this.direction, this.direction);
         vec3.transformQuat(this.direction, this.direction, this.object.transformWorld);
         const rayHit = this.rayHit = (this.rayCastMode == 0) ?

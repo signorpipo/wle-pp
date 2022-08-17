@@ -3,7 +3,7 @@ WL.registerComponent("pp-easy-text-color", {
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
     _myUseTuneTarget: { type: WL.Type.Bool, default: false },
     _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'], default: 'hsv' },
-    _myColorType: { type: WL.Type.Enum, values: ['color', 'outline color'], default: 'color' }
+    _myColorType: { type: WL.Type.Enum, values: ['color', 'effect color'], default: 'color' }
 
 }, {
     init: function () {
@@ -22,7 +22,7 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
         super(object, variableName, setAsDefault, useTuneTarget);
         this._myColorModel = colorModel;
         this._myColorType = colorType;
-        this._myColorVariableNames = ['color', 'outlineColor'];
+        this._myColorVariableNames = ['color', 'effectColor'];
     }
 
     _getVariableNamePrefix() {
@@ -46,8 +46,6 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
 
         let textMaterial = this._getTextMaterial(object);
         if (textMaterial) {
-            console.error(this._myColorType, this._myColorVariableNames[this._myColorType]);
-            console.error(textMaterial[this._myColorVariableNames[this._myColorType]]);
             color = textMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
 
             if (this._myColorModel == 0) {

@@ -18,6 +18,10 @@ PP.Timer = class Timer {
         this._myStarted = true;
     }
 
+    end() {
+        this._done();
+    }
+
     reset(duration = null) {
         if (duration != null) {
             this._myDuration = Math.max(0, duration);

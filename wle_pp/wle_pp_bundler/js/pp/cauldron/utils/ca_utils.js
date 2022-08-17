@@ -23,7 +23,6 @@ PP.CAUtils = {
     isSDKAvailable: function () {
         return "casdk" in window;
     },
-
     getLeaderboard: function (leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError, overrideUseDummyServer = null) {
         if (PP.CAUtils.isSDKAvailable()) {
             if (!isAroundPlayer) {

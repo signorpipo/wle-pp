@@ -3,7 +3,8 @@ PP.DebugDrawObjectType = {
     TRANSFORM: 1,
     ARROW: 2,
     POINT: 3,
-    RAYCAST: 4
+    RAYCAST: 4,
+    TEXT: 5
 };
 
 PP.DebugManager = class DebugManager {
@@ -170,6 +171,9 @@ PP.DebugManager = class DebugManager {
                 break;
             case PP.DebugDrawObjectType.RAYCAST:
                 debugDrawObject = new PP.DebugRaycast();
+                break;
+            case PP.DebugDrawObjectType.TEXT:
+                debugDrawObject = new PP.DebugText();
                 break;
         }
 

@@ -7,7 +7,7 @@ PP.DebugLineParams = class DebugLineParams {
 
         this.myThickness = 0.005;
 
-        this.myColor = [0.7, 0.7, 0.7, 1];
+        this.myColor = [0, 1, 0, 1];
 
         this.myType = PP.DebugDrawObjectType.LINE;
     }
@@ -16,7 +16,7 @@ PP.DebugLineParams = class DebugLineParams {
         end.vec3_sub(start, this.myDirection);
         this.myLength = this.myDirection.vec3_length();
         this.myDirection.vec3_normalize(this.myDirection);
-        this.myStart = start;
+        this.myStart.vec3_copy(start);
 
         return this;
     }
@@ -26,6 +26,7 @@ PP.DebugLine = class DebugLine {
 
     constructor(params = new PP.DebugLineParams()) {
         this._myParams = params;
+        this._myParams.myDirection.vec3_normalize(this._myParams.myDirection);
 
         this._myLineRootObject = null;
 
@@ -55,6 +56,7 @@ PP.DebugLine = class DebugLine {
 
     setParams(params) {
         this._myParams = params;
+        this._myParams.myDirection.vec3_normalize(this._myParams.myDirection);
         this._markDirty();
     }
 
@@ -64,8 +66,9 @@ PP.DebugLine = class DebugLine {
     }
 
     setStartDirectionLength(start, direction, length) {
-        this._myParams.myStart = start;
-        this._myParams.myDirection = direction;
+        this._myParams.myStart.vec3_copy(start);
+        this._myParams.myDirection.vec3_copy(direction);
+        this._myParams.myDirection.vec3_normalize(this._myParams.myDirection);
         this._myParams.myLength = length;
 
         this._markDirty();
@@ -81,6 +84,10 @@ PP.DebugLine = class DebugLine {
         this._myParams.myThickness = thickness;
 
         this._markDirty();
+    }
+
+    refresh() {
+        this.update(0);
     }
 
     update(dt) {
@@ -111,7 +118,7 @@ PP.DebugLine = class DebugLine {
 
         this._myLineMesh = this._myLineObject.addComponent('mesh');
         this._myLineMesh.mesh = PP.myDebugData.myCubeMesh;
-        this._myLineMesh.material = PP.myDebugData.myFlatMaterial.clone();
+        this._myLineMesh.material = PP.myDebugData.myDebugMaterial.clone();
     }
 
     _markDirty() {

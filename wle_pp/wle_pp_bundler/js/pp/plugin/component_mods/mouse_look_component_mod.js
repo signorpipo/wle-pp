@@ -6,7 +6,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         document.addEventListener('mousemove', function (e) {
             if (this.active && (this.mouseDown || !this.requireMouseDown)) {
 
-                let viewForward = this.object.pp_getForward();
+                let viewForward = this.object.pp_getBackward(); // the view "real" forward is actually the backward
                 let viewUp = this.object.pp_getUp();
 
                 let referenceUp = [0, 1, 0];
@@ -15,74 +15,31 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
                 }
 
                 let referenceRight = viewForward.vec3_cross(referenceUp);
+
                 let minAngle = 1;
                 if (viewForward.vec3_angle(referenceUp) < minAngle) {
                     referenceRight = viewUp.vec3_negate().vec3_cross(referenceUp);
-                } else if (referenceRight.vec3_angle(referenceUp.vec3_negate()) < minAngle) {
+                } else if (viewForward.vec3_angle(referenceUp.vec3_negate()) < minAngle) {
                     referenceRight = viewUp.vec3_cross(referenceUp);
                 } else if (!viewUp.vec3_isConcordant(referenceUp)) {
-                    referenceRight = viewForward.vec3_negate().vec3_cross(referenceUp);
+                    referenceRight.vec3_negate(referenceRight);
                 }
                 referenceRight.vec3_normalize(referenceRight);
 
-                this.rotationY = -this.sensitity * e.movementX;
-                this.rotationX = -this.sensitity * e.movementY;
+                this.rotationX = -this.sensitity * e.movementX;
+                this.rotationY = -this.sensitity * e.movementY;
 
-                this.object.pp_rotateAxis(-this.rotationX, referenceRight);
-                this.object.pp_rotateAxis(this.rotationY, referenceUp);
+                this.object.pp_rotateAxis(this.rotationY, referenceRight);
 
-                // remove X tilt
-                {
-                    let newForward = this.object.pp_getForward();
-                    let newRight = this.object.pp_getRight();
-                    let newUp = this.object.pp_getUp();
-
-                    let fixedRight = newForward.vec3_cross(referenceUp);
-                    if (!newUp.vec3_isConcordant(referenceUp)) {
-                        fixedRight.vec3_negate(fixedRight);
-                    }
-                    fixedRight.vec3_normalize(fixedRight);
-                    if (fixedRight.vec3_length() == 0) {
-                        fixedRight = newRight;
-                    }
-
-                    let fixedUp = fixedRight.vec3_cross(newForward);
-                    fixedUp.vec3_normalize(fixedUp);
-                    let fixedForward = fixedUp.vec3_cross(fixedRight);
-                    fixedForward.vec3_normalize(fixedForward);
-
-                    let fixedRotation = PP.quat_create();
-                    fixedRotation.quat_fromAxes(fixedRight.vec3_negate(), fixedUp, fixedForward);
-
-                    this.object.pp_setRotationQuat(fixedRotation);
+                let maxVerticalAngle = 90 - 0.001;
+                let newUp = this.object.pp_getUp();
+                let angleWithUp = Math.pp_angleClamp(newUp.vec3_angleSigned(referenceUp, referenceRight));
+                if (Math.abs(angleWithUp) > maxVerticalAngle) {
+                    let fixAngle = (Math.abs(angleWithUp) - maxVerticalAngle) * Math.pp_sign(angleWithUp);
+                    this.object.pp_rotateAxis(fixAngle, referenceRight);
                 }
 
-                // fix upside down
-                {
-                    let newRight = this.object.pp_getRight();
-                    let newUp = this.object.pp_getUp();
-
-                    if (!newUp.vec3_isConcordant(referenceUp)) {
-                        let signedAngle = newUp.vec3_angleSigned(referenceUp, newRight);
-                        if (signedAngle > 0) {
-                            signedAngle -= 89.995;
-                        } else {
-                            signedAngle += 89.995;
-                        }
-
-                        let fixedUp = newUp.vec3_rotateAxis(signedAngle, newRight);
-                        fixedUp.vec3_normalize(fixedUp);
-                        let fixedForward = fixedUp.vec3_cross(newRight);
-                        fixedForward.vec3_normalize(fixedForward);
-                        let fixedRight = fixedForward.vec3_cross(fixedUp);
-                        fixedRight.vec3_normalize(fixedRight);
-
-                        let fixedRotation = PP.quat_create();
-                        fixedRotation.quat_fromAxes(fixedRight.vec3_negate(), fixedUp, fixedForward);
-
-                        this.object.pp_setRotationQuat(fixedRotation);
-                    }
-                }
+                this.object.pp_rotateAxis(this.rotationX, referenceUp);
             }
         }.bind(this));
 
@@ -108,6 +65,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
                     this.mouseDown = false;
                     document.body.style.cursor = "initial";
                 }
+            }.bind(this));
+            WL.canvas.addEventListener('mouseleave', function (e) {
+                this.mouseDown = false;
+                document.body.style.cursor = "initial";
             }.bind(this));
 
             WL.canvas.addEventListener('touchstart', function (e) {

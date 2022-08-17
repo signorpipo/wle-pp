@@ -1,5 +1,5 @@
 WL.registerComponent("pp-benchmark-max-visible-triangles", {
-    _myTargetFrameRate: { type: WL.Type.Int, default: -1 },     //-1 means it will auto detect it at start
+    _myTargetFrameRate: { type: WL.Type.Int, default: -1 },     // -1 means it will auto detect it at start
     _myTargetFrameRateThreshold: { type: WL.Type.Int, default: 3 },
     _myStartPlaneCount: { type: WL.Type.Int, default: 1 },
     _myPlaneTriangles: { type: WL.Type.Int, default: 100 },
@@ -39,7 +39,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myFirstTime = true;
     },
     _update(dt) {
-        //Skip lag frames after the new set of plane has been shown, wait for it to be stable
+        // Skip lag frames after the new set of plane has been shown, wait for it to be stable
         {
             if (dt < 0.00001) {
                 return;
@@ -72,7 +72,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
                     this._myFirstTime = false;
                 } else {
 
-                    //if there is not lag, the current plane count is a good lower limit, otherwise the current count is now a upper threshold, we have to search below it
+                    // if there is not lag, the current plane count is a good lower limit, otherwise the current count is now a upper threshold, we have to search below it
                     let isLagging = false;
                     if (frameRate < this._myStableFrameRate - this._myTargetFrameRateThreshold) {
                         this._myUpperLimit = this._myCurrentPlanes;
@@ -94,24 +94,24 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
                     this._myFPSTextComponent.text = "FPS: " + frameRate + " / " + this._myStableFrameRate;
 
                     if (isLagging) {
-                        this._myTriangleTextComponent.material.outlineColor = [0.5, 0, 0, 1];
-                        this._myPlaneTextComponent.material.outlineColor = [0.5, 0, 0, 1];
-                        this._myFPSTextComponent.material.outlineColor = [0.5, 0, 0, 1];
+                        this._myTriangleTextComponent.material.color = this._myLagColor;
+                        this._myPlaneTextComponent.material.color = this._myLagColor;
+                        this._myFPSTextComponent.material.color = this._myLagColor;
                     } else {
-                        this._myTriangleTextComponent.material.outlineColor = [0, 0, 0, 1];
-                        this._myPlaneTextComponent.material.outlineColor = [0, 0, 0, 1];
-                        this._myFPSTextComponent.material.outlineColor = [0, 0, 0, 1];
+                        this._myTriangleTextComponent.material.color = this._myNormalColor;
+                        this._myPlaneTextComponent.material.color = this._myNormalColor;
+                        this._myFPSTextComponent.material.color = this._myNormalColor;
                     }
 
                     let reset = false;
 
-                    //check if the binary search is completed
+                    // check if the binary search is completed
                     if ((this._myUpperLimit > 0 &&
                         (!isLagging && (this._myUpperLimit - this._myLowerLimit) <= Math.max(2, 1000 / this._myRealTrianglesAmount)) ||
                         (isLagging && (this._myUpperLimit - this._myLowerLimit) <= 1)) ||
                         (!isLagging && this._myMaxPlaneReached)) {
                         if (frameRate < this._myStableFrameRate - this._myTargetFrameRateThreshold) {
-                            //going a bit back with the binary search, maybe the lower limit was not lower after all cause of a bad assumption of average FPS
+                            // going a bit back with the binary search, maybe the lower limit was not lower after all cause of a bad assumption of average FPS
                             this._myLowerLimit = Math.max(1, Math.floor(this._myUpperLimit / 2.5));
                             this._myUpperLimit = 0;
                             reset = true;
@@ -150,7 +150,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
                     }
 
                     if (!this._myIsDone) {
-                        //sort of binary search, if there is no upper limit yet, just double
+                        // sort of binary search, if there is no upper limit yet, just double
                         if (this._myUpperLimit > 0) {
                             this._myCurrentPlanes = Math.floor((this._myUpperLimit + this._myLowerLimit) / 2);
                             this._myCurrentPlanes = Math.max(this._myCurrentPlanes, 1);
@@ -216,6 +216,9 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         }
     },
     start() {
+        this._myLagColor = [0.5, 0, 0, 1];
+        this._myNormalColor = [0, 0, 0, 1];
+
         this._myRealTrianglesAmount = 0;
 
         this._myTrianglesObject = WL.scene.addObject(this.object);
@@ -273,9 +276,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myTriangleTextComponent.alignment = WL.Alignment.Left;
         this._myTriangleTextComponent.justification = WL.Justification.Line;
         this._myTriangleTextComponent.material = this._myTextMaterial.clone();
-        this._myTriangleTextComponent.material.color = [1, 1, 1, 1];
-        this._myTriangleTextComponent.material.outlineColor = [0, 0, 0, 1];
-        this._myTriangleTextComponent.material.outlineRange = [0.5, 0.3];
+        this._myTriangleTextComponent.material.color = this._myNormalColor;
         this._myTriangleTextComponent.text = " ";
         //this._myTriangleTextComponent.text = "Triangles: 9999999";
 
@@ -287,9 +288,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myPlaneTextComponent.alignment = WL.Alignment.Left;
         this._myPlaneTextComponent.justification = WL.Justification.Line;
         this._myPlaneTextComponent.material = this._myTextMaterial.clone();
-        this._myPlaneTextComponent.material.color = [1, 1, 1, 1];
-        this._myPlaneTextComponent.material.outlineColor = [0, 0, 0, 1];
-        this._myPlaneTextComponent.material.outlineRange = [0.5, 0.3];
+        this._myPlaneTextComponent.material.color = this._myNormalColor;
         this._myPlaneTextComponent.text = " ";
         //this._myPlaneTextComponent.text = "Planes: 9999999";
 
@@ -301,9 +300,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myFPSTextComponent.alignment = WL.Alignment.Left;
         this._myFPSTextComponent.justification = WL.Justification.Line;
         this._myFPSTextComponent.material = this._myTextMaterial.clone();
-        this._myFPSTextComponent.material.color = [1, 1, 1, 1];
-        this._myFPSTextComponent.material.outlineColor = [0, 0, 0, 1];
-        this._myFPSTextComponent.material.outlineRange = [0.5, 0.3];
+        this._myFPSTextComponent.material.color = this._myNormalColor;
         this._myFPSTextComponent.text = " ";
         //this._myFPSTextComponent.text = "FPS: 99.99";
 
@@ -315,9 +312,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myDoneTextComponent.alignment = WL.Alignment.Center;
         this._myDoneTextComponent.justification = WL.Justification.Line;
         this._myDoneTextComponent.material = this._myTextMaterial.clone();
-        this._myDoneTextComponent.material.color = [1, 1, 1, 1];
-        this._myDoneTextComponent.material.outlineColor = [0, 0, 0, 1];
-        this._myDoneTextComponent.material.outlineRange = [0.45, 0.3];
+        this._myDoneTextComponent.material.color = this._myNormalColor;
         this._myDoneTextComponent.text = " ";
         //this._myDoneTextComponent.text = "End";
 
@@ -397,53 +392,52 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
             row--;
         }
 
-        let vertexCount = (row + 1) * (column + 1);
-        let vertexDataSize = WL.Mesh.VERTEX_FLOAT_SIZE;
-
-        let vertexData = new Float32Array(vertexCount * vertexDataSize);
+        let meshParams = new PP.MeshCreationParams();
 
         for (let i = 0; i < row + 1; i++) {
             for (let j = 0; j < column + 1; j++) {
+
                 let x = (2 / column) * j;
                 let y = (2 / row) * i;
 
-                let index = (i * (column + 1)) + j;
+                let vertexParams = new PP.MeshCreationVertexParams();
 
-                vertexData[index * vertexDataSize + WL.Mesh.POS.X] = x - 1;
-                vertexData[index * vertexDataSize + WL.Mesh.POS.Y] = y - 1;
-                vertexData[index * vertexDataSize + WL.Mesh.POS.Z] = 0;
+                vertexParams.myPosition = new PP.vec3_create();
+                vertexParams.myPosition[0] = x - 1;
+                vertexParams.myPosition[1] = y - 1;
+                vertexParams.myPosition[2] = 0;
 
-                vertexData[index * vertexDataSize + WL.Mesh.TEXCOORD.U] = x / 2;
-                vertexData[index * vertexDataSize + WL.Mesh.TEXCOORD.V] = y / 2;
+                vertexParams.myTextureCoordinates = new PP.vec2_create();
+                vertexParams.myTextureCoordinates[0] = x / 2;
+                vertexParams.myTextureCoordinates[1] = y / 2;
 
-                vertexData[index * vertexDataSize + WL.Mesh.NORMAL.X] = 0;
-                vertexData[index * vertexDataSize + WL.Mesh.NORMAL.Y] = 0;
-                vertexData[index * vertexDataSize + WL.Mesh.NORMAL.Z] = 999;
+                vertexParams.myNormal = new PP.vec3_create();
+                vertexParams.myNormal[0] = 0;
+                vertexParams.myNormal[1] = 0;
+                vertexParams.myNormal[2] = 1;
+
+                meshParams.myVertexes.push(vertexParams);
             }
         }
-
-        let realSquaresAmount = (row * column);
-        let realTrianglesAmount = realSquaresAmount * 2;
-        let indexData = new Uint32Array(realTrianglesAmount * 3);
 
         for (let i = 0; i < row; i++) {
             for (let j = 0; j < column; j++) {
-                let startIndex = ((i * column) + j) * 6;
+                let firstTriangle = new PP.MeshCreationTriangleParams();
+                firstTriangle.myIndexes[0] = (i * (column + 1)) + j;
+                firstTriangle.myIndexes[1] = (i * (column + 1)) + j + 1;
+                firstTriangle.myIndexes[2] = ((i + 1) * (column + 1)) + j;
 
-                indexData[startIndex] = (i * (column + 1)) + j;
-                indexData[startIndex + 1] = (i * (column + 1)) + j + 1;
-                indexData[startIndex + 2] = ((i + 1) * (column + 1)) + j;
-                indexData[startIndex + 3] = ((i + 1) * (column + 1)) + j;
-                indexData[startIndex + 4] = (i * (column + 1)) + j + 1;
-                indexData[startIndex + 5] = ((i + 1) * (column + 1)) + j + 1;
+                let secondTriangle = new PP.MeshCreationTriangleParams();
+                secondTriangle.myIndexes[0] = ((i + 1) * (column + 1)) + j;
+                secondTriangle.myIndexes[1] = (i * (column + 1)) + j + 1;
+                secondTriangle.myIndexes[2] = ((i + 1) * (column + 1)) + j + 1;
+
+                meshParams.myTriangles.push(firstTriangle);
+                meshParams.myTriangles.push(secondTriangle);
             }
         }
 
-        let mesh = new WL.Mesh({
-            indexData: indexData,
-            indexType: WL.MeshIndexType.UnsignedInt,
-            vertexData: vertexData
-        });
+        let mesh = PP.MeshUtils.createMesh(meshParams);
 
         return mesh;
     }

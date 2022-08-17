@@ -176,8 +176,7 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
             textComp.justification = this._mySetup.myMessagesTextJustification;
             textComp.material = this._myAdditionalSetup.myTextMaterial.clone();
             textComp.material.color = this._mySetup.myMessagesTextColors[PP.ConsoleVRWidget.MessageType[key]];
-            textComp.material.outlineColor = this._mySetup.myMessagesTextOutlineColors[PP.ConsoleVRWidget.MessageType[key]];
-            textComp.material.outlineRange = this._mySetup.myMessagesTextOutlineRange;
+            textComp.lineSpacing = 1.2;
             textComp.text = this._mySetup.myMessagesTextStartString;
 
             this.myMessagesTextComponents[PP.ConsoleVRWidget.MessageType[key]] = textComp;
@@ -214,7 +213,6 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
             let buttonTextComp = this.myFilterButtonsTexts[PP.ConsoleVRWidget.MessageType[key]].addComponent('text');
             this._setupButtonTextComponent(buttonTextComp);
             buttonTextComp.material.color = this._mySetup.myFilterButtonsTextColors[PP.ConsoleVRWidget.MessageType[key]];
-            buttonTextComp.material.outlineColor = this._mySetup.myFilterButtonsTextOutlineColors[PP.ConsoleVRWidget.MessageType[key]];
             buttonTextComp.text = this._mySetup.myFilterButtonsTextLabel[PP.ConsoleVRWidget.MessageType[key]];
 
             let buttonCursorTargetComp = this.myFilterButtonsCursorTargets[PP.ConsoleVRWidget.MessageType[key]].addComponent('cursor-target');
@@ -319,9 +317,7 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
         textComponent.alignment = this._mySetup.myTextAlignment;
         textComponent.justification = this._mySetup.myTextJustification;
         textComponent.material = this._myAdditionalSetup.myTextMaterial.clone();
-        textComponent.material.outlineRange = this._mySetup.myTextOutlineRange;
         textComponent.material.color = this._mySetup.myTextColor;
-        textComponent.material.outlineColor = this._mySetup.myTextOutlineColor;
         textComponent.text = "";
     }
 };

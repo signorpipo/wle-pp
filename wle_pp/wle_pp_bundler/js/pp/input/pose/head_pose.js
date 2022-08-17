@@ -1,13 +1,21 @@
+PP.HeadPoseParams = class HeadPoseParams {
+    constructor() {
+        this.myReferenceObject = null;
+        this.myFixForward = true;
+        this.myForceEmulatedVelocities = false;
+    }
+};
+
 // HeadPose transform is local by default (as if the parent/reference object was the identity transform)
 // you can use setReferenceObject if you want the HandPose to return the transform in world space
 PP.HeadPose = class HeadPose {
 
-    constructor(fixForward = true, forceEmulatedVelocities = false) {
-        this._myFixForward = fixForward;
-        this._myForceEmulatedVelocities = forceEmulatedVelocities;
+    constructor(headPoseParams = new PP.HeadPoseParams()) {
+        this._myFixForward = headPoseParams.myFixForward;
+        this._myForceEmulatedVelocities = headPoseParams.myForceEmulatedVelocities;
 
         this._myReferenceSpace = null;
-        this._myReferenceObject = null;
+        this._myReferenceObject = headPoseParams.myReferenceObject;
 
         this._myPosition = [0, 0, 0];
         this._myRotation = [0, 0, 0, 1];
@@ -155,6 +163,12 @@ PP.HeadPose = class HeadPose {
 
     setForceEmulatedVelocities(forceEmulatedVelocities) {
         this._myForceEmulatedVelocities = forceEmulatedVelocities;
+    }
+
+    setHeadPoseParams(headPoseParams) {
+        this.setReferenceObject(headPoseParams.myReferenceObject);
+        this.setFixForward(headPoseParams.myFixForward);
+        this.setForceEmulatedVelocities(headPoseParams.myForceEmulatedVelocities);
     }
 
     start() {

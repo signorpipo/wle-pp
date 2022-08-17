@@ -302,10 +302,10 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
                 }.bind(this), linesBetweenItems);
             }
 
-            stringifiedItem = stringifiedItem.replace('"[', '[');
-            stringifiedItem = stringifiedItem.replace("'[", "[");
-            stringifiedItem = stringifiedItem.replace(']"', ']');
-            stringifiedItem = stringifiedItem.replace("]'", "]");
+            stringifiedItem = stringifiedItem.replaceAll('"[', '[');
+            stringifiedItem = stringifiedItem.replaceAll("'[", "[");
+            stringifiedItem = stringifiedItem.replaceAll(']"', ']');
+            stringifiedItem = stringifiedItem.replaceAll("]'", "]");
 
             return stringifiedItem;
         }
@@ -732,7 +732,13 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     }
 
     _isSpecialSimpleArray(item) {
-        return item && item.constructor && item.constructor.name == "Float32Array";
+        return item && item.constructor &&
+            (
+                item.constructor.name == "Uint32Array" ||
+                item.constructor.name == "Int32Array" ||
+                item.constructor.name == "Float32Array" ||
+                item.constructor.name == "Float64Array"
+            );
     }
 
     _setGamepadScrollActive(active) {

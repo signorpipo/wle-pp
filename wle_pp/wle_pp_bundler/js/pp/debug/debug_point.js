@@ -4,7 +4,7 @@ PP.DebugPointParams = class DebugPointParams {
         this.myPosition = [0, 0, 0];
         this.myRadius = 0;
 
-        this.myColor = [0.7, 0.7, 0.7, 1];
+        this.myColor = [0, 1, 0, 1];
 
         this.myType = PP.DebugDrawObjectType.POINT;
     }
@@ -59,9 +59,13 @@ PP.DebugPoint = class DebugPoint {
     }
 
     setColor(color) {
-        this._myParams.myColor = color;
+        this._myParams.myColor.vec4_copy(color);
 
         this._markDirty();
+    }
+
+    refresh() {
+        this.update(0);
     }
 
     update(dt) {
@@ -84,7 +88,7 @@ PP.DebugPoint = class DebugPoint {
 
         this._myPointMesh = this._myPointObject.addComponent('mesh');
         this._myPointMesh.mesh = PP.myDebugData.mySphereMesh;
-        this._myPointMesh.material = PP.myDebugData.myFlatMaterial.clone();
+        this._myPointMesh.material = PP.myDebugData.myDebugMaterial.clone();
     }
 
     _markDirty() {

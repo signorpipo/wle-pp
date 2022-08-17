@@ -6,6 +6,9 @@
     For rotations u can add a suffix like Degrees/Radians to use a specific version, example:
         - pp_angleDistanceSignedDegrees
         - pp_isInsideAngleRangeRadians
+        
+    List of constants:
+        - PP_EPSILON_NUMBER / PP_EPSILON_ANGLE
 
     List of functions:
         Notes:
@@ -13,18 +16,21 @@
 
         - pp_clamp
         - pp_sign
-        - pp_toDegrees  /   pp_toRadians
+        - pp_toDegrees      / pp_toRadians
         - pp_roundDecimal
         - pp_mapToRange
-        - pp_random     /   pp_randomInt    /   pp_randomSign   /   pp_randomPick
-        - pp_lerp       /   pp_interpolate  / PP.EasingFunction
-        - pp_angleDistance  /   pp_angleDistanceSigned
+        - pp_random         / pp_randomInt    / pp_randomInt        / pp_randomSign / pp_randomPick
+        - pp_lerp           / pp_interpolate  / PP.EasingFunction
+        - pp_angleDistance  / pp_angleDistanceSigned
         - pp_angleClamp
         - pp_isInsideAngleRange
 */
 
+Math.PP_EPSILON_NUMBER = 0.00001;
+Math.PP_EPSILON_ANGLE = 0.0001;
+
 Math.pp_clamp = function (value, start, end) {
-    let fixedStart = (start != null) ? start : Number.MIN_VALUE;
+    let fixedStart = (start != null) ? start : -Number.MAX_VALUE;
     let fixedEnd = (end != null) ? end : Number.MAX_VALUE;
 
     let min = Math.min(fixedStart, fixedEnd);
@@ -86,6 +92,10 @@ Math.pp_randomInt = function (start, end) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+Math.pp_randomBool = function () {
+    return Math.pp_randomInt(0, 1) == 0;
+};
+
 //Return 1 or -1
 Math.pp_randomSign = function () {
     return (Math.random() < 0.5) ? 1 : -1;
@@ -111,9 +121,9 @@ Math.pp_randomPick = function (...args) {
 };
 
 Math.pp_lerp = function (from, to, interpolationValue) {
-    if (interpolationValue == 0) {
+    if (interpolationValue <= 0) {
         return from;
-    } else if (interpolationValue == 1) {
+    } else if (interpolationValue >= 1) {
         return to;
     }
 
@@ -229,6 +239,9 @@ Math.pp_isInsideAngleRangeDegrees = function (angle, start, end, useShortestAngl
 Math.pp_isInsideAngleRangeRadians = function (angle, start, end, useShortestAngle = false) {
     return Math.pp_isInsideAngleRangeDegrees(Math.pp_toDegrees(angle), Math.pp_toDegrees(start), Math.pp_toDegrees(end), useShortestAngle);
 };
+
+
+
 
 for (let key in Math) {
     let prefixes = ["pp_", "_pp_"];

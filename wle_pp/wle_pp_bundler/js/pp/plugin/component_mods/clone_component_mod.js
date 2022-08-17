@@ -11,22 +11,7 @@ if (WL && WL.Object) {
         }
 
         if (deepCloneParams.isDeepCloneComponentVariable("mesh", "mesh")) {
-            let vertexData = new Float32Array(this.mesh.vertexData.length);
-            let indexData = new Uint32Array(this.mesh.indexData.length);
-
-            for (let i = 0; i < this.mesh.vertexData.length; i++) {
-                vertexData[i] = this.mesh.vertexData[i];
-            }
-
-            for (let i = 0; i < this.mesh.indexData.length; i++) {
-                indexData[i] = this.mesh.indexData[i];
-            }
-
-            clonedComponent.mesh = new WL.Mesh({
-                indexData: indexData,
-                indexType: WL.MeshIndexType.UnsignedInt,
-                vertexData: vertexData
-            });
+            clonedComponent.mesh = PP.MeshUtils.cloneMesh(this.mesh);
         } else {
             clonedComponent.mesh = this.mesh;
         }
@@ -69,33 +54,30 @@ if (WL && WL.Object) {
         return clonedComponent;
     };
 
-    // #TODO not completed
+    // #TODO not completed, missing flags like gravity or groups
     WL.PhysXComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
-        let clonedComponent = clonedObject.pp_addComponent(this.type);
+        let clonedComponent = clonedObject.pp_addComponent(this.type, {
+            "angularDamping": this.angularDamping,
+            "angularVelocity": this.angularVelocity,
+            "dynamicFriction": this.dynamicFriction,
+            "extents": this.extents,
+            "kinematic": this.kinematic,
+            "linearDamping": this.linearDamping,
+            "linearVelocity": this.linearVelocity,
+            "mass": this.mass,
+            "restituition": this.restituition,
+            "shape": this.shape,
+            "shapeData": this.shapeData,
+            "static": this.static,
+            "staticFriction": this.staticFriction,
+        });
+
         clonedComponent.active = this.active;
-
-        clonedComponent.angularDamping = this.angularDamping;
-        clonedComponent.angularVelocity = this.angularVelocity.slice(0);
-
-        clonedComponent.dynamicFriction = this.dynamicFriction;
-
-        clonedComponent.extents = this.extents.slice(0);
-
-        clonedComponent.kinematic = this.kinematic;
-
-        clonedComponent.linearDamping = this.linearDamping;
-        clonedComponent.linearVelocity = this.linearVelocity.slice(0);
-
-        clonedComponent.mass = this.mass;
-        clonedComponent.restitution = this.restitution;
-        clonedComponent.static = this.static;
-        clonedComponent.staticFriction = this.staticFriction;
-
-        clonedComponent.shape = this.shape;
-        clonedComponent.shapeData = this.shapeData;
 
         return clonedComponent;
     };
+
+
 
     Object.defineProperty(WL.MeshComponent.prototype, "pp_clone", { enumerable: false });
     Object.defineProperty(WL.CollisionComponent.prototype, "pp_clone", { enumerable: false });

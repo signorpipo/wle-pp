@@ -18,9 +18,7 @@ PP.EasyTuneBoolArrayWidgetSetup = class EasyTuneBoolArrayWidgetSetup {
 
         this.myTextAlignment = 2; // center
         this.myTextJustification = 2; // middle
-        this.myTextOutlineRange = [0.45, 0.45];
         this.myTextColor = this.myDefaultTextColor;
-        this.myTextOutlineColor = this.myDefaultTextColor;
 
         //Pivot
         this.myPivotObjectPositions = [];

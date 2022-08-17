@@ -22,6 +22,9 @@ WL.registerComponent('pp-benchmark-max-physx', {
     start: function () {
         this._myRootObject = WL.scene.addObject(this.object);
 
+        this._myRaycastSetup = new PP.RaycastSetup();
+        this._myRaycastResult = new PP.RaycastResult();
+
         this._myStaticPhysXObjects = [];
         this._myStaticPhysXComponents = [];
         this._myDynamicPhysXObjects = [];
@@ -114,16 +117,19 @@ WL.registerComponent('pp-benchmark-max-physx', {
             let origin = [Math.pp_random(1, 2) * Math.pp_randomSign(), Math.pp_random(1, 2) * Math.pp_randomSign(), Math.pp_random(1, 2) * Math.pp_randomSign()];
             let direction = [Math.pp_random(-1, 1), Math.pp_random(-1, 1), Math.pp_random(-1, 1)];
             direction.vec3_normalize(direction);
-            let raycastResult = WL.physics.rayCast(origin, direction, 255, distance);
+
+            this._myRaycastSetup.myOrigin.vec3_copy(origin);
+            this._myRaycastSetup.myDirection.vec3_copy(direction);
+            this._myRaycastSetup.myDistance = distance;
+            this._myRaycastSetup.myBlockLayerFlags.setMask(255);
+
+            let raycastResult = PP.PhysicsUtils.raycast(this._myRaycastSetup, this._myRaycastResult);
 
             if (debugActive) {
                 let raycastParams = new PP.DebugRaycastParams();
-                raycastParams.myOrigin = origin;
-                raycastParams.myDirection = direction;
-                raycastParams.myDistance = distance;
+                raycastParams.myRaycastResult = raycastResult;
                 raycastParams.myNormalLength = 5;
                 raycastParams.myThickness = 0.015;
-                raycastParams.myRaycastResult = raycastResult;
                 PP.myDebugManager.draw(raycastParams, this._myDebugTimer.getDuration());
             }
         }

@@ -86,6 +86,10 @@ PP.DebugTransform = class DebugTransform {
         this._markDirty();
     }
 
+    refresh() {
+        this.update(0);
+    }
+
     update(dt) {
         if (this._myDirty) {
             this._refresh();

@@ -96,7 +96,7 @@
     "textures": {
         "t0": {
             "link": {
-                "name": "DefaultFont",
+                "name": "DefaultTexture",
                 "file": "default"
             }
         }
@@ -104,7 +104,7 @@
     "images": {
         "f0": {
             "link": {
-                "name": "DefaultFontImage",
+                "name": "DefaultImage",
                 "file": "default"
             }
         }
@@ -120,49 +120,85 @@
     "shaders": {
         "1": {
             "link": {
-                "name": "Depth",
+                "name": "Depth.frag",
                 "file": "default"
             }
         },
         "3": {
             "link": {
-                "name": "DistanceFieldVector",
+                "name": "DistanceFieldVector.frag",
                 "file": "default"
             }
         },
         "5": {
             "link": {
-                "name": "Dynamic",
+                "name": "Dynamic.vert",
                 "file": "default"
             }
         },
         "6": {
             "link": {
-                "name": "Flat",
+                "name": "Flat.frag",
                 "file": "default"
             }
         },
         "9": {
             "link": {
-                "name": "MeshVisualizer",
+                "name": "MeshVisualizer.frag",
                 "file": "default"
             }
         },
         "11": {
             "link": {
-                "name": "Skinning",
+                "name": "Skinning.vert",
                 "file": "default"
             }
         },
         "12": {
             "link": {
-                "name": "Phong",
+                "name": "Phong.frag",
                 "file": "default"
             }
         },
         "15": {
             "link": {
-                "name": "Particle",
+                "name": "Particle.frag",
+                "file": "default"
+            }
+        },
+        "25": {
+            "link": {
+                "name": "Physical.frag",
+                "file": "default"
+            }
+        },
+        "28": {
+            "link": {
+                "name": "Sky.frag",
+                "file": "default"
+            }
+        },
+        "29": {
+            "link": {
+                "name": "Sky.vert",
+                "file": "default"
+            }
+        },
+        "30": {
+            "link": {
+                "name": "Text.frag",
+                "file": "default"
+            }
+        },
+        "32": {
+            "link": {
+                "name": "Text.vert",
+                "file": "default"
+            }
+        },
+        "33": {
+            "link": {
+                "name": "TileFeedback.frag",
                 "file": "default"
             }
         }
@@ -221,6 +257,30 @@
         "17": {
             "link": {
                 "name": "Particle",
+                "file": "default"
+            }
+        },
+        "26": {
+            "link": {
+                "name": "Physical Opaque",
+                "file": "default"
+            }
+        },
+        "27": {
+            "link": {
+                "name": "Physical Opaque Textured",
+                "file": "default"
+            }
+        },
+        "31": {
+            "link": {
+                "name": "Text",
+                "file": "default"
+            }
+        },
+        "34": {
+            "link": {
+                "name": "Sky",
                 "file": "default"
             }
         }

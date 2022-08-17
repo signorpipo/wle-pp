@@ -178,7 +178,7 @@ PP.EasyTuneNumberArray = class EasyTuneNumberArray extends PP.EasyTuneVariableAr
 
         if (!resetInitialValue) {
             let clampedInitialValue = this.myInitialValue.vec_clamp(this.myMin, this.myMax);
-            let initialValueChanged = !clampedInitialValue.vec_equals(this.myInitialValue);
+            let initialValueChanged = !clampedInitialValue.vec_equals(this.myInitialValue, 0.00001);
             if (initialValueChanged) {
                 PP.EasyTuneVariableArray.prototype.setInitialValue.call(this, clampedInitialValue);
             }

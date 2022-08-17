@@ -2,7 +2,8 @@ WL.registerComponent('pp-debug-manager', {
     _myCubeMesh: { type: WL.Type.Mesh },
     _mySphereMesh: { type: WL.Type.Mesh },
     _myConeMesh: { type: WL.Type.Mesh },
-    _myFlatMaterial: { type: WL.Type.Material },
+    _myDebugMaterial: { type: WL.Type.Material },
+    _myTextMaterial: { type: WL.Type.Material },
 }, {
     init: function () {
         if (this.active) {
@@ -10,7 +11,8 @@ WL.registerComponent('pp-debug-manager', {
             PP.myDebugData.myCubeMesh = this._myCubeMesh;
             PP.myDebugData.mySphereMesh = this._mySphereMesh;
             PP.myDebugData.myConeMesh = this._myConeMesh;
-            PP.myDebugData.myFlatMaterial = this._myFlatMaterial.clone();
+            PP.myDebugData.myDebugMaterial = this._myDebugMaterial.clone();
+            PP.myDebugData.myTextMaterial = this._myTextMaterial.clone();
 
             PP.myDebugManager = new PP.DebugManager();
         }
@@ -29,5 +31,6 @@ PP.myDebugData = {
     myCubeMesh: null,
     mySphereMesh: null,
     myConeMesh: null,
-    myFlatMaterial: null
+    myDebugMaterial: null,
+    myTextMaterial: null,
 };
