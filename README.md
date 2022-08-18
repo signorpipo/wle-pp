@@ -184,9 +184,13 @@ List of components:
 - [`pp-clear-console-on-session`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/clear_console_on_session.js)
   * u can add this to the scene so that when u press VR and enter the session, the console is cleared
   * useful to clear the console from everything related to the initialization that you may have already checked before entering
-- [`pp-set-hierarchy-active`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/set_hierarchy_active.js)
+- [`pp-set-active`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/set_active.js)
   * component that let you specify if the hierarchy of an object should be set active or not
-  * useful to deactive a tree of objects that you prefer to be visible in the editor
+  * useful to deactivate a tree of objects that you prefer to be visible in the editor
+- [`pp-adjust-hierarchy-physx-scale`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/adjust_hierarchy_physx_scale.js)
+  * can be used to adjust the physx scale of all the physx components in the hierarchy the current object
+  * adjusting means that every physx scale will be multiplied by the scale of the current object, since physx does not automatically adjust with the object scale
+  * makes it easier to scale up/down an entire scene made of physx since u don't have to scale every single one manually
 
 ### FSM
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm)
@@ -249,7 +253,19 @@ A collection of states that can be used with the FSM.
 List of states:
 - [`PP.TimerState`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm/states/timer_state.js)
   * let you wait in a specific state for a given time before performing a specified transition
-  
+
+### Physics
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics)
+
+List of features:
+- [`PP.PhysicsLayerFlags`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_layer_flags.js)
+  * a class that makes it easier to create and interact with a physx mask
+- [`PP.RaycastSetup`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastResult`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastResultHit`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js)
+  * a set of classes that are used to raycast into the scene and get the result of it  
+- [`PP.PhysicsUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_utils.js)
+  * some functions to interact with PhysX
+  * let you raycast into the scene 
+ 
 ### Utils
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils)
 
@@ -288,6 +304,8 @@ List of features:
   * show the position, orientation and scale of a transform
 - [`PP.DebugRaycast`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_raycast.js)
   * display the result of a raycast
+- [`PP.DebugText`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_text.js)
+  * displays a text on a specified position
 
 #### Components
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug/components)
@@ -333,6 +351,15 @@ By default the `lifetime` is set to 0, so that the debug will be displayed for j
 
 A collection of gameplay features ready to be used.
 
+### Cauldron
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay/cauldron)
+
+List of features:
+- [`PP.Direction2DTo3DConverter`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/gameplay/cauldron/direction_2D_to_3D_converter.js)
+  * convert a 2D direction (like the ones from the gamepad stick) to a 3D direction based on a reference transform
+  * takes care of making the 3D direction flat, for example to keep moving parallel to the ground
+  * it also have an automatic and customizable way of detecting when the 3D direction should start to "fly", that is stop being flat
+  
 ### Grab & Throw
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay/grab_throw)
 
@@ -375,6 +402,13 @@ A collection of classes and component to read inputs like head/hand transform or
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron)
 
 List of features:
+- [`PP.Keyboard`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/keyboard.js)
+  * a class that makes it easier to access the keyboard state
+  * let you check if a button is pressed or it's just been pressed/released
+- [`PP.Mouse`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/mouse.js)
+  * a class that makes it easier to access the mouse state
+  * let you check if a button is pressed or it's just been pressed/released or if the cursor is moving
+  * you can get the position on the screen or in the 3D world, and also cast a PhysX ray from the mouse into the world  
 - [`pp-finger-cursor`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/finger_cursor.js)
   * u can use this component to add a cursor on the tip of the index finger that can interact with WLE `cursor-target`
 - [`Input Types`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_types.js)
@@ -389,8 +423,9 @@ Everything u need to get inputs from a gamepad, and some utilities to animate a 
 You can find an outdated example of the Gamepad [here](https://github.com/SignorPipo/wle_gamepad).
 
 List of features:
-- [`PP.Gamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad.js)
+- [`PP.UniversalGamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/universal_gamepad.js)
   * a simple interface to retrieve buttons and axes state, get the controller transform and also make it pulse/vibrate
+  * it works through gamepad cores, that specify how the buttons are activated (keyboard, mouse, quest controllers)
   * example:
     ```js
     PP.myLeftGamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
@@ -399,20 +434,30 @@ List of features:
     PP.myGamepads[PP.Handedness.LEFT].getAxesInfo().getAxes();    
     PP.myRightGamepad.pulse(0.5, 1);    
     ```
-- [`PP.GamepadUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_utils.js)
+- [`Gamepad Buttons`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_buttons.js)
+  * here u can find the enums for the buttons and axes types and events and the classes the contains the buttons and axes infos
+- [`PP.GamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/gamepad_core.js)
+  * the base class that u can inherit to create a custom gamepad core that u can then plug into the universal gamepad
+- [`PP.XRGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/xr_gamepad_core.js) / [`PP.KeyboardGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/keyboard_gamepad_core.js)
+  * a few gamepad cores that let you retrieve the buttons trough the quest controllers or the keyboard  
+- [`PP.BaseGamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/base_gamepad.js)
+  * the base class that u can inherit to create your own gamepad, so that u can specify how buttons activate and stuff
+  * `PP.UniversalGamepad` inherits from this class
+- [`PP.GamepadUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_utils.js)
   * a bunch of functions that work with the gamepad
   * let you check if multiple buttons are pressed at the same time, or if any button in a specified list is pressed
-- [`PP.GamepadManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_manager.js)
+- [`PP.GamepadManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_manager.js)
   * a class that handle the creation and the update of the gamepads
-- [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_manager_component.js)
-  * handy component that will create a manager and update it
+- [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_manager_component.js)
+  * handy component that will create a gbamepad manager and update it
+  * it adds by default a few gamepad cores like the `PP.XRGamepadCore` and the `PP.KeyboardGamepadCore`
   * it will create a global `PP.myLeftGamepad` and a global `PP.myRightGamepad`
   * it will also create a global `PP.myGamepads` that contains both controllers and use `PP.Handedness` as index
-- [`pp-gamepad-animator`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_animator.js)
+- [`pp-gamepad-animator`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_animator.js)
   * component that let you animate a controller, that is buttons and axes move in the game like the one in real life
   * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
     * you can use [this 3D model](https://github.com/SignorPipo/wle_ppefault/blob/main/wle_ppefault/wle_ppefault/assets/models/quest_controllers_credits_Jezza3D.fbx) as a reference
-- [`pp-gamepad-control-scheme`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_control_scheme.js)
+- [`pp-gamepad-control-scheme`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_control_scheme.js)
   * component that let you add a visual control scheme on the gamepad
   * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
     * you can use [this 3D model](https://github.com/SignorPipo/wle_ppefault/blob/main/wle_ppefault/wle_ppefault/assets/models/quest_controllers_credits_Jezza3D.fbx) as a reference
@@ -488,7 +533,7 @@ The extensions add new functions to already existing features:
     Math.pp_angleDistance(from, to);
     ```
 - [`array_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/array_extension.js)
-  * adds some handy functions to the javascript Array library
+  * adds some handy functions to the javascript Array/Float32Array/Int32Array/... libraries
   * all the extensions methods start eaither with `pp_`, for method that applies on all arrays, or with the vector type that the Array represent, like `vec3_`, `quat_` and `mat4_`
   * one of the purpose is just to make `glMatrix` functions be available on the array directly
   * ranges from adding a simple remove function, to a push unique one, to one that gets the component along a specified axis and one to convert a quaternion to radians
@@ -502,8 +547,6 @@ The extensions add new functions to already existing features:
     array.quat_toRadians(); 
     array.mat4_getPosition();
     ```
-- [`float32array_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/float32array_extension.js)
-  * a copy of the Array extension on the Float32Array type so that u can use the extension methods without worrying if u are using one or the other
 
 ## Tool
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool)
