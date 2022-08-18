@@ -66,7 +66,8 @@ PP.PhysicsUtils = {
                     raycastResult._myUnusedHits = [];
                 }
 
-                for (let i = 0; i < raycastResult.myHits.length - validHitsCount; i++) {
+                let hitsToRemove = raycastResult.myHits.length - validHitsCount;
+                for (let i = 0; i < hitsToRemove; i++) {
                     raycastResult._myUnusedHits.push(raycastResult.myHits.pop());
                 }
             }

@@ -34,7 +34,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._mySkipNextFrames = 0;
         this._myMaxWaitFrames = 0;
 
-        this._myMaxPlaneReached = false;
+        this._myMaxPlanesReached = false;
 
         this._myFirstTime = true;
     },
@@ -109,7 +109,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
                     if ((this._myUpperLimit > 0 &&
                         (!isLagging && (this._myUpperLimit - this._myLowerLimit) <= Math.max(2, 1000 / this._myRealTrianglesAmount)) ||
                         (isLagging && (this._myUpperLimit - this._myLowerLimit) <= 1)) ||
-                        (!isLagging && this._myMaxPlaneReached)) {
+                        (!isLagging && this._myMaxPlanesReached)) {
                         if (frameRate < this._myStableFrameRate - this._myTargetFrameRateThreshold) {
                             // going a bit back with the binary search, maybe the lower limit was not lower after all cause of a bad assumption of average FPS
                             this._myLowerLimit = Math.max(1, Math.floor(this._myUpperLimit / 2.5));
@@ -120,9 +120,11 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
                                 console.log("Rst - Triangles:", this._myCurrentPlanes * this._myRealTrianglesAmount, "- Planes:", this._myCurrentPlanes, "- Frame Rate:", frameRate);
                             }
                         } else {
-                            if (this._myMaxPlaneReached) {
+                            if (this._myMaxPlanesReached) {
                                 if (this._myEnableLog) {
-                                    console.log("Aborting - Max Plane Reached");
+                                    console.log("Aborted - Max Planes Reached");
+
+                                    this._myDoneTextComponent.text = "Aborted - Max Planes Reached";
                                 }
                             } else {
                                 this._displayPlanes(this._myLowerLimit);
@@ -162,9 +164,9 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
 
                         if (this._myCurrentPlanes > 50000) {
                             this._myCurrentPlanes = 50000;
-                            this._myMaxPlaneReached = true;
+                            this._myMaxPlanesReached = true;
                         } else {
-                            this._myMaxPlaneReached = false;
+                            this._myMaxPlanesReached = false;
                         }
                     }
                 }
