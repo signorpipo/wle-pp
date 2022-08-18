@@ -260,7 +260,7 @@ List of states:
 List of features:
 - [`PP.PhysicsLayerFlags`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_layer_flags.js)
   * a class that makes it easier to create and interact with a physx mask
-- [`PP.RaycastSetup`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastResult`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastResultHit`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js)
+- [`PP.RaycastSetup`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastResult`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastHit`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_raycast_data.js)
   * a set of classes that are used to raycast into the scene and get the result of it  
 - [`PP.PhysicsUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics/physics_utils.js)
   * some functions to interact with PhysX

@@ -106,7 +106,7 @@ PP.RaycastResult = class RaycastResult {
 PP.RaycastResult.prototype.copy = function () {
     let copyHitCallback = function (currentElement, elementToCopy) {
         if (currentElement == null) {
-            currentElement = new PP.RaycastResultHit();
+            currentElement = new PP.RaycastHit();
         }
 
         currentElement.copy(elementToCopy);
@@ -147,7 +147,7 @@ PP.RaycastResult.prototype.copy = function () {
     };
 }();
 
-PP.RaycastResultHit = class RaycastResultHit {
+PP.RaycastHit = class RaycastHit {
     constructor() {
         this.myPosition = [0, 0, 0];
         this.myNormal = [0, 0, 0];

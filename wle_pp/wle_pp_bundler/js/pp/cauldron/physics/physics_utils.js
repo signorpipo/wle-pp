@@ -39,16 +39,14 @@ PP.PhysicsUtils = {
 
                 if (isHitValid) {
                     let hit = null;
-                    let reusedFromHits = false;
 
                     if (currentValidHitIndex < raycastResult.myHits.length) {
                         hit = raycastResult.myHits[currentValidHitIndex];
-                        reusedFromHits = true;
                     } else if (raycastResult._myUnusedHits != null && raycastResult._myUnusedHits.length > 0) {
                         hit = raycastResult._myUnusedHits.pop();
                         raycastResult.myHits.push(hit);
                     } else {
-                        hit = new PP.RaycastResultHit();
+                        hit = new PP.RaycastHit();
                         raycastResult.myHits.push(hit);
                     }
 
