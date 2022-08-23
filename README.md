@@ -22,15 +22,24 @@ Some of the features that you can get with this library:
 
 # How To Import
 
-To import this library into your own projects you have to get the `wle_pp_bundle.js` file, that you can find [here](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundle.js), and add it to your project.  
-
-If your project is a standard one (not `NPM`), the file must be added in the `Javascript source paths` section that can be found under the `Project Settings`, as any other javascript file u want to use in the project. 
-
-If your project is an `NPM` one, the file must be required in your bundle, just like any other dependency.  
-You also have to require, before the `wle_pp_bundle.js` file, the `cursor` and `cursor-target` WLE components.  
-You can find an official tutorial on how to setup an `NPM` project and add the required WLE components [here](https://wonderlandengine.com/tutorials/npm-project/).
-
 You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle_ppefault).
+
+## Import using the bundle file
+
+If you want to import this library into your own projects through the bundle file, you have to get the `wle_pp_bundle.js` file, that you can find [here](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundle.js), and add it to your project.  
+
+If your project is a standard one (not `npm`), the file must be added in the `Javascript source paths` section that can be found under the `Project Settings`, as any other javascript file u want to use in the project. 
+
+If your project is an `npm` one, the file must be required in your bundle, just like any other dependency.  
+You also have to require, before the `wle_pp_bundle.js` file, some WLE components like the `cursor` and `cursor-target` (an error will be logged otherwise).  
+You can find an official tutorial on how to setup an `npm` project and add the required WLE components [here](https://wonderlandengine.com/tutorials/npm-project/).
+
+## Import using npm
+
+If you want to import this library into your own project using `npm` you have to:
+  - setup an `npm` Wonderland Engine project like shown [here](https://wonderlandengine.com/tutorials/npm-project/)
+  - install the PP package with `npm install wle_pp`
+  - require the package inside your bundle file with: `require('wle_pp');`
 
 # License
 You are free to use this in your projects, just remember to credit me somewhere!
