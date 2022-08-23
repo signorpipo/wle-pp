@@ -17,7 +17,6 @@ WL.registerComponent('pp-gamepad-animator', {
         this._myIsTouchedDiffuseButtonColor = null;
         this._myIsTouchedAmbientButtonColor = null;
 
-        this._myThumbstickInitialLocalUp = this._getLocalAxis(this._myThumbstick, [0, 1, 0]);
         this._myThumbstickUp = [0, 1, 0];
         this._mySelectUp = [0, 1, 0];
 
@@ -29,6 +28,8 @@ WL.registerComponent('pp-gamepad-animator', {
         } else {
             this._myGamepad = PP.myRightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
         }
+
+        this._myThumbstickInitialLocalUp = this._getLocalAxis(this._myThumbstick, [0, 1, 0]);
 
         this._mySelectMaterial = this._mySelect.getComponent("mesh").material.clone();
         this._mySelect.getComponent("mesh").material = this._mySelectMaterial;
