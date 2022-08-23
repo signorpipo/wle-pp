@@ -23,14 +23,19 @@ PP.Mouse = class Mouse {
         WL.canvas.addEventListener("mouseup", this._myOnMouseUpCallback);
         this._myOnMouseLeaveCallback = this._onMouseLeave.bind(this);
         WL.canvas.addEventListener("mouseleave", this._myOnMouseLeaveCallback);
+        this._myOnMouseEnterCallback = this._onMouseEnter.bind(this);
+        WL.canvas.addEventListener("mouseenter", this._myOnMouseEnterCallback);
 
         this._myPreventContextMenuCallback = this._preventContextMenu.bind(this);
 
         this._myInternalMousePosition = PP.vec2_create();
         this._myScreenSize = PP.vec2_create();
 
-        this._myIsMovingToProcess = false;
+        this._myResetMovingDelay = 0.15;
+        this._myResetMovingTimer = new PP.Timer(this._myResetMovingDelay, false);
         this._myIsMoving = false;
+
+        this._myIsInsideView = true;
 
         this._myContextMenuActive = true;
 
@@ -42,8 +47,13 @@ PP.Mouse = class Mouse {
     }
 
     update(dt) {
-        this._myIsMoving = this._myIsMovingToProcess;
-        this._myIsMovingToProcess = false;
+        if (this._myResetMovingTimer.isRunning()) {
+            this._myResetMovingTimer.update(dt);
+            if (this._myResetMovingTimer.isDone()) {
+                this._myResetMovingTimer.reset();
+                this._myIsMoving = false;
+            }
+        }
 
         for (let buttonInfo of this._myButtonInfos.values()) {
             buttonInfo.myIsPressStart = buttonInfo.myIsPressStartToProcess;
@@ -93,6 +103,10 @@ PP.Mouse = class Mouse {
 
     isMoving() {
         return this._myIsMoving;
+    }
+
+    isInsideView() {
+        return this._myIsInsideView;
     }
 
     setContextMenuActive(active) {
@@ -172,6 +186,14 @@ PP.Mouse = class Mouse {
         return raycastResult;
     }
 
+    setResetMovingDelay(delay) {
+        this._myResetMovingDelay = delay;
+    }
+
+    getResetMovingDelay() {
+        return this._myResetMovingDelay;
+    }
+
     _updatePositionAndView(event) {
         let bounds = event.target.getBoundingClientRect();
         this._myScreenSize[0] = bounds.width;
@@ -181,7 +203,8 @@ PP.Mouse = class Mouse {
     }
 
     _onMouseMove(event) {
-        this._myIsMovingToProcess = true;
+        this._myResetMovingTimer.start(this._myResetMovingDelay);
+        this._myIsMoving = true;
 
         this._updatePositionAndView(event);
     }
@@ -207,6 +230,19 @@ PP.Mouse = class Mouse {
     }
 
     _onMouseLeave(event) {
+        this._myIsInsideView = false;
+
+        for (let buttonInfo of this._myButtonInfos.values()) {
+            if (buttonInfo.myIsPressed) {
+                buttonInfo.myIsPressed = false;
+                buttonInfo.myIsPressEndToProcess = true;
+            }
+        }
+    }
+
+    _onMouseEnter(event) {
+        this._myIsInsideView = true;
+
         for (let buttonInfo of this._myButtonInfos.values()) {
             if (buttonInfo.myIsPressed) {
                 buttonInfo.myIsPressed = false;

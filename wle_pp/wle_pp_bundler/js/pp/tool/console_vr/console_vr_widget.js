@@ -463,7 +463,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             let cursorTarget = ui.myClearButtonCursorTargetComponent;
             let backgroundMaterial = ui.myClearButtonBackgroundComponent.material;
 
-            cursorTarget.addClickFunction(this._clearConsole.bind(this));
+            cursorTarget.addClickFunction(this._clearConsole.bind(this, false, null));
             cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
             cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
         }

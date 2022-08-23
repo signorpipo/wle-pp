@@ -1,9 +1,11 @@
 WL.registerComponent('pp-gamepad-control-scheme', {
-    _myVisible: { type: WL.Type.Bool, default: true },
+    _myStartVisible: { type: WL.Type.Bool, default: true },
 
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
 
-    _myLineLength: { type: WL.Type.Float, default: 0.085 },
+    _myTextScaleMultiplier: { type: WL.Type.Float, default: 1 },
+    _myLineLengthMultiplier: { type: WL.Type.Float, default: 1 },
+    _myLineThicknessMultiplier: { type: WL.Type.Float, default: 1 },
 
     _mySelectText: { type: WL.Type.String, default: "" },
     _mySqueezeText: { type: WL.Type.String, default: "" },
@@ -30,8 +32,10 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
         this._myControlSchemeDirection = (this._myHandednessType == PP.Handedness.LEFT) ? 1 : -1;
 
+        this._myVisible = false;
+
         this._createControlScheme();
-        this.setVisible(this._myVisible);
+        this.setVisible(this._myStartVisible);
     },
     update: function (dt) {
     },
@@ -77,7 +81,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         this.object.pp_resetScale();
 
         let distanceFromButton = 0.015;
-        let lineLength = this._myLineLength;
+        let lineLength = 0.0935 * this._myLineLengthMultiplier;
 
         let referenceObject = this._myThumbstick;
 
@@ -154,7 +158,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
 
         lineRootObject.pp_setPosition(start);
 
-        let thickness = 0.001;
+        let thickness = 0.001 * this._myLineThicknessMultiplier;
         lineObject.pp_scaleObject([thickness / 2, thickness / 2, length / 2]);
 
         lineObject.pp_lookTo(lineDirection);
@@ -164,7 +168,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         let textObject = parentObject.pp_addObject();
         textObject.pp_setPosition(position);
         textObject.pp_lookTo(up, forward);
-        textObject.pp_scaleObject(0.075);
+        textObject.pp_scaleObject(0.0935 * this._myTextScaleMultiplier);
 
         let textComponent = textObject.pp_addComponent("text");
         textComponent.alignment = WL.Alignment.Center;
