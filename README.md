@@ -4,6 +4,8 @@ A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp).
 
+The npm package can be found [here](https://www.npmjs.com/package/wle_pp).
+
 A collection of Wonderland Engine default projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
 
 Some of the features that you can get with this library:
