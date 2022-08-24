@@ -137,6 +137,17 @@ WL.registerComponent('pp-grabber-hand', {
                 }
             }
 
+            let grabberPosition = this.object.pp_getPosition();
+            grabbablesToGrab.sort(function (first, second) {
+                let firstPosition = first.object.pp_getPosition();
+                let secondPosition = second.object.pp_getPosition();
+
+                let firstDistance = firstPosition.vec3_distance(grabberPosition);
+                let secondDistance = secondPosition.vec3_distance(grabberPosition);
+
+                return Math.pp_sign(firstDistance - secondDistance, 0);
+            });
+
             for (let grabbableToGrab of grabbablesToGrab) {
                 if (!this._isAlreadyGrabbed(grabbableToGrab)) {
                     let grabbableData = new PP.GrabberHandGrabbableData(grabbableToGrab, this._myThrowVelocitySource == 1, this._myLinearVelocityHistorySize, this._myAngularVelocityHistorySize);
