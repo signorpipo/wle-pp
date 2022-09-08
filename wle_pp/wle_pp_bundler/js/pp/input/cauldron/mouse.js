@@ -15,18 +15,8 @@ PP.Mouse = class Mouse {
                 { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, });
         }
 
-        this._myOnMouseMoveCallback = this._onMouseMove.bind(this);
-        WL.canvas.addEventListener("mousemove", this._myOnMouseMoveCallback);
-        this._myOnMouseDownCallback = this._onMouseDown.bind(this);
-        WL.canvas.addEventListener("mousedown", this._myOnMouseDownCallback);
-        this._myOnMouseUpCallback = this._onMouseUp.bind(this);
-        WL.canvas.addEventListener("mouseup", this._myOnMouseUpCallback);
-        this._myOnMouseLeaveCallback = this._onMouseLeave.bind(this);
-        WL.canvas.addEventListener("mouseleave", this._myOnMouseLeaveCallback);
-        this._myOnMouseEnterCallback = this._onMouseEnter.bind(this);
-        WL.canvas.addEventListener("mouseenter", this._myOnMouseEnterCallback);
-
         this._myPreventContextMenuCallback = this._preventContextMenu.bind(this);
+        this._myPreventMiddleButtonScrollCallback = this._preventMiddleButtonScroll.bind(this);
 
         this._myInternalMousePosition = PP.vec2_create();
         this._myScreenSize = PP.vec2_create();
@@ -38,12 +28,26 @@ PP.Mouse = class Mouse {
         this._myIsInsideView = true;
 
         this._myContextMenuActive = true;
+        this._myMiddleButtonScrollActive = true;
 
         // Support Variables
         this._myProjectionMatrixInverse = PP.mat4_create();
         this._myRotationQuat = PP.quat_create();
         this._myOriginWorld = PP.vec3_create();
         this._myDirectionWorld = PP.vec3_create();
+    }
+
+    start() {
+        this._myOnMouseMoveCallback = this._onMouseMove.bind(this);
+        WL.canvas.addEventListener("mousemove", this._myOnMouseMoveCallback);
+        this._myOnMouseDownCallback = this._onMouseDown.bind(this);
+        WL.canvas.addEventListener("mousedown", this._myOnMouseDownCallback);
+        this._myOnMouseUpCallback = this._onMouseUp.bind(this);
+        WL.canvas.addEventListener("mouseup", this._myOnMouseUpCallback);
+        this._myOnMouseLeaveCallback = this._onMouseLeave.bind(this);
+        WL.canvas.addEventListener("mouseleave", this._myOnMouseLeaveCallback);
+        this._myOnMouseEnterCallback = this._onMouseEnter.bind(this);
+        WL.canvas.addEventListener("mouseenter", this._myOnMouseEnterCallback);
     }
 
     update(dt) {
@@ -69,6 +73,7 @@ PP.Mouse = class Mouse {
         WL.canvas.removeEventListener("mouseup", this._myOnMouseUpCallback);
         WL.canvas.removeEventListener("mouseleave", this._myOnMouseLeaveCallback);
         WL.canvas.removeEventListener("contextmenu", this._myPreventContextMenuCallback);
+        WL.canvas.removeEventListener("mousedown", this._myPreventMiddleButtonScrollCallback);
     }
 
     isButtonPressed(buttonInfoType) {
@@ -117,6 +122,17 @@ PP.Mouse = class Mouse {
                 WL.canvas.addEventListener("contextmenu", this._myPreventContextMenuCallback, false);
             }
             this._myContextMenuActive = active;
+        }
+    }
+
+    setMiddleButtonScrollActive(active) {
+        if (this._myMiddleButtonScrollActive != active) {
+            if (active) {
+                WL.canvas.removeEventListener("mousedown", this._myPreventMiddleButtonScrollCallback);
+            } else {
+                WL.canvas.addEventListener("mousedown", this._myPreventMiddleButtonScrollCallback, false);
+            }
+            this._myMiddleButtonScrollActive = active;
         }
     }
 
@@ -253,5 +269,12 @@ PP.Mouse = class Mouse {
 
     _preventContextMenu(event) {
         event.preventDefault();
+    }
+
+    _preventMiddleButtonScroll(event) {
+        if (event.button == 1) {
+            event.preventDefault();
+            return false;
+        }
     }
 };

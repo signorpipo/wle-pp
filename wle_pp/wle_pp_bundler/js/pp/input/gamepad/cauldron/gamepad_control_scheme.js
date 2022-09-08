@@ -17,17 +17,13 @@ WL.registerComponent('pp-gamepad-control-scheme', {
     _mySqueeze: { type: WL.Type.Object, default: null },
     _myThumbstick: { type: WL.Type.Object, default: null },
     _myBottomButton: { type: WL.Type.Object, default: null },
-    _myTopButton: { type: WL.Type.Object, default: null },
-
-    _myCubeMesh: { type: WL.Type.Mesh },
-    _myTextMaterial: { type: WL.Type.Material },
-    _myFlatMaterial: { type: WL.Type.Material }
+    _myTopButton: { type: WL.Type.Object, default: null }
 }, {
     init: function () {
     },
     start: function () {
-        this._myTextMaterial = this._myTextMaterial.clone();
-        this._myFlatMaterial = this._myFlatMaterial.clone();
+        this._myTextMaterial = PP.myDefaultResources.myMaterials.myText.clone();
+        this._myFlatMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
 
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
         this._myControlSchemeDirection = (this._myHandednessType == PP.Handedness.LEFT) ? 1 : -1;
@@ -153,7 +149,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         lineObject = lineRootObject.pp_addObject();
 
         let lineMesh = lineObject.addComponent('mesh');
-        lineMesh.mesh = this._myCubeMesh;
+        lineMesh.mesh = PP.myDefaultResources.myMeshes.myCube;
         lineMesh.material = this._myFlatMaterial;
 
         lineRootObject.pp_setPosition(start);

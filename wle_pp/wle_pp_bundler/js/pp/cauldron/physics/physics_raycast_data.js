@@ -1,3 +1,16 @@
+/*
+let raycastSetup = new PP.RaycastSetup();
+
+raycastSetup.myOrigin.vec3_copy(origin);
+raycastSetup.myDirection.vec3_copy(direction);
+raycastSetup.myDistance = distance;
+raycastSetup.myBlockLayerFlags.setMask(flags);
+raycastSetup.myObjectsToIgnore.pp_clear();
+raycastSetup.myIgnoreHitsInsideCollision = false;
+
+let raycastResult = PP.PhysicsUtils.raycast(raycastSetup);
+*/
+
 PP.RaycastSetup = class RaycastSetup {
     constructor() {
         this.myOrigin = [0, 0, 0];

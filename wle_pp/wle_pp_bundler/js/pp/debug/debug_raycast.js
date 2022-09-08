@@ -1,3 +1,11 @@
+/*
+let debugParams = new PP.DebugRaycastParams();
+debugParams.myRaycastResult = raycastResult;
+debugParams.myNormalLength = 0.2;
+debugParams.myThickness = 0.005;
+PP.myDebugManager.draw(debugParams);
+*/
+
 PP.DebugRaycastParams = class DebugRaycastParams {
 
     constructor() {

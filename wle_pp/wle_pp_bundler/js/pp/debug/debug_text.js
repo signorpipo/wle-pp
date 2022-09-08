@@ -119,7 +119,7 @@ PP.DebugText = class DebugText {
         this._myTextObject = WL.scene.addObject(PP.myDebugData.myRootObject);
         this._myTextComponent = this._myTextObject.addComponent('text');
 
-        this._myTextComponent.material = PP.myDebugData.myTextMaterial.clone();
+        this._myTextComponent.material = PP.myDefaultResources.myMaterials.myText.clone();
     }
 
     _markDirty() {

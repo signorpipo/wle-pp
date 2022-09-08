@@ -1,3 +1,12 @@
+/*
+let debugParams = new PP.DebugArrowParams();
+debugParams.myStart = start;
+debugParams.myDirection = direction;
+debugParams.myLength = 0.1;
+debugParams.myColor = [0, 1, 0, 1];
+PP.myDebugManager.draw(debugParams);
+*/
+
 PP.DebugArrowParams = class DebugArrowParams extends PP.DebugLineParams {
     constructor() {
         super();
@@ -119,8 +128,8 @@ PP.DebugArrow = class DebugArrow {
         this._myArrowObject.scale([0.01, 0.01, 0.01]);
 
         this._myArrowMesh = this._myArrowObject.addComponent('mesh');
-        this._myArrowMesh.mesh = PP.myDebugData.myConeMesh;
-        this._myArrowMesh.material = PP.myDebugData.myDebugMaterial.clone();
+        this._myArrowMesh.mesh = PP.myDefaultResources.myMeshes.myCone;
+        this._myArrowMesh.material = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
     }
 
     _markDirty() {

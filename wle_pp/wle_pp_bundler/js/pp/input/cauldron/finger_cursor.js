@@ -2,9 +2,8 @@ WL.registerComponent('pp-finger-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myEnableMultipleClicks: { type: WL.Type.Bool, default: true },
     _myCollisionGroup: { type: WL.Type.Int, default: 1 },
-    _myCursorMesh: { type: WL.Type.Mesh, default: null },
-    _myCursorMaterial: { type: WL.Type.Material, default: null },
-    _myCursorSize: { type: WL.Type.Float, default: 0.0125 }
+    _myCollisionSize: { type: WL.Type.Float, default: 0.0125 },
+    _myCursorObject: { type: WL.Type.Object, default: null }
 }, {
     init: function () {
         this._myLastTarget = null;
@@ -18,19 +17,18 @@ WL.registerComponent('pp-finger-cursor', {
         this._myMultipleClickDelay = 0.3;
     },
     start: function () {
-        this._myCursorObject = WL.scene.addObject(this.object.parent);
-        this._myCursorObject.scale([this._myCursorSize, this._myCursorSize, this._myCursorSize]);
+        this._myCursorObjectRoot = WL.scene.addObject(null);
 
-        if (this._myCursorMesh) {
-            this._myCursorMeshComponent = this._myCursorObject.addComponent("mesh");
-            this._myCursorMeshComponent.mesh = this._myCursorMesh;
-            this._myCursorMeshComponent.material = this._myCursorMaterial.clone();
+        if (this._myCursorObject == null) {
+            this._myCursorObject = this._myCursorObjectRoot.pp_addObject();
+        } else {
+            this._myCursorObject.pp_setParent(this._myCursorObjectRoot);
         }
 
         this._myCollisionComponent = this._myCursorObject.addComponent('collision');
-        this._myCollisionComponent.collider = 0; //sphere
+        this._myCollisionComponent.collider = WL.Collider.Sphere;
         this._myCollisionComponent.group = 1 << this._myCollisionGroup;
-        this._myCollisionComponent.extents = [this._myCursorSize, this._myCursorSize, this._myCursorSize];
+        this._myCollisionComponent.extents = [this._myCollisionSize, this._myCollisionSize, this._myCollisionSize];
 
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);
@@ -47,6 +45,7 @@ WL.registerComponent('pp-finger-cursor', {
             this._myTripleClickTimer -= dt;
         }
 
+        this._myCursorObjectRoot.pp_setTransformQuat(PP.myPlayerObjects.myPlayerPivot.pp_getTransformQuat());
         this._updateHand();
 
         if (this._myHandInputSource) {
@@ -116,17 +115,16 @@ WL.registerComponent('pp-finger-cursor', {
             let tip = Module['webxr_frame'].getJointPose(this._myHandInputSource.hand.get("index-finger-tip"), this._myReferenceSpace);
 
             if (tip) {
-                this._myCursorObject.resetTransform();
-                this._myCursorObject.transformLocal.set([
+                this._myCursorObject.pp_setRotationLocalQuat([
                     tip.transform.orientation.x,
                     tip.transform.orientation.y,
                     tip.transform.orientation.z,
                     tip.transform.orientation.w]);
-                this._myCursorObject.translate([
+
+                this._myCursorObject.pp_setPositionLocal([
                     tip.transform.position.x,
                     tip.transform.position.y,
                     tip.transform.position.z]);
-                this._myCursorObject.scale([this._myCursorSize, this._myCursorSize, this._myCursorSize]);
             }
         }
     },

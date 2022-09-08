@@ -12,7 +12,7 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
         if (gamepadCore.getHandedness() == this.getHandedness()) {
             this._myGamepadCores.set(id, gamepadCore);
             if (this._myStarted) {
-                this._myGamepadCores._start();
+                gamepadCore.start();
             }
         }
     }

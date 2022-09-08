@@ -1,9 +1,7 @@
 WL.registerComponent('pp-tool-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myPulseOnHover: { type: WL.Type.Bool, default: false },
-    _myShowFingerCursor: { type: WL.Type.Bool, default: false },
-    _myCursorMesh: { type: WL.Type.Mesh, default: null },
-    _myCursorMaterial: { type: WL.Type.Material, default: null }
+    _myShowFingerCursor: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
         this._myHandednessString = ['left', 'right'][this._myHandedness];
@@ -30,11 +28,11 @@ WL.registerComponent('pp-tool-cursor', {
         this._myCursorObject.rotateObject(this._myCursorRotation);
 
         this._myCursorMeshObject = WL.scene.addObject(this._myCursorObject);
-        this._myCursorMeshObject.scale(this._myCursorMeshScale);
+        this._myCursorMeshObject.pp_setScale(this._myCursorMeshScale);
 
         this._myCursorMeshComponent = this._myCursorMeshObject.addComponent("mesh");
-        this._myCursorMeshComponent.mesh = this._myCursorMesh;
-        this._myCursorMeshComponent.material = this._myCursorMaterial.clone();
+        this._myCursorMeshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
+        this._myCursorMeshComponent.material = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
         this._myCursorMeshComponent.material.color = this._myCursorColor;
 
         this._myCursorComponent = this._myCursorObject.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1, "cursorObject": this._myCursorMeshObject });
@@ -43,12 +41,25 @@ WL.registerComponent('pp-tool-cursor', {
             this._myCursorComponent.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
         }
 
+        let fingerCursorObject = null;
+        let fingerCollisionSize = 0.0125;
+
+        if (this._myShowFingerCursor) {
+            fingerCursorObject = this.object.pp_addObject();
+
+            let meshComponent = fingerCursorObject.addComponent("mesh");
+            meshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
+            meshComponent.material = this._myCursorMeshComponent.material.clone();
+
+            fingerCursorObject.pp_setScale(fingerCollisionSize);
+        }
+
         this._myFingerCursorComponent = this.object.addComponent("pp-finger-cursor", {
             "_myHandedness": this._myHandedness,
             "_myEnableMultipleClicks": true,
             "_myCollisionGroup": this._myCursorTargetCollisionGroup,
-            "_myCursorMesh": (this._myShowFingerCursor ? this._myCursorMesh : null),
-            "_myCursorMaterial": this._myCursorMeshComponent.material
+            "_myCollisionSize": fingerCollisionSize,
+            "_myCursorObject": fingerCursorObject
         });
         this._myFingerCursorComponent.setActive(false);
     },

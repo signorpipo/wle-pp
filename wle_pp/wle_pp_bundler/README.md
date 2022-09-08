@@ -202,6 +202,11 @@ List of components:
   * can be used to adjust the physx scale of all the physx components in the hierarchy the current object
   * adjusting means that every physx scale will be multiplied by the scale of the current object, since physx does not automatically adjust with the object scale
   * makes it easier to scale up/down an entire scene made of physx since u don't have to scale every single one manually
+- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/get_player_objects.js)
+  * Setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
+  * This variable can be used to easily obtain the player objects/transforms in the code
+- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/get_default_resources.js)
+  * Setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
 
 ### FSM
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm)
@@ -391,7 +396,7 @@ The configuration is pretty straight forward:
 1. Enable the `Physics` feature, that u can find under the `Project Settings`
 1. Add the following components somewhere in your scene:
 	- [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_manager_component.js)
-	- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/get_player_objects.js)
+	- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/get_player_objects.js)
 	- If you are using one of the [wle_ppefault](https://github.com/SignorPipo/wle_ppefault) default projects you will find these components already setup in the scene
 3. Add a `pp-grabber-hand` component to one of the hands of the player
 	  - Make sure the `handedness` parameter of the component matches the hand one
@@ -426,6 +431,11 @@ List of features:
   * a collection of enums used to specify the type of the input, like the handedness or if it is a gamepad or a hand
 - [`PP.InputUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_utils.js)
   * a bunch of functions to work with inputs
+- [`PP.InputManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_manager.js)
+  * a class that handle the creation and the update of the inputs like gamepad, mouse and keyboard
+- [`pp-input-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_manager_component.js)
+  * handy component that will create a input manager and update it
+  * it creates some global variable like `PP.myMouse` or `PP.myGamepads` to easily access these devices
 
 ### Gamepad
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad)
@@ -460,7 +470,7 @@ List of features:
 - [`PP.GamepadManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_manager.js)
   * a class that handle the creation and the update of the gamepads
 - [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_manager_component.js)
-  * handy component that will create a gbamepad manager and update it
+  * handy component that will create a gamepad manager and update it
   * it adds by default a few gamepad cores like the `PP.XRGamepadCore` and the `PP.KeyboardGamepadCore`
   * it will create a global `PP.myLeftGamepad` and a global `PP.myRightGamepad`
   * it will also create a global `PP.myGamepads` that contains both controllers and use `PP.Handedness` as index
@@ -486,9 +496,6 @@ List of features:
 - [`pp-set-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_head_local_transform.js) / [`pp-set-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_vr_head_local_transform.js) / [`pp-set-non-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_non_vr_head_local_transform.js) / [`pp-set-hand-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_hand_local_transform.js)
   * components that set the local transform of their object to the one of the head/hand, relative to the real space (reference space)
   * fix forward can be used to make it so that the head/hand has the forward in the direction they look at since WebXR by default make it so the forward is in the opposite direction
-- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/inpacut/pose/components/get_player_objects.js)
-  * Setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
-  * This variable can be used to easily obtain the player objects/transforms in the code
 - [`pp-copy-head-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_head_transform.js) / [`pp-copy-hand-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_hand_transform.js)
   * component that set the world transform of its object to the one of the head/hand
   * it needs a head/hand to be already setup in the scene
