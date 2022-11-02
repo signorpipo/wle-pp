@@ -46,32 +46,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.cursorObjScale = new Float32Array(3);
         this.direction = [0, 0, 0];
         this.tempQuat = new Float32Array(4);
-        this.viewComponent = this.object.getComponent("view");
-        /* If this object also has a view component, we will enable inverse-projected mouse clicks,
-         * otherwise just use the objects transformation */
-        if (this.viewComponent != null) {
-            const onClick = this.onClick.bind(this);
-            WL.canvas.addEventListener("click", onClick);
-            const onPointerMove = this.onPointerMove.bind(this);
-            WL.canvas.addEventListener("pointermove", onPointerMove);
-            const onPointerDown = this.onPointerDown.bind(this);
-            WL.canvas.addEventListener("pointerdown", onPointerDown);
-            const onPointerUp = this.onPointerUp.bind(this);
-            WL.canvas.addEventListener("pointerup", onPointerUp);
-
-            this.projectionMatrix = new Float32Array(16);
-            mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
-            const onViewportResize = this.onViewportResize.bind(this);
-            window.addEventListener("resize", onViewportResize);
-
-            this.onDestroyCallbacks.push(() => {
-                WL.canvas.removeEventListener("click", onClick);
-                WL.canvas.removeEventListener("pointermove", onPointerMove);
-                WL.canvas.removeEventListener("pointerdown", onPointerDown);
-                WL.canvas.removeEventListener("pointerup", onPointerUp);
-                window.removeEventListener("resize", onViewportResize);
-            });
-        }
+        this.setViewComponent(this.object.getComponent("view"));
         this.isHovering = false;
         this.visible = true;
         this.isDown = false;
@@ -105,6 +80,35 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this._setCursorVisibility(false);
     };
 
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.setViewComponent = function (viewComponent) {
+        this.viewComponent = viewComponent;
+        /* If this object also has a view component, we will enable inverse-projected mouse clicks,
+         * otherwise just use the objects transformation */
+        if (this.viewComponent != null) {
+            const onClick = this.onClick.bind(this);
+            WL.canvas.addEventListener("click", onClick);
+            const onPointerMove = this.onPointerMove.bind(this);
+            WL.canvas.addEventListener("pointermove", onPointerMove);
+            const onPointerDown = this.onPointerDown.bind(this);
+            WL.canvas.addEventListener("pointerdown", onPointerDown);
+            const onPointerUp = this.onPointerUp.bind(this);
+            WL.canvas.addEventListener("pointerup", onPointerUp);
+
+            this.projectionMatrix = new Float32Array(16);
+            mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
+            const onViewportResize = this.onViewportResize.bind(this);
+            window.addEventListener("resize", onViewportResize);
+
+            this.onDestroyCallbacks.push(() => {
+                WL.canvas.removeEventListener("click", onClick);
+                WL.canvas.removeEventListener("pointermove", onPointerMove);
+                WL.canvas.removeEventListener("pointerdown", onPointerDown);
+                WL.canvas.removeEventListener("pointerup", onPointerUp);
+                window.removeEventListener("resize", onViewportResize);
+            });
+        }
+    };
+
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onViewportResize = function () {
         if (!this.viewComponent) return;
         /* Projection matrix will change if the viewport is resized, which will affect the
@@ -127,15 +131,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._setCursorVisibility = function (visible) {
-        if (this.visible == visible) return;
         this.visible = visible;
         if (!this.cursorObject) return;
 
-        if (visible) {
-            this.cursorObject.pp_setActive(true);
-        } else {
-            this.cursorObject.pp_setActive(false);
-        }
+        this.cursorObject.pp_setActive(visible);
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.update = function (dt) {
@@ -190,13 +189,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
                 this._setCursorVisibility(false);
             }
+        }
 
-            if (this.cursorRayObject) {
-                if (this.showRay) {
-                    this.cursorRayObject.pp_setActive(true);
-                    this.showRay = false;
-                }
-            }
+        if (this.cursorRayObject) {
+            this.cursorRayObject.pp_setActive(true);
         }
     };
 

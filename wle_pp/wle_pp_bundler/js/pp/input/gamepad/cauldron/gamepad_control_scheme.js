@@ -17,32 +17,53 @@ WL.registerComponent('pp-gamepad-control-scheme', {
     _mySqueeze: { type: WL.Type.Object, default: null },
     _myThumbstick: { type: WL.Type.Object, default: null },
     _myBottomButton: { type: WL.Type.Object, default: null },
-    _myTopButton: { type: WL.Type.Object, default: null }
+    _myTopButton: { type: WL.Type.Object, default: null },
+
+    _myTextMaterial: { type: WL.Type.Material },
+    _myLineMaterial: { type: WL.Type.Material }
 }, {
     init: function () {
     },
     start: function () {
-        this._myTextMaterial = PP.myDefaultResources.myMaterials.myText.clone();
-        this._myFlatMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
+        this._myTextMaterialFinal = (this._myTextMaterial != null) ? this._myTextMaterial : PP.myDefaultResources.myMaterials.myText.clone();
+        this._myLineMaterialFinal = (this._myLineMaterial != null) ? this._myLineMaterial : PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
 
         this._myHandednessType = PP.InputUtils.getHandednessByIndex(this._myHandedness);
         this._myControlSchemeDirection = (this._myHandednessType == PP.Handedness.LEFT) ? 1 : -1;
 
         this._myVisible = false;
+        this._mySetVisibleNextUpdate = false;
 
         this._createControlScheme();
         this.setVisible(this._myStartVisible);
     },
     update: function (dt) {
+        if (this._mySetVisibleNextUpdate) {
+            this._mySetVisibleNextUpdate = false;
+            this.setVisible(false);
+            this.setVisible(this._myVisible);
+        }
+    },
+    onActivate() {
+        this._mySetVisibleNextUpdate = true;
+    },
+    onDeactivate() {
+        let backupVisible = this._myVisible;
+        this.setVisible(false);
+        this._myVisible = backupVisible;
     },
     isVisible() {
         return this._myVisible;
     },
     setVisible(visible) {
         this._myVisible = visible;
-        this._myRootObject.pp_setActive(this._myVisible);
-        if (this._myVisible) {
-            this._hideEmptySchemes();
+
+        if (this._myRootObject != null) {
+            this._myRootObject.pp_setActive(this._myVisible);
+
+            if (this._myVisible) {
+                this._hideEmptySchemes();
+            }
         }
     },
     setSelectText(text) {
@@ -150,7 +171,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
 
         let lineMesh = lineObject.addComponent('mesh');
         lineMesh.mesh = PP.myDefaultResources.myMeshes.myCube;
-        lineMesh.material = this._myFlatMaterial;
+        lineMesh.material = this._myLineMaterialFinal;
 
         lineRootObject.pp_setPosition(start);
 
@@ -169,7 +190,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         let textComponent = textObject.pp_addComponent("text");
         textComponent.alignment = WL.Alignment.Center;
         textComponent.justification = WL.Justification.Top;
-        textComponent.material = this._myTextMaterial;
+        textComponent.material = this._myTextMaterialFinal;
 
         return textComponent;
     },

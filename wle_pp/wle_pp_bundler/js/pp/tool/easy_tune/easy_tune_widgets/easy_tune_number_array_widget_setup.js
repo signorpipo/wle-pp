@@ -22,9 +22,9 @@ PP.EasyTuneNumberArrayWidgetSetup = class EasyTuneNumberArrayWidgetSetup {
 
         //Pivot
         this.myPivotObjectPositions = [];
-        this.myPivotObjectPositions[PP.ToolHandedness.NONE] = [0, 0, 0];
-        this.myPivotObjectPositions[PP.ToolHandedness.LEFT] = [-0.04, 0.02, 0.00003713]; //little "random" z offset to avoid glitching with other widgets
-        this.myPivotObjectPositions[PP.ToolHandedness.RIGHT] = [-0.08, 0.02, 0.00003713];
+        this.myPivotObjectPositions[PP.ToolHandedness.NONE] = [0, 0, 0.00803713];
+        this.myPivotObjectPositions[PP.ToolHandedness.LEFT] = [-0.04, 0.02, 0.00803713]; //little "random" z offset to avoid glitching with other widgets
+        this.myPivotObjectPositions[PP.ToolHandedness.RIGHT] = [-0.08, 0.02, 0.00803713];
 
         let panelZ = 0.01;
         let distanceFromBorder = 0.0125;

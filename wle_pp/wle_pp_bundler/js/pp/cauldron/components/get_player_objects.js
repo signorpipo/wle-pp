@@ -14,6 +14,7 @@ WL.registerComponent("pp-get-player-objects", {
         PP.myPlayerObjects.myPlayer = this._myPlayer;
         PP.myPlayerObjects.myPlayerPivot = this._myPlayerPivot;
         PP.myPlayerObjects.myNonVRCamera = this._myNonVRCamera;
+        PP.myPlayerObjects.myHead = this._myHead;
         PP.myPlayerObjects.myNonVRHead = this._myNonVRHead;
         PP.myPlayerObjects.myVRHead = this._myVRHead;
         PP.myPlayerObjects.myEyeLeft = this._myEyeLeft;
@@ -32,20 +33,6 @@ WL.registerComponent("pp-get-player-objects", {
         if (PP.myPlayerObjects.myPlayerPivot == null) {
             PP.myPlayerObjects.myPlayerPivot = PP.myPlayerObjects.myPlayer;
         }
-
-        PP.myPlayerObjects.myHead = this._myNonVRHead;
-
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
-    },
-    _onXRSessionStart(session) {
-        PP.myPlayerObjects.myHead = PP.myPlayerObjects.myVRHead;
-    },
-    _onXRSessionEnd() {
-        PP.myPlayerObjects.myHead = PP.myPlayerObjects.myNonVRHead;
     }
 });
 

@@ -3,7 +3,8 @@ PP.Timer = class Timer {
         this._myDuration = duration;
         this._myOnEndCallbacks = new Map();     // Signature: callback()
 
-        this._myIsDone = false;
+        this._myDone = false;
+        this._myJustDone = false;
         this._myStarted = false;
 
         if (autoStart) {
@@ -28,11 +29,14 @@ PP.Timer = class Timer {
         }
 
         this._myTimer = this._myDuration;
-        this._myIsDone = false;
+        this._myDone = false;
+        this._myJustDone = false;
         this._myStarted = false;
     }
 
     update(dt) {
+        this._myJustDone = false;
+
         if (this.isRunning()) {
             this._myTimer = Math.max(0, this._myTimer - dt);
             if (this._myTimer == 0) {
@@ -42,7 +46,11 @@ PP.Timer = class Timer {
     }
 
     isDone() {
-        return this._myIsDone;
+        return this._myDone;
+    }
+
+    isJustDone() {
+        return this._myJustDone;
     }
 
     isStarted() {
@@ -83,7 +91,8 @@ PP.Timer = class Timer {
 
     _done() {
         this._myTimer = 0;
-        this._myIsDone = true;
+        this._myDone = true;
+        this._myJustDone = true;
         if (this._myOnEndCallbacks.size > 0) {
             for (let callback of this._myOnEndCallbacks.values()) {
                 callback();

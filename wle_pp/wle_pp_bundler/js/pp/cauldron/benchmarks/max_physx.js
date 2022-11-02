@@ -3,11 +3,12 @@ import * as glMatrix from 'gl-matrix';
 // adjust the gravity to a low value like -0.05 to have better results, since the dynamic objects will move slowly instead of quickly falling far away
 WL.registerComponent('pp-benchmark-max-physx', {
     _myStaticDomeSize: { type: WL.Type.Float, default: 40 },
-    _myStaticPhysXCount: { type: WL.Type.Int, default: 2000 },
+    _myStaticPhysXCount: { type: WL.Type.Int, default: 1000 },
     _myDynamicDomeSize: { type: WL.Type.Float, default: 80 },
     _myDynamicPhysXCount: { type: WL.Type.Int, default: 250 },
-    _myKinematic: { type: WL.Type.Bool, default: false },
-    _myRaycastCount: { type: WL.Type.Int, default: 500 },
+    _myKinematicDomeSize: { type: WL.Type.Float, default: 120 },
+    _myKinematicPhysXCount: { type: WL.Type.Int, default: 250 },
+    _myRaycastCount: { type: WL.Type.Int, default: 100 },
     _myVisualizeRaycast: { type: WL.Type.Bool, default: false },
     _myVisualizeRaycastDelay: { type: WL.Type.Float, default: 0.5 },
 
@@ -27,24 +28,31 @@ WL.registerComponent('pp-benchmark-max-physx', {
 
         this._myStaticPhysXObjects = [];
         this._myStaticPhysXComponents = [];
+        this._myStaticPhysXCollectors = [];
         this._myDynamicPhysXObjects = [];
         this._myDynamicPhysXComponents = [];
-        this._myStaticPhysXCollectors = [];
         this._myDynamicPhysXCollectors = [];
+        this._myKinematicPhysXObjects = [];
+        this._myKinematicPhysXComponents = [];
+        this._myKinematicPhysXCollectors = [];
 
-        this._spawnDome(true);
-        this._spawnDome(false);
+        this._spawnDome(true, false);
+        this._spawnDome(false, false);
+        this._spawnDome(false, true);
 
         this._myStartTimer = new PP.Timer(1);
         this._myTimer = new PP.Timer(0);
         this._myDebugTimer = new PP.Timer(this._myVisualizeRaycastDelay);
         this._myEnableLogTimer = new PP.Timer(1);
         this._myFPSHistory = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 7; i++) {
             this._myFPSHistory.push(0);
         }
 
-        this._myKinematicSetDelay = 10;
+        this._myAddVelocityDelay = 10;
+
+        this._myTranslateVec3 = PP.vec3_create();
+        this._myRotateVec3 = PP.vec3_create();
     },
     update: function (dt) {
         this._myStartTimer.update(dt);
@@ -74,6 +82,7 @@ WL.registerComponent('pp-benchmark-max-physx', {
                     console.clear();
                     console.log("Static PhysX Dome Size:", this._myStaticPhysXObjects.length);
                     console.log("Dynamic PhysX Dome Size:", this._myDynamicPhysXObjects.length);
+                    console.log("Kinematic PhysX Dome Size:", this._myKinematicPhysXObjects.length);
 
                     let staticCollisions = 0;
                     for (let collector of this._myStaticPhysXCollectors) {
@@ -85,7 +94,12 @@ WL.registerComponent('pp-benchmark-max-physx', {
                         dynamicCollisions += collector.getCollisions().length;
                     }
 
-                    let totalCollisions = (staticCollisions + dynamicCollisions) / 2; //every collision is considered twice since it is caught by 2 physX
+                    let kinematicCollisions = 0;
+                    for (let collector of this._myKinematicPhysXCollectors) {
+                        kinematicCollisions += collector.getCollisions().length;
+                    }
+
+                    let totalCollisions = (staticCollisions + dynamicCollisions + kinematicCollisions) / 2; //every collision is considered twice since it is caught by 2 physX
 
                     console.log("Current Collisions Count:", totalCollisions);
                     console.log("Raycast Count:", this._myRaycastCount);
@@ -99,13 +113,26 @@ WL.registerComponent('pp-benchmark-max-physx', {
             }
         }
 
-        this._myKinematicSetDelay--;
-        if (this._myKinematicSetDelay == 0) {
-            for (let physX of this._myDynamicPhysXComponents) {
-                physX.kinematic = this._myKinematic;
-                let strength = 2;
-                physX.linearVelocity = [Math.pp_random(-strength, strength), Math.pp_random(-strength, strength), Math.pp_random(-strength, strength)];
+        if (this._myAddVelocityDelay > 0) {
+            this._myAddVelocityDelay--;
+            if (this._myAddVelocityDelay == 0) {
+                for (let physX of this._myDynamicPhysXComponents) {
+                    physX.kinematic = false;
+                    let strength = 50;
+                    physX.linearVelocity = [Math.pp_random(-strength, strength), Math.pp_random(-strength, strength), Math.pp_random(-strength, strength)];
+                    physX.angularVelocity = [Math.pp_random(-strength, strength), Math.pp_random(-strength, strength), Math.pp_random(-strength, strength)];
+                }
             }
+        }
+
+        for (let physX of this._myKinematicPhysXObjects) {
+            let strength = 5 * dt;
+            this._myTranslateVec3.vec3_set(Math.pp_random(-strength, strength), Math.pp_random(-strength, strength), Math.pp_random(-strength, strength));
+            physX.pp_translate(this._myTranslateVec3);
+
+            rotateStrength = 50 * dt;
+            this._myRotateVec3.vec3_set(Math.pp_random(-rotateStrength, rotateStrength), Math.pp_random(-rotateStrength, rotateStrength), Math.pp_random(-rotateStrength, rotateStrength));
+            physX.pp_rotate(this._myRotateVec3);
         }
     },
     _raycastTest(debugActive) {
@@ -126,22 +153,24 @@ WL.registerComponent('pp-benchmark-max-physx', {
             let raycastResult = PP.PhysicsUtils.raycast(this._myRaycastSetup, this._myRaycastResult);
 
             if (debugActive) {
-                let raycastParams = new PP.DebugRaycastParams();
-                raycastParams.myRaycastResult = raycastResult;
-                raycastParams.myNormalLength = 5;
-                raycastParams.myThickness = 0.015;
-                PP.myDebugManager.draw(raycastParams, this._myDebugTimer.getDuration());
+                PP.myDebugVisualManager.drawRaycast(this._myDebugTimer.getDuration(), raycastResult, true, 5, 0.015);
             }
         }
     },
-    _spawnDome(isStatic) {
+    _spawnDome(isStatic, isDynamic) {
         let maxCount = this._myStaticPhysXCount;
         let physXList = this._myStaticPhysXObjects;
         let cloves = Math.ceil(Math.sqrt(this._myStaticPhysXCount));
         if (!isStatic) {
-            cloves = Math.ceil(Math.sqrt(this._myDynamicPhysXCount));
-            maxCount = this._myDynamicPhysXCount;
-            physXList = this._myDynamicPhysXObjects;
+            if (isDynamic) {
+                cloves = Math.ceil(Math.sqrt(this._myDynamicPhysXCount));
+                maxCount = this._myDynamicPhysXCount;
+                physXList = this._myDynamicPhysXObjects;
+            } else {
+                cloves = Math.ceil(Math.sqrt(this._myKinematicPhysXCount));
+                maxCount = this._myKinematicPhysXCount;
+                physXList = this._myKinematicPhysXObjects;
+            }
         }
 
         let angleForClove = Math.PI * 2 / cloves;
@@ -150,8 +179,13 @@ WL.registerComponent('pp-benchmark-max-physx', {
         let maxDistance = this._myStaticDomeSize + 20;
 
         if (!isStatic) {
-            minDistance = Math.max(0, this._myDynamicDomeSize - 20);
-            maxDistance = this._myDynamicDomeSize + 20;
+            if (isDynamic) {
+                minDistance = Math.max(0, this._myDynamicDomeSize - 20);
+                maxDistance = this._myDynamicDomeSize + 20;
+            } else {
+                minDistance = Math.max(0, this._myKinematicDomeSize - 20);
+                maxDistance = this._myKinematicDomeSize + 20;
+            }
         }
 
         let minExtraRotation = 0;
@@ -179,7 +213,7 @@ WL.registerComponent('pp-benchmark-max-physx', {
 
                     glMatrix.vec3.scale(physXDirection, physXDirection, distance);
 
-                    this._addPhysX(physXDirection, isStatic);
+                    this._addPhysX(physXDirection, isStatic, isDynamic);
                 }
 
                 verticalDirection.vec3_rotateAxisRadians(angleForClove / 2, rotationAxis, verticalDirection);
@@ -195,7 +229,7 @@ WL.registerComponent('pp-benchmark-max-physx', {
 
                     glMatrix.vec3.scale(physXDirection, physXDirection, distance);
 
-                    this._addPhysX(physXDirection, isStatic);
+                    this._addPhysX(physXDirection, isStatic, isDynamic);
                 }
 
                 verticalDirection.vec3_rotateAxisRadians(angleForClove / 2, rotationAxis, verticalDirection);
@@ -205,7 +239,7 @@ WL.registerComponent('pp-benchmark-max-physx', {
             horizontalDirection.vec3_rotateAxisRadians(angleForClove, upDirection, horizontalDirection);
         }
     },
-    _addPhysX(physXDirection, isStatic) {
+    _addPhysX(physXDirection, isStatic, isDynamic) {
         let position = physXDirection;
         let scale = Math.pp_random(1, 10);
         let shape = Math.pp_randomPick(WL.Shape.Sphere, WL.Shape.Box);
@@ -221,22 +255,22 @@ WL.registerComponent('pp-benchmark-max-physx', {
             "shape": shape, "shapeData": { index: this._myShapeIndex },
             "extents": [scale, scale, scale],
             "static": isStatic,
-            "kinematic": this._myKinematic,
+            "kinematic": !isDynamic,
             "mass": 1
         });
-        if (!this._myKinematic && !isStatic) {
-            let strength = 10;
-            physXComponent.linearVelocity = [Math.pp_random(-strength, strength), Math.pp_random(-strength, strength), Math.pp_random(-strength, strength)];
-        }
 
         if (isStatic) {
             this._myStaticPhysXObjects.push(physX);
             this._myStaticPhysXComponents.push(physXComponent);
             this._myStaticPhysXCollectors.push(new PP.PhysXCollisionCollector(physXComponent));
-        } else {
+        } else if (isDynamic) {
             this._myDynamicPhysXObjects.push(physX);
             this._myDynamicPhysXComponents.push(physXComponent);
             this._myDynamicPhysXCollectors.push(new PP.PhysXCollisionCollector(physXComponent));
+        } else {
+            this._myKinematicPhysXObjects.push(physX);
+            this._myKinematicPhysXComponents.push(physXComponent);
+            this._myKinematicPhysXCollectors.push(new PP.PhysXCollisionCollector(physXComponent));
         }
     }
 });

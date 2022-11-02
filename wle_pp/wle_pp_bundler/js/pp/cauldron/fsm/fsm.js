@@ -64,6 +64,7 @@ PP.FSM = class FSM {
         this._myPerformType = performType;
         this._myPerformDelayedType = performDelayedType;
         this._myPendingPerforms = [];
+        this._myCurrentlyPerformedTransition = null;
 
         this._myInitCallbacks = new Map();            // Signature: callback(fsm, initStateData, initTransitionObject, ...args)
         this._myInitIDCallbacks = new Map();          // Signature: callback(fsm, initStateData, initTransitionObject, ...args)
@@ -226,6 +227,14 @@ PP.FSM = class FSM {
 
     isInState(stateID) {
         return this._myCurrentStateData != null && this._myCurrentStateData.myID == stateID;
+    }
+
+    isPerformingTransition() {
+        return this._myCurrentlyPerformedTransition != null;
+    }
+
+    getCurrentlyPerformedTransition() {
+        return this._myCurrentlyPerformedTransition;
     }
 
     hasBeenInit() {
@@ -546,10 +555,24 @@ PP.FSM = class FSM {
     }
 
     _perform(transitionID, performType, ...args) {
+        if (this.isPerformingTransition()) {
+            let currentlyPerformedTransition = this.getCurrentlyPerformedTransition();
+            let consoleArguments = [this._myDebugLogName, "- Trying to perform:", transitionID];
+            if (this._myDebugShowDelayedInfo) {
+                consoleArguments.push(performType == PP.PerformType.DELAYED ? "- Delayed" : "- Immediate");
+            }
+            consoleArguments.push("- But another transition is currently being performed -", currentlyPerformedTransition.myID);
+            console.warn(...consoleArguments);
+
+            return false;
+        }
+
         if (this._myCurrentStateData) {
             if (this.canPerform(transitionID)) {
                 let transitions = this._myTransitionMap.get(this._myCurrentStateData.myID);
                 let transitionToPerform = transitions.get(transitionID);
+
+                this._myCurrentlyPerformedTransition = transitionToPerform;
 
                 let fromState = this._myCurrentStateData;
                 let toState = this._myStateMap.get(transitionToPerform.myToState.myID);
@@ -596,6 +619,8 @@ PP.FSM = class FSM {
                         callbackMap.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performType, ...args); }.bind(this));
                     }
                 }
+
+                this._myCurrentlyPerformedTransition = null;
 
                 return true;
             } else if (this._myDebugLogActive) {

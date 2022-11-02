@@ -10,6 +10,14 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
         this._createSkeleton();
         this._setTransforms();
         this._addComponents();
+
+        this._setTransformForNonVR();
+
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
     setVisible(visible) {
@@ -319,5 +327,21 @@ PP.ConsoleVRWidgetUI = class ConsoleVRWidgetUI {
         textComponent.material = this._myAdditionalSetup.myTextMaterial.clone();
         textComponent.material.color = this._mySetup.myTextColor;
         textComponent.text = "";
+    }
+
+    _onXRSessionStart() {
+        this._setTransformForVR();
+    }
+
+    _onXRSessionEnd() {
+        this._setTransformForNonVR();
+    }
+
+    _setTransformForVR() {
+        this.myNotifyIconPanel.setTranslationLocal(this._mySetup.myNotifyIconPanelPositions[this._myAdditionalSetup.myHandedness]);
+    }
+
+    _setTransformForNonVR() {
+        this.myNotifyIconPanel.setTranslationLocal(this._mySetup.myNotifyIconPanelPositions[PP.ToolHandedness.NONE]);
     }
 };

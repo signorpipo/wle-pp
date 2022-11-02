@@ -8,5 +8,5 @@ PP.ToolHandedness = {
 PP.ToolInputSourceType = {
     NONE: null,
     GAMEPAD: 0,
-    HAND: 1
+    TRACKED_HAND: 1
 };

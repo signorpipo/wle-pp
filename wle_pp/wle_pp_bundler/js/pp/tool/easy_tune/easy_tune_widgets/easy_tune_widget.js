@@ -45,6 +45,14 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         }
     }
 
+    setVisible(visible) {
+        this._myWidgetFrame.setVisible(visible);
+    }
+
+    isVisible() {
+        return this._myWidgetFrame.isVisible();
+    }
+
     start(parentObject, additionalSetup, easyTuneVariables) {
         this._myRightGamepad = PP.myRightGamepad; //@EDIT get right gamepad here based on how you store it in your game
         this._myLeftGamepad = PP.myLeftGamepad; //@EDIT get left gamepad here based on how you store it in your game
@@ -187,6 +195,10 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _widgetVisibleChanged(visible) {
+        for (let widget of this._myWidgets) {
+            widget.setVisible(false);
+        }
+
         if (this._myCurrentWidget) {
             if (this._myEasyTuneVariables.size > 0) {
                 this._myCurrentWidget.setVisible(visible);

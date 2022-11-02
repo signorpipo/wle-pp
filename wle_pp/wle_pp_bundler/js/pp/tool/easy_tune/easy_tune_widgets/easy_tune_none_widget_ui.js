@@ -10,6 +10,14 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
         this._createSkeleton();
         this._setTransforms();
         this._addComponents();
+
+        this._setTransformForNonVR();
+
+        if (WL.xrSession) {
+            this._onXRSessionStart(WL.xrSession);
+        }
+        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
+        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
     }
 
     setVisible(visible) {
@@ -156,5 +164,21 @@ PP.EasyTuneNoneWidgetUI = class EasyTuneNoneWidgetUI {
         textComponent.material = this._myAdditionalSetup.myTextMaterial.clone();
         textComponent.material.color = this._mySetup.myTextColor;
         textComponent.text = "";
+    }
+
+    _onXRSessionStart() {
+        this._setTransformForVR();
+    }
+
+    _onXRSessionEnd() {
+        this._setTransformForNonVR();
+    }
+
+    _setTransformForVR() {
+        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandedness]);
+    }
+
+    _setTransformForNonVR() {
+        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[PP.ToolHandedness.NONE]);
     }
 };

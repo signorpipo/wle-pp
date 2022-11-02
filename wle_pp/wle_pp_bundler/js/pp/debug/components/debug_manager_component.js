@@ -2,12 +2,12 @@ WL.registerComponent('pp-debug-manager', {
 }, {
     init: function () {
         if (this.active) {
-            PP.myDebugData.myRootObject = WL.scene.addObject(null);
-
             PP.myDebugManager = new PP.DebugManager();
+            PP.myDebugVisualManager = PP.myDebugManager.getDebugVisualManager();
         }
     },
     start() {
+        PP.myDebugManager.start();
     },
     update(dt) {
         PP.myDebugManager.update(dt);
@@ -15,7 +15,4 @@ WL.registerComponent('pp-debug-manager', {
 });
 
 PP.myDebugManager = null;
-
-PP.myDebugData = {
-    myRootObject: null
-};
+PP.myDebugVisualManager = null;

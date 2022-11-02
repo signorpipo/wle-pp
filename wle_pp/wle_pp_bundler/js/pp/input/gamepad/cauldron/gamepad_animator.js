@@ -1,6 +1,3 @@
-/**
- * Animate the buttons of a gamepad, like pressing, thumbstick tilting and so on
- */
 WL.registerComponent('pp-gamepad-animator', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _mySelect: { type: WL.Type.Object, default: null },
@@ -119,17 +116,21 @@ WL.registerComponent('pp-gamepad-animator', {
 
         this._enableMeshInSession();
     },
-    _thumbstickPressedStart: function (buttonInfo, gamepad) {
-        //since thumbstick object rotate I need to specifically use its initial up
+    _thumbstickPressedStart: function () {
         let tempVector = PP.vec3_create();
-        this._myThumbstickInitialLocalUp.vec3_scale(-0.0015, tempVector);
-        this._myThumbstick.translate(tempVector);
-    },
-    _thumbstickPressedEnd: function (buttonInfo, gamepad) {
+        return function _thumbstickPressedStart(buttonInfo, gamepad) {
+            //since thumbstick object rotate I need to specifically use its initial up
+            this._myThumbstickInitialLocalUp.vec3_scale(-0.0015, tempVector);
+            this._myThumbstick.translate(tempVector);
+        };
+    }(),
+    _thumbstickPressedEnd: function () {
         let tempVector = PP.vec3_create();
-        this._myThumbstickInitialLocalUp.vec3_scale(0.0015, tempVector);
-        this._myThumbstick.translate(tempVector);
-    },
+        return function _thumbstickPressedEnd(buttonInfo, gamepad) {
+            this._myThumbstickInitialLocalUp.vec3_scale(0.0015, tempVector);
+            this._myThumbstick.translate(tempVector);
+        };
+    }(),
     _bottomButtonPressedStart: function (buttonInfo, gamepad) {
         this._translateLocalAxis(this._myBottomButton, [0, 1, 0], -0.002);
     },
@@ -254,12 +255,14 @@ WL.registerComponent('pp-gamepad-animator', {
         tempVector.vec3_scale(amount, tempVector);
         object.translate(tempVector);
     },
-    _getLocalAxis(object, axis) {
+    _getLocalAxis: function () {
         let tempVector = PP.vec3_create();
-        axis.vec3_transformQuat(object.transformLocal, tempVector);
-        tempVector.vec3_normalize(tempVector);
-        return tempVector;
-    },
+        return function _getLocalAxis(object, axis) {
+            axis.vec3_transformQuat(object.transformLocal, tempVector);
+            tempVector.vec3_normalize(tempVector);
+            return tempVector;
+        };
+    }(),
     _enableMeshInSession: function () {
         if (!this._myIsMeshEnabled) {
             if (WL.xrSession) {

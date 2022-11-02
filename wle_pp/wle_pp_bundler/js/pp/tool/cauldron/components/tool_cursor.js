@@ -23,22 +23,36 @@ WL.registerComponent('pp-tool-cursor', {
     start: function () {
         this._myFixForwardObject = WL.scene.addObject(this.object);
         this._myFixForwardObject.pp_rotateObject([0, 180, 0]);
-        this._myCursorObject = WL.scene.addObject(this._myFixForwardObject);
-        this._myCursorObject.setTranslationLocal(this._myCursorPosition);
-        this._myCursorObject.rotateObject(this._myCursorRotation);
 
-        this._myCursorMeshObject = WL.scene.addObject(this._myCursorObject);
-        this._myCursorMeshObject.pp_setScale(this._myCursorMeshScale);
+        this._myCursorObjectVR = WL.scene.addObject(this._myFixForwardObject);
+        this._myCursorObjectVR.setTranslationLocal(this._myCursorPosition);
+        this._myCursorObjectVR.rotateObject(this._myCursorRotation);
 
-        this._myCursorMeshComponent = this._myCursorMeshObject.addComponent("mesh");
-        this._myCursorMeshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
-        this._myCursorMeshComponent.material = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-        this._myCursorMeshComponent.material.color = this._myCursorColor;
+        {
+            let cursorMeshObject = WL.scene.addObject(this._myCursorObjectVR);
+            cursorMeshObject.pp_setScale(this._myCursorMeshScale);
 
-        this._myCursorComponent = this._myCursorObject.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1, "cursorObject": this._myCursorMeshObject });
-        this._myCursorComponent.rayCastMode = 0; //collision
-        if (this._myPulseOnHover) {
-            this._myCursorComponent.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
+            let cursorMeshComponent = cursorMeshObject.addComponent("mesh");
+            cursorMeshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
+            cursorMeshComponent.material = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
+            cursorMeshComponent.material.color = this._myCursorColor;
+
+            let cursorComponent = this._myCursorObjectVR.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1, "cursorObject": cursorMeshObject });
+            cursorComponent.rayCastMode = 0; //collision
+            if (this._myPulseOnHover) {
+                cursorComponent.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
+            }
+        }
+
+        this._myCursorObjectNonVR = WL.scene.addObject(null);
+
+        {
+            let cursorComponent = this._myCursorObjectNonVR.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1 });
+            cursorComponent.rayCastMode = 0; //collision
+            if (this._myPulseOnHover) {
+                cursorComponent.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
+            }
+            cursorComponent.setViewComponent(PP.myPlayerObjects.myNonVRCamera.getComponent("view"));
         }
 
         let fingerCursorObject = null;
@@ -49,30 +63,49 @@ WL.registerComponent('pp-tool-cursor', {
 
             let meshComponent = fingerCursorObject.addComponent("mesh");
             meshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
-            meshComponent.material = this._myCursorMeshComponent.material.clone();
+            meshComponent.material = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
+            meshComponent.material.color = this._myCursorColor;
 
             fingerCursorObject.pp_setScale(fingerCollisionSize);
         }
 
-        this._myFingerCursorComponent = this.object.addComponent("pp-finger-cursor", {
+        this._myFingerCursorObject = WL.scene.addObject(this.object);
+        this._myFingerCursorComponent = this._myFingerCursorObject.addComponent("pp-finger-cursor", {
             "_myHandedness": this._myHandedness,
             "_myEnableMultipleClicks": true,
             "_myCollisionGroup": this._myCursorTargetCollisionGroup,
             "_myCollisionSize": fingerCollisionSize,
             "_myCursorObject": fingerCursorObject
         });
-        this._myFingerCursorComponent.setActive(false);
-    },
-    update: function (dt) {
-        let isUsingHand = this._isUsingHand();
 
-        this._myFingerCursorComponent.setActive(isUsingHand);
+        this._myCursorObjectVR.pp_setActive(false);
+        this._myCursorObjectNonVR.pp_setActive(false);
+        this._myFingerCursorObject.pp_setActive(false);
 
-        this._myCursorComponent.active = !isUsingHand;
-        if (!this._myCursorComponent.active) {
-            this._myCursorComponent._setCursorVisibility(false);
-        }
     },
+    update: function () {
+        let transformQuat = PP.quat2_create();
+        return function update(dt) {
+            let isUsingHand = this._isUsingHand();
+
+            this._myFingerCursorObject.pp_setActive(isUsingHand);
+
+            if (isUsingHand) {
+                this._myCursorObjectNonVR.pp_setActive(false);
+                this._myCursorObjectVR.pp_setActive(false);
+            } else {
+                if (PP.XRUtils.isXRSessionActive()) {
+                    this._myCursorObjectVR.pp_setActive(!isUsingHand);
+                    this._myCursorObjectNonVR.pp_setActive(false);
+                } else {
+                    this._myCursorObjectNonVR.pp_setActive(!isUsingHand);
+                    this._myCursorObjectVR.pp_setActive(false);
+
+                    this._myCursorObjectNonVR.pp_setTransformQuat(PP.myPlayerObjects.myNonVRCamera.pp_getTransformQuat(transformQuat));
+                }
+            }
+        };
+    }(),
     _isUsingHand: function () {
         let isUsingHand = false;
 

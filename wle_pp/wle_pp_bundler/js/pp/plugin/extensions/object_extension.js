@@ -67,6 +67,8 @@
         - pp_setActive  / pp_setActiveSelf  / pp_setActiveHierarchy / pp_setActiveDescendants / pp_setActiveChildren
 
         - pp_clone      / pp_isCloneable
+        
+        - pp_toString   / pp_toStringCompact / pp_toStringExtended
 
         - pp_addObject
         - pp_getName    / pp_setName
@@ -2164,6 +2166,137 @@ if (WL && WL.Object) {
 
         return isCloneable;
     };
+
+    //To String
+
+    WL.Object.prototype.pp_toString = function () {
+        return this.pp_toStringCompact();
+    }
+
+    WL.Object.prototype.pp_toStringExtended = function () {
+        let tab = "    ";
+        let newLine = "\n";
+        let startObject = "{";
+        let endObject = "}";
+        let nameLabel = "name: ";
+        let idLabel = "id: ";
+        let componentsLabel = "components: ";
+        let typeLabel = "type: ";
+        let childrenLabel = "children: ";
+        let startComponents = "[";
+        let endComponents = "]";
+        let startChildren = startComponents;
+        let endChildren = endComponents;
+        let separator = ",";
+        let newLineTab = newLine.concat(tab, tab);
+        return function pp_toString() {
+            let objectString = "";
+            objectString = objectString.concat(startObject, newLine);
+            let name = this.pp_getName();
+            if (name.length > 0) {
+                objectString = objectString.concat(tab, nameLabel, this.pp_getName(), separator, newLine);
+            }
+            objectString = objectString.concat(tab, idLabel, this.pp_getID(), separator, newLine);
+
+            let components = this.pp_getComponents();
+            if (components.length > 0) {
+                objectString = objectString.concat(tab, componentsLabel, newLine, tab, startComponents, newLine);
+                for (let i = 0; i < components.length; i++) {
+                    let component = components[i];
+
+                    objectString = objectString.concat(tab, tab, startObject, newLine);
+                    objectString = objectString.concat(tab, tab, tab, typeLabel, component.type, separator, newLine);
+                    objectString = objectString.concat(tab, tab, tab, idLabel, component._id, separator, newLine);
+                    objectString = objectString.concat(tab, tab, endObject);
+
+                    if (i != components.length - 1) {
+                        objectString = objectString.concat(separator, newLine);
+                    } else {
+                        objectString = objectString.concat(newLine);
+                    }
+                }
+
+                objectString = objectString.concat(tab, endComponents, separator, newLine);
+            }
+
+            let children = this.pp_getChildren();
+            if (children.length > 0) {
+                objectString = objectString.concat(tab, childrenLabel, newLine, tab, startChildren, newLine);
+                for (let i = 0; i < children.length; i++) {
+                    let child = children[i];
+
+                    let childString = child.pp_toStringExtended();
+                    childString = childString.replaceAll(newLine, newLineTab);
+                    childString = tab.concat(tab, childString);
+                    objectString = objectString.concat(childString);
+
+                    if (i != children.length - 1) {
+                        objectString = objectString.concat(separator, newLine);
+                    } else {
+                        objectString = objectString.concat(newLine);
+                    }
+                }
+                objectString = objectString.concat(tab, endChildren, separator, newLine);
+            }
+
+            objectString = objectString.concat(endObject);
+
+            return objectString;
+        };
+    }();
+
+    WL.Object.prototype.pp_toStringCompact = function () {
+        let tab = "    ";
+        let newLine = "\n";
+        let emptyName = "<none>";
+        let nameLabel = "name: ";
+        let componentsLabel = "components: ";
+        let separator = ", ";
+        let newLineTab = newLine.concat(tab);
+        return function pp_toString() {
+            let objectString = "";
+
+            let name = this.pp_getName();
+            if (name.length > 0) {
+                objectString = objectString.concat(nameLabel, name);
+            } else {
+                objectString = objectString.concat(nameLabel, emptyName);
+            }
+
+            let components = this.pp_getComponents();
+            if (components.length > 0) {
+                objectString = objectString.concat(separator, componentsLabel);
+                for (let i = 0; i < components.length; i++) {
+                    let component = components[i];
+
+                    objectString = objectString.concat(component.type);
+
+                    if (i != components.length - 1) {
+                        objectString = objectString.concat(separator);
+                    }
+                }
+            }
+
+            let children = this.pp_getChildren();
+            if (children.length > 0) {
+                objectString = objectString.concat(newLine);
+                for (let i = 0; i < children.length; i++) {
+                    let child = children[i];
+
+                    let childString = child.pp_toStringCompact();
+                    childString = childString.replaceAll(newLine, newLineTab);
+                    childString = tab.concat(childString);
+                    objectString = objectString.concat(childString);
+
+                    if (i != children.length - 1) {
+                        objectString = objectString.concat(newLine);
+                    }
+                }
+            }
+
+            return objectString;
+        };
+    }();
 
     //Cauldron
 

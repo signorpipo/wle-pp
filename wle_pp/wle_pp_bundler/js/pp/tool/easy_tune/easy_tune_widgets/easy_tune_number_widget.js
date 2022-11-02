@@ -34,12 +34,12 @@ PP.EasyTuneNumberWidget = class EasyTuneNumberWidget {
     }
 
     setVisible(visible) {
+        for (let widget of this._myWidgets.values()) {
+            widget.setVisible(false);
+        }
+
         if (this._myVariable) {
             this._sizeChangedCheck();
-
-            for (let widget of this._myWidgets.values()) {
-                widget.setVisible(false);
-            }
 
             this._myWidgets.get(this._myCurrentArraySize).setVisible(visible);
         }

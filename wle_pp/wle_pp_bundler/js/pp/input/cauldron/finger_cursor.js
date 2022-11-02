@@ -104,12 +104,14 @@ WL.registerComponent('pp-finger-cursor', {
             this._myLastTarget = null;
         }
     },
-    setActive: function (active) {
-        this._myCursorObject.pp_setActiveHierarchy(active);
-        this.active = active;
+    onActivate: function () {
+        this._myCursorObjectRoot.pp_setActive(true);
+    },
+    onDeactivate: function () {
+        this._myCursorObjectRoot.pp_setActive(false);
     },
     _updateHand() {
-        this._myHandInputSource = PP.InputUtils.getInputSource(this._myHandednessString, PP.InputSourceType.HAND);
+        this._myHandInputSource = PP.InputUtils.getInputSource(this._myHandednessString, PP.InputSourceType.TRACKED_HAND);
 
         if (this._myHandInputSource) {
             let tip = Module['webxr_frame'].getJointPose(this._myHandInputSource.hand.get("index-finger-tip"), this._myReferenceSpace);

@@ -8,7 +8,7 @@
         - pp_isInsideAngleRangeRadians
         
     List of constants:
-        - PP_EPSILON_NUMBER / PP_EPSILON_ANGLE
+        - PP_EPSILON_NUMBER / PP_EPSILON_DEGREES
 
     List of functions:
         Notes:
@@ -27,7 +27,7 @@
 */
 
 Math.PP_EPSILON_NUMBER = 0.00001;
-Math.PP_EPSILON_ANGLE = 0.0001;
+Math.PP_EPSILON_DEGREES = 0.0001;
 
 Math.pp_clamp = function (value, start, end) {
     let fixedStart = (start != null) ? start : -Number.MAX_VALUE;

@@ -37,6 +37,14 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         }
     }
 
+    setVisible(visible) {
+        this._myWidgetFrame.setVisible(visible);
+    }
+
+    isVisible() {
+        return this._myWidgetFrame.isVisible();
+    }
+
     start(parentObject, additionalSetup) {
         this._myLeftGamepad = PP.myLeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
         this._myRightGamepad = PP.myRightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game

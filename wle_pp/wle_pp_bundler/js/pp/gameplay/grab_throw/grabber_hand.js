@@ -38,7 +38,6 @@ WL.registerComponent('pp-grabber-hand', {
         this._myThrowCallbacks = new Map();     // Signature: callback(grabber, grabbable)
 
         this._myDebugActive = false;
-        this._myDebugLines = [];
     },
     start: function () {
         if (this._myHandedness == PP.HandednessIndex.LEFT) {
@@ -49,13 +48,6 @@ WL.registerComponent('pp-grabber-hand', {
 
         this._myPhysX = this.object.pp_getComponent('physx');
         this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysX, true);
-
-        if (this._myDebugActive) {
-            for (let i = 0; i < this._myLinearVelocityHistorySize; i++) {
-                let line = new PP.DebugLine();
-                this._myDebugLines.push(line);
-            }
-        }
     },
     update: function (dt) {
         this._myCollisionsCollector.update(dt);
@@ -303,10 +295,9 @@ WL.registerComponent('pp-grabber-hand', {
             }
             direction.vec3_normalize(direction);
 
-            this._myDebugLines[j - 1].setStartDirectionLength(this.object.pp_getPosition(), direction, 0.2);
             let color = 1 / j;
-            this._myDebugLines[j - 1].setColor([color, color, color, 1]);
-            this._myDebugLines[j - 1].setVisible(true);
+
+            PP.myDebugVisualManager.drawLine(5, this.object.pp_getPosition(), direction, 0.2, [olor, color, color, 1]);
         }
     },
     _isAlreadyGrabbed(grabbable) {

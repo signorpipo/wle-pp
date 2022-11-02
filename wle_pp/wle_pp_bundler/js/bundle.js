@@ -35,6 +35,7 @@ require('./pp/cauldron/components/set_active');
 require('./pp/cauldron/components/adjust_hierarchy_physx_scale');
 require('./pp/cauldron/components/get_player_objects');
 require('./pp/cauldron/components/get_default_resources');
+require('./pp/cauldron/components/show_fps');
 
 require('./pp/cauldron/fsm/fsm');
 require('./pp/cauldron/fsm/state');
@@ -52,14 +53,24 @@ require('./pp/cauldron/physics/physics_utils');
 require('./pp/cauldron/physics/physics_raycast_data');
 require('./pp/cauldron/physics/physics_layer_flags');
 
+require('./pp/cauldron/visual/visual_manager');
+
+require('./pp/cauldron/visual/elements/visual_element_types');
+require('./pp/cauldron/visual/elements/visual_line');
+require('./pp/cauldron/visual/elements/visual_mesh');
+require('./pp/cauldron/visual/elements/visual_point');
+require('./pp/cauldron/visual/elements/visual_arrow');
+require('./pp/cauldron/visual/elements/visual_text');
+require('./pp/cauldron/visual/elements/visual_transform');
+require('./pp/cauldron/visual/elements/visual_raycast');
+require('./pp/cauldron/visual/elements/visual_torus');
+
+require('./pp/cauldron/visual/components/visual_manager_component');
+
 //	DEBUG
 require('./pp/debug/debug_manager');
-require('./pp/debug/debug_transform');
-require('./pp/debug/debug_line');
-require('./pp/debug/debug_arrow');
-require('./pp/debug/debug_point');
-require('./pp/debug/debug_raycast');
-require('./pp/debug/debug_text');
+require('./pp/debug/debug_visual_manager');
+
 require('./pp/debug/components/debug_transform_component');
 require('./pp/debug/components/debug_manager_component');
 
@@ -77,6 +88,10 @@ require('./pp/input/cauldron/keyboard');
 require('./pp/input/cauldron/mouse');
 require('./pp/input/cauldron/input_manager');
 require('./pp/input/cauldron/input_manager_component');
+require('./pp/input/cauldron/switch_hand_object');
+require('./pp/input/cauldron/tracked_hand_draw_joint');
+require('./pp/input/cauldron/tracked_hand_draw_all_joints');
+require('./pp/input/cauldron/tracked_hand_draw_skin');
 
 require('./pp/input/gamepad/gamepad_buttons');
 require('./pp/input/gamepad/base_gamepad');
@@ -85,20 +100,25 @@ require('./pp/input/gamepad/gamepad_cores/gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/xr_gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/keyboard_gamepad_core');
 require('./pp/input/gamepad/cauldron/gamepad_animator');
-require('./pp/input/gamepad/cauldron/gamepad_manager_component');
 require('./pp/input/gamepad/cauldron/gamepad_manager');
 require('./pp/input/gamepad/cauldron/gamepad_utils');
 require('./pp/input/gamepad/cauldron/gamepad_control_scheme');
 
+require('./pp/input/pose/base_pose.js');
 require('./pp/input/pose/hand_pose');
 require('./pp/input/pose/head_pose');
+require('./pp/input/pose/tracked_hand_joint_pose');
+require('./pp/input/pose/tracked_hand_pose');
 require('./pp/input/pose/components/set_player_height');
 require('./pp/input/pose/components/set_hand_local_transform');
 require('./pp/input/pose/components/set_head_local_transform');
 require('./pp/input/pose/components/set_vr_head_local_transform');
 require('./pp/input/pose/components/set_non_vr_head_local_transform');
+require('./pp/input/pose/components/set_tracked_hand_joint_local_transform');
 require('./pp/input/pose/components/copy_hand_transform');
 require('./pp/input/pose/components/copy_head_transform');
+require('./pp/input/pose/components/copy_player_transform');
+require('./pp/input/pose/components/copy_player_pivot_transform');
 
 //	TOOL
 require('./pp/tool/cauldron/cauldron/tool_types');

@@ -435,7 +435,7 @@ List of features:
   * a class that handle the creation and the update of the inputs like gamepad, mouse and keyboard
 - [`pp-input-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_manager_component.js)
   * handy component that will create a input manager and update it
-  * it creates some global variable like `PP.myMouse` or `PP.myGamepads` to easily access these devices
+  * it creates some global variables like `PP.myMouse` or `PP.myGamepads` to easily access these devices
 
 ### Gamepad
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad)
