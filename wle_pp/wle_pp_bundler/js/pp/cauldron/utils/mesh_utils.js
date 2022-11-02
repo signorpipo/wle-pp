@@ -135,6 +135,10 @@ PP.MeshUtils = {
         let color = PP.vec4_create();
 
         return function cloneMesh(mesh) {
+            if (mesh == null) {
+                return null;
+            }
+
             let clonedIndexData = new Uint32Array(mesh.indexData.length);
             for (let i = 0; i < mesh.indexData.length; i++) {
                 clonedIndexData[i] = mesh.indexData[i];
@@ -214,6 +218,10 @@ PP.MeshUtils = {
         let color = PP.vec4_create();
 
         return function invertMesh(mesh) {
+            if (mesh == null) {
+                return null;
+            }
+
             let invertedIndexData = new Uint32Array(mesh.indexData.length);
             for (let i = 0; i < mesh.indexData.length / 3; i++) {
                 invertedIndexData[i * 3 + 0] = mesh.indexData[i * 3 + 2];

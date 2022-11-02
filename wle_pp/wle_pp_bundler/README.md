@@ -6,9 +6,11 @@ The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/ma
 
 The npm package can be found [here](https://www.npmjs.com/package/wle_pp).
 
-A collection of Wonderland Engine default projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
+A collection of Wonderland Engine template projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
 
-Some of the features that you can get with this library:
+## Quick Feature Summary
+
+Some of the features that you can get with this library are:
   - Object Extension
     * add to the WLE object lots of functions that make the object interface more cohesive and complete
   - Gamepad
@@ -17,6 +19,11 @@ Some of the features that you can get with this library:
     * a ready to use gameplay feature to grab and throw objects
   - FSM
     * a simple but powerful finite state machine, your best friend when developing a game
+  - Array Extension
+    * add to the Array object lots of functions that makes it easy to work with `vec3`, `quat` and more
+  - Debug Draw
+    * easily draw some debug object in the scene using functions like `PP.myDebugVisualManager.drawLine`, `PP.myDebugVisualManager.drawArrow` or `PP.myDebugVisualManager.drawRaycast`
+	* this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
   - Console VR
     * a tool that let you see the console even when u are inside the VR session
   - Easy Tune
@@ -42,6 +49,22 @@ If you want to import this library into your own project using `npm` you have to
   - setup an `npm` Wonderland Engine project like shown [here](https://wonderlandengine.com/tutorials/npm-project/)
   - install the PP package with `npm install wle_pp`
   - require the package inside your bundle file with: `require('wle_pp');`
+  
+## Project Setup
+
+In order to use most of the PP library your project needs to have certain components in your scene properly setup.  
+Specifically, these components needs to be added:
+  - `pp-get-default-resources`
+  - `pp-get-player-objects`
+  - `pp-input-manager`
+  - `pp-visual-manager`
+  - `pp-debug-manager`
+  
+The best approach is to start by using a `ppefault` template project, which can be found [here](https://github.com/SignorPipo/wle_ppefault).  
+If u need to integrate the bundle in an existing project you can still take a look at this template project to see how to setup the above components properly.
+
+The `ppefault` template project also present a `Player` hierarchy structure that keeps things clean and organized.  
+It's not mandatory to keep this structure but can make things easier so I advise u to use it!
 
 # License
 You are free to use this in your projects, just remember to credit me somewhere!
@@ -64,6 +87,7 @@ For the extensions (functions added to already existing objects), the names usua
   * [Components](#components)
   * [FSM](#fsm)
   * [Utils](#utils)
+  * [Visual](#visual)
 - [Debug](#debug)
 - [Gameplay](#gameplay)
   * [Grab & Throw](#grab--throw)
@@ -203,10 +227,12 @@ List of components:
   * adjusting means that every physx scale will be multiplied by the scale of the current object, since physx does not automatically adjust with the object scale
   * makes it easier to scale up/down an entire scene made of physx since u don't have to scale every single one manually
 - [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/get_player_objects.js)
-  * Setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
-  * This variable can be used to easily obtain the player objects/transforms in the code
+  * setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
+  * this variable can be used to easily obtain the player objects/transforms in the code
 - [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/get_default_resources.js)
-  * Setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
+  * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
+- [`pp-show-fps`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/show_fps.js)
+  * easy way to show fps as a UI element
 
 ### FSM
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm)
@@ -292,6 +318,7 @@ List of features:
 - [`PP.ColorUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils/color_utils.js)
   * bunch of functions to work with colors, like converting hsv to rgb, or code notation (0,1) to the human one (0,255)
 - [`PP.MeshUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils/ca_utils.js)
+  * some functions to create/clone/invert a mesh in an easy way
   * let you create some simple meshes like a plane, and also change the alpha (or material or else) of all the meshes of an object
 - [`PP.SaveUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils/mesh_utils.js)
   * a set of functions to interact with the local storage, that is to save and load data
@@ -301,6 +328,58 @@ List of features:
 - [`PP.XRUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils/xr_utils.js)
   * some functions to interact with the WebXR APIs
   * you can check if the device that is running is emulated or if the session is active
+  
+### Visual
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual)
+
+This feature let you add visual objects like lines, arrows, points and more easily.
+
+List of features:
+- [`PP.VisualManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_manager.js)
+  * let you easily draw visual in the scene
+- [`PP.VisualLine`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_line.js)
+  * you can specify a start and end position and it will visualize it as a line
+- [`PP.VisualArrow`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_arrow.js)
+  * you can specify a start and end position and it will visualize it as an arrow toward the end position
+- [`PP.VisualPoint`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_point.js)
+  * you can specify a position and it will display a point on it with a given radius
+- [`PP.VisualMesh`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_mesh.js)
+  * you can specify a mesh and a material and it will visualize it
+- [`PP.VisualTransform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_transform.js)
+  * show the position, orientation and scale of a transform
+- [`PP.VisualRaycast`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_raycast.js)
+  * display the result of a raycast
+- [`PP.VisualText`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_text.js)
+  * displays a text on a specified position
+- [`PP.VisualTorus`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/visual_torus.js)
+  * you can specify a radius, the number of segment and their thickness and it will visualize a torus with those params
+
+#### Components
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/components)
+
+List of components:
+- [`pp-visual-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/components/visual_manager_component.js)
+  * handy component that will create a visual manager and update it
+  
+#### How To
+In this case an example is worth more than a billion words:
+```js
+let visualParams = new PP.VisualLineParams();
+visualParams.myStart.vec3_copy([0,0,0]);
+visualParams.myDirection.vec3_copy([0,0,1]);
+visualParams.myLength = l;
+visualParams.myMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
+visualParams.myMaterial.color = [1, 1, 1, 1];
+PP.myVisualManager.draw(visualParams, lifetimeSeconds);
+
+or
+
+let visualLine = new PP.VisualLine(visualParams);
+
+```
+
+In the example above two tecniques are shown: the first let the manager draw the line for the amount of seconds specified, the second one create the object and let you manage it yourself.
+If the value of the `lifetimeSeconds` is set to 0 the visual will be drawn for onle 1 frame.
 
 ## Debug
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug)
@@ -309,58 +388,30 @@ A collection of classes and components to help with debugging, like showing in r
 
 List of features:
 - [`PP.DebugManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_manager.js)
-  * let you easily display debug objects in the scene with the draw functionalities
-- [`PP.DebugLine`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_line.js)
-  * you can specify a start and end position and it will visualize it as a line
-- [`PP.DebugArrow`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_arrow.js)
-  * you can specify a start and end position and it will visualize it as an arrow toward the end position
-- [`PP.DebugPoint`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_point.js)
-  * you can specify a position and it will display a point on it with a given radius
-- [`PP.DebugTransform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_transform.js)
-  * show the position, orientation and scale of a transform
-- [`PP.DebugRaycast`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_raycast.js)
-  * display the result of a raycast
-- [`PP.DebugText`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_text.js)
-  * displays a text on a specified position
+  * manages all the debug features
+- [`PP.DebugVisualManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/debug_manager.js)
+  * a debug version of the visual manager, so that u can split between the normal visual and the debug ones
+  * it also feature some quick draw methods not available with the `PP.VisualManager` to add debug objects even more easily
 
 #### Components
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug/components)
   
 List of components:
 - [`pp-debug-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/components/debug_manager_component.js)
-  * a component that takes care of initializing the debug data used by the debug features
-  * it creates and updates a debug manager
+  * creates and updates a debug manager
 - [`pp-debug-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/debug/components/debug_transform_component.js)
   * a handy component to add the debug transform debug to an existing object in the scene  
   
 ### How To
-You first need to:
-- initialize the `PP.myDebugData` field, needed to get the materials and meshes used to create the debugs
-- create and update a `PP.DebugManager`
+You can add debug visuals exactly like you would do for the plain visual feature.  
+In addition to that, you can also use a bunch of quick draw methods only avaiable in the debug feature, for example: 
 
-You can easily do that by using the `pp-debug-manager` component.
-
-Beside that, u just have to create the debug u want and set the data for it:
 ```js
-let debugLine = new PP.DebugLine();
-debugLine.setColor([1, 0, 0, 1]);
-debugLine.setStartEnd([0, 0, 0],[0, 0, 1]); 
+PP.myDebugVisualManager.drawLine(lifetimeSeconds, position, direction, length, color, thickness);
+PP.myDebugVisualManager.drawArrow(lifetimeSeconds, position, direction, length, color, thickness);
+PP.myDebugVisualManager.drawPoint(lifetimeSeconds, position, color, radius);
+PP.myDebugVisualManager.drawRaycast(lifetimeSeconds, raycastResult, showOnlyFirstHit, hitNormalLength, thickness);
 ```
-
-You can also use the draw feature of the `PP.DebugManager` to quickly draw a debug with a given lifetime, so that it will be automatically removed:
-```js
-let debugLineParams = new PP.debugLineParams();
-debugLineParams.myStart = [0,0,0];
-debugLineParams.myDirection = [0,0,1];
-debugLineParams.myLength = 0.1;
-debugLineParams.myColor = [0, 0, 1, 1];
-
-let lifetime = 1; // 1 second
-
-PP.myDebugManager.draw(debugLineParams, lifetime); // PP.myDebugManager is setup by the pp-debug-manager component
-```
-
-By default the `lifetime` is set to 0, so that the debug will be displayed for just 1 frame.
 
 ## Gameplay
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay)
@@ -435,7 +486,15 @@ List of features:
   * a class that handle the creation and the update of the inputs like gamepad, mouse and keyboard
 - [`pp-input-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/input_manager_component.js)
   * handy component that will create a input manager and update it
-  * it creates some global variable like `PP.myMouse` or `PP.myGamepads` to easily access these devices
+  * it creates some global variables like `PP.myMouse` or `PP.myGamepads` to easily access these devices
+- [`pp-switch-hand-object`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/switch_hand_object.js)
+  * automatically switch between a given gamepad hand object and tracked hand object
+- [`pp-tracked-hand-draw-all-joints`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/tracked_hand_draw_all_joints.js)
+  * given a mesh, it draws it on the specified tracked hand joint
+- [`pp-tracked-hand-draw-joint`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/tracked_hand_draw_joint.js)
+  * given a mesh, it draws it on all the tracked hand joints
+- [`pp-tracked-hand-draw-skin`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron/tracked_hand_draw_skin.js)
+  * given a hand skin, it draws it on the tracked hand
 
 ### Gamepad
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad)
@@ -489,6 +548,16 @@ List of features:
 List of features:
 - [`PP.HeadPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/head_pose.js) / [`PP.HandPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/hand_pose.js)
   * two classes that let you retrieve the pose of the head/hand, that is their transform and their linear and angular velocities
+- [`PP.TrackedHandJointPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/tracked_hand_joint_pose.js)
+  * let you retrieve the pose of the specified tracked hand joint, that is its transform and its linear and angular velocities
+- [`PP.TrackedHandPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/tracked_hand_pose.js)
+  * let you retrieve the pose of the specified tracked hand joints, that is their transform and their linear and angular velocities
+  * it is like having multiple `PP.TrackedHandJointPose` but without the need to update them all yourself
+
+#### Components
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components)
+  
+List of components:
 - [`pp-set-player-height`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_player_height.js)
   * used on the pivot of the player let you specify its height, when the feature `local-floor` is disabled or not supported
   * the component does nothing if `local-floor` is enabled and supported
@@ -496,8 +565,10 @@ List of features:
 - [`pp-set-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_head_local_transform.js) / [`pp-set-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_vr_head_local_transform.js) / [`pp-set-non-vr-head-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_non_vr_head_local_transform.js) / [`pp-set-hand-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_hand_local_transform.js)
   * components that set the local transform of their object to the one of the head/hand, relative to the real space (reference space)
   * fix forward can be used to make it so that the head/hand has the forward in the direction they look at since WebXR by default make it so the forward is in the opposite direction
-- [`pp-copy-head-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_head_transform.js) / [`pp-copy-hand-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_hand_transform.js)
-  * component that set the world transform of its object to the one of the head/hand
+- [`pp-set-tracked-hand-joint-local-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/set_tracked_hand_joint_local_transform.js)
+  * component that sets the local transform of their object to the one of the specified tracked hand joint
+- [`pp-copy-head-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_head_transform.js) / [`pp-copy-hand-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_hand_transform.js) / [`pp-copy-player-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_player_transform.js) / [`pp-copy-player-pivot-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components/copy_player_pivot_transform.js)
+  * components that set the world transform of its object to the one of the head/hand
   * it needs a head/hand to be already setup in the scene
 
 ## Plugin

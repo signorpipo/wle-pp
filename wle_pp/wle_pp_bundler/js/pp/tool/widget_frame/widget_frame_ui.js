@@ -195,18 +195,20 @@ PP.WidgetFrameUI = class WidgetFrameUI {
     }
 
     _setTransformForNonVR() {
-        this.myFixForwardObject.pp_setParent(this.myNonVRParentObject);
-        this.myFixForwardObject.pp_resetTransformLocal();
+        if (!this._myIsPinned) {
+            this.myFixForwardObject.pp_setParent(this.myNonVRParentObject);
+            this.myFixForwardObject.pp_resetTransformLocal();
 
-        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myPosition);
-        this.myPivotObject.resetRotation();
-        this.myPivotObject.rotateObject(this._mySetup.myPivotObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myRotation);
+            this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myPosition);
+            this.myPivotObject.resetRotation();
+            this.myPivotObject.rotateObject(this._mySetup.myPivotObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myRotation);
 
-        this.myWidgetObject.setTranslationLocal(this._mySetup.myWidgetObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myPosition);
-        this.myWidgetObject.resetRotation();
-        this.myWidgetObject.rotateObject(this._mySetup.myWidgetObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myRotation);
+            this.myWidgetObject.setTranslationLocal(this._mySetup.myWidgetObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myPosition);
+            this.myWidgetObject.resetRotation();
+            this.myWidgetObject.rotateObject(this._mySetup.myWidgetObjectTransforms[PP.ToolInputSourceType.NONE][PP.ToolHandedness.NONE].myRotation);
 
-        this.myVisibilityButtonPanel.setTranslationLocal(this._mySetup.myVisibilityButtonPosition[PP.ToolHandedness.NONE].myPosition);
-        this.myPinButtonPanel.setTranslationLocal(this._mySetup.myPinButtonPosition[PP.ToolHandedness.NONE].myPosition);
+            this.myVisibilityButtonPanel.setTranslationLocal(this._mySetup.myVisibilityButtonPosition[PP.ToolHandedness.NONE].myPosition);
+            this.myPinButtonPanel.setTranslationLocal(this._mySetup.myPinButtonPosition[PP.ToolHandedness.NONE].myPosition);
+        }
     }
 };
