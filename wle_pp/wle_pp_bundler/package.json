@@ -10,7 +10,7 @@
   "author": "Pipo",
   "license": "ISC",
   "devDependencies": {
-    "esbuild": "^0.14.38"
+    "esbuild": "^0.14.54"
   },
   "dependencies": {
     "@wonderlandengine/components": "^0.8.16",
