@@ -18,7 +18,7 @@ require('./pp/audio/audio_manager_component');
 require('./pp/audio/audio_manager');
 require('./pp/audio/audio_player');
 require('./pp/audio/audio_setup');
-require('./pp/audio/mute_all');
+require('./pp/audio/mute_everything');
 
 //	CAULDRON
 require('./pp/cauldron/benchmarks/max_physx');
@@ -30,7 +30,7 @@ require('./pp/cauldron/cauldron/physx_collision_collector');
 require('./pp/cauldron/cauldron/save_manager');
 require('./pp/cauldron/cauldron/timer');
 
-require('./pp/cauldron/components/clear_console_on_session');
+require('./pp/cauldron/components/clear_console_on_xr_session_start');
 require('./pp/cauldron/components/set_active');
 require('./pp/cauldron/components/adjust_hierarchy_physx_scale');
 require('./pp/cauldron/components/get_player_objects');
