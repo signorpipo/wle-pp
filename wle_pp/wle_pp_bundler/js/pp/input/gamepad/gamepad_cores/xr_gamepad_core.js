@@ -56,8 +56,8 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
 
                 buttonData.myIsTouched = gamepadButton.touched;
                 buttonData.myValue = gamepadButton.value;
-            } else if (buttonType == PP.ButtonType.BOTTOM_BUTTON && this._myGamepad.buttons.length >= 3) {
-                //This way if you are using a basic touch controller bottom button will work anyway
+            } else if (buttonType == PP.ButtonType.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
+                //This way if you are using a basic touch gamepad, top button will work anyway
                 let touchButton = this._myGamepad.buttons[2];
                 buttonData.myIsPressed = touchButton.pressed;
                 buttonData.myIsTouched = touchButton.touched;
@@ -74,7 +74,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         if (this.isGamepadCoreActive()) {
             let internalAxes = this._myGamepad.axes;
             if (internalAxes.length == 4) {
-                //in this case it could be both touch axes or thumbstick axes, that depends on the controller
+                //in this case it could be both touch axes or thumbstick axes, that depends on the gamepad
                 //to support both I simply choose the absolute max value (unused axes will always be 0)
 
                 //X

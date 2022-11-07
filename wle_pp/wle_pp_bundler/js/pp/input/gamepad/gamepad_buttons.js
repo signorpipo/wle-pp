@@ -1,9 +1,11 @@
 PP.ButtonType = {
-    SELECT: 0,      //Trigger
-    SQUEEZE: 1,     //Grip
+    SELECT: 0,      // Trigger
+    SQUEEZE: 1,     // Grip
+    TOUCHPAD: 2,    // This is to support older gamepads, you can just use TOP_BUTTON to use this button for both older and newer gamepads
     THUMBSTICK: 3,
-    BOTTOM_BUTTON: 4,   // A or X button on oculus quest controller, also triggered for "touchpad" press on other controllers
-    TOP_BUTTON: 5       // B or Y button
+    BOTTOM_BUTTON: 4,   // A or X button on oculus quest gamepad
+    TOP_BUTTON: 5,      // B or Y button on oculus quest gamepad, reverts to TOUCHPAD button for gamepads that does not support TOP_BUTTON
+    THUMB_REST: 6
 };
 
 PP.ButtonEvent = {

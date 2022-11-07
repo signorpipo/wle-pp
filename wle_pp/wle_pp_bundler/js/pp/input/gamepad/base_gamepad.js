@@ -162,9 +162,11 @@ PP.BaseGamepad = class BaseGamepad {
     _updateButtonInfos() {
         this._updateSingleButtonInfo(PP.ButtonType.SELECT);
         this._updateSingleButtonInfo(PP.ButtonType.SQUEEZE);
+        this._updateSingleButtonInfo(PP.ButtonType.TOUCHPAD);
         this._updateSingleButtonInfo(PP.ButtonType.THUMBSTICK);
         this._updateSingleButtonInfo(PP.ButtonType.BOTTOM_BUTTON);
         this._updateSingleButtonInfo(PP.ButtonType.TOP_BUTTON);
+        this._updateSingleButtonInfo(PP.ButtonType.THUMB_REST);
     }
 
     _updateSingleButtonInfo(buttonType) {

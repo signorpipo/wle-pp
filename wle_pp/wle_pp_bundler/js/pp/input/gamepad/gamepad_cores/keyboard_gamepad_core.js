@@ -52,14 +52,20 @@ PP.KeyboardGamepadCore = class KeyboardGamepadCore extends PP.GamepadCore {
                     case PP.ButtonType.SQUEEZE:
                         buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.F) || PP.myKeyboard.isKeyPressed(PP.KeyType.f);
                         break;
+                    case PP.ButtonType.TOUCHPAD:
+                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.X) || PP.myKeyboard.isKeyPressed(PP.KeyType.x);
+                        break;
                     case PP.ButtonType.THUMBSTICK:
                         buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.R) || PP.myKeyboard.isKeyPressed(PP.KeyType.r);
+                        break;
+                    case PP.ButtonType.BOTTOM_BUTTON:
+                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.Q) || PP.myKeyboard.isKeyPressed(PP.KeyType.q);
                         break;
                     case PP.ButtonType.TOP_BUTTON:
                         buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.E) || PP.myKeyboard.isKeyPressed(PP.KeyType.e);
                         break;
-                    case PP.ButtonType.BOTTOM_BUTTON:
-                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.Q) || PP.myKeyboard.isKeyPressed(PP.KeyType.q);
+                    case PP.ButtonType.THUMB_REST:
+                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.V) || PP.myKeyboard.isKeyPressed(PP.KeyType.v);
                         break;
                 }
             } else {
@@ -70,14 +76,20 @@ PP.KeyboardGamepadCore = class KeyboardGamepadCore extends PP.GamepadCore {
                     case PP.ButtonType.SQUEEZE:
                         buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.H) || PP.myKeyboard.isKeyPressed(PP.KeyType.h);
                         break;
+                    case PP.ButtonType.TOUCHPAD:
+                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.M) || PP.myKeyboard.isKeyPressed(PP.KeyType.m);
+                        break;
                     case PP.ButtonType.THUMBSTICK:
                         buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.Y) || PP.myKeyboard.isKeyPressed(PP.KeyType.y);
+                        break;
+                    case PP.ButtonType.BOTTOM_BUTTON:
+                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.O) || PP.myKeyboard.isKeyPressed(PP.KeyType.o);
                         break;
                     case PP.ButtonType.TOP_BUTTON:
                         buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.U) || PP.myKeyboard.isKeyPressed(PP.KeyType.u);
                         break;
-                    case PP.ButtonType.BOTTOM_BUTTON:
-                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.O) || PP.myKeyboard.isKeyPressed(PP.KeyType.o);
+                    case PP.ButtonType.THUMB_REST:
+                        buttonData.myIsPressed = PP.myKeyboard.isKeyPressed(PP.KeyType.B) || PP.myKeyboard.isKeyPressed(PP.KeyType.b);
                         break;
                 }
             }

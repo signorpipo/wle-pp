@@ -1,12 +1,14 @@
 # Overview
 
-A library for the [Wonderland Engine](https://wonderlandengine.com/).  
+A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp).
 
 The npm package can be found [here](https://www.npmjs.com/package/wle_pp).
 
 A collection of Wonderland Engine template projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
+
+A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
 
 ## Quick Feature Summary
 
@@ -67,9 +69,11 @@ The `ppefault` template project also present a `Player` hierarchy structure that
 It's not mandatory to keep this structure but can make things easier so I advise u to use it!
 
 # License
+
 You are free to use this in your projects, just remember to credit me somewhere!
 
 # Documentation
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp)
 
 I will explain more or less everything but without going too much into details.  
@@ -81,6 +85,7 @@ The components names always start with a `pp-` prefix.
 For the extensions (functions added to already existing objects), the names usually start with a `pp_` prefix, or, for array extensions, with something like `vec_`, `vec3_`, `quat2_` based on how you want to intepret the array value.
 
 ## Table Of Contents  
+
 - [Audio](#audio)
 - [Cauldron](#cauldron-1)
   * [Benchmarks](#benchmarks)
@@ -102,6 +107,7 @@ For the extensions (functions added to already existing objects), the names usua
   * [Easy Tune](#easy-tune)
 
 ## Audio
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/audio)
 
 A collection of classes and components to manage audio files, creating audio players for a specific audio file, adding an audio listener and some other utilities.
@@ -120,11 +126,12 @@ List of features:
   * also allow you to change the volume of the game, or stop every audio that is playing
 - [`pp-audio-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/audio/audio_manager_component.js)
   * component that adds a global audio manager to your game, feel free to initialize your Audio Manager this way or to use a custom solution
-- [`pp-mute-all`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/audio/mute_all.js)
+- [`pp-mute-everything`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/audio/mute_everything.js)
   * component that, when active, mutes the game
   * useful when u are testing and don't want to hear your game music without muting the browser or the headset
       
 ### How To
+
 If u don't want to use the audio manager, it is as simple as filling the fields of the audio setup and then using it to create an audio player.
  
 ```js
@@ -155,11 +162,13 @@ audioPlayer.play();
 ```
 
 ## Cauldron
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron)
 
 A generic collection of features.
 
 ### Benchmarks
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/benchmarks)
 
 A set of utilities to test the performance and capabilities of the Wonderland Engine.
@@ -171,6 +180,7 @@ List of features:
   * test how many visible triangles u can have in the scene at the same time
 
 ### Cauldron
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/cauldron)
 
 List of features:
@@ -213,10 +223,11 @@ List of features:
   * nothing more than a timer that u can update and ask if it is done
 
 ### Components
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components)
 
 List of components:
-- [`pp-clear-console-on-session`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/clear_console_on_session.js)
+- [`pp-clear-console-on-xr-session-start`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/clear_console_on_xr_session_start.js)
   * u can add this to the scene so that when u press VR and enter the session, the console is cleared
   * useful to clear the console from everything related to the initialization that you may have already checked before entering
 - [`pp-set-active`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/components/set_active.js)
@@ -235,6 +246,7 @@ List of components:
   * easy way to show fps as a UI element
 
 ### FSM
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm)
 
 An fsm let you create game logic like switching between the menu and the game, or character logic like running and jumping.  
@@ -251,6 +263,7 @@ List of features:
   * a class that can be inherited from when you want to create a "class" transition
   
 #### How To
+
 In this case an example is worth more than a billion words:
 ```js
 let fsm = new PP.FSM();
@@ -288,6 +301,7 @@ This can be useful if u want to enforce a specific flow in your code.
 Another thing is that nothing prevents you from doing a transition from within a state of the fsm, it can be useful and quick, but may also have unexpected result and sometimes could require a perform delayed to work properly.
 
 #### States
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/fsm/states)
 
 A collection of states that can be used with the FSM.
@@ -297,6 +311,7 @@ List of states:
   * let you wait in a specific state for a given time before performing a specified transition
 
 ### Physics
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/physics)
 
 List of features:
@@ -309,6 +324,7 @@ List of features:
   * let you raycast into the scene 
  
 ### Utils
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils)
 
 List of features:
@@ -330,6 +346,7 @@ List of features:
   * you can check if the device that is running is emulated or if the session is active
   
 ### Visual
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual)
 
 This feature let you add visual objects like lines, arrows, points and more easily.
@@ -355,6 +372,7 @@ List of features:
   * you can specify a radius, the number of segment and their thickness and it will visualize a torus with those params
 
 #### Components
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/cauldron/visual/components)
 
 List of components:
@@ -362,6 +380,7 @@ List of components:
   * handy component that will create a visual manager and update it
   
 #### How To
+
 In this case an example is worth more than a billion words:
 ```js
 let visualParams = new PP.VisualLineParams();
@@ -382,6 +401,7 @@ In the example above two tecniques are shown: the first let the manager draw the
 If the value of the `lifetimeSeconds` is set to 0 the visual will be drawn for onle 1 frame.
 
 ## Debug
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug)
 
 A collection of classes and components to help with debugging, like showing in real time the position and orientation of an object.
@@ -394,6 +414,7 @@ List of features:
   * it also feature some quick draw methods not available with the `PP.VisualManager` to add debug objects even more easily
 
 #### Components
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/debug/components)
   
 List of components:
@@ -403,6 +424,7 @@ List of components:
   * a handy component to add the debug transform debug to an existing object in the scene  
   
 ### How To
+
 You can add debug visuals exactly like you would do for the plain visual feature.  
 In addition to that, you can also use a bunch of quick draw methods only avaiable in the debug feature, for example: 
 
@@ -414,11 +436,13 @@ PP.myDebugVisualManager.drawRaycast(lifetimeSeconds, raycastResult, showOnlyFirs
 ```
 
 ## Gameplay
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay)
 
 A collection of gameplay features ready to be used.
 
 ### Cauldron
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay/cauldron)
 
 List of features:
@@ -428,6 +452,7 @@ List of features:
   * it also have an automatic and customizable way of detecting when the 3D direction should start to "fly", that is stop being flat
   
 ### Grab & Throw
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/gameplay/grab_throw)
 
 Let you add a grab and throw mechanic in your game with little effort.
@@ -443,6 +468,7 @@ List of features:
   * this object must also have a `physx` component on itself, used to detect the grab and to simulate the throw
 
 #### How To
+
 The configuration is pretty straight forward:
 1. Enable the `Physics` feature, that u can find under the `Project Settings`
 1. Add the following components somewhere in your scene:
@@ -461,11 +487,13 @@ The configuration is pretty straight forward:
 	  - Be sure that the groups/block flags match the one u used for the hand
 
 ## Input
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input)
 
 A collection of classes and component to read inputs like head/hand transform or gamepad buttons.
 
 ### Cauldron
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/cauldron)
 
 List of features:
@@ -497,15 +525,16 @@ List of features:
   * given a hand skin, it draws it on the tracked hand
 
 ### Gamepad
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad)
 
-Everything u need to get inputs from a gamepad, and some utilities to animate a controller or get multiple buttons press.
+Everything u need to get inputs from a gamepad, and some utilities to animate a gamepad or get multiple buttons press.
 You can find an outdated example of the Gamepad [here](https://github.com/SignorPipo/wle_gamepad).
 
 List of features:
 - [`PP.UniversalGamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/universal_gamepad.js)
-  * a simple interface to retrieve buttons and axes state, get the controller transform and also make it pulse/vibrate
-  * it works through gamepad cores, that specify how the buttons are activated (keyboard, mouse, quest controllers)
+  * a simple interface to retrieve buttons and axes state, get the gamepad transform and also make it pulse/vibrate
+  * it works through gamepad cores, that specify how the buttons are activated (keyboard, mouse, gamepads)
   * example:
     ```js
     PP.myLeftGamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
@@ -519,7 +548,7 @@ List of features:
 - [`PP.GamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/gamepad_core.js)
   * the base class that u can inherit to create a custom gamepad core that u can then plug into the universal gamepad
 - [`PP.XRGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/xr_gamepad_core.js) / [`PP.KeyboardGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/keyboard_gamepad_core.js)
-  * a few gamepad cores that let you retrieve the buttons trough the quest controllers or the keyboard  
+  * a few gamepad cores that let you retrieve the buttons through the gamepads or the keyboard  
 - [`PP.BaseGamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/base_gamepad.js)
   * the base class that u can inherit to create your own gamepad, so that u can specify how buttons activate and stuff
   * `PP.UniversalGamepad` inherits from this class
@@ -532,17 +561,18 @@ List of features:
   * handy component that will create a gamepad manager and update it
   * it adds by default a few gamepad cores like the `PP.XRGamepadCore` and the `PP.KeyboardGamepadCore`
   * it will create a global `PP.myLeftGamepad` and a global `PP.myRightGamepad`
-  * it will also create a global `PP.myGamepads` that contains both controllers and use `PP.Handedness` as index
-- [`pp-gamepad-animator`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_animator.js)
-  * component that let you animate a controller, that is buttons and axes move in the game like the one in real life
-  * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
-    * you can use [this 3D model](https://github.com/SignorPipo/wle_ppefault/blob/main/wle_ppefault/wle_ppefault/assets/models/quest_controllers_credits_Jezza3D.fbx) as a reference
+  * it will also create a global `PP.myGamepads` that contains both gamepads and use `PP.Handedness` as index
+- [`pp-gamepad-mesh-animator`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_mesh_animator.js)
+  * component that let you animate a gamepad, that is buttons and axes move in the game like the one in real life
+  * to make this work you have to use a gamepad model where buttons and axes have a proper positioned pivot
+    * you can use [this 3D model](https://github.com/SignorPipo/wle_assets/tree/main/wle_assets/assets/models/gamepads/meta_quest_2/classic/high_res) as a reference
 - [`pp-gamepad-control-scheme`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/cauldron/gamepad_control_scheme.js)
   * component that let you add a visual control scheme on the gamepad
-  * to make this work you have to use a controller model where buttons and axes have a proper positioned pivot
-    * you can use [this 3D model](https://github.com/SignorPipo/wle_ppefault/blob/main/wle_ppefault/wle_ppefault/assets/models/quest_controllers_credits_Jezza3D.fbx) as a reference
+  * to make this work you have to use a gamepad model where buttons and axes have a proper positioned pivot
+    * you can use [this 3D model](https://github.com/SignorPipo/wle_assets/tree/main/wle_assets/assets/models/gamepads/meta_quest_2/classic/high_res) as a reference
 
 ### Pose
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/pose)
 
 List of features:
@@ -555,6 +585,7 @@ List of features:
   * it is like having multiple `PP.TrackedHandJointPose` but without the need to update them all yourself
 
 #### Components
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/pose/components)
   
 List of components:
@@ -572,11 +603,13 @@ List of components:
   * it needs a head/hand to be already setup in the scene
 
 ## Plugin
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/plugin)
 
 A set of features that extends what WLE and Javascript already offer.
 
 ### Component Mods
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods)
 
 These files change some of the functions of WLE components, or add to them new ones:
@@ -586,10 +619,11 @@ These files change some of the functions of WLE components, or add to them new o
   * adds double and triple click
   * bunch of fixes
 - [`mouse_look_component_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/component_mods/mouse_look_component_mod.js)
-  * adds support for oculus quest controller as a pointer to move the view
+  * adds support for gamepad as a pointer to move the view
   * improves how the view is rotated based on the pointer movement
 
 ### Extensions
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions)
 
 The extensions add new functions to already existing features:
@@ -638,10 +672,12 @@ The extensions add new functions to already existing features:
     ```
 
 ## Tool
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool)
 
 A set of tools that can help while developing and debugging.
 ### Cauldron
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool/cauldron)
 
 List of features:
@@ -651,6 +687,7 @@ List of features:
   * just place it on one of the hands to use it
 
 ### Console VR
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool/console_vr)
 
 Let u see the browser console from withing the vr session, making it easier to debug
@@ -658,6 +695,7 @@ There is no need to understand the details of this since it's meant to be used.
 You can find an outdated example of the Console VR [here](https://github.com/SignorPipo/wle_consolevr).
 
 #### How To
+
 You have to add a `pp-console-vr` component to the scene, usually on the hand since it will let you keep it with you.
 
 You can find some flags to customize it on the component.  
@@ -668,6 +706,7 @@ You can hide/show the Console VR by pressing both thumbstick buttons (`R3` + `L3
 If you click on the `P` button on the bottom left u can pin the console so that it will stay in place.
 
 ### Easy Tune
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool/easy_tune)
 
 A set of tools and widgets to make it easier to tune/adjust the values in your game, and also add some "toggable" debug stuff.  
@@ -675,6 +714,7 @@ The main idea is that you have some values in the code that you would like to ad
 For this same reason, you can have some flags that enable some debug/test features, and you can change the flags values at runtime through this.
 
 #### Easy Tune
+
 [Code File Link](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/tool/easy_tune/easy_tune.js)
 
 The main tool of this feature.  
@@ -683,13 +723,15 @@ There is no need to understand the details of this since it's meant to be used.
 You can find an outdated example of the Easy Tune [here](https://github.com/SignorPipo/wle_easytune).
 
 ##### How To
+
 You have to add a `pp-easy-tune` component to the scene, usually on the hand since it will let you keep it with you.  
 You can find some flags to customize it on the component.   
 
-You can hide/show it by pressing both the right top and bottom buttons (`A` + `B` on the oculus controller).  
+You can hide/show it by pressing both the right top and bottom buttons (`B`/`Y` + `A`/`X` on the meta quest gamepad).  
 If you click on the `P` button on the bottom left u can pin the easy tune so that it will stay in place.
 
 #### Easy Tune Variables
+
 [Code File Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool/easy_tune/easy_tune_variables.js)
 
 These are the variables that you can edit with the easy tune widget.
@@ -702,6 +744,7 @@ You can find different types:
 The easy tune variables are basically just a wrapper of their own type, but also offer some extra functionalities like a callback triggered when the variable change.
 
 ##### How To
+
 To add an easy tune variable you just have to call a line like this:
 ```js
 PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Speed", 10.32, 0.01, 3));
@@ -735,6 +778,7 @@ Easy Tune Variables examples:
 ```
 
 #### Easy Object Tuners
+
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool/easy_tune/easy_object_tuners)
 
 A set of components that makes it even easier to use the easy tune.
