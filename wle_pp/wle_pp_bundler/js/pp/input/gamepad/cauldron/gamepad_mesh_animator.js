@@ -1,6 +1,5 @@
 WL.registerComponent('pp-gamepad-mesh-animator', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
-    _myGamepad: { type: WL.Type.Object, default: null },
     _mySelect: { type: WL.Type.Object, default: null },
     _mySqueeze: { type: WL.Type.Object, default: null },
     _myThumbstick: { type: WL.Type.Object, default: null },
@@ -15,17 +14,12 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
     _myUsePressForSqueeze: { type: WL.Type.Bool, default: false },
     _mySqueezePressOffset: { type: WL.Type.Float, default: 0.0015 },
 }, {
-    init: function () {
-        this._myIsMeshEnabled = false;
-
-        this._myTiltDirection = PP.vec3_create();
-    },
     start: function () {
         let gamepad = null;
         if (this._myHandedness == 0) {
-            gamepad = PP.myLeftGamepad; //@EDIT get gamepad LEFT here based on how you store it in your game
+            gamepad = PP.myLeftGamepad; // @EDIT get gamepad LEFT here based on how you store it in your game
         } else {
-            gamepad = PP.myRightGamepad; //@EDIT get gamepad RIGHT here based on how you store it in your game
+            gamepad = PP.myRightGamepad; // @EDIT get gamepad RIGHT here based on how you store it in your game
         }
 
         if (this._mySelect != null) {
@@ -58,7 +52,7 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
             this._myBottomButtonOriginalUp = this._myBottomButton.pp_getUpLocal();
         }
 
-        //PRESSED
+        // PRESSED
         if (this._myThumbstick != null) {
             gamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressedStart.bind(this));
             gamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_END, this, this._thumbstickPressedEnd.bind(this));
@@ -75,7 +69,7 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
             gamepad.registerButtonEventListener(PP.ButtonType.BOTTOM_BUTTON, PP.ButtonEvent.PRESS_END, this, this._bottomButtonPressedEnd.bind(this));
         }
 
-        //VALUE CHANGED
+        // VALUE CHANGED
         if (this._mySelect != null) {
             gamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.VALUE_CHANGED, this, this._selectValueChanged.bind(this));
         }
@@ -84,27 +78,17 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
             gamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.VALUE_CHANGED, this, this._squeezeValueChanged.bind(this));
         }
 
-        //AXES CHANGED
+        // AXES CHANGED
         if (this._myThumbstick != null) {
             gamepad.registerAxesEventListener(PP.AxesEvent.AXES_CHANGED, this, this._thumbstickValueChanged.bind(this));
         }
-
-        this._myFirstUpdate = true;
-    },
-    update: function (dt) {
-        if (this._myFirstUpdate) {
-            this._myFirstUpdate = false;
-            this._myGamepad.pp_setScaleLocal([0.00001, 0.00001, 0.00001]);
-        }
-
-        this._enableMeshInSession();
     },
     _thumbstickPressedStart: function () {
-        let tempVector = PP.vec3_create();
+        let upTranslation = PP.vec3_create();
         return function _thumbstickPressedStart(buttonInfo, gamepad) {
-            //since thumbstick object rotate I need to specifically use its initial up
-            this._myThumbstickOriginalUp.vec3_scale(-this._myThumbstickPressOffset, tempVector);
-            this._myThumbstick.pp_translateLocal(tempVector);
+            // since thumbstick object rotate you need to specifically use its original up to translate it
+            this._myThumbstickOriginalUp.vec3_scale(-this._myThumbstickPressOffset, upTranslation);
+            this._myThumbstick.pp_translateLocal(upTranslation);
         };
     }(),
     _thumbstickPressedEnd: function _thumbstickPressedEnd(buttonInfo, gamepad) {
@@ -163,14 +147,6 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
 
         if (Math.abs(forwardRotation) > 0.0001) {
             this._myThumbstick.pp_rotateAxisLocal(forwardRotation, this._myThumbstickOriginalForward);
-        }
-    },
-    _enableMeshInSession: function () {
-        if (!this._myIsMeshEnabled) {
-            if (WL.xrSession) {
-                this._myGamepad.pp_resetScaleLocal();
-                this._myIsMeshEnabled = true;
-            }
         }
     }
 });
