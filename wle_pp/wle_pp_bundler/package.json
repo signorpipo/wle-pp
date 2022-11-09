@@ -1,6 +1,6 @@
 {
   "name": "wle_pp",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A library for the Wonderland Engine",
   "main": "./js/bundle.js",
   "exports": "./js/bundle.js",
@@ -13,8 +13,8 @@
     "esbuild": "^0.14.54"
   },
   "dependencies": {
-    "@wonderlandengine/components": "^0.8.16",
-    "gl-matrix": "^3.4.3"
+    "gl-matrix": "^3.4.3",
+    "howler": "^2.2.3"
   },
   "files": [
     "js"

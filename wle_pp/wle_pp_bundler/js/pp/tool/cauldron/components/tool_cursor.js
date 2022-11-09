@@ -6,16 +6,9 @@ WL.registerComponent('pp-tool-cursor', {
     init: function () {
         this._myHandednessString = ['left', 'right'][this._myHandedness];
 
-        if (this._myHandedness == 0) {
-            this._myCursorPosition = [-0.01, -0.024, -0.05];
-        } else {
-            this._myCursorPosition = [0.01, -0.024, -0.05];
-        }
-
-        this._myCursorRotation = [-0.382, 0, 0, 0.924];
-        this._myCursorRotation.quat_normalize(this._myCursorRotation);
+        this._myCursorPosition = [0, -0.035, -0.05];
+        this._myCursorRotation = [-30, 0, 0];
         this._myCursorMeshScale = [0.0025, 0.0025, 0.0025];
-
         this._myCursorColor = [255 / 255, 255 / 255, 255 / 255, 1];
 
         this._myCursorTargetCollisionGroup = 7;
@@ -25,8 +18,8 @@ WL.registerComponent('pp-tool-cursor', {
         this._myFixForwardObject.pp_rotateObject([0, 180, 0]);
 
         this._myCursorObjectVR = WL.scene.addObject(this._myFixForwardObject);
-        this._myCursorObjectVR.setTranslationLocal(this._myCursorPosition);
-        this._myCursorObjectVR.rotateObject(this._myCursorRotation);
+        this._myCursorObjectVR.pp_setPositionLocal(this._myCursorPosition);
+        this._myCursorObjectVR.pp_rotateObject(this._myCursorRotation);
 
         {
             let cursorMeshObject = WL.scene.addObject(this._myCursorObjectVR);

@@ -1,11 +1,7 @@
 WL.registerComponent('pp-gamepad-control-scheme', {
-    _myStartVisible: { type: WL.Type.Bool, default: true },
+    _myShowOnStart: { type: WL.Type.Bool, default: true },
 
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
-
-    _myTextScaleMultiplier: { type: WL.Type.Float, default: 1 },
-    _myLineLengthMultiplier: { type: WL.Type.Float, default: 1 },
-    _myLineThicknessMultiplier: { type: WL.Type.Float, default: 1 },
 
     _mySelectText: { type: WL.Type.String, default: "" },
     _mySqueezeText: { type: WL.Type.String, default: "" },
@@ -18,6 +14,12 @@ WL.registerComponent('pp-gamepad-control-scheme', {
     _myThumbstick: { type: WL.Type.Object, default: null },
     _myBottomButton: { type: WL.Type.Object, default: null },
     _myTopButton: { type: WL.Type.Object, default: null },
+
+    _myTextScaleMultiplier: { type: WL.Type.Float, default: 1 },
+    _myTextOffsetMultiplier: { type: WL.Type.Float, default: 1 },
+    _myLineLengthMultiplier: { type: WL.Type.Float, default: 1 },
+    _myLineThicknessMultiplier: { type: WL.Type.Float, default: 1 },
+    _myDistanceFromButtonsMultiplier: { type: WL.Type.Float, default: 1 },
 
     _myTextMaterial: { type: WL.Type.Material },
     _myLineMaterial: { type: WL.Type.Material }
@@ -35,22 +37,23 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         this._mySetVisibleNextUpdate = false;
 
         this._createControlScheme();
-        this.setVisible(this._myStartVisible);
+        this.setVisible(this._myShowOnStart);
+
+        this._myVisibleBackup = this._myVisible;
     },
     update: function (dt) {
         if (this._mySetVisibleNextUpdate) {
             this._mySetVisibleNextUpdate = false;
             this.setVisible(false);
-            this.setVisible(this._myVisible);
+            this.setVisible(this._myVisibleBackup);
         }
     },
     onActivate() {
         this._mySetVisibleNextUpdate = true;
     },
     onDeactivate() {
-        let backupVisible = this._myVisible;
+        this._myVisibleBackup = this._myVisible;
         this.setVisible(false);
-        this._myVisible = backupVisible;
     },
     isVisible() {
         return this._myVisible;
@@ -94,10 +97,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
     _createControlScheme() {
         this._myRootObject = this.object.pp_addObject();
 
-        let objectScale = this.object.pp_getScale();
-        this.object.pp_resetScale();
-
-        let distanceFromButton = 0.015;
+        let distanceFromButton = 0.02 * this._myDistanceFromButtonsMultiplier;
         let lineLength = 0.0935 * this._myLineLengthMultiplier;
 
         let referenceObject = this._myThumbstick;
@@ -123,27 +123,40 @@ WL.registerComponent('pp-gamepad-control-scheme', {
             this._myThumbstickObject);
         this._myThumbstickTextComponent.text = this._myThumbstickText;
 
-        this._myBottomButtonObject = this._myRootObject.pp_addObject();
-        this._myBottomButtonTextComponent = this._addScheme(this._myBottomButton, referenceObject,
-            [0, distanceFromButton, 0],
-            [0, 0, -lineLength],
-            this._myBottomButtonObject);
-        this._myBottomButtonTextComponent.text = this._myBottomButtonText;
+        let thumbstickPositionLocal = this._myThumbstick.pp_getPositionLocal();
+        let thumbstickUpLocal = this._myThumbstick.pp_getUpLocal();
 
-        this._myTopButtonObject = this._myRootObject.pp_addObject();
-        this._myTopButtonTextComponent = this._addScheme(this._myTopButton, referenceObject,
-            [0, distanceFromButton, 0],
-            [-lineLength * this._myControlSchemeDirection, 0, 0].vec3_rotateAxis(-45 * this._myControlSchemeDirection, [0, 1, 0]),
-            this._myTopButtonObject);
-        this._myTopButtonTextComponent.text = this._myTopButtonText;
+        {
+            let bottomButtonPositionLocal = this._myBottomButton.pp_getPositionLocal();
+            let difference = bottomButtonPositionLocal.vec3_sub(thumbstickPositionLocal);
+            let differenceOnUp = difference.vec3_valueAlongAxis(thumbstickUpLocal);
 
-        this.object.pp_setScale(objectScale);
+            this._myBottomButtonObject = this._myRootObject.pp_addObject();
+            this._myBottomButtonTextComponent = this._addScheme(this._myBottomButton, referenceObject,
+                [0, distanceFromButton - differenceOnUp, 0],
+                [0, 0, -lineLength],
+                this._myBottomButtonObject);
+            this._myBottomButtonTextComponent.text = this._myBottomButtonText;
+        }
+
+        {
+            let topButtonPositionLocal = this._myTopButton.pp_getPositionLocal();
+            let difference = topButtonPositionLocal.vec3_sub(thumbstickPositionLocal);
+            let differenceOnUp = difference.vec3_valueAlongAxis(thumbstickUpLocal);
+
+            this._myTopButtonObject = this._myRootObject.pp_addObject();
+            this._myTopButtonTextComponent = this._addScheme(this._myTopButton, referenceObject,
+                [0, distanceFromButton - differenceOnUp, 0],
+                [-lineLength * this._myControlSchemeDirection, 0, 0].vec3_rotateAxis(-45 * this._myControlSchemeDirection, [0, 1, 0]),
+                this._myTopButtonObject);
+            this._myTopButtonTextComponent.text = this._myTopButtonText;
+        }
     },
     _addScheme(buttonObject, referenceObject, startOffset, endOffset, parentObject) {
-        let buttonPosition = buttonObject.pp_getPosition();
-        let referenceForward = referenceObject.pp_getForward();
-        let referenceRight = referenceObject.pp_getRight();
-        let referenceUp = referenceObject.pp_getUp();
+        let buttonPosition = buttonObject.pp_getPositionLocal();
+        let referenceForward = referenceObject.pp_getForwardLocal();
+        let referenceRight = referenceObject.pp_getRightLocal();
+        let referenceUp = referenceObject.pp_getUpLocal();
 
         let lineStart = buttonPosition.vec3_add(referenceRight.vec3_scale(startOffset[0]));
         lineStart.vec3_add(referenceUp.vec3_scale(startOffset[1]), lineStart);
@@ -153,7 +166,7 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         lineEnd.vec3_add(referenceUp.vec3_scale(endOffset[1]), lineEnd);
         lineEnd.vec3_add(referenceForward.vec3_scale(endOffset[2]), lineEnd);
 
-        let textOffset = 0.01;
+        let textOffset = 0.01 * this._myTextOffsetMultiplier;
         let textPosition = lineEnd.vec3_add(referenceForward.vec3_scale(-textOffset));
 
         this._addLine(lineStart, lineEnd, parentObject);
@@ -170,21 +183,21 @@ WL.registerComponent('pp-gamepad-control-scheme', {
         lineObject = lineRootObject.pp_addObject();
 
         let lineMesh = lineObject.addComponent('mesh');
-        lineMesh.mesh = PP.myDefaultResources.myMeshes.myCube;
+        lineMesh.mesh = PP.myDefaultResources.myMeshes.myCylinder;
         lineMesh.material = this._myLineMaterialFinal;
 
-        lineRootObject.pp_setPosition(start);
+        lineRootObject.pp_setPositionLocal(start);
 
         let thickness = 0.001 * this._myLineThicknessMultiplier;
-        lineObject.pp_scaleObject([thickness / 2, thickness / 2, length / 2]);
+        lineObject.pp_scaleObject([thickness / 2, length / 2, thickness / 2]);
 
-        lineObject.pp_lookTo(lineDirection);
-        lineObject.pp_translateObject([0, 0, length / 2]);
+        lineObject.pp_setUpLocal(lineDirection);
+        lineObject.pp_translateObject([0, length / 2, 0]);
     },
     _addText(position, forward, up, parentObject) {
         let textObject = parentObject.pp_addObject();
-        textObject.pp_setPosition(position);
-        textObject.pp_lookTo(up, forward);
+        textObject.pp_setPositionLocal(position);
+        textObject.pp_lookToLocal(up, forward);
         textObject.pp_scaleObject(0.0935 * this._myTextScaleMultiplier);
 
         let textComponent = textObject.pp_addComponent("text");
