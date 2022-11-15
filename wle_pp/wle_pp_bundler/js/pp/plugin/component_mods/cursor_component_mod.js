@@ -158,7 +158,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             if (this.arTouchDown && this.input && WL.xrSession.inputSources[0].handedness === 'none' && WL.xrSession.inputSources[0].gamepad) {
                 const p = WL.xrSession.inputSources[0].gamepad.axes;
                 /* Screenspace Y is inverted */
-                this.direction = [p[0], -p[1], -1.0];
+                this.direction.vec3_set(p[0], -p[1], -1.0);
                 this.updateDirection();
             } else {
                 this.object.getTranslationWorld(this.origin);
@@ -175,6 +175,14 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             }
 
             this.hoverBehaviour(rayHit, doClick);
+        } else {
+            if (PP.myMouse != null && PP.myMouse.isValid() && PP.myMouse.isInsideView()) {
+                PP.myMouse.getPositionScreenNormalized(this.direction);
+                this.direction[2] = -1;
+
+                const rayHit = this.updateDirection();
+                this.hoverBehaviour(rayHit, false);
+            }
         }
 
         if (this.cursorObject) {
@@ -224,10 +232,6 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
                     if (cursorTarget) cursorTarget.onDownOnHover(this.hoveringObject, this);
                     this.globalTarget.onDownOnHover(this.hoveringObject, this);
                 }
-            }
-
-            if (this.hoveringObjectTarget) {
-                this.hoveringObjectTarget.onMove(this.hoveringObject, this);
             }
 
             let cursorTarget = this.hoveringObject.getComponent("cursor-target");
@@ -398,7 +402,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         /* Get direction in normalized device coordinate space from mouse position */
         const left = clientX / w;
         const top = clientY / h;
-        this.direction = [left * 2 - 1, -top * 2 + 1, -1.0];
+        this.direction.vec3_set(left * 2 - 1, -top * 2 + 1, -1.0);
         return this.updateDirection();
     };
 

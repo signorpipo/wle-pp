@@ -20,9 +20,11 @@ PP.WidgetFrameSetup = class WidgetFrameSetup {
         this.myTextJustification = 2; // middle
         this.myTextColor = this.myDefaultTextColor;
 
+        this.myButtonTextScale = [0.18, 0.18, 0.18];
+
         this.myVisibilityButtonBackgroundScale = [0.015, 0.015, 1];
         this.myVisibilityButtonTextPosition = [0, 0, 0.007];
-        this.myVisibilityButtonTextScale = [0.18, 0.18, 0.18];
+        this.myVisibilityButtonTextScale = this.myButtonTextScale;
 
         let distanceBetweenToolsVisibilityButtons = 0.01;
         let buttonXOffset = this.myVisibilityButtonBackgroundScale[0] * (2 * buttonsColumnIndex) + distanceBetweenToolsVisibilityButtons * buttonsColumnIndex;

@@ -387,7 +387,7 @@ Array.prototype.pp_clear = function () {
 
 //New Functions
 
-Array.prototype.vec_toString = function (decimalPlaces = 4) {
+Array.prototype.vec_toString = function (decimalPlaces = null) {
     let message = this._vec_buildConsoleMessage(decimalPlaces);
     return message;
 };
@@ -2292,7 +2292,11 @@ Array.prototype._vec_buildConsoleMessage = function (decimalPlaces) {
             message = message.concat(", ");
         }
 
-        message = message.concat(this[i].toFixed(decimalPlaces));
+        if (decimalPlaces != null) {
+            message = message.concat(this[i].toFixed(decimalPlaces));
+        } else {
+            message = message.concat(this[i].toString());
+        }
     }
 
     message = message.concat("]");

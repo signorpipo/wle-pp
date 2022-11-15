@@ -49,6 +49,7 @@ PP.VisualTorus = class VisualTorus {
         this._myFlatOpaqueMaterial = null;
 
         this._build();
+        this.forceRefresh();
 
         this.setVisible(true);
     }
@@ -96,7 +97,10 @@ PP.VisualTorus = class VisualTorus {
     forceRefresh() {
         this._refresh();
 
-        for (let visualSegment of this._myVisualSegmentList) {
+        let segmentToRefresh = Math.min(this._myParams.mySegmentAmount, this._myVisualSegmentList.length);
+
+        for (let i = 0; i < segmentToRefresh; i++) {
+            let visualSegment = this._myVisualSegmentList[i];
             visualSegment.forceRefresh();
         }
     }

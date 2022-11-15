@@ -1,13 +1,16 @@
 WL.registerComponent('pp-tool-cursor', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
+    _myFixForward: { type: WL.Type.Bool, default: true },
+    _myApplyDefaultCursorOffset: { type: WL.Type.Bool, default: true },
     _myPulseOnHover: { type: WL.Type.Bool, default: false },
-    _myShowFingerCursor: { type: WL.Type.Bool, default: false }
+    _myShowFingerCursor: { type: WL.Type.Bool, default: false },
 }, {
     init: function () {
         this._myHandednessString = ['left', 'right'][this._myHandedness];
 
-        this._myCursorPosition = [0, -0.035, -0.05];
-        this._myCursorRotation = [-30, 0, 0];
+        this._myCursorPositionDefaultOffset = [0, -0.035, -0.05];
+        this._myCursorRotationDefaultOffset = [-30, 0, 0];
+
         this._myCursorMeshScale = [0.0025, 0.0025, 0.0025];
         this._myCursorColor = [255 / 255, 255 / 255, 255 / 255, 1];
 
@@ -15,11 +18,17 @@ WL.registerComponent('pp-tool-cursor', {
     },
     start: function () {
         this._myFixForwardObject = WL.scene.addObject(this.object);
-        this._myFixForwardObject.pp_rotateObject([0, 180, 0]);
+
+        if (this._myFixForward) {
+            this._myFixForwardObject.pp_rotateObject([0, 180, 0]);
+        }
 
         this._myCursorObjectVR = WL.scene.addObject(this._myFixForwardObject);
-        this._myCursorObjectVR.pp_setPositionLocal(this._myCursorPosition);
-        this._myCursorObjectVR.pp_rotateObject(this._myCursorRotation);
+
+        if (this._myApplyDefaultCursorOffset) {
+            this._myCursorObjectVR.pp_setPositionLocal(this._myCursorPositionDefaultOffset);
+            this._myCursorObjectVR.pp_rotateObject(this._myCursorRotationDefaultOffset);
+        }
 
         {
             let cursorMeshObject = WL.scene.addObject(this._myCursorObjectVR);

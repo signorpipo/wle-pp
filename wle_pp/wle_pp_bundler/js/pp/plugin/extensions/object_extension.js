@@ -2192,13 +2192,25 @@ if (WL && WL.Object) {
         return function pp_toString() {
             let objectString = "";
             objectString = objectString.concat(startObject, newLine);
-            let name = this.pp_getName();
-            if (name.length > 0) {
-                objectString = objectString.concat(tab, nameLabel, this.pp_getName(), separator, newLine);
-            }
-            objectString = objectString.concat(tab, idLabel, this.pp_getID(), separator, newLine);
 
             let components = this.pp_getComponents();
+            let children = this.pp_getChildren();
+            let name = this.pp_getName();
+
+            if (components.length > 0 || children.length > 0 || name.length > 0) {
+                objectString = objectString.concat(tab, idLabel, this.pp_getID(), separator, newLine);
+            } else {
+                objectString = objectString.concat(tab, idLabel, this.pp_getID(), newLine);
+            }
+
+            if (name.length > 0) {
+                if (components.length > 0 || children.length > 0) {
+                    objectString = objectString.concat(tab, nameLabel, this.pp_getName(), separator, newLine);
+                } else {
+                    objectString = objectString.concat(tab, nameLabel, this.pp_getName(), newLine);
+                }
+            }
+
             if (components.length > 0) {
                 objectString = objectString.concat(tab, componentsLabel, newLine, tab, startComponents, newLine);
                 for (let i = 0; i < components.length; i++) {
@@ -2216,10 +2228,13 @@ if (WL && WL.Object) {
                     }
                 }
 
-                objectString = objectString.concat(tab, endComponents, separator, newLine);
+                if (children.length > 0) {
+                    objectString = objectString.concat(tab, endComponents, separator, newLine);
+                } else {
+                    objectString = objectString.concat(tab, endComponents, newLine);
+                }
             }
 
-            let children = this.pp_getChildren();
             if (children.length > 0) {
                 objectString = objectString.concat(tab, childrenLabel, newLine, tab, startChildren, newLine);
                 for (let i = 0; i < children.length; i++) {
@@ -2236,7 +2251,7 @@ if (WL && WL.Object) {
                         objectString = objectString.concat(newLine);
                     }
                 }
-                objectString = objectString.concat(tab, endChildren, separator, newLine);
+                objectString = objectString.concat(tab, endChildren, newLine);
             }
 
             objectString = objectString.concat(endObject);

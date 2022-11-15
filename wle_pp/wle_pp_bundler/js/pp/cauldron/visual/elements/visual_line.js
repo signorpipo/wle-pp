@@ -56,6 +56,7 @@ PP.VisualLine = class VisualLine {
         this._myFlatOpaqueMaterial = null;
 
         this._build();
+        this.forceRefresh();
 
         this.setVisible(true);
     }

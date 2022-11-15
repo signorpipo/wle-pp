@@ -780,6 +780,18 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     }
 };
 
+PP.ConsoleVRWidget.AdditionalSetup = class ConsoleVRWidgetAdditionalSetup {
+    constructor() {
+        this.myHandedness = PP.ToolHandedness.NONE;
+        this.myOverrideBrowserConsole = false;
+        this.myShowOnStart = false;
+        this.myShowVisibilityButton = false;
+        this.myPulseOnNewMessage = PP.ConsoleVRWidget.PulseOnNewMessage.NEVER;
+        this.myPlaneMaterial = null;
+        this.myTextMaterial = null;
+    }
+};
+
 PP.ConsoleVRWidget.ConsoleFunction = {
     INFO: 0,
     WARN: 1,
@@ -808,7 +820,7 @@ PP.ConsoleVRWidget.MessageType = {
     LOG: 3
 };
 
-PP.ConsoleVRWidget.Message = class Message {
+PP.ConsoleVRWidget.Message = class ConsoleVRWidgetMessage {
     constructor(messageType, messageLines) {
         this.myType = messageType;
         this.myLines = messageLines;
@@ -830,58 +842,5 @@ PP.ConsoleVRWidget.Message = class Message {
         let text = this._myOriginalText.slice(0);
         text = countString.concat(text);
         this.myLines = text.split("\n");
-    }
-};
-
-PP.ConsoleVR = {
-    _myRealLog: console.log,
-    _myRealError: console.error,
-    _myRealWarn: console.warn,
-    _myRealInfo: console.info,
-    _myRealDebug: console.debug,
-    _myRealAssert: console.assert,
-    _myRealClear: console.clear,
-    _myForwardToBrowserConsole: true,
-
-    log: function (...args) {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealLog.apply(console, args);
-        }
-    },
-    error: function (...args) {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealError.apply(console, args);
-        }
-    },
-    warn: function (...args) {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealWarn.apply(console, args);
-        }
-    },
-    info: function (...args) {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealInfo.apply(console, args);
-        }
-    },
-    debug: function (...args) {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealDebug.apply(console, args);
-        }
-    },
-    assert: function (...args) {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealAssert.apply(console, args);
-        }
-    },
-    clear: function () {
-        if (this._myForwardToBrowserConsole) {
-            this._myRealClear.apply(console);
-        }
-    },
-    setForwardToBrowserConsole: function (forwardToBrowserConsole) {
-        this._myForwardToBrowserConsole = forwardToBrowserConsole;
-    },
-    isForwardToBrowserConsole: function () {
-        return this._myForwardToBrowserConsole;
     }
 };

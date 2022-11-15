@@ -39,6 +39,7 @@ PP.VisualMesh = class VisualMesh {
         this._myMeshComponent = null;
 
         this._build();
+        this.forceRefresh();
 
         this.setVisible(true);
     }

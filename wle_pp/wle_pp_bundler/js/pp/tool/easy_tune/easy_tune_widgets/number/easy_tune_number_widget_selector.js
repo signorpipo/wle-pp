@@ -1,5 +1,5 @@
 
-PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
+PP.EasyTuneNumberArrayWidgetSelector = class EasyTuneNumberArrayWidgetSelector {
 
     constructor(gamepad) {
         this._myGamepad = gamepad;
@@ -110,7 +110,7 @@ PP.EasyTuneBoolWidget = class EasyTuneBoolWidget {
     }
 
     _createWidget(arraySize) {
-        this._myWidgets.set(arraySize, new PP.EasyTuneBoolArrayWidget(arraySize, this._myGamepad));
+        this._myWidgets.set(arraySize, new PP.EasyTuneNumberArrayWidget(arraySize, this._myGamepad));
         this._myWidgets.get(arraySize).start(this._myParentObject, this._myAdditionalSetup);
         this._myWidgets.get(arraySize).setVisible(false);
         this._myWidgets.get(arraySize).registerScrollVariableRequestEventListener(this, this._scrollVariableRequest.bind(this));

@@ -52,6 +52,8 @@ PP.VisualRaycast = class VisualRaycast {
         this._myVisualRaycastHitList = [];
         this._addVisualRaycastHit();
 
+        this.forceRefresh();
+
         this.setVisible(true);
     }
 
@@ -107,8 +109,14 @@ PP.VisualRaycast = class VisualRaycast {
         this._refresh();
 
         this._myVisualRaycast.forceRefresh();
-        for (let visualRaycastHit of this._myVisualRaycastHitList) {
-            visualRaycastHit.forceRefresh();
+
+        if (this._myParams.myRaycastResult.myHits.length > 0) {
+            let hitsToRefresh = Math.min(this._myParams.myRaycastResult.myHits.length, this._myVisualRaycastHitList.length);
+
+            for (let i = 0; i < hitsToRefresh; i++) {
+                let visualRaycastHit = this._myVisualRaycastHitList[i];
+                visualRaycastHit.forceRefresh();
+            }
         }
     }
 

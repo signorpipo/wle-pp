@@ -128,6 +128,7 @@ require('./pp/tool/console_vr/console_vr_widget_setup');
 require('./pp/tool/console_vr/console_vr_widget_ui');
 require('./pp/tool/console_vr/console_vr_widget');
 require('./pp/tool/console_vr/console_vr');
+require('./pp/tool/console_vr/console_vr_component');
 
 require('./pp/tool/easy_tune/easy_object_tuners/easy_object_tuner');
 require('./pp/tool/easy_tune/easy_object_tuners/easy_light_attenuation');
@@ -138,25 +139,32 @@ require('./pp/tool/easy_tune/easy_object_tuners/easy_set_tune_target_child_numbe
 require('./pp/tool/easy_tune/easy_object_tuners/easy_set_tune_target_grab');
 require('./pp/tool/easy_tune/easy_object_tuners/easy_transform');
 
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_bool_array_widget');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_bool_array_widget_ui');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_bool_array_widget_setup');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_bool_widget');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_none_widget');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_none_widget_ui');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_none_widget_setup');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_number_array_widget');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_number_array_widget_ui');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_number_array_widget_setup');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_number_widget');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_transform_widget');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_transform_widget_ui');
-require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_transform_widget_setup');
+require('./pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget');
+require('./pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_ui');
+require('./pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_setup');
+require('./pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget');
+require('./pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui');
+require('./pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_setup');
+require('./pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_selector');
+require('./pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget');
+require('./pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_ui');
+require('./pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_setup');
+require('./pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget');
+require('./pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_ui');
+require('./pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_setup');
+require('./pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_widget_selector');
+require('./pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget');
+require('./pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_ui');
+require('./pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_setup');
 require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_widget');
 require('./pp/tool/easy_tune/easy_tune_widgets/easy_tune_widget_setup');
 
 require('./pp/tool/easy_tune/easy_tune_variables');
-require('./pp/tool/easy_tune/easy_tune');
+require('./pp/tool/easy_tune/easy_tune_variable_types');
+require('./pp/tool/easy_tune/easy_tune_globals');
+
+require('./pp/tool/easy_tune/components/easy_tune_component');
+require('./pp/tool/easy_tune/components/easy_tune_import_variables');
 
 require('./pp/tool/widget_frame/widget_frame_setup');
 require('./pp/tool/widget_frame/widget_frame_ui');

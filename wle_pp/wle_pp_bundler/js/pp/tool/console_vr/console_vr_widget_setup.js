@@ -60,7 +60,7 @@ PP.ConsoleVRWidgetSetup = class ConsoleVRWidgetSetup {
 
         this.myButtonBackgroundScale = [0.04, 0.02, 1];
 
-        this.myButtonTextPosition = [0, 0, 0.0065];
+        this.myButtonTextPosition = [0, 0, 0.007];
         this.myButtonTextScale = [0.18, 0.18, 0.18];
 
         this.myButtonCursorTargetPosition = [0, 0, 0];

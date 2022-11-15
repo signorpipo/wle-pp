@@ -40,6 +40,7 @@ PP.VisualArrow = class VisualArrow {
         this._myFlatOpaqueMaterial = null;
 
         this._build();
+        this.forceRefresh();
 
         this.setVisible(true);
     }

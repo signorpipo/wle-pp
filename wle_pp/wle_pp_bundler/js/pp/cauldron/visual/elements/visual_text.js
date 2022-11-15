@@ -46,6 +46,7 @@ PP.VisualText = class VisualText {
         this._myTextMaterial = null;
 
         this._build();
+        this.forceRefresh();
 
         this.setVisible(true);
     }

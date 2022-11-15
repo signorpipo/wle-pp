@@ -44,6 +44,8 @@ PP.VisualTransform = class VisualTransform {
         this._myVisualUp.setAutoRefresh(false);
         this._myVisualForward.setAutoRefresh(false);
 
+        this.forceRefresh();
+
         this.setVisible(true);
     }
 

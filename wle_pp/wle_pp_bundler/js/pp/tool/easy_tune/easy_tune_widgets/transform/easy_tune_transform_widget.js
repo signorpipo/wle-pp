@@ -1,18 +1,12 @@
-PP.EasyTuneTransformWidget = class EasyTuneTransformWidget {
+PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBaseWidget {
 
     constructor(gamepad) {
+        super();
+
         this._myGamepad = gamepad;
 
         this._mySetup = new PP.EasyTuneTransformWidgetSetup();
         this._myUI = new PP.EasyTuneTransformWidgetUI();
-
-        this._myVariable = null;
-
-        this._myIsVisible = true;
-
-        this._myScrollVariableRequestCallbacks = new Map();     // Signature: callback(scrollAmount)
-
-        this._myAppendToVariableName = "";
 
         this._myValueButtonEditIntensity = 0;
         this._myValueButtonEditIntensityTimer = 0;
@@ -22,98 +16,58 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget {
         this._myValueEditActive = false;
         this._myStepEditActive = false;
 
-        this._myValueRealValue = null;
-        this._myComponentStepValue = null;
-        this._myStepMultiplierValue = null;
+        this._myValueRealValue = 0;
+        this._myComponentStepValue = 0;
+        this._myStepMultiplierValue = 0;
         this._myStepFastEdit = false;
 
         this._myValueEditIndex = -1;
         this._myComponentIndex = 0;
         this._myStepIndex = 0;
-
-        this._myScrollVariableActive = false;
-        this._myScrollDirection = 0;
-        this._myScrollVariableTimer = 0;
-        this._myHasScrolled = false;
     }
 
-    setEasyTuneVariable(variable, appendToVariableName) {
-        this._myVariable = variable;
-
-        if ((typeof appendToVariableName) !== 'undefined') {
-            this._myAppendToVariableName = appendToVariableName;
-        } else {
-            this._myAppendToVariableName = "";
-        }
-
-        this._refreshUI();
-    }
-
-    isScrollVariableActive() {
-        return this._myScrollVariableActive;
-    }
-
-    getScrollVariableDirection() {
-        return this._myScrollDirection;
-    }
-
-    setScrollVariableActive(active, scrollDirection) {
-        this._myScrollVariableActive = active;
-        this._myScrollDirection = scrollDirection;
-        this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
-        this._myHasScrolled = false;
-    }
-
-    _refreshUI() {
-        if (this._myVariable) {
-            this._myUI.myVariableLabelTextComponent.text = this._myVariable.myName.concat(this._myAppendToVariableName);
-
-            for (let i = 0; i < 3; i++) {
-                this._myUI.myPositionTextComponents[i].text = this._myVariable.myPosition[i].toFixed(this._myVariable.myDecimalPlaces);
+    _setEasyTuneVariableHook() {
+        if (this._myValueEditIndex >= 0) {
+            switch (this._myComponentIndex) {
+                case 0:
+                    this._myValueRealValue = this._myVariable.myPosition[this._myValueEditIndex];
+                    this._myComponentStepValue = this._myVariable.myPositionStepPerSecond;
+                    break;
+                case 1:
+                    this._myValueRealValue = this._myVariable.myRotation[this._myValueEditIndex];
+                    this._myComponentStepValue = this._myVariable.myRotationStepPerSecond;
+                    break;
+                case 2:
+                    this._myValueRealValue = this._myVariable.myScale[this._myValueEditIndex];
+                    this._myComponentStepValue = this._myVariable.myScaleStepPerSecond;
+                    break;
             }
-            this._myUI.myPositionStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myPositionStepPerSecond);
-
-            for (let i = 0; i < 3; i++) {
-                this._myUI.myRotationTextComponents[i].text = this._myVariable.myRotation[i].toFixed(this._myVariable.myDecimalPlaces);
-            }
-            this._myUI.myRotationStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myRotationStepPerSecond);
-
-            for (let i = 0; i < 3; i++) {
-                this._myUI.myScaleTextComponents[i].text = this._myVariable.myScale[i].toFixed(this._myVariable.myDecimalPlaces);
-            }
-            this._myUI.myScaleStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myScaleStepPerSecond);
         }
     }
 
-    setVisible(visible) {
-        if (visible) {
-            this._refreshUI();
+    _refreshUIHook() {
+        for (let i = 0; i < 3; i++) {
+            this._myUI.myPositionTextComponents[i].text = this._myVariable.myPosition[i].toFixed(this._myVariable.myDecimalPlaces);
         }
-        this._myUI.setVisible(visible);
+        this._myUI.myPositionStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myPositionStepPerSecond);
 
-        this._myIsVisible = visible;
+        for (let i = 0; i < 3; i++) {
+            this._myUI.myRotationTextComponents[i].text = this._myVariable.myRotation[i].toFixed(this._myVariable.myDecimalPlaces);
+        }
+        this._myUI.myRotationStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myRotationStepPerSecond);
+
+        for (let i = 0; i < 3; i++) {
+            this._myUI.myScaleTextComponents[i].text = this._myVariable.myScale[i].toFixed(this._myVariable.myDecimalPlaces);
+        }
+        this._myUI.myScaleStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myScaleStepPerSecond);
     }
 
-    registerScrollVariableRequestEventListener(id, callback) {
-        this._myScrollVariableRequestCallbacks.set(id, callback);
-    }
-
-    unregisterScrollVariableRequestEventListener(id) {
-        this._myScrollVariableRequestCallbacks.delete(id);
-    }
-
-    start(parentObject, additionalSetup) {
-        this._myUI.build(parentObject, this._mySetup, additionalSetup);
+    _startHook(parentObject, additionalSetup) {
         this._myUI.setAdditionalButtonsActive(additionalSetup.myEnableAdditionalButtons);
-
-        this._addListeners();
     }
 
-    update(dt) {
-        if (this._isActive()) {
-            this._updateValue(dt);
-            this._updateScrollVariable(dt);
-        }
+    _updateHook(dt) {
+        this._updateValue(dt);
     }
 
     _updateValue(dt) {
@@ -254,44 +208,12 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget {
         }
     }
 
-    _updateScrollVariable(dt) {
-        if (this._myScrollVariableActive) {
-            if (this._myScrollVariableTimer <= 0) {
-                this._scrollVariableRequest(this._myScrollDirection);
-                this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
-                this._myHasScrolled = true;
-            } else {
-                this._myScrollVariableTimer -= dt;
-            }
-        }
-    }
-
-    _isActive() {
-        return this._myIsVisible && this._myVariable;
-    }
-
-    _addListeners() {
+    _addListenersHook() {
         let ui = this._myUI;
 
         ui.myVariableLabelCursorTargetComponent.addClickFunction(this._resetAllValues.bind(this));
         ui.myVariableLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myVariableLabelText));
         ui.myVariableLabelCursorTargetComponent.addUnHoverFunction(this._genericTextUnHover.bind(this, ui.myVariableLabelText, this._mySetup.myVariableLabelTextScale));
-
-        ui.myNextButtonCursorTargetComponent.addDownFunction(this._setScrollVariableActive.bind(this, true, 1, false));
-        ui.myNextButtonCursorTargetComponent.addDownOnHoverFunction(this._setScrollVariableActive.bind(this, true, 1, false));
-        ui.myNextButtonCursorTargetComponent.addUpFunction(this._setScrollVariableActive.bind(this, false, 0, false));
-        ui.myNextButtonCursorTargetComponent.addUpWithNoDownFunction(this._setScrollVariableActive.bind(this, false, 0, true));
-        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableActive.bind(this, false, 0, true));
-        ui.myNextButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
-        ui.myNextButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
-
-        ui.myPreviousButtonCursorTargetComponent.addDownFunction(this._setScrollVariableActive.bind(this, true, -1, false));
-        ui.myPreviousButtonCursorTargetComponent.addDownOnHoverFunction(this._setScrollVariableActive.bind(this, true, -1, false));
-        ui.myPreviousButtonCursorTargetComponent.addUpFunction(this._setScrollVariableActive.bind(this, false, 0, false));
-        ui.myPreviousButtonCursorTargetComponent.addUpWithNoDownFunction(this._setScrollVariableActive.bind(this, false, 0, true));
-        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._setScrollVariableActive.bind(this, false, 0, true));
-        ui.myPreviousButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
-        ui.myPreviousButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
         ui.myPositionLabelCursorTargetComponent.addClickFunction(this._resetComponentValues.bind(this, 0));
         ui.myPositionLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myPositionLabelText));
@@ -511,44 +433,23 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget {
         }
     }
 
-    _setScrollVariableActive(active, scrollDirection, skipForceScroll) {
-        if (this._isActive() || !active) {
-            let forceScroll = !active && !this._myHasScrolled && !skipForceScroll;
-            let oldScrollDirection = this._myScrollDirection;
-
-            this.setScrollVariableActive(active, scrollDirection);
-
-            if (forceScroll) {
-                this._scrollVariableRequest(oldScrollDirection);
-            }
-        }
-    }
-
-    _scrollVariableRequest(amount) {
-        if (this._isActive() && amount != 0) {
-            for (let callback of this._myScrollVariableRequestCallbacks.values()) {
-                callback(amount);
-            }
-        }
-    }
-
     _resetValue(componentIndex, index) {
         if (this._isActive()) {
             switch (componentIndex) {
                 case 0:
-                    this._myVariable.myPosition[index] = this._myVariable.myInitialPosition[index];
+                    this._myVariable.myPosition[index] = this._myVariable.myDefaultPosition[index];
                     this._myUI.myPositionTextComponents[index].text = this._myVariable.myPosition[index].toFixed(this._myVariable.myDecimalPlaces);
                     break;
                 case 1:
-                    this._myVariable.myRotation[index] = this._myVariable.myInitialRotation[index];
+                    this._myVariable.myRotation[index] = this._myVariable.myDefaultRotation[index];
                     this._myUI.myRotationTextComponents[index].text = this._myVariable.myRotation[index].toFixed(this._myVariable.myDecimalPlaces);
                     break;
                 case 2:
-                    this._myVariable.myScale[index] = this._myVariable.myInitialScale[index];
+                    this._myVariable.myScale[index] = this._myVariable.myDefaultScale[index];
                     this._myUI.myScaleTextComponents[index].text = this._myVariable.myScale[index].toFixed(this._myVariable.myDecimalPlaces);
                     break;
                 default:
-                    initialValue = 0;
+                    defaultValue = 0;
             }
         }
     }
@@ -567,22 +468,22 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget {
 
     _resetStep(index) {
         if (this._isActive()) {
-            let initialValue = 0;
+            let defaultValue = 0;
             switch (index) {
                 case 0:
-                    initialValue = this._myVariable.myInitialPositionStepPerSecond;
+                    defaultValue = this._myVariable.myDefaultPositionStepPerSecond;
                     break;
                 case 1:
-                    initialValue = this._myVariable.myInitialRotationStepPerSecond;
+                    defaultValue = this._myVariable.myDefaultRotationStepPerSecond;
                     break;
                 case 2:
-                    initialValue = this._myVariable.myInitialScaleStepPerSecond;
+                    defaultValue = this._myVariable.myDefaultScaleStepPerSecond;
                     break;
                 default:
-                    initialValue = 0;
+                    defaultValue = 0;
             }
 
-            this._changeStep(index, initialValue);
+            this._changeStep(index, defaultValue);
         }
     }
 
@@ -603,14 +504,6 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget {
                 this._myUI.myScaleStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myScaleStepPerSecond);
                 break;
         }
-    }
-
-    _genericHover(material) {
-        material.color = this._mySetup.myButtonHoverColor;
-    }
-
-    _genericUnHover(material) {
-        material.color = this._mySetup.myBackgroundColor;
     }
 
     _genericTextHover(text) {

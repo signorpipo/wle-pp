@@ -119,14 +119,16 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _initializeWidgets() {
         this._myWidgets[PP.EasyTuneVariableType.NONE] = new PP.EasyTuneNoneWidget();
-        this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberWidget(this._myGamepad);
-        this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolWidget(this._myGamepad);
+        this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberArrayWidgetSelector(this._myGamepad);
+        this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolArrayWidgetSelector(this._myGamepad);
         this._myWidgets[PP.EasyTuneVariableType.TRANSFORM] = new PP.EasyTuneTransformWidget(this._myGamepad);
 
-        for (let item of this._myWidgets) {
-            item.start(this._myWidgetFrame.getWidgetObject(), this._myAdditionalSetup);
-            item.setVisible(false);
-            item.registerScrollVariableRequestEventListener(this, this._scrollVariable.bind(this));
+        for (let widget of this._myWidgets) {
+            if (widget != null) {
+                widget.start(this._myWidgetFrame.getWidgetObject(), this._myAdditionalSetup);
+                widget.setVisible(false);
+                widget.registerScrollVariableRequestEventListener(this, this._scrollVariable.bind(this));
+            }
         }
 
         this._selectCurrentWidget();
@@ -196,7 +198,9 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _widgetVisibleChanged(visible) {
         for (let widget of this._myWidgets) {
-            widget.setVisible(false);
+            if (widget != null) {
+                widget.setVisible(false);
+            }
         }
 
         if (this._myCurrentWidget) {
@@ -275,5 +279,21 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         if (this._myWidgetFrame.myIsWidgetVisible && this._myCurrentVariable) {
             this._myCurrentVariable.myIsActive = true;
         }
+    }
+};
+
+PP.EasyTuneWidgetAdditionalSetup = class EasyTuneWidgetAdditionalSetup {
+    constructor() {
+        this.myHandedness = PP.ToolHandedness.NONE;
+        this.myShowOnStart = false;
+        this.myShowVisibilityButton = false;
+        this.myEnableAdditionalButtons = false;
+        this.myEnableGamepadScrollVariable = false;
+        this.myPlaneMaterial = null;
+        this.myTextMaterial = null;
+
+        this.myEnableVariablesImportExportButtons = false;
+        this.myVariablesImportCallback = null;   // Signature: callback()
+        this.myVariablesExportCallback = null;   // Signature: callback()
     }
 };

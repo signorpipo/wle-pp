@@ -1,34 +1,5 @@
 
-PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
-
-    build(parentObject, setup, additionalSetup) {
-        this._myParentObject = parentObject;
-        this._mySetup = setup;
-        this._myAdditionalSetup = additionalSetup;
-
-        this._myAdditionalButtonsActive = true;
-
-        this._myPlaneMesh = PP.MeshUtils.createPlaneMesh();
-
-        this._createSkeleton();
-        this._setTransforms();
-        this._addComponents();
-
-        this._setTransformForNonVR();
-
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
-    }
-
-    setVisible(visible) {
-        this.myPivotObject.pp_setActiveHierarchy(visible);
-        if (visible) {
-            this.setAdditionalButtonsActive(this._myAdditionalButtonsActive);
-        }
-    }
+PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI extends PP.EasyTuneBaseWidgetUI {
 
     setAdditionalButtonsActive(active) {
         this._myAdditionalButtonsActive = active;
@@ -55,37 +26,13 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
         this.myScaleStepDecreaseButtonPanel.pp_setActiveHierarchy(this._myAdditionalButtonsActive);
     }
 
-    //Skeleton
-    _createSkeleton() {
-        this.myPivotObject = WL.scene.addObject(this._myParentObject);
-
-        this.myBackPanel = WL.scene.addObject(this.myPivotObject);
-        this.myBackBackground = WL.scene.addObject(this.myBackPanel);
-
-        this._createDisplaySkeleton();
-        this._createStepSkeleton();
-        this._createPointerSkeleton();
+    _buildHook() {
+        this._myAdditionalButtonsActive = true;
     }
 
-    _createDisplaySkeleton() {
-        this.myDisplayPanel = WL.scene.addObject(this.myPivotObject);
+    _createSkeletonHook() {
+        // Position
 
-        this.myVariableLabelPanel = WL.scene.addObject(this.myDisplayPanel);
-        this.myVariableLabelText = WL.scene.addObject(this.myVariableLabelPanel);
-        this.myVariableLabelCursorTarget = WL.scene.addObject(this.myVariableLabelPanel);
-
-        //Next/Previous
-        this.myNextButtonPanel = WL.scene.addObject(this.myVariableLabelPanel);
-        this.myNextButtonBackground = WL.scene.addObject(this.myNextButtonPanel);
-        this.myNextButtonText = WL.scene.addObject(this.myNextButtonPanel);
-        this.myNextButtonCursorTarget = WL.scene.addObject(this.myNextButtonPanel);
-
-        this.myPreviousButtonPanel = WL.scene.addObject(this.myVariableLabelPanel);
-        this.myPreviousButtonBackground = WL.scene.addObject(this.myPreviousButtonPanel);
-        this.myPreviousButtonText = WL.scene.addObject(this.myPreviousButtonPanel);
-        this.myPreviousButtonCursorTarget = WL.scene.addObject(this.myPreviousButtonPanel);
-
-        //Position
         this.myPositionPanel = WL.scene.addObject(this.myDisplayPanel);
         this.myPositionLabelText = WL.scene.addObject(this.myPositionPanel);
         this.myPositionLabelCursorTarget = WL.scene.addObject(this.myPositionPanel);
@@ -109,7 +56,6 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myPositionTexts[i] = WL.scene.addObject(this.myPositionPanels[i]);
             this.myPositionCursorTargets[i] = WL.scene.addObject(this.myPositionPanels[i]);
 
-            //Increase/Decrease
             this.myPositionIncreaseButtonPanels[i] = WL.scene.addObject(this.myPositionPanels[i]);
             this.myPositionIncreaseButtonBackgrounds[i] = WL.scene.addObject(this.myPositionIncreaseButtonPanels[i]);
             this.myPositionIncreaseButtonTexts[i] = WL.scene.addObject(this.myPositionIncreaseButtonPanels[i]);
@@ -121,7 +67,8 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myPositionDecreaseButtonCursorTargets[i] = WL.scene.addObject(this.myPositionDecreaseButtonPanels[i]);
         }
 
-        //Rotation
+        // Rotation
+
         this.myRotationPanel = WL.scene.addObject(this.myDisplayPanel);
         this.myRotationLabelText = WL.scene.addObject(this.myRotationPanel);
         this.myRotationLabelCursorTarget = WL.scene.addObject(this.myRotationPanel);
@@ -145,7 +92,6 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myRotationTexts[i] = WL.scene.addObject(this.myRotationPanels[i]);
             this.myRotationCursorTargets[i] = WL.scene.addObject(this.myRotationPanels[i]);
 
-            //Increase/Decrease
             this.myRotationIncreaseButtonPanels[i] = WL.scene.addObject(this.myRotationPanels[i]);
             this.myRotationIncreaseButtonBackgrounds[i] = WL.scene.addObject(this.myRotationIncreaseButtonPanels[i]);
             this.myRotationIncreaseButtonTexts[i] = WL.scene.addObject(this.myRotationIncreaseButtonPanels[i]);
@@ -157,7 +103,8 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myRotationDecreaseButtonCursorTargets[i] = WL.scene.addObject(this.myRotationDecreaseButtonPanels[i]);
         }
 
-        //Scale
+        // Scale
+
         this.myScalePanel = WL.scene.addObject(this.myDisplayPanel);
         this.myScaleLabelText = WL.scene.addObject(this.myScalePanel);
         this.myScaleLabelCursorTarget = WL.scene.addObject(this.myScalePanel);
@@ -181,7 +128,6 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myScaleTexts[i] = WL.scene.addObject(this.myScalePanels[i]);
             this.myScaleCursorTargets[i] = WL.scene.addObject(this.myScalePanels[i]);
 
-            //Increase/Decrease
             this.myScaleIncreaseButtonPanels[i] = WL.scene.addObject(this.myScalePanels[i]);
             this.myScaleIncreaseButtonBackgrounds[i] = WL.scene.addObject(this.myScaleIncreaseButtonPanels[i]);
             this.myScaleIncreaseButtonTexts[i] = WL.scene.addObject(this.myScaleIncreaseButtonPanels[i]);
@@ -192,15 +138,15 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myScaleDecreaseButtonTexts[i] = WL.scene.addObject(this.myScaleDecreaseButtonPanels[i]);
             this.myScaleDecreaseButtonCursorTargets[i] = WL.scene.addObject(this.myScaleDecreaseButtonPanels[i]);
         }
-    }
 
-    _createStepSkeleton() {
-        //Position
+        // Steps
+
+        // Position
+
         this.myPositionStepPanel = WL.scene.addObject(this.myPositionPanel);
         this.myPositionStepText = WL.scene.addObject(this.myPositionStepPanel);
         this.myPositionStepCursorTarget = WL.scene.addObject(this.myPositionStepPanel);
 
-        //Increase/Decrease
         this.myPositionStepIncreaseButtonPanel = WL.scene.addObject(this.myPositionStepPanel);
         this.myPositionStepIncreaseButtonBackground = WL.scene.addObject(this.myPositionStepIncreaseButtonPanel);
         this.myPositionStepIncreaseButtonText = WL.scene.addObject(this.myPositionStepIncreaseButtonPanel);
@@ -211,12 +157,12 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
         this.myPositionStepDecreaseButtonText = WL.scene.addObject(this.myPositionStepDecreaseButtonPanel);
         this.myPositionStepDecreaseButtonCursorTarget = WL.scene.addObject(this.myPositionStepDecreaseButtonPanel);
 
-        //Rotation
+        // Rotation
+
         this.myRotationStepPanel = WL.scene.addObject(this.myRotationPanel);
         this.myRotationStepText = WL.scene.addObject(this.myRotationStepPanel);
         this.myRotationStepCursorTarget = WL.scene.addObject(this.myRotationStepPanel);
 
-        //Increase/Decrease
         this.myRotationStepIncreaseButtonPanel = WL.scene.addObject(this.myRotationStepPanel);
         this.myRotationStepIncreaseButtonBackground = WL.scene.addObject(this.myRotationStepIncreaseButtonPanel);
         this.myRotationStepIncreaseButtonText = WL.scene.addObject(this.myRotationStepIncreaseButtonPanel);
@@ -227,12 +173,12 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
         this.myRotationStepDecreaseButtonText = WL.scene.addObject(this.myRotationStepDecreaseButtonPanel);
         this.myRotationStepDecreaseButtonCursorTarget = WL.scene.addObject(this.myRotationStepDecreaseButtonPanel);
 
-        //Scale
+        // Scale
+
         this.myScaleStepPanel = WL.scene.addObject(this.myScalePanel);
         this.myScaleStepText = WL.scene.addObject(this.myScaleStepPanel);
         this.myScaleStepCursorTarget = WL.scene.addObject(this.myScaleStepPanel);
 
-        //Increase/Decrease
         this.myScaleStepIncreaseButtonPanel = WL.scene.addObject(this.myScaleStepPanel);
         this.myScaleStepIncreaseButtonBackground = WL.scene.addObject(this.myScaleStepIncreaseButtonPanel);
         this.myScaleStepIncreaseButtonText = WL.scene.addObject(this.myScaleStepIncreaseButtonPanel);
@@ -244,43 +190,9 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
         this.myScaleStepDecreaseButtonCursorTarget = WL.scene.addObject(this.myScaleStepDecreaseButtonPanel);
     }
 
-    _createPointerSkeleton() {
-        this.myPointerCursorTarget = WL.scene.addObject(this.myPivotObject);
-    }
-
-    //Transforms
-    _setTransforms() {
-        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandedness]);
-
-        this.myBackPanel.setTranslationLocal(this._mySetup.myBackPanelPosition);
-        this.myBackBackground.scale(this._mySetup.myBackBackgroundScale);
-
-        this._setDisplayTransforms();
-        this._setStepTransforms();
-        this._setPointerTransform();
-    }
-
-    _setDisplayTransforms() {
-        this.myDisplayPanel.setTranslationLocal(this._mySetup.myDisplayPanelPosition);
-
-        this.myVariableLabelPanel.setTranslationLocal(this._mySetup.myVariableLabelPanelPosition);
-        this.myVariableLabelText.scale(this._mySetup.myVariableLabelTextScale);
-        this.myVariableLabelCursorTarget.setTranslationLocal(this._mySetup.myVariableLabelCursorTargetPosition);
-
-        //Next/Previous
-        this.myNextButtonPanel.setTranslationLocal(this._mySetup.myNextButtonPosition);
-        this.myNextButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
-        this.myNextButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
-        this.myNextButtonText.scale(this._mySetup.mySideButtonTextScale);
-        this.myNextButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
-
-        this.myPreviousButtonPanel.setTranslationLocal(this._mySetup.myPreviousButtonPosition);
-        this.myPreviousButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
-        this.myPreviousButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
-        this.myPreviousButtonText.scale(this._mySetup.mySideButtonTextScale);
-        this.myPreviousButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
-
+    _setTransformHook() {
         //Position
+
         this.myPositionPanel.setTranslationLocal(this._mySetup.myPositionPanelPosition);
         this.myPositionLabelText.scale(this._mySetup.myComponentLabelTextScale);
         this.myPositionLabelCursorTarget.setTranslationLocal(this._mySetup.myComponentLabelCursorTargetPosition);
@@ -290,20 +202,21 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myPositionTexts[i].scale(this._mySetup.myValueTextScale);
             this.myPositionCursorTargets[i].setTranslationLocal(this._mySetup.myValueCursorTargetPosition);
 
-            this.myPositionIncreaseButtonPanels[i].setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+            this.myPositionIncreaseButtonPanels[i].setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
             this.myPositionIncreaseButtonBackgrounds[i].scale(this._mySetup.mySideButtonBackgroundScale);
             this.myPositionIncreaseButtonTexts[i].setTranslationLocal(this._mySetup.mySideButtonTextPosition);
             this.myPositionIncreaseButtonTexts[i].scale(this._mySetup.mySideButtonTextScale);
             this.myPositionIncreaseButtonCursorTargets[i].setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-            this.myPositionDecreaseButtonPanels[i].setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+            this.myPositionDecreaseButtonPanels[i].setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
             this.myPositionDecreaseButtonBackgrounds[i].scale(this._mySetup.mySideButtonBackgroundScale);
             this.myPositionDecreaseButtonTexts[i].setTranslationLocal(this._mySetup.mySideButtonTextPosition);
             this.myPositionDecreaseButtonTexts[i].scale(this._mySetup.mySideButtonTextScale);
             this.myPositionDecreaseButtonCursorTargets[i].setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
         }
 
-        //Rotation
+        // Rotation
+
         this.myRotationPanel.setTranslationLocal(this._mySetup.myRotationPanelPosition);
         this.myRotationLabelText.scale(this._mySetup.myComponentLabelTextScale);
         this.myRotationLabelCursorTarget.setTranslationLocal(this._mySetup.myComponentLabelCursorTargetPosition);
@@ -313,20 +226,21 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myRotationTexts[i].scale(this._mySetup.myValueTextScale);
             this.myRotationCursorTargets[i].setTranslationLocal(this._mySetup.myValueCursorTargetPosition);
 
-            this.myRotationIncreaseButtonPanels[i].setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+            this.myRotationIncreaseButtonPanels[i].setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
             this.myRotationIncreaseButtonBackgrounds[i].scale(this._mySetup.mySideButtonBackgroundScale);
             this.myRotationIncreaseButtonTexts[i].setTranslationLocal(this._mySetup.mySideButtonTextPosition);
             this.myRotationIncreaseButtonTexts[i].scale(this._mySetup.mySideButtonTextScale);
             this.myRotationIncreaseButtonCursorTargets[i].setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-            this.myRotationDecreaseButtonPanels[i].setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+            this.myRotationDecreaseButtonPanels[i].setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
             this.myRotationDecreaseButtonBackgrounds[i].scale(this._mySetup.mySideButtonBackgroundScale);
             this.myRotationDecreaseButtonTexts[i].setTranslationLocal(this._mySetup.mySideButtonTextPosition);
             this.myRotationDecreaseButtonTexts[i].scale(this._mySetup.mySideButtonTextScale);
             this.myRotationDecreaseButtonCursorTargets[i].setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
         }
 
-        //Scale
+        // Scale
+
         this.myScalePanel.setTranslationLocal(this._mySetup.myScalePanelPosition);
         this.myScaleLabelText.scale(this._mySetup.myComponentLabelTextScale);
         this.myScaleLabelCursorTarget.setTranslationLocal(this._mySetup.myComponentLabelCursorTargetPosition);
@@ -336,136 +250,79 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myScaleTexts[i].scale(this._mySetup.myValueTextScale);
             this.myScaleCursorTargets[i].setTranslationLocal(this._mySetup.myValueCursorTargetPosition);
 
-            this.myScaleIncreaseButtonPanels[i].setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+            this.myScaleIncreaseButtonPanels[i].setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
             this.myScaleIncreaseButtonBackgrounds[i].scale(this._mySetup.mySideButtonBackgroundScale);
             this.myScaleIncreaseButtonTexts[i].setTranslationLocal(this._mySetup.mySideButtonTextPosition);
             this.myScaleIncreaseButtonTexts[i].scale(this._mySetup.mySideButtonTextScale);
             this.myScaleIncreaseButtonCursorTargets[i].setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-            this.myScaleDecreaseButtonPanels[i].setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+            this.myScaleDecreaseButtonPanels[i].setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
             this.myScaleDecreaseButtonBackgrounds[i].scale(this._mySetup.mySideButtonBackgroundScale);
             this.myScaleDecreaseButtonTexts[i].setTranslationLocal(this._mySetup.mySideButtonTextPosition);
             this.myScaleDecreaseButtonTexts[i].scale(this._mySetup.mySideButtonTextScale);
             this.myScaleDecreaseButtonCursorTargets[i].setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
         }
-    }
 
-    _setStepTransforms() {
-        //Position
+        // Steps
+
+        // Position
+
         this.myPositionStepPanel.setTranslationLocal(this._mySetup.myStepPanelPosition);
         this.myPositionStepText.scale(this._mySetup.myStepTextScale);
         this.myPositionStepCursorTarget.setTranslationLocal(this._mySetup.myStepCursorTargetPosition);
 
-        //Increase/Decrease
-        this.myPositionStepIncreaseButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+        this.myPositionStepIncreaseButtonPanel.setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
         this.myPositionStepIncreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
         this.myPositionStepIncreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
         this.myPositionStepIncreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
         this.myPositionStepIncreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        this.myPositionStepDecreaseButtonPanel.setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+        this.myPositionStepDecreaseButtonPanel.setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
         this.myPositionStepDecreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
         this.myPositionStepDecreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
         this.myPositionStepDecreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
         this.myPositionStepDecreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        //Rotation
+        // Rotation
+
         this.myRotationStepPanel.setTranslationLocal(this._mySetup.myStepPanelPosition);
         this.myRotationStepText.scale(this._mySetup.myStepTextScale);
         this.myRotationStepCursorTarget.setTranslationLocal(this._mySetup.myStepCursorTargetPosition);
 
-        //Increase/Decrease
-        this.myRotationStepIncreaseButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+        this.myRotationStepIncreaseButtonPanel.setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
         this.myRotationStepIncreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
         this.myRotationStepIncreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
         this.myRotationStepIncreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
         this.myRotationStepIncreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        this.myRotationStepDecreaseButtonPanel.setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+        this.myRotationStepDecreaseButtonPanel.setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
         this.myRotationStepDecreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
         this.myRotationStepDecreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
         this.myRotationStepDecreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
         this.myRotationStepDecreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        //Scale
+        // Scale
+
         this.myScaleStepPanel.setTranslationLocal(this._mySetup.myStepPanelPosition);
         this.myScaleStepText.scale(this._mySetup.myStepTextScale);
         this.myScaleStepCursorTarget.setTranslationLocal(this._mySetup.myStepCursorTargetPosition);
 
-        //Increase/Decrease
-        this.myScaleStepIncreaseButtonPanel.setTranslationLocal(this._mySetup.myRightSideButtonPosition);
+        this.myScaleStepIncreaseButtonPanel.setTranslationLocal(this._mySetup.myIncreaseButtonPosition);
         this.myScaleStepIncreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
         this.myScaleStepIncreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
         this.myScaleStepIncreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
         this.myScaleStepIncreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
 
-        this.myScaleStepDecreaseButtonPanel.setTranslationLocal(this._mySetup.myLeftSideButtonPosition);
+        this.myScaleStepDecreaseButtonPanel.setTranslationLocal(this._mySetup.myDecreaseButtonPosition);
         this.myScaleStepDecreaseButtonBackground.scale(this._mySetup.mySideButtonBackgroundScale);
         this.myScaleStepDecreaseButtonText.setTranslationLocal(this._mySetup.mySideButtonTextPosition);
         this.myScaleStepDecreaseButtonText.scale(this._mySetup.mySideButtonTextScale);
         this.myScaleStepDecreaseButtonCursorTarget.setTranslationLocal(this._mySetup.mySideButtonCursorTargetPosition);
-
     }
 
-    _setPointerTransform() {
-        this.myPointerCursorTarget.setTranslationLocal(this._mySetup.myPointerCursorTargetPosition);
-    }
+    _addComponentsHook() {
+        // Position
 
-    //Components
-    _addComponents() {
-        this.myBackBackgroundComponent = this.myBackBackground.addComponent('mesh');
-        this.myBackBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myBackBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myBackBackgroundComponent.material.color = this._mySetup.myBackBackgroundColor;
-
-        this._addDisplayComponents();
-        this._addStepComponents();
-        this._addPointerComponents();
-    }
-
-    _addDisplayComponents() {
-        this.myVariableLabelTextComponent = this.myVariableLabelText.addComponent('text');
-        this._setupTextComponent(this.myVariableLabelTextComponent);
-        this.myVariableLabelTextComponent.text = " ";
-
-        this.myVariableLabelCursorTargetComponent = this.myVariableLabelCursorTarget.addComponent('cursor-target');
-        this.myVariableLabelCollisionComponent = this.myVariableLabelCursorTarget.addComponent('collision');
-        this.myVariableLabelCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myVariableLabelCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myVariableLabelCollisionComponent.extents = this._mySetup.myVariableLabelCollisionExtents;
-
-        //Next/Previous
-        this.myNextButtonBackgroundComponent = this.myNextButtonBackground.addComponent('mesh');
-        this.myNextButtonBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myNextButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myNextButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
-
-        this.myNextButtonTextComponent = this.myNextButtonText.addComponent('text');
-        this._setupTextComponent(this.myNextButtonTextComponent);
-        this.myNextButtonTextComponent.text = this._mySetup.myNextButtonText;
-
-        this.myNextButtonCursorTargetComponent = this.myNextButtonCursorTarget.addComponent('cursor-target');
-        this.myNextButtonCollisionComponent = this.myNextButtonCursorTarget.addComponent('collision');
-        this.myNextButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myNextButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myNextButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
-
-        this.myPreviousButtonBackgroundComponent = this.myPreviousButtonBackground.addComponent('mesh');
-        this.myPreviousButtonBackgroundComponent.mesh = this._myPlaneMesh;
-        this.myPreviousButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
-        this.myPreviousButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
-
-        this.myPreviousButtonTextComponent = this.myPreviousButtonText.addComponent('text');
-        this._setupTextComponent(this.myPreviousButtonTextComponent);
-        this.myPreviousButtonTextComponent.text = this._mySetup.myPreviousButtonText;
-
-        this.myPreviousButtonCursorTargetComponent = this.myPreviousButtonCursorTarget.addComponent('cursor-target');
-        this.myPreviousButtonCollisionComponent = this.myPreviousButtonCursorTarget.addComponent('collision');
-        this.myPreviousButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myPreviousButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myPreviousButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
-
-        //Position
         this.myPositionLabelTextComponent = this.myPositionLabelText.addComponent('text');
         this._setupTextComponent(this.myPositionLabelTextComponent);
         this.myPositionLabelTextComponent.text = this._mySetup.myPositionText;
@@ -501,7 +358,6 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myPositionCollisionComponents[i].group = 1 << this._mySetup.myCursorTargetCollisionGroup;
             this.myPositionCollisionComponents[i].extents = this._mySetup.myValueCollisionExtents;
 
-            //Increase/Decrease
             this.myPositionIncreaseButtonBackgroundComponents[i] = this.myPositionIncreaseButtonBackgrounds[i].addComponent('mesh');
             this.myPositionIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
             this.myPositionIncreaseButtonBackgroundComponents[i].material = this._myAdditionalSetup.myPlaneMaterial.clone();
@@ -533,7 +389,8 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myPositionDecreaseButtonCollisionComponents[i].extents = this._mySetup.mySideButtonCollisionExtents;
         }
 
-        //Rotation
+        // Rotation
+
         this.myRotationLabelTextComponent = this.myRotationLabelText.addComponent('text');
         this._setupTextComponent(this.myRotationLabelTextComponent);
         this.myRotationLabelTextComponent.text = this._mySetup.myRotationText;
@@ -569,7 +426,6 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myRotationCollisionComponents[i].group = 1 << this._mySetup.myCursorTargetCollisionGroup;
             this.myRotationCollisionComponents[i].extents = this._mySetup.myValueCollisionExtents;
 
-            //Increase/Decrease
             this.myRotationIncreaseButtonBackgroundComponents[i] = this.myRotationIncreaseButtonBackgrounds[i].addComponent('mesh');
             this.myRotationIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
             this.myRotationIncreaseButtonBackgroundComponents[i].material = this._myAdditionalSetup.myPlaneMaterial.clone();
@@ -601,7 +457,8 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myRotationDecreaseButtonCollisionComponents[i].extents = this._mySetup.mySideButtonCollisionExtents;
         }
 
-        //Scale
+        // Scale
+
         this.myScaleLabelTextComponent = this.myScaleLabelText.addComponent('text');
         this._setupTextComponent(this.myScaleLabelTextComponent);
         this.myScaleLabelTextComponent.text = this._mySetup.myScaleText;
@@ -637,7 +494,6 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myScaleCollisionComponents[i].group = 1 << this._mySetup.myCursorTargetCollisionGroup;
             this.myScaleCollisionComponents[i].extents = this._mySetup.myValueCollisionExtents;
 
-            //Increase/Decrease
             this.myScaleIncreaseButtonBackgroundComponents[i] = this.myScaleIncreaseButtonBackgrounds[i].addComponent('mesh');
             this.myScaleIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
             this.myScaleIncreaseButtonBackgroundComponents[i].material = this._myAdditionalSetup.myPlaneMaterial.clone();
@@ -668,6 +524,133 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
             this.myScaleDecreaseButtonCollisionComponents[i].group = 1 << this._mySetup.myCursorTargetCollisionGroup;
             this.myScaleDecreaseButtonCollisionComponents[i].extents = this._mySetup.mySideButtonCollisionExtents;
         }
+
+        // Steps
+
+        // Position 
+        this.myPositionStepTextComponent = this.myPositionStepText.addComponent('text');
+        this._setupTextComponent(this.myPositionStepTextComponent);
+        this.myPositionStepTextComponent.text = " ";
+
+        this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.addComponent('cursor-target');
+        this.myPositionStepCollisionComponent = this.myPositionStepCursorTarget.addComponent('collision');
+        this.myPositionStepCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myPositionStepCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myPositionStepCollisionComponent.extents = this._mySetup.myStepCollisionExtents;
+
+        this.myPositionStepIncreaseButtonBackgroundComponent = this.myPositionStepIncreaseButtonBackground.addComponent('mesh');
+        this.myPositionStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myPositionStepIncreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myPositionStepIncreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+
+        this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myPositionStepIncreaseButtonTextComponent);
+        this.myPositionStepIncreaseButtonTextComponent.text = this._mySetup.myIncreaseButtonText;
+
+        this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myPositionStepIncreaseButtonCollisionComponent = this.myPositionStepIncreaseButtonCursorTarget.addComponent('collision');
+        this.myPositionStepIncreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myPositionStepIncreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myPositionStepIncreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
+
+        this.myPositionStepDecreaseButtonBackgroundComponent = this.myPositionStepDecreaseButtonBackground.addComponent('mesh');
+        this.myPositionStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myPositionStepDecreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myPositionStepDecreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+
+        this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myPositionStepDecreaseButtonTextComponent);
+        this.myPositionStepDecreaseButtonTextComponent.text = this._mySetup.myDecreaseButtonText;
+
+        this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myPositionStepDecreaseButtonCollisionComponent = this.myPositionStepDecreaseButtonCursorTarget.addComponent('collision');
+        this.myPositionStepDecreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myPositionStepDecreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myPositionStepDecreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
+
+        // Rotation
+
+        this.myRotationStepTextComponent = this.myRotationStepText.addComponent('text');
+        this._setupTextComponent(this.myRotationStepTextComponent);
+        this.myRotationStepTextComponent.text = " ";
+
+        this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.addComponent('cursor-target');
+        this.myRotationStepCollisionComponent = this.myRotationStepCursorTarget.addComponent('collision');
+        this.myRotationStepCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myRotationStepCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myRotationStepCollisionComponent.extents = this._mySetup.myStepCollisionExtents;
+
+        this.myRotationStepIncreaseButtonBackgroundComponent = this.myRotationStepIncreaseButtonBackground.addComponent('mesh');
+        this.myRotationStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myRotationStepIncreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myRotationStepIncreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+
+        this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myRotationStepIncreaseButtonTextComponent);
+        this.myRotationStepIncreaseButtonTextComponent.text = this._mySetup.myIncreaseButtonText;
+
+        this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myRotationStepIncreaseButtonCollisionComponent = this.myRotationStepIncreaseButtonCursorTarget.addComponent('collision');
+        this.myRotationStepIncreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myRotationStepIncreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myRotationStepIncreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
+
+        this.myRotationStepDecreaseButtonBackgroundComponent = this.myRotationStepDecreaseButtonBackground.addComponent('mesh');
+        this.myRotationStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myRotationStepDecreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myRotationStepDecreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+
+        this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myRotationStepDecreaseButtonTextComponent);
+        this.myRotationStepDecreaseButtonTextComponent.text = this._mySetup.myDecreaseButtonText;
+
+        this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myRotationStepDecreaseButtonCollisionComponent = this.myRotationStepDecreaseButtonCursorTarget.addComponent('collision');
+        this.myRotationStepDecreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myRotationStepDecreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myRotationStepDecreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
+
+        // Scale
+
+        this.myScaleStepTextComponent = this.myScaleStepText.addComponent('text');
+        this._setupTextComponent(this.myScaleStepTextComponent);
+        this.myScaleStepTextComponent.text = " ";
+
+        this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.addComponent('cursor-target');
+        this.myScaleStepCollisionComponent = this.myScaleStepCursorTarget.addComponent('collision');
+        this.myScaleStepCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myScaleStepCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myScaleStepCollisionComponent.extents = this._mySetup.myStepCollisionExtents;
+
+        this.myScaleStepIncreaseButtonBackgroundComponent = this.myScaleStepIncreaseButtonBackground.addComponent('mesh');
+        this.myScaleStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myScaleStepIncreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myScaleStepIncreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+
+        this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myScaleStepIncreaseButtonTextComponent);
+        this.myScaleStepIncreaseButtonTextComponent.text = this._mySetup.myIncreaseButtonText;
+
+        this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myScaleStepIncreaseButtonCollisionComponent = this.myScaleStepIncreaseButtonCursorTarget.addComponent('collision');
+        this.myScaleStepIncreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myScaleStepIncreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myScaleStepIncreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
+
+        this.myScaleStepDecreaseButtonBackgroundComponent = this.myScaleStepDecreaseButtonBackground.addComponent('mesh');
+        this.myScaleStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
+        this.myScaleStepDecreaseButtonBackgroundComponent.material = this._myAdditionalSetup.myPlaneMaterial.clone();
+        this.myScaleStepDecreaseButtonBackgroundComponent.material.color = this._mySetup.myBackgroundColor;
+
+        this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.addComponent('text');
+        this._setupTextComponent(this.myScaleStepDecreaseButtonTextComponent);
+        this.myScaleStepDecreaseButtonTextComponent.text = this._mySetup.myDecreaseButtonText;
+
+        this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.addComponent('cursor-target');
+        this.myScaleStepDecreaseButtonCollisionComponent = this.myScaleStepDecreaseButtonCursorTarget.addComponent('collision');
+        this.myScaleStepDecreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
+        this.myScaleStepDecreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
+        this.myScaleStepDecreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
     }
 
     _addStepComponents() {
@@ -796,36 +779,5 @@ PP.EasyTuneTransformWidgetUI = class EasyTuneTransformWidgetUI {
         this.myScaleStepDecreaseButtonCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
         this.myScaleStepDecreaseButtonCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
         this.myScaleStepDecreaseButtonCollisionComponent.extents = this._mySetup.mySideButtonCollisionExtents;
-    }
-
-    _addPointerComponents() {
-        this.myPointerCollisionComponent = this.myPointerCursorTarget.addComponent('collision');
-        this.myPointerCollisionComponent.collider = this._mySetup.myCursorTargetCollisionCollider;
-        this.myPointerCollisionComponent.group = 1 << this._mySetup.myCursorTargetCollisionGroup;
-        this.myPointerCollisionComponent.extents = this._mySetup.myPointerCollisionExtents;
-    }
-
-    _setupTextComponent(textComponent) {
-        textComponent.alignment = this._mySetup.myTextAlignment;
-        textComponent.justification = this._mySetup.myTextJustification;
-        textComponent.material = this._myAdditionalSetup.myTextMaterial.clone();
-        textComponent.material.color = this._mySetup.myTextColor;
-        textComponent.text = "";
-    }
-
-    _onXRSessionStart() {
-        this._setTransformForVR();
-    }
-
-    _onXRSessionEnd() {
-        this._setTransformForNonVR();
-    }
-
-    _setTransformForVR() {
-        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[this._myAdditionalSetup.myHandedness]);
-    }
-
-    _setTransformForNonVR() {
-        this.myPivotObject.setTranslationLocal(this._mySetup.myPivotObjectPositions[PP.ToolHandedness.NONE]);
     }
 };

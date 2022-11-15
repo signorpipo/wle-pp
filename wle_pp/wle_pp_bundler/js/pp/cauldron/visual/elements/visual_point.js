@@ -42,6 +42,7 @@ PP.VisualPoint = class VisualPoint {
         this._myFlatOpaqueMaterial = null;
 
         this._build();
+        this.forceRefresh();
 
         this.setVisible(true);
     }

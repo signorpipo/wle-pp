@@ -25,17 +25,30 @@ WL.registerComponent('pp-switch-hand-object', {
             this._myCurrentInputSourceType = inputSourceType;
 
             if (inputSourceType == PP.InputSourceType.TRACKED_HAND) {
-                this._myGamepad.pp_setActive(false);
-                this._myTrackedHand.pp_setActive(true);
+                if (this._myGamepad != null) {
+                    this._myGamepad.pp_setActive(false);
+                }
+                if (this._myTrackedHand != null) {
+                    this._myTrackedHand.pp_setActive(true);
+                }
             } else if (inputSourceType == PP.InputSourceType.GAMEPAD) {
-                this._myTrackedHand.pp_setActive(false);
-                this._myGamepad.pp_setActive(true);
+                if (this._myTrackedHand != null) {
+                    this._myTrackedHand.pp_setActive(false);
+                }
+                if (this._myGamepad != null) {
+                    this._myGamepad.pp_setActive(true);
+                }
             }
         }
     },
     _start() {
-        this._myGamepad.pp_setActive(false);
-        this._myTrackedHand.pp_setActive(false);
+        if (this._myGamepad != null) {
+            this._myGamepad.pp_setActive(false);
+        }
+
+        if (this._myTrackedHand != null) {
+            this._myTrackedHand.pp_setActive(false);
+        }
 
         this._myCurrentInputSourceType = null;
     }
