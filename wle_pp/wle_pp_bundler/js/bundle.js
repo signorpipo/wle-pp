@@ -11,6 +11,7 @@ require('./pp/plugin/component_mods/mouse_look_component_mod');
 require('./pp/plugin/extensions/array_extension');
 require('./pp/plugin/extensions/object_extension');
 require('./pp/plugin/extensions/math_extension');
+require('./pp/plugin/extensions/scene_extension');
 
 //	AUDIO
 require('./pp/audio/spatial_audio_listener');

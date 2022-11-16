@@ -628,7 +628,7 @@ These files change some of the functions of WLE components, or add to them new o
 
 The extensions add new functions to already existing features:
 - [`object_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/object_extension.js)
-	* greatly enhance what a WLE object can do
+  * greatly enhance what a WLE object can do
   * create a consistent and user friendly interface to get position/rotation/scale and everything u need from the object
   * all the extensions methods start with `pp_`
   * let you easily get the data in World or Local form, and in Quaternion or Degrees
@@ -638,9 +638,20 @@ The extensions add new functions to already existing features:
     ```js
     this.object.pp_getPosition();
     this.object.pp_getScaleLocal(outScale);  //out parameters are optional, if empty will return a new one
-    this.object.pp_rotateAxis(angle, axis);pp_getComponentHierarchy
+    this.object.pp_rotateAxis(angle, axis);
     this.object.pp_convertPositionObjectToWorld(position, outPosition);
     this.object.pp_getComponentHierarchy(type, index);   
+    ```
+- [`scene_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/scene_extension.js)
+  * adds some handy functions to the WL.scene object
+  * all the extensions methods start with `pp_`
+  * ranges from getting the scene root, to getting an object in the entire scene by name, or looking for a component in the entire scene
+  * at the start of the file you can find a comment section explaining all the features in more details
+  * example:
+    ```js
+    WL.scene.pp_getRoot();
+    WL.scene.pp_getComponent("mesh");
+    WL.scene.pp_getObjectByName("name");
     ```
 - [`math_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/math_extension.js)
   * adds some handy functions to the javascript Math library

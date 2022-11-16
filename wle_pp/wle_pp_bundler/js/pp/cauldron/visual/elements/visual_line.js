@@ -21,10 +21,12 @@ PP.VisualLineParams = class VisualLineParams {
 
         this.myThickness = 0.005;
 
-        this.myMaterial = null;
-        this.myColor = null; // if this is set and material is null, it will use the default flat opaque material with this color
+        this.myMesh = null;         // the mesh is scaled along up axis, null means it will default on PP.myDefaultResources.myMeshes.myCylinder
 
-        this.myParent = null; // if this is set the parent will not be the visual root anymore, the positions will be local to this object
+        this.myMaterial = null;     // null means it will default on PP.myDefaultResources.myMaterials.myFlatOpaque
+        this.myColor = null;        // if this is set and material is null, it will use the default flat opaque material with this color
+
+        this.myParent = null;       // if this is set the parent will not be the visual root anymore, the positions will be local to this object
 
         this.myType = PP.VisualElementType.LINE;
     }
@@ -106,7 +108,6 @@ PP.VisualLine = class VisualLine {
         this._myLineObject = WL.scene.addObject(this._myLineRootObject);
 
         this._myLineMeshComponent = this._myLineObject.addComponent('mesh');
-        this._myLineMeshComponent.mesh = PP.myDefaultResources.myMeshes.myCylinder;
     }
 
     _markDirty() {
@@ -123,6 +124,8 @@ PP.VisualLine = class VisualLine {
         clonedParams.myDirection.vec3_copy(this._myParams.myDirection);
         clonedParams.myLength = this._myParams.myLength;
         clonedParams.myThickness = this._myParams.myThickness;
+
+        clonedParams.myMesh = this._myParams.myMesh;
 
         if (this._myParams.myMaterial != null) {
             clonedParams.myMaterial = this._myParams.myMaterial.clone();
@@ -151,7 +154,7 @@ PP.VisualLine.prototype._refresh = function () {
     let scaleLine = PP.vec3_create();
     let translateLine = PP.vec3_create();
 
-    let forward = PP.vec3_create(0, 0, 1);
+    let forward = PP.vec3_create(0, 1, 0);
     return function _refresh() {
         this._myLineRootObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
 
@@ -164,8 +167,15 @@ PP.VisualLine.prototype._refresh = function () {
         this._myLineObject.pp_scaleObject(scaleLine);
 
         this._myLineObject.pp_setUpLocal(this._myParams.myDirection, forward);
+
         translateLine.vec3_set(0, this._myParams.myLength / 2, 0);
         this._myLineObject.pp_translateObject(translateLine);
+
+        if (this._myParams.myMesh != null) {
+            this._myLineMeshComponent.mesh = this._myParams.myMesh;
+        } else {
+            this._myLineMeshComponent.mesh = PP.myDefaultResources.myMeshes.myCylinder;
+        }
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {

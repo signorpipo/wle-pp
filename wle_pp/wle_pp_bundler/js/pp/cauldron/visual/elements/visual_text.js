@@ -20,11 +20,11 @@ PP.VisualTextParams = class VisualTextParams {
 
         this.myTransform = PP.mat4_create();
 
-        this.myMaterial = null;
+        this.myMaterial = null;     // null means it will default on PP.myDefaultResources.myMaterials.myDefaultTextMaterial
 
-        this.myColor = null; // if this is set and material is null, it will use the default text material with this color
+        this.myColor = null;        // if this is set and material is null, it will use the default text material with this color
 
-        this.myParent = null; // if this is set the parent will not be the visual root anymore, the positions will be local to this object
+        this.myParent = null;       // if this is set the parent will not be the visual root anymore, the positions will be local to this object
 
         this.myType = PP.VisualElementType.TEXT;
     }

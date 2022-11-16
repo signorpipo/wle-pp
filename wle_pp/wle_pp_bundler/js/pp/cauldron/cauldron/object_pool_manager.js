@@ -50,8 +50,8 @@ PP.ObjectPoolManager = class ObjectPoolManager {
 PP.ObjectPoolParams = class ObjectPoolParams {
     constructor() {
         this.myInitialPoolSize = 0;
-        this.myAmountToAddWhenEmpty = 1;        //If all the objects are busy, this amount will be added to the pool
-        this.myPercentageToAddWhenEmpty = 0.5;  //If all the objects are busy, this percentage of the current pool size will be added to the pool        
+        this.myAmountToAddWhenEmpty = 0;        //If all the objects are busy, this amount will be added to the pool
+        this.myPercentageToAddWhenEmpty = 0;    //If all the objects are busy, this percentage of the current pool size will be added to the pool        
 
         this.myCloneParams = undefined;
 
@@ -60,7 +60,7 @@ PP.ObjectPoolParams = class ObjectPoolParams {
         //These extra functions can be used if u want to use the pool with objects that are not from WLE (WL.Object)
         this.myCloneCallback = undefined;                       //Signature: callback(object, cloneParams) -> clonedObject
         this.mySetActiveCallback = undefined;                   //Signature: callback(object, active)
-        this.myEqualCallback = undefined;                      //Signature: callback(firstObject, secondObject) -> bool
+        this.myEqualCallback = undefined;                       //Signature: callback(firstObject, secondObject) -> bool
         this.myOptimizeObjectsAllocationCallback = undefined;   //Signature: callback(object, numberOfObjectsToAllocate)
 
         this.myEnableDebugLog = true;

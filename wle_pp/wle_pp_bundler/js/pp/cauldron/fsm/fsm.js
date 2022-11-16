@@ -1,10 +1,10 @@
 /*
-    You can also use plain functions for state/transition if u want to do something simpler and faster
+    You can also use plain functions for state/transition if u want to do something simple and quick
 
     Signatures:
-        stateUpdateFunction(dt, fsm)
-        initFunction(fsm, initStateData)
-        transitionFunction(fsm, transitionData)
+        function stateUpdate(dt, fsm)
+        function init(fsm, initStateData)
+        function transition(fsm, transitionData)
 */
 
 PP.StateData = class StateData {

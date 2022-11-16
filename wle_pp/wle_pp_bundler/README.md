@@ -82,7 +82,7 @@ Each folder under the `pp` folder will be a main section of this documentation.
 
 As you will notice, everything in this bundle (classes, functions, variables) can be found under the `PP` object, that works as a sort of namespace.  
 The components names always start with a `pp-` prefix.  
-For the extensions (functions added to already existing objects), the names usually start with a `pp_` prefix, or, for array extensions, with something like `vec_`, `vec3_`, `quat2_` based on how you want to intepret the array value.
+For the extensions (features added to already existing objects), the names usually start with a `pp_` prefix, or, for array extensions, with something like `vec_`, `vec3_`, `quat2_` based on how you want to intepret the array value.
 
 ## Table Of Contents  
 
@@ -188,7 +188,7 @@ List of features:
   * this set of classes let you create a special number, that interpolate between different numbers based on a value u used to get it
   * it is especially useful if u want a number to change over time during a level, where the value is the time spent in the level itself
   * the range version returns a random number in the range, where the range change based on the given value
-  * Example
+  * example:
     ```js
     //enemy speed will change from 5 to 8 as the time goes from 30 to 60
     let enemySpeed = new PP.NumberOverValue(5, 8, 30, 60); 
@@ -198,7 +198,7 @@ List of features:
   * a simple way to manage a set of pools of objects
   * you can get an object from it and it will refill if it runs out of them
   * by default works with wonderland objects that can be cloned (see object extension)
-  * Example
+  * example:
     ```js
     let objectPoolParams = new PP.ObjectPoolParams();
     objectPoolParams.myInitialPoolSize = 20;
@@ -628,7 +628,7 @@ These files change some of the functions of WLE components, or add to them new o
 
 The extensions add new functions to already existing features:
 - [`object_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/object_extension.js)
-	* greatly enhance what a WLE object can do
+  * greatly enhance what a WLE object can do
   * create a consistent and user friendly interface to get position/rotation/scale and everything u need from the object
   * all the extensions methods start with `pp_`
   * let you easily get the data in World or Local form, and in Quaternion or Degrees
@@ -638,9 +638,20 @@ The extensions add new functions to already existing features:
     ```js
     this.object.pp_getPosition();
     this.object.pp_getScaleLocal(outScale);  //out parameters are optional, if empty will return a new one
-    this.object.pp_rotateAxis(angle, axis);pp_getComponentHierarchy
+    this.object.pp_rotateAxis(angle, axis);
     this.object.pp_convertPositionObjectToWorld(position, outPosition);
     this.object.pp_getComponentHierarchy(type, index);   
+    ```
+- [`scene_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/scene_extension.js)
+  * adds some handy functions to the WL.scene object
+  * all the extensions methods start with `pp_`
+  * ranges from getting the scene root, to getting an object in the entire scene by name, or looking for a component in the entire scene
+  * at the start of the file you can find a comment section explaining all the features in more details
+  * example:
+    ```js
+    WL.scene.pp_getRoot();
+    WL.scene.pp_getComponent("mesh");
+    WL.scene.pp_getObjectByName("name");
     ```
 - [`math_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/plugin/extensions/math_extension.js)
   * adds some handy functions to the javascript Math library
@@ -690,7 +701,8 @@ List of features:
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/tool/console_vr)
 
-Let u see the browser console from withing the vr session, making it easier to debug
+Let u see the browser console from withing the vr session, making it easier to debug.
+
 There is no need to understand the details of this since it's meant to be used.
 You can find an outdated example of the Console VR [here](https://github.com/SignorPipo/wle_consolevr).
 
@@ -718,7 +730,9 @@ For this same reason, you can have some flags that enable some debug/test featur
 [Code File Link](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/tool/easy_tune/easy_tune.js)
 
 The main tool of this feature.  
-Let you visualize and edit the EasyTuneVariables you have created, that can be used in the code while also edited at runtime through this tool.  
+Let you visualize and edit the EasyTuneVariables you have created, that can be used in the code while also edited at runtime through this tool. 
+You can also import and export the variables at runtime, so that you can easily save and load your changes without having to edit the variables in the code every time.
+
 There is no need to understand the details of this since it's meant to be used.  
 You can find an outdated example of the Easy Tune [here](https://github.com/SignorPipo/wle_easytune).
 

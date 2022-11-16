@@ -1,11 +1,15 @@
 PP.VisualManager = class VisualManager {
     constructor() {
+        this._myVisualElementPrototypeCreationCallbacks = new Map();
+
         this._myVisualElementTypeMap = new Map();
         this._myVisualElementLastID = 0;
         this._myVisualElementsPool = new PP.ObjectPoolManager();
         this._myVisualElementsToShow = [];
 
         this._myActive = true;
+
+        this._addStandardVisualElementTypes();
     }
 
     setActive(active) {
@@ -137,6 +141,14 @@ PP.VisualManager = class VisualManager {
         }
     }
 
+    addVisualElementType(visualElementType, visuaElementPrototypeCreationCallback) {
+        this._myVisualElementPrototypeCreationCallbacks.set(visualElementType, visuaElementPrototypeCreationCallback);
+    }
+
+    removeVisualElementType(visualElementType) {
+        this._myVisualElementPrototypeCreationCallbacks.delete(visualElementType);
+    }
+
     _updateDraw(dt) {
         for (let visualElement of this._myVisualElementsToShow) {
             visualElement.setVisible(true);
@@ -180,47 +192,36 @@ PP.VisualManager = class VisualManager {
     _addVisualElementTypeToPool(type) {
         let objectPoolParams = new PP.ObjectPoolParams();
         objectPoolParams.myInitialPoolSize = 10;
-        objectPoolParams.myPercentageToAddWhenEmpty = 1;
+        objectPoolParams.myAmountToAddWhenEmpty = 0;
+        objectPoolParams.myPercentageToAddWhenEmpty = 0.5;
         objectPoolParams.myEnableDebugLog = false;
         objectPoolParams.mySetActiveCallback = function (object, active) {
             object.setVisible(active);
         };
 
-        let visualElement = null;
-        switch (type) {
-            case PP.VisualElementType.LINE:
-                visualElement = new PP.VisualLine();
-                break;
-            case PP.VisualElementType.MESH:
-                visualElement = new PP.VisualMesh();
-                break;
-            case PP.VisualElementType.POINT:
-                visualElement = new PP.VisualPoint();
-                break;
-            case PP.VisualElementType.ARROW:
-                visualElement = new PP.VisualArrow();
-                break;
-            case PP.VisualElementType.TEXT:
-                visualElement = new PP.VisualText();
-                break;
-            case PP.VisualElementType.TRANSFORM:
-                visualElement = new PP.VisualTransform();
-                break;
-            case PP.VisualElementType.RAYCAST:
-                visualElement = new PP.VisualRaycast();
-                break;
-            case PP.VisualElementType.TORUS:
-                visualElement = new PP.VisualTorus();
-                break;
+        let visualElementPrototype = null;
+        if (this._myVisualElementPrototypeCreationCallbacks.has(type)) {
+            visualElementPrototype = this._myVisualElementPrototypeCreationCallbacks.get(type)();
         }
 
-        visualElement.setVisible(false);
-        visualElement.setAutoRefresh(true);
+        if (visualElementPrototype != null) {
+            visualElementPrototype.setVisible(false);
+            visualElementPrototype.setAutoRefresh(true);
 
-        if (visualElement != null) {
-            this._myVisualElementsPool.addPool(type, visualElement, objectPoolParams);
+            this._myVisualElementsPool.addPool(type, visualElementPrototype, objectPoolParams);
         } else {
             console.error("Visual element type not supported");
         }
+    }
+
+    _addStandardVisualElementTypes() {
+        this.addVisualElementType(PP.VisualElementType.LINE, () => new PP.VisualLine());
+        this.addVisualElementType(PP.VisualElementType.MESH, () => new PP.VisualMesh());
+        this.addVisualElementType(PP.VisualElementType.POINT, () => new PP.VisualPoint());
+        this.addVisualElementType(PP.VisualElementType.ARROW, () => new PP.VisualArrow());
+        this.addVisualElementType(PP.VisualElementType.TEXT, () => new PP.VisualText());
+        this.addVisualElementType(PP.VisualElementType.TRANSFORM, () => new PP.VisualTransform());
+        this.addVisualElementType(PP.VisualElementType.RAYCAST, () => new PP.VisualRaycast());
+        this.addVisualElementType(PP.VisualElementType.TORUS, () => new PP.VisualTorus());
     }
 };

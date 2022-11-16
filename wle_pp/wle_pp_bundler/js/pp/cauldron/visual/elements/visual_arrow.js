@@ -12,11 +12,32 @@ or
 let visualArrow = new PP.VisualArrow(visualParams);
 */
 
-PP.VisualArrowParams = class VisualArrowParams extends PP.VisualLineParams {
+PP.VisualArrowParams = class VisualArrowParams {
     constructor() {
-        super();
+        this.myStart = [0, 0, 0];
+        this.myDirection = [0, 0, 1];
+        this.myLength = 0;
+
+        this.myThickness = 0.005;
+
+        this.myLineMesh = null;     // the mesh is scaled along up axis, null means it will default on PP.myDefaultResources.myMeshes.myCylinder
+        this.myArrowMesh = null;    // the mesh is scaled along up axis, null means it will default on PP.myDefaultResources.myMeshes.myCone
+
+        this.myMaterial = null;     // null means it will default on PP.myDefaultResources.myMaterials.myFlatOpaque
+        this.myColor = null;        // if this is set and material is null, it will use the default flat opaque material with this color
+
+        this.myParent = null;       // if this is set the parent will not be the visual root anymore, the positions will be local to this object
 
         this.myType = PP.VisualElementType.ARROW;
+    }
+
+    setStartEnd(start, end) {
+        end.vec3_sub(start, this.myDirection);
+        this.myLength = this.myDirection.vec3_length();
+        this.myDirection.vec3_normalize(this.myDirection);
+        this.myStart.vec3_copy(start);
+
+        return this;
     }
 };
 
@@ -94,7 +115,6 @@ PP.VisualArrow = class VisualArrow {
         this._myArrowObject = WL.scene.addObject(this._myArrowRootObject);
 
         this._myArrowMeshComponent = this._myArrowObject.addComponent('mesh');
-        this._myArrowMeshComponent.mesh = PP.myDefaultResources.myMeshes.myCone;
     }
 
     _markDirty() {
@@ -111,6 +131,9 @@ PP.VisualArrow = class VisualArrow {
         clonedParams.myDirection.vec3_copy(this._myParams.myDirection);
         clonedParams.myLength = this._myParams.myLength;
         clonedParams.myThickness = this._myParams.myThickness;
+
+        clonedParams.myArrowMesh = this._myParams.myArrowMesh;
+        clonedParams.myLineMesh = this._myParams.myLineMesh;
 
         if (this._myParams.myMaterial != null) {
             clonedParams.myMaterial = this._myParams.myMaterial.clone();
@@ -141,7 +164,7 @@ PP.VisualArrow.prototype._refresh = function () {
     let scaleArrow = PP.vec3_create();
     let direction = PP.vec3_create();
 
-    let forward = PP.vec3_create(0, 0, 1);
+    let forward = PP.vec3_create(0, 1, 0);
     return function _refresh() {
         this._myArrowRootObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
 
@@ -157,6 +180,12 @@ PP.VisualArrow.prototype._refresh = function () {
         this._myArrowObject.pp_resetScaleLocal();
         scaleArrow.vec3_set(this._myParams.myThickness * 1.25, this._myParams.myThickness * 2, this._myParams.myThickness * 1.25);
         this._myArrowObject.pp_scaleObject(scaleArrow);
+
+        if (this._myParams.myArrowMesh != null) {
+            this._myArrowMeshComponent.mesh = this._myParams.myArrowMesh;
+        } else {
+            this._myArrowMeshComponent.mesh = PP.myDefaultResources.myMeshes.myCone;
+        }
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {
@@ -178,6 +207,7 @@ PP.VisualArrow.prototype._refresh = function () {
         visualLineParams.myDirection = direction.vec3_normalize(visualLineParams.myDirection);
         visualLineParams.myLength = direction.vec3_length();
         visualLineParams.myThickness = this._myParams.myThickness;
+        visualLineParams.myMesh = this._myParams.myLineMesh;
 
         visualLineParams.myMaterial = this._myArrowMeshComponent.material;
 
