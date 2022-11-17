@@ -23,6 +23,8 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             const index = WL.onSceneLoaded.indexOf(sceneLoaded);
             if (index >= 0) WL.onSceneLoaded.splice(index, 1);
         }];
+
+        this.prevHitLocationLocalToTarget = [0, 0, 0];
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.start = function () {
@@ -147,8 +149,6 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
 
         this.doUpdate(false);
-
-        this.isUpWithNoDown = false;
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.doUpdate = function (doClick) {
@@ -176,7 +176,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
             this.hoverBehaviour(rayHit, doClick);
         } else {
-            if (PP.myMouse != null && PP.myMouse.isValid() && PP.myMouse.isInsideView()) {
+            if (this.viewComponent != null && this._isPPMouseValid()) {
                 PP.myMouse.getPositionScreenNormalized(this.direction);
                 this.direction[2] = -1;
 
@@ -206,6 +206,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = function (rayHit, doClick) {
         if (rayHit.hitCount > 0) {
+            let hoveringObjectChanged = false;
             if (!this.hoveringObject || !this.hoveringObject.equals(rayHit.objects[0])) {
                 /* Unhover previous, if exists */
                 if (this.hoveringObject) {
@@ -214,8 +215,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
                     this.globalTarget.onUnhover(this.hoveringObject, this);
                 }
 
-                this.isDown = false;
-                this.lastIsDown = false;
+                hoveringObjectChanged = true;
 
                 /* Hover new object */
                 this.hoveringObject = rayHit.objects[0];
@@ -223,12 +223,15 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
                 let cursorTarget = this.hoveringObject.getComponent("cursor-target");
                 if (cursorTarget) {
-                    this.hoveringObjectTarget = cursorTarget;
                     cursorTarget.onHover(this.hoveringObject, this);
                 }
                 this.globalTarget.onHover(this.hoveringObject, this);
 
-                if (this.isRealDown) {
+                if (!this._isDown() && this.isRealDown) {
+                    this.isDown = false;
+                    this.lastIsDown = false;
+                    this.isUpWithNoDown = false;
+
                     if (cursorTarget) cursorTarget.onDownOnHover(this.hoveringObject, this);
                     this.globalTarget.onDownOnHover(this.hoveringObject, this);
                 }
@@ -236,14 +239,17 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
             let cursorTarget = this.hoveringObject.getComponent("cursor-target");
 
-            /* Cursor down */
-            if (this.isDown !== this.lastIsDown && this.isDown) {
-                if (cursorTarget) cursorTarget.onDown(this.hoveringObject, this);
-                this.globalTarget.onDown(this.hoveringObject, this);
+            if (!hoveringObjectChanged && this._isMoving(rayHit.locations[0])) {
+                if (cursorTarget) cursorTarget.onMove(this.hoveringObject, this);
+                this.globalTarget.onMove(this.hoveringObject, this);
             }
 
-            /* Click */
-            if (this.isDown !== this.lastIsDown && !this.isDown) {
+            if (this._isDown()) {
+                /* Cursor down */
+                if (cursorTarget) cursorTarget.onDown(this.hoveringObject, this);
+                this.globalTarget.onDown(this.hoveringObject, this);
+
+                /* Click */
                 if (this.tripleClickTimer > 0 && this.multipleClickObject && this.multipleClickObject.equals(this.hoveringObject)) {
                     if (cursorTarget) cursorTarget.onTripleClick(this.hoveringObject, this);
                     this.globalTarget.onTripleClick(this.hoveringObject, this);
@@ -263,23 +269,24 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
                     this.doubleClickTimer = this.multipleClickDelay;
                     this.multipleClickObject = this.hoveringObject;
                 }
+            } else {
+                /* Cursor up */
+                if (!this.isUpWithNoDown && !hoveringObjectChanged && this._isUp()) {
+                    if (cursorTarget) cursorTarget.onUp(this.hoveringObject, this);
+                    this.globalTarget.onUp(this.hoveringObject, this);
+                } else if (this.isUpWithNoDown || (hoveringObjectChanged && this._isUp())) {
+                    if (cursorTarget) cursorTarget.onUpWithNoDown(this.hoveringObject, this);
+                    this.globalTarget.onUpWithNoDown(this.hoveringObject, this);
+                }
             }
 
-            /* Cursor up */
-            if (this.isDown !== this.lastIsDown && !this.isDown) {
-                if (cursorTarget) cursorTarget.onUp(this.hoveringObject, this);
-                this.globalTarget.onUp(this.hoveringObject, this);
-            } else if (this.isUpWithNoDown) {
-                if (cursorTarget) cursorTarget.onUpWithNoDown(this.hoveringObject, this);
-                this.globalTarget.onUpWithNoDown(this.hoveringObject, this);
-            }
+            this.prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(rayHit.locations[0], this.prevHitLocationLocalToTarget);
         } else if (this.hoveringObject && rayHit.hitCount == 0) {
             let cursorTarget = this.hoveringObject.getComponent("cursor-target");
             if (cursorTarget) cursorTarget.onUnhover(this.hoveringObject, this);
             this.globalTarget.onUnhover(this.hoveringObject, this);
 
             this.hoveringObject = null;
-            this.hoveringObjectTarget = null;
             if (this.styleCursor) WL.canvas.style.cursor = "default";
         }
 
@@ -289,6 +296,8 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             this.isDown = false;
             this.lastIsDown = false;
         }
+
+        this.isUpWithNoDown = false;
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.setupVREvents = function (s) {
@@ -349,10 +358,19 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onPointerMove = function (e) {
         /* Don't care about secondary pointers */
         if (!e.isPrimary) return;
-        const bounds = e.target.getBoundingClientRect();
-        const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
 
-        this.hoverBehaviour(rayHit, false);
+        if (this._isPPMouseValid()) {
+            PP.myMouse.getPositionScreenNormalized(this.direction);
+            this.direction[2] = -1;
+
+            const rayHit = this.updateDirection();
+            this.hoverBehaviour(rayHit, false);
+        } else {
+            const bounds = e.target.getBoundingClientRect();
+            const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
+
+            this.hoverBehaviour(rayHit, false);
+        }
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onClick = function (e) {
@@ -362,10 +380,19 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         if (this.active) {
             /* Don't care about secondary pointers or non-left clicks */
             if (!e.isPrimary || e.button !== 0) return;
-            const bounds = e.target.getBoundingClientRect();
-            const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
 
-            this.hoverBehaviour(rayHit, false); //simulate a move before the click, to clean previous hover/unhover
+            let rayHit = null;
+            if (this._isPPMouseValid()) {
+                PP.myMouse.getPositionScreenNormalized(this.direction);
+                this.direction[2] = -1;
+
+                rayHit = this.updateDirection();
+            } else {
+                const bounds = e.target.getBoundingClientRect();
+                rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
+
+                this.hoverBehaviour(rayHit, false); // simulate a move before the click, to clean previous hover/unhover
+            }
 
             this.isDown = true;
             this.isRealDown = true;
@@ -380,10 +407,19 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         if (this.active) {
             /* Don't care about secondary pointers or non-left clicks */
             if (!e.isPrimary || e.button !== 0) return;
-            const bounds = e.target.getBoundingClientRect();
-            const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
 
-            this.hoverBehaviour(rayHit, false); //simulate a move before the click, to clean previous hover/unhover
+            let rayHit = null;
+            if (this._isPPMouseValid()) {
+                PP.myMouse.getPositionScreenNormalized(this.direction);
+                this.direction[2] = -1;
+
+                rayHit = this.updateDirection();
+            } else {
+                const bounds = e.target.getBoundingClientRect();
+                rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
+
+                this.hoverBehaviour(rayHit, false); // simulate a move before the click, to clean previous hover/unhover
+            }
 
             if (!this.isDown) {
                 this.isUpWithNoDown = true;
@@ -434,7 +470,6 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
 
         this.hoveringObject = null;
-        this.hoveringObjectTarget = null;
         if (this.styleCursor) WL.canvas.style.cursor = "default";
 
         this.isDown = false;
@@ -458,6 +493,33 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onDestroy = function () {
         for (const f of this.onDestroyCallbacks) f();
     };
+
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isPPMouseValid = function () {
+        return PP != null && PP.myMouse != null && PP.myMouse.isValid() && PP.myMouse.isInsideView();
+    };
+
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isDown = function () {
+        return this.isDown !== this.lastIsDown && this.isDown;
+    };
+
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isUp = function () {
+        return this.isDown !== this.lastIsDown && !this.isDown;
+    };
+
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isMoving = function () {
+        let hitLocationLocalToTarget = [0, 0, 0];
+        return function _isMoving(hitLocation) {
+            let isMoving = false;
+
+            hitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, hitLocationLocalToTarget);
+
+            if (!hitLocationLocalToTarget.vec_equals(this.prevHitLocationLocalToTarget, 0.0001)) {
+                isMoving = true;
+            }
+
+            return isMoving;
+        };
+    }();
 
 } else {
     console.error("Wonderland Engine \"cursor\" component not found.\n Add the component to your project to avoid any issue with the PP bundle.");

@@ -1,6 +1,6 @@
 if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]]) {
 
-    // Modified Functions
+    // Modified Functions 
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.init = function () {
         this.hoverFunctions = [];
@@ -8,12 +8,13 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.clickFunctions = [];
         this.doubleClickFunctions = [];
         this.tripleClickFunctions = [];
+        this.moveFunctions = [];
         this.downFunctions = [];
         this.upFunctions = [];
         this.downOnHoverFunctions = [];
         this.upWithNoDownFunctions = [];
 
-        this.isSurface = false; // just a way to specify if this target is just used as a surface between buttons
+        this.isSurface = false; // just a way to specify if this target is just used as a surface between buttons 
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.onHover = function (object, cursor) {
@@ -26,6 +27,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.onClick = function (object, cursor) {
         for (let f of this.clickFunctions) f(object, cursor);
+    };
+
+    _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.onMove = function (object, cursor) {
+        for (let f of this.moveFunctions) f(object, cursor);
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.onDown = function (object, cursor) {
@@ -66,6 +71,16 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this._removeItemOnce(this.clickFunctions, f);
     };
 
+    _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.addMoveFunction = function (f) {
+        this._validateCallback(f);
+        this.moveFunctions.push(f);
+    };
+
+    _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.removeMoveFunction = function (f) {
+        this._validateCallback(f);
+        this._removeItemOnce(this.moveFunctions, f);
+    };
+
     _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.addDownFunction = function (f) {
         this._validateCallback(f);
         this.downFunctions.push(f);
@@ -99,7 +114,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    // New Functions
+    // New Functions 
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor-target"]].proto.onDoubleClick = function (object, cursor) {
         for (let f of this.doubleClickFunctions) f(object, cursor);

@@ -82,7 +82,11 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
             console.clear = this._clearConsole.bind(this, true, PP.ConsoleVRWidget.Sender.BROWSER_CONSOLE);
 
             window.addEventListener('error', function (errorEvent) {
-                this._consolePrint(PP.ConsoleVRWidget.ConsoleFunction.ERROR, PP.ConsoleVRWidget.Sender.WINDOW, "Uncaught", errorEvent.error.stack);
+                if (errorEvent.error != null) {
+                    this._consolePrint(PP.ConsoleVRWidget.ConsoleFunction.ERROR, PP.ConsoleVRWidget.Sender.WINDOW, "Uncaught", errorEvent.error.stack);
+                } else {
+                    this._consolePrint(PP.ConsoleVRWidget.ConsoleFunction.ERROR, PP.ConsoleVRWidget.Sender.WINDOW, "Uncaught", errorEvent.message);
+                }
             }.bind(this));
 
             window.addEventListener('unhandledrejection', function (errorEvent) {
@@ -230,6 +234,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
                 this._myOldConsoleVR[consoleFunction].apply(PP.ConsoleVR, args);
                 break;
             default:
+                this._myOldBrowserConsole[consoleFunction].apply(console, args);
                 break;
         }
     }

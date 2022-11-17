@@ -1,23 +1,14 @@
 {
-  "name": "wle_pp",
+  "name": "wle_pp_bundle",
   "version": "0.2.8",
   "description": "A library for the Wonderland Engine",
-  "main": "./js/bundle.js",
-  "exports": "./js/bundle.js",
-  "scripts": {
-    "build": "esbuild ./js/bundle.js --minify --sourcemap --bundle --outfile=\"deploy/wle_pp_bundler-bundle.js\""
-  },
+  "main": "./wle_pp_bundle.js",
+  "exports": "./wle_pp_bundle.js",
   "author": "Pipo",
   "license": "ISC",
-  "devDependencies": {
-    "esbuild": "^0.14.54"
-  },
-  "dependencies": {
-    "gl-matrix": "^3.4.3",
-    "howler": "^2.2.3"
-  },
   "files": [
-    "js"
+    "./wle_pp_bundle.js",
+	"./wle_pp_bundle.js.map"
   ],
   "keywords": [
     "wonderland",
