@@ -10,7 +10,29 @@ A collection of Wonderland Engine template projects that already includes this b
 
 A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
 
-## Quick Feature Summary
+## Table Of Contents  
+
+- [Downloads](#downloads)
+- [Quick Features Summary](#quick-features-summary)
+- [How To Import](#how-to-import)
+  * [Import using the bundle file](#import-using-the-bundle-file)
+  * [Import using npm](#import-using-npm)
+  * [Project Setup](#project-setup)
+- [License](#license)
+- [Documentation](#documentation)
+
+# Downloads
+
+You can download the bundle file through the following link:
+  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
+
+You can also download this library through `npm`: 
+  * `npm install wle_pp`
+    * install the library as a list of files
+  * `npm install wle_pp_bundle`
+    * install the library as a single bundle file
+  
+# Quick Features Summary
 
 Some of the features that you can get with this library are:
   - Object Extension
