@@ -4,8 +4,6 @@ A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp).
 
-The npm package can be found [here](https://www.npmjs.com/package/wle_pp).
-
 A collection of Wonderland Engine template projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
 
 A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
@@ -15,9 +13,10 @@ A collection of assets that can be useful while working with the Wonderland Engi
 - [Downloads](#downloads)
 - [Quick Features Summary](#quick-features-summary)
 - [How To Import](#how-to-import)
-  * [Import using the bundle file](#import-using-the-bundle-file)
-  * [Import using npm](#import-using-npm)
-  * [Project Setup](#project-setup)
+  * [Import through the bundle file](#import-through-the-bundle-file)
+  * [Import through npm](#import-through-npm)
+  * [Import through the entire code folder](#import-through-the-entire-code-folder)
+- [How to Setup the Project](#how-to-setup-the-project)
 - [License](#license)
 - [Documentation](#documentation)
 
@@ -26,11 +25,16 @@ A collection of assets that can be useful while working with the Wonderland Engi
 You can download the bundle file through the following link:
   * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
 
-You can also download this library through `npm`: 
-  * `npm install wle_pp`
+You can download the library through `npm`: 
+  * [`npm install wle_pp`](https://www.npmjs.com/package/wle_pp)
+	* unbundled version of the library
     * install the library as a list of files
-  * `npm install wle_pp_bundle`
+  * [`npm install wle_pp_bundle`](https://www.npmjs.com/package/wle_pp_bundle)
+    * bundled version of the library
     * install the library as a single bundle file
+
+You can download the unbundled version of the library through the following link:
+  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
   
 # Quick Features Summary
 
@@ -57,27 +61,41 @@ Some of the features that you can get with this library are:
 
 You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle_ppefault).
 
-## Import using the bundle file
+## Import through the bundle file
 
-If you want to import this library into your own projects through the bundle file, you have to get the `wle_pp_bundle.js` file, that you can find [here](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundle/wle_pp_bundle.js), and add it to your project.
+If you want to import this library into your own projects through the bundle file, you have to:
+  - get the `wle_pp_bundle.js` file from [here](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
+  - if your project is a standard one (not `npm`), you have to:
+    * add the bundle file in the `Javascript source paths` section as any other javascript file u want to use in the project
+  - if your project is an `npm` one, you have to:
+    * require the bundle file as any other javascript file u want to use in the project
+    * require any additional WLE components (an error will be logged specifying the ones that are missing)
+      * these requires must be put before the PP one
+    * an official tutorial on how to setup an `npm` project and add the required WLE components can be found [here](https://wonderlandengine.com/tutorials/npm-project/)
 
-If your project is a standard one (not `npm`), the file must be added in the `Javascript source paths` section that can be found under the `Project Settings`, as any other javascript file u want to use in the project. 
+## Import through npm
 
-If your project is an `npm` one, the file must be required in your bundle, just like any other dependency.  
-You also have to require, before the `wle_pp_bundle.js` file, some WLE components like the `cursor` and `cursor-target` (an error will be logged otherwise).  
-You can find an official tutorial on how to setup an `npm` project and add the required WLE components [here](https://wonderlandengine.com/tutorials/npm-project/).
+If you want to import this library into your own project through `npm` you have to:
+  - install the PP package with `npm install wle_pp` / `npm install wle_pp_bundle`
+  - require the package inside your bundle file with: `require('wle_pp');` / `require('wle_pp_bundle');`
+  - require any additional WLE components (an error will be logged specifying the ones that are missing)
+    * these requires must be put before the PP one
+  - an official tutorial on how to setup an `npm` project and add the required WLE components can be found [here](https://wonderlandengine.com/tutorials/npm-project/)
 
-You can also get the bundle file through `npm`: 
-  * `npm install wle_pp_bundle`
+## Import through the entire code folder
 
-## Import using npm
+You can also import this library by importing the entire code folder, which could be useful if you want to customize it while developing your project.  
+This is possible only if your project is an `npm` one.
 
-If you want to import this library into your own project using `npm` you have to:
-  - setup an `npm` Wonderland Engine project like shown [here](https://wonderlandengine.com/tutorials/npm-project/)
-  - install the PP package with `npm install wle_pp`
-  - require the package inside your bundle file with: `require('wle_pp');`
+In this case, you have to:
+  - get the unbundled version of the library from [here](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+  - require the files found in the `js/pp` folder (you can use the `bundle.js` file found in the `js` folder to see the requires you need)
+  - add the dependencies found in the `package.json` file to your own `package.json`
+  - require any additional WLE components (an error will be logged specifying the ones that are missing)
+    * these requires must be put before the PP ones
+  - an official tutorial on how to setup an `npm` project and add the required WLE components can be found [here](https://wonderlandengine.com/tutorials/npm-project/)
   
-## Project Setup
+# How to Setup the Project
 
 In order to use most of the PP library your project needs to have certain components in your scene properly setup.  
 Specifically, these components needs to be added:

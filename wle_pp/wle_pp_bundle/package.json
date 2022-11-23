@@ -10,8 +10,7 @@
   },
   "license": "ISC",
   "files": [
-    "./wle_pp_bundle.js",
-	"./wle_pp_bundle.js.map"
+    "js"
   ],
   "keywords": [
     "wonderland",
@@ -20,6 +19,6 @@
     "wle",
     "webxr"
   ],
-  "main": "./wle_pp_bundle.js",
-  "exports": "./wle_pp_bundle.js"
+  "main": "./js/wle_pp_bundle.js",
+  "exports": "./js/wle_pp_bundle.js"
 }
