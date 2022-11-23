@@ -20,6 +20,7 @@ PP.Mouse = class Mouse {
 
         this._myInternalMousePosition = PP.vec2_create();
         this._myScreenSize = PP.vec2_create();
+        this._updateScreenSize();
 
         this._myResetMovingDelay = 0.15;
         this._myResetMovingTimer = new PP.Timer(this._myResetMovingDelay, false);
@@ -66,6 +67,8 @@ PP.Mouse = class Mouse {
             buttonInfo.myIsPressStartToProcess = false;
             buttonInfo.myIsPressEndToProcess = false;
         }
+
+        this._updateScreenSize();
     }
 
     destroy() {
@@ -223,9 +226,7 @@ PP.Mouse = class Mouse {
     }
 
     _updatePositionAndScreen(event) {
-        let bounds = event.target.getBoundingClientRect();
-        this._myScreenSize[0] = bounds.width;
-        this._myScreenSize[1] = bounds.height;
+        this._updateScreenSize();
         this._myInternalMousePosition[0] = event.clientX;
         this._myInternalMousePosition[1] = event.clientY;
 
@@ -290,5 +291,11 @@ PP.Mouse = class Mouse {
             event.preventDefault();
             return false;
         }
+    }
+
+    _updateScreenSize() {
+        let bounds = WL.canvas.getBoundingClientRect();
+        this._myScreenSize[0] = bounds.width;
+        this._myScreenSize[1] = bounds.height;
     }
 };

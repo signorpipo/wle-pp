@@ -4,7 +4,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
     // Modified Functions
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.init = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.init = function () {
         /* VR session cache, in case in VR */
         this.session = null;
         this.collisionMask = (1 << this.collisionGroup);
@@ -27,7 +27,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.prevHitLocationLocalToTarget = [0, 0, 0];
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.start = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.start = function () {
         if (this.handedness == 0) {
             const inputComp = this.object.getComponent('input');
             if (!inputComp) {
@@ -82,7 +82,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this._setCursorVisibility(false);
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.setViewComponent = function (viewComponent) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.setViewComponent = function (viewComponent) {
         this.viewComponent = viewComponent;
         /* If this object also has a view component, we will enable inverse-projected mouse clicks,
          * otherwise just use the objects transformation */
@@ -111,14 +111,14 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onViewportResize = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onViewportResize = function () {
         if (!this.viewComponent) return;
         /* Projection matrix will change if the viewport is resized, which will affect the
          * projection matrix because of the aspect ratio. */
         mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._setCursorRayTransform = function (hitPosition) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._setCursorRayTransform = function (hitPosition) {
         if (!this.cursorRayObject) return;
         if (this.cursorRayScalingAxis != 4) {
             this.cursorRayObject.resetScaling();
@@ -132,14 +132,14 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._setCursorVisibility = function (visible) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._setCursorVisibility = function (visible) {
         this.visible = visible;
         if (!this.cursorObject) return;
 
         this.cursorObject.pp_setActive(visible);
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.update = function (dt) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.update = function (dt) {
         if (this.doubleClickTimer > 0) {
             this.doubleClickTimer -= dt;
         }
@@ -151,7 +151,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.doUpdate(false);
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.doUpdate = function (doClick) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.doUpdate = function (doClick) {
         /* If in VR, set the cursor ray based on object transform */
         if (this.session) {
             /* Since Google Cardboard tap is registered as arTouchDown without a gamepad, we need to check for gamepad presence */
@@ -204,7 +204,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.hoverBehaviour = function (rayHit, doClick) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.hoverBehaviour = function (rayHit, doClick) {
         if (rayHit.hitCount > 0) {
             let hoveringObjectChanged = false;
             if (!this.hoveringObject || !this.hoveringObject.equals(rayHit.objects[0])) {
@@ -300,7 +300,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.isUpWithNoDown = false;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.setupVREvents = function (s) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.setupVREvents = function (s) {
         /* If in VR, one-time bind the listener */
         this.session = s;
         const onSessionEnd = function (e) {
@@ -329,10 +329,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.onViewportResize();
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onSelect = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onSelect = function (e) {
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onSelectStart = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onSelectStart = function (e) {
         if (this.active) {
             this.arTouchDown = true;
             if (e.inputSource.handedness == this.handedness) {
@@ -342,7 +342,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.isRealDown = true;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onSelectEnd = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onSelectEnd = function (e) {
         if (this.active) {
             this.arTouchDown = false;
             if (e.inputSource.handedness == this.handedness) {
@@ -355,7 +355,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.isRealDown = false;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onPointerMove = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerMove = function (e) {
         /* Don't care about secondary pointers */
         if (!e.isPrimary) return;
 
@@ -373,10 +373,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onClick = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onClick = function (e) {
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onPointerDown = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerDown = function (e) {
         if (this.active) {
             /* Don't care about secondary pointers or non-left clicks */
             if (!e.isPrimary || e.button !== 0) return;
@@ -403,7 +403,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onPointerUp = function (e) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerUp = function (e) {
         if (this.active) {
             /* Don't care about secondary pointers or non-left clicks */
             if (!e.isPrimary || e.button !== 0) return;
@@ -434,7 +434,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.updateMousePos = function (clientX, clientY, w, h) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.updateMousePos = function (clientX, clientY, w, h) {
         /* Get direction in normalized device coordinate space from mouse position */
         const left = clientX / w;
         const top = clientY / h;
@@ -442,7 +442,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         return this.updateDirection();
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.updateDirection = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.updateDirection = function () {
         this.object.getTranslationWorld(this.origin);
 
         /* Reverse-project the direction into view space */
@@ -462,7 +462,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         return rayHit;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onDeactivate = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onDeactivate = function () {
         if (this.hoveringObject) {
             const cursorTarget = this.hoveringObject.getComponent('cursor-target');
             if (cursorTarget) cursorTarget.onUnhover(this.hoveringObject, this);
@@ -482,7 +482,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onActivate = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onActivate = function () {
         this.showRay = true;
 
         this.isDown = false;
@@ -490,23 +490,23 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         this.isUpWithNoDown = false;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto.onDestroy = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onDestroy = function () {
         for (const f of this.onDestroyCallbacks) f();
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isPPMouseValid = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._isPPMouseValid = function () {
         return PP != null && PP.myMouse != null && PP.myMouse.isValid() && PP.myMouse.isInsideView();
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isDown = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._isDown = function () {
         return this.isDown !== this.lastIsDown && this.isDown;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isUp = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._isUp = function () {
         return this.isDown !== this.lastIsDown && !this.isDown;
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].proto._isMoving = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._isMoving = function () {
         let hitLocationLocalToTarget = [0, 0, 0];
         return function _isMoving(hitLocation) {
             let isMoving = false;

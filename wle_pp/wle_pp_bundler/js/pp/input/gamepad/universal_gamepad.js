@@ -39,10 +39,13 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
 
         for (let core of this._myGamepadCores.values()) {
             if (core.isGamepadCoreActive()) {
-                handPose = core.getHandPose();
+                let currentCoreHandPose = core.getHandPose();
+                if (handPose == null || (currentCoreHandPose != null && currentCoreHandPose.isValid())) {
+                    handPose = currentCoreHandPose;
+                }
             }
 
-            if (handPose != null) {
+            if (handPose != null && handPose.isValid()) {
                 break;
             }
         }

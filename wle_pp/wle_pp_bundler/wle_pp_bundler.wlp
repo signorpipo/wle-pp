@@ -114,6 +114,9 @@
             "link": {
                 "name": "DefaultFontMaterial",
                 "file": "default"
+            },
+            "Text": {
+                "font": "39"
             }
         }
     },
@@ -240,6 +243,9 @@
             "link": {
                 "name": "Flat Opaque Textured",
                 "file": "default"
+            },
+            "features": {
+                "ALPHA_MASKED": true
             }
         },
         "10": {
@@ -258,6 +264,9 @@
             "link": {
                 "name": "Phong Opaque Textured",
                 "file": "default"
+            },
+            "features": {
+                "ALPHA_MASKED": true
             }
         },
         "16": {
@@ -282,6 +291,9 @@
             "link": {
                 "name": "Physical Opaque Textured",
                 "file": "default"
+            },
+            "features": {
+                "ALPHA_MASKED": true
             }
         },
         "31": {
@@ -295,6 +307,18 @@
                 "name": "Sky",
                 "file": "default"
             }
+        },
+        "37": {
+            "link": {
+                "name": "Phong Normalmapped",
+                "file": "default"
+            }
+        },
+        "38": {
+            "link": {
+                "name": "Phong Lightmapped",
+                "file": "default"
+            }
         }
     },
     "settings": {
@@ -303,7 +327,7 @@
             "version": [
                 0,
                 9,
-                3
+                4
             ]
         },
         "scripting": {
@@ -367,6 +391,14 @@
                 0.9215686,
                 1.0
             ]
+        }
+    },
+    "fonts": {
+        "39": {
+            "link": {
+                "name": "DejaVuSans.ttf",
+                "file": "default"
+            }
         }
     }
 }
