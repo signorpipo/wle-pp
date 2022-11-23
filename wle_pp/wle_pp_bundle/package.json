@@ -1,6 +1,6 @@
 {
   "name": "wle_pp_bundle",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "A library for the Wonderland Engine",
   "main": "./wle_pp_bundle.js",
   "exports": "./wle_pp_bundle.js",
