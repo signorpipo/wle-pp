@@ -114,7 +114,7 @@ PP.Direction2DTo3DConverter = class Direction2DTo3DConverter {
     // it's also needed to specify the fly axis, if different from the conversionTransform up
     // if direction3DUp is null, conversionTransform up is used
     convertTransform(direction2D, conversionTransform, direction3DUp = null, outDirection3D = PP.vec3_create()) {
-        return this.convertTransformMatrix(direction2D, conversionTransform, direction3DUp = null, outDirection3D);
+        return this.convertTransformMatrix(direction2D, conversionTransform, direction3DUp, outDirection3D);
     }
 
     convertTransformMatrix(direction2D, conversionTransformMatrix, direction3DUp = null, outDirection3D = PP.vec3_create()) {

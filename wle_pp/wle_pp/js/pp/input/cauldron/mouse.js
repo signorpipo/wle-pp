@@ -1,4 +1,4 @@
-PP.MouseButtonType = {
+PP.MouseButtonID = {
     LEFT: 0,
     MIDDLE: 1,
     RIGHT: 2,
@@ -7,11 +7,10 @@ PP.MouseButtonType = {
 PP.Mouse = class Mouse {
     constructor() {
         // #TODO refactor Mouse/Keyboard/Gamepad and create a sort of parent ButtonHandler that have the base ButtonInfo and all of them inherit
-        // ButtonType could also become GamepadButtonID or directly GamepadButton like in Unity
 
         this._myButtonInfos = new Map();
-        for (let typeKey in PP.MouseButtonType) {
-            this._myButtonInfos.set(PP.MouseButtonType[typeKey],
+        for (let key in PP.MouseButtonID) {
+            this._myButtonInfos.set(PP.MouseButtonID[key],
                 { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, });
         }
 
@@ -84,31 +83,31 @@ PP.Mouse = class Mouse {
         return this._myIsValid;
     }
 
-    isButtonPressed(buttonInfoType) {
+    isButtonPressed(buttonID) {
         let isPressed = false;
 
-        if (this._myButtonInfos.has(buttonInfoType)) {
-            isPressed = this._myButtonInfos.get(buttonInfoType).myIsPressed;
+        if (this._myButtonInfos.has(buttonID)) {
+            isPressed = this._myButtonInfos.get(buttonID).myIsPressed;
         }
 
         return isPressed;
     }
 
-    isButtonPressStart(buttonInfoType) {
+    isButtonPressStart(buttonID) {
         let isPressStart = false;
 
-        if (this._myButtonInfos.has(buttonInfoType)) {
-            isPressStart = this._myButtonInfos.get(buttonInfoType).myIsPressStart;
+        if (this._myButtonInfos.has(buttonID)) {
+            isPressStart = this._myButtonInfos.get(buttonID).myIsPressStart;
         }
 
         return isPressStart;
     }
 
-    isButtonPressEnd(buttonInfoType = null) {
+    isButtonPressEnd(buttonID = null) {
         let isPressEnd = false;
 
-        if (this._myButtonInfos.has(buttonInfoType)) {
-            isPressEnd = this._myButtonInfos.get(buttonInfoType).myIsPressEnd;
+        if (this._myButtonInfos.has(buttonID)) {
+            isPressEnd = this._myButtonInfos.get(buttonID).myIsPressEnd;
         }
 
         return isPressEnd;

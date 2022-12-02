@@ -28,7 +28,7 @@ PP.GamepadCore = class GamepadCore {
 
     }
 
-    getButtonData(buttonType) {
+    getButtonData(buttonID) {
         let buttonData = { pressed: false, touched: false, value: 0 };
         return buttonData;
     }

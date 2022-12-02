@@ -31,12 +31,12 @@ PP.PendingPerform = class PendingPerform {
     }
 };
 
-PP.PerformType = {
+PP.PerformMode = {
     IMMEDIATE: 0,
     DELAYED: 1
 };
 
-PP.PerformDelayedType = {
+PP.PerformDelayedMode = {
     QUEUE: 0,
     KEEP_FIRST: 1,
     KEEP_LAST: 2
@@ -51,7 +51,7 @@ PP.SkipStateFunction = {
 
 PP.FSM = class FSM {
 
-    constructor(performType = PP.PerformType.IMMEDIATE, performDelayedType = PP.PerformDelayedType.QUEUE) {
+    constructor(performMode = PP.PerformMode.IMMEDIATE, performDelayedMode = PP.PerformDelayedMode.QUEUE) {
         this._myCurrentStateData = null;
 
         this._myStateMap = new Map();
@@ -61,15 +61,15 @@ PP.FSM = class FSM {
         this._myDebugShowDelayedInfo = false;
         this._myDebugLogName = "FSM";
 
-        this._myPerformType = performType;
-        this._myPerformDelayedType = performDelayedType;
+        this._myPerformMode = performMode;
+        this._myPerformDelayedMode = performDelayedMode;
         this._myPendingPerforms = [];
         this._myCurrentlyPerformedTransition = null;
 
         this._myInitCallbacks = new Map();            // Signature: callback(fsm, initStateData, initTransitionObject, ...args)
         this._myInitIDCallbacks = new Map();          // Signature: callback(fsm, initStateData, initTransitionObject, ...args)
-        this._myTransitionCallbacks = new Map();      // Signature: callback(fsm, fromStateData, toStateData, transitionData, performType, ...args)
-        this._myTransitionIDCallbacks = [];           // Signature: callback(fsm, fromStateData, toStateData, transitionData, performType, ...args)
+        this._myTransitionCallbacks = new Map();      // Signature: callback(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
+        this._myTransitionIDCallbacks = [];           // Signature: callback(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
     }
 
     addState(stateID, state = null) {
@@ -171,7 +171,7 @@ PP.FSM = class FSM {
     update(dt, ...args) {
         if (this._myPendingPerforms.length > 0) {
             for (let i = 0; i < this._myPendingPerforms.length; i++) {
-                this._perform(this._myPendingPerforms[i].myID, PP.PerformType.DELAYED, ...this._myPendingPerforms[i].myArgs);
+                this._perform(this._myPendingPerforms[i].myID, PP.PerformMode.DELAYED, ...this._myPendingPerforms[i].myArgs);
             }
             this._myPendingPerforms = [];
         }
@@ -182,7 +182,7 @@ PP.FSM = class FSM {
     }
 
     perform(transitionID, ...args) {
-        if (this._myPerformType == PP.PerformType.DELAYED) {
+        if (this._myPerformMode == PP.PerformMode.DELAYED) {
             this.performDelayed(transitionID, ...args);
         } else {
             this.performImmediate(transitionID, ...args);
@@ -192,18 +192,18 @@ PP.FSM = class FSM {
     performDelayed(transitionID, ...args) {
         let performDelayed = false;
 
-        switch (this._myPerformDelayedType) {
-            case PP.PerformDelayedType.QUEUE:
+        switch (this._myPerformDelayedMode) {
+            case PP.PerformDelayedMode.QUEUE:
                 this._myPendingPerforms.push(new PP.PendingPerform(transitionID, ...args));
                 performDelayed = true;
                 break;
-            case PP.PerformDelayedType.KEEP_FIRST:
+            case PP.PerformDelayedMode.KEEP_FIRST:
                 if (!this.hasPendingPerforms()) {
                     this._myPendingPerforms.push(new PP.PendingPerform(transitionID, ...args));
                     performDelayed = true;
                 }
                 break;
-            case PP.PerformDelayedType.KEEP_LAST:
+            case PP.PerformDelayedMode.KEEP_LAST:
                 this.resetPendingPerforms();
                 this._myPendingPerforms.push(new PP.PendingPerform(transitionID, ...args));
                 performDelayed = true;
@@ -214,7 +214,7 @@ PP.FSM = class FSM {
     }
 
     performImmediate(transitionID, ...args) {
-        return this._perform(transitionID, PP.PerformType.IMMEDIATE, ...args);
+        return this._perform(transitionID, PP.PerformMode.IMMEDIATE, ...args);
     }
 
     canPerform(transitionID) {
@@ -367,20 +367,20 @@ PP.FSM = class FSM {
         return hasTransition;
     }
 
-    setPerformType(performType) {
-        this._myPerformType = performType;
+    setPerformMode(performMode) {
+        this._myPerformMode = performMode;
     }
 
-    getPerformType() {
-        return this._myPerformType;
+    getPerformMode() {
+        return this._myPerformMode;
     }
 
-    setPerformDelayedType(performDelayedType) {
-        this._myPerformDelayedType = performDelayedType;
+    setPerformDelayedMode(performDelayedMode) {
+        this._myPerformDelayedMode = performDelayedMode;
     }
 
-    getPerformDelayedType() {
-        return this._myPerformDelayedType;
+    getPerformDelayedMode() {
+        return this._myPerformDelayedMode;
     }
 
     hasPendingPerforms() {
@@ -402,8 +402,8 @@ PP.FSM = class FSM {
         cloneFSM._myDebugShowDelayedInfo = this._myDebugShowDelayedInfo;
         cloneFSM._myDebugLogName = this._myDebugLogName.slice(0);
 
-        cloneFSM._myPerformType = this._myPerformType;
-        cloneFSM._myPerformDelayedType = this._myPerformDelayedType;
+        cloneFSM._myPerformMode = this._myPerformMode;
+        cloneFSM._myPerformDelayedMode = this._myPerformDelayedMode;
         cloneFSM._myPendingPerforms = this._myPendingPerforms.slice(0);
 
         for (let entry of this._myStateMap.entries()) {
@@ -554,12 +554,12 @@ PP.FSM = class FSM {
         }
     }
 
-    _perform(transitionID, performType, ...args) {
+    _perform(transitionID, performMode, ...args) {
         if (this.isPerformingTransition()) {
             let currentlyPerformedTransition = this.getCurrentlyPerformedTransition();
             let consoleArguments = [this._myDebugLogName, "- Trying to perform:", transitionID];
             if (this._myDebugShowDelayedInfo) {
-                consoleArguments.push(performType == PP.PerformType.DELAYED ? "- Delayed" : "- Immediate");
+                consoleArguments.push(performMode == PP.PerformMode.DELAYED ? "- Delayed" : "- Immediate");
             }
             consoleArguments.push("- But another transition is currently being performed -", currentlyPerformedTransition.myID);
             console.warn(...consoleArguments);
@@ -580,7 +580,7 @@ PP.FSM = class FSM {
                 if (this._myDebugLogActive) {
                     let consoleArguments = [this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID];
                     if (this._myDebugShowDelayedInfo) {
-                        consoleArguments.push(performType == PP.PerformType.DELAYED ? "- Delayed" : "- Immediate");
+                        consoleArguments.push(performMode == PP.PerformMode.DELAYED ? "- Delayed" : "- Immediate");
                     }
                     console.log(...consoleArguments);
                 }
@@ -602,7 +602,7 @@ PP.FSM = class FSM {
                 this._myCurrentStateData = transitionToPerform.myToState;
 
                 if (this._myTransitionCallbacks.size > 0) {
-                    this._myTransitionCallbacks.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performType, ...args); }.bind(this));
+                    this._myTransitionCallbacks.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performMode, ...args); }.bind(this));
                 }
 
                 if (this._myTransitionIDCallbacks.length > 0) {
@@ -616,7 +616,7 @@ PP.FSM = class FSM {
                     }
 
                     for (let callbackMap of this.transitionIDMaps) {
-                        callbackMap.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performType, ...args); }.bind(this));
+                        callbackMap.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performMode, ...args); }.bind(this));
                     }
                 }
 
@@ -626,14 +626,14 @@ PP.FSM = class FSM {
             } else if (this._myDebugLogActive) {
                 let consoleArguments = [this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myID];
                 if (this._myDebugShowDelayedInfo) {
-                    consoleArguments.push(performType == PP.PerformType.DELAYED ? "- Delayed" : "- Immediate");
+                    consoleArguments.push(performMode == PP.PerformMode.DELAYED ? "- Delayed" : "- Immediate");
                 }
                 console.warn(...consoleArguments);
             }
         } else if (this._myDebugLogActive) {
             let consoleArguments = [this._myDebugLogName, "- FSM not initialized yet"];
             if (this._myDebugShowDelayedInfo) {
-                consoleArguments.push(performType == PP.PerformType.DELAYED ? "- Delayed" : "- Immediate");
+                consoleArguments.push(performMode == PP.PerformMode.DELAYED ? "- Delayed" : "- Immediate");
             }
             console.warn(...consoleArguments);
         }

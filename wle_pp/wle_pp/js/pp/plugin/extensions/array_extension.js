@@ -69,6 +69,7 @@
 
         VECTOR 2:
             ○ vec2_set
+            - vec2_normalize
             - vec2_length
             - vec2_isZero
 
@@ -487,6 +488,11 @@ Array.prototype.vec2_set = function (x, y = null) {
 
 Array.prototype.vec2_length = function () {
     return glMatrix.vec2.length(this);
+};
+
+Array.prototype.vec2_normalize = function (out = glMatrix.vec2.create()) {
+    glMatrix.vec2.normalize(out, this);
+    return out;
 };
 
 // New Functions

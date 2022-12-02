@@ -2,7 +2,7 @@ WL.registerComponent('pp-set-tracked-hand-joint-local-transform', {
     _myHandedness: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myFixForward: { type: WL.Type.Bool, default: true },
     _mySetLocalScaleAsJointRadius: { type: WL.Type.Bool, default: false },
-    _myJointType: {
+    _myJointID: {
         type: WL.Type.Enum, values:
             [
                 'Wrist',
@@ -17,9 +17,9 @@ WL.registerComponent('pp-set-tracked-hand-joint-local-transform', {
 }, {
     init: function () {
         this._myHandednessInternal = PP.InputUtils.getHandednessByIndex(this._myHandedness);
-        this._myJointTypeInternal = PP.InputUtils.getJointTypeByIndex(this._myJointType);
+        this._myJointIDInternal = PP.InputUtils.getJointIDByIndex(this._myJointID);
 
-        this._myTrackedHandJointPose = new PP.TrackedHandJointPose(this._myHandednessInternal, this._myJointTypeInternal);
+        this._myTrackedHandJointPose = new PP.TrackedHandJointPose(this._myHandednessInternal, this._myJointIDInternal);
         this._myTrackedHandJointPose.setFixForward(this._myFixForward);
     },
     start: function () {

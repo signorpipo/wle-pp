@@ -62,21 +62,21 @@ PP.InputUtils = {
 
         return oppositeHandedness;
     },
-    getJointTypeByIndex: function (index) {
-        let jointType = null;
+    getJointIDByIndex: function (index) {
+        let jointID = null;
 
-        let jointTypeKey = null;
-        for (let jointTypeIndexKey in PP.TrackedHandJointTypeIndex) {
-            if (PP.TrackedHandJointTypeIndex[jointTypeIndexKey] == index) {
-                jointTypeKey = jointTypeIndexKey;
+        let jointIDKey = null;
+        for (let jointIDIndexKey in PP.TrackedHandJointIDIndex) {
+            if (PP.TrackedHandJointIDIndex[jointIDIndexKey] == index) {
+                jointIDKey = jointIDIndexKey;
                 break;
             }
         }
 
-        if (jointTypeKey != null) {
-            jointType = PP.TrackedHandJointType[jointTypeKey];
+        if (jointIDKey != null) {
+            jointID = PP.TrackedHandJointID[jointIDKey];
         }
 
-        return jointType;
+        return jointID;
     },
 };

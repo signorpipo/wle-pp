@@ -76,8 +76,8 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
             light.color[3] = light.color[3];
         }
 
-        if ((PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed) ||
-            (PP.myLeftGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed)) {
+        if ((PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed) ||
+            (PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed)) {
 
             let hsvColor = PP.ColorUtils.color1To255(PP.ColorUtils.rgbToHsv(color));
             let rgbColor = PP.ColorUtils.color1To255(color);

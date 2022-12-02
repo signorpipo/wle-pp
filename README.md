@@ -580,14 +580,14 @@ List of features:
   * it works through gamepad cores, that specify how the buttons are activated (keyboard, mouse, gamepads)
   * example:
     ```js
-    PP.myLeftGamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
-    PP.myRightGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isTouchEnd();    
-    PP.myLeftGamepad.getButtonInfo(PP.ButtonType.SQUEEZE).isPressStart(2); // fast pressed 2 times     
+    PP.myLeftGamepad.registerButtonEventListener(PP.GamepadButtonID.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
+    PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isTouchEnd();    
+    PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.SQUEEZE).isPressStart(2); // fast pressed 2 times     
     PP.myGamepads[PP.Handedness.LEFT].getAxesInfo().getAxes();    
     PP.myRightGamepad.pulse(0.5, 1);    
     ```
 - [`Gamepad Buttons`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_buttons.js)
-  * here u can find the enums for the buttons and axes types and events and the classes the contains the buttons and axes infos
+  * here u can find the enums for the buttons and axes ids and events and the classes the contains the buttons and axes infos
 - [`PP.GamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/gamepad_core.js)
   * the base class that u can inherit to create a custom gamepad core that u can then plug into the universal gamepad
 - [`PP.XRGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/xr_gamepad_core.js) / [`PP.KeyboardGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/gamepad_cores/keyboard_gamepad_core.js)

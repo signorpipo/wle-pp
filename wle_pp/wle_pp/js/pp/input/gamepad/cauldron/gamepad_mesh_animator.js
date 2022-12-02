@@ -54,33 +54,33 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
 
         // PRESSED
         if (this._myThumbstick != null) {
-            gamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressedStart.bind(this));
-            gamepad.registerButtonEventListener(PP.ButtonType.THUMBSTICK, PP.ButtonEvent.PRESS_END, this, this._thumbstickPressedEnd.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.THUMBSTICK, PP.GamepadButtonEvent.PRESS_START, this, this._thumbstickPressedStart.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.THUMBSTICK, PP.GamepadButtonEvent.PRESS_END, this, this._thumbstickPressedEnd.bind(this));
         }
 
         if (this._myTopButton != null) {
-            gamepad.registerButtonEventListener(PP.ButtonType.TOP_BUTTON, PP.ButtonEvent.PRESS_START, this, this._topButtonPressedStart.bind(this));
-            gamepad.registerButtonEventListener(PP.ButtonType.TOP_BUTTON, PP.ButtonEvent.PRESS_END, this, this._topButtonPressedEnd.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.TOP_BUTTON, PP.GamepadButtonEvent.PRESS_START, this, this._topButtonPressedStart.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.TOP_BUTTON, PP.GamepadButtonEvent.PRESS_END, this, this._topButtonPressedEnd.bind(this));
         }
 
         if (this._myBottomButton != null) {
 
-            gamepad.registerButtonEventListener(PP.ButtonType.BOTTOM_BUTTON, PP.ButtonEvent.PRESS_START, this, this._bottomButtonPressedStart.bind(this));
-            gamepad.registerButtonEventListener(PP.ButtonType.BOTTOM_BUTTON, PP.ButtonEvent.PRESS_END, this, this._bottomButtonPressedEnd.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.BOTTOM_BUTTON, PP.GamepadButtonEvent.PRESS_START, this, this._bottomButtonPressedStart.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.BOTTOM_BUTTON, PP.GamepadButtonEvent.PRESS_END, this, this._bottomButtonPressedEnd.bind(this));
         }
 
         // VALUE CHANGED
         if (this._mySelect != null) {
-            gamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.VALUE_CHANGED, this, this._selectValueChanged.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.SELECT, PP.GamepadButtonEvent.VALUE_CHANGED, this, this._selectValueChanged.bind(this));
         }
 
         if (this._mySqueeze != null) {
-            gamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.VALUE_CHANGED, this, this._squeezeValueChanged.bind(this));
+            gamepad.registerButtonEventListener(PP.GamepadButtonID.SQUEEZE, PP.GamepadButtonEvent.VALUE_CHANGED, this, this._squeezeValueChanged.bind(this));
         }
 
         // AXES CHANGED
         if (this._myThumbstick != null) {
-            gamepad.registerAxesEventListener(PP.AxesEvent.AXES_CHANGED, this, this._thumbstickValueChanged.bind(this));
+            gamepad.registerAxesEventListener(PP.GamepadAxesEvent.AXES_CHANGED, this, this._thumbstickValueChanged.bind(this));
         }
     },
     _thumbstickPressedStart: function () {

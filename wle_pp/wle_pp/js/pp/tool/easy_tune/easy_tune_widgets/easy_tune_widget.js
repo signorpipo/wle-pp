@@ -185,8 +185,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _updateGamepadWidgetVisibility() {
         if (this._myGamepad) {
-            if ((this._myGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed) ||
-                (this._myGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).myIsPressed)) {
+            if ((this._myGamepad.getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed) ||
+                (this._myGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).myIsPressed)) {
                 this._toggleVisibility();
             }
         }
@@ -217,7 +217,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _updateGamepadScrollVariable(dt) {
-        if (this._myGamepad && (!this._mySetup.myScrollVariableButtonType || this._myGamepad.getButtonInfo(this._mySetup.myScrollVariableButtonType).myIsPressed)) {
+        if (this._myGamepad && (!this._mySetup.myScrollVariableButtonID || this._myGamepad.getButtonInfo(this._mySetup.myScrollVariableButtonID).myIsPressed)) {
             let x = this._myGamepad.getAxesInfo().myAxes[0];
             let y = this._myGamepad.getAxesInfo().myAxes[1];
             if (Math.abs(x) > this._mySetup.myScrollVariableMinXThreshold && Math.abs(y) < this._mySetup.myScrollVariableMaxYThreshold) {

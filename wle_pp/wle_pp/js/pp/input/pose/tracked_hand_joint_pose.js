@@ -1,22 +1,22 @@
 PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
 
-    constructor(handedness, trackedHandJointType, basePoseParams = new PP.BasePoseParams()) {
+    constructor(handedness, trackedHandJointID, basePoseParams = new PP.BasePoseParams()) {
         super(basePoseParams);
 
         this._myInputSource = null;
 
         this._myHandedness = handedness;
-        this._myTrackedHandJointType = trackedHandJointType;
+        this._myTrackedHandJointID = trackedHandJointID;
 
         this._myJointRadius = 0;
     }
 
-    getTrackedHandJointType() {
-        return this._myTrackedHandJointType;
+    getTrackedHandJointID() {
+        return this._myTrackedHandJointID;
     }
 
-    setTrackedHandJointType(trackedHandJointType) {
-        this._myTrackedHandJointType = trackedHandJointType;
+    setTrackedHandJointID(trackedHandJointID) {
+        this._myTrackedHandJointID = trackedHandJointID;
     }
 
     getJointRadius() {
@@ -28,7 +28,7 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
     }
 
     _getPose(xrFrame) {
-        return xrFrame.getJointPose(this._myInputSource.hand.get(this._myTrackedHandJointType), this._myReferenceSpace);
+        return xrFrame.getJointPose(this._myInputSource.hand.get(this._myTrackedHandJointID), this._myReferenceSpace);
     }
 
     _updateHook(dt, xrPose) {

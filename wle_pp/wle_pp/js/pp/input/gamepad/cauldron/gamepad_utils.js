@@ -14,31 +14,31 @@ PP.GamepadUtils = {
         return PP.GamepadUtils._mySimultaneousTouchMaxDelay;
     },
 
-    // gamepadButtonTypesList is a sequence of a gamepads and a list of buttonTypes like this ([gamepad1, squeeze, top, select], [gamepad2, bottom, squeeze, select], ...)
+    // gamepadButtonIDsList is a sequence of a gamepads and a list of buttonIDs like this ([gamepad1, squeeze, top, select], [gamepad2, bottom, squeeze, select], ...)
     // if the first parameter is a number it's used as multiplePressCount
-    // if the buttonTypes list is empty for a given gamepad, it means that every button will be included
-    isAnyButtonPressStart: function (...gamepadButtonTypesList) {
+    // if the buttonIDs list is empty for a given gamepad, it means that every button will be included
+    isAnyButtonPressStart: function (...gamepadButtonIDsList) {
         let multiplePressCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multiplePressCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multiplePressCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let isOnePressStart = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (button.isPressStart(multiplePressCount)) {
                     isOnePressStart = true;
@@ -53,32 +53,32 @@ PP.GamepadUtils = {
 
         return isOnePressStart;
     },
-    // gamepadButtonTypesList is a sequence of a gamepads and a list of buttonTypes like this ([gamepad1, squeeze, top, select], [gamepad2, bottom, squeeze, select], ...)
+    // gamepadButtonIDsList is a sequence of a gamepads and a list of buttonIDs like this ([gamepad1, squeeze, top, select], [gamepad2, bottom, squeeze, select], ...)
     // if the first parameter is a number it's used as multiplePressCount
-    // if the buttonTypes list is empty for a given gamepad, it means that every button will be included
-    areButtonsPressStart: function (...gamepadButtonTypesList) {
+    // if the buttonIDs list is empty for a given gamepad, it means that every button will be included
+    areButtonsPressStart: function (...gamepadButtonIDsList) {
         let multiplePressCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multiplePressCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multiplePressCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let areButtonPressedRecently = true;
         let isOnePressStart = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (!(button.myIsPressed && (multiplePressCount == null || button.myMultiplePressStartCount == multiplePressCount) && button.myTimePressed < PP.GamepadUtils._mySimultaneousPressMaxDelay)) {
                     areButtonPressedRecently = false;
@@ -97,28 +97,28 @@ PP.GamepadUtils = {
 
         return areButtonPressedRecently && isOnePressStart;
     },
-    isAnyButtonPressEnd: function (...gamepadButtonTypesList) {
+    isAnyButtonPressEnd: function (...gamepadButtonIDsList) {
         let multiplePressCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multiplePressCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multiplePressCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let isOnePressEnd = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (button.isPressEnd(multiplePressCount)) {
                     isOnePressEnd = true;
@@ -133,29 +133,29 @@ PP.GamepadUtils = {
 
         return isOnePressEnd;
     },
-    areButtonsPressEnd: function (...gamepadButtonTypesList) {
+    areButtonsPressEnd: function (...gamepadButtonIDsList) {
         let multiplePressCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multiplePressCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multiplePressCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let areButtonNotPressedRecently = true;
         let isOnePressEnd = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (!(!button.myIsPressed && (multiplePressCount == null || button.myMultiplePressEndCount == multiplePressCount) && button.myTimeNotPressed < PP.GamepadUtils._mySimultaneousPressMaxDelay)) {
                     areButtonNotPressedRecently = false;
@@ -174,28 +174,28 @@ PP.GamepadUtils = {
 
         return areButtonNotPressedRecently && isOnePressEnd;
     },
-    isAnyButtonTouchStart: function (...gamepadButtonTypesList) {
+    isAnyButtonTouchStart: function (...gamepadButtonIDsList) {
         let multiplePressCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multiplePressCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multiplePressCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let isOneTouchStart = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (button.isTouchStart(multiplePressCount)) {
                     isOneTouchStart = true;
@@ -210,29 +210,29 @@ PP.GamepadUtils = {
 
         return isOneTouchStart;
     },
-    areButtonsTouchStart: function (...gamepadButtonTypesList) {
+    areButtonsTouchStart: function (...gamepadButtonIDsList) {
         let multipleTouchCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multipleTouchCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multipleTouchCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let areButtonTouchedRecently = true;
         let isOneTouchStart = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (!(button.myIsTouched && (multipleTouchCount == null || button.myMultipleTouchStartCount == multipleTouchCount) && button.myTimeTouched < PP.GamepadUtils._mySimultaneousTouchMaxDelay)) {
                     areButtonTouchedRecently = false;
@@ -251,28 +251,28 @@ PP.GamepadUtils = {
 
         return areButtonTouchedRecently && isOneTouchStart;
     },
-    isAnyButtonTouchEnd: function (...gamepadButtonTypesList) {
+    isAnyButtonTouchEnd: function (...gamepadButtonIDsList) {
         let multiplePressCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multiplePressCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multiplePressCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let isOneTouchEnd = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (button.isTouchEnd(multiplePressCount)) {
                     isOneTouchEnd = true;
@@ -287,29 +287,29 @@ PP.GamepadUtils = {
 
         return isOneTouchEnd;
     },
-    areButtonsTouchEnd: function (...gamepadButtonTypesList) {
+    areButtonsTouchEnd: function (...gamepadButtonIDsList) {
         let multipleTouchCount = null;
-        let realGamepadButtonTypesList = gamepadButtonTypesList;
-        if (!isNaN(gamepadButtonTypesList[0])) {
-            multipleTouchCount = gamepadButtonTypesList[0];
-            realGamepadButtonTypesList = gamepadButtonTypesList.slice(1);
+        let realGamepadButtonIDsList = gamepadButtonIDsList;
+        if (!isNaN(gamepadButtonIDsList[0])) {
+            multipleTouchCount = gamepadButtonIDsList[0];
+            realGamepadButtonIDsList = gamepadButtonIDsList.slice(1);
         }
 
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            if (gamepadButtonIDs.length == 1) {
+                for (let key in PP.GamepadButtonID) {
+                    gamepadButtonIDs.push(PP.GamepadButtonID[key]);
                 }
             }
         }
 
         let areButtonNotTouchedRecently = true;
         let isOneTouchEnd = false;
-        for (let gamepadButtonTypes of realGamepadButtonTypesList) {
-            let gamepad = gamepadButtonTypes[0];
-            for (let i = 1; i < gamepadButtonTypes.length; i++) {
-                let buttonType = gamepadButtonTypes[i];
-                let button = gamepad.getButtonInfo(buttonType);
+        for (let gamepadButtonIDs of realGamepadButtonIDsList) {
+            let gamepad = gamepadButtonIDs[0];
+            for (let i = 1; i < gamepadButtonIDs.length; i++) {
+                let buttonID = gamepadButtonIDs[i];
+                let button = gamepad.getButtonInfo(buttonID);
 
                 if (!(!button.myIsTouched && (multipleTouchCount == null || button.myMultipleTouchEndCount == multipleTouchCount) && button.myTimeNotTouched < PP.GamepadUtils._mySimultaneousTouchMaxDelay)) {
                     areButtonNotTouchedRecently = false;

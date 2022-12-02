@@ -1,4 +1,4 @@
-PP.ButtonType = {
+PP.GamepadButtonID = {
     SELECT: 0,      // Trigger
     SQUEEZE: 1,     // Grip
     TOUCHPAD: 2,    // This is to support older gamepads, you can just use TOP_BUTTON to use this button for both older and newer gamepads
@@ -8,7 +8,7 @@ PP.ButtonType = {
     THUMB_REST: 6
 };
 
-PP.ButtonEvent = {
+PP.GamepadButtonEvent = {
     PRESS_START: 0,
     PRESS_END: 1,
     PRESSED: 2,     //Every frame that it is pressed
@@ -21,16 +21,16 @@ PP.ButtonEvent = {
     ALWAYS: 9,      //Every frame
 };
 
-PP.AxesEvent = {
+PP.GamepadAxesEvent = {
     X_CHANGED: 0,
     Y_CHANGED: 1,
     AXES_CHANGED: 2,
     ALWAYS: 3
 };
 
-PP.ButtonInfo = class ButtonInfo {
-    constructor(type, handedness) {
-        this.myType = type;
+PP.GamepadButtonInfo = class GamepadButtonInfo {
+    constructor(id, handedness) {
+        this.myID = id;
         this.myHandedness = handedness;
 
         this.myIsPressed = false;
@@ -65,8 +65,8 @@ PP.ButtonInfo = class ButtonInfo {
         this.myPrevMultipleTouchEndCount = 0;
     }
 
-    getType() {
-        return this.myType;
+    getID() {
+        return this.myID;
     }
 
     getHandedness() {
@@ -102,7 +102,7 @@ PP.ButtonInfo = class ButtonInfo {
     }
 
     clone() {
-        let value = new ButtonInfo(this.myType, this.myHandedness);
+        let value = new PP.GamepadButtonInfo(this.myID, this.myHandedness);
         value.myIsPressed = this.myIsPressed;
         value.myPrevIsPressed = this.myPrevIsPressed;
         value.myIsTouched = this.myIsTouched;
@@ -134,7 +134,7 @@ PP.ButtonInfo = class ButtonInfo {
     }
 };
 
-PP.AxesInfo = class AxesInfo {
+PP.GamepadAxesInfo = class GamepadAxesInfo {
     constructor(handedness) {
         this.myHandedness = handedness;
 
@@ -154,7 +154,7 @@ PP.AxesInfo = class AxesInfo {
     }
 
     clone() {
-        let value = new AxesInfo(this.myHandedness);
+        let value = new PP.GamepadAxesInfo(this.myHandedness);
         value.myAxes = this.myAxes;
         value.myPrevAxes = this.myPrevAxes;
 
@@ -162,7 +162,7 @@ PP.AxesInfo = class AxesInfo {
     }
 };
 
-PP.PulseInfo = class PulseInfo {
+PP.GamepadPulseInfo = class GamepadPulseInfo {
     constructor() {
         this.myIntensity = 0.0;
         this.myDuration = 0.0;
@@ -171,7 +171,7 @@ PP.PulseInfo = class PulseInfo {
     }
 
     clone() {
-        let value = new PulseInfo();
+        let value = new PP.GamepadPulseInfo();
         value.myIntensity = this.myIntensity;
         value.myDuration = this.myDuration;
         value.myIsDevicePulsing = this.myIsDevicePulsing;

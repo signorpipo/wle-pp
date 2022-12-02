@@ -20,8 +20,8 @@ WL.registerComponent('pp-tracked-hand-draw-skin', {
         for (let i = 0; i < this._myJoints.length; i++) {
             let jointObject = this._myJoints[i];
 
-            let jointType = jointObject.name; // joint name must match the PP.TrackedHandJointType enum value
-            let jointPose = this._myTrackedHandPose.getJointPose(jointType);
+            let jointID = jointObject.name; // joint name must match the PP.TrackedHandJointID enum value
+            let jointPose = this._myTrackedHandPose.getJointPose(jointID);
 
             jointObject.pp_setTransformLocalQuat(jointPose.getTransformQuat());
         }

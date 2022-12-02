@@ -1,12 +1,12 @@
 PP.TrackedHandPoseParams = class TrackedHandPoseParams extends PP.BasePoseParams {
-    constructor(addAllJointTypes = true) {
+    constructor(addAllJointIDs = true) {
         super();
 
-        this.myTrackedHandJointTypeList = [];
+        this.myTrackedHandJointIDList = [];
 
-        if (addAllJointTypes) {
-            for (let typeKey in PP.TrackedHandJointType) {
-                this.myTrackedHandJointTypeList.push([PP.TrackedHandJointType[typeKey]]);
+        if (addAllJointIDs) {
+            for (let key in PP.TrackedHandJointID) {
+                this.myTrackedHandJointIDList.push([PP.TrackedHandJointID[key]]);
             }
         }
     }
@@ -26,9 +26,9 @@ PP.TrackedHandPose = class TrackedHandPose {
         this._myTrackedHandJointPoseParams.myReferenceObject = this._myReferenceObject;
 
         this._myTrackedHandJointPoseList = [];
-        for (let jointType of trackedHandPoseParams.myTrackedHandJointTypeList) {
-            let trackedHandJointPose = new PP.TrackedHandJointPose(this._myHandedness, jointType, this._myTrackedHandJointPoseParams);
-            this._myTrackedHandJointPoseList[jointType] = trackedHandJointPose;
+        for (let jointID of trackedHandPoseParams.myTrackedHandJointIDList) {
+            let trackedHandJointPose = new PP.TrackedHandJointPose(this._myHandedness, jointID, this._myTrackedHandJointPoseParams);
+            this._myTrackedHandJointPoseList[jointID] = trackedHandJointPose;
         }
     }
 
@@ -46,23 +46,23 @@ PP.TrackedHandPose = class TrackedHandPose {
         }
     }
 
-    getJointPose(jointType) {
-        return this._myTrackedHandJointPoseList[jointType];
+    getJointPose(jointID) {
+        return this._myTrackedHandJointPoseList[jointID];
     }
 
-    getJointPoseByIndex(jointPoseTypeIndex) {
-        return this._myTrackedHandJointPoseList[PP.InputUtils.getJointTypeByIndex(jointPoseTypeIndex)];
+    getJointPoseByIndex(jointIDIndex) {
+        return this._myTrackedHandJointPoseList[PP.InputUtils.getJointIDByIndex(jointIDIndex)];
     }
 
-    addTrackedHandJointType(jointType) {
-        if (!this._myTrackedHandJointPoseList.pp_has(element => element.getTrackedHandJointType() == jointType)) {
-            let trackedHandJointPose = new PP.TrackedHandJointPose(this._myHandedness, jointType, this._myTrackedHandJointPoseParams);
+    addTrackedHandJointID(jointID) {
+        if (!this._myTrackedHandJointPoseList.pp_has(element => element.getTrackedHandJointID() == jointID)) {
+            let trackedHandJointPose = new PP.TrackedHandJointPose(this._myHandedness, jointID, this._myTrackedHandJointPoseParams);
             this._myTrackedHandJointPoseList.push(trackedHandJointPose);
         }
     }
 
-    removeTrackedHandJointType(jointType) {
-        this._myTrackedHandJointPoseList.pp_remove(element => element.getTrackedHandJointType() == jointType);
+    removeTrackedHandJointID(jointID) {
+        this._myTrackedHandJointPoseList.pp_remove(element => element.getTrackedHandJointID() == jointID);
     }
 
     setReferenceObject(referenceObject) {

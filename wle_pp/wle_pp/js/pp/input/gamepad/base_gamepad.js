@@ -4,26 +4,26 @@ PP.BaseGamepad = class BaseGamepad {
         this._myHandedness = handedness;
 
         this._myButtonInfos = [];
-        for (let key in PP.ButtonType) {
-            this._myButtonInfos[PP.ButtonType[key]] = new PP.ButtonInfo(PP.ButtonType[key], this._myHandedness);
+        for (let key in PP.GamepadButtonID) {
+            this._myButtonInfos[PP.GamepadButtonID[key]] = new PP.GamepadButtonInfo(PP.GamepadButtonID[key], this._myHandedness);
         }
 
-        this._myAxesInfo = new PP.AxesInfo(this._myHandedness);
+        this._myAxesInfo = new PP.GamepadAxesInfo(this._myHandedness);
 
         this._myButtonCallbacks = [];   // Signature: callback(ButtonInfo, Gamepad)
-        for (let typeKey in PP.ButtonType) {
-            this._myButtonCallbacks[PP.ButtonType[typeKey]] = [];
-            for (let eventKey in PP.ButtonEvent) {
-                this._myButtonCallbacks[PP.ButtonType[typeKey]][PP.ButtonEvent[eventKey]] = new Map();
+        for (let key in PP.GamepadButtonID) {
+            this._myButtonCallbacks[PP.GamepadButtonID[key]] = [];
+            for (let eventKey in PP.GamepadButtonEvent) {
+                this._myButtonCallbacks[PP.GamepadButtonID[key]][PP.GamepadButtonEvent[eventKey]] = new Map();
             }
         }
 
         this._myAxesCallbacks = [];     // Signature: callback(AxesInfo, Gamepad)
-        for (let eventKey in PP.AxesEvent) {
-            this._myAxesCallbacks[PP.AxesEvent[eventKey]] = new Map();
+        for (let eventKey in PP.GamepadAxesEvent) {
+            this._myAxesCallbacks[PP.GamepadAxesEvent[eventKey]] = new Map();
         }
 
-        this._myPulseInfo = new PP.PulseInfo();
+        this._myPulseInfo = new PP.GamepadPulseInfo();
 
         //Setup
         this._myMultiplePressMaxDelay = 0.3;
@@ -34,16 +34,16 @@ PP.BaseGamepad = class BaseGamepad {
         return this._myHandedness;
     }
 
-    getButtonInfo(buttonType) {
-        return this._myButtonInfos[buttonType];
+    getButtonInfo(buttonID) {
+        return this._myButtonInfos[buttonID];
     }
 
-    registerButtonEventListener(buttonType, buttonEvent, id, callback) {
-        this._myButtonCallbacks[buttonType][buttonEvent].set(id, callback);
+    registerButtonEventListener(buttonID, buttonEvent, id, callback) {
+        this._myButtonCallbacks[buttonID][buttonEvent].set(id, callback);
     }
 
-    unregisterButtonEventListener(buttonType, buttonEvent, id) {
-        this._myButtonCallbacks[buttonType][buttonEvent].delete(id);
+    unregisterButtonEventListener(buttonID, buttonEvent, id) {
+        this._myButtonCallbacks[buttonID][buttonEvent].delete(id);
     }
 
     getAxesInfo() {
@@ -114,7 +114,7 @@ PP.BaseGamepad = class BaseGamepad {
 
     }
 
-    _getButtonData(buttonType) {
+    _getButtonData(buttonID) {
         let buttonData = { myIsPressed: false, myIsTouched: false, myValue: 0 };
         return buttonData;
     }
@@ -160,18 +160,18 @@ PP.BaseGamepad = class BaseGamepad {
     }
 
     _updateButtonInfos() {
-        this._updateSingleButtonInfo(PP.ButtonType.SELECT);
-        this._updateSingleButtonInfo(PP.ButtonType.SQUEEZE);
-        this._updateSingleButtonInfo(PP.ButtonType.TOUCHPAD);
-        this._updateSingleButtonInfo(PP.ButtonType.THUMBSTICK);
-        this._updateSingleButtonInfo(PP.ButtonType.BOTTOM_BUTTON);
-        this._updateSingleButtonInfo(PP.ButtonType.TOP_BUTTON);
-        this._updateSingleButtonInfo(PP.ButtonType.THUMB_REST);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.SELECT);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.SQUEEZE);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.TOUCHPAD);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.THUMBSTICK);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.TOP_BUTTON);
+        this._updateSingleButtonInfo(PP.GamepadButtonID.THUMB_REST);
     }
 
-    _updateSingleButtonInfo(buttonType) {
-        let button = this._myButtonInfos[buttonType];
-        let buttonData = this._getButtonData(buttonType);
+    _updateSingleButtonInfo(buttonID) {
+        let button = this._myButtonInfos[buttonID];
+        let buttonData = this._getButtonData(buttonID);
 
         button.myIsPressed = buttonData.myIsPressed;
         button.myIsTouched = buttonData.myIsTouched;
@@ -257,56 +257,56 @@ PP.BaseGamepad = class BaseGamepad {
             }
         }.bind(this));
 
-        for (let typeKey in PP.ButtonType) {
-            let buttonInfo = this._myButtonInfos[PP.ButtonType[typeKey]];
-            let buttonCallbacks = this._myButtonCallbacks[PP.ButtonType[typeKey]];
+        for (let key in PP.GamepadButtonID) {
+            let buttonInfo = this._myButtonInfos[PP.GamepadButtonID[key]];
+            let buttonCallbacks = this._myButtonCallbacks[PP.GamepadButtonID[key]];
 
             //PRESSED
             if (buttonInfo.myIsPressed && !buttonInfo.myPrevIsPressed) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESS_START];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.PRESS_START];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             if (!buttonInfo.myIsPressed && buttonInfo.myPrevIsPressed) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESS_END];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.PRESS_END];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             if (buttonInfo.myIsPressed) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.PRESSED];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.PRESSED];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             } else {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.NOT_PRESSED];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.NOT_PRESSED];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             //TOUCHED
             if (buttonInfo.myIsTouched && !buttonInfo.myPrevIsTouched) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCH_START];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.TOUCH_START];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             if (!buttonInfo.myIsTouched && buttonInfo.myPrevIsTouched) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCH_END];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.TOUCH_END];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             if (buttonInfo.myIsTouched) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.TOUCHED];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.TOUCHED];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             } else {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.NOT_TOUCHED];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.NOT_TOUCHED];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             //VALUE
             if (buttonInfo.myValue != buttonInfo.myPrevValue) {
-                let callbacksMap = buttonCallbacks[PP.ButtonEvent.VALUE_CHANGED];
+                let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.VALUE_CHANGED];
                 this._triggerCallbacks(callbacksMap, buttonInfo);
             }
 
             //ALWAYS
-            let callbacksMap = buttonCallbacks[PP.ButtonEvent.ALWAYS];
+            let callbacksMap = buttonCallbacks[PP.GamepadButtonEvent.ALWAYS];
             this._triggerCallbacks(callbacksMap, buttonInfo);
         }
 
@@ -327,25 +327,25 @@ PP.BaseGamepad = class BaseGamepad {
     _postUpdateAxesInfos() {
         //X CHANGED
         if (this._myAxesInfo.myAxes[0] != this._myAxesInfo.myPrevAxes[0]) {
-            let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.X_CHANGED];
+            let callbacksMap = this._myAxesCallbacks[PP.GamepadAxesEvent.X_CHANGED];
             this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }
 
         //Y CHANGED
         if (this._myAxesInfo.myAxes[1] != this._myAxesInfo.myPrevAxes[1]) {
-            let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.Y_CHANGED];
+            let callbacksMap = this._myAxesCallbacks[PP.GamepadAxesEvent.Y_CHANGED];
             this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }
 
         //AXES CHANGED
         if (this._myAxesInfo.myAxes[0] != this._myAxesInfo.myPrevAxes[0] ||
             this._myAxesInfo.myAxes[1] != this._myAxesInfo.myPrevAxes[1]) {
-            let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.AXES_CHANGED];
+            let callbacksMap = this._myAxesCallbacks[PP.GamepadAxesEvent.AXES_CHANGED];
             this._triggerCallbacks(callbacksMap, this._myAxesInfo);
         }
 
         //ALWAYS        
-        let callbacksMap = this._myAxesCallbacks[PP.AxesEvent.ALWAYS];
+        let callbacksMap = this._myAxesCallbacks[PP.GamepadAxesEvent.ALWAYS];
         this._triggerCallbacks(callbacksMap, this._myAxesInfo);
     }
 
