@@ -27,8 +27,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -66,8 +66,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -107,8 +107,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -143,8 +143,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -184,8 +184,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -220,8 +220,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -261,8 +261,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }
@@ -297,8 +297,8 @@ PP.GamepadUtils = {
 
         for (let gamepadButtonTypes of realGamepadButtonTypesList) {
             if (gamepadButtonTypes.length == 1) {
-                for (let key in PP.ButtonType) {
-                    gamepadButtonTypes.push(PP.ButtonType[key]);
+                for (let key in PP.GamepadButtonType) {
+                    gamepadButtonTypes.push(PP.GamepadButtonType[key]);
                 }
             }
         }

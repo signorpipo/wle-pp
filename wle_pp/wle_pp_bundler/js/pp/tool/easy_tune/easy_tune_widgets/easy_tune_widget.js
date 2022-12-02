@@ -185,8 +185,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _updateGamepadWidgetVisibility() {
         if (this._myGamepad) {
-            if ((this._myGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).myIsPressed) ||
-                (this._myGamepad.getButtonInfo(PP.ButtonType.TOP_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.ButtonType.BOTTOM_BUTTON).myIsPressed)) {
+            if ((this._myGamepad.getButtonInfo(PP.GamepadButtonType.BOTTOM_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.GamepadButtonType.TOP_BUTTON).myIsPressed) ||
+                (this._myGamepad.getButtonInfo(PP.GamepadButtonType.TOP_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(PP.GamepadButtonType.BOTTOM_BUTTON).myIsPressed)) {
                 this._toggleVisibility();
             }
         }

@@ -7,7 +7,6 @@ PP.MouseButtonType = {
 PP.Mouse = class Mouse {
     constructor() {
         // #TODO refactor Mouse/Keyboard/Gamepad and create a sort of parent ButtonHandler that have the base ButtonInfo and all of them inherit
-        // ButtonType could also become GamepadButtonID or directly GamepadButton like in Unity
 
         this._myButtonInfos = new Map();
         for (let typeKey in PP.MouseButtonType) {

@@ -81,17 +81,17 @@ WL.registerComponent('pp-grabber-hand', {
         }
 
         if (this._myGrabButton == 0) {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SELECT));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SELECT));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, PP.GamepadButtonType.SELECT));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, PP.GamepadButtonType.SELECT));
         } else if (this._myGrabButton == 1) {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SQUEEZE));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SQUEEZE));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, PP.GamepadButtonType.SQUEEZE));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, PP.GamepadButtonType.SQUEEZE));
         } else {
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SQUEEZE));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SQUEEZE));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, PP.GamepadButtonType.SQUEEZE));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, PP.GamepadButtonType.SQUEEZE));
 
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this, this._grab.bind(this, PP.ButtonType.SELECT));
-            this._myGamepad.registerButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this, this._throw.bind(this, PP.ButtonType.SELECT));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, PP.GamepadButtonType.SELECT));
+            this._myGamepad.registerButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, PP.GamepadButtonType.SELECT));
         }
     },
     onDeactivate() {
@@ -100,17 +100,17 @@ WL.registerComponent('pp-grabber-hand', {
         }
 
         if (this._myGrabButton == 0) {
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_END, this);
         } else if (this._myGrabButton == 1) {
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_END, this);
         } else {
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SQUEEZE, PP.ButtonEvent.PRESS_END, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SQUEEZE, PP.GamepadButtonEvent.PRESS_END, this);
 
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(PP.ButtonType.SELECT, PP.ButtonEvent.PRESS_END, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_START, this);
+            this._myGamepad.unregisterButtonEventListener(PP.GamepadButtonType.SELECT, PP.GamepadButtonEvent.PRESS_END, this);
         }
     },
     _grab: function (grabButton) {
