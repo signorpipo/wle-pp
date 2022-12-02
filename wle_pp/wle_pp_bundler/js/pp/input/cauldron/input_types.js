@@ -14,7 +14,7 @@ PP.InputSourceType = {
     TRACKED_HAND: 1
 };
 
-PP.TrackedHandJointType = {
+PP.TrackedHandJointID = {
     WRIST: "wrist",
 
     THUMB_METACARPAL: "thumb-metacarpal",
@@ -47,7 +47,7 @@ PP.TrackedHandJointType = {
     PINKY_FINGER_TIP: "pinky-finger-tip",
 };
 
-PP.TrackedHandJointTypeIndex = {
+PP.TrackedHandJointIDIndex = {
     WRIST: 0,
 
     THUMB_METACARPAL: 1,

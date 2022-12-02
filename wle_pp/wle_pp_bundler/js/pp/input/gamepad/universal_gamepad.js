@@ -86,12 +86,12 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
         }
     }
 
-    _getButtonData(buttonType) {
+    _getButtonData(buttonID) {
         let buttonData = { myIsPressed: false, myIsTouched: false, myValue: 0 };
 
         for (let core of this._myGamepadCores.values()) {
             if (core.isGamepadCoreActive()) {
-                let coreButtonData = core.getButtonData(buttonType);
+                let coreButtonData = core.getButtonData(buttonID);
                 buttonData.myIsPressed = buttonData.myIsPressed || coreButtonData.myIsPressed;
                 buttonData.myIsTouched = buttonData.myIsTouched || coreButtonData.myIsTouched;
                 if (Math.abs(coreButtonData.myValue) > Math.abs(buttonData.myValue)) {

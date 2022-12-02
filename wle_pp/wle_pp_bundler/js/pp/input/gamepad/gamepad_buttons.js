@@ -1,4 +1,4 @@
-PP.GamepadButtonType = {
+PP.GamepadButtonID = {
     SELECT: 0,      // Trigger
     SQUEEZE: 1,     // Grip
     TOUCHPAD: 2,    // This is to support older gamepads, you can just use TOP_BUTTON to use this button for both older and newer gamepads
@@ -29,8 +29,8 @@ PP.GamepadAxesEvent = {
 };
 
 PP.GamepadButtonInfo = class GamepadButtonInfo {
-    constructor(type, handedness) {
-        this.myType = type;
+    constructor(id, handedness) {
+        this.myID = id;
         this.myHandedness = handedness;
 
         this.myIsPressed = false;
@@ -65,8 +65,8 @@ PP.GamepadButtonInfo = class GamepadButtonInfo {
         this.myPrevMultipleTouchEndCount = 0;
     }
 
-    getType() {
-        return this.myType;
+    getID() {
+        return this.myID;
     }
 
     getHandedness() {
@@ -102,7 +102,7 @@ PP.GamepadButtonInfo = class GamepadButtonInfo {
     }
 
     clone() {
-        let value = new PP.GamepadButtonInfo(this.myType, this.myHandedness);
+        let value = new PP.GamepadButtonInfo(this.myID, this.myHandedness);
         value.myIsPressed = this.myIsPressed;
         value.myPrevIsPressed = this.myPrevIsPressed;
         value.myIsTouched = this.myIsTouched;

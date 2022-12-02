@@ -1,4 +1,4 @@
-PP.KeyType = {
+PP.KeyID = {
     _0: "0",
     _1: "1",
     _2: "2",
@@ -86,43 +86,43 @@ PP.Keyboard = class Keyboard {
     constructor() {
         this._myKeyInfos = new Map();
 
-        for (let keyType in PP.KeyType) {
-            this.addKey(PP.KeyType[keyType]);
+        for (let key in PP.KeyID) {
+            this.addKey(PP.KeyID[key]);
         }
     }
 
-    isKeyPressed(keyType) {
+    isKeyPressed(KeyID) {
         let isPressed = false;
 
-        if (this._myKeyInfos.has(keyType)) {
-            isPressed = this._myKeyInfos.get(keyType).myIsPressed;
+        if (this._myKeyInfos.has(KeyID)) {
+            isPressed = this._myKeyInfos.get(KeyID).myIsPressed;
         }
 
         return isPressed;
     }
 
-    isKeyPressStart(keyType) {
+    isKeyPressStart(KeyID) {
         let isPressStart = false;
 
-        if (this._myKeyInfos.has(keyType)) {
-            isPressStart = this._myKeyInfos.get(keyType).myIsPressStart;
+        if (this._myKeyInfos.has(KeyID)) {
+            isPressStart = this._myKeyInfos.get(KeyID).myIsPressStart;
         }
 
         return isPressStart;
     }
 
-    isKeyPressEnd(keyType) {
+    isKeyPressEnd(KeyID) {
         let isPressEnd = false;
 
-        if (this._myKeyInfos.has(keyType)) {
-            isPressEnd = this._myKeyInfos.get(keyType).myIsPressEnd;
+        if (this._myKeyInfos.has(KeyID)) {
+            isPressEnd = this._myKeyInfos.get(KeyID).myIsPressEnd;
         }
 
         return isPressEnd;
     }
 
-    addKey(keyType) {
-        this._myKeyInfos.set(keyType,
+    addKey(KeyID) {
+        this._myKeyInfos.set(KeyID,
             { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, });
     }
 
@@ -163,9 +163,9 @@ PP.Keyboard = class Keyboard {
         }
     }
 
-    _keyPressedChanged(keyType, isPressed) {
-        if (this._myKeyInfos.has(keyType)) {
-            let keyInfo = this._myKeyInfos.get(keyType);
+    _keyPressedChanged(KeyID, isPressed) {
+        if (this._myKeyInfos.has(KeyID)) {
+            let keyInfo = this._myKeyInfos.get(KeyID);
 
             if (isPressed) {
                 keyInfo.myIsPressed = true;

@@ -17,21 +17,21 @@ WL.registerComponent('pp-tracked-hand-draw-all-joints', {
 
         this._myJointMeshObjectList = [];
 
-        for (let jointTypeKey in PP.TrackedHandJointType) {
-            let jointType = PP.TrackedHandJointType[jointTypeKey];
+        for (let jointIDKey in PP.TrackedHandJointID) {
+            let jointID = PP.TrackedHandJointID[jointIDKey];
             if (!this._myHideMetacarpals ||
-                (jointType != PP.TrackedHandJointType.THUMB_METACARPAL &&
-                    jointType != PP.TrackedHandJointType.INDEX_FINGER_METACARPAL && jointType != PP.TrackedHandJointType.MIDDLE_FINGER_METACARPAL &&
-                    jointType != PP.TrackedHandJointType.RING_FINGER_METACARPAL && jointType != PP.TrackedHandJointType.PINKY_FINGER_METACARPAL)
+                (jointID != PP.TrackedHandJointID.THUMB_METACARPAL &&
+                    jointID != PP.TrackedHandJointID.INDEX_FINGER_METACARPAL && jointID != PP.TrackedHandJointID.MIDDLE_FINGER_METACARPAL &&
+                    jointID != PP.TrackedHandJointID.RING_FINGER_METACARPAL && jointID != PP.TrackedHandJointID.PINKY_FINGER_METACARPAL)
             ) {
                 let jointObject = this._myTrackedHandMeshObject.pp_addObject();
-                this._myJointMeshObjectList[jointType] = jointObject;
+                this._myJointMeshObjectList[jointID] = jointObject;
 
                 jointObject.pp_addComponent("pp-tracked-hand-draw-joint",
                     {
                         "_myHandedness": this._myHandedness,
                         "_myFixForward": this._myFixForward,
-                        "_myJointType": PP.TrackedHandJointTypeIndex[jointTypeKey],
+                        "_myJointID": PP.TrackedHandJointIDIndex[jointIDKey],
                         "_myJointMesh": this._myJointMesh,
                         "_myJointMaterial": this._myJointMaterial,
                     });
