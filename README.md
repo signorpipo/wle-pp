@@ -580,7 +580,7 @@ List of features:
   * it works through gamepad cores, that specify how the buttons are activated (keyboard, mouse, gamepads)
   * example:
     ```js
-    PP.myLeftGamepad.registerButtonEventListener(PP.GamepadButtonID.THUMBSTICK, PP.ButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
+    PP.myLeftGamepad.registerButtonEventListener(PP.GamepadButtonID.THUMBSTICK, PP.GamepadButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
     PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isTouchEnd();    
     PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.SQUEEZE).isPressStart(2); // fast pressed 2 times     
     PP.myGamepads[PP.Handedness.LEFT].getAxesInfo().getAxes();    
