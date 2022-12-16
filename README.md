@@ -25,6 +25,9 @@ A collection of assets that can be useful while working with the Wonderland Engi
 You can download the bundle file through the following link:
   * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
 
+You can download the unbundled version of the library through the following link:
+  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+
 You can download the library through `npm`: 
   * [`npm install wle_pp`](https://www.npmjs.com/package/wle_pp)
 	* unbundled version of the library
@@ -32,9 +35,6 @@ You can download the library through `npm`:
   * [`npm install wle_pp_bundle`](https://www.npmjs.com/package/wle_pp_bundle)
     * bundled version of the library
     * install the library as a single bundle file
-
-You can download the unbundled version of the library through the following link:
-  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
   
 # Quick Features Summary
 
