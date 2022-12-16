@@ -3,9 +3,7 @@
 PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
 
     constructor(handedness, handPoseParams = new PP.HandPoseParams()) {
-        super(handedness);
-
-        this._myHandPose = new PP.HandPose(this._myHandedness, handPoseParams);
+        super(handedness, new PP.HandPose(handedness, handPoseParams));
 
         this._mySelectPressed = false;
         this._mySqueezePressed = false;
@@ -13,14 +11,11 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         this._myIsXRSessionActive = false;
         this._myInputSource = null;
         this._myGamepad = null;
-    }
 
-    getHandedness() {
-        return this._myHandedness;
-    }
-
-    getHandPose() {
-        return this._myHandPose;
+        // Support Variables
+        this._myButtonData = this._createButtonData();
+        this._myAxesData = this._createAxesData();
+        this._myHapticActuators = [];
     }
 
     isGamepadCoreActive() {
@@ -43,34 +38,36 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
     }
 
     getButtonData(buttonID) {
-        let buttonData = { myIsPressed: false, myIsTouched: false, myValue: 0 };
+        this._myButtonData.myIsPressed = false;
+        this._myButtonData.myIsTouched = false;
+        this._myButtonData.myValue = 0;
 
         if (this.isGamepadCoreActive()) {
             if (buttonID < this._myGamepad.buttons.length) {
                 let gamepadButton = this._myGamepad.buttons[buttonID];
 
                 if (buttonID != PP.GamepadButtonID.SELECT && buttonID != PP.GamepadButtonID.SQUEEZE) {
-                    buttonData.myIsPressed = gamepadButton.pressed;
+                    this._myButtonData.myIsPressed = gamepadButton.pressed;
                 } else {
-                    buttonData.myIsPressed = this._getSpecialButtonPressed(buttonID);
+                    this._myButtonData.myIsPressed = this._getSpecialButtonPressed(buttonID);
                 }
 
-                buttonData.myIsTouched = gamepadButton.touched;
-                buttonData.myValue = gamepadButton.value;
+                this._myButtonData.myIsTouched = gamepadButton.touched;
+                this._myButtonData.myValue = gamepadButton.value;
             } else if (buttonID == PP.GamepadButtonID.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
                 //This way if you are using a basic touch gamepad, top button will work anyway
                 let touchButton = this._myGamepad.buttons[2];
-                buttonData.myIsPressed = touchButton.pressed;
-                buttonData.myIsTouched = touchButton.touched;
-                buttonData.myValue = touchButton.value;
+                this._myButtonData.myIsPressed = touchButton.pressed;
+                this._myButtonData.myIsTouched = touchButton.touched;
+                this._myButtonData.myValue = touchButton.value;
             }
         }
 
-        return buttonData;
+        return this._myButtonData;
     }
 
     getAxesData() {
-        let axes = [0.0, 0.0];
+        this._myAxesData.vec2_zero();
 
         if (this.isGamepadCoreActive()) {
             let internalAxes = this._myGamepad.axes;
@@ -80,42 +77,44 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
 
                 //X
                 if (Math.abs(internalAxes[0]) > Math.abs(internalAxes[2])) {
-                    axes[0] = internalAxes[0];
+                    this._myAxesData[0] = internalAxes[0];
                 } else {
-                    axes[0] = internalAxes[2];
+                    this._myAxesData[0] = internalAxes[2];
                 }
 
                 //Y
                 if (Math.abs(internalAxes[1]) > Math.abs(internalAxes[3])) {
-                    axes[1] = internalAxes[1];
+                    this._myAxesData[1] = internalAxes[1];
                 } else {
-                    axes[1] = internalAxes[3];
+                    this._myAxesData[1] = internalAxes[3];
                 }
 
             } else if (internalAxes.length == 2) {
-                axes[0] = internalAxes[0];
-                axes[1] = internalAxes[1];
+                this._myAxesData[0] = internalAxes[0];
+                this._myAxesData[1] = internalAxes[1];
             }
 
             //y axis is recorder negative when thumbstick is pressed forward for weird reasons
-            axes[1] = -axes[1];
+            this._myAxesData[1] = -this._myAxesData[1];
         }
 
-        return axes;
+        return this._myAxesData;
     }
 
     getHapticActuators() {
-        let hapticActuators = [];
+        this._myHapticActuators.pp_clear();
 
         if (this.isGamepadCoreActive()) {
-            if (this._myGamepad.hapticActuators && this._myGamepad.hapticActuators.length > 0) {
-                hapticActuators = this._myGamepad.hapticActuators;
-            } else if (this._myGamepad.vibrationActuator) {
-                hapticActuators.push(this._myGamepad.vibrationActuator);
+            if (this._myGamepad.hapticActuators != null && this._myGamepad.hapticActuators.length > 0) {
+                this._myHapticActuators.push(...this._myGamepad.hapticActuators);
+            }
+
+            if (this._myGamepad.vibrationActuator != null) {
+                this._myHapticActuators.push(this._myGamepad.vibrationActuator);
             }
         }
 
-        return hapticActuators;
+        return this._myHapticActuators;
     }
 
     _updateHandPose(dt) {

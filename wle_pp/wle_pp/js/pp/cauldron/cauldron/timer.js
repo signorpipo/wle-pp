@@ -28,7 +28,7 @@ PP.Timer = class Timer {
             this._myDuration = Math.max(0, duration);
         }
 
-        this._myTimer = this._myDuration;
+        this._myTimeLeft = this._myDuration;
         this._myDone = false;
         this._myJustDone = false;
         this._myStarted = false;
@@ -38,8 +38,8 @@ PP.Timer = class Timer {
         this._myJustDone = false;
 
         if (this.isRunning()) {
-            this._myTimer = Math.max(0, this._myTimer - dt);
-            if (this._myTimer == 0) {
+            this._myTimeLeft = Math.max(0, this._myTimeLeft - dt);
+            if (this._myTimeLeft == 0) {
                 this._done();
             }
         }
@@ -69,14 +69,14 @@ PP.Timer = class Timer {
         this._myDuration = Math.max(0, duration);
     }
 
-    getTimer() {
-        return this._myTimer;
+    getTimeLeft() {
+        return this._myTimeLeft;
     }
 
     getPercentage() {
         let percentage = 1;
-        if (this._myTimer > 0) {
-            percentage = (this._myDuration - this._myTimer) / this._myDuration;
+        if (this._myTimeLeft > 0) {
+            percentage = (this._myDuration - this._myTimeLeft) / this._myDuration;
         }
         return Math.pp_clamp(percentage, 0, 1);
     }
@@ -90,7 +90,7 @@ PP.Timer = class Timer {
     }
 
     _done() {
-        this._myTimer = 0;
+        this._myTimeLeft = 0;
         this._myDone = true;
         this._myJustDone = true;
         if (this._myOnEndCallbacks.size > 0) {

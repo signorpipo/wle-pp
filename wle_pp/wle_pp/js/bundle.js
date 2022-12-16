@@ -3,15 +3,15 @@
 require('./pp/pp');
 
 //	PLUGIN
-require('./pp/plugin/component_mods/clone_component_mod');
-require('./pp/plugin/component_mods/cursor_component_mod');
-require('./pp/plugin/component_mods/cursor_target_component_mod');
-require('./pp/plugin/component_mods/mouse_look_component_mod');
-
 require('./pp/plugin/extensions/array_extension');
 require('./pp/plugin/extensions/object_extension');
 require('./pp/plugin/extensions/math_extension');
 require('./pp/plugin/extensions/scene_extension');
+
+require('./pp/plugin/component_mods/clone_component_mod');
+require('./pp/plugin/component_mods/cursor_component_mod');
+require('./pp/plugin/component_mods/cursor_target_component_mod');
+require('./pp/plugin/component_mods/mouse_look_component_mod');
 
 //	AUDIO
 require('./pp/audio/spatial_audio_listener');
@@ -49,6 +49,7 @@ require('./pp/cauldron/utils/mesh_utils');
 require('./pp/cauldron/utils/save_utils');
 require('./pp/cauldron/utils/text_utils');
 require('./pp/cauldron/utils/xr_utils');
+require('./pp/cauldron/utils/browser_utils');
 
 require('./pp/cauldron/physics/physics_utils');
 require('./pp/cauldron/physics/physics_raycast_data');
@@ -100,10 +101,18 @@ require('./pp/input/gamepad/universal_gamepad');
 require('./pp/input/gamepad/gamepad_cores/gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/xr_gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/keyboard_gamepad_core');
+require('./pp/input/gamepad/gamepad_cores/virtual_gamepad_gamepad_core');
 require('./pp/input/gamepad/cauldron/gamepad_mesh_animator');
 require('./pp/input/gamepad/cauldron/gamepad_manager');
 require('./pp/input/gamepad/cauldron/gamepad_utils');
 require('./pp/input/gamepad/cauldron/gamepad_control_scheme');
+
+require('./pp/input/gamepad/virtual_gamepad/virtual_gamepad');
+require('./pp/input/gamepad/virtual_gamepad/virtual_gamepad_component');
+require('./pp/input/gamepad/virtual_gamepad/virtual_gamepad_params');
+require('./pp/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_button');
+require('./pp/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_thumbstick');
+require('./pp/input/gamepad/virtual_gamepad/virtual_gamepad_icon');
 
 require('./pp/input/pose/base_pose.js');
 require('./pp/input/pose/hand_pose');

@@ -1,8 +1,8 @@
 
 PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTuneBaseWidget {
 
-    constructor(arraySize, gamepad) {
-        super();
+    constructor(params, arraySize, gamepad) {
+        super(params);
 
         this._myGamepad = gamepad;
 

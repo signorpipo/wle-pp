@@ -1,7 +1,7 @@
 /*
 let visualParams = new PP.VisualTorusParams();
 visualParams.myRadius = 1;
-visualParams.mySegmentAmount = 12;
+visualParams.mySegmentsAmount = 12;
 visualParams.mySegmentThickness = 0.05;
 visualParams.myTransform.mat4_copy(transform);
 visualParams.myMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
@@ -19,7 +19,7 @@ PP.VisualTorusParams = class VisualTorusParams {
         this.myTransform = PP.mat4_create();
         this.myRadius = 0;
 
-        this.mySegmentAmount = 12;
+        this.mySegmentsAmount = 12;
         this.mySegmentThickness = 0.05;
 
         this.mySegmentMesh = null;  // the mesh is scaled along up axis, null means it will default on PP.myDefaultResources.myMeshes.myCylinder
@@ -60,7 +60,7 @@ PP.VisualTorus = class VisualTorus {
             this._myVisible = visible;
 
             if (this._myVisible) {
-                let segmentToShow = Math.min(this._myParams.mySegmentAmount, this._myVisualSegmentList.length);
+                let segmentToShow = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
 
                 for (let i = 0; i < segmentToShow; i++) {
                     let visualSegment = this._myVisualSegmentList[i];
@@ -98,7 +98,7 @@ PP.VisualTorus = class VisualTorus {
     forceRefresh() {
         this._refresh();
 
-        let segmentToRefresh = Math.min(this._myParams.mySegmentAmount, this._myVisualSegmentList.length);
+        let segmentToRefresh = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
 
         for (let i = 0; i < segmentToRefresh; i++) {
             let visualSegment = this._myVisualSegmentList[i];
@@ -133,7 +133,7 @@ PP.VisualTorus = class VisualTorus {
     }
 
     _fillSegmentList() {
-        while (this._myVisualSegmentList.length < this._myParams.mySegmentAmount) {
+        while (this._myVisualSegmentList.length < this._myParams.mySegmentsAmount) {
             let visualSegment = new PP.VisualLine();
 
             visualSegment.setAutoRefresh(false);
@@ -148,7 +148,7 @@ PP.VisualTorus = class VisualTorus {
     clone() {
         let clonedParams = new PP.VisualTorusParams();
         clonedParams.myRadius = this._myParams.myRadius;
-        clonedParams.mySegmentAmount = this._myParams.mySegmentAmount;
+        clonedParams.mySegmentsAmount = this._myParams.mySegmentsAmount;
         clonedParams.mySegmentThickness = this._myParams.mySegmentThickness;
 
         clonedParams.myTransform.mat4_copy(this._myParams.myTransform);
@@ -198,9 +198,9 @@ PP.VisualTorus.prototype._refresh = function () {
         this._myTorusRootObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
         this._myTorusRootObject.pp_setTransformLocal(this._myParams.myTransform);
 
-        let sliceAngle = 2 * Math.PI / this._myParams.mySegmentAmount;
+        let sliceAngle = 2 * Math.PI / this._myParams.mySegmentsAmount;
         segmentStart.vec3_set(this._myParams.myRadius, 0, 0);
-        for (let i = 0; i < this._myParams.mySegmentAmount; i++) {
+        for (let i = 0; i < this._myParams.mySegmentsAmount; i++) {
             segmentEnd = segmentStart.vec3_rotateAxisRadians(sliceAngle, up, segmentEnd);
 
             segmentDirection = segmentEnd.vec3_sub(segmentStart, segmentDirection).vec3_normalize(segmentDirection);

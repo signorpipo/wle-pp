@@ -1,10 +1,12 @@
 
 PP.EasyTuneBoolArrayWidgetSelector = class EasyTuneBoolArrayWidgetSelector {
 
-    constructor(gamepad) {
+    constructor(params, gamepad) {
         this._myGamepad = gamepad;
 
         this._myParentObject = null;
+
+        this._myParams = params;
         this._myAdditionalSetup = null;
 
         this._myWidgets = new Map();
@@ -28,7 +30,10 @@ PP.EasyTuneBoolArrayWidgetSelector = class EasyTuneBoolArrayWidgetSelector {
             this._createWidget(this._myCurrentArraySize);
         }
 
-        this._myWidgets.get(this._myCurrentArraySize).setEasyTuneVariable(variable, appendToVariableName);
+        let widget = this._myWidgets.get(this._myCurrentArraySize);
+        if (widget) {
+            widget.setEasyTuneVariable(variable, appendToVariableName);
+        }
 
         this.setVisible(this._myIsVisible);
     }
@@ -41,7 +46,10 @@ PP.EasyTuneBoolArrayWidgetSelector = class EasyTuneBoolArrayWidgetSelector {
         if (this._myVariable) {
             this._sizeChangedCheck();
 
-            this._myWidgets.get(this._myCurrentArraySize).setVisible(visible);
+            let widget = this._myWidgets.get(this._myCurrentArraySize);
+            if (widget) {
+                widget.setVisible(visible);
+            }
         }
 
         this._myIsVisible = visible;
@@ -72,6 +80,10 @@ PP.EasyTuneBoolArrayWidgetSelector = class EasyTuneBoolArrayWidgetSelector {
         }
     }
 
+    getWidget() {
+        return this._myWidgets.get(this._myCurrentArraySize);
+    }
+
     registerScrollVariableRequestEventListener(id, callback) {
         this._myScrollVariableRequestCallbacks.set(id, callback);
     }
@@ -95,7 +107,38 @@ PP.EasyTuneBoolArrayWidgetSelector = class EasyTuneBoolArrayWidgetSelector {
         if (this._isActive()) {
             this._sizeChangedCheck();
 
-            this._myWidgets.get(this._myCurrentArraySize).update(dt);
+            let widget = this._myWidgets.get(this._myCurrentArraySize);
+            if (widget) {
+                widget.update(dt);
+            }
+        }
+    }
+
+    onImportSuccess() {
+        let widget = this._myWidgets.get(this._myCurrentArraySize);
+        if (widget) {
+            widget.onImportSuccess();
+        }
+    }
+
+    onImportFailure() {
+        let widget = this._myWidgets.get(this._myCurrentArraySize);
+        if (widget) {
+            widget.onImportFailure();
+        }
+    }
+
+    onExportSuccess() {
+        let widget = this._myWidgets.get(this._myCurrentArraySize);
+        if (widget) {
+            widget.onExportSuccess();
+        }
+    }
+
+    onExportFailure() {
+        let widget = this._myWidgets.get(this._myCurrentArraySize);
+        if (widget) {
+            widget.onExportFailure();
         }
     }
 
@@ -110,7 +153,7 @@ PP.EasyTuneBoolArrayWidgetSelector = class EasyTuneBoolArrayWidgetSelector {
     }
 
     _createWidget(arraySize) {
-        this._myWidgets.set(arraySize, new PP.EasyTuneBoolArrayWidget(arraySize, this._myGamepad));
+        this._myWidgets.set(arraySize, new PP.EasyTuneBoolArrayWidget(this._myParams, arraySize, this._myGamepad));
         this._myWidgets.get(arraySize).start(this._myParentObject, this._myAdditionalSetup);
         this._myWidgets.get(arraySize).setVisible(false);
         this._myWidgets.get(arraySize).registerScrollVariableRequestEventListener(this, this._scrollVariableRequest.bind(this));

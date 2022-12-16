@@ -1,7 +1,8 @@
 PP.GamepadCore = class GamepadCore {
 
-    constructor(handedness) {
+    constructor(handedness, handPose) {
         this._myHandedness = handedness;
+        this._myHandPose = handPose;
     }
 
     getHandedness() {
@@ -9,7 +10,7 @@ PP.GamepadCore = class GamepadCore {
     }
 
     getHandPose() {
-        return null;
+        return this._myHandPose;
     }
 
     isGamepadCoreActive() {
@@ -29,17 +30,25 @@ PP.GamepadCore = class GamepadCore {
     }
 
     getButtonData(buttonID) {
-        let buttonData = { pressed: false, touched: false, value: 0 };
+        let buttonData = this._createButtonData();
         return buttonData;
     }
 
     getAxesData() {
-        let axesData = [0.0, 0.0];
+        let axesData = this._createAxesData();
         return axesData;
     }
 
     getHapticActuators() {
         let hapticActuators = [];
         return hapticActuators;
+    }
+
+    _createButtonData() {
+        return { myIsPressed: false, myIsTouched: false, myValue: 0 };
+    }
+
+    _createAxesData() {
+        return PP.vec2_create(0, 0);
     }
 };

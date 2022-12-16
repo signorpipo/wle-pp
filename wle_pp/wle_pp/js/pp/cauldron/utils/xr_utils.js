@@ -3,7 +3,7 @@ PP.XRUtils = {
         let isEmulated = ('CustomWebXRPolyfill' in window);
         return isEmulated;
     },
-    isXRSessionActive: function () {
+    isSessionActive: function () {
         return WL.xrSession != null;
     },
     isReferenceSpaceLocalFloor: function () {

@@ -96,7 +96,7 @@ WL.registerComponent('pp-tool-cursor', {
                 this._myCursorObjectNonVR.pp_setActive(false);
                 this._myCursorObjectVR.pp_setActive(false);
             } else {
-                if (PP.XRUtils.isXRSessionActive()) {
+                if (PP.XRUtils.isSessionActive()) {
                     this._myCursorObjectVR.pp_setActive(!isUsingHand);
                     this._myCursorObjectNonVR.pp_setActive(false);
                 } else {

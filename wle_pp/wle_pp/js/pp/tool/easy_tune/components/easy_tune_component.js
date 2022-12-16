@@ -33,11 +33,11 @@ WL.registerComponent('pp-easy-tune', {
         additionalSetup.myTextMaterial = PP.myDefaultResources.myMaterials.myText.clone();
 
         additionalSetup.myEnableVariablesImportExportButtons = this._myEnableVariablesImportExportButtons;
-        additionalSetup.myVariablesImportCallback = function () {
-            PP.importEasyTuneVariables(this._myVariablesImportURL, this._myResetVariablesDefaultValueOnImport);
+        additionalSetup.myVariablesImportCallback = function (onSuccessCallback, onFailureCallback) {
+            PP.importEasyTuneVariables(this._myVariablesImportURL, this._myResetVariablesDefaultValueOnImport, onSuccessCallback, onFailureCallback);
         }.bind(this);
-        additionalSetup.myVariablesExportCallback = function () {
-            PP.exportEasyTuneVariables(this._myVariablesExportURL);
+        additionalSetup.myVariablesExportCallback = function (onSuccessCallback, onFailureCallback) {
+            PP.exportEasyTuneVariables(this._myVariablesExportURL, onSuccessCallback, onFailureCallback);
         }.bind(this);
 
         this._myWidget.start(this.object, additionalSetup, PP.myEasyTuneVariables._getInternalMap());

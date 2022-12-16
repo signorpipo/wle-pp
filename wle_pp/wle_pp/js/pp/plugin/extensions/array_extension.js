@@ -68,7 +68,8 @@
             - vec_equals   
 
         VECTOR 2:
-            ○ vec2_set
+            ○ vec2_set      / vec2_copy     / vec2_zero
+            - vec2_clone 
             - vec2_normalize
             - vec2_length
             - vec2_isZero
@@ -273,16 +274,16 @@ Array.prototype.pp_removeAll = function (callback) {
 
 Array.prototype.pp_removeEqual = function (elementToRemove, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.pp_remove(element => element === elementToFind);
+        return this.pp_remove(element => element === elementToRemove);
     }
-    return this.pp_remove(element => elementsEqualCallback(element, elementToFind));
+    return this.pp_remove(element => elementsEqualCallback(element, elementToRemove));
 };
 
 Array.prototype.pp_removeAllEqual = function (elementToRemove, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.pp_removeAll(element => element === elementToFind);
+        return this.pp_removeAll(element => element === elementToRemove);
     }
-    return this.pp_removeAll(element => elementsEqualCallback(element, elementToFind));
+    return this.pp_removeAll(element => elementsEqualCallback(element, elementToRemove));
 };
 
 Array.prototype.pp_pushUnique = function (element, elementsEqualCallback = null) {
@@ -493,6 +494,21 @@ Array.prototype.vec2_length = function () {
 Array.prototype.vec2_normalize = function (out = glMatrix.vec2.create()) {
     glMatrix.vec2.normalize(out, this);
     return out;
+};
+
+Array.prototype.vec2_copy = function (vector) {
+    glMatrix.vec2.copy(this, vector);
+    return this;
+};
+
+Array.prototype.vec2_clone = function (out = glMatrix.vec2.create()) {
+    glMatrix.vec2.copy(out, this);
+    return out;
+};
+
+Array.prototype.vec2_zero = function () {
+    glMatrix.vec2.zero(this);
+    return this;
 };
 
 // New Functions

@@ -115,13 +115,13 @@ PP.BaseGamepad = class BaseGamepad {
     }
 
     _getButtonData(buttonID) {
-        let buttonData = { myIsPressed: false, myIsTouched: false, myValue: 0 };
+        let buttonData = this._createButtonData();
         return buttonData;
     }
 
     _getAxesData() {
-        let axes = [0.0, 0.0];
-        return axes;
+        let axesData = this._createAxesData();
+        return axesData;
     }
 
     _getHapticActuators() {
@@ -317,11 +317,14 @@ PP.BaseGamepad = class BaseGamepad {
     }
 
     _preUpdateAxesInfos() {
-        this._myAxesInfo.myPrevAxes = this._myAxesInfo.myAxes;
+        this._myAxesInfo.myPrevAxes[0] = this._myAxesInfo.myAxes[0];
+        this._myAxesInfo.myPrevAxes[1] = this._myAxesInfo.myAxes[1];
     }
 
     _updateAxesInfos() {
-        this._myAxesInfo.myAxes = this._getAxesData();
+        let axesData = this._getAxesData();
+        this._myAxesInfo.myAxes[0] = axesData[0];
+        this._myAxesInfo.myAxes[1] = axesData[1];
     }
 
     _postUpdateAxesInfos() {
@@ -380,5 +383,13 @@ PP.BaseGamepad = class BaseGamepad {
         for (let callback of callbacksMap.values()) {
             callback(info, this);
         }
+    }
+
+    _createButtonData() {
+        return { myIsPressed: false, myIsTouched: false, myValue: 0 };
+    }
+
+    _createAxesData() {
+        return PP.vec2_create(0, 0);
     }
 };

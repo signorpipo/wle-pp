@@ -6,6 +6,12 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
         this._myGamepadCores = new Map();
 
         this._myStarted = false;
+
+        // Support Variables
+        this._myButtonData = this._createButtonData();
+        this._myAxesData = this._createAxesData();
+        this._myHapticActuators = [];
+
     }
 
     addGamepadCore(id, gamepadCore) {
@@ -18,7 +24,7 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
     }
 
     getGamepadCore(id) {
-        this._myGamepadCores.get(id);
+        return this._myGamepadCores.get(id);
     }
 
     removeGamepadCore(id) {
@@ -87,51 +93,53 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
     }
 
     _getButtonData(buttonID) {
-        let buttonData = { myIsPressed: false, myIsTouched: false, myValue: 0 };
+        this._myButtonData.myIsPressed = false;
+        this._myButtonData.myIsTouched = false;
+        this._myButtonData.myValue = 0;
 
         for (let core of this._myGamepadCores.values()) {
             if (core.isGamepadCoreActive()) {
                 let coreButtonData = core.getButtonData(buttonID);
-                buttonData.myIsPressed = buttonData.myIsPressed || coreButtonData.myIsPressed;
-                buttonData.myIsTouched = buttonData.myIsTouched || coreButtonData.myIsTouched;
-                if (Math.abs(coreButtonData.myValue) > Math.abs(buttonData.myValue)) {
-                    buttonData.myValue = coreButtonData.myValue;
+                this._myButtonData.myIsPressed = this._myButtonData.myIsPressed || coreButtonData.myIsPressed;
+                this._myButtonData.myIsTouched = this._myButtonData.myIsTouched || coreButtonData.myIsTouched;
+                if (Math.abs(coreButtonData.myValue) > Math.abs(this._myButtonData.myValue)) {
+                    this._myButtonData.myValue = coreButtonData.myValue;
                 }
             }
         }
 
-        return buttonData;
+        return this._myButtonData;
     }
 
     _getAxesData() {
-        let axesData = [0.0, 0.0];
+        this._myAxesData.vec2_zero();
 
         for (let core of this._myGamepadCores.values()) {
             if (core.isGamepadCoreActive()) {
                 let coreAxesData = core.getAxesData();
 
-                if (Math.abs(coreAxesData[0]) > Math.abs(axesData[0])) {
-                    axesData[0] = coreAxesData[0];
+                if (Math.abs(coreAxesData[0]) > Math.abs(this._myAxesData[0])) {
+                    this._myAxesData[0] = coreAxesData[0];
                 }
 
-                if (Math.abs(coreAxesData[1]) > Math.abs(axesData[1])) {
-                    axesData[1] = coreAxesData[1];
+                if (Math.abs(coreAxesData[1]) > Math.abs(this._myAxesData[1])) {
+                    this._myAxesData[1] = coreAxesData[1];
                 }
             }
         }
 
-        return axesData;
+        return this._myAxesData;
     }
 
     _getHapticActuators() {
-        let hapticActuators = [];
+        this._myHapticActuators.pp_clear();
 
         for (let core of this._myGamepadCores.values()) {
             if (core.isGamepadCoreActive()) {
-                hapticActuators.push(...core.getHapticActuators());
+                this._myHapticActuators.push(...core.getHapticActuators());
             }
         }
 
-        return hapticActuators;
+        return this._myHapticActuators;
     }
 };

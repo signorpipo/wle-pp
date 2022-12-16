@@ -45,7 +45,7 @@ WL.registerComponent('pp-show-fps', {
 
                 let visualParams = this._myVisualFPS.getParams();
 
-                if (PP.XRUtils.isXRSessionActive()) {
+                if (PP.XRUtils.isSessionActive()) {
                     visualParams.myTransform.mat4_setPositionRotationScale([-0.115, -0.115, 0.35], [0, 180, 0], [0.3, 0.3, 0.3]);
                 } else {
                     visualParams.myTransform.mat4_setPositionRotationScale([-0.25, -0.130, 0.35], [0, 180, 0], [0.3, 0.3, 0.3]);

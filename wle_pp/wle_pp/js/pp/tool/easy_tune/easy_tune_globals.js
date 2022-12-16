@@ -4,21 +4,33 @@ PP.myEasyTuneTarget = null;
 
 // fileURL can contain parameters inside brackets, like {param}
 // those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-PP.importEasyTuneVariables = function (fileURL = null, resetDefaultValue = false) {
+PP.importEasyTuneVariables = function (fileURL = null, resetVariablesDefaultValueOnImport = false, onSuccessCallback = null, onFailureCallback = null) {
     if (fileURL == null || fileURL.length == 0) {
         if (navigator.clipboard) {
             navigator.clipboard.readText().then(
                 function (clipboard) {
-                    PP.myEasyTuneVariables.fromJSON(clipboard, resetDefaultValue);
+                    PP.myEasyTuneVariables.fromJSON(clipboard, resetVariablesDefaultValueOnImport);
 
                     PP.refreshEasyTuneWidget();
+
+                    if (onSuccessCallback != null) {
+                        onSuccessCallback();
+                    }
 
                     console.log("Easy Tune Variables Imported from: clipboard");
                     console.log(clipboard);
                 }, function () {
+                    if (onFailureCallback != null) {
+                        onFailureCallback();
+                    }
+
                     console.error("An error occurred while importing the easy tune variables from: clipboard");
                 }
             ).catch(function (reason) {
+                if (onFailureCallback != null) {
+                    onFailureCallback();
+                }
+
                 console.error("An error occurred while importing the easy tune variables from: clipboard");
                 console.error(reason);
             });
@@ -31,28 +43,48 @@ PP.importEasyTuneVariables = function (fileURL = null, resetDefaultValue = false
                 if (response.ok) {
                     response.text().then(
                         function (text) {
-                            PP.myEasyTuneVariables.fromJSON(text, resetDefaultValue);
+                            PP.myEasyTuneVariables.fromJSON(text, resetVariablesDefaultValueOnImport);
 
                             PP.refreshEasyTuneWidget();
+
+                            if (onSuccessCallback != null) {
+                                onSuccessCallback();
+                            }
 
                             console.log("Easy Tune Variables Imported from:", replacedFileURL);
                             console.log(text);
                         },
                         function (response) {
+                            if (onFailureCallback != null) {
+                                onFailureCallback();
+                            }
+
                             console.error("An error occurred while importing the easy tune variables from:", replacedFileURL);
                             console.error(response);
                         }
                     );
                 } else {
+                    if (onFailureCallback != null) {
+                        onFailureCallback();
+                    }
+
                     console.error("An error occurred while importing the easy tune variables from:", replacedFileURL);
                     console.error(response);
                 }
             },
             function (response) {
+                if (onFailureCallback != null) {
+                    onFailureCallback();
+                }
+
                 console.error("An error occurred while importing the easy tune variables from:", replacedFileURL);
                 console.error(response);
             }
         ).catch(function (reason) {
+            if (onFailureCallback != null) {
+                onFailureCallback();
+            }
+
             console.error("An error occurred while importing the easy tune variables from:", replacedFileURL);
             console.error(reason);
         });
@@ -63,20 +95,32 @@ PP.importEasyTuneVariables = function (fileURL = null, resetDefaultValue = false
 
 // fileURL can contain parameters inside brackets, like {param}
 // those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-PP.exportEasyTuneVariables = function (fileURL = null) {
+PP.exportEasyTuneVariables = function (fileURL = null, onSuccessCallback = null, onFailureCallback = null) {
     let jsonVariables = PP.myEasyTuneVariables.toJSON();
 
     if (fileURL == null || fileURL.length == 0) {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(jsonVariables).then(
                 function () {
+                    if (onSuccessCallback != null) {
+                        onSuccessCallback();
+                    }
+
                     console.log("Easy Tune Variables Exported to: clipboard");
                     console.log(jsonVariables);
                 },
                 function () {
+                    if (onFailureCallback != null) {
+                        onFailureCallback();
+                    }
+
                     console.error("An error occurred while exporting the easy tune variables to: clipboard");
                 }
             ).catch(function (reason) {
+                if (onFailureCallback != null) {
+                    onFailureCallback();
+                }
+
                 console.error("An error occurred while exporting the easy tune variables to: clipboard");
                 console.error(reason);
             });
@@ -94,18 +138,34 @@ PP.exportEasyTuneVariables = function (fileURL = null) {
         }).then(
             function (response) {
                 if (response.ok) {
+                    if (onSuccessCallback != null) {
+                        onSuccessCallback();
+                    }
+
                     console.log("Easy Tune Variables Exported to:", replacedFileURL);
                     console.log(jsonVariables);
                 } else {
+                    if (onFailureCallback != null) {
+                        onFailureCallback();
+                    }
+
                     console.error("An error occurred while exporting the easy tune variables to:", replacedFileURL);
                     console.error(response);
                 }
             },
             function (response) {
+                if (onFailureCallback != null) {
+                    onFailureCallback();
+                }
+
                 console.error("An error occurred while exporting the easy tune variables to:", replacedFileURL);
                 console.error(response);
             }
         ).catch(function (reason) {
+            if (onFailureCallback != null) {
+                onFailureCallback();
+            }
+
             console.error("An error occurred while exporting the easy tune variables to:", replacedFileURL);
             console.error(reason);
         });
