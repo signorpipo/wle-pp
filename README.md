@@ -43,6 +43,8 @@ Some of the features that you can get with this library are:
     * add to the WLE object lots of functions that make the object interface more cohesive and complete
   - Gamepad
     * manages the input from the gamepads, like reading the state of a button or the value of the thumbstick
+	* automatically works with the keyboard
+	* u can also add a virtual gamepad to use the gamepad on a mobile device
   - Grab & Throw
     * a ready to use gameplay feature to grab and throw objects
   - FSM
@@ -387,6 +389,8 @@ List of features:
 - [`PP.XRUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils/xr_utils.js)
   * some functions to interact with the WebXR APIs
   * you can check if the device that is running is emulated or if the session is active
+- [`PP.BrowserUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/cauldron/utils/browser_utils.js)
+  * some functions related to browser stuff, like checking if u are on a mobile or desktop browser
   
 ### Visual
 
@@ -613,6 +617,20 @@ List of features:
   * component that let you add a visual control scheme on the gamepad
   * to make this work you have to use a gamepad model where buttons and axes have a proper positioned pivot
     * you can use [this 3D model](https://github.com/SignorPipo/wle_assets/tree/main/wle_assets/assets/models/gamepads/meta_quest_2/classic/high_res) as a reference
+	
+#### Virtual Gamepad
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/virtual_gamepad)
+
+A virtual gamepad that let u use the gamepad on mobile devices.
+
+List of features:
+- [`pp-virtual-gamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/virtual_gamepad/virtual_gamepad_component.js)
+  * add a virtual gamepad interface on top of the screen
+  * allow for a bit of customization of the interface, like specifying the colors, the buttons that should be visible, what kind of icon you want on every button and so on
+  * it also add a `PP.VirtualGamepadGamepadCore` to the `PP.UniversalGamepad` so that it automatically works with that
+- [`PP.VirtualGamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp_bundler/js/pp/input/gamepad/virtual_gamepad/virtual_gamepad.js)
+  * the actual virtual gamepad, you may want to use directly this class instead of the built in component if you want to specify a custom set of parameters to build the interface
 
 ### Pose
 
