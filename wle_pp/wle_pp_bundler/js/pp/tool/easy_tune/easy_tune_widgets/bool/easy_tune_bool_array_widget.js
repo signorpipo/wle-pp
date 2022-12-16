@@ -1,8 +1,8 @@
 
 PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget extends PP.EasyTuneBaseWidget {
 
-    constructor(arraySize, gamepad) {
-        super();
+    constructor(params, arraySize, gamepad) {
+        super(params);
 
         this._mySetup = new PP.EasyTuneBoolArrayWidgetSetup(arraySize);
         this._myUI = new PP.EasyTuneBoolArrayWidgetUI();

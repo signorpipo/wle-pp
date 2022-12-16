@@ -138,11 +138,8 @@ PP.GamepadAxesInfo = class GamepadAxesInfo {
     constructor(handedness) {
         this.myHandedness = handedness;
 
-        this.myAxes = new Float32Array(2); // this.myAxes[0] is X,  this.myAxes[1] is Y
-        this.myAxes.fill(0.0);
-
-        this.myPrevAxes = new Float32Array(2);
-        this.myPrevAxes.fill(0.0);
+        this.myAxes = PP.vec2_create(0, 0); // this.myAxes[0] is X,  this.myAxes[1] is Y
+        this.myPrevAxes = PP.vec2_create(0, 0);
     }
 
     getAxes() {
@@ -155,8 +152,8 @@ PP.GamepadAxesInfo = class GamepadAxesInfo {
 
     clone() {
         let value = new PP.GamepadAxesInfo(this.myHandedness);
-        value.myAxes = this.myAxes;
-        value.myPrevAxes = this.myPrevAxes;
+        value.myAxes.vec2_copy(this.myAxes);
+        value.myPrevAxes.vec2_copy(this.myPrevAxes);
 
         return value;
     }

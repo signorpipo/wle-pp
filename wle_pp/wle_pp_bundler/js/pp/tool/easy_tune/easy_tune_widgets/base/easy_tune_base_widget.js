@@ -1,10 +1,17 @@
+PP.EasyTuneBaseWidgetParams = class EasyTuneBaseWidgetParams {
+    constructor() {
+        this.myVariablesImportCallback = null;   // Signature: callback()
+        this.myVariablesExportCallback = null;   // Signature: callback()
+    }
+};
 
 PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
 
-    constructor() {
+    constructor(params) {
         this._mySetup = null;
         this._myUI = null;
 
+        this._myParams = params;
         this._myAdditionalSetup = null;
 
         this._myVariable = null;
@@ -19,6 +26,19 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
         this._myScrollDirection = 0;
         this._myScrollVariableTimer = 0;
         this._myHasScrolled = false;
+
+        this._myResetImportLabelTimer = new PP.Timer(0, false);
+        this._myResetExportLabelTimer = new PP.Timer(0, false);
+    }
+
+    setVisible(visible) {
+        if (visible) {
+            this._refreshUI();
+        }
+
+        this._myUI.setVisible(visible);
+
+        this._myIsVisible = visible;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
@@ -48,6 +68,91 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
         this._myScrollDirection = scrollDirection;
         this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
         this._myHasScrolled = false;
+    }
+
+    getWidget() {
+        return this;
+    }
+
+    syncWidget(otherEasyTuneWidget) {
+        if (otherEasyTuneWidget != null) {
+            if (otherEasyTuneWidget._myResetImportLabelTimer.isRunning()) {
+                this._myResetImportLabelTimer.start(otherEasyTuneWidget._myResetImportLabelTimer.getTimeLeft());
+            } else {
+                this._myResetImportLabelTimer.reset();
+            }
+
+            if (otherEasyTuneWidget._myResetExportLabelTimer.isRunning()) {
+                this._myResetExportLabelTimer.start(otherEasyTuneWidget._myResetExportLabelTimer.getTimeLeft());
+            } else {
+                this._myResetExportLabelTimer.reset();
+            }
+
+            this._myUI.myImportButtonTextComponent.text = otherEasyTuneWidget._myUI.myImportButtonTextComponent.text;
+            this._myUI.myExportButtonTextComponent.text = otherEasyTuneWidget._myUI.myExportButtonTextComponent.text;
+
+            this.setScrollVariableActive(otherEasyTuneWidget.isScrollVariableActive(), otherEasyTuneWidget.getScrollVariableDirection());
+        } else {
+            this._myResetImportLabelTimer.reset();
+            this._myUI.myImportButtonTextComponent.text = this._mySetup.myImportButtonText;
+
+            this._myResetExportLabelTimer.reset();
+            this._myUI.myExportButtonTextComponent.text = this._mySetup.myExportButtonText;
+        }
+    }
+
+    onImportSuccess() {
+        this._myUI.myImportButtonTextComponent.text = this._mySetup.myImportSuccessButtonText;
+        this._myResetImportLabelTimer.start(this._mySetup.myImportExportResetLabelSeconds);
+    }
+
+    onImportFailure() {
+        this._myUI.myImportButtonTextComponent.text = this._mySetup.myImportFailureButtonText;
+        this._myResetImportLabelTimer.start(this._mySetup.myImportExportResetLabelSeconds);
+    }
+
+    onExportSuccess() {
+        this._myUI.myExportButtonTextComponent.text = this._mySetup.myExportSuccessButtonText;
+        this._myResetExportLabelTimer.start(this._mySetup.myImportExportResetLabelSeconds);
+    }
+
+    onExportFailure() {
+        this._myUI.myExportButtonTextComponent.text = this._mySetup.myExportFailureButtonText;
+        this._myResetExportLabelTimer.start(this._mySetup.myImportExportResetLabelSeconds);
+    }
+
+    registerScrollVariableRequestEventListener(id, callback) {
+        this._myScrollVariableRequestCallbacks.set(id, callback);
+    }
+
+    unregisterScrollVariableRequestEventListener(id) {
+        this._myScrollVariableRequestCallbacks.delete(id);
+    }
+
+    start(parentObject, additionalSetup) {
+        this._myAdditionalSetup = additionalSetup;
+
+        this._mySetup.build();
+
+        this._myResetImportLabelTimer.setDuration(this._mySetup.myImportExportResetLabelSeconds);
+        this._myResetExportLabelTimer.setDuration(this._mySetup.myImportExportResetLabelSeconds);
+
+        this._myUI.build(parentObject, this._mySetup, additionalSetup);
+        this._myUI.setImportExportButtonsActive(this._myAdditionalSetup.myEnableVariablesImportExportButtons);
+
+        this._startHook(parentObject, additionalSetup);
+
+        this._addListeners();
+    }
+
+    update(dt) {
+        if (this._isActive()) {
+            this._updateHook(dt);
+
+            this._updateScrollVariable(dt);
+
+            this._updateImportExportLabel(dt);
+        }
     }
 
     // Hooks
@@ -82,43 +187,6 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
         }
     }
 
-    setVisible(visible) {
-        if (visible) {
-            this._refreshUI();
-        }
-        this._myUI.setVisible(visible);
-
-        this._myIsVisible = visible;
-    }
-
-    registerScrollVariableRequestEventListener(id, callback) {
-        this._myScrollVariableRequestCallbacks.set(id, callback);
-    }
-
-    unregisterScrollVariableRequestEventListener(id) {
-        this._myScrollVariableRequestCallbacks.delete(id);
-    }
-
-    start(parentObject, additionalSetup) {
-        this._myAdditionalSetup = additionalSetup;
-
-        this._mySetup.build();
-        this._myUI.build(parentObject, this._mySetup, additionalSetup);
-        this._myUI.setImportExportButtonsActive(this._myAdditionalSetup.myEnableVariablesImportExportButtons);
-
-        this._startHook(parentObject, additionalSetup);
-
-        this._addListeners();
-    }
-
-    update(dt) {
-        if (this._isActive()) {
-            this._updateHook(dt);
-
-            this._updateScrollVariable(dt);
-        }
-    }
-
     _updateScrollVariable(dt) {
         if (this._myScrollVariableActive) {
             if (this._myScrollVariableTimer <= 0) {
@@ -127,6 +195,24 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
                 this._myHasScrolled = true;
             } else {
                 this._myScrollVariableTimer -= dt;
+            }
+        }
+    }
+
+    _updateImportExportLabel(dt) {
+        if (this._myResetImportLabelTimer.isRunning(dt)) {
+            this._myResetImportLabelTimer.update(dt);
+            if (this._myResetImportLabelTimer.isDone()) {
+                this._myResetImportLabelTimer.reset();
+                this._myUI.myImportButtonTextComponent.text = this._mySetup.myImportButtonText;
+            }
+        }
+
+        if (this._myResetExportLabelTimer.isRunning(dt)) {
+            this._myResetExportLabelTimer.update(dt);
+            if (this._myResetExportLabelTimer.isDone()) {
+                this._myResetExportLabelTimer.reset();
+                this._myUI.myExportButtonTextComponent.text = this._mySetup.myExportButtonText;
             }
         }
     }
@@ -186,19 +272,29 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
         }
     }
 
-    _importVariables() {
-        this._myAdditionalSetup.myVariablesImportCallback();
-    }
-
-    _exportVariables() {
-        this._myAdditionalSetup.myVariablesExportCallback();
-    }
-
     _genericHover(material) {
         material.color = this._mySetup.myButtonHoverColor;
     }
 
     _genericUnHover(material) {
         material.color = this._mySetup.myBackgroundColor;
+    }
+
+    _importVariables() {
+        if (this._myUI.myImportButtonTextComponent.text == this._mySetup.myImportButtonText) {
+            this._myUI.myImportButtonTextComponent.text = this._mySetup.myImportingButtonText;
+            this._myResetImportLabelTimer.reset();
+
+            this._myParams.myVariablesImportCallback();
+        }
+    }
+
+    _exportVariables() {
+        if (this._myUI.myExportButtonTextComponent.text == this._mySetup.myExportButtonText) {
+            this._myUI.myExportButtonTextComponent.text = this._mySetup.myExportingButtonText;
+            this._myResetExportLabelTimer.reset();
+
+            this._myParams.myVariablesExportCallback();
+        }
     }
 };

@@ -1,17 +1,17 @@
 PP.PhysicsUtils = {
-    _myLayerFlagAmount: 8,
-    _myLayerFlagNames: ["0", "1", "2", "3", "4", "5", "6", "7"],
-    setLayerFlagAmount: function (layerFlagAmount) {
-        PP.PhysicsUtils._myLayerFlagAmount = layerFlagAmount;
+    _myLayerFlagsAmount: 8,
+    _myLayerFlagsNames: ["0", "1", "2", "3", "4", "5", "6", "7"],
+    setLayerFlagsAmount: function (layerFlagsAmount) {
+        PP.PhysicsUtils._myLayerFlagsAmount = layerFlagsAmount;
     },
-    setLayerFlagNames: function (layerFlagNames) {
-        PP.PhysicsUtils._myLayerFlagNames = layerFlagNames;
+    setLayerFlagsNames: function (layerFlagsNames) {
+        PP.PhysicsUtils._myLayerFlagsNames = layerFlagsNames;
     },
-    getLayerFlagAmount: function () {
-        return PP.PhysicsUtils._myLayerFlagAmount;
+    getLayerFlagsAmount: function () {
+        return PP.PhysicsUtils._myLayerFlagsAmount;
     },
-    getLayerFlagNames: function () {
-        return PP.PhysicsUtils._myLayerFlagNames;
+    getLayerFlagsNames: function () {
+        return PP.PhysicsUtils._myLayerFlagsNames;
     },
     raycast: function () {
         let objectsEqualCallback = (first, second) => first.pp_equals(second);

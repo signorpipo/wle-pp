@@ -131,6 +131,16 @@ PP.EasyTuneBaseWidgetSetup = class EasyTuneBaseWidgetSetup {
         this.myImportButtonText = "Import";
         this.myExportButtonText = "Export";
 
+        this.myImportExportResetLabelSeconds = 2;
+
+        this.myImportingButtonText = "...";
+        this.myImportSuccessButtonText = "Done";
+        this.myImportFailureButtonText = "Error";
+
+        this.myExportingButtonText = "...";
+        this.myExportSuccessButtonText = "Done";
+        this.myExportFailureButtonText = "Error";
+
         this.myImportButtonPosition = [0, 0, -0.00001];
         this.myImportButtonPosition[0] = -this.myImportExportButtonBackgroundScale[0] - this._mySideButtonDistanceFromBorder / 2;
 

@@ -1,7 +1,7 @@
 PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBaseWidget {
 
-    constructor(gamepad) {
-        super();
+    constructor(params, gamepad) {
+        super(params);
 
         this._myGamepad = gamepad;
 

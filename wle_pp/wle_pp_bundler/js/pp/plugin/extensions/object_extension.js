@@ -2519,12 +2519,12 @@ if (WL && WL.Object) {
     };
 
     WL.Object.prototype.pp_getComponentAmountMap = function (amountMap = new Map()) {
-        let objectAmount = amountMap.get("object");
-        if (objectAmount == null) {
-            objectAmount = 0;
+        let objectsAmount = amountMap.get("object");
+        if (objectsAmount == null) {
+            objectsAmount = 0;
         }
-        objectAmount += 1;
-        amountMap.set("object", objectAmount);
+        objectsAmount += 1;
+        amountMap.set("object", objectsAmount);
 
         let components = this.pp_getComponents();
         for (let component of components) {

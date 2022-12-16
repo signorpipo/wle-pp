@@ -91,39 +91,38 @@ PP.Keyboard = class Keyboard {
         }
     }
 
-    isKeyPressed(KeyID) {
+    isKeyPressed(keyID) {
         let isPressed = false;
 
-        if (this._myKeyInfos.has(KeyID)) {
-            isPressed = this._myKeyInfos.get(KeyID).myIsPressed;
+        if (this._myKeyInfos.has(keyID)) {
+            isPressed = this._myKeyInfos.get(keyID).myIsPressed;
         }
 
         return isPressed;
     }
 
-    isKeyPressStart(KeyID) {
+    isKeyPressStart(keyID) {
         let isPressStart = false;
 
-        if (this._myKeyInfos.has(KeyID)) {
-            isPressStart = this._myKeyInfos.get(KeyID).myIsPressStart;
+        if (this._myKeyInfos.has(keyID)) {
+            isPressStart = this._myKeyInfos.get(keyID).myIsPressStart;
         }
 
         return isPressStart;
     }
 
-    isKeyPressEnd(KeyID) {
+    isKeyPressEnd(keyID) {
         let isPressEnd = false;
 
-        if (this._myKeyInfos.has(KeyID)) {
-            isPressEnd = this._myKeyInfos.get(KeyID).myIsPressEnd;
+        if (this._myKeyInfos.has(keyID)) {
+            isPressEnd = this._myKeyInfos.get(keyID).myIsPressEnd;
         }
 
         return isPressEnd;
     }
 
-    addKey(KeyID) {
-        this._myKeyInfos.set(KeyID,
-            { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, });
+    addKey(keyID) {
+        this._myKeyInfos.set(keyID, this._createKeyInfo());
     }
 
     start() {
@@ -163,9 +162,9 @@ PP.Keyboard = class Keyboard {
         }
     }
 
-    _keyPressedChanged(KeyID, isPressed) {
-        if (this._myKeyInfos.has(KeyID)) {
-            let keyInfo = this._myKeyInfos.get(KeyID);
+    _keyPressedChanged(keyID, isPressed) {
+        if (this._myKeyInfos.has(keyID)) {
+            let keyInfo = this._myKeyInfos.get(keyID);
 
             if (isPressed) {
                 keyInfo.myIsPressed = true;
@@ -175,5 +174,9 @@ PP.Keyboard = class Keyboard {
                 keyInfo.myIsPressEndToProcess = true;
             }
         }
+    }
+
+    _createKeyInfo() {
+        return { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, };
     }
 };

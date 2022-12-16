@@ -1,3 +1,19 @@
+PP.EasyTuneWidgetAdditionalSetup = class EasyTuneWidgetAdditionalSetup {
+    constructor() {
+        this.myHandedness = PP.ToolHandedness.NONE;
+        this.myShowOnStart = false;
+        this.myShowVisibilityButton = false;
+        this.myEnableAdditionalButtons = false;
+        this.myEnableGamepadScrollVariable = false;
+        this.myPlaneMaterial = null;
+        this.myTextMaterial = null;
+
+        this.myEnableVariablesImportExportButtons = false;
+        this.myVariablesImportCallback = null;   // Signature: callback()
+        this.myVariablesExportCallback = null;   // Signature: callback()
+    }
+};
+
 PP.EasyTuneWidget = class EasyTuneWidget {
 
     constructor() {
@@ -118,10 +134,14 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _initializeWidgets() {
-        this._myWidgets[PP.EasyTuneVariableType.NONE] = new PP.EasyTuneNoneWidget();
-        this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberArrayWidgetSelector(this._myGamepad);
-        this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolArrayWidgetSelector(this._myGamepad);
-        this._myWidgets[PP.EasyTuneVariableType.TRANSFORM] = new PP.EasyTuneTransformWidget(this._myGamepad);
+        let widgetParams = new PP.EasyTuneBaseWidgetParams();
+        widgetParams.myVariablesImportCallback = this._importVariables.bind(this);
+        widgetParams.myVariablesExportCallback = this._exportVariables.bind(this);
+
+        this._myWidgets[PP.EasyTuneVariableType.NONE] = new PP.EasyTuneNoneWidget(widgetParams);
+        this._myWidgets[PP.EasyTuneVariableType.NUMBER] = new PP.EasyTuneNumberArrayWidgetSelector(widgetParams, this._myGamepad);
+        this._myWidgets[PP.EasyTuneVariableType.BOOL] = new PP.EasyTuneBoolArrayWidgetSelector(widgetParams, this._myGamepad);
+        this._myWidgets[PP.EasyTuneVariableType.TRANSFORM] = new PP.EasyTuneTransformWidget(widgetParams, this._myGamepad);
 
         for (let widget of this._myWidgets) {
             if (widget != null) {
@@ -139,14 +159,9 @@ PP.EasyTuneWidget = class EasyTuneWidget {
             return;
         }
 
-        let scrollVariableActive = false;
-        let scrollVariableDirection = 0;
-
-        if (this._myCurrentWidget) {
-            scrollVariableActive = this._myCurrentWidget.isScrollVariableActive();
-            scrollVariableDirection = this._myCurrentWidget.getScrollVariableDirection();
-
-            this._myCurrentWidget.setVisible(false);
+        let prevWidget = null;
+        if (this._myCurrentWidget != null) {
+            prevWidget = this._myCurrentWidget.getWidget();
         }
 
         if (this._myCurrentVariable.myType in this._myWidgets) {
@@ -156,8 +171,13 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         }
 
         this._myCurrentWidget.setEasyTuneVariable(this._myCurrentVariable, this._createIndexString());
+        this._myCurrentWidget.getWidget().syncWidget(prevWidget);
+
+        if (prevWidget != null) {
+            prevWidget.setVisible(false);
+        }
+
         this._myCurrentWidget.setVisible(this._myWidgetFrame.myIsWidgetVisible);
-        this._myCurrentWidget.setScrollVariableActive(scrollVariableActive, scrollVariableDirection);
     }
 
     _refreshEasyTuneVariables() {
@@ -280,20 +300,36 @@ PP.EasyTuneWidget = class EasyTuneWidget {
             this._myCurrentVariable.myIsActive = true;
         }
     }
-};
 
-PP.EasyTuneWidgetAdditionalSetup = class EasyTuneWidgetAdditionalSetup {
-    constructor() {
-        this.myHandedness = PP.ToolHandedness.NONE;
-        this.myShowOnStart = false;
-        this.myShowVisibilityButton = false;
-        this.myEnableAdditionalButtons = false;
-        this.myEnableGamepadScrollVariable = false;
-        this.myPlaneMaterial = null;
-        this.myTextMaterial = null;
+    _importVariables() {
+        this._myAdditionalSetup.myVariablesImportCallback(this._onImportSuccess.bind(this), this._onImportFailure.bind(this));
+    }
 
-        this.myEnableVariablesImportExportButtons = false;
-        this.myVariablesImportCallback = null;   // Signature: callback()
-        this.myVariablesExportCallback = null;   // Signature: callback()
+    _exportVariables() {
+        this._myAdditionalSetup.myVariablesExportCallback(this._onExportSuccess.bind(this), this._onExportFailure.bind(this));
+    }
+
+    _onImportSuccess() {
+        if (this._myCurrentWidget) {
+            this._myCurrentWidget.onImportSuccess();
+        }
+    }
+
+    _onImportFailure() {
+        if (this._myCurrentWidget) {
+            this._myCurrentWidget.onImportFailure();
+        }
+    }
+
+    _onExportSuccess() {
+        if (this._myCurrentWidget) {
+            this._myCurrentWidget.onExportSuccess();
+        }
+    }
+
+    _onExportFailure() {
+        if (this._myCurrentWidget) {
+            this._myCurrentWidget.onExportFailure();
+        }
     }
 };

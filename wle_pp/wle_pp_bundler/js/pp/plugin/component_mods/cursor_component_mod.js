@@ -25,6 +25,13 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }];
 
         this.prevHitLocationLocalToTarget = [0, 0, 0];
+
+        this.pointerId = null;
+
+        this.lastClientX = null;
+        this.lastClientY = null;
+        this.lastWidth = null;
+        this.lastHeight = null;
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.start = function () {
@@ -89,12 +96,14 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         if (this.viewComponent != null) {
             const onClick = this.onClick.bind(this);
             WL.canvas.addEventListener("click", onClick);
-            const onPointerMove = this.onPointerMove.bind(this);
-            WL.canvas.addEventListener("pointermove", onPointerMove);
             const onPointerDown = this.onPointerDown.bind(this);
             WL.canvas.addEventListener("pointerdown", onPointerDown);
+            const onPointerMove = this.onPointerMove.bind(this);
+            WL.canvas.addEventListener("pointermove", onPointerMove);
             const onPointerUp = this.onPointerUp.bind(this);
             WL.canvas.addEventListener("pointerup", onPointerUp);
+            const onPointerLeave = this.onPointerLeave.bind(this);
+            WL.canvas.addEventListener("pointerleave", onPointerLeave);
 
             this.projectionMatrix = new Float32Array(16);
             mat4.invert(this.projectionMatrix, this.viewComponent.projectionMatrix);
@@ -103,9 +112,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
             this.onDestroyCallbacks.push(() => {
                 WL.canvas.removeEventListener("click", onClick);
-                WL.canvas.removeEventListener("pointermove", onPointerMove);
                 WL.canvas.removeEventListener("pointerdown", onPointerDown);
+                WL.canvas.removeEventListener("pointermove", onPointerMove);
                 WL.canvas.removeEventListener("pointerup", onPointerUp);
+                WL.canvas.removeEventListener("pointerleave", onPointerLeave);
                 window.removeEventListener("resize", onViewportResize);
             });
         }
@@ -176,11 +186,8 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
             this.hoverBehaviour(rayHit, doClick);
         } else {
-            if (this.viewComponent != null && this._isPPMouseValid()) {
-                PP.myMouse.getPositionScreenNormalized(this.direction);
-                this.direction[2] = -1;
-
-                const rayHit = this.updateDirection();
+            if (this.viewComponent != null && this.lastClientX != null) {
+                const rayHit = this.updateMousePos(this.lastClientX, this.lastClientY, this.lastWidth, this.lastHeight);
                 this.hoverBehaviour(rayHit, false);
             }
         }
@@ -202,10 +209,14 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         if (this.cursorRayObject) {
             this.cursorRayObject.pp_setActive(true);
         }
+
+        if (this.hoveringObject == null) {
+            this.pointerId = null;
+        }
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.hoverBehaviour = function (rayHit, doClick) {
-        if (rayHit.hitCount > 0) {
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.hoverBehaviour = function (rayHit, doClick, forceUnhover = false) {
+        if (!forceUnhover && rayHit.hitCount > 0) {
             let hoveringObjectChanged = false;
             if (!this.hoveringObject || !this.hoveringObject.equals(rayHit.objects[0])) {
                 /* Unhover previous, if exists */
@@ -219,7 +230,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
                 /* Hover new object */
                 this.hoveringObject = rayHit.objects[0];
-                if (this.styleCursor) WL.canvas.style.cursor = "pointer";
+                if (this.styleCursor) document.body.style.cursor = "pointer";
 
                 let cursorTarget = this.hoveringObject.getComponent("cursor-target");
                 if (cursorTarget) {
@@ -281,13 +292,13 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             }
 
             this.prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(rayHit.locations[0], this.prevHitLocationLocalToTarget);
-        } else if (this.hoveringObject && rayHit.hitCount == 0) {
+        } else if (this.hoveringObject && (forceUnhover || rayHit.hitCount == 0)) {
             let cursorTarget = this.hoveringObject.getComponent("cursor-target");
             if (cursorTarget) cursorTarget.onUnhover(this.hoveringObject, this);
             this.globalTarget.onUnhover(this.hoveringObject, this);
 
             this.hoveringObject = null;
-            if (this.styleCursor) WL.canvas.style.cursor = "default";
+            if (this.styleCursor) document.body.style.cursor = "default";
         }
 
         if (this.hoveringObject) {
@@ -356,20 +367,20 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerMove = function (e) {
-        /* Don't care about secondary pointers */
-        if (!e.isPrimary) return;
+        if (this.active) {
+            /* Don't care about secondary pointers */
+            if (this.pointerId != null && this.pointerId != e.pointerId) return;
 
-        if (this._isPPMouseValid()) {
-            PP.myMouse.getPositionScreenNormalized(this.direction);
-            this.direction[2] = -1;
-
-            const rayHit = this.updateDirection();
-            this.hoverBehaviour(rayHit, false);
-        } else {
-            const bounds = e.target.getBoundingClientRect();
+            const bounds = document.body.getBoundingClientRect();
             const rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
 
             this.hoverBehaviour(rayHit, false);
+
+            if (this.hoveringObject != null) {
+                this.pointerId = e.pointerId;
+            } else {
+                this.pointerId = null;
+            }
         }
     };
 
@@ -379,25 +390,21 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerDown = function (e) {
         if (this.active) {
             /* Don't care about secondary pointers or non-left clicks */
-            if (!e.isPrimary || e.button !== 0) return;
+            if ((this.pointerId != null && this.pointerId != e.pointerId) || e.button !== 0) return;
 
-            let rayHit = null;
-            if (this._isPPMouseValid()) {
-                PP.myMouse.getPositionScreenNormalized(this.direction);
-                this.direction[2] = -1;
-
-                rayHit = this.updateDirection();
-            } else {
-                const bounds = e.target.getBoundingClientRect();
-                rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
-
-                this.hoverBehaviour(rayHit, false); // simulate a move before the click, to clean previous hover/unhover
-            }
+            const bounds = document.body.getBoundingClientRect();
+            let rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
 
             this.isDown = true;
             this.isRealDown = true;
 
             this.hoverBehaviour(rayHit, false);
+
+            if (this.hoveringObject != null) {
+                this.pointerId = e.pointerId;
+            } else {
+                this.pointerId = null;
+            }
         } else {
             this.isRealDown = true;
         }
@@ -406,20 +413,10 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerUp = function (e) {
         if (this.active) {
             /* Don't care about secondary pointers or non-left clicks */
-            if (!e.isPrimary || e.button !== 0) return;
+            if ((this.pointerId != null && this.pointerId != e.pointerId) || e.button !== 0) return;
 
-            let rayHit = null;
-            if (this._isPPMouseValid()) {
-                PP.myMouse.getPositionScreenNormalized(this.direction);
-                this.direction[2] = -1;
-
-                rayHit = this.updateDirection();
-            } else {
-                const bounds = e.target.getBoundingClientRect();
-                rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
-
-                this.hoverBehaviour(rayHit, false); // simulate a move before the click, to clean previous hover/unhover
-            }
+            const bounds = document.body.getBoundingClientRect();
+            let rayHit = this.updateMousePos(e.clientX, e.clientY, bounds.width, bounds.height);
 
             if (!this.isDown) {
                 this.isUpWithNoDown = true;
@@ -429,12 +426,38 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
             this.isRealDown = false;
 
             this.hoverBehaviour(rayHit, false);
+
+            if (this.hoveringObject != null) {
+                this.pointerId = e.pointerId;
+            } else {
+                this.pointerId = null;
+            }
         } else {
             this.isRealDown = false;
         }
     };
 
+    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onPointerLeave = function (e) {
+        if (this.pointerId == null || this.pointerId == e.pointerId) {
+            if (this.active) {
+                this.hoverBehaviour(null, false, true); // trigger unhover
+            }
+
+            this.pointerId = null;
+
+            this.lastClientX = null;
+            this.lastClientY = null;
+            this.lastWidth = null;
+            this.lastHeight = null;
+        }
+    };
+
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.updateMousePos = function (clientX, clientY, w, h) {
+        this.lastClientX = clientX;
+        this.lastClientY = clientY;
+        this.lastWidth = w;
+        this.lastHeight = h;
+
         /* Get direction in normalized device coordinate space from mouse position */
         const left = clientX / w;
         const top = clientY / h;
@@ -470,7 +493,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }
 
         this.hoveringObject = null;
-        if (this.styleCursor) WL.canvas.style.cursor = "default";
+        if (this.styleCursor) document.body.style.cursor = "default";
 
         this.isDown = false;
         this.lastIsDown = false;
@@ -480,6 +503,13 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         if (this.cursorRayObject) {
             this.cursorRayObject.pp_setActive(false);
         }
+
+        this.pointerId = null;
+
+        this.lastClientX = null;
+        this.lastClientY = null;
+        this.lastWidth = null;
+        this.lastHeight = null;
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onActivate = function () {
@@ -492,10 +522,6 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype.onDestroy = function () {
         for (const f of this.onDestroyCallbacks) f();
-    };
-
-    _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._isPPMouseValid = function () {
-        return PP != null && PP.myMouse != null && PP.myMouse.isValid() && PP.myMouse.isInsideView();
     };
 
     _WL._componentTypes[_WL._componentTypeIndices["cursor"]].prototype._isDown = function () {
