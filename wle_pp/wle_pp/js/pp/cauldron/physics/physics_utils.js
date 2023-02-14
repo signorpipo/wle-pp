@@ -36,20 +36,31 @@ PP.PhysicsUtils = {
                             objects = internalRaycastResult.objects;
                         }
 
-                        if (raycastSetup.myObjectsToIgnore.pp_hasEqual(objects[i], objectsEqualCallback)) {
+                        if (raycastSetup.myObjectsToIgnore.pp_hasEqual(objects[i]/*, objectsEqualCallback*/)) {
                             continue;
                         }
                     }
 
                     if (!distances) {
                         distances = internalRaycastResult.distances;
-                        locations = internalRaycastResult.locations;
-                        normals = internalRaycastResult.normals;
                     }
 
-                    const isHitInsideCollision = distances[i] === 0
-                        && (raycastSetup.myOrigin.vec3_distance(locations[i]) < 0.00001
-                            && Math.abs(raycastSetup.myDirection.vec3_angle(normals[i]) - 180) < 0.00001);
+                    let isHitInsideCollision = distances[i] === 0;
+                    if (isHitInsideCollision) {
+                        if (!locations) {
+                            locations = internalRaycastResult.locations;
+                        }
+
+                        isHitInsideCollision &&= raycastSetup.myOrigin.vec3_distance(locations[i]) < 0.00001;
+
+                        if (isHitInsideCollision) {
+                            if (!normals) {
+                                normals = internalRaycastResult.normals;
+                            }
+
+                            isHitInsideCollision &&= Math.abs(raycastSetup.myDirection.vec3_angle(normals[i]) - 180) < 0.00001;
+                        }
+                    }
 
                     if (!raycastSetup.myIgnoreHitsInsideCollision || !isHitInsideCollision) {
                         let hit = null;
@@ -66,6 +77,14 @@ PP.PhysicsUtils = {
 
                         if (!objects) {
                             objects = internalRaycastResult.objects;
+                        }
+
+                        if (!locations) {
+                            locations = internalRaycastResult.locations;
+                        }
+
+                        if (!normals) {
+                            normals = internalRaycastResult.normals;
                         }
 
                         hit.myPosition.vec3_copy(locations[i]);

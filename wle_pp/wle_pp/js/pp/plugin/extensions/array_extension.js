@@ -208,28 +208,40 @@ Array.prototype.pp_findAllIndexes = function (callback) {
 
 Array.prototype.pp_findEqual = function (elementToFind, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.pp_find(element => element === elementToFind);
+        const index = this.indexOf(elementToFind);
+        return index < 0 ? undefined : this[index];
     }
     return this.pp_find(element => elementsEqualCallback(element, elementToFind));
 };
 
+function arrayFindAll(array, elementToFind, getIndex) {
+    // adapted from: https://stackoverflow.com/a/20798567
+    const matches = [];
+    let index = -1;
+    while ((index = array.indexOf(elementToFind, index + 1)) >= 0) {
+        matches.push(getIndex ? index : array[index]);
+    }
+
+    return matches;
+}
+
 Array.prototype.pp_findAllEqual = function (elementToFind, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.pp_findAll(element => element === elementToFind);
+        return arrayFindAll(this, elementToFind, false);
     }
     return this.pp_findAll(element => elementsEqualCallback(element, elementToFind));
 };
 
 Array.prototype.pp_findIndexEqual = function (elementToFind, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.findIndex(element => element === elementToFind);
+        return this.indexOf(elementToFind);
     }
     return this.findIndex(element => elementsEqualCallback(element, elementToFind));
 };
 
 Array.prototype.pp_findAllIndexesEqual = function (elementToFind, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.pp_findAllIndexes(element => element === elementToFind);
+        return arrayFindAll(this, elementToFind, true);
     }
     return this.pp_findAllIndexes(element => elementsEqualCallback(element, elementToFind));
 };
@@ -274,7 +286,12 @@ Array.prototype.pp_removeAll = function (callback) {
 
 Array.prototype.pp_removeEqual = function (elementToRemove, elementsEqualCallback = null) {
     if (elementsEqualCallback == null) {
-        return this.pp_remove(element => element === elementToRemove);
+        const index = this.indexOf(elementToRemove);
+        if (index >= 0) {
+            return this.splice(index, 1)[0];
+        } else {
+            return;
+        }
     }
     return this.pp_remove(element => elementsEqualCallback(element, elementToRemove));
 };

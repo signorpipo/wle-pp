@@ -32,7 +32,7 @@ WL.registerComponent('pp-tracked-hand-draw-skin', {
         let skinJointIDs = this._myHandSkin.jointIds;
 
         for (let i = 0; i < skinJointIDs.length; i++) {
-            this._myJoints[i] = new WL.Object(skinJointIDs[i]);
+            this._myJoints[i] = WL.Object._wrapObject(skinJointIDs[i]);
         }
     }
 });
