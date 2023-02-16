@@ -36,7 +36,7 @@ PP.PhysicsUtils = {
                             objects = internalRaycastResult.objects;
                         }
 
-                        if (raycastSetup.myObjectsToIgnore.pp_hasEqual(objects[i]/*, objectsEqualCallback*/)) {
+                        if (raycastSetup.myObjectsToIgnore.pp_hasEqual(objects[i], objectsEqualCallback)) {
                             continue;
                         }
                     }
