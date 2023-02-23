@@ -1,49 +1,49 @@
 PP.ObjectPoolManager = class ObjectPoolManager {
     constructor() {
-        this._myPoolMap = new Map();
+        this._myPools = new Map();
     }
 
     addPool(poolID, poolObject, objectPoolParams = new PP.ObjectPoolParams()) {
-        if (!this._myPoolMap.has(poolID)) {
+        if (!this._myPools.has(poolID)) {
             let pool = new PP.ObjectPool(poolObject, objectPoolParams);
-            this._myPoolMap.set(poolID, pool);
+            this._myPools.set(poolID, pool);
         } else {
             console.error("Pool already created with this ID");
         }
     }
 
     increasePool(poolID, amount) {
-        let pool = this._myPoolMap.get(poolID);
+        let pool = this._myPools.get(poolID);
         if (pool) {
             pool.increase(amount);
         }
     }
 
     increasePoolPercentage(poolID, percentage) {
-        let pool = this._myPoolMap.get(poolID);
+        let pool = this._myPools.get(poolID);
         if (pool) {
             pool.increasePercentage(percentage);
         }
     }
 
     getPool(poolID) {
-        return this._myPoolMap.get(poolID);
+        return this._myPools.get(poolID);
     }
 
     hasPool(poolID) {
-        return this._myPoolMap.has(poolID);
+        return this._myPools.has(poolID);
     }
 
     getObject(poolID) {
-        if (this._myPoolMap.has(poolID)) {
-            return this._myPoolMap.get(poolID).get();
+        if (this._myPools.has(poolID)) {
+            return this._myPools.get(poolID).get();
         }
 
         return null;
     }
 
     releaseObject(poolID, object) {
-        this._myPoolMap.get(poolID).release(object);
+        this._myPools.get(poolID).release(object);
     }
 };
 

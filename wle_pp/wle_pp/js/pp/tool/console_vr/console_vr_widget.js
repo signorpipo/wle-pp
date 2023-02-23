@@ -251,7 +251,7 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
 
         let lines = this._splitLongLines(formattedText);
 
-        if (messageType == PP.ConsoleVRWidget.MessageType.DEBUG) {
+        if (messageType == PP.ConsoleVRWidget.MessageType.INFO) {
             messageType = PP.ConsoleVRWidget.MessageType.LOG;
         } else if (messageType == PP.ConsoleVRWidget.MessageType.EXCEPTION || messageType == PP.ConsoleVRWidget.MessageType.ASSERT) {
             messageType = PP.ConsoleVRWidget.MessageType.ERROR;
@@ -266,9 +266,9 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
     _consoleFunctionToMessageType(consoleFunction) {
         let messageType = PP.ConsoleVRWidget.MessageType.LOG;
 
-        if (consoleFunction < PP.ConsoleVRWidget.ConsoleFunction.DEBUG) {
+        if (consoleFunction < PP.ConsoleVRWidget.ConsoleFunction.INFO) {
             messageType = consoleFunction;
-        } else if (consoleFunction == PP.ConsoleVRWidget.ConsoleFunction.DEBUG) {
+        } else if (consoleFunction == PP.ConsoleVRWidget.ConsoleFunction.INFO) {
             messageType = PP.ConsoleVRWidget.MessageType.LOG;
         } else {
             messageType = PP.ConsoleVRWidget.MessageType.ERROR;
@@ -798,11 +798,11 @@ PP.ConsoleVRWidget.AdditionalSetup = class ConsoleVRWidgetAdditionalSetup {
 };
 
 PP.ConsoleVRWidget.ConsoleFunction = {
-    INFO: 0,
+    DEBUG: 0,
     WARN: 1,
     ERROR: 2,
     LOG: 3,
-    DEBUG: 4,
+    INFO: 4,
     ASSERT: 5
 };
 
@@ -819,7 +819,7 @@ PP.ConsoleVRWidget.PulseOnNewMessage = {
 };
 
 PP.ConsoleVRWidget.MessageType = {
-    INFO: 0,
+    DEBUG: 0,
     WARN: 1,
     ERROR: 2,
     LOG: 3

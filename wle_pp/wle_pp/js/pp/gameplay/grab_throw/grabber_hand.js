@@ -26,11 +26,11 @@ WL.registerComponent('pp-grabber-hand', {
         this._myLinearVelocityHistoryDirectionAverageSkipFromStart = 0;
 
         this._myHandLinearVelocityHistory = new Array(this._myLinearVelocityHistorySize);
-        this._myHandLinearVelocityHistory.fill([0, 0, 0]);
+        this._myHandLinearVelocityHistory.fill(PP.vec3_create());
 
         this._myAngularVelocityHistorySize = 1;
         this._myHandAngularVelocityHistory = new Array(this._myAngularVelocityHistorySize);
-        this._myHandAngularVelocityHistory.fill([0, 0, 0]);
+        this._myHandAngularVelocityHistory.fill(PP.vec3_create());
 
         this._myThrowMaxAngularSpeedRadians = Math.pp_toRadians(this._myThrowMaxAngularSpeed);
 
@@ -47,7 +47,7 @@ WL.registerComponent('pp-grabber-hand', {
         }
 
         this._myPhysX = this.object.pp_getComponent('physx');
-        this._myCollisionsCollector = new PP.PhysXCollisionCollector(this._myPhysX, true);
+        this._myCollisionsCollector = new PP.PhysicsCollisionCollector(this._myPhysX, true);
     },
     update: function (dt) {
         this._myCollisionsCollector.update(dt);
@@ -250,7 +250,7 @@ WL.registerComponent('pp-grabber-hand', {
         //direction
         let directionCurrentWeight = this._myLinearVelocityHistoryDirectionAverageSamplesFromStart;
         let lastDirectionIndex = this._myLinearVelocityHistoryDirectionAverageSkipFromStart + this._myLinearVelocityHistoryDirectionAverageSamplesFromStart;
-        let direction = [0, 0, 0];
+        let direction = PP.vec3_create();
         for (let i = this._myLinearVelocityHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
             let currentDirection = linearVelocityHistory[i];
             currentDirection.vec3_scale(directionCurrentWeight, currentDirection);
@@ -285,7 +285,7 @@ WL.registerComponent('pp-grabber-hand', {
 
             let directionCurrentWeight = j - this._myLinearVelocityHistoryDirectionAverageSkipFromStart;
             let lastDirectionIndex = j - this._myLinearVelocityHistoryDirectionAverageSkipFromStart;
-            let direction = [0, 0, 0];
+            let direction = PP.vec3_create();
             for (let i = this._myLinearVelocityHistoryDirectionAverageSkipFromStart; i < lastDirectionIndex; i++) {
                 let currentDirection = linearVelocityHistory[i].pp_clone();
                 currentDirection.vec3_scale(directionCurrentWeight, currentDirection);
@@ -297,7 +297,7 @@ WL.registerComponent('pp-grabber-hand', {
 
             let color = 1 / j;
 
-            PP.myDebugVisualManager.drawLine(5, this.object.pp_getPosition(), direction, 0.2, [olor, color, color, 1]);
+            PP.myDebugVisualManager.drawLine(5, this.object.pp_getPosition(), direction, 0.2, PP.vec4_create(olor, color, color, 1));
         }
     },
     _isAlreadyGrabbed(grabbable) {
@@ -313,10 +313,10 @@ PP.GrabberHandGrabbableData = class GrabberHandGrabbableData {
 
         if (this._myUseGrabbableAsVelocitySource) {
             this._myLinearVelocityHistory = new Array(linearVelocityHistorySize);
-            this._myLinearVelocityHistory.fill([0, 0, 0]);
+            this._myLinearVelocityHistory.fill(PP.vec3_create());
 
             this._myAngularVelocityHistory = new Array(angularVelocityHistorySize);
-            this._myAngularVelocityHistory.fill([0, 0, 0]);
+            this._myAngularVelocityHistory.fill(PP.vec3_create());
         }
     }
 

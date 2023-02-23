@@ -32,7 +32,8 @@ PP.CAUtils = {
                             callbackOnDone(result.leaderboard);
                         }
                     } else {
-                        if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                             PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                         } else if (callbackOnError) {
                             let error = {};
@@ -40,6 +41,16 @@ PP.CAUtils = {
                             error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
                             callbackOnError(error, result);
                         }
+                    }
+                }).catch(function (result) {
+                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                        PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
+                    } else if (callbackOnError) {
+                        let error = {};
+                        error.reason = "Get leaderboard failed";
+                        error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                        callbackOnError(error, result);
                     }
                 });
             } else {
@@ -60,7 +71,8 @@ PP.CAUtils = {
                                         callbackOnDone(result.leaderboard);
                                     }
                                 } else {
-                                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                                         PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                                     } else if (callbackOnError) {
                                         let error = {};
@@ -70,7 +82,8 @@ PP.CAUtils = {
                                     }
                                 }
                             } else {
-                                if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                                     PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                                 } else if (callbackOnError) {
                                     let error = {};
@@ -79,11 +92,22 @@ PP.CAUtils = {
                                     callbackOnError(error, result);
                                 }
                             }
+                        }).catch(function (result) {
+                            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                                (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                                PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
+                            } else if (callbackOnError) {
+                                let error = {};
+                                error.reason = "Get leaderboard failed";
+                                error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                                callbackOnError(error, result);
+                            }
                         });
 
                     },
                     function () {
-                        if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                        if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                            (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                             PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
                         } else if (callbackOnError) {
                             let error = {};
@@ -95,7 +119,8 @@ PP.CAUtils = {
                     false);
             }
         } else {
-            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getLeaderboard != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.getLeaderboardDummy(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -121,7 +146,8 @@ PP.CAUtils = {
         if (PP.CAUtils.isSDKAvailable()) {
             casdk.submitScore(leaderboardID, scoreToSubmit).then(function (result) {
                 if (result.error) {
-                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                         PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
                     } else if (callbackOnError) {
                         let error = {};
@@ -132,9 +158,20 @@ PP.CAUtils = {
                 } else {
                     callbackOnDone();
                 }
+            }).catch(function (result) {
+                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
+                } else if (callbackOnError) {
+                    let error = {};
+                    error.reason = "Submit score failed";
+                    error.type = PP.CAUtils.ErrorType.SUBMIT_SCORE_FAILED;
+                    callbackOnError(error, result);
+                }
             });
         } else {
-            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.submitScore != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -164,7 +201,8 @@ PP.CAUtils = {
                         callbackOnDone(result.user);
                     }
                 } else {
-                    if ((PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                        (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                         PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
                     } else if (callbackOnError) {
                         let error = {};
@@ -173,9 +211,20 @@ PP.CAUtils = {
                         callbackOnError(error, result);
                     }
                 }
+            }).catch(function (result) {
+                if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                    (PP.CAUtils._myUseDummyServerOnError && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+                    PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
+                } else if (callbackOnError) {
+                    let error = {};
+                    error.reason = "Get user failed";
+                    error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
+                    callbackOnError(error, result);
+                }
             });
         } else {
-            if ((PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
+            if (PP.CAUtils._myDummyServer != null && PP.CAUtils._myDummyServer.getUser != null &&
+                (PP.CAUtils._myUseDummyServerOnSDKMissing && overrideUseDummyServer == null) || (overrideUseDummyServer != null && overrideUseDummyServer)) {
                 PP.CAUtils.getUserDummy(callbackOnDone, callbackOnError);
             } else if (callbackOnError) {
                 let error = {};
@@ -215,30 +264,47 @@ PP.CADummyServer = class CADummyServer {
     getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
         let leaderboard = null;
 
-        if (isAroundPlayer) {
+        if (PP.CAUtils.isSDKAvailable()) {
             leaderboard = [
-                { rank: 7, displayName: "Player 1", score: 1000000 },
-                { rank: 8, displayName: "Player 2", score: 1000000 },
-                { rank: 9, displayName: "Player 3", score: 900000 },
-                { rank: 10, displayName: "Player 4", score: 800000 },
-                { rank: 11111, displayName: "Player 5", score: 70000000 },
-                { rank: 22222, displayName: "VeryLongName_06", score: 600000 },
-                { rank: 33333, displayName: "Player 7", score: 500000 },
-                { rank: 44444, displayName: "Player 8", score: 400000 },
-                { rank: 55555, displayName: "Player 9", score: 300000 },
-                { rank: 66666, displayName: "Player 10", score: 200000 }];
+                { rank: 0, displayName: "An", score: 0 },
+                { rank: 1, displayName: "Error", score: 0 },
+                { rank: 2, displayName: "Has", score: 0 },
+                { rank: 3, displayName: "Occurred", score: 0 },
+                { rank: 4, displayName: "While", score: 0 },
+                { rank: 5, displayName: "Trying", score: 0 },
+                { rank: 6, displayName: "To", score: 0 },
+                { rank: 7, displayName: "Retrieve", score: 0 },
+                { rank: 8, displayName: "The", score: 0 },
+                { rank: 9, displayName: "Leaderboard", score: 0 }
+            ];
         } else {
-            leaderboard = [
-                { rank: 0, displayName: "Player 1", score: 1000000 },
-                { rank: 1, displayName: "Player 2", score: 1000000 },
-                { rank: 2, displayName: "Player 3", score: 900000 },
-                { rank: 3, displayName: "Player 4", score: 800000 },
-                { rank: 4, displayName: "Player 5", score: 700000 },
-                { rank: 5, displayName: "Player 6", score: 600000 },
-                { rank: 6, displayName: "Player 7", score: 500000 },
-                { rank: 7, displayName: "Player 8", score: 400000 },
-                { rank: 8, displayName: "Player 9", score: 300000 },
-                { rank: 9, displayName: "Player 10", score: 200000 }];
+            if (isAroundPlayer) {
+                leaderboard = [
+                    { rank: 0, displayName: "Sign In", score: 0 },
+                    { rank: 1, displayName: "And", score: 0 },
+                    { rank: 2, displayName: "Play", score: 0 },
+                    { rank: 3, displayName: "On", score: 0 },
+                    { rank: 4, displayName: "HeyVR", score: 0 },
+                    { rank: 5, displayName: "To", score: 0 },
+                    { rank: 6, displayName: "Submit", score: 0 },
+                    { rank: 7, displayName: "Your", score: 0 },
+                    { rank: 8, displayName: "Own", score: 0 },
+                    { rank: 9, displayName: "Score", score: 0 }
+                ];
+            } else {
+                leaderboard = [
+                    { rank: 0, displayName: "The", score: 0 },
+                    { rank: 1, displayName: "Top 10", score: 0 },
+                    { rank: 2, displayName: "Leaderboard", score: 0 },
+                    { rank: 3, displayName: "Is", score: 0 },
+                    { rank: 4, displayName: "Available", score: 0 },
+                    { rank: 5, displayName: "Only", score: 0 },
+                    { rank: 5, displayName: "When", score: 0 },
+                    { rank: 7, displayName: "Playing", score: 0 },
+                    { rank: 8, displayName: "On", score: 0 },
+                    { rank: 9, displayName: "HeyVR", score: 0 },
+                ];
+            }
         }
 
         while (leaderboard.length > scoresAmount) {

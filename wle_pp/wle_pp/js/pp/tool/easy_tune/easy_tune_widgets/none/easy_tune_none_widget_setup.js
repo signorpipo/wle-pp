@@ -9,8 +9,8 @@ PP.EasyTuneNoneWidgetSetup = class EasyTuneNoneWidgetSetup extends PP.EasyTuneBa
     }
 
     _initializeBuildSetupHook() {
-        this.myTypeNotSupportedPanelPosition = [0, -0.03, this._myPanelZOffset];
-        this.myTypeNotSupportedTextScale = [0.275, 0.275, 0.275];
+        this.myTypeNotSupportedPanelPosition = PP.vec3_create(0, -0.03, this._myPanelZOffset);
+        this.myTypeNotSupportedTextScale = PP.vec3_create(0.275, 0.275, 0.275);
         this.myTypeNotSupportedText = "Type Not Supported";
     }
 };

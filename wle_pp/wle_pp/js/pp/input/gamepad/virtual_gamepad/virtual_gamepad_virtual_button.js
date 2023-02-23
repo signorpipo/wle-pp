@@ -2,6 +2,7 @@ PP.VirtualGamepadVirtualButton = class VirtualGamepadVirtualButton {
     constructor(buttonElementParent, virtualGamepadParams, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
         this._myButtonElement = null;
         this._myButtonIcon = null;
+        this._myButtonDetectionElement = null;
 
         this._myIsActive = true;
 
@@ -15,15 +16,15 @@ PP.VirtualGamepadVirtualButton = class VirtualGamepadVirtualButton {
 
         this._build(buttonElementParent, virtualButtonHandedness, virtualButtonIndex);
 
-        this._myButtonElement.addEventListener("pointerdown", this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents));
+        this._myButtonDetectionElement.addEventListener("pointerdown", this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents));
         document.body.addEventListener("pointerup", this._onPointerUp.bind(this));
 
         if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
             document.body.addEventListener("pointerleave", this._onPointerLeave.bind(this));
         }
 
-        this._myButtonElement.addEventListener("mouseenter", this._onButtonElementEnter.bind(this));
-        this._myButtonElement.addEventListener("mouseleave", this._onButtonElementLeave.bind(this));
+        this._myButtonDetectionElement.addEventListener("mouseenter", this._onButtonEnter.bind(this));
+        this._myButtonDetectionElement.addEventListener("mouseleave", this._onButtonLeave.bind(this));
     }
 
     isPressed() {
@@ -89,13 +90,13 @@ PP.VirtualGamepadVirtualButton = class VirtualGamepadVirtualButton {
         this.reset();
     }
 
-    _onButtonElementEnter(event) {
+    _onButtonEnter(event) {
         if (!this._myIsActive) return;
 
         this._myButtonIcon.onMouseEnter(event);
     }
 
-    _onButtonElementLeave(event) {
+    _onButtonLeave(event) {
         if (!this._myIsActive) return;
 
         this._myButtonIcon.onMouseLeave(event);
@@ -161,6 +162,28 @@ PP.VirtualGamepadVirtualButton = class VirtualGamepadVirtualButton {
         buttonPivot.appendChild(this._myButtonElement);
 
         this._myButtonIcon = new PP.VirtualGamepadIcon(this._myButtonElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myInterfaceScale);
+
+        let buttonElementStill = document.createElement("div");
+        buttonElementStill.style.position = "absolute";
+        buttonElementStill.style.width = "100%";
+        buttonElementStill.style.height = "100%";
+        buttonElementStill.style.transform = "rotate(" + counterAngle + "deg)";
+        buttonPivot.appendChild(buttonElementStill);
+
+        let buttonDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        buttonDetectionElementSVG.style.position = "absolute";
+        buttonDetectionElementSVG.style.width = "100%";
+        buttonDetectionElementSVG.style.height = "100%";
+        buttonElementStill.appendChild(buttonDetectionElementSVG);
+
+        let buttonDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        buttonDetectionElement.setAttributeNS(null, 'cx', "50%");
+        buttonDetectionElement.setAttributeNS(null, 'cy', "50%");
+        buttonDetectionElement.setAttributeNS(null, 'r', "50%");
+        buttonDetectionElement.style.fill = "#00000000";
+        buttonDetectionElementSVG.appendChild(buttonDetectionElement);
+
+        this._myButtonDetectionElement = buttonDetectionElement;
     }
 
     _createSizeValue(value, minSizeMultiplier) {

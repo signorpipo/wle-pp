@@ -4,7 +4,7 @@ PP.myEasyTuneTarget = null;
 
 // fileURL can contain parameters inside brackets, like {param}
 // those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-PP.importEasyTuneVariables = function (fileURL = null, resetVariablesDefaultValueOnImport = false, onSuccessCallback = null, onFailureCallback = null) {
+PP.importEasyTuneVariables = function importEasyTuneVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, onSuccessCallback = null, onFailureCallback = null) {
     if (fileURL == null || fileURL.length == 0) {
         if (navigator.clipboard) {
             navigator.clipboard.readText().then(
@@ -95,7 +95,7 @@ PP.importEasyTuneVariables = function (fileURL = null, resetVariablesDefaultValu
 
 // fileURL can contain parameters inside brackets, like {param}
 // those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-PP.exportEasyTuneVariables = function (fileURL = null, onSuccessCallback = null, onFailureCallback = null) {
+PP.exportEasyTuneVariables = function exportEasyTuneVariables(fileURL = null, onSuccessCallback = null, onFailureCallback = null) {
     let jsonVariables = PP.myEasyTuneVariables.toJSON();
 
     if (fileURL == null || fileURL.length == 0) {
@@ -173,20 +173,20 @@ PP.exportEasyTuneVariables = function (fileURL = null, onSuccessCallback = null,
 };
 
 PP.mySetEasyTuneWidgetActiveVariableCallbacks = [];
-PP.setEasyTuneWidgetActiveVariable = function (variableName) {
+PP.setEasyTuneWidgetActiveVariable = function setEasyTuneWidgetActiveVariable(variableName) {
     for (let callback of PP.mySetEasyTuneWidgetActiveVariableCallbacks) {
         callback(variableName);
     }
 };
 
 PP.myRefreshEasyTuneWidgetCallbacks = [];
-PP.refreshEasyTuneWidget = function () {
+PP.refreshEasyTuneWidget = function refreshEasyTuneWidget() {
     for (let callback of PP.myRefreshEasyTuneWidgetCallbacks) {
         callback();
     }
 };
 
-PP._importExportEasyTuneVariablesReplaceFileURLParams = function (fileURL) {
+PP._importExportEasyTuneVariablesReplaceFileURLParams = function _importExportEasyTuneVariablesReplaceFileURLParams(fileURL) {
     let params = fileURL.match(/\{.+?\}/g);
 
     if (params == null || params.length == 0) {

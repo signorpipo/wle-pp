@@ -75,10 +75,17 @@ PP.Timer = class Timer {
 
     getPercentage() {
         let percentage = 1;
-        if (this._myTimeLeft > 0) {
+        if (this._myTimeLeft > 0 && this._myDuration > 0) {
             percentage = (this._myDuration - this._myTimeLeft) / this._myDuration;
         }
         return Math.pp_clamp(percentage, 0, 1);
+    }
+
+    setPercentage(percentage) {
+        if (this.isRunning()) {
+            let durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
+            this._myTimeLeft = this._myDuration * durationPercentage;
+        }
     }
 
     onEnd(callback, id = null) {

@@ -1,6 +1,6 @@
 //This is added just to make it easy to just use plain number instead of doing new PP.NumberOverValue(<number>) 
 //You can remove this if it cause issues but you won't be able anymore to use plain number and will have to use new PP.NumberOverValue(<number>) 
-Number.prototype.get = function () {
+Number.prototype.get = function get() {
     return this.valueOf();
 };
 Object.defineProperty(Number.prototype, "get", { enumerable: false });

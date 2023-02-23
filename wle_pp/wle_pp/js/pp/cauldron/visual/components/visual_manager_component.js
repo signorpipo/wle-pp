@@ -13,16 +13,16 @@ WL.registerComponent('pp-visual-manager', {
         PP.myVisualData.myDefaultMaterials.myDefaultTextMaterial = PP.myDefaultResources.myMaterials.myText.clone();
 
         PP.myVisualData.myDefaultMaterials.myDefaultRightMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-        PP.myVisualData.myDefaultMaterials.myDefaultRightMaterial.color = [1, 0, 0, 1];
+        PP.myVisualData.myDefaultMaterials.myDefaultRightMaterial.color = PP.vec4_create(1, 0, 0, 1);
         PP.myVisualData.myDefaultMaterials.myDefaultUpMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-        PP.myVisualData.myDefaultMaterials.myDefaultUpMaterial.color = [0, 1, 0, 1];
+        PP.myVisualData.myDefaultMaterials.myDefaultUpMaterial.color = PP.vec4_create(0, 1, 0, 1);
         PP.myVisualData.myDefaultMaterials.myDefaultForwardMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-        PP.myVisualData.myDefaultMaterials.myDefaultForwardMaterial.color = [0, 0, 1, 1];
+        PP.myVisualData.myDefaultMaterials.myDefaultForwardMaterial.color = PP.vec4_create(0, 0, 1, 1);
 
         PP.myVisualData.myDefaultMaterials.myDefaultRayMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-        PP.myVisualData.myDefaultMaterials.myDefaultRayMaterial.color = [0, 1, 0, 1];
+        PP.myVisualData.myDefaultMaterials.myDefaultRayMaterial.color = PP.vec4_create(0, 1, 0, 1);
         PP.myVisualData.myDefaultMaterials.myDefaultHitNormalMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-        PP.myVisualData.myDefaultMaterials.myDefaultHitNormalMaterial.color = [1, 0, 0, 1];
+        PP.myVisualData.myDefaultMaterials.myDefaultHitNormalMaterial.color = PP.vec4_create(1, 0, 0, 1);
 
         PP.myVisualManager.start();
     },

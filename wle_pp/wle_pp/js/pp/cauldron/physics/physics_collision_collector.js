@@ -1,4 +1,4 @@
-PP.PhysXCollisionCollector = class PhysXCollisionCollector {
+PP.PhysicsCollisionCollector = class PhysicsCollisionCollector {
     constructor(physXComponent, isTrigger = false) {
         this._myPhysX = physXComponent;
 
@@ -210,7 +210,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
             this._myTriggerDesyncFixDelay.start();
 
             let collisionsToEnd = this._myCollisions.pp_findAll(function (element) {
-                let physX = element.pp_getComponent("physx");
+                let physX = element.pp_getComponentSelf("physx");
                 return physX == null || !physX.active;
             });
 
@@ -218,7 +218,7 @@ PP.PhysXCollisionCollector = class PhysXCollisionCollector {
                 //console.error("DESYNC RESOLVED");
 
                 for (let collision of collisionsToEnd) {
-                    let physX = collision.pp_getComponent("physx");
+                    let physX = collision.pp_getComponentSelf("physx");
                     if (physX) {
                         this._onCollisionEnd(physX);
                     } else {

@@ -48,7 +48,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         if (!this._myIsStarted) {
             this._myStartVariable = variableName;
         } else if (this._myEasyTuneVariables.has(variableName)) {
-            this._myCurrentVariable = this._myEasyTuneVariables.get(variableName);
+            this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(variableName);
             this._selectCurrentWidget();
         } else {
             console.log("Can't set easy tune active variable");
@@ -85,16 +85,16 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         this._myWidgetFrame.start(parentObject, additionalSetup);
 
         this._myEasyTuneVariables = easyTuneVariables;
-        this._myEasyTuneLastSize = this._myEasyTuneVariables.size;
-        this._myVariableNames = Array.from(this._myEasyTuneVariables.keys());
+        this._myEasyTuneLastSize = this._myEasyTuneVariables.length();
+        this._myVariableNames = this._myEasyTuneVariables.getEasyTuneVariablesNames();
 
-        if (this._myEasyTuneVariables.size > 0) {
-            this._myCurrentVariable = this._myEasyTuneVariables.get(this._myVariableNames[0]);
+        if (this._myEasyTuneVariables.length() > 0) {
+            this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
         }
 
         if (this._myStartVariable) {
             if (this._myEasyTuneVariables.has(this._myStartVariable)) {
-                this._myCurrentVariable = this._myEasyTuneVariables.get(this._myStartVariable);
+                this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myStartVariable);
             } else {
                 console.log("Can't set easy tune active variable");
             }
@@ -106,11 +106,11 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     update(dt) {
         this._myWidgetFrame.update(dt);
 
-        if (this._myEasyTuneVariables.size != this._myEasyTuneLastSize || this._myDirty) {
+        if (this._myEasyTuneVariables.length() != this._myEasyTuneLastSize || this._myDirty) {
             this._refreshEasyTuneVariables();
         }
 
-        if (this._myWidgetFrame.myIsWidgetVisible && this._myEasyTuneVariables.size > 0) {
+        if (this._myWidgetFrame.myIsWidgetVisible && this._myEasyTuneVariables.length() > 0) {
             if (this._mySetup.myRefreshVariablesDelay != null) {
                 this._myRefreshVariablesTimer += dt;
                 if (this._myRefreshVariablesTimer > this._mySetup.myRefreshVariablesDelay) {
@@ -155,7 +155,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _selectCurrentWidget() {
-        if (this._myEasyTuneVariables.size <= 0) {
+        if (this._myEasyTuneVariables.length() <= 0) {
             return;
         }
 
@@ -181,14 +181,14 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _refreshEasyTuneVariables() {
-        this._myVariableNames = Array.from(this._myEasyTuneVariables.keys());
-        this._myEasyTuneLastSize = this._myEasyTuneVariables.size;
+        this._myVariableNames = this._myEasyTuneVariables.getEasyTuneVariablesNames();
+        this._myEasyTuneLastSize = this._myEasyTuneVariables.length();
 
-        if (this._myEasyTuneVariables.size > 0) {
+        if (this._myEasyTuneVariables.length() > 0) {
             if (this._myCurrentVariable && this._myEasyTuneVariables.has(this._myCurrentVariable.myName)) {
-                this._myCurrentVariable = this._myEasyTuneVariables.get(this._myCurrentVariable.myName);
+                this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myCurrentVariable.myName);
             } else {
-                this._myCurrentVariable = this._myEasyTuneVariables.get(this._myVariableNames[0]);
+                this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
             }
 
             this._selectCurrentWidget();
@@ -224,7 +224,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         }
 
         if (this._myCurrentWidget) {
-            if (this._myEasyTuneVariables.size > 0) {
+            if (this._myEasyTuneVariables.length() > 0) {
                 this._myCurrentWidget.setVisible(visible);
             } else {
                 this._myCurrentWidget.setVisible(false);
@@ -255,7 +255,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _scrollVariable(amount) {
-        if (this._myEasyTuneVariables.size <= 0) {
+        if (this._myEasyTuneVariables.length() <= 0) {
             return;
         }
 
@@ -263,7 +263,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
         if (variableIndex >= 0) {
             let newIndex = (((variableIndex + amount) % this._myVariableNames.length) + this._myVariableNames.length) % this._myVariableNames.length; //manage negative numbers
             if (this._myEasyTuneVariables.has(this._myVariableNames[newIndex])) {
-                this._myCurrentVariable = this._myEasyTuneVariables.get(this._myVariableNames[newIndex]);
+                this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[newIndex]);
                 this._selectCurrentWidget();
             } else {
                 this._refreshEasyTuneVariables();
@@ -276,7 +276,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     _createIndexString() {
         let indexString = " (";
         let index = (this._getVariableIndex(this._myCurrentVariable) + 1).toString();
-        let length = (this._myEasyTuneVariables.size).toString();
+        let length = (this._myEasyTuneVariables.length()).toString();
         while (index.length < length.length) {
             index = "0".concat(index);
         }
@@ -292,7 +292,7 @@ PP.EasyTuneWidget = class EasyTuneWidget {
     }
 
     _updateActiveVariable() {
-        this._myEasyTuneVariables.forEach(function (value) {
+        this._myEasyTuneVariables.getEasyTuneVariables().forEach(function (value) {
             value.myIsActive = false;
         });
 

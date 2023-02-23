@@ -2,9 +2,9 @@
 Easy Tune Variables Examples
 
 Number:         PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Float", 1.00, 0.1, 3));
-Number Array:   PP.myEasyTuneVariables.add(new PP.EasyTuneNumberArray("Float Array", [1.00,2.00,3.00], 0.1, 3));
+Number Array:   PP.myEasyTuneVariables.add(new PP.EasyTuneNumberArray("Float Array", [1.00, 2.00, 3.00], 0.1, 3));
 Int:            PP.myEasyTuneVariables.add(new PP.EasyTuneInt("Int", 1, 1));
-Int Array:      PP.myEasyTuneVariables.add(new PP.EasyTuneIntArray("Int Array", [1,2,3], 1));
+Int Array:      PP.myEasyTuneVariables.add(new PP.EasyTuneIntArray("Int Array", [1, 2, 3], 1));
 Bool:           PP.myEasyTuneVariables.add(new PP.EasyTuneBool("Bool", false));
 Bool Array:     PP.myEasyTuneVariables.add(new PP.EasyTuneBoolArray("Bool Array", [false, true, false]));
 Transform:      PP.myEasyTuneVariables.add(new PP.EasyTuneTransform("Transform", PP.mat4_create(), true));

@@ -31,7 +31,7 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
         return xrFrame.getJointPose(this._myInputSource.hand.get(this._myTrackedHandJointID), this._myReferenceSpace);
     }
 
-    _updateHook(dt, xrPose) {
+    _updateHook(dt, updateVelocity, xrPose) {
         if (xrPose != null) {
             this._myJointRadius = xrPose.radius;
         }

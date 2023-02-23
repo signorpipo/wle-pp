@@ -22,6 +22,7 @@
   "main": "./js/bundle.js",
   "exports": "./js/bundle.js",
   "dependencies": {
+    "@wonderlandengine/api": "^0.9.6",
     "gl-matrix": "^3.4.3",
     "howler": "^2.2.3"
   },

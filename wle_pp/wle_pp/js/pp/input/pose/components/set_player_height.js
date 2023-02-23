@@ -4,7 +4,7 @@ WL.registerComponent("pp-set-player-height", {
 }, {
     start() {
         let localPosition = this.object.pp_getPositionLocal();
-        this.object.pp_setPositionLocal([localPosition[0], this._myEyesHeight, localPosition[2]]);
+        this.object.pp_setPositionLocal(PP.vec3_create(localPosition[0], this._myEyesHeight, localPosition[2]));
 
         this._myHeightSetOnce = false;
 
@@ -18,11 +18,11 @@ WL.registerComponent("pp-set-player-height", {
         if (this.active && (!this._mySetOnlyOnStart || !this._myHeightSetOnce)) {
             let localPosition = this.object.pp_getPositionLocal();
             if (PP.XRUtils.isReferenceSpaceLocalFloor()) {
-                this.object.pp_setPositionLocal([localPosition[0], 0, localPosition[2]]);
+                this.object.pp_setPositionLocal(PP.vec3_create(localPosition[0], 0, localPosition[2]));
             } else if (PP.XRUtils.isDeviceEmulated()) {
-                this.object.pp_setPositionLocal([localPosition[0], 0, localPosition[2]]);
+                this.object.pp_setPositionLocal(PP.vec3_create(localPosition[0], 0, localPosition[2]));
             } else {
-                this.object.pp_setPositionLocal([localPosition[0], this._myEyesHeight, localPosition[2]]);
+                this.object.pp_setPositionLocal(PP.vec3_create(localPosition[0], this._myEyesHeight, localPosition[2]));
             }
 
             this._myHeightSetOnce = true;
@@ -31,7 +31,7 @@ WL.registerComponent("pp-set-player-height", {
     _onXRSessionEnd() {
         if (this.active && !this._mySetOnlyOnStart) {
             let localPosition = this.object.pp_getPositionLocal();
-            this.object.pp_setPositionLocal([localPosition[0], this._myEyesHeight, localPosition[2]]);
+            this.object.pp_setPositionLocal(PP.vec3_create(localPosition[0], this._myEyesHeight, localPosition[2]));
         }
     }
 });

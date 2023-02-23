@@ -4,7 +4,7 @@ visualParams.myStart.vec3_copy(start);
 visualParams.myDirection.vec3_copy(direction);
 visualParams.myLength = 0.2;
 visualParams.myMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = [1, 1, 1, 1];
+visualParams.myMaterial.color = PP.vec4_create(1, 1, 1, 1);
 PP.myVisualManager.draw(visualParams);
 
 or
@@ -15,8 +15,8 @@ let visualLine = new PP.VisualLine(visualParams);
 PP.VisualLineParams = class VisualLineParams {
 
     constructor() {
-        this.myStart = [0, 0, 0];
-        this.myDirection = [0, 0, 1];
+        this.myStart = PP.vec3_create();
+        this.myDirection = PP.vec3_create(0, 0, 1);
         this.myLength = 0;
 
         this.myThickness = 0.005;
@@ -26,7 +26,8 @@ PP.VisualLineParams = class VisualLineParams {
         this.myMaterial = null;     // null means it will default on PP.myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // if this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = null;       // if this is set the parent will not be the visual root anymore, the positions will be local to this object
+        this.myParent = PP.myVisualData.myRootObject;
+        this.myIsLocal = false;
 
         this.myType = PP.VisualElementType.LINE;
     }
@@ -38,6 +39,10 @@ PP.VisualLineParams = class VisualLineParams {
         this.myStart.vec3_copy(start);
 
         return this;
+    }
+
+    copy(other) {
+        // implemented outside class definition
     }
 };
 
@@ -83,6 +88,11 @@ PP.VisualLine = class VisualLine {
         this._markDirty();
     }
 
+    copyParams(params) {
+        this._myParams.copy(params);
+        this._markDirty();
+    }
+
     paramsUpdated() {
         this._markDirty();
     }
@@ -120,26 +130,7 @@ PP.VisualLine = class VisualLine {
 
     clone() {
         let clonedParams = new PP.VisualLineParams();
-        clonedParams.myStart.vec3_copy(this._myParams.myStart);
-        clonedParams.myDirection.vec3_copy(this._myParams.myDirection);
-        clonedParams.myLength = this._myParams.myLength;
-        clonedParams.myThickness = this._myParams.myThickness;
-
-        clonedParams.myMesh = this._myParams.myMesh;
-
-        if (this._myParams.myMaterial != null) {
-            clonedParams.myMaterial = this._myParams.myMaterial.clone();
-        } else {
-            clonedParams.myMaterial = null;
-        }
-
-        if (this._myParams.myColor != null) {
-            clonedParams.myColor.vec4_copy(this._myParams.myColor);
-        } else {
-            clonedParams.myColor = null;
-        }
-
-        clonedParams.myParent = this._myParams.myParent;
+        clonedParams.copy(this._myParams);
 
         let clone = new PP.VisualLine(clonedParams);
         clone.setAutoRefresh(this._myAutoRefresh);
@@ -156,18 +147,28 @@ PP.VisualLine.prototype._refresh = function () {
 
     let forward = PP.vec3_create(0, 1, 0);
     return function _refresh() {
-        this._myLineRootObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
+        this._myLineRootObject.pp_setParent(this._myParams.myParent, false);
 
-        this._myLineRootObject.pp_setPositionLocal(this._myParams.myStart);
-
-        this._myLineObject.pp_resetPositionLocal();
-        this._myLineObject.pp_resetScaleLocal();
+        if (this._myParams.myIsLocal) {
+            this._myLineRootObject.pp_setPositionLocal(this._myParams.myStart);
+        } else {
+            this._myLineRootObject.pp_setPosition(this._myParams.myStart);
+        }
 
         scaleLine.vec3_set(this._myParams.myThickness / 2, this._myParams.myLength / 2, this._myParams.myThickness / 2);
-        this._myLineObject.pp_scaleObject(scaleLine);
+        if (this._myParams.myIsLocal) {
+            this._myLineObject.pp_setScaleLocal(scaleLine);
+        } else {
+            this._myLineObject.pp_setScale(scaleLine);
+        }
 
-        this._myLineObject.pp_setUpLocal(this._myParams.myDirection, forward);
+        if (this._myParams.myIsLocal) {
+            this._myLineObject.pp_setUpLocal(this._myParams.myDirection, forward);
+        } else {
+            this._myLineObject.pp_setUp(this._myParams.myDirection, forward);
+        }
 
+        this._myLineObject.pp_resetPositionLocal();
         translateLine.vec3_set(0, this._myParams.myLength / 2, 0);
         this._myLineObject.pp_translateObject(translateLine);
 
@@ -193,6 +194,33 @@ PP.VisualLine.prototype._refresh = function () {
     };
 }();
 
+PP.VisualLineParams.prototype.copy = function copy(other) {
+    this.myStart.vec3_copy(other.myStart);
+    this.myDirection.vec3_copy(other.myDirection);
+    this.myLength = other.myLength;
+    this.myThickness = other.myThickness;
+
+    this.myMesh = other.myMesh;
+
+    if (other.myMaterial != null) {
+        this.myMaterial = other.myMaterial.clone();
+    } else {
+        this.myMaterial = null;
+    }
+
+    if (other.myColor != null) {
+        this.myColor.vec4_copy(other.myColor);
+    } else {
+        this.myColor = null;
+    }
+
+    this.myParent = other.myParent;
+    this.myIsLocal = other.myIsLocal;
+
+    this.myType = other.myType;
+};
+
 
 
 Object.defineProperty(PP.VisualLine.prototype, "_refresh", { enumerable: false });
+Object.defineProperty(PP.VisualLineParams.prototype, "copy", { enumerable: false });

@@ -14,6 +14,17 @@ WL.registerComponent("pp-easy-mesh-color", {
     },
     update: function (dt) {
         this._myEasyObjectTuner.update(dt);
+    },
+    pp_clone(targetObject) {
+        let clonedComponent = targetObject.pp_addComponent(this.type, {
+            "_myVariableName": this._myVariableName,
+            "_mySetAsDefault": this._mySetAsDefault,
+            "_myUseTuneTarget": this._myUseTuneTarget,
+            "_myColorModel": this._myColorModel,
+            "_myColorType": this._myColorType,
+        });
+
+        return clonedComponent;
     }
 });
 

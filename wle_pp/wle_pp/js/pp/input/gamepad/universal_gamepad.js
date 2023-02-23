@@ -59,19 +59,6 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
         return handPose;
     }
 
-    isGamepadActive() {
-        let isActive = false;
-
-        for (let core of this._myGamepadCores.values()) {
-            if (core.isGamepadCoreActive()) {
-                isActive = true;
-                break;
-            }
-        }
-
-        return isActive;
-    }
-
     _start() {
         for (let core of this._myGamepadCores.values()) {
             core.start();

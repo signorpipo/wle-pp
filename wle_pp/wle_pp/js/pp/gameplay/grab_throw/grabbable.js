@@ -1,7 +1,8 @@
 WL.registerComponent('pp-grabbable', {
     _myThrowLinearVelocityMultiplier: { type: WL.Type.Float, default: 1 },
     _myThrowAngularVelocityMultiplier: { type: WL.Type.Float, default: 1 },
-    _myKinematicValueOnRelease: { type: WL.Type.Enum, values: ['true', 'false', 'keep'], default: 'false' },
+    _myKinematicValueOnRelease: { type: WL.Type.Enum, values: ['true', 'false', 'own'], default: 'false' },
+    _myParentOnRelease: { type: WL.Type.Enum, values: ['null', 'own'], default: 'own' },
 }, {
     init: function () {
         this._myIsGrabbed = false;
@@ -110,7 +111,12 @@ WL.registerComponent('pp-grabbable', {
         this._myReleaseCallbacks.delete(id);
     },
     _release() {
-        this.object.pp_setParent(this._myOldParent);
+        if (this._myParentOnRelease == 0) {
+            this.object.pp_setParent(null);
+        } else {
+            this.object.pp_setParent(this._myOldParent);
+        }
+
         this._myIsGrabbed = false;
         this._myGrabber = null;
 
@@ -123,8 +129,20 @@ WL.registerComponent('pp-grabbable', {
         }
 
         if (this._myPhysX.kinematic) {
-            this._myPhysX.linearVelocity = [0, 0, 0];
-            this._myPhysX.angularVelocity = [0, 0, 0];
+            this._myPhysX.linearVelocity = PP.vec3_create();
+            this._myPhysX.angularVelocity = PP.vec3_create();
         }
+    },
+    pp_clone(targetObject) {
+        let clonedComponent = targetObject.pp_addComponent(this.type);
+
+        clonedComponent._myThrowLinearVelocityMultiplier = this._myThrowLinearVelocityMultiplier;
+        clonedComponent._myThrowAngularVelocityMultiplier = this._myThrowAngularVelocityMultiplier;
+        clonedComponent._myKinematicValueOnRelease = this._myKinematicValueOnRelease;
+
+        return clonedComponent;
+    },
+    pp_clonePostProcess() {
+        this.start();
     }
 });
