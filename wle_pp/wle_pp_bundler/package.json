@@ -1,6 +1,6 @@
 {
   "name": "wle_pp_bundler",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Pipo",
   "description": "Bundler for the WLE PP library",
   "homepage": "https://github.com/SignorPipo/wle_pp",
