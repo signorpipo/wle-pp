@@ -85,7 +85,7 @@ PP.HandPose.prototype.getRotationQuat = function () {
     let right = PP.vec3_create();
     let forward = PP.vec3_create();
     return function getRotationQuat() {
-        rotationQuat.quat_copy(this._myRotation);
+        rotationQuat.quat_copy(this._myRotationQuat);
 
         if (this._myFixForward) {
             rotationQuat.quat_rotateAxisRadians(Math.PI, rotationQuat.quat_getUp(up), rotationQuat);

@@ -17,7 +17,7 @@ WL.registerComponent('pp-finger-cursor', {
         this._myMultipleClickDelay = 0.3;
     },
     start: function () {
-        this._myCursorObjectRoot = WL.scene.addObject(null);
+        this._myCursorObjectRoot = WL.scene.addObject(this.object);
 
         if (this._myCursorObject == null) {
             this._myCursorObject = this._myCursorObjectRoot.pp_addObject();
@@ -28,7 +28,7 @@ WL.registerComponent('pp-finger-cursor', {
         this._myCollisionComponent = this._myCursorObject.addComponent('collision');
         this._myCollisionComponent.collider = WL.Collider.Sphere;
         this._myCollisionComponent.group = 1 << this._myCollisionGroup;
-        this._myCollisionComponent.extents = [this._myCollisionSize, this._myCollisionSize, this._myCollisionSize];
+        this._myCollisionComponent.extents = PP.vec3_create(this._myCollisionSize, this._myCollisionSize, this._myCollisionSize);
 
         if (WL.xrSession) {
             this._onXRSessionStart(WL.xrSession);

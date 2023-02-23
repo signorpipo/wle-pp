@@ -2,7 +2,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
 
     // Modified Functions
 
-    _WL._componentTypes[_WL._componentTypeIndices["mouse-look"]].prototype.init = function () {
+    _WL._componentTypes[_WL._componentTypeIndices["mouse-look"]].prototype.init = function init() {
         this.pointerId = null;
         this.prevMoveEvent = null;
 
@@ -60,7 +60,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         }.bind(this));
     };
 
-    _WL._componentTypes[_WL._componentTypeIndices["mouse-look"]].prototype.update = function (dt) {
+    _WL._componentTypes[_WL._componentTypeIndices["mouse-look"]].prototype.update = function update(dt) {
         if (this.resetMovingTimer.isRunning()) {
             this.resetMovingTimer.update(dt);
             if (this.resetMovingTimer.isDone()) {
@@ -87,7 +87,7 @@ if (_WL && _WL._componentTypes && _WL._componentTypes[_WL._componentTypeIndices[
         let referenceRight = PP.vec3_create();
 
         let newUp = PP.vec3_create();
-        return function (event) {
+        return function _onMove(event) {
             if (this.pointerId != null && event.pointerId != this.pointerId) return;
 
             if (this.active && (this.mouseDown || !this.requireMouseDown)) {

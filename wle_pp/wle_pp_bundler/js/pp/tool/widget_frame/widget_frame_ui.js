@@ -92,7 +92,7 @@ PP.WidgetFrameUI = class WidgetFrameUI {
     //Skeleton
     _createSkeleton() {
         this.myFixForwardObject = WL.scene.addObject(this._myParentObject);
-        this.myFixForwardObject.pp_rotateObject([0, 180, 0]);
+        this.myFixForwardObject.pp_rotateObject(PP.vec3_create(0, 180, 0));
         this.myPivotObject = WL.scene.addObject(this.myFixForwardObject);
         this.myWidgetObject = WL.scene.addObject(this.myPivotObject);
 
@@ -109,8 +109,8 @@ PP.WidgetFrameUI = class WidgetFrameUI {
         this.myPinButtonCursorTarget = WL.scene.addObject(this.myPinButtonPanel);
 
         this.myNonVRParentObject = WL.scene.addObject(PP.myPlayerObjects.myNonVRCamera);
-        this.myNonVRParentObject.pp_translateLocal([0, 0, -this._mySetup._myPivotObjectDistanceFromNonVRHead]);
-        this.myNonVRParentObject.pp_lookToLocal([0, 0, 1], [0, 1, 0]);
+        this.myNonVRParentObject.pp_translateLocal(PP.vec3_create(0, 0, -this._mySetup._myPivotObjectDistanceFromNonVRHead));
+        this.myNonVRParentObject.pp_lookToLocal(PP.vec3_create(0, 0, 1), PP.vec3_create(0, 1, 0));
 
     }
 
@@ -189,7 +189,7 @@ PP.WidgetFrameUI = class WidgetFrameUI {
         this.myFixForwardObject.pp_setParent(this._myParentObject);
 
         this.myFixForwardObject.pp_resetTransformLocal();
-        this.myFixForwardObject.pp_rotateObject([0, 180, 0]);
+        this.myFixForwardObject.pp_rotateObject(PP.vec3_create(0, 180, 0));
 
         this._updateObjectsTransforms(true);
     }

@@ -5,7 +5,7 @@ visualParams.mySegmentsAmount = 12;
 visualParams.mySegmentThickness = 0.05;
 visualParams.myTransform.mat4_copy(transform);
 visualParams.myMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = [1, 1, 1, 1];
+visualParams.myMaterial.color = PP.vec4_create(1, 1, 1, 1);
 PP.myVisualManager.draw(visualParams);
 
 or
@@ -27,9 +27,14 @@ PP.VisualTorusParams = class VisualTorusParams {
         this.myMaterial = null;     // null means it will default on PP.myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // if this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = null;       // if this is set the parent will not be the visual root anymore, the positions will be local to this object
+        this.myParent = PP.myVisualData.myRootObject;
+        this.myIsLocal = false;
 
         this.myType = PP.VisualElementType.TORUS;
+    }
+
+    copy(other) {
+        // implemented outside class definition
     }
 };
 
@@ -87,6 +92,11 @@ PP.VisualTorus = class VisualTorus {
         this._markDirty();
     }
 
+    copyParams(params) {
+        this._myParams.copy(params);
+        this._markDirty();
+    }
+
     paramsUpdated() {
         this._markDirty();
     }
@@ -140,6 +150,7 @@ PP.VisualTorus = class VisualTorus {
             visualSegment.setVisible(false);
 
             visualSegment.getParams().myParent = this._myTorusRootObject;
+            visualSegment.getParams().myIsLocal = true;
 
             this._myVisualSegmentList.push(visualSegment);
         }
@@ -147,27 +158,7 @@ PP.VisualTorus = class VisualTorus {
 
     clone() {
         let clonedParams = new PP.VisualTorusParams();
-        clonedParams.myRadius = this._myParams.myRadius;
-        clonedParams.mySegmentsAmount = this._myParams.mySegmentsAmount;
-        clonedParams.mySegmentThickness = this._myParams.mySegmentThickness;
-
-        clonedParams.myTransform.mat4_copy(this._myParams.myTransform);
-
-        clonedParams.mySegmentMesh = this._myParams.mySegmentMesh;
-
-        if (this._myParams.myMaterial != null) {
-            clonedParams.myMaterial = this._myParams.myMaterial.clone();
-        } else {
-            clonedParams.myMaterial = null;
-        }
-
-        if (this._myParams.myColor != null) {
-            clonedParams.myColor.vec4_copy(this._myParams.myColor);
-        } else {
-            clonedParams.myColor = null;
-        }
-
-        clonedParams.myParent = this._myParams.myParent;
+        clonedParams.copy(this._myParams);
 
         let clone = new PP.VisualTorus(clonedParams);
         clone.setAutoRefresh(this._myAutoRefresh);
@@ -195,8 +186,13 @@ PP.VisualTorus.prototype._refresh = function () {
             visualSegment.setVisible(false);
         }
 
-        this._myTorusRootObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
-        this._myTorusRootObject.pp_setTransformLocal(this._myParams.myTransform);
+        this._myTorusRootObject.pp_setParent(this._myParams.myParent, false);
+
+        if (this._myParams.myIsLocal) {
+            this._myTorusRootObject.pp_setTransformLocal(this._myParams.myTransform);
+        } else {
+            this._myTorusRootObject.pp_setTransform(this._myParams.myTransform);
+        }
 
         let sliceAngle = 2 * Math.PI / this._myParams.mySegmentsAmount;
         segmentStart.vec3_set(this._myParams.myRadius, 0, 0);
@@ -241,6 +237,34 @@ PP.VisualTorus.prototype._refresh = function () {
     };
 }();
 
+PP.VisualTorusParams.prototype.copy = function copy(other) {
+    this.myRadius = other.myRadius;
+    this.mySegmentsAmount = other.mySegmentsAmount;
+    this.mySegmentThickness = other.mySegmentThickness;
+
+    this.myTransform.mat4_copy(other.myTransform);
+
+    this.mySegmentMesh = other.mySegmentMesh;
+
+    if (other.myMaterial != null) {
+        this.myMaterial = other.myMaterial.clone();
+    } else {
+        this.myMaterial = null;
+    }
+
+    if (other.myColor != null) {
+        this.myColor.vec4_copy(other.myColor);
+    } else {
+        this.myColor = null;
+    }
+
+    this.myParent = other.myParent;
+    this.myIsLocal = other.myIsLocal;
+
+    this.myType = other.myType;
+};
+
 
 
 Object.defineProperty(PP.VisualTorus.prototype, "_refresh", { enumerable: false });
+Object.defineProperty(PP.VisualTorusParams.prototype, "copy", { enumerable: false });

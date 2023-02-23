@@ -171,11 +171,11 @@ PP.Mouse = class Mouse {
     }
 
     // the origin and direction are set by the mouse
-    raycastWorld(raycastSetup, raycastResult = new PP.RaycastResult()) {
+    raycastWorld(raycastSetup, raycastResults = new PP.RaycastResults()) {
         this.getOriginWorld(raycastSetup.myOrigin);
         this.getDirectionWorld(raycastSetup.myDirection);
-        raycastResult = PP.PhysicsUtils.raycast(raycastSetup, raycastResult);
-        return raycastResult;
+        raycastResults = PP.PhysicsUtils.raycast(raycastSetup, raycastResults);
+        return raycastResults;
     }
 
     getPositionScreen(out = PP.vec2_create()) {

@@ -1,18 +1,18 @@
 PP.EasyTuneVariables = class EasyTuneVariables {
     constructor() {
-        this._myMap = new Map();
+        this._myVariables = new Map();
     }
 
     add(variable) {
-        this._myMap.set(variable.myName, variable);
+        this._myVariables.set(variable.myName, variable);
     }
 
     remove(variableName) {
-        this._myMap.delete(variableName);
+        this._myVariables.delete(variableName);
     }
 
     get(variableName) {
-        let variable = this._myMap.get(variableName);
+        let variable = this._myVariables.get(variableName);
         if (variable) {
             return variable.getValue();
         }
@@ -21,14 +21,22 @@ PP.EasyTuneVariables = class EasyTuneVariables {
     }
 
     set(variableName, value, resetDefaultValue = false) {
-        let variable = this._myMap.get(variableName);
+        let variable = this._myVariables.get(variableName);
         if (variable) {
             variable.setValue(value, resetDefaultValue);
         }
     }
 
+    has(variableName) {
+        return this._myVariables.has(variableName);
+    }
+
+    length() {
+        return this._myVariables.size;
+    }
+
     isActive(variableName) {
-        let variable = this._myMap.get(variableName);
+        let variable = this._myVariables.get(variableName);
         if (variable) {
             return variable.myIsActive;
         }
@@ -37,13 +45,21 @@ PP.EasyTuneVariables = class EasyTuneVariables {
     }
 
     getEasyTuneVariable(variableName) {
-        return this._myMap.get(variableName);
+        return this._myVariables.get(variableName);
+    }
+
+    getEasyTuneVariables() {
+        return Array.from(this._myVariables.values());
+    }
+
+    getEasyTuneVariablesNames() {
+        return Array.from(this._myVariables.keys());
     }
 
     fromJSON(json, resetDefaultValue = false) {
         let objectJSON = JSON.parse(json);
 
-        for (let variable of this._myMap.values()) {
+        for (let variable of this._myVariables.values()) {
             let variableValueJSON = objectJSON[variable.myName];
             if (variableValueJSON !== undefined) {
                 variable.fromJSON(variableValueJSON, resetDefaultValue);
@@ -54,7 +70,7 @@ PP.EasyTuneVariables = class EasyTuneVariables {
     toJSON() {
         let objectJSON = {};
 
-        for (let variable of this._myMap.values()) {
+        for (let variable of this._myVariables.values()) {
             objectJSON[variable.myName] = variable.toJSON();
         }
 
@@ -62,14 +78,10 @@ PP.EasyTuneVariables = class EasyTuneVariables {
     }
 
     registerValueChangedEventListener(variableName, callbackID, callback) {
-        this._myMap.get(variableName).registerValueChangedEventListener(callbackID, callback);
+        this._myVariables.get(variableName).registerValueChangedEventListener(callbackID, callback);
     }
 
     unregisterValueChangedEventListener(variableName, callbackID, callback) {
-        this._myMap.get(variableName).unregisterValueChangedEventListener(callbackID);
-    }
-
-    _getInternalMap() {
-        return this._myMap;
+        this._myVariables.get(variableName).unregisterValueChangedEventListener(callbackID);
     }
 };

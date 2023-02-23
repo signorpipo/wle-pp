@@ -44,14 +44,14 @@ PP.VirtualGamepadIcon = class VirtualGamepadIcon {
 
         this._myPressed = false;
 
-        this._myMouseHoverCount = 0;
+        this._myIsMouseHover = false;
         this._myIsMouseHoverActive = true;
 
         this._build(iconElementParent, minSizeMultiplier, scale);
     }
 
     update(dt) {
-        if (this._myPressed || this._myMouseHoverCount == 0 || !this._myIsMouseHoverActive) {
+        if (this._myPressed || !this._myIsMouseHover || !this._myIsMouseHoverActive) {
             this._myIconContainerElement.style.filter = "none";
         } else {
             this._myIconContainerElement.style.filter = "brightness(" + this._myParams.myOverallHoveredBrightness + ")";
@@ -60,7 +60,7 @@ PP.VirtualGamepadIcon = class VirtualGamepadIcon {
 
     reset() {
         this.setPressed(false);
-        this._myMouseHoverCount = 0;
+        this._myIsMouseHover = false;
         this._myIconContainerElement.style.filter = "none";
     }
 
@@ -68,30 +68,30 @@ PP.VirtualGamepadIcon = class VirtualGamepadIcon {
         if (this._myPressed != pressed) {
             this._myPressed = pressed;
 
-            if (this._myParams.myIconType != PP.VirtualGamepadIconType.NONE) {
+            if (this._myPressed) {
+                this._myBackgroundElement.style.fill = this._myParams.myBackgroundPressedColor;
                 if (this._myIconElement != null) {
-                    if (this._myPressed) {
-                        this._myBackgroundElement.style.fill = this._myParams.myBackgroundPressedColor;
-                        if (this._myIconElement.style.strokeWidth.length > 0) {
-                            this._myIconElement.style.stroke = this._myParams.myIconPressedColor;
-                        } else {
-                            this._myIconElement.style.fill = this._myParams.myIconPressedColor;
-                        }
-
-                        if (this._myParams.myIconType == PP.VirtualGamepadIconType.IMAGE) {
-                            this._myIconElement.style.filter = "brightness(" + this._myParams.myImagePressedBrightness + ")";
-                        }
+                    if (this._myIconElement.style.strokeWidth.length > 0) {
+                        this._myIconElement.style.stroke = this._myParams.myIconPressedColor;
                     } else {
-                        this._myBackgroundElement.style.fill = this._myParams.myBackgroundColor;
-                        if (this._myIconElement.style.strokeWidth.length > 0) {
-                            this._myIconElement.style.stroke = this._myParams.myIconColor;
-                        } else {
-                            this._myIconElement.style.fill = this._myParams.myIconColor;
-                        }
+                        this._myIconElement.style.fill = this._myParams.myIconPressedColor;
+                    }
 
-                        if (this._myParams.myIconType == PP.VirtualGamepadIconType.IMAGE) {
-                            this._myIconElement.style.filter = "none";
-                        }
+                    if (this._myParams.myIconType == PP.VirtualGamepadIconType.IMAGE) {
+                        this._myIconElement.style.filter = "brightness(" + this._myParams.myImagePressedBrightness + ")";
+                    }
+                }
+            } else {
+                this._myBackgroundElement.style.fill = this._myParams.myBackgroundColor;
+                if (this._myIconElement != null) {
+                    if (this._myIconElement.style.strokeWidth.length > 0) {
+                        this._myIconElement.style.stroke = this._myParams.myIconColor;
+                    } else {
+                        this._myIconElement.style.fill = this._myParams.myIconColor;
+                    }
+
+                    if (this._myParams.myIconType == PP.VirtualGamepadIconType.IMAGE) {
+                        this._myIconElement.style.filter = "none";
                     }
                 }
             }
@@ -99,16 +99,11 @@ PP.VirtualGamepadIcon = class VirtualGamepadIcon {
     }
 
     onMouseEnter() {
-        this._myMouseHoverCount++;
+        this._myIsMouseHover = true;
     }
 
     onMouseLeave() {
-        this._myMouseHoverCount--;
-        this._myMouseHoverCount = Math.max(0, this._myMouseHoverCount);
-    }
-
-    resetMouseHoverCount() {
-        this._myMouseHoverCount = 0;
+        this._myIsMouseHover = false;
     }
 
     setMouseHoverActive(hoverActive) {

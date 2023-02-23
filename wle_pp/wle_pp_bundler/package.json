@@ -10,6 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@wonderlandengine/api": "^0.9.4",
     "gl-matrix": "^3.4.3",
     "howler": "^2.2.3"
   },

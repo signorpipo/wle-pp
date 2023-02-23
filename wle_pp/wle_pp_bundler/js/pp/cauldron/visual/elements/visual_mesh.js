@@ -3,7 +3,7 @@ let visualParams = new PP.VisualMeshParams();
 visualParams.myTransform = transform;
 visualParams.myMesh = PP.myDefaultResources.myMeshes.mySphere;
 visualParams.myMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = [1, 1, 1, 1];
+visualParams.myMaterial.color = PP.vec4_create(1, 1, 1, 1);
 PP.myVisualManager.draw(visualParams);
 
 or
@@ -19,9 +19,14 @@ PP.VisualMeshParams = class VisualMeshParams {
         this.myMesh = null;
         this.myMaterial = null;
 
-        this.myParent = null; // if this is set the parent will not be the visual root anymore, the positions will be local to this object
+        this.myParent = PP.myVisualData.myRootObject;
+        this.myIsLocal = false;
 
         this.myType = PP.VisualElementType.MESH;
+    }
+
+    copy(other) {
+        // implemented outside class definition
     }
 };
 
@@ -64,6 +69,11 @@ PP.VisualMesh = class VisualMesh {
         this._markDirty();
     }
 
+    copyParams(params) {
+        this._myParams.copy(params);
+        this._markDirty();
+    }
+
     paramsUpdated() {
         this._markDirty();
     }
@@ -85,8 +95,13 @@ PP.VisualMesh = class VisualMesh {
     }
 
     _refresh() {
-        this._myMeshObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
-        this._myMeshObject.pp_setTransformLocal(this._myParams.myTransform);
+        this._myMeshObject.pp_setParent(this._myParams.myParent, false);
+
+        if (this._myParams.myIsLocal) {
+            this._myMeshObject.pp_setTransformLocal(this._myParams.myTransform);
+        } else {
+            this._myMeshObject.pp_setTransform(this._myParams.myTransform);
+        }
 
         if (this._myParams.myMesh == null) {
             this._myMeshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
@@ -117,21 +132,7 @@ PP.VisualMesh = class VisualMesh {
 
     clone() {
         let clonedParams = new PP.VisualMeshParams();
-        clonedParams.myTransform.pp_copy(this._myParams.myTransform);
-
-        if (this._myParams.myMesh != null) {
-            clonedParams.myMesh = this._myParams.myMesh;
-        } else {
-            clonedParams.myMesh = null;
-        }
-
-        if (this._myParams.myMaterial != null) {
-            clonedParams.myMaterial = this._myParams.myMaterial.clone();
-        } else {
-            clonedParams.myMaterial = null;
-        }
-
-        clonedParams.myParent = this._myParams.myParent;
+        clonedParams.copy(this._myParams);
 
         let clone = new PP.VisualMesh(clonedParams);
         clone.setAutoRefresh(this._myAutoRefresh);
@@ -141,3 +142,28 @@ PP.VisualMesh = class VisualMesh {
         return clone;
     }
 };
+
+PP.VisualMeshParams.prototype.copy = function copy(other) {
+    this.myTransform.pp_copy(other.myTransform);
+
+    if (other.myMesh != null) {
+        this.myMesh = other.myMesh;
+    } else {
+        this.myMesh = null;
+    }
+
+    if (other.myMaterial != null) {
+        this.myMaterial = other.myMaterial.clone();
+    } else {
+        this.myMaterial = null;
+    }
+
+    this.myParent = other.myParent;
+    this.myIsLocal = other.myIsLocal;
+
+    this.myType = other.myType;
+};
+
+
+
+Object.defineProperty(PP.VisualMeshParams.prototype, "copy", { enumerable: false });

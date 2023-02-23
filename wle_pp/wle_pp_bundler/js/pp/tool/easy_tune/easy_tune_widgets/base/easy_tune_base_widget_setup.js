@@ -54,8 +54,8 @@ PP.EasyTuneBaseWidgetSetup = class EasyTuneBaseWidgetSetup {
         this.myTextJustification = WL.Justification.Middle;
         this.myTextColor = this.myDefaultTextColor;
 
-        this.myLabelTextScale = [0.19, 0.19, 0.19];
-        this.myButtonTextScale = [0.18, 0.18, 0.18];
+        this.myLabelTextScale = PP.vec3_create(0.19, 0.19, 0.19);
+        this.myButtonTextScale = PP.vec3_create(0.18, 0.18, 0.18);
 
         this._myPanelZOffset = 0.01;
         this._myColliderZOffset = 0.017;
@@ -65,35 +65,35 @@ PP.EasyTuneBaseWidgetSetup = class EasyTuneBaseWidgetSetup {
         // Pivot
 
         this.myPivotObjectPositions = [];
-        this.myPivotObjectPositions[PP.ToolHandedness.NONE] = [0, 0, this._getPivotZOffset()];
-        this.myPivotObjectPositions[PP.ToolHandedness.LEFT] = [-0.04, 0.02, this._getPivotZOffset()];
-        this.myPivotObjectPositions[PP.ToolHandedness.RIGHT] = [-0.08, 0.02, this._getPivotZOffset()];
+        this.myPivotObjectPositions[PP.ToolHandedness.NONE] = PP.vec3_create(0, 0, this._getPivotZOffset());
+        this.myPivotObjectPositions[PP.ToolHandedness.LEFT] = PP.vec3_create(-0.04, 0.02, this._getPivotZOffset());
+        this.myPivotObjectPositions[PP.ToolHandedness.RIGHT] = PP.vec3_create(-0.08, 0.02, this._getPivotZOffset());
 
-        this.mySideButtonBackgroundScale = [0.015, 0.015, 1];
+        this.mySideButtonBackgroundScale = PP.vec3_create(0.015, 0.015, 1);
         this.mySideButtonTextScale = this.myButtonTextScale;
-        this.mySideButtonTextPosition = [0, 0, 0.007];
+        this.mySideButtonTextPosition = PP.vec3_create(0, 0, 0.007);
 
-        this.mySideButtonCursorTargetPosition = [0, 0, 0];
+        this.mySideButtonCursorTargetPosition = PP.vec3_create(0, 0, 0);
         this.mySideButtonCursorTargetPosition[2] = this._myColliderZOffset - this._myPanelZOffset;
         this.mySideButtonCollisionExtents = this.mySideButtonBackgroundScale.slice(0);
         this.mySideButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
-        this.myLeftSideButtonPosition = [0, 0, -0.00001];
+        this.myLeftSideButtonPosition = PP.vec3_create(0, 0, -0.00001);
         this.myLeftSideButtonPosition[0] = -this._mySideButtonPanelHalfWidth + this.mySideButtonBackgroundScale[0] + this._mySideButtonDistanceFromBorder;
 
-        this.myRightSideButtonPosition = [0, 0, -0.00001];
+        this.myRightSideButtonPosition = PP.vec3_create(0, 0, -0.00001);
         this.myRightSideButtonPosition[0] = -this.myLeftSideButtonPosition[0];
 
         // Display
 
-        this.myDisplayPanelPosition = [0, 0.1, 0];
+        this.myDisplayPanelPosition = PP.vec3_create(0, 0.1, 0);
 
-        this.myVariableLabelPanelPosition = [0, 0.025, this._myPanelZOffset];
+        this.myVariableLabelPanelPosition = PP.vec3_create(0, 0.025, this._myPanelZOffset);
         this.myVariableLabelTextScale = this.myLabelTextScale;
 
-        this.myVariableLabelCursorTargetPosition = [0, 0, 0];
+        this.myVariableLabelCursorTargetPosition = PP.vec3_create(0, 0, 0);
         this.myVariableLabelCursorTargetPosition[2] = this._myColliderZOffset - this._myPanelZOffset;
-        this.myVariableLabelCollisionExtents = [0.065, 0.0175, 1];
+        this.myVariableLabelCollisionExtents = PP.vec3_create(0.065, 0.0175, 1);
         this.myVariableLabelCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
         this.myNextButtonText = ">";
@@ -117,13 +117,13 @@ PP.EasyTuneBaseWidgetSetup = class EasyTuneBaseWidgetSetup {
 
         // Import Export
 
-        this.myImportExportButtonBackgroundScale = [0.04, 0.02, 1];
+        this.myImportExportButtonBackgroundScale = PP.vec3_create(0.04, 0.02, 1);
         this.myImportExportButtonTextScale = this.myButtonTextScale;
-        this.myImportExportButtonTextPosition = [0, 0, 0.007];
+        this.myImportExportButtonTextPosition = PP.vec3_create(0, 0, 0.007);
 
         this.myImportExportPanelPosition = [0, this._getBackPanelMaxY() + this._mySideButtonDistanceFromBorder + this.myImportExportButtonBackgroundScale[1], this._myPanelZOffset];
 
-        this.myImportExportButtonCursorTargetPosition = [0, 0, 0];
+        this.myImportExportButtonCursorTargetPosition = PP.vec3_create(0, 0, 0);
         this.myImportExportButtonCursorTargetPosition[2] = this._myColliderZOffset - this._myPanelZOffset;
         this.myImportExportButtonCollisionExtents = this.myImportExportButtonBackgroundScale.slice(0);
         this.myImportExportButtonCollisionExtents[2] = this.myCursorTargetCollisionThickness;
@@ -141,10 +141,10 @@ PP.EasyTuneBaseWidgetSetup = class EasyTuneBaseWidgetSetup {
         this.myExportSuccessButtonText = "Done";
         this.myExportFailureButtonText = "Error";
 
-        this.myImportButtonPosition = [0, 0, -0.00001];
+        this.myImportButtonPosition = PP.vec3_create(0, 0, -0.00001);
         this.myImportButtonPosition[0] = -this.myImportExportButtonBackgroundScale[0] - this._mySideButtonDistanceFromBorder / 2;
 
-        this.myExportButtonPosition = [0, 0, -0.00001];
+        this.myExportButtonPosition = PP.vec3_create(0, 0, -0.00001);
         this.myExportButtonPosition[0] = -this.myImportButtonPosition[0];
 
 

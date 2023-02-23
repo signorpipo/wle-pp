@@ -2,7 +2,7 @@ import { Howler } from 'howler';
 
 PP.AudioManager = class AudioManager {
     constructor() {
-        this._myAudioSetupMap = new Map();
+        this._myAudioSetups = new Map();
     }
 
     createAudioPlayer(audioSetupID) {
@@ -15,18 +15,18 @@ PP.AudioManager = class AudioManager {
     }
 
     getAudioSetup(id) {
-        return this._myAudioSetupMap.get(id);
+        return this._myAudioSetups.get(id);
     }
 
     addAudioSetup(id, audioSetup, preload = true) {
-        this._myAudioSetupMap.set(id, audioSetup);
+        this._myAudioSetups.set(id, audioSetup);
         if (preload) {
             this.createAudioPlayer(id);
         }
     }
 
     removeAudioSetup(id) {
-        this._myAudioSetupMap.delete(id);
+        this._myAudioSetups.delete(id);
     }
 
     setVolume(volume) {

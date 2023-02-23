@@ -24,15 +24,15 @@ PP.EasyTuneBoolArrayWidgetSetup = class EasyTuneBoolArrayWidgetSetup extends PP.
 
         this.myValuesPanelPosition = [0, this.myVariableLabelPanelPosition[1] - this._myValuePanelDistanceFromVariableLabelPanel, this._myPanelZOffset];
 
-        this.myValueTextScale = [0.4, 0.4, 0.4];
+        this.myValueTextScale = PP.vec3_create(0.4, 0.4, 0.4);
 
-        this.myValueCursorTargetPosition = [0, 0, 0];
+        this.myValueCursorTargetPosition = PP.vec3_create(0, 0, 0);
         this.myValueCursorTargetPosition[2] = this._myColliderZOffset - this._myPanelZOffset;
-        this.myValueCollisionExtents = [0.065, 0.02, 1];
+        this.myValueCollisionExtents = PP.vec3_create(0.065, 0.02, 1);
         this.myValueCollisionExtents[2] = this.myCursorTargetCollisionThickness;
 
         this.myValuePanelsPositions = [];
-        this.myValuePanelsPositions[0] = [0, 0, 0];
+        this.myValuePanelsPositions[0] = PP.vec3_create(0, 0, 0);
         for (let i = 1; i < this.myArraySize; i++) {
             this.myValuePanelsPositions[i] = this.myValuePanelsPositions[i - 1].slice(0);
             this.myValuePanelsPositions[i][1] -= this._myDistanceBetweenValues;
@@ -40,7 +40,7 @@ PP.EasyTuneBoolArrayWidgetSetup = class EasyTuneBoolArrayWidgetSetup extends PP.
     }
 
     _initializeRuntimeSetupHook() {
-        this.myTextHoverScaleMultiplier = [1.25, 1.25, 1.25];
+        this.myTextHoverScaleMultiplier = PP.vec3_create(1.25, 1.25, 1.25);
 
         this.myThumbstickToggleThreshold = 0.6;
         this.myButtonEditDelay = 0;

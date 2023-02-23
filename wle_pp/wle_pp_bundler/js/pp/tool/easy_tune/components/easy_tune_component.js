@@ -40,7 +40,7 @@ WL.registerComponent('pp-easy-tune', {
             PP.exportEasyTuneVariables(this._myVariablesExportURL, onSuccessCallback, onFailureCallback);
         }.bind(this);
 
-        this._myWidget.start(this.object, additionalSetup, PP.myEasyTuneVariables._getInternalMap());
+        this._myWidget.start(this.object, additionalSetup, PP.myEasyTuneVariables);
 
         this._myWidgetVisibleBackup = this._myWidget.isVisible();
         this._mySetVisibleNextUpdate = false;

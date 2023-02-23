@@ -46,6 +46,10 @@ PP.TrackedHandPose = class TrackedHandPose {
         }
     }
 
+    getJointPoseList() {
+        return this._myTrackedHandJointPoseList;
+    }
+
     getJointPose(jointID) {
         return this._myTrackedHandJointPoseList[jointID];
     }

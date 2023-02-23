@@ -18,7 +18,7 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myBackgroundSize = 4;
         this._myBackgroundObject.pp_setActive(true);
         this._myBackgroundObject.pp_setScale(this._myBackgroundSize + 0.1);
-        this._myBackgroundObject.pp_translate([0, 0, -0.001]);
+        this._myBackgroundObject.pp_translate(PP.vec3_create(0, 0, -0.001));
 
         this._myDoubleTimer = new PP.Timer(this._mySecondsBeforeDoubling);
         this._myIsDone = false;
@@ -218,8 +218,8 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         }
     },
     start() {
-        this._myLagColor = [0.5, 0, 0, 1];
-        this._myNormalColor = [0, 0, 0, 1];
+        this._myLagColor = PP.vec4_create(0.5, 0, 0, 1);
+        this._myNormalColor = PP.vec4_create(0, 0, 0, 1);
 
         this._myRealTrianglesAmount = 0;
 
@@ -318,13 +318,13 @@ WL.registerComponent("pp-benchmark-max-visible-triangles", {
         this._myDoneTextComponent.text = " ";
         //this._myDoneTextComponent.text = "End";
 
-        this._myTextsObject.pp_setPositionLocal([0, 4.3, 0]);
+        this._myTextsObject.pp_setPositionLocal(PP.vec3_create(0, 4.3, 0));
         this._myTextsObject.pp_setScale(2.75);
 
-        this._myTriangleTextObject.pp_setPositionLocal([-1.4, 0, 0]);
-        this._myPlaneTextObject.pp_setPositionLocal([0.55, 0, 0]);
-        this._myFPSTextObject.pp_setPositionLocal([-0.315, 0, 0]);
-        this._myDoneTextObject.pp_setPositionLocal([0, -4.6, 0]);
+        this._myTriangleTextObject.pp_setPositionLocal(PP.vec3_create(-1.4, 0, 0));
+        this._myPlaneTextObject.pp_setPositionLocal(PP.vec3_create(0.55, 0, 0));
+        this._myFPSTextObject.pp_setPositionLocal(PP.vec3_create(-0.315, 0, 0));
+        this._myDoneTextObject.pp_setPositionLocal(PP.vec3_create(0, -4.6, 0));
         this._myDoneTextObject.pp_setScale(4);
 
         this._myDTHistory = [];

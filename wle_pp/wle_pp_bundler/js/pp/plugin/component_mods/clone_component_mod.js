@@ -1,7 +1,7 @@
 if (WL && WL.Object) {
 
-    WL.MeshComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
-        let clonedComponent = clonedObject.pp_addComponent(this.type);
+    WL.MeshComponent.prototype.pp_clone = function pp_clone(targetObject, deepCloneParams = new PP.DeepCloneParams(), customParamsMap = null) {
+        let clonedComponent = targetObject.pp_addComponent(this.type);
         clonedComponent.active = this.active;
 
         if (deepCloneParams.isDeepCloneComponentVariable("mesh", "material")) {
@@ -21,8 +21,8 @@ if (WL && WL.Object) {
         return clonedComponent;
     };
 
-    WL.CollisionComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
-        let clonedComponent = clonedObject.pp_addComponent(this.type);
+    WL.CollisionComponent.prototype.pp_clone = function pp_clone(targetObject, deepCloneParams = new PP.DeepCloneParams(), customParamsMap = null) {
+        let clonedComponent = targetObject.pp_addComponent(this.type);
         clonedComponent.active = this.active;
 
         clonedComponent.collider = this.collider;
@@ -32,8 +32,8 @@ if (WL && WL.Object) {
         return clonedComponent;
     };
 
-    WL.TextComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
-        let clonedComponent = clonedObject.pp_addComponent(this.type);
+    WL.TextComponent.prototype.pp_clone = function pp_clone(targetObject, deepCloneParams = new PP.DeepCloneParams(), customParamsMap = null) {
+        let clonedComponent = targetObject.pp_addComponent(this.type);
         clonedComponent.active = this.active;
 
         if (deepCloneParams.isDeepCloneComponent("text")) {
@@ -55,22 +55,33 @@ if (WL && WL.Object) {
     };
 
     // #TODO not completed, missing flags like gravity or groups
-    WL.PhysXComponent.prototype.pp_clone = function (clonedObject, deepCloneParams, extraData) {
-        let clonedComponent = clonedObject.pp_addComponent(this.type, {
+    WL.PhysXComponent.prototype.pp_clone = function pp_clone(targetObject, deepCloneParams = new PP.DeepCloneParams(), customParamsMap = null) {
+        let componentParams = {
+            "static": this.static,
+            "simulate": this.simulate,
             "angularDamping": this.angularDamping,
-            "angularVelocity": this.angularVelocity,
             "dynamicFriction": this.dynamicFriction,
             "extents": this.extents,
             "kinematic": this.kinematic,
             "linearDamping": this.linearDamping,
-            "linearVelocity": this.linearVelocity,
             "mass": this.mass,
             "restituition": this.restituition,
             "shape": this.shape,
             "shapeData": this.shapeData,
-            "static": this.static,
             "staticFriction": this.staticFriction,
-        });
+            "bounciness": this.bounciness,
+            "allowQuery": this.allowQuery,
+            "allowSimulation": this.allowSimulation,
+            "gravity": this.gravity,
+            "trigger": this.trigger
+        };
+
+        if (!this.static) {
+            componentParams["angularVelocity"] = this.angularVelocity;
+            componentParams["linearVelocity"] = this.linearVelocity;
+        }
+
+        let clonedComponent = targetObject.pp_addComponent(this.type, componentParams);
 
         clonedComponent.active = this.active;
 

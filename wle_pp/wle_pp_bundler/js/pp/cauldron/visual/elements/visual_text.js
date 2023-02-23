@@ -3,7 +3,7 @@ let visualParams = new PP.VisualTextParams();
 visualParams.myText = text;
 visualParams.myTransform.mat4_copy(transform);
 visualParams.myMaterial = PP.myDefaultResources.myMaterials.myText.clone();
-visualParams.myMaterial.color = [1, 1, 1, 1];
+visualParams.myMaterial.color = PP.vec4_create(1, 1, 1, 1);
 PP.myVisualManager.draw(visualParams);
 
 or
@@ -24,9 +24,14 @@ PP.VisualTextParams = class VisualTextParams {
 
         this.myColor = null;        // if this is set and material is null, it will use the default text material with this color
 
-        this.myParent = null;       // if this is set the parent will not be the visual root anymore, the positions will be local to this object
+        this.myParent = PP.myVisualData.myRootObject;
+        this.myIsLocal = false;
 
         this.myType = PP.VisualElementType.TEXT;
+    }
+
+    copy(other) {
+        // implemented outside class definition
     }
 };
 
@@ -71,6 +76,11 @@ PP.VisualText = class VisualText {
         this._markDirty();
     }
 
+    copyParams(params) {
+        this._myParams.copy(params);
+        this._markDirty();
+    }
+
     paramsUpdated() {
         this._markDirty();
     }
@@ -92,9 +102,13 @@ PP.VisualText = class VisualText {
     }
 
     _refresh() {
-        this._myTextObject.pp_setParent(this._myParams.myParent == null ? PP.myVisualData.myRootObject : this._myParams.myParent, false);
+        this._myTextObject.pp_setParent(this._myParams.myParent, false);
 
-        this._myTextObject.pp_setTransformLocal(this._myParams.myTransform);
+        if (this._myParams.myIsLocal) {
+            this._myTextObject.pp_setTransformLocal(this._myParams.myTransform);
+        } else {
+            this._myTextObject.pp_setTransform(this._myParams.myTransform);
+        }
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {
@@ -132,26 +146,7 @@ PP.VisualText = class VisualText {
 
     clone() {
         let clonedParams = new PP.VisualTextParams();
-
-        clonedParams.myText = this._myParams.myText;
-        clonedParams.myAlignment = this._myParams.myAlignment;
-        clonedParams.myJustification = this._myParams.myJustification;
-
-        clonedParams.myTransform.mat4_copy(this._myParams.myTransform);
-
-        if (this._myParams.myMaterial != null) {
-            clonedParams.myMaterial = this._myParams.myMaterial.clone();
-        } else {
-            clonedParams.myMaterial = null;
-        }
-
-        if (this._myParams.myColor != null) {
-            clonedParams.myColor.vec4_copy(this._myParams.myColor);
-        } else {
-            clonedParams.myColor = null;
-        }
-
-        clonedParams.myParent = this._myParams.myParent;
+        clonedParams.copy(this._myParams);
 
         let clone = new PP.VisualText(clonedParams);
         clone.setAutoRefresh(this._myAutoRefresh);
@@ -161,3 +156,32 @@ PP.VisualText = class VisualText {
         return clone;
     }
 };
+
+PP.VisualTextParams.prototype.copy = function copy(other) {
+    this.myText = other.myText;
+    this.myAlignment = other.myAlignment;
+    this.myJustification = other.myJustification;
+
+    this.myTransform.mat4_copy(other.myTransform);
+
+    if (other.myMaterial != null) {
+        this.myMaterial = other.myMaterial.clone();
+    } else {
+        this.myMaterial = null;
+    }
+
+    if (other.myColor != null) {
+        this.myColor.vec4_copy(other.myColor);
+    } else {
+        this.myColor = null;
+    }
+
+    this.myParent = other.myParent;
+    this.myIsLocal = other.myIsLocal;
+
+    this.myType = other.myType;
+};
+
+
+
+Object.defineProperty(PP.VisualTextParams.prototype, "copy", { enumerable: false });

@@ -7,12 +7,13 @@ PP.VirtualGamepadButtonParams = class VirtualGamepadButtonParams {
 PP.VirtualGamepadThumbstickParams = class VirtualGamepadThumbstickParams {
     constructor() {
         this.myBackgroundColor = "";
-        this.myBackgroundPressedColor = "";
 
         this.myMaxDistanceFromCenterMultiplier = 1;
 
         this.myReleaseTransitionSeconds = 0.2;
         this.myMoveTransitionSeconds = 0;
+
+        this.myIncludeBackgroundToDetection = false; // you can press the background of the icon to move the thumbstick, makes it harder to miss it
 
         this.myIconParams = new PP.VirtualGamepadIconParams();
     }
@@ -100,6 +101,8 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
         let buttonHoveredBrightness = 0.75;
         let thumbstickHoveredBrightness = 0.75;
 
+        let thumbstickIncludeBackgroundToDetection = true;
+
         for (let handedness in this.myButtonParams) {
             for (let gamepadButtonID in this.myButtonParams[handedness]) {
                 let buttonParams = this.myButtonParams[handedness][gamepadButtonID];
@@ -134,6 +137,8 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
             thumbstickParams.myIconParams.myIconColor = backgroundColor;
             thumbstickParams.myIconParams.myIconPressedColor = backgroundColor;
             thumbstickParams.myIconParams.myOverallHoveredBrightness = thumbstickHoveredBrightness;
+
+            thumbstickParams.myIncludeBackgroundToDetection = thumbstickIncludeBackgroundToDetection;
         }
 
         // Orders

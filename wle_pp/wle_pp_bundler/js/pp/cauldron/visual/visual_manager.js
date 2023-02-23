@@ -2,7 +2,7 @@ PP.VisualManager = class VisualManager {
     constructor() {
         this._myVisualElementPrototypeCreationCallbacks = new Map();
 
-        this._myVisualElementTypeMap = new Map();
+        this._myVisualElementsTypeMap = new Map();
         this._myVisualElementLastID = 0;
         this._myVisualElementsPool = new PP.ObjectPoolManager();
         this._myVisualElementsToShow = [];
@@ -43,11 +43,11 @@ PP.VisualManager = class VisualManager {
         let visualElement = null;
         let idReused = false;
         if (idToReuse != null) {
-            if (this._myVisualElementTypeMap.has(visualElementParams.myType)) {
-                let visualElementMap = this._myVisualElementTypeMap.get(visualElementParams.myType);
-                if (visualElementMap.has(idToReuse)) {
-                    visualElement = visualElementMap.get(idToReuse)[0];
-                    visualElement.setParams(visualElementParams);
+            if (this._myVisualElementsTypeMap.has(visualElementParams.myType)) {
+                let visualElements = this._myVisualElementsTypeMap.get(visualElementParams.myType);
+                if (visualElements.has(idToReuse)) {
+                    visualElement = visualElements.get(idToReuse)[0];
+                    visualElement.copyParams(visualElementParams);
                     visualElement.setVisible(false);
                     idReused = true;
                 }
@@ -63,20 +63,20 @@ PP.VisualManager = class VisualManager {
             return null;
         }
 
-        if (!this._myVisualElementTypeMap.has(visualElementParams.myType)) {
-            this._myVisualElementTypeMap.set(visualElementParams.myType, new Map());
+        if (!this._myVisualElementsTypeMap.has(visualElementParams.myType)) {
+            this._myVisualElementsTypeMap.set(visualElementParams.myType, new Map());
         }
-        let visualElementMap = this._myVisualElementTypeMap.get(visualElementParams.myType);
+        let visualElements = this._myVisualElementsTypeMap.get(visualElementParams.myType);
 
         let elementID = null;
         if (!idReused) {
             elementID = this._myVisualElementLastID + 1;
             this._myVisualElementLastID = elementID;
 
-            visualElementMap.set(elementID, [visualElement, new PP.Timer(lifetimeSeconds, lifetimeSeconds != null)]);
+            visualElements.set(elementID, [visualElement, new PP.Timer(lifetimeSeconds, lifetimeSeconds != null)]);
         } else {
             elementID = idToReuse;
-            let visualElementPair = visualElementMap.get(elementID);
+            let visualElementPair = visualElements.get(elementID);
             visualElementPair[0] = visualElement;
             visualElementPair[1].reset(lifetimeSeconds);
             if (lifetimeSeconds != null) {
@@ -92,9 +92,9 @@ PP.VisualManager = class VisualManager {
     getDraw(elementID) {
         let visualElement = null;
 
-        for (let visualElementMap of this._myVisualElementTypeMap.values()) {
-            if (visualElementMap.has(elementID)) {
-                let visualElementPair = visualElementMap.get(elementID);
+        for (let visualElements of this._myVisualElementsTypeMap.values()) {
+            if (visualElements.has(elementID)) {
+                let visualElementPair = visualElements.get(elementID);
                 visualElement = visualElementPair[0];
                 break;
             }
@@ -105,21 +105,21 @@ PP.VisualManager = class VisualManager {
 
     clearDraw(elementID = null) {
         if (elementID == null) {
-            for (let visualElementMap of this._myVisualElementTypeMap.values()) {
-                for (let visualElement of visualElementMap.values()) {
+            for (let visualElements of this._myVisualElementsTypeMap.values()) {
+                for (let visualElement of visualElements.values()) {
                     this._myVisualElementsPool.releaseObject(visualElement[0].getParams().myType, visualElement[0]);
                 }
             }
 
             this._myVisualElementsToShow = [];
-            this._myVisualElementTypeMap = new Map();
+            this._myVisualElementsTypeMap = new Map();
             this._myVisualElementLastID = 0;
         } else {
-            for (let visualElementMap of this._myVisualElementTypeMap.values()) {
-                if (visualElementMap.has(elementID)) {
-                    let visualElementPair = visualElementMap.get(elementID);
+            for (let visualElements of this._myVisualElementsTypeMap.values()) {
+                if (visualElements.has(elementID)) {
+                    let visualElementPair = visualElements.get(elementID);
                     this._myVisualElementsPool.releaseObject(visualElementPair[0].getParams().myType, visualElementPair[0]);
-                    visualElementMap.delete(elementID);
+                    visualElements.delete(elementID);
 
                     this._myVisualElementsToShow.pp_removeEqual(visualElementPair[0]);
                     break;
@@ -155,20 +155,20 @@ PP.VisualManager = class VisualManager {
         }
         this._myVisualElementsToShow = [];
 
-        for (let visualElementMap of this._myVisualElementTypeMap.values()) {
+        for (let visualElements of this._myVisualElementsTypeMap.values()) {
             let idsToRemove = [];
-            for (let visualElementMapEntry of visualElementMap.entries()) {
-                let visualElement = visualElementMapEntry[1];
+            for (let visualElementsEntry of visualElements.entries()) {
+                let visualElement = visualElementsEntry[1];
                 if (visualElement[1].isDone()) {
                     this._myVisualElementsPool.releaseObject(visualElement[0].getParams().myType, visualElement[0]);
-                    idsToRemove.push(visualElementMapEntry[0]);
+                    idsToRemove.push(visualElementsEntry[0]);
                 }
 
                 visualElement[1].update(dt);
             }
 
             for (let id of idsToRemove) {
-                visualElementMap.delete(id);
+                visualElements.delete(id);
             }
         }
     }
@@ -183,7 +183,7 @@ PP.VisualManager = class VisualManager {
         element = this._myVisualElementsPool.getObject(params.myType);
 
         if (element != null) {
-            element.setParams(params);
+            element.copyParams(params);
         }
 
         return element;
