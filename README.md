@@ -41,6 +41,8 @@ You can download the library through `npm`:
 Some of the features that you can get with this library are:
   - Object Extension
     * add to the WLE object lots of functions that make the object interface more cohesive and complete
+  - Array Extension
+    * add to the Array object lots of functions that makes it easy to work with `vec3`, `quat` and more
   - Gamepad
     * manages the input from the gamepads, like reading the state of a button or the value of the thumbstick
 	* automatically works with the keyboard
@@ -49,11 +51,11 @@ Some of the features that you can get with this library are:
     * a ready to use gameplay feature to grab and throw objects
   - FSM
     * a simple but powerful finite state machine, your best friend when developing a game
-  - Array Extension
-    * add to the Array object lots of functions that makes it easy to work with `vec3`, `quat` and more
   - Debug Draw
     * easily draw some debug object in the scene using functions like `PP.myDebugVisualManager.drawLine`, `PP.myDebugVisualManager.drawArrow` or `PP.myDebugVisualManager.drawRaycast`
 	* this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
+  - Debug Function Calls Counter
+    * let you specify a class or an object instance and count all the calls that are being made on its functions
   - Console VR
     * a tool that let you see the console even when u are inside the VR session
   - Easy Tune
@@ -137,6 +139,7 @@ For the extensions (features added to already existing objects), the names usual
   * [Components](#components)
   * [FSM](#fsm)
   * [Utils](#utils)
+  * [Physics](#physics)
   * [Visual](#visual)
 - [Debug](#debug)
 - [Gameplay](#gameplay)
@@ -169,6 +172,8 @@ List of features:
   * this is a convenient way to manage all the audio setups in your game
   * you can add to it every setup you need and later ask it to create a player for a specif setup, by using an ID specified when adding the setup
   * also allow you to change the volume of the game, or stop every audio that is playing
+- [`PP.AudioUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/audio/audio_utils.js)
+  * some functions related to audio stuff, like checking if the audio context is running
 - [`pp-audio-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/audio/audio_manager_component.js)
   * component that adds a global audio manager to your game, feel free to initialize your Audio Manager this way or to use a custom solution
 - [`pp-mute-everything`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/audio/mute_everything.js)
@@ -229,16 +234,6 @@ List of features:
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/cauldron)
 
 List of features:
-- [`PP.NumberOverValue`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/number_over_value.js)
-  * this set of classes let you create a special number, that interpolate between different numbers based on a value u used to get it
-  * it is especially useful if u want a number to change over time during a level, where the value is the time spent in the level itself
-  * the range version returns a random number in the range, where the range change based on the given value
-  * example:
-    ```js
-    //enemy speed will change from 5 to 8 as the time goes from 30 to 60
-    let enemySpeed = new PP.NumberOverValue(5, 8, 30, 60); 
-    let currentSpeed = enemySpeed.get(timeElapsed);
-    ```
 - [`PP.ObjectPoolManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/object_pool_manager.js)
   * a simple way to manage a set of pools of objects
   * you can get an object from it and it will refill if it runs out of them
@@ -257,10 +252,6 @@ List of features:
     
     let object = objectPoolManager.getObject("pool_ID");    
     ```
-- [`PP.PhysXCollisionCollector`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/physx_collision_collector.js)
-  * collects the objects that are currently colliding with a given physx component
-  * if updated it also let you know when a collision is just started or ended
-  * it also let you register callback for collision start and end, even though you could still do that on the physx component itself
 - [`PP.SaveManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/save_manager.js)
   * let you save and load from the local storage
   * takes care of caching the loaded result so that you don't need to load again when asking for the same data
@@ -365,8 +356,12 @@ List of features:
 - [`PP.RaycastSetup`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastResult`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/physics/physics_raycast_data.js) / [`PP.RaycastHit`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/physics/physics_raycast_data.js)
   * a set of classes that are used to raycast into the scene and get the result of it  
 - [`PP.PhysicsUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/physics/physics_utils.js)
-  * some functions to interact with PhysX
-  * let you raycast into the scene 
+  * some functions to interact with physics
+  * let you raycast into the scene
+- [`PP.PhysicsCollisionCollector`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/physics/physics_collision_collector.js)
+  * collects the objects that are currently colliding with a given physx component
+  * if updated it also let you know when a collision is just started or ended
+  * it also let you register callback for collision start and end, even though you could still do that on the physx component itself
  
 ### Utils
 
@@ -391,6 +386,8 @@ List of features:
   * you can check if the device that is running is emulated or if the session is active
 - [`PP.BrowserUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/browser_utils.js)
   * some functions related to browser stuff, like checking if u are on a mobile or desktop browser
+- [`PP.MaterialUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/material_utils.js)
+  * a set of functions to interact with materials, like setting the alpha of all the materials of an object to easily make it fade in/out
   
 ### Visual
 
@@ -470,6 +467,27 @@ List of components:
 - [`pp-debug-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/components/debug_transform_component.js)
   * a handy component to add the debug transform debug to an existing object in the scene  
   
+#### Function Calls Counter
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter)
+  
+List of components:
+- [`PP.DebugFunctionCallsCounter`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/debug_function_calls_counter.js)
+  * let you specify a class or an object instance and count all the calls that are being made on its functions
+  * it's a very useful class to understand how many times specific functions are being called, helping you in finding bottlenecks or garbage collection issues
+- [`PP.DebugFunctionCallsCountLogger`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/debug_function_calls_count_logger.js)
+  * an utility class to easily log the result of the `PP.DebugFunctionCallsCounter`
+- ['pp-debug-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_function_calls_counter_component.js)
+  * a handy component to add a function calls counter for any class you want and log the result
+- ['pp-debug-pp-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_pp_function_calls_counter.js)
+  * a component that add a function calls counter for the whole `PP` library
+- ['pp-debug-wl-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_wl_function_calls_counter.js)
+  * a component that add a function calls counter for the whole `WL` library
+- ['pp-debug-array-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_array_function_calls_counter.js)
+  * a component that add a function calls counter for the whole `Array` library, including `Float32Array` and other `TypedArray`classes
+- ['pp-debug-pp-array-creation-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_pp_array_creation_calls_counter.js)
+  * a component that add a function calls counter for the `PP` array creation funtions, like `PP.vec3_create`
+  
 ### How To
 
 You can add debug visuals exactly like you would do for the plain visual feature.  
@@ -492,11 +510,25 @@ A collection of gameplay features ready to be used.
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/cauldron)
 
+#### Cauldron
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/cauldron/cauldron)
+
 List of features:
 - [`PP.Direction2DTo3DConverter`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/gameplay/cauldron/direction_2D_to_3D_converter.js)
   * convert a 2D direction (like the ones from the gamepad stick) to a 3D direction based on a reference transform
   * takes care of making the 3D direction flat, for example to keep moving parallel to the ground
   * it also have an automatic and customizable way of detecting when the 3D direction should start to "fly", that is stop being flat
+- [`PP.NumberOverValue`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/number_over_value.js)
+  * this set of classes let you create a special number, that interpolate between different numbers based on a value u used to get it
+  * it is especially useful if u want a number to change over time during a level, where the value is the time spent in the level itself
+  * the range version returns a random number in the range, where the range change based on the given value
+  * example:
+    ```js
+    //enemy speed will change from 5 to 8 as the time goes from 30 to 60
+    let enemySpeed = new PP.NumberOverValue(5, 8, 30, 60); 
+    let currentSpeed = enemySpeed.get(timeElapsed);
+    ```
   
 ### Grab & Throw
 
@@ -533,6 +565,26 @@ The configuration is pretty straight forward:
 6. Add a `physx` component on the same object
 	  - Be sure that the groups/block flags match the one u used for the hand
 
+### Integrations
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations)
+
+Gameplay features that are integrations of already existing functionalities so that they are easier to use and more compliant to the PP library.
+
+### Construct Arcade
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade)
+
+List of features:
+- [`PP.CAUtils`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_utils.js)
+  * a set of functions to interact with the Construct Arcade SDK, like getting the leaderboard or the data of the current user
+- [`PP.CADummyServer`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_utils.js)
+  * u can add a dummy server to the CA utils so that when u want to test the funcionalities you can have a faked responde
+  * the dummy server can also be used to have a fallback for when there are errors even for the released app
+- [`pp-ca-display-leaderboard`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard.js)
+  * let u easily display a construct arcade leaderboard
+  * u need to have two `text` components named `Names` and `Scores` as child of the object that has this component
+
 ## Input
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input)
@@ -550,7 +602,7 @@ List of features:
 - [`PP.Mouse`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/cauldron/mouse.js)
   * a class that makes it easier to access the mouse state
   * let you check if a button is pressed or it's just been pressed/released or if the cursor is moving
-  * you can get the position on the screen or in the 3D world, and also cast a PhysX ray from the mouse into the world  
+  * you can get the position on the screen or in the 3D world, and also cast a physics ray from the mouse into the world  
 - [`pp-finger-cursor`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/cauldron/finger_cursor.js)
   * u can use this component to add a cursor on the tip of the index finger that can interact with WLE `cursor-target`
 - [`Input Types`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/cauldron/input_types.js)
@@ -862,7 +914,7 @@ You just have to add the component on the object you want to tune, the variable 
 List of components:
 - [`pp-easy-scale`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_scale.js) / [`pp-easy-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_transform.js)
   * add a variable to adjust the scale/transform of the object
-- [`pp-easy-text-color`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_text_color.js) / [`pp-easy-mesh-color`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_mesh_color.js)
+- [`pp-easy-text-color`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_text_color.js) / [`pp-easy-mesh-color`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_mesh_color.js) / [`pp-easy-mesh-ambient-factor`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_mesh_ambient_factor.js)
   * add a variable to adjust the color of the first text/mesh material of the object
 - [`pp-easy-light-color`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_light_color.js) / [`pp-easy-light-attenuation`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners/easy_light_attenuation.js)
   * add a variable to adjust the color/attenuation of the first light on the object
