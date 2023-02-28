@@ -195,16 +195,21 @@ PP.DebugFunctionCallsCounter = class DebugFunctionCallsCounter {
         let isValidReferencePath = this._filterName(referencePath, includePathList, excludePathList);
         let isValidReferenceName = this._filterName(renamedReferenceName, includeNameList, excludeNameList);
         if (isValidReferencePath && isValidReferenceName) {
-            let counterTarget = null;
-
-            if (isClass) {
-                counterTarget = reference.prototype;
-            } else {
-                counterTarget = reference;
-            }
-
             let propertyNames = this._getAllPropertyNames(reference);
             for (let propertyName of propertyNames) {
+                let counterTarget = null;
+
+                if (isClass) {
+                    counterTarget = reference.prototype;
+                    try {
+                        if (counterTarget[propertyName] == null) {
+                            counterTarget = reference;
+                        }
+                    } catch (e) { }
+                } else {
+                    counterTarget = reference;
+                }
+
                 this._addFunctionCallsCounter(counterTarget, propertyName, reference, referenceParent, referenceName, isClass, false, referencePath);
             }
         }
@@ -387,15 +392,21 @@ PP.DebugFunctionCallsCounter = class DebugFunctionCallsCounter {
     _getAllPropertyNames(reference) {
         let properties = Object.getOwnPropertyNames(reference);
 
-        let prototype = reference.prototype;
-        if (prototype == null) {
-            prototype = Object.getPrototypeOf(reference);
+        let prototypes = [reference.prototype, Object.getPrototypeOf(reference)];
+
+        for (let prototype of prototypes) {
+            if (prototype != null && (!this._myParams.myExcludeJavascriptObjectFunctions || prototype != Object.prototype)) {
+                let recursivePropertyNames = this._getAllPropertyNames(prototype);
+                for (let recursivePropertyName of recursivePropertyNames) {
+                    properties.pp_pushUnique(recursivePropertyName);
+                }
+            }
         }
 
-        if (prototype != null && (!this._myParams.myExcludeJavascriptObjectFunctions || prototype != Object.prototype)) {
-            let recursivePropertyNames = this._getAllPropertyNames(prototype);
-            for (let recursivePropertyName of recursivePropertyNames) {
-                properties.pp_pushUnique(recursivePropertyName);
+        if (this._myParams.myExcludeJavascriptObjectFunctions) {
+            let functionsToRemove = ["arguments", "caller", "bind", "call", "toString", "apply"];
+            for (let functionToRemove of functionsToRemove) {
+                properties.pp_removeEqual(functionToRemove);
             }
         }
 

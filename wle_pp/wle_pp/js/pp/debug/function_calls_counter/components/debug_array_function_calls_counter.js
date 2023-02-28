@@ -10,6 +10,7 @@ WL.registerComponent('pp-debug-array-function-calls-counter', {
     _myLogFunctionsWithCallsCounterAbove: { type: WL.Type.Int, default: -1 },
     _myFunctionNamesToInclude: { type: WL.Type.String, default: "" },
     _myFunctionNamesToExclude: { type: WL.Type.String, default: "" },
+    _myExcludeConstructors: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
         if (!this.active) return;
@@ -45,7 +46,7 @@ WL.registerComponent('pp-debug-array-function-calls-counter', {
         functionCallsCounterParams.myClassesByPath = [
             "Array", "Uint8ClampedArray", "Uint8Array", "Uint16Array", "Uint32Array", "Int8Array",
             "Int16Array", "Int32Array", "Float32Array", "Float64Array"];
-        functionCallsCounterParams.myExcludeConstructors = false;
+        functionCallsCounterParams.myExcludeConstructors = this._myExcludeConstructors;
         functionCallsCounterParams.myExcludeJavascriptObjectFunctions = true;
         functionCallsCounterParams.myAddPathPrefix = true;
 

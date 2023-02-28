@@ -47,6 +47,10 @@ Some of the features that you can get with this library are:
     * manages the input from the gamepads, like reading the state of a button or the value of the thumbstick
 	* automatically works with the keyboard
 	* u can also add a virtual gamepad to use the gamepad on a mobile device
+  - Experimental Locomotion
+    * smooth and teleport locomotion with physics collision check
+	* view obscuration when going inside walls
+	* the feature is in an experimental phase, this means u can use it but won't be very easy to adjust and may have weird bugs (please report them!)
   - Grab & Throw
     * a ready to use gameplay feature to grab and throw objects
   - FSM
@@ -144,6 +148,7 @@ For the extensions (features added to already existing objects), the names usual
 - [Debug](#debug)
 - [Gameplay](#gameplay)
   * [Grab & Throw](#grab--throw)
+  * [Experimental Locomotion](#locomotion)
 - [Input](#input)
   * [Gamepad](#gamepad)
   * [Pose](#pose)
@@ -584,6 +589,26 @@ List of features:
 - [`pp-ca-display-leaderboard`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard.js)
   * let u easily display a construct arcade leaderboard
   * u need to have two `text` components named `Names` and `Scores` as child of the object that has this component
+  
+### Experimental
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/experimental)
+
+Gameplay features that are in an experimental phase.
+
+#### Locomotion
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/experimental/locomotion)
+
+Gives u a standard VR locomotion, this means both smooth and teleport locomotion with physics collision check.  
+It also check when the player goes inside the wall and obscure the view when that happens.  
+The feature is in an experimental phase, this means u can use it but won't be very easy to adjust and may have weird bugs (please report them!).
+
+##### How To
+
+Add the `pp-player-locomotion` component to the player in the scene.  
+A bit of setup is available on the component itself, other stuff is available in the code, even though it's not very readable as of now.  
+Good luck, you will need it!
 
 ## Input
 

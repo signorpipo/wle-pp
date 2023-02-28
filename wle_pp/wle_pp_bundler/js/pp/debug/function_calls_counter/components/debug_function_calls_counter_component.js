@@ -16,7 +16,9 @@ WL.registerComponent('pp-debug-function-calls-counter', {
     _myExcludeJavascriptObjectFunctions: { type: WL.Type.Bool, default: true },
     _myAddPathPrefix: { type: WL.Type.Bool, default: true },
     _myObjectRecursionDepthLevelforObjects: { type: WL.Type.Int, default: 0 },
-    _myObjectRecursionDepthLevelforClasses: { type: WL.Type.Int, default: 0 }
+    _myObjectRecursionDepthLevelforClasses: { type: WL.Type.Int, default: 0 },
+    _myClearConsoleBeforeLog: { type: WL.Type.Bool, default: false },
+    _myResetMaxFunctionCallsShortcutEnabled: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
         if (!this.active) return;
@@ -45,6 +47,12 @@ WL.registerComponent('pp-debug-function-calls-counter', {
         } else {
             this._myFunctionCallsCountLogger.update(dt);
             this._myFunctionCallsCounter.resetCallsCount();
+        }
+
+        if (this._myResetMaxFunctionCallsShortcutEnabled) {
+            if (PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.SELECT).isPressEnd(3)) {
+                this._myFunctionCallsCounter.resetMaxCallsCount();
+            }
         }
     },
     _start: function () {
@@ -98,7 +106,10 @@ WL.registerComponent('pp-debug-function-calls-counter', {
         functionCallsCountLoggerParams.myLogDelay = this._myLogDelay;
         functionCallsCountLoggerParams.myLogFunction = ['log', 'error', 'warn', 'debug'][this._myLogFunction];
         functionCallsCountLoggerParams.myLogCollapsed = this._myLogCollapsed;
+        functionCallsCountLoggerParams.myLogFunctionsMaxAmount = (this._myLogFunctionsMaxAmount >= 0) ? this._myLogFunctionsMaxAmount : null;
+        functionCallsCountLoggerParams.myLogFunctionsWithCallsCounterAbove = (this._myLogFunctionsWithCallsCounterAbove >= 0) ? this._myLogFunctionsWithCallsCounterAbove : null;
         functionCallsCountLoggerParams.myLogMaxFunctionCalls = this._myLogMaxFunctionCalls;
+        functionCallsCountLoggerParams.myClearConsoleBeforeLog = this._myClearConsoleBeforeLog;
 
         this._myFunctionCallsCountLogger = new PP.DebugFunctionCallsCountLogger(functionCallsCountLoggerParams);
     },

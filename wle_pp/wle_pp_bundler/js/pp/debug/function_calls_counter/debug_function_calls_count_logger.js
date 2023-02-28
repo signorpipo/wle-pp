@@ -13,6 +13,8 @@ PP.DebugFunctionCallsCountLoggerParams = class DebugFunctionCallsCountLoggerPara
 
         this.myLogSorted = true;
         this.myLogMaxFunctionCalls = false;
+
+        this.myClearConsoleBeforeLog = false;
     }
 };
 
@@ -59,6 +61,10 @@ PP.DebugFunctionCallsCountLogger = class DebugFunctionCallsCountLogger {
                     let counter = callsCountersClone.get(keys[i]);
                     callsCounters.set(keys[i], counter);
                 }
+            }
+
+            if (this._myParams.myClearConsoleBeforeLog) {
+                console.clear();
             }
 
             if (this._myParams.myLogCollapsed) {

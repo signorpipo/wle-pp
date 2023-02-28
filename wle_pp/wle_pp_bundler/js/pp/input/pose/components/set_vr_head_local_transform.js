@@ -10,6 +10,7 @@ WL.registerComponent('pp-set-vr-head-local-transform', {
     },
     start: function () {
         this._myHeadPose.start();
+        this.update(0);
     },
     update: function update(dt) {
         this._myHeadPose.update(dt);

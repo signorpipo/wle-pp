@@ -27,6 +27,7 @@ WL.registerComponent('pp-set-tracked-hand-joint-local-transform', {
     },
     start: function () {
         this._myTrackedHandJointPose.start();
+        this.update(0);
     },
     update: function (dt) {
         this._myTrackedHandJointPose.update(dt);

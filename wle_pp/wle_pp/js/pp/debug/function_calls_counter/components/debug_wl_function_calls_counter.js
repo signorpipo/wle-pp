@@ -9,6 +9,7 @@ WL.registerComponent('pp-debug-wl-function-calls-counter', {
     _myLogFunctionsWithCallsCounterAbove: { type: WL.Type.Int, default: -1 },
     _myFunctionNamesToInclude: { type: WL.Type.String, default: "" },
     _myFunctionNamesToExclude: { type: WL.Type.String, default: "" },
+    _myExcludeConstructors: { type: WL.Type.Bool, default: false }
 }, {
     init: function () {
         if (!this.active) return;
@@ -42,7 +43,7 @@ WL.registerComponent('pp-debug-wl-function-calls-counter', {
     _start() {
         let functionCallsCounterParams = new PP.DebugFunctionCallsCounterParams();
         functionCallsCounterParams.myObjectsByPath = ["WL"];
-        functionCallsCounterParams.myExcludeConstructors = false;
+        functionCallsCounterParams.myExcludeConstructors = this._myExcludeConstructors;
         functionCallsCounterParams.myExcludeJavascriptObjectFunctions = true;
         functionCallsCounterParams.myAddPathPrefix = true;
 

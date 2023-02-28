@@ -11,6 +11,7 @@ WL.registerComponent('pp-set-hand-local-transform', {
     },
     start: function () {
         this._myHandPose.start();
+        this.update(0);
     },
     update: function update(dt) {
         this._myHandPose.update(dt);

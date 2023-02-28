@@ -209,7 +209,11 @@ PP.VisualLineParams.prototype.copy = function copy(other) {
     }
 
     if (other.myColor != null) {
-        this.myColor.vec4_copy(other.myColor);
+        if (this.myColor != null) {
+            this.myColor.vec4_copy(other.myColor);
+        } else {
+            this.myColor = other.myColor.vec4_clone();
+        }
     } else {
         this.myColor = null;
     }

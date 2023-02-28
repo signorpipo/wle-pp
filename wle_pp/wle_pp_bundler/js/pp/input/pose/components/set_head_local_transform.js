@@ -11,6 +11,7 @@ WL.registerComponent('pp-set-head-local-transform', {
     },
     start: function () {
         this._myHeadPose.start();
+        this.update(0);
     },
     update: function () {
         let nonVRCameraRotation = PP.quat_create();

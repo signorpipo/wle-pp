@@ -107,6 +107,7 @@
             
         VECTOR 4:
             ○ vec4_set      / vec4_copy
+            - vec4_clone 
 
         QUAT:
             ○ quat_set          / quat_copy     / quat_identity
@@ -1546,6 +1547,11 @@ Array.prototype.vec3_interpolate = function vec3_interpolate(to, interpolationVa
 Array.prototype.vec4_copy = function vec4_copy(vector) {
     glMatrix.vec4.copy(this, vector);
     return this;
+};
+
+Array.prototype.vec4_clone = function vec4_clone(out = PP.vec4_create()) {
+    glMatrix.vec4.copy(out, this);
+    return out;
 };
 
 //QUAT
