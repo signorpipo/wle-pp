@@ -1,4 +1,5 @@
 WL.registerComponent('pp-player-locomotion', {
+    _myPhysicsBlockLayerFlags: { type: WL.Type.String, default: "1, 0, 0, 0, 0, 0, 0, 0" },
     _myMaxSpeed: { type: WL.Type.Float, default: 2 },
     _myMaxRotationSpeed: { type: WL.Type.Float, default: 100 },
     _myCharacterRadius: { type: WL.Type.Float, default: 0.3 },
@@ -17,7 +18,9 @@ WL.registerComponent('pp-player-locomotion', {
     _myVRDirectionReferenceObject: { type: WL.Type.Object },
     _myTeleportParableStartReferenceObject: { type: WL.Type.Object },
     _myTeleportPositionObject: { type: WL.Type.Object },
-    _myUseCleanedVersion: { type: WL.Type.Bool, default: true }
+    _myUseCleanedVersion: { type: WL.Type.Bool, default: true },
+    _myMoveThroughCollisionShortcutEnabled: { type: WL.Type.Bool, default: false },
+    _myMoveHeadShortcutEnabled: { type: WL.Type.Bool, default: false },
 }, {
     init() {
     },
@@ -51,6 +54,11 @@ WL.registerComponent('pp-player-locomotion', {
         params.myForeheadExtraHeight = 0.1;
 
         params.myTeleportPositionObject = this._myTeleportPositionObject;
+
+        params.myMoveThroughCollisionShortcutEnabled = this._myMoveThroughCollisionShortcutEnabled;
+        params.myMoveHeadShortcutEnabled = this._myMoveHeadShortcutEnabled;
+
+        params.myPhysicsBlockLayerFlags.copy(this._getPhysicsBlockLayersFlags());
 
         if (this._myUseCleanedVersion) {
             this._myPlayerLocomotion = new PP.CleanedPlayerLocomotion(params);
@@ -94,6 +102,16 @@ WL.registerComponent('pp-player-locomotion', {
                 this._myPlayerLocomotion.setActive(false);
             }
         }
+    },
+    _getPhysicsBlockLayersFlags() {
+        let physicsFlags = new PP.PhysicsLayerFlags();
+
+        let flags = [...this._myPhysicsBlockLayerFlags.split(",")];
+        for (let i = 0; i < flags.length; i++) {
+            physicsFlags.setFlagActive(i, flags[i].trim() == "1");
+        }
+
+        return physicsFlags;
     }
 });
 

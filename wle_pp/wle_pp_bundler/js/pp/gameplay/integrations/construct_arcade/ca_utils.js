@@ -1,3 +1,12 @@
+PP.CAError = {
+    DUMMY_NOT_INITIALIZED: 0,
+    CA_SDK_MISSING: 1,
+    SUBMIT_SCORE_FAILED: 2,
+    GET_LEADERBOARD_FAILED: 3,
+    GET_USER_FAILED: 4,
+    USER_HAS_NO_SCORE: 5
+};
+
 PP.CAUtils = {
     _myDummyServer: null,
     _myUseDummyServerOnSDKMissing: false,
@@ -38,7 +47,7 @@ PP.CAUtils = {
                         } else if (callbackOnError) {
                             let error = {};
                             error.reason = "Get leaderboard failed";
-                            error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                            error.type = PP.CAError.GET_LEADERBOARD_FAILED;
                             callbackOnError(error, result);
                         }
                     }
@@ -49,7 +58,7 @@ PP.CAUtils = {
                     } else if (callbackOnError) {
                         let error = {};
                         error.reason = "Get leaderboard failed";
-                        error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                        error.type = PP.CAError.GET_LEADERBOARD_FAILED;
                         callbackOnError(error, result);
                     }
                 });
@@ -77,7 +86,7 @@ PP.CAUtils = {
                                     } else if (callbackOnError) {
                                         let error = {};
                                         error.reason = "Searching for around player but the user has not submitted a score yet";
-                                        error.type = PP.CAUtils.ErrorType.USER_HAS_NO_SCORE;
+                                        error.type = PP.CAError.USER_HAS_NO_SCORE;
                                         callbackOnError(error, result);
                                     }
                                 }
@@ -88,7 +97,7 @@ PP.CAUtils = {
                                 } else if (callbackOnError) {
                                     let error = {};
                                     error.reason = "Get leaderboard failed";
-                                    error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                                    error.type = PP.CAError.GET_LEADERBOARD_FAILED;
                                     callbackOnError(error, result);
                                 }
                             }
@@ -99,7 +108,7 @@ PP.CAUtils = {
                             } else if (callbackOnError) {
                                 let error = {};
                                 error.reason = "Get leaderboard failed";
-                                error.type = PP.CAUtils.ErrorType.GET_LEADERBOARD_FAILED;
+                                error.type = PP.CAError.GET_LEADERBOARD_FAILED;
                                 callbackOnError(error, result);
                             }
                         });
@@ -112,7 +121,7 @@ PP.CAUtils = {
                         } else if (callbackOnError) {
                             let error = {};
                             error.reason = "Searching for around player but the user can't be retrieved";
-                            error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
+                            error.type = PP.CAError.GET_USER_FAILED;
                             callbackOnError(error, result);
                         }
                     },
@@ -125,7 +134,7 @@ PP.CAUtils = {
             } else if (callbackOnError) {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
-                error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
+                error.type = PP.CAError.CA_SDK_MISSING;
                 callbackOnError(error, null);
             }
         }
@@ -137,7 +146,7 @@ PP.CAUtils = {
             if (callbackOnError) {
                 let error = {};
                 error.reason = "Dummy server not initialized";
-                error.type = PP.CAUtils.ErrorType.DUMMY_NOT_INITIALIZED;
+                error.type = PP.CAError.DUMMY_NOT_INITIALIZED;
                 callbackOnError(error);
             }
         }
@@ -152,7 +161,7 @@ PP.CAUtils = {
                     } else if (callbackOnError) {
                         let error = {};
                         error.reason = "Submit score failed";
-                        error.type = PP.CAUtils.ErrorType.SUBMIT_SCORE_FAILED;
+                        error.type = PP.CAError.SUBMIT_SCORE_FAILED;
                         callbackOnError(error, result);
                     }
                 } else {
@@ -165,7 +174,7 @@ PP.CAUtils = {
                 } else if (callbackOnError) {
                     let error = {};
                     error.reason = "Submit score failed";
-                    error.type = PP.CAUtils.ErrorType.SUBMIT_SCORE_FAILED;
+                    error.type = PP.CAError.SUBMIT_SCORE_FAILED;
                     callbackOnError(error, result);
                 }
             });
@@ -176,7 +185,7 @@ PP.CAUtils = {
             } else if (callbackOnError) {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
-                error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
+                error.type = PP.CAError.CA_SDK_MISSING;
                 callbackOnError(error, null);
             }
         }
@@ -188,7 +197,7 @@ PP.CAUtils = {
             if (callbackOnError) {
                 let error = {};
                 error.reason = "Dummy server not initialized";
-                error.type = PP.CAUtils.ErrorType.DUMMY_NOT_INITIALIZED;
+                error.type = PP.CAError.DUMMY_NOT_INITIALIZED;
                 callbackOnError(error);
             }
         }
@@ -207,7 +216,7 @@ PP.CAUtils = {
                     } else if (callbackOnError) {
                         let error = {};
                         error.reason = "Get user failed";
-                        error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
+                        error.type = PP.CAError.GET_USER_FAILED;
                         callbackOnError(error, result);
                     }
                 }
@@ -218,7 +227,7 @@ PP.CAUtils = {
                 } else if (callbackOnError) {
                     let error = {};
                     error.reason = "Get user failed";
-                    error.type = PP.CAUtils.ErrorType.GET_USER_FAILED;
+                    error.type = PP.CAError.GET_USER_FAILED;
                     callbackOnError(error, result);
                 }
             });
@@ -229,7 +238,7 @@ PP.CAUtils = {
             } else if (callbackOnError) {
                 let error = {};
                 error.reason = "Construct Arcade SDK missing";
-                error.type = PP.CAUtils.ErrorType.CA_SDK_MISSING;
+                error.type = PP.CAError.CA_SDK_MISSING;
                 callbackOnError(error, null);
             }
         }
@@ -241,93 +250,9 @@ PP.CAUtils = {
             if (callbackOnError) {
                 let error = {};
                 error.reason = "Dummy server not initialized";
-                error.type = PP.CAUtils.ErrorType.DUMMY_NOT_INITIALIZED;
+                error.type = PP.CAError.DUMMY_NOT_INITIALIZED;
                 callbackOnError(error);
             }
         }
     },
-    ErrorType: {
-        DUMMY_NOT_INITIALIZED: 0,
-        CA_SDK_MISSING: 1,
-        SUBMIT_SCORE_FAILED: 2,
-        GET_LEADERBOARD_FAILED: 3,
-        GET_USER_FAILED: 4,
-        USER_HAS_NO_SCORE: 5
-    }
-};
-
-PP.CADummyServer = class CADummyServer {
-
-    constructor() {
-    }
-
-    getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
-        let leaderboard = null;
-
-        if (PP.CAUtils.isSDKAvailable()) {
-            leaderboard = [
-                { rank: 0, displayName: "An", score: 0 },
-                { rank: 1, displayName: "Error", score: 0 },
-                { rank: 2, displayName: "Has", score: 0 },
-                { rank: 3, displayName: "Occurred", score: 0 },
-                { rank: 4, displayName: "While", score: 0 },
-                { rank: 5, displayName: "Trying", score: 0 },
-                { rank: 6, displayName: "To", score: 0 },
-                { rank: 7, displayName: "Retrieve", score: 0 },
-                { rank: 8, displayName: "The", score: 0 },
-                { rank: 9, displayName: "Leaderboard", score: 0 }
-            ];
-        } else {
-            if (isAroundPlayer) {
-                leaderboard = [
-                    { rank: 0, displayName: "Sign In", score: 0 },
-                    { rank: 1, displayName: "And", score: 0 },
-                    { rank: 2, displayName: "Play", score: 0 },
-                    { rank: 3, displayName: "On", score: 0 },
-                    { rank: 4, displayName: "HeyVR", score: 0 },
-                    { rank: 5, displayName: "To", score: 0 },
-                    { rank: 6, displayName: "Submit", score: 0 },
-                    { rank: 7, displayName: "Your", score: 0 },
-                    { rank: 8, displayName: "Own", score: 0 },
-                    { rank: 9, displayName: "Score", score: 0 }
-                ];
-            } else {
-                leaderboard = [
-                    { rank: 0, displayName: "The", score: 0 },
-                    { rank: 1, displayName: "Top 10", score: 0 },
-                    { rank: 2, displayName: "Leaderboard", score: 0 },
-                    { rank: 3, displayName: "Is", score: 0 },
-                    { rank: 4, displayName: "Available", score: 0 },
-                    { rank: 5, displayName: "Only", score: 0 },
-                    { rank: 5, displayName: "When", score: 0 },
-                    { rank: 7, displayName: "Playing", score: 0 },
-                    { rank: 8, displayName: "On", score: 0 },
-                    { rank: 9, displayName: "HeyVR", score: 0 },
-                ];
-            }
-        }
-
-        while (leaderboard.length > scoresAmount) {
-            leaderboard.pop();
-        }
-
-        if (callbackOnDone) {
-            callbackOnDone(leaderboard);
-        }
-    }
-
-    submitScore(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError) {
-        if (callbackOnDone) {
-            callbackOnDone();
-        }
-    }
-
-    getUser(callbackOnDone, callbackOnError) {
-        let user = {};
-        user.displayName = "Jonathan";
-
-        if (callbackOnDone) {
-            callbackOnDone(user);
-        }
-    }
 };

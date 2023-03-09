@@ -688,9 +688,9 @@ PP.ConsoleVRWidget = class ConsoleVRWidget {
         if (this._myWidgetFrame.myIsWidgetVisible && this._myGamepadScrollActive) {
             let axes = [0, 0];
             if (this._mySetup.myScrollThumbstickHandedness == PP.ToolHandedness.LEFT) {
-                axes = this._myLeftGamepad.getAxesInfo().myAxes;
+                axes = this._myLeftGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes;
             } else if (this._mySetup.myScrollThumbstickHandedness == PP.ToolHandedness.RIGHT) {
-                axes = this._myRightGamepad.getAxesInfo().myAxes;
+                axes = this._myRightGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes;
             }
 
             if (Math.abs(axes[1]) > this._mySetup.myScrollThumbstickMinThreshold) {

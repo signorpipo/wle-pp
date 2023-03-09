@@ -130,7 +130,6 @@ PP.PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = functi
             }
 
             this._teleportToPosition(newFeetPosition, rotationOnUp, this._myLocomotionRuntimeParams.myCollisionRuntimeParams, true);
-
         }
     };
 }();

@@ -65,7 +65,7 @@ PP.PlayerLocomotionRotate.prototype._rotateHeadHorizontally = function () {
 
         headRotation.quat_identity();
 
-        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo().getAxes();
+        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
 
         if (!this._myParams.myIsSnapTurn || (this._myParams.mySnapTurnOnlyVR && !PP.XRUtils.isSessionActive())) {
             if (Math.abs(axes[0]) > this._myParams.myRotationMinStickIntensityThreshold) {
@@ -149,7 +149,7 @@ PP.PlayerLocomotionRotate.prototype._rotateHeadVertically = function () {
 
         referenceRight.vec3_normalize(referenceRight);
 
-        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo().getAxes();
+        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
         let angleToRotate = 0;
 
         if (!this._myParams.myIsSnapTurn || (this._myParams.mySnapTurnOnlyVR && !PP.XRUtils.isSessionActive())) {

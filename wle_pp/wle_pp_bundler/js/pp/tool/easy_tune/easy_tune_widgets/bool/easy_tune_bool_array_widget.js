@@ -33,7 +33,7 @@ PP.EasyTuneBoolArrayWidget = class EasyTuneBoolArrayWidget extends PP.EasyTuneBa
         let stickVariableIntensity = 0;
 
         if (this._myGamepad) {
-            stickVariableIntensity = this._myGamepad.getAxesInfo().myAxes[1];
+            stickVariableIntensity = this._myGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes[1];
         }
 
         let valueIntensity = 0;

@@ -34,7 +34,7 @@ PP.GamepadCore = class GamepadCore {
         return buttonData;
     }
 
-    getAxesData() {
+    getAxesData(axesID) {
         let axesData = this._createAxesData();
         return axesData;
     }

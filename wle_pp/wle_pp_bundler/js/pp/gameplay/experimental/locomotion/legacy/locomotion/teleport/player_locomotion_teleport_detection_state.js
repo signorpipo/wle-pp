@@ -111,7 +111,7 @@ PP.PlayerLocomotionTeleportDetectionState = class PlayerLocomotionTeleportDetect
                 confirmTeleport = PP.myMouse.isButtonPressEnd(PP.MouseButtonID.MIDDLE);
             }
         } else {
-            let axes = PP.myGamepads[this._myTeleportParams.myHandedness].getAxesInfo().getAxes();
+            let axes = PP.myGamepads[this._myTeleportParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
             if (axes.vec2_length() <= this._myTeleportParams.myStickIdleThreshold) {
                 confirmTeleport = true;
             }
@@ -532,7 +532,7 @@ PP.PlayerLocomotionTeleportDetectionState.prototype._detectTeleportRotationVR = 
     let axesForward = PP.vec3_create(0, 0, 1);
     let axesUp = PP.vec3_create(0, 1, 0);
     return function _detectTeleportRotationVR(dt) {
-        let axes = PP.myGamepads[this._myTeleportParams.myHandedness].getAxesInfo().getAxes();
+        let axes = PP.myGamepads[this._myTeleportParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
 
         if (axes.vec2_length() > this._myTeleportParams.myDetectionParams.myRotationOnUpMinStickIntensity) {
             this._myTeleportRuntimeParams.myTeleportRotationOnUp = this._myTeleportRotationOnUpNext;

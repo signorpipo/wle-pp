@@ -51,6 +51,7 @@ require('./pp/cauldron/utils/save_utils');
 require('./pp/cauldron/utils/text_utils');
 require('./pp/cauldron/utils/xr_utils');
 require('./pp/cauldron/utils/browser_utils');
+require('./pp/cauldron/utils/js_utils');
 
 require('./pp/cauldron/physics/physics_utils');
 require('./pp/cauldron/physics/physics_raycast_data');
@@ -78,13 +79,15 @@ require('./pp/debug/debug_visual_manager');
 require('./pp/debug/components/debug_transform_component');
 require('./pp/debug/components/debug_manager_component');
 
-require('./pp/debug/function_calls_counter/debug_function_calls_counter');
-require('./pp/debug/function_calls_counter/debug_function_calls_count_logger');
-require('./pp/debug/function_calls_counter/components/debug_pp_array_creation_calls_counter');
-require('./pp/debug/function_calls_counter/components/debug_array_function_calls_counter');
-require('./pp/debug/function_calls_counter/components/debug_pp_function_calls_counter');
-require('./pp/debug/function_calls_counter/components/debug_function_calls_counter_component');
-require('./pp/debug/function_calls_counter/components/debug_wl_function_calls_counter');
+require('./pp/debug/debug_functions_overwriter/debug_functions_overwriter');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analyzer');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analysis_results_logger');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component');
+require('./pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js');
 
 //	GAMEPLAY
 
@@ -98,6 +101,7 @@ require('./pp/gameplay/grab_throw/grabber_hand');
 
 //    INTEGRATIONS
 require('./pp/gameplay/integrations/construct_arcade/ca_utils');
+require('./pp/gameplay/integrations/construct_arcade/ca_dummy_server');
 require('./pp/gameplay/integrations/construct_arcade/ca_display_leaderboard');
 
 //    EXPERIMENTAL
@@ -200,6 +204,7 @@ require('./pp/input/gamepad/gamepad_cores/gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/xr_gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/keyboard_gamepad_core');
 require('./pp/input/gamepad/gamepad_cores/virtual_gamepad_gamepad_core');
+require('./pp/input/gamepad/gamepad_cores/classic_gamepad_core');
 require('./pp/input/gamepad/cauldron/gamepad_mesh_animator');
 require('./pp/input/gamepad/cauldron/gamepad_manager');
 require('./pp/input/gamepad/cauldron/gamepad_utils');

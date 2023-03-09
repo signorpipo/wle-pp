@@ -74,7 +74,7 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBa
         let stickVariableIntensity = 0;
 
         if (this._myGamepad) {
-            let y = this._myGamepad.getAxesInfo().myAxes[1];
+            let y = this._myGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes[1];
 
             if (Math.abs(y) > this._mySetup.myEditThumbstickMinThreshold) {
                 let normalizedEditAmount = (Math.abs(y) - this._mySetup.myEditThumbstickMinThreshold) / (1 - this._mySetup.myEditThumbstickMinThreshold);

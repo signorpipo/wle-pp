@@ -22,6 +22,9 @@ PP.PlayerLocomotionSmoothParams = class PlayerLocomotionSmoothParams {
         this.myVRDirectionReferenceObject = null;
 
         this.myHandedness = PP.Handedness.LEFT;
+
+        this.myMoveThroughCollisionShortcutEnabled = false;
+        this.myMoveHeadShortcutEnabled = false;
     }
 };
 
@@ -83,7 +86,7 @@ PP.PlayerLocomotionSmooth.prototype.update = function () {
 
         headMovement.vec3_zero();
 
-        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo().getAxes();
+        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
         axes[0] = Math.abs(axes[0]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[0] : 0;
         axes[1] = Math.abs(axes[1]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[1] : 0;
 

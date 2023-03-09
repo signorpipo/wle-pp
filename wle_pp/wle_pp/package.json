@@ -1,6 +1,6 @@
 {
   "name": "wle_pp",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": "Pipo",
   "description": "A library for the Wonderland Engine - Unbundled Version",
   "homepage": "https://github.com/SignorPipo/wle_pp",
@@ -22,7 +22,7 @@
   "main": "./js/bundle.js",
   "exports": "./js/bundle.js",
   "dependencies": {
-    "@wonderlandengine/api": "^0.9.6",
+    "@wonderlandengine/api": "0.9.4",
     "gl-matrix": "^3.4.3",
     "howler": "^2.2.3"
   },

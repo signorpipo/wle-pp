@@ -1,7 +1,7 @@
 PP.GamepadButtonID = {
-    SELECT: 0,      // Trigger
-    SQUEEZE: 1,     // Grip
-    TOUCHPAD: 2,    // This is to support older gamepads, you can just use TOP_BUTTON to use this button for both older and newer gamepads
+    SELECT: 0,          // Trigger
+    SQUEEZE: 1,         // Grip
+    TOUCHPAD: 2,
     THUMBSTICK: 3,
     BOTTOM_BUTTON: 4,   // A or X button on oculus quest gamepad
     TOP_BUTTON: 5,      // B or Y button on oculus quest gamepad, reverts to TOUCHPAD button for gamepads that does not support TOP_BUTTON
@@ -11,14 +11,18 @@ PP.GamepadButtonID = {
 PP.GamepadButtonEvent = {
     PRESS_START: 0,
     PRESS_END: 1,
-    PRESSED: 2,     //Every frame that it is pressed
-    NOT_PRESSED: 3, //Every frame that it is not pressed
+    PRESSED: 2,         //Every frame that it is pressed
+    NOT_PRESSED: 3,     //Every frame that it is not pressed
     TOUCH_START: 4,
     TOUCH_END: 5,
-    TOUCHED: 6,     //Every frame that it is touched
-    NOT_TOUCHED: 7, //Every frame that it is not touched
+    TOUCHED: 6,         //Every frame that it is touched
+    NOT_TOUCHED: 7,     //Every frame that it is not touched
     VALUE_CHANGED: 8,
-    ALWAYS: 9,      //Every frame
+    ALWAYS: 9,          //Every frame
+};
+
+PP.GamepadAxesID = {
+    THUMBSTICK: 0
 };
 
 PP.GamepadAxesEvent = {
@@ -135,11 +139,17 @@ PP.GamepadButtonInfo = class GamepadButtonInfo {
 };
 
 PP.GamepadAxesInfo = class GamepadAxesInfo {
-    constructor(handedness) {
+    constructor(id, handedness) {
+        this.myID = id;
+
         this.myHandedness = handedness;
 
         this.myAxes = PP.vec2_create(0, 0); // this.myAxes[0] is X,  this.myAxes[1] is Y
         this.myPrevAxes = PP.vec2_create(0, 0);
+    }
+
+    getID() {
+        return this.myID;
     }
 
     getAxes() {
@@ -151,7 +161,7 @@ PP.GamepadAxesInfo = class GamepadAxesInfo {
     }
 
     clone() {
-        let value = new PP.GamepadAxesInfo(this.myHandedness);
+        let value = new PP.GamepadAxesInfo(this.myID, this.myHandedness);
         value.myAxes.vec2_copy(this.myAxes);
         value.myPrevAxes.vec2_copy(this.myPrevAxes);
 

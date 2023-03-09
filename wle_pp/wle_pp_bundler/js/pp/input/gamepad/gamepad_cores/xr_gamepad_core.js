@@ -19,7 +19,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
     }
 
     isGamepadCoreActive() {
-        //connected == null is to fix webxr emulator that leaves that field undefined
+        // connected == null is to fix webxr emulator that leaves that field undefined
         return this._myIsXRSessionActive && this._myGamepad != null && (this._myGamepad.connected == null || this._myGamepad.connected);
     }
 
@@ -55,7 +55,8 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
                 this._myButtonData.myIsTouched = gamepadButton.touched;
                 this._myButtonData.myValue = gamepadButton.value;
             } else if (buttonID == PP.GamepadButtonID.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
-                //This way if you are using a basic touch gamepad, top button will work anyway
+                // This way if you are using a basic touch gamepad, top button will work anyway
+
                 let touchButton = this._myGamepad.buttons[2];
                 this._myButtonData.myIsPressed = touchButton.pressed;
                 this._myButtonData.myIsTouched = touchButton.touched;
@@ -66,23 +67,23 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         return this._myButtonData;
     }
 
-    getAxesData() {
+    getAxesData(axesID) {
         this._myAxesData.vec2_zero();
 
         if (this.isGamepadCoreActive()) {
             let internalAxes = this._myGamepad.axes;
             if (internalAxes.length == 4) {
-                //in this case it could be both touch axes or thumbstick axes, that depends on the gamepad
-                //to support both I simply choose the absolute max value (unused axes will always be 0)
+                // In this case it could be both touch axes or thumbstick axes, that depends on the gamepad
+                // to support both I simply choose the absolute max value (unused axes will always be 0)
 
-                //X
+                // X
                 if (Math.abs(internalAxes[0]) > Math.abs(internalAxes[2])) {
                     this._myAxesData[0] = internalAxes[0];
                 } else {
                     this._myAxesData[0] = internalAxes[2];
                 }
 
-                //Y
+                // Y
                 if (Math.abs(internalAxes[1]) > Math.abs(internalAxes[3])) {
                     this._myAxesData[1] = internalAxes[1];
                 } else {
@@ -94,7 +95,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
                 this._myAxesData[1] = internalAxes[1];
             }
 
-            //y axis is recorder negative when thumbstick is pressed forward for weird reasons
+            // Y axis is recorded negative when thumbstick is pressed forward for weird reasons
             this._myAxesData[1] = -this._myAxesData[1];
         }
 
@@ -128,7 +129,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         }
     }
 
-    //This is to be more compatible
+    // This is to be more compatible
     _getSpecialButtonPressed(buttonID) {
         let isPressed = false;
 
@@ -157,7 +158,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         this._myIsXRSessionActive = false;
     }
 
-    //Select and Squeeze are managed this way to be more compatible
+    // Select and Squeeze are managed this way to be more compatible
     _selectStart(event) {
         if (this._myInputSource != null && this._myInputSource == event.inputSource) {
             this._mySelectPressed = true;

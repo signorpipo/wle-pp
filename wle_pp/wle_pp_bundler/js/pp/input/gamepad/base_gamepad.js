@@ -8,7 +8,10 @@ PP.BaseGamepad = class BaseGamepad {
             this._myButtonInfos[PP.GamepadButtonID[key]] = new PP.GamepadButtonInfo(PP.GamepadButtonID[key], this._myHandedness);
         }
 
-        this._myAxesInfo = new PP.GamepadAxesInfo(this._myHandedness);
+        this._myAxesInfos = [];
+        for (let key in PP.GamepadAxesID) {
+            this._myAxesInfos[PP.GamepadAxesID[key]] = new PP.GamepadAxesInfo(PP.GamepadAxesID[key], this._myHandedness);
+        }
 
         this._myButtonCallbacks = [];   // Signature: callback(ButtonInfo, Gamepad)
         for (let key in PP.GamepadButtonID) {
@@ -18,9 +21,12 @@ PP.BaseGamepad = class BaseGamepad {
             }
         }
 
-        this._myAxesCallbacks = [];     // Signature: callback(AxesInfo, Gamepad)
-        for (let eventKey in PP.GamepadAxesEvent) {
-            this._myAxesCallbacks[PP.GamepadAxesEvent[eventKey]] = new Map();
+        this._myAxesCallbacks = [];   // Signature: callback(AxesInfo, Gamepad)
+        for (let key in PP.GamepadAxesID) {
+            this._myAxesCallbacks[PP.GamepadAxesID[key]] = [];
+            for (let eventKey in PP.GamepadAxesEvent) {
+                this._myAxesCallbacks[PP.GamepadAxesID[key]][PP.GamepadAxesEvent[eventKey]] = new Map();
+            }
         }
 
         this._myPulseInfo = new PP.GamepadPulseInfo();
@@ -46,16 +52,16 @@ PP.BaseGamepad = class BaseGamepad {
         this._myButtonCallbacks[buttonID][buttonEvent].delete(id);
     }
 
-    getAxesInfo() {
-        return this._myAxesInfo;
+    getAxesInfo(axesID) {
+        return this._myAxesInfos[axesID];
     }
 
-    registerAxesEventListener(axesEvent, id, callback) {
-        this._myAxesCallbacks[axesEvent].set(id, callback);
+    registerAxesEventListener(axesID, axesEvent, id, callback) {
+        this._myAxesCallbacks[axesID][axesEvent].set(id, callback);
     }
 
-    unregisterAxesEventListener(axesEvent, id) {
-        this._myAxesCallbacks[axesEvent].delete(id);
+    unregisterAxesEventListener(axesID, axesEvent, id) {
+        this._myAxesCallbacks[axesID][axesEvent].delete(id);
     }
 
     pulse(intensity, duration = 0) {
@@ -115,7 +121,7 @@ PP.BaseGamepad = class BaseGamepad {
         return buttonData;
     }
 
-    _getAxesData() {
+    _getAxesData(axesID) {
         let axesData = this._createAxesData();
         return axesData;
     }
@@ -166,12 +172,12 @@ PP.BaseGamepad = class BaseGamepad {
     }
 
     _updateSingleButtonInfo(buttonID) {
-        let button = this._myButtonInfos[buttonID];
+        let buttonInfo = this._myButtonInfos[buttonID];
         let buttonData = this._getButtonData(buttonID);
 
-        button.myIsPressed = buttonData.myIsPressed;
-        button.myIsTouched = buttonData.myIsTouched;
-        button.myValue = buttonData.myValue;
+        buttonInfo.myIsPressed = buttonData.myIsPressed;
+        buttonInfo.myIsTouched = buttonData.myIsTouched;
+        buttonInfo.myValue = buttonData.myValue;
     }
 
     _postUpdateButtonInfos(dt) {
@@ -313,39 +319,52 @@ PP.BaseGamepad = class BaseGamepad {
     }
 
     _preUpdateAxesInfos() {
-        this._myAxesInfo.myPrevAxes[0] = this._myAxesInfo.myAxes[0];
-        this._myAxesInfo.myPrevAxes[1] = this._myAxesInfo.myAxes[1];
+        this._myAxesInfos.forEach(function (item) {
+            item.myPrevAxes[0] = item.myAxes[0];
+            item.myPrevAxes[1] = item.myAxes[1];
+        });
     }
 
     _updateAxesInfos() {
-        let axesData = this._getAxesData();
-        this._myAxesInfo.myAxes[0] = axesData[0];
-        this._myAxesInfo.myAxes[1] = axesData[1];
+        this._updateSingleAxesInfo(PP.GamepadAxesID.THUMBSTICK);
+    }
+
+    _updateSingleAxesInfo(axesID) {
+        let axesInfo = this._myAxesInfos[axesID];
+        let axesData = this._getAxesData(axesID);
+
+        axesInfo.myAxes[0] = axesData[0];
+        axesInfo.myAxes[1] = axesData[1];
     }
 
     _postUpdateAxesInfos() {
-        //X CHANGED
-        if (this._myAxesInfo.myAxes[0] != this._myAxesInfo.myPrevAxes[0]) {
-            let callbacks = this._myAxesCallbacks[PP.GamepadAxesEvent.X_CHANGED];
-            this._triggerCallbacks(callbacks, this._myAxesInfo);
-        }
+        for (let key in PP.GamepadAxesID) {
+            let axesInfo = this._myAxesInfos[PP.GamepadAxesID[key]];
+            let axesCallbacks = this._myAxesCallbacks[PP.GamepadAxesID[key]];
 
-        //Y CHANGED
-        if (this._myAxesInfo.myAxes[1] != this._myAxesInfo.myPrevAxes[1]) {
-            let callbacks = this._myAxesCallbacks[PP.GamepadAxesEvent.Y_CHANGED];
-            this._triggerCallbacks(callbacks, this._myAxesInfo);
-        }
+            //X CHANGED
+            if (axesInfo.myAxes[0] != axesInfo.myPrevAxes[0]) {
+                let callbacks = axesCallbacks[PP.GamepadAxesEvent.X_CHANGED];
+                this._triggerCallbacks(callbacks, axesInfo);
+            }
 
-        //AXES CHANGED
-        if (this._myAxesInfo.myAxes[0] != this._myAxesInfo.myPrevAxes[0] ||
-            this._myAxesInfo.myAxes[1] != this._myAxesInfo.myPrevAxes[1]) {
-            let callbacks = this._myAxesCallbacks[PP.GamepadAxesEvent.AXES_CHANGED];
-            this._triggerCallbacks(callbacks, this._myAxesInfo);
-        }
+            //Y CHANGED
+            if (axesInfo.myAxes[1] != axesInfo.myPrevAxes[1]) {
+                let callbacks = axesCallbacks[PP.GamepadAxesEvent.Y_CHANGED];
+                this._triggerCallbacks(callbacks, axesInfo);
+            }
 
-        //ALWAYS        
-        let callbacks = this._myAxesCallbacks[PP.GamepadAxesEvent.ALWAYS];
-        this._triggerCallbacks(callbacks, this._myAxesInfo);
+            //AXES CHANGED
+            if (axesInfo.myAxes[0] != axesInfo.myPrevAxes[0] ||
+                axesInfo.myAxes[1] != axesInfo.myPrevAxes[1]) {
+                let callbacks = axesCallbacks[PP.GamepadAxesEvent.AXES_CHANGED];
+                this._triggerCallbacks(callbacks, axesInfo);
+            }
+
+            //ALWAYS        
+            let callbacks = axesCallbacks[PP.GamepadAxesEvent.ALWAYS];
+            this._triggerCallbacks(callbacks, axesInfo);
+        }
     }
 
     _updatePulse(dt) {

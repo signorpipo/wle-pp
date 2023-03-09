@@ -98,12 +98,12 @@ PP.UniversalGamepad = class UniversalGamepad extends PP.BaseGamepad {
         return this._myButtonData;
     }
 
-    _getAxesData() {
+    _getAxesData(axesID) {
         this._myAxesData.vec2_zero();
 
         for (let core of this._myGamepadCores.values()) {
             if (core.isGamepadCoreActive()) {
-                let coreAxesData = core.getAxesData();
+                let coreAxesData = core.getAxesData(axesID);
 
                 if (Math.abs(coreAxesData[0]) > Math.abs(this._myAxesData[0])) {
                     this._myAxesData[0] = coreAxesData[0];

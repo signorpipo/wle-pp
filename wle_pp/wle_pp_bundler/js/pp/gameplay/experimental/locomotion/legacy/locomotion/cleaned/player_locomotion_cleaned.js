@@ -194,6 +194,9 @@ PP.CleanedPlayerLocomotion = class CleanedPlayerLocomotion {
                 params.myVRDirectionReferenceType = this._myParams.myVRDirectionReferenceType;
                 params.myVRDirectionReferenceObject = this._myParams.myVRDirectionReferenceObject;
 
+                params.myMoveThroughCollisionShortcutEnabled = this._myParams.myMoveThroughCollisionShortcutEnabled;
+                params.myMoveHeadShortcutEnabled = this._myParams.myMoveHeadShortcutEnabled;
+
                 this._myPlayerLocomotionSmooth = new PP.CleanedPlayerLocomotionSmooth(params, this._myMovementRuntimeParams);
             }
 
@@ -212,8 +215,8 @@ PP.CleanedPlayerLocomotion = class CleanedPlayerLocomotion {
                 params.myDetectionParams.myGroundAngleToIgnoreUpward = this._myCollisionCheckParamsMovement.myGroundAngleToIgnore;
                 params.myDetectionParams.myMustBeOnGround = true;
 
-                params.myDetectionParams.myTeleportBlockLayerFlags.setAllFlagsActive(true);
-                params.myDetectionParams.myTeleportFloorLayerFlags.setAllFlagsActive(true);
+                params.myDetectionParams.myTeleportBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
+                params.myDetectionParams.myTeleportFloorLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
 
                 params.myDetectionParams.myTeleportFeetPositionMustBeVisible = false;
                 params.myDetectionParams.myTeleportHeadPositionMustBeVisible = false;
@@ -372,7 +375,7 @@ PP.CleanedPlayerLocomotion = class CleanedPlayerLocomotion {
         simplifiedParams.myMaxWalkableGroundStepHeight = 0.1;
         simplifiedParams.myShouldNotFallFromEdges = false;
 
-        simplifiedParams.myHorizontalCheckBlockLayerFlags.setAllFlagsActive(true);
+        simplifiedParams.myHorizontalCheckBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
         let physXComponents = PP.myPlayerObjects.myPlayer.pp_getComponentsHierarchy("physx");
         for (let physXComponent of physXComponents) {
             simplifiedParams.myHorizontalCheckObjectsToIgnore.pp_pushUnique(physXComponent.object, (first, second) => first.pp_equals(second));

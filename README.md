@@ -58,8 +58,8 @@ Some of the features that you can get with this library are:
   - Debug Draw
     * easily draw some debug object in the scene using functions like `PP.myDebugVisualManager.drawLine`, `PP.myDebugVisualManager.drawArrow` or `PP.myDebugVisualManager.drawRaycast`
 	* this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
-  - Debug Function Calls Counter
-    * let you specify a class or an object instance and count all the calls that are being made on its functions
+  - Debug Functions Performance Analyzer
+    * let you specify a class or an object instance and count all the calls that are being made on its functions as for its total execution time
   - Console VR
     * a tool that let you see the console even when u are inside the VR session
   - Easy Tune
@@ -373,9 +373,6 @@ List of features:
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/utils)
 
 List of features:
-- [`PP.CAUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/ca_utils.js)
-  * set of functions to interact with the Construct Arcade SDK, like getting a leaderboard, a user info and so on
-  * you can specify a dummy server that can be used when the SDK is not available (when testing or if the game is not on CA) or when there is an error with real server
 - [`PP.ColorUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/color_utils.js)
   * bunch of functions to work with colors, like converting hsv to rgb, or code notation (0,1) to the human one (0,255)
 - [`PP.MeshUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/ca_utils.js)
@@ -393,6 +390,8 @@ List of features:
   * some functions related to browser stuff, like checking if u are on a mobile or desktop browser
 - [`PP.MaterialUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/material_utils.js)
   * a set of functions to interact with materials, like setting the alpha of all the materials of an object to easily make it fade in/out
+- [`PP.JSUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/js_utils.js)
+  * a set of functions related to Javascript itself, like checking if a reference is a function, or getting all the property names of a reference
   
 ### Visual
 
@@ -462,7 +461,7 @@ List of features:
   * a debug version of the visual manager, so that u can split between the normal visual and the debug ones
   * it also feature some quick draw methods not available with the `PP.VisualManager` to add debug objects even more easily
 
-#### Components
+### Components
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/components)
   
@@ -472,26 +471,27 @@ List of components:
 - [`pp-debug-transform`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/components/debug_transform_component.js)
   * a handy component to add the debug transform debug to an existing object in the scene  
   
-#### Function Calls Counter
+### Debug Functions Overwriter
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter)
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter)
+
+List of features:
+- [`PP.DebugFunctionsOverwriter`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_overwriter.js)
+  * Let you overwrite a group of functions for debug purposes, like counting the calls being made.
   
-List of components:
-- [`PP.DebugFunctionCallsCounter`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/debug_function_calls_counter.js)
-  * let you specify a class or an object instance and count all the calls that are being made on its functions
+#### Debug Functions Performance Analyzer
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer)
+
+List of features:
+- [`PP.DebugFunctionsPerformanceAnalyzer`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analyzer.js)
+  * let you specify a class or an object instance and count all the calls that are being made on its functions as for its total execution time
   * it's a very useful class to understand how many times specific functions are being called, helping you in finding bottlenecks or garbage collection issues
-- [`PP.DebugFunctionCallsCountLogger`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/debug_function_calls_count_logger.js)
+- [`PP.DebugFunctionsPerformanceAnalysisResultsLogger`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analysis_results_logger.js)
   * an utility class to easily log the result of the `PP.DebugFunctionCallsCounter`
-- ['pp-debug-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_function_calls_counter_component.js)
-  * a handy component to add a function calls counter for any class you want and log the result
-- ['pp-debug-pp-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_pp_function_calls_counter.js)
-  * a component that add a function calls counter for the whole `PP` library
-- ['pp-debug-wl-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_wl_function_calls_counter.js)
-  * a component that add a function calls counter for the whole `WL` library
-- ['pp-debug-array-function-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_array_function_calls_counter.js)
-  * a component that add a function calls counter for the whole `Array` library, including `Float32Array` and other `TypedArray`classes
-- ['pp-debug-pp-array-creation-calls-counter'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/function_calls_counter/components/debug_pp_array_creation_calls_counter.js)
-  * a component that add a function calls counter for the `PP` array creation funtions, like `PP.vec3_create`
+- ['pp-debug-functions-performance-analyzer'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js)
+  * a handy component to add a function performance analyzer for any class you want and log the result
+  * u can also find some specific versions of this component like 'pp-debug-array-functions-performance-analyzer'
   
 ### How To
 
@@ -583,7 +583,7 @@ Gameplay features that are integrations of already existing functionalities so t
 List of features:
 - [`PP.CAUtils`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_utils.js)
   * a set of functions to interact with the Construct Arcade SDK, like getting the leaderboard or the data of the current user
-- [`PP.CADummyServer`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_utils.js)
+- [`PP.CADummyServer`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_dummy_server.js)
   * u can add a dummy server to the CA utils so that when u want to test the funcionalities you can have a faked responde
   * the dummy server can also be used to have a fallback for when there are errors even for the released app
 - [`pp-ca-display-leaderboard`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard.js)
@@ -664,15 +664,15 @@ List of features:
     PP.myLeftGamepad.registerButtonEventListener(PP.GamepadButtonID.THUMBSTICK, PP.GamepadButtonEvent.PRESS_START, this, this._thumbstickPressStart.bind(this));        
     PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isTouchEnd();    
     PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.SQUEEZE).isPressStart(2); // fast pressed 2 times     
-    PP.myGamepads[PP.Handedness.LEFT].getAxesInfo().getAxes();    
+    PP.myGamepads[PP.Handedness.LEFT].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
     PP.myRightGamepad.pulse(0.5, 1);    
     ```
 - [`Gamepad Buttons`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_buttons.js)
   * here u can find the enums for the buttons and axes ids and events and the classes the contains the buttons and axes infos
 - [`PP.GamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_cores/gamepad_core.js)
   * the base class that u can inherit to create a custom gamepad core that u can then plug into the universal gamepad
-- [`PP.XRGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_cores/xr_gamepad_core.js) / [`PP.KeyboardGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_cores/keyboard_gamepad_core.js)
-  * a few gamepad cores that let you retrieve the buttons through the gamepads or the keyboard  
+- [`PP.XRGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_cores/xr_gamepad_core.js) / [`PP.KeyboardGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_cores/keyboard_gamepad_core.js) / [`PP.ClassicGamepadCore`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_cores/classic_gamepad_core.js)
+  * a few gamepad cores that let you retrieve the buttons through the xr/classic gamepads or the keyboard  
 - [`PP.BaseGamepad`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/base_gamepad.js)
   * the base class that u can inherit to create your own gamepad, so that u can specify how buttons activate and stuff
   * `PP.UniversalGamepad` inherits from this class

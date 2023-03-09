@@ -80,7 +80,7 @@ WL.registerComponent('pp-gamepad-mesh-animator', {
 
         // AXES CHANGED
         if (this._myThumbstick != null) {
-            gamepad.registerAxesEventListener(PP.GamepadAxesEvent.AXES_CHANGED, this, this._thumbstickValueChanged.bind(this));
+            gamepad.registerAxesEventListener(PP.GamepadAxesID.THUMBSTICK, PP.GamepadAxesEvent.AXES_CHANGED, this, this._thumbstickValueChanged.bind(this));
         }
     },
     _thumbstickPressedStart: function () {

@@ -53,7 +53,7 @@ PP.VirtualGamepadGamepadCore = class VirtualGamepadGamepadCore extends PP.Gamepa
         return this._myButtonData;
     }
 
-    getAxesData() {
+    getAxesData(axesID) {
         this._myAxesData.vec2_zero();
 
         if (this.isGamepadCoreActive()) {

@@ -238,8 +238,8 @@ PP.EasyTuneWidget = class EasyTuneWidget {
 
     _updateGamepadScrollVariable(dt) {
         if (this._myGamepad && (!this._mySetup.myScrollVariableButtonID || this._myGamepad.getButtonInfo(this._mySetup.myScrollVariableButtonID).myIsPressed)) {
-            let x = this._myGamepad.getAxesInfo().myAxes[0];
-            let y = this._myGamepad.getAxesInfo().myAxes[1];
+            let x = this._myGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes[0];
+            let y = this._myGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes[1];
             if (Math.abs(x) > this._mySetup.myScrollVariableMinXThreshold && Math.abs(y) < this._mySetup.myScrollVariableMaxYThreshold) {
                 this._myScrollVariableTimer += dt;
                 while (this._myScrollVariableTimer > this._mySetup.myScrollVariableDelay) {

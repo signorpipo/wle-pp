@@ -32,8 +32,8 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
         this.myInterfaceScale = 1;
         this.myMarginScale = 1;
 
-        this.myReleaseOnPointerLeave = false; // if mouse leaves the canvas it will be like it was released
-        this.myStopPropagatingMouseDownEvents = true; // this can be used to make it so the rest of the game will ignore clicks on the virtual gamepad
+        this.myReleaseOnPointerLeave = true;            // if mouse leaves the canvas it will be like it was released
+        this.myStopPropagatingMouseDownEvents = true;   // this can be used to make it so the rest of the game will ignore clicks on the virtual gamepad
 
         // Advanced Params
 

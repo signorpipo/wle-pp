@@ -2,7 +2,6 @@ WL.registerComponent("pp-virtual-gamepad", {
     _myShowOnDesktop: { type: WL.Type.Bool, default: false },   // you may have to enable headset too
     _myShowOnMobile: { type: WL.Type.Bool, default: true },
     _myShowOnHeadset: { type: WL.Type.Bool, default: false },   // not 100% reliable, this is true if the device supports vr and it is desktop
-    _myReleaseOnPointerLeave: { type: WL.Type.Bool, default: false },
     _myAddToUniversalGamepad: { type: WL.Type.Bool, default: true },
     _myOpacity: { type: WL.Type.Float, default: 0.5 },
     _myIconColor: { type: WL.Type.String, default: "#e0e0e0" },
@@ -92,7 +91,6 @@ WL.registerComponent("pp-virtual-gamepad", {
 
         params.myOpacity = this._myOpacity;
 
-        params.myReleaseOnPointerLeave = this._myReleaseOnPointerLeave;
         params.myInterfaceScale = this._myInterfaceScale;
         params.myMarginScale = this._myMarginScale;
 

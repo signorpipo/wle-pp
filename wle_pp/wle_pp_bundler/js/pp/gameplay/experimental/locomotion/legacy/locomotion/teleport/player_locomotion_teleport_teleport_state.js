@@ -110,6 +110,9 @@ PP.PlayerLocomotionTeleportTeleportState = class PlayerLocomotionTeleportTelepor
     }
 
     _teleportDone() {
+        this._myTeleportParams.myPlayerTransformManager.resetReal(true, false, false);
+        this._myTeleportParams.myPlayerTransformManager.resetHeadToReal();
+
         this._myParentFSM.performDelayed("done");
     }
 };

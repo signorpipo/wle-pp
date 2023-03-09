@@ -115,7 +115,7 @@ PP.PlayerLocomotionTeleport = class PlayerLocomotionTeleport extends PP.PlayerLo
         if (!PP.XRUtils.isSessionActive()) {
             startDetecting = PP.myMouse.isButtonPressStart(PP.MouseButtonID.MIDDLE) && PP.myMouse.isTargetingRenderCanvas();
         } else {
-            let axes = PP.myGamepads[this._myTeleportParams.myHandedness].getAxesInfo().getAxes();
+            let axes = PP.myGamepads[this._myTeleportParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
 
             if (axes.vec2_length() <= this._myTeleportParams.myStickIdleThreshold) {
                 this._myStickIdleCharge = true;
