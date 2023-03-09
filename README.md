@@ -489,7 +489,7 @@ List of features:
   * it's a very useful class to understand how many times specific functions are being called, helping you in finding bottlenecks or garbage collection issues
 - [`PP.DebugFunctionsPerformanceAnalysisResultsLogger`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analysis_results_logger.js)
   * an utility class to easily log the result of the `PP.DebugFunctionCallsCounter`
-- ['pp-debug-functions-performance-analyzer'](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js)
+- [`pp-debug-functions-performance-analyzer`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js)
   * a handy component to add a function performance analyzer for any class you want and log the result
   * u can also find some specific versions of this component like 'pp-debug-array-functions-performance-analyzer'
   
