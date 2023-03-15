@@ -124,10 +124,10 @@ PP.CleanedPlayerLocomotion = class CleanedPlayerLocomotion {
             params.myObscureFadeEasingFunction = PP.EasingFunction.linear;
             params.myObscureLevelRelativeDistanceEasingFunction = PP.EasingFunction.linear;
 
-            params.myDistanceToStartObscureWhenBodyColliding = 0.35;
+            params.myDistanceToStartObscureWhenBodyColliding = 0.75;
             params.myDistanceToStartObscureWhenHeadColliding = 0;
-            params.myDistanceToStartObscureWhenFloating = 0.35;
-            params.myDistanceToStartObscureWhenFar = 0.5;
+            params.myDistanceToStartObscureWhenFloating = 0.75;
+            params.myDistanceToStartObscureWhenFar = 0.75;
 
             params.myRelativeDistanceToMaxObscureWhenBodyColliding = 0.5;
             params.myRelativeDistanceToMaxObscureWhenHeadColliding = 0.1;
@@ -451,7 +451,7 @@ PP.CleanedPlayerLocomotion = class CleanedPlayerLocomotion {
 
     _setupLocomotionMovementFSM() {
         this._myLocomotionMovementFSM = new PP.FSM();
-        this._myLocomotionMovementFSM.setDebugLogActive(true, "Locomotion Movement");
+        //this._myLocomotionMovementFSM.setDebugLogActive(true, "Locomotion Movement");
 
         this._myLocomotionMovementFSM.addState("init");
         this._myLocomotionMovementFSM.addState("smooth", (dt) => this._myPlayerLocomotionSmooth.update(dt));

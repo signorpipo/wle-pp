@@ -4,7 +4,7 @@ PP.VisualManager = class VisualManager {
 
         this._myVisualElementsTypeMap = new Map();
         this._myVisualElementLastID = 0;
-        this._myVisualElementsPool = new PP.ObjectPoolManager();
+        this._myVisualElementsPool = new PP.ObjectPoolsManager();
         this._myVisualElementsToShow = [];
 
         this._myActive = true;

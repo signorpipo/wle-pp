@@ -11,10 +11,10 @@ WL.registerComponent('pp-input-manager', {
         PP.myMouse = this._myInputManager.getMouse();
         PP.myKeyboard = this._myInputManager.getKeyboard();
 
-        PP.myGamepadManager = this._myInputManager.getGamepadManager();
-        PP.myGamepads = PP.myGamepadManager.getGamepads();
-        PP.myLeftGamepad = PP.myGamepadManager.getLeftGamepad();
-        PP.myRightGamepad = PP.myGamepadManager.getRightGamepad();
+        PP.myGamepadsManager = this._myInputManager.getGamepadsManager();
+        PP.myGamepads = PP.myGamepadsManager.getGamepads();
+        PP.myLeftGamepad = PP.myGamepadsManager.getLeftGamepad();
+        PP.myRightGamepad = PP.myGamepadsManager.getRightGamepad();
     },
     start() {
         this._myInputManager.start();
@@ -66,7 +66,7 @@ PP.myMouse = null;
 
 PP.myKeyboard = null;
 
-PP.myGamepadManager = null;
+PP.myGamepadsManager = null;
 PP.myGamepads = null;
 PP.myLeftGamepad = null;
 PP.myRightGamepad = null;

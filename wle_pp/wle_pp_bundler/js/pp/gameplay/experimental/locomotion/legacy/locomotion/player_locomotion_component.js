@@ -12,7 +12,7 @@ WL.registerComponent('pp-player-locomotion', {
     _myMinAngleToFlyDownNonVR: { type: WL.Type.Float, default: 50 },
     _myMinAngleToFlyUpVR: { type: WL.Type.Float, default: 60 },
     _myMinAngleToFlyDownVR: { type: WL.Type.Float, default: 1 },
-    _myMinAngleToFlyRight: { type: WL.Type.Float, default: 30 },
+    _myMinAngleToFlyRight: { type: WL.Type.Float, default: 60 },
     _myMainHand: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
     _myVRDirectionReferenceType: { type: WL.Type.Enum, values: ['head', 'hand', 'custom object'], default: 'hand' },
     _myVRDirectionReferenceObject: { type: WL.Type.Object },

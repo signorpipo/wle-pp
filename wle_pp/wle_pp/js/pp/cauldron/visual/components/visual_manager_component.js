@@ -1,11 +1,8 @@
 WL.registerComponent('pp-visual-manager', {
 }, {
     init: function () {
-        if (this.active) {
-            PP.myVisualData.myRootObject = WL.scene.addObject(null);
-
-            PP.myVisualManager = new PP.VisualManager();
-        }
+        PP.myVisualData.myRootObject = WL.scene.addObject(null);
+        PP.myVisualManager = new PP.VisualManager();
     },
     start() {
         PP.myVisualData.myDefaultMaterials.myDefaultMeshMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();

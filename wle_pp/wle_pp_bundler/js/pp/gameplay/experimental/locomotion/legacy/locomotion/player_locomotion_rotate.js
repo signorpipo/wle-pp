@@ -111,11 +111,7 @@ PP.PlayerLocomotionRotate.prototype._rotateHeadHorizontally = function () {
         }
 
         if (headRotation.quat_getAngle() > PP.LocomotionUtils.EPSILON_DEGREES) {
-            if (PP.myGamepads[PP.InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
-                this._myParams.myPlayerHeadManager.rotateFeetQuat(headRotation);
-            } else {
-                this._myParams.myPlayerTransformManager.rotateQuat(headRotation);
-            }
+            this._myParams.myPlayerTransformManager.rotateQuat(headRotation);
         }
     };
 }();

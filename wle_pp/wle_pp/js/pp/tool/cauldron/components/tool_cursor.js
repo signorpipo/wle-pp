@@ -40,22 +40,22 @@ WL.registerComponent('pp-tool-cursor', {
             cursorMeshComponent.material = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
             cursorMeshComponent.material.color = this._myCursorColor;
 
-            let cursorComponent = this._myCursorObjectVR.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1, "cursorObject": this._myCursorMeshobject });
-            cursorComponent.rayCastMode = 0; //collision
+            this._myCursorComponentVR = this._myCursorObjectVR.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1, "cursorObject": this._myCursorMeshobject });
+            this._myCursorComponentVR.rayCastMode = 0; //collision
             if (this._myPulseOnHover) {
-                cursorComponent.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
+                this._myCursorComponentVR.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
             }
         }
 
         this._myCursorObjectNonVR = WL.scene.addObject(this._myToolCursorObject);
 
         {
-            let cursorComponent = this._myCursorObjectNonVR.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1 });
-            cursorComponent.rayCastMode = 0; //collision
+            this._myCursorComponentNonVR = this._myCursorObjectNonVR.addComponent("cursor", { "collisionGroup": this._myCursorTargetCollisionGroup, "handedness": this._myHandedness + 1 });
+            this._myCursorComponentNonVR.rayCastMode = 0; //collision
             if (this._myPulseOnHover) {
-                cursorComponent.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
+                this._myCursorComponentNonVR.globalTarget.addHoverFunction(this._pulseOnHover.bind(this));
             }
-            cursorComponent.setViewComponent(PP.myPlayerObjects.myNonVRCamera.getComponent("view"));
+            this._myCursorComponentNonVR.setViewComponent(PP.myPlayerObjects.myNonVRCamera.getComponent("view"));
         }
 
         let fingerCursorMeshObject = null;
@@ -81,29 +81,28 @@ WL.registerComponent('pp-tool-cursor', {
             "_myCursorObject": fingerCursorMeshObject
         });
 
-        this._myCursorObjectVR.pp_setActive(false);
-        this._myCursorObjectNonVR.pp_setActive(false);
-        this._myFingerCursorObject.pp_setActive(false);
+        this._myCursorComponentVR.active = false;
+        this._myCursorComponentNonVR.active = false;
+        this._myFingerCursorComponent.active = false;
 
     },
     update: function () {
         let transformQuat = PP.quat2_create();
-        let transform = PP.mat4_create();
         return function update(dt) {
             let isUsingHand = this._isUsingHand();
 
-            this._myFingerCursorObject.pp_setActive(isUsingHand);
+            this._myFingerCursorComponent.active = isUsingHand;
 
             if (isUsingHand) {
-                this._myCursorObjectNonVR.pp_setActive(false);
-                this._myCursorObjectVR.pp_setActive(false);
+                this._myCursorComponentVR.active = false;
+                this._myCursorComponentNonVR.active = false;
             } else {
                 if (PP.XRUtils.isSessionActive()) {
-                    this._myCursorObjectVR.pp_setActive(!isUsingHand);
-                    this._myCursorObjectNonVR.pp_setActive(false);
+                    this._myCursorComponentVR.active = !isUsingHand;
+                    this._myCursorComponentNonVR.active = false;
                 } else {
-                    this._myCursorObjectNonVR.pp_setActive(!isUsingHand);
-                    this._myCursorObjectVR.pp_setActive(false);
+                    this._myCursorComponentNonVR.active = !isUsingHand;
+                    this._myCursorComponentVR.active = false;
 
                     this._myCursorObjectNonVR.pp_setTransformQuat(PP.myPlayerObjects.myNonVRCamera.pp_getTransformQuat(transformQuat));
                 }

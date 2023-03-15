@@ -2,7 +2,7 @@ WL.registerComponent("pp-easy-light-color", {
     _myVariableName: { type: WL.Type.String, default: "" },
     _mySetAsDefault: { type: WL.Type.Bool, default: false },
     _myUseTuneTarget: { type: WL.Type.Bool, default: false },
-    _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'] }
+    _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'], default: 'hsv' }
 
 }, {
     init: function () {

@@ -86,6 +86,7 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
     outCharacterColliderSetup.myGroundSetup.mySurfaceSnapMaxDistance = simplifiedCreationParams.myMaxDistanceToSnapOnGround;
     outCharacterColliderSetup.myGroundSetup.mySurfacePopOutMaxDistance = simplifiedCreationParams.myMaxDistanceToSnapOnGround > 0 ?
         simplifiedCreationParams.myMaxDistanceToSnapOnGround : (simplifiedCreationParams.myRadius > 0.1) ? 0.1 : 0.01;
+    outCharacterColliderSetup.myGroundSetup.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myGroundSetup.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalCheckFeetDistanceToIgnore);
     outCharacterColliderSetup.myGroundSetup.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = simplifiedCreationParams.myRadius;
 
     outCharacterColliderSetup.myGroundSetup.myCollectSurfaceInfo = simplifiedCreationParams.myCollectGroundInfo || simplifiedCreationParams.myMaxWalkableGroundAngle > 0;

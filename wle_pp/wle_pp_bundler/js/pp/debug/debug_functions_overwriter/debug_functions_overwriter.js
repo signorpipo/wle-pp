@@ -1,5 +1,7 @@
 // #TODO add getter/setter accessors overwrite
 // #TODO if both a class and the parent class are in the list, they should be overwritten in parent first order
+// #TODO how to overwrite class and objects from modules?
+// #TODO some functions, like glMatrix.vec3.copy, are defined as getter, how to overwrite them?
 
 PP.DebugFunctionsOverwriterParams = class DebugFunctionsOverwriterParams {
     constructor() {

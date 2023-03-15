@@ -151,10 +151,8 @@ PP.JSUtils = {
                 let originalPropertyDescriptor = Object.getOwnPropertyDescriptor(propertyOwnParent, propertyName);
 
                 if (originalPropertyDescriptor != null) {
-                    if (originalPropertyDescriptor.get == null && originalPropertyDescriptor.set == null && originalPropertyDescriptor.value != null) {
-                        let originalProperty = originalPropertyDescriptor.value;
-                        this.copyReferenceProperties(originalProperty, newProperty, true, javascriptObjectFunctionsSpecialOverwrite, debugLogActive);
-                    }
+                    let originalProperty = this.getReferenceProperty(propertyOwnParent, propertyName);
+                    this.copyReferenceProperties(originalProperty, newProperty, true, javascriptObjectFunctionsSpecialOverwrite, debugLogActive);
 
                     let overwriteTarget = reference;
                     if (overwriteOnOwnParent) {
@@ -169,7 +167,19 @@ PP.JSUtils = {
                     });
 
                     success = true;
+                } else {
+                    Object.defineProperty(reference, propertyName, {
+                        value: newProperty
+                    });
+
+                    success = true;
                 }
+            } else {
+                Object.defineProperty(reference, propertyName, {
+                    value: newProperty
+                });
+
+                success = true;
             }
         } catch (error) {
             if (debugLogActive) {

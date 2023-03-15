@@ -63,6 +63,12 @@ WL.registerComponent('pp-grabber-hand', {
     throw: function (throwButton = null) {
         this._throw(throwButton);
     },
+    getGamepad() {
+        return this._myGamepad;
+    },
+    getHandedness() {
+        return PP.InputUtils.getHandednessByIndex(this._myHandedness);
+    },
     registerGrabEventListener(id, callback) {
         this._myGrabCallbacks.set(id, callback);
     },
