@@ -107,11 +107,9 @@ In this case, you have to:
 
 In order to use most of the PP library your project needs to have certain components in your scene properly setup.  
 Specifically, these components needs to be added:
+  - `pp-gateway`
   - `pp-get-default-resources`
   - `pp-get-player-objects`
-  - `pp-input-manager`
-  - `pp-visual-manager`
-  - `pp-debug-manager`
   
 The best approach is to start by using a `ppefault` template project, which can be found [here](https://github.com/SignorPipo/wle_ppefault).  
 If u need to integrate the bundle in an existing project you can still take a look at this template project to see how to setup the above components properly.
@@ -830,11 +828,11 @@ List of features:
 - [`pp-gateway`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/pp_gateway_component.js)
   * entry point of the `PP` library
   * setup some stuff like creating the `PP.InputManager` and the `PP.VisualManager`
+- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_default_resources.js)
+  * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
 - [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_player_objects.js)
   * setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
   * this variable can be used to easily obtain the player objects/transforms in the code
-- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_default_resources.js)
-  * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
 
 ## Tool
 
