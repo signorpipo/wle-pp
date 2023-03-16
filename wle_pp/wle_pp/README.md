@@ -4,7 +4,8 @@ A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp).
 
-A collection of Wonderland Engine template projects that already includes this bundle can be found [here](https://github.com/SignorPipo/wle_ppefault).
+A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).
+A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle_pplaygrounds).
 
 A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
 
@@ -820,13 +821,13 @@ The extensions add new functions to already existing features:
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/pp)
 
-Contains components and scripts related to the `PP` library or needed to setup it properly.
+Contains components and scripts related to the PP library or needed to setup it properly.
 
 List of features:
 - [`PP`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/pp.js)
-  * the global variables that contains every definitions in the `PP` library
+  * the global variables that contains every definitions in the PP library
 - [`pp-gateway`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/pp_gateway_component.js)
-  * entry point of the `PP` library
+  * entry point of the PP library
   * setup some stuff like creating the `PP.InputManager` and the `PP.VisualManager`
 - [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_default_resources.js)
   * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
