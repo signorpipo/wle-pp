@@ -4,7 +4,7 @@ A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
 The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp).
 
-A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).
+A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).  
 A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle_pplaygrounds).
 
 A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
