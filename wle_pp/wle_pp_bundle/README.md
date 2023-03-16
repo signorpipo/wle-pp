@@ -155,6 +155,7 @@ For the extensions (features added to already existing objects), the names usual
 - [Plugin](#plugin)
   * [Component Mods](#component-mods)
   * [Extensions](#extensions)
+- [PP](#pp)
 - [Tool](#tool)
   * [Console VR](#console-vr)
   * [Easy Tune](#easy-tune)
@@ -239,23 +240,25 @@ List of features:
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/cauldron)
 
 List of features:
-- [`PP.ObjectPoolManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/object_pool_manager.js)
-  * a simple way to manage a set of pools of objects
+- [`PP.ObjectPool`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/object_pool.js)
+  * a pool of objects
   * you can get an object from it and it will refill if it runs out of them
   * by default works with wonderland objects that can be cloned (see object extension)
+- [`PP.ObjectPoolsManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/object_pools_manager.js)
+  * a simple way to manage a set of pools of objects
   * example:
     ```js
     let objectPoolParams = new PP.ObjectPoolParams();
     objectPoolParams.myInitialPoolSize = 20;
     objectPoolParams.myPercentageToAddWhenEmpty = 0.2;
     
-    let objectPoolManager = new PP.ObjectPoolManager();
+    let objectPoolsManager = new PP.ObjectPoolsManager();
     
-    objectPoolManager.addPool("pool_ID", gameObjectToClone, objectPoolParams);
+    objectPoolsManager.addPool("pool_ID", gameObjectToClone, objectPoolParams);
     
     ...
     
-    let object = objectPoolManager.getObject("pool_ID");    
+    let object = objectPoolsManager.getObject("pool_ID");    
     ```
 - [`PP.SaveManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/save_manager.js)
   * let you save and load from the local storage
@@ -278,11 +281,6 @@ List of components:
   * can be used to adjust the physx scale of all the physx components in the hierarchy the current object
   * adjusting means that every physx scale will be multiplied by the scale of the current object, since physx does not automatically adjust with the object scale
   * makes it easier to scale up/down an entire scene made of physx since u don't have to scale every single one manually
-- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/components/get_player_objects.js)
-  * setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
-  * this variable can be used to easily obtain the player objects/transforms in the code
-- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/components/get_default_resources.js)
-  * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
 - [`pp-show-fps`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/components/show_fps.js)
   * easy way to show fps as a UI element
 
@@ -556,7 +554,7 @@ List of features:
 The configuration is pretty straight forward:
 1. Enable the `Physics` feature, that u can find under the `Project Settings`
 1. Add the following components somewhere in your scene:
-	- [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_manager_component.js)
+	- [`pp-gamepads-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/gamepad_managers_component.js)
 	- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/components/get_player_objects.js)
 	- If you are using one of the [wle_ppefault](https://github.com/SignorPipo/wle_ppefault) default projects you will find these components already setup in the scene
 3. Add a `pp-grabber-hand` component to one of the hands of the player
@@ -679,10 +677,10 @@ List of features:
 - [`PP.GamepadUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/cauldron/gamepad_utils.js)
   * a bunch of functions that work with the gamepad
   * let you check if multiple buttons are pressed at the same time, or if any button in a specified list is pressed
-- [`PP.GamepadManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/cauldron/gamepad_manager.js)
+- [`PP.GamepadsManager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/cauldron/gamepads_manager.js)
   * a class that handle the creation and the update of the gamepads
-- [`pp-gamepad-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/cauldron/gamepad_manager_component.js)
-  * handy component that will create a gamepad manager and update it
+- [`pp-gamepads-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/gamepad/cauldron/gamepad_managers_component.js)
+  * handy component that will create a gamepads manager and update it
   * it adds by default a few gamepad cores like the `PP.XRGamepadCore` and the `PP.KeyboardGamepadCore`
   * it will create a global `PP.myLeftGamepad` and a global `PP.myRightGamepad`
   * it will also create a global `PP.myGamepads` that contains both gamepads and use `PP.Handedness` as index
@@ -820,11 +818,30 @@ The extensions add new functions to already existing features:
     array.mat4_getPosition();
     ```
 
+## PP
+
+[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/pp)
+
+Contains components and scripts related to the `PP` library or needed to setup it properly.
+
+List of features:
+- [`PP`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/pp.js)
+  * the global variables that contains every definitions in the `PP` library
+- [`pp-gateway`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/pp_gateway.js)
+  * entry point of the `PP` library
+  * setup some stuff like creating the `PP.InputManager` and the `PP.VisualManager`
+- [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_player_objects.js)
+  * setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
+  * this variable can be used to easily obtain the player objects/transforms in the code
+- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/p/components/get_default_resources.js)
+  * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
+
 ## Tool
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool)
 
 A set of tools that can help while developing and debugging.
+
 ### Cauldron
 
 [Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/cauldron)
