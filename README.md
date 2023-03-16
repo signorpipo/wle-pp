@@ -827,13 +827,13 @@ Contains components and scripts related to the `PP` library or needed to setup i
 List of features:
 - [`PP`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/pp.js)
   * the global variables that contains every definitions in the `PP` library
-- [`pp-gateway`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/pp_gateway.js)
+- [`pp-gateway`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/pp_gateway_component.js)
   * entry point of the `PP` library
   * setup some stuff like creating the `PP.InputManager` and the `PP.VisualManager`
 - [`pp-get-player-objects`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_player_objects.js)
   * setup a variable `PP.myPlayerObjects` so that it will contain the player objects that u have setup in the scene
   * this variable can be used to easily obtain the player objects/transforms in the code
-- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/p/components/get_default_resources.js)
+- [`pp-get-default-resources`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/pp/components/get_default_resources.js)
   * setup a variable `PP.myDefaultResources` so that it will contain some engine resources like meshes and materials
 
 ## Tool
