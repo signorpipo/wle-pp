@@ -124,7 +124,7 @@ You are free to use this in your projects, just remember to credit me somewhere!
 
 # Documentation
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp)
 
 I will explain more or less everything but without going too much into details.  
 Each folder under the `pp` folder will be a main section of this documentation.  
@@ -161,7 +161,7 @@ For the extensions (features added to already existing objects), the names usual
 
 ## Audio
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/audio)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/audio)
 
 A collection of classes and components to manage audio files, creating audio players for a specific audio file, adding an audio listener and some other utilities.
 
@@ -218,13 +218,13 @@ audioPlayer.play();
 
 ## Cauldron
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron)
 
 A generic collection of features.
 
 ### Benchmarks
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/benchmarks)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/benchmarks)
 
 A set of utilities to test the performance and capabilities of the Wonderland Engine.
 
@@ -236,7 +236,7 @@ List of features:
 
 ### Cauldron
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/cauldron)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/cauldron)
 
 List of features:
 - [`PP.ObjectPool`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/cauldron/object_pool.js)
@@ -267,7 +267,7 @@ List of features:
 
 ### Components
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/components)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/components)
 
 List of components:
 - [`pp-clear-console-on-xr-session-start`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/components/clear_console_on_xr_session_start.js)
@@ -285,7 +285,7 @@ List of components:
 
 ### FSM
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/fsm)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/fsm)
 
 An fsm let you create game logic like switching between the menu and the game, or character logic like running and jumping.  
 I'm not going to explain it in details, I'll suppose you already know the overall idea of what a finite state machine is.
@@ -340,7 +340,7 @@ Another thing is that nothing prevents you from doing a transition from within a
 
 #### States
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/fsm/states)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/fsm/states)
 
 A collection of states that can be used with the FSM.
   
@@ -350,7 +350,7 @@ List of states:
 
 ### Physics
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/physics)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/physics)
 
 List of features:
 - [`PP.PhysicsLayerFlags`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/physics/physics_layer_flags.js)
@@ -367,7 +367,7 @@ List of features:
  
 ### Utils
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/utils)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/utils)
 
 List of features:
 - [`PP.ColorUtils`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/utils/color_utils.js)
@@ -392,7 +392,7 @@ List of features:
   
 ### Visual
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/visual)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/visual)
 
 This feature let you add visual objects like lines, arrows, points and more easily.
 
@@ -418,7 +418,7 @@ List of features:
 
 #### Components
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/visual/components)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/cauldron/visual/components)
 
 List of components:
 - [`pp-visual-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/cauldron/visual/components/visual_manager_component.js)
@@ -447,7 +447,7 @@ If the value of the `lifetimeSeconds` is set to 0 the visual will be drawn for o
 
 ## Debug
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug)
 
 A collection of classes and components to help with debugging, like showing in real time the position and orientation of an object.
 
@@ -460,7 +460,7 @@ List of features:
 
 ### Components
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/components)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/components)
   
 List of components:
 - [`pp-debug-manager`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/components/debug_manager_component.js)
@@ -470,7 +470,7 @@ List of components:
   
 ### Debug Functions Overwriter
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter)
 
 List of features:
 - [`PP.DebugFunctionsOverwriter`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_overwriter.js)
@@ -478,7 +478,7 @@ List of features:
   
 #### Debug Functions Performance Analyzer
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer)
 
 List of features:
 - [`PP.DebugFunctionsPerformanceAnalyzer`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analyzer.js)
@@ -504,17 +504,17 @@ PP.myDebugVisualManager.drawRaycast(lifetimeSeconds, raycastResult, showOnlyFirs
 
 ## Gameplay
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay)
 
 A collection of gameplay features ready to be used.
 
 ### Cauldron
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/cauldron)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/cauldron)
 
 #### Cauldron
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/cauldron/cauldron)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/cauldron/cauldron)
 
 List of features:
 - [`PP.Direction2DTo3DConverter`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/gameplay/cauldron/direction_2D_to_3D_converter.js)
@@ -534,7 +534,7 @@ List of features:
   
 ### Grab & Throw
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/grab_throw)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/grab_throw)
 
 Let you add a grab and throw mechanic in your game with little effort.
 You can find an outdated example of the Grab & Throw [here](https://github.com/SignorPipo/wle_grab_throw).
@@ -569,13 +569,13 @@ The configuration is pretty straight forward:
 
 ### Integrations
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations)
 
 Gameplay features that are integrations of already existing functionalities so that they are easier to use and more compliant to the PP library.
 
 ### Construct Arcade
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade)
 
 List of features:
 - [`PP.CAUtils`](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade/ca_utils.js)
@@ -589,13 +589,13 @@ List of features:
   
 ### Experimental
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/experimental)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/experimental)
 
 Gameplay features that are in an experimental phase.
 
 #### Locomotion
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/experimental/locomotion)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/experimental/locomotion)
 
 Gives u a standard VR locomotion, this means both smooth and teleport locomotion with physics collision check.  
 It also check when the player goes inside the wall and obscure the view when that happens.  
@@ -609,13 +609,13 @@ Good luck, you will need it!
 
 ## Input
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input)
 
 A collection of classes and component to read inputs like head/hand transform or gamepad buttons.
 
 ### Cauldron
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/cauldron)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/cauldron)
 
 List of features:
 - [`PP.Keyboard`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/cauldron/keyboard.js)
@@ -647,7 +647,7 @@ List of features:
 
 ### Gamepad
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/gamepad)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/gamepad)
 
 Everything u need to get inputs from a gamepad, and some utilities to animate a gamepad or get multiple buttons press.
 You can find an outdated example of the Gamepad [here](https://github.com/SignorPipo/wle_gamepad).
@@ -694,7 +694,7 @@ List of features:
 	
 #### Virtual Gamepad
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/gamepad/virtual_gamepad)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/gamepad/virtual_gamepad)
 
 A virtual gamepad that let u use the gamepad on mobile devices.
 
@@ -708,7 +708,7 @@ List of features:
 
 ### Pose
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/pose)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/pose)
 
 List of features:
 - [`PP.HeadPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/pose/head_pose.js) / [`PP.HandPose`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/pose/hand_pose.js)
@@ -721,7 +721,7 @@ List of features:
 
 #### Components
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/pose/components)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/input/pose/components)
   
 List of components:
 - [`pp-set-player-height`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/input/pose/components/set_player_height.js)
@@ -739,13 +739,13 @@ List of components:
 
 ## Plugin
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/plugin)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/plugin)
 
 A set of features that extends what WLE and Javascript already offer.
 
 ### Component Mods
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/plugin/component_mods)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/plugin/component_mods)
 
 These files change some of the functions of WLE components, or add to them new ones:
 - [`clone_component_mod.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/plugin/component_mods/clone_component_mod.js)
@@ -759,7 +759,7 @@ These files change some of the functions of WLE components, or add to them new o
 
 ### Extensions
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/plugin/extensions)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/plugin/extensions)
 
 The extensions add new functions to already existing features:
 - [`object_extension.js`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/plugin/extensions/object_extension.js)
@@ -819,7 +819,7 @@ The extensions add new functions to already existing features:
 
 ## PP
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/pp)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/pp)
 
 Contains components and scripts related to the PP library or needed to setup it properly.
 
@@ -837,13 +837,13 @@ List of features:
 
 ## Tool
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool)
 
 A set of tools that can help while developing and debugging.
 
 ### Cauldron
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/cauldron)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/cauldron)
 
 List of features:
 - [`pp-tool-cursor`](https://github.com/SignorPipo/wle_pp/blob/main/wle_pp/wle_pp/js/pp/tool/cauldron/components/tool_cursor.js)
@@ -853,7 +853,7 @@ List of features:
 
 ### Console VR
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/console_vr)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/console_vr)
 
 Let u see the browser console from withing the vr session, making it easier to debug.
 
@@ -873,7 +873,7 @@ If you click on the `P` button on the bottom left u can pin the console so that 
 
 ### Easy Tune
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/easy_tune)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/easy_tune)
 
 A set of tools and widgets to make it easier to tune/adjust the values in your game, and also add some "toggable" debug stuff.  
 The main idea is that you have some values in the code that you would like to adjust at runtime, and this let you do exactly that.  
@@ -947,7 +947,7 @@ Easy Tune Variables examples:
 
 #### Easy Object Tuners
 
-[Code Folder Link](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners)
+[Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/tool/easy_tune/easy_object_tuners)
 
 A set of components that makes it even easier to use the easy tune.
 You just have to add the component on the object you want to tune, the variable will be created for you and the component will update the corrispondent value of the object automatically.
