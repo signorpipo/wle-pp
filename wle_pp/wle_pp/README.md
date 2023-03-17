@@ -573,7 +573,7 @@ The configuration is pretty straight forward:
 
 Gameplay features that are integrations of already existing functionalities so that they are easier to use and more compliant to the PP library.
 
-### Construct Arcade
+#### Construct Arcade
 
 [Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade)
 
