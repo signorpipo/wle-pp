@@ -1,10 +1,17 @@
-PP.VirtualGamepadButtonParams = class VirtualGamepadButtonParams {
-    constructor() {
-        this.myIconParams = new PP.VirtualGamepadIconParams();
-    }
-};
+import { getMainEngine } from "../../../cauldron/wl/engine_globals";
+import { Handedness } from "../../cauldron/input_types";
+import { GamepadAxesID, GamepadButtonID } from "../gamepad_buttons";
+import { VirtualGamepadIconParams, VirtualGamepadIconType } from "./virtual_gamepad_icon";
 
-PP.VirtualGamepadThumbstickParams = class VirtualGamepadThumbstickParams {
+export class VirtualGamepadButtonParams {
+
+    constructor() {
+        this.myIconParams = new VirtualGamepadIconParams();
+    }
+}
+
+export class VirtualGamepadThumbstickParams {
+
     constructor() {
         this.myBackgroundColor = "";
 
@@ -13,17 +20,18 @@ PP.VirtualGamepadThumbstickParams = class VirtualGamepadThumbstickParams {
         this.myReleaseTransitionSeconds = 0.2;
         this.myMoveTransitionSeconds = 0;
 
-        this.myIncludeBackgroundToDetection = false; // you can press the background of the icon to move the thumbstick, makes it harder to miss it
+        this.myIncludeBackgroundToDetection = false; // You can press the background of the icon to move the thumbstick, makes it harder to miss it
 
-        this.myIconParams = new PP.VirtualGamepadIconParams();
+        this.myIconParams = new VirtualGamepadIconParams();
     }
-};
+}
 
-PP.VirtualGamepadParams = class VirtualGamepadParams {
-    constructor() {
+export class VirtualGamepadParams {
+
+    constructor(engine = getMainEngine()) {
         this.myShowOnDesktop = false;
         this.myShowOnMobile = false;
-        this.myShowOnHeadset = false;   // not 100% reliable, this is true if the device supports vr and it is desktop
+        this.myShowOnHeadset = false;   // Not 100% reliable, this is true if the device supports VR and it is Desktop
 
         this.myAutoUpdateVisibility = false;
 
@@ -32,38 +40,40 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
         this.myInterfaceScale = 1;
         this.myMarginScale = 1;
 
-        this.myReleaseOnPointerLeave = true;            // if mouse leaves the canvas it will be like it was released
-        this.myStopPropagatingMouseDownEvents = true;   // this can be used to make it so the rest of the game will ignore clicks on the virtual gamepad
+        this.myReleaseOnPointerLeave = true;            // If mouse leaves the canvas it will be like it was released
+        this.myStopPropagatingMouseDownEvents = true;   // This can be used to make it so the rest of the game will ignore clicks on the virtual gamepad
 
         // Advanced Params
 
         this.myButtonParams = [];
-        this.myButtonParams[PP.Handedness.LEFT] = [];
-        this.myButtonParams[PP.Handedness.RIGHT] = [];
+        this.myButtonParams[Handedness.LEFT] = [];
+        this.myButtonParams[Handedness.RIGHT] = [];
 
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.SELECT] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.SQUEEZE] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.THUMBSTICK] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.TOP_BUTTON] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.BOTTOM_BUTTON] = new PP.VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.THUMBSTICK] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.TOP_BUTTON] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON] = new VirtualGamepadButtonParams();
 
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.SELECT] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.SQUEEZE] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.THUMBSTICK] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.TOP_BUTTON] = new PP.VirtualGamepadButtonParams();
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.BOTTOM_BUTTON] = new PP.VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.THUMBSTICK] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON] = new VirtualGamepadButtonParams();
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON] = new VirtualGamepadButtonParams();
 
         this.myThumbstickParams = [];
-        this.myThumbstickParams[PP.Handedness.LEFT] = new PP.VirtualGamepadThumbstickParams();
-        this.myThumbstickParams[PP.Handedness.RIGHT] = new PP.VirtualGamepadThumbstickParams();
+        this.myThumbstickParams[Handedness.LEFT] = [];
+        this.myThumbstickParams[Handedness.RIGHT] = [];
+        this.myThumbstickParams[Handedness.LEFT][GamepadAxesID.THUMBSTICK] = new VirtualGamepadThumbstickParams();
+        this.myThumbstickParams[Handedness.RIGHT][GamepadAxesID.THUMBSTICK] = new VirtualGamepadThumbstickParams();
 
         this.myButtonsOrder = [];
-        this.myButtonsOrder[PP.Handedness.LEFT] = [null, null, null, null, null];
-        this.myButtonsOrder[PP.Handedness.RIGHT] = [null, null, null, null, null];
+        this.myButtonsOrder[Handedness.LEFT] = [null, null, null, null, null];
+        this.myButtonsOrder[Handedness.RIGHT] = [null, null, null, null, null];
 
         this.myThumbsticksOrder = [];
-        this.myThumbsticksOrder[PP.Handedness.LEFT] = null;
-        this.myThumbsticksOrder[PP.Handedness.RIGHT] = null;
+        this.myThumbsticksOrder[Handedness.LEFT] = [null];
+        this.myThumbsticksOrder[Handedness.RIGHT] = [null];
 
         // Even More Advanced Params
 
@@ -82,9 +92,11 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
 
         this.myFontSize = 0;
 
-        this.myMinSizeMultiplier = 0;  // can be used to specify a min size based on the view width for when the view is in portrait mode
+        this.myMinSizeMultiplier = 0;  // Can be used to specify a min size based on the view width for when the view is in portrait mode
 
         this.myDisableMouseHoverWhenPressed = false;
+
+        this.myEngine = engine;
     }
 
     defaultSetup() {
@@ -114,49 +126,51 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
             }
         }
 
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.SQUEEZE].myIconParams.myIconType = PP.VirtualGamepadIconType.SQUARE;
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.SQUEEZE].myIconParams.myIconType = PP.VirtualGamepadIconType.SQUARE;
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE].myIconParams.myIconType = VirtualGamepadIconType.SQUARE;
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE].myIconParams.myIconType = VirtualGamepadIconType.SQUARE;
 
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.SELECT].myIconParams.myIconType = PP.VirtualGamepadIconType.FRAME;
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.SELECT].myIconParams.myIconType = PP.VirtualGamepadIconType.FRAME;
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT].myIconParams.myIconType = VirtualGamepadIconType.FRAME;
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT].myIconParams.myIconType = VirtualGamepadIconType.FRAME;
 
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.TOP_BUTTON].myIconParams.myIconType = PP.VirtualGamepadIconType.CIRCLE;
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.TOP_BUTTON].myIconParams.myIconType = PP.VirtualGamepadIconType.CIRCLE;
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.TOP_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.CIRCLE;
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.CIRCLE;
 
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.BOTTOM_BUTTON].myIconParams.myIconType = PP.VirtualGamepadIconType.RING;
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.BOTTOM_BUTTON].myIconParams.myIconType = PP.VirtualGamepadIconType.RING;
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.RING;
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.RING;
 
-        this.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.THUMBSTICK].myIconParams.myIconType = PP.VirtualGamepadIconType.DOT;
-        this.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.THUMBSTICK].myIconParams.myIconType = PP.VirtualGamepadIconType.DOT;
+        this.myButtonParams[Handedness.LEFT][GamepadButtonID.THUMBSTICK].myIconParams.myIconType = VirtualGamepadIconType.DOT;
+        this.myButtonParams[Handedness.RIGHT][GamepadButtonID.THUMBSTICK].myIconParams.myIconType = VirtualGamepadIconType.DOT;
 
         for (let handedness in this.myThumbstickParams) {
-            let thumbstickParams = this.myThumbstickParams[handedness];
-            thumbstickParams.myBackgroundColor = backgroundColor;
-            thumbstickParams.myIconParams.myBackgroundColor = iconColor;
-            thumbstickParams.myIconParams.myBackgroundPressedColor = iconColor;
-            thumbstickParams.myIconParams.myIconColor = backgroundColor;
-            thumbstickParams.myIconParams.myIconPressedColor = backgroundColor;
-            thumbstickParams.myIconParams.myOverallHoveredBrightness = thumbstickHoveredBrightness;
+            for (let gamepadAxesID in this.myThumbstickParams[handedness]) {
+                let thumbstickParams = this.myThumbstickParams[handedness][gamepadAxesID];
+                thumbstickParams.myBackgroundColor = backgroundColor;
+                thumbstickParams.myIconParams.myBackgroundColor = iconColor;
+                thumbstickParams.myIconParams.myBackgroundPressedColor = iconColor;
+                thumbstickParams.myIconParams.myIconColor = backgroundColor;
+                thumbstickParams.myIconParams.myIconPressedColor = backgroundColor;
+                thumbstickParams.myIconParams.myOverallHoveredBrightness = thumbstickHoveredBrightness;
 
-            thumbstickParams.myIncludeBackgroundToDetection = thumbstickIncludeBackgroundToDetection;
+                thumbstickParams.myIncludeBackgroundToDetection = thumbstickIncludeBackgroundToDetection;
+            }
         }
 
         // Orders
 
-        this.myButtonsOrder[PP.Handedness.LEFT][0] = [PP.Handedness.LEFT, PP.GamepadButtonID.SQUEEZE];
-        this.myButtonsOrder[PP.Handedness.LEFT][1] = [PP.Handedness.LEFT, PP.GamepadButtonID.SELECT];
-        this.myButtonsOrder[PP.Handedness.LEFT][2] = [PP.Handedness.LEFT, PP.GamepadButtonID.TOP_BUTTON];
-        this.myButtonsOrder[PP.Handedness.LEFT][3] = [PP.Handedness.LEFT, PP.GamepadButtonID.BOTTOM_BUTTON];
-        this.myButtonsOrder[PP.Handedness.LEFT][4] = [PP.Handedness.LEFT, PP.GamepadButtonID.THUMBSTICK];
+        this.myButtonsOrder[Handedness.LEFT][0] = [Handedness.LEFT, GamepadButtonID.SQUEEZE];
+        this.myButtonsOrder[Handedness.LEFT][1] = [Handedness.LEFT, GamepadButtonID.SELECT];
+        this.myButtonsOrder[Handedness.LEFT][2] = [Handedness.LEFT, GamepadButtonID.TOP_BUTTON];
+        this.myButtonsOrder[Handedness.LEFT][3] = [Handedness.LEFT, GamepadButtonID.BOTTOM_BUTTON];
+        this.myButtonsOrder[Handedness.LEFT][4] = [Handedness.LEFT, GamepadButtonID.THUMBSTICK];
 
-        this.myButtonsOrder[PP.Handedness.RIGHT][0] = [PP.Handedness.RIGHT, PP.GamepadButtonID.SQUEEZE];
-        this.myButtonsOrder[PP.Handedness.RIGHT][1] = [PP.Handedness.RIGHT, PP.GamepadButtonID.SELECT];
-        this.myButtonsOrder[PP.Handedness.RIGHT][2] = [PP.Handedness.RIGHT, PP.GamepadButtonID.TOP_BUTTON];
-        this.myButtonsOrder[PP.Handedness.RIGHT][3] = [PP.Handedness.RIGHT, PP.GamepadButtonID.BOTTOM_BUTTON];
-        this.myButtonsOrder[PP.Handedness.RIGHT][4] = [PP.Handedness.RIGHT, PP.GamepadButtonID.THUMBSTICK];
+        this.myButtonsOrder[Handedness.RIGHT][0] = [Handedness.RIGHT, GamepadButtonID.SQUEEZE];
+        this.myButtonsOrder[Handedness.RIGHT][1] = [Handedness.RIGHT, GamepadButtonID.SELECT];
+        this.myButtonsOrder[Handedness.RIGHT][2] = [Handedness.RIGHT, GamepadButtonID.TOP_BUTTON];
+        this.myButtonsOrder[Handedness.RIGHT][3] = [Handedness.RIGHT, GamepadButtonID.BOTTOM_BUTTON];
+        this.myButtonsOrder[Handedness.RIGHT][4] = [Handedness.RIGHT, GamepadButtonID.THUMBSTICK];
 
-        this.myThumbsticksOrder[PP.Handedness.LEFT] = PP.Handedness.LEFT;
-        this.myThumbsticksOrder[PP.Handedness.RIGHT] = PP.Handedness.RIGHT;
+        this.myThumbsticksOrder[Handedness.LEFT][0] = [Handedness.LEFT, GamepadAxesID.THUMBSTICK];
+        this.myThumbsticksOrder[Handedness.RIGHT][0] = [Handedness.RIGHT, GamepadAxesID.THUMBSTICK];
 
         // Sizes
 
@@ -178,4 +192,4 @@ PP.VirtualGamepadParams = class VirtualGamepadParams {
         this.myDisableMouseHoverWhenPressed = true;
         this.myValidPointerButtons = [0];
     }
-};
+}

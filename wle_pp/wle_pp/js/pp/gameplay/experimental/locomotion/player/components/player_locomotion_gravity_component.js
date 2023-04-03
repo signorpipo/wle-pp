@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerLocomotionGravity } from "../player_locomotion_gravity";
 
-PP.PlayerLocomotionGravityComponent = class PlayerLocomotionGravityComponent extends Component {
-    static TypeName = 'pp-player-locomotion-gravity';
+export class PlayerLocomotionGravityComponent extends Component {
+    static TypeName = "pp-player-locomotion-gravity";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerLocomotionGravity = new PP.PlayerLocomotionGravity();
+        this._myPlayerLocomotionGravity = new PlayerLocomotionGravity();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerLocomotionGravityComponent = class PlayerLocomotionGravityComponent ext
     getPlayerLocomotionGravity() {
         return this._myPlayerLocomotionGravity;
     }
-};
-
-WL.registerComponent(PP.PlayerLocomotionGravityComponent);
+}

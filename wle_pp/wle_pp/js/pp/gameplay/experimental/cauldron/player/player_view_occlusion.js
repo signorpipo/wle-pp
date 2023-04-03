@@ -1,4 +1,5 @@
-PP.PlayerViewOcclusion = class PlayerViewOcclusion {
+export class PlayerViewOcclusion {
+
     constructor() {
     }
-};
+}

@@ -1,11 +1,14 @@
-PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
+
+CollisionCheck.prototype._horizontalMovementCheck = function () {
     let checkPositions = [];
     let cachedCheckPositions = [];
     let currentCachedCheckPositionIndex = 0;
     let _localGetCachedCheckPosition = function () {
         let item = null;
         while (cachedCheckPositions.length <= currentCachedCheckPositionIndex) {
-            cachedCheckPositions.push(PP.vec3_create());
+            cachedCheckPositions.push(vec3_create());
         }
 
         item = cachedCheckPositions[currentCachedCheckPositionIndex];
@@ -19,16 +22,16 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
 
     let objectsEqualCallback = (first, second) => first.pp_equals(second);
 
-    let movementDirection = PP.vec3_create();
-    let heightOffset = PP.vec3_create();
-    let heightStep = PP.vec3_create();
-    let currentHeightOffset = PP.vec3_create();
-    let leftRadialDirection = PP.vec3_create();
-    let rightRadialDirection = PP.vec3_create();
+    let movementDirection = vec3_create();
+    let heightOffset = vec3_create();
+    let heightStep = vec3_create();
+    let currentHeightOffset = vec3_create();
+    let leftRadialDirection = vec3_create();
+    let rightRadialDirection = vec3_create();
     return function _horizontalMovementCheck(movement, originalFeetPosition, originalHeight, feetPosition, height, up, collisionCheckParams, collisionRuntimeParams) {
-        // #TODO add a flag in the params to specify if u want to allow movement inside collision (to hope that it will end up in a non collision position)
-        // also vertical check should check all hits like the position check
-        // for now is ok as it is, the movement check is not as important and could also be disabled it the movement per frame is very small
+        // #TODO Add a flag in the params to specify if u want to allow movement inside collision (to hope that it will end up in a non collision position)
+        // Also vertical check should check all hits like the position check
+        // For now is ok as it is, the movement check is not as important and could also be disabled it the movement per frame is very small
 
         this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugHorizontalMovementActive;
 
@@ -50,7 +53,7 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
             leftRadialDirection = movementDirection.vec3_rotateAxis(halfConeAngle, up, leftRadialDirection);
             rightRadialDirection = movementDirection.vec3_rotateAxis(-halfConeAngle, up, rightRadialDirection);
             for (let i = 1; i <= collisionCheckParams.myHorizontalMovementRadialStepAmount; i++) {
-                // left
+                // Left
                 {
                     let currentStep = i * steplength;
                     let tempCheckPosition = _localGetCachedCheckPosition();
@@ -59,7 +62,7 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
                     checkPositions.push(currentCheckPosition);
                 }
 
-                // right
+                // Right
                 {
                     let currentStep = i * steplength;
                     let tempCheckPosition = _localGetCachedCheckPosition();
@@ -70,14 +73,14 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
             }
         }
 
-        // if result is inside a collision it's ignored, so that at least you can exit it before seeing if the new position works now
+        // If result is inside a collision it's ignored, so that at least you can exit it before seeing if the new position works now
 
         let groundObjectsToIgnore = null;
         let ceilingObjectsToIgnore = null;
         let groundCeilingObjectsToIgnore = null;
 
         if (collisionCheckParams.myGroundAngleToIgnore > 0) {
-            // gather ground objects to ignore
+            // Gather ground objects to ignore
             groundObjectsToIgnore = _localGroundObjectsToIgnore;
             groundObjectsToIgnore.length = 0;
             groundCeilingObjectsToIgnore = _localGroundCeilingObjectsToIgnore;
@@ -95,7 +98,7 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
         }
 
         if (collisionCheckParams.myCeilingAngleToIgnore > 0) {
-            // gather ceiling objects to ignore
+            // Gather ceiling objects to ignore
             if (!collisionRuntimeParams.myIsCollidingHorizontally && collisionCheckParams.myCheckHeight) {
                 ceilingObjectsToIgnore = _localCeilingObjectsToIgnore;
                 ceilingObjectsToIgnore.length = 0;
@@ -117,7 +120,7 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
             let groundCeilingCheckIsFine = true;
 
             if (groundCeilingObjectsToIgnore != null) {
-                // check that the ceiling objects ignored by the ground are the correct ones, that is the one ignored by the upper check
+                // Check that the ceiling objects ignored by the ground are the correct ones, that is the one ignored by the upper check
                 for (let object of groundCeilingObjectsToIgnore) {
                     if (!ceilingObjectsToIgnore.pp_hasEqual(object, objectsEqualCallback)) {
                         groundCeilingCheckIsFine = false;
@@ -146,8 +149,8 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
             for (let i = 0; i <= heightStepAmount; i++) {
                 currentHeightOffset = heightStep.vec3_scale(i, currentHeightOffset);
 
-                // we can skip the ground check since we have already done that, but if there was an error do it again with the proper set of objects to ignore
-                // the ceiling check can always be ignored, it used the proper ground objects already
+                // We can skip the ground check since we have already done that, but if there was an error do it again with the proper set of objects to ignore
+                // The ceiling check can always be ignored, it used the proper ground objects already
                 if (collisionCheckParams.myCheckHeightTopMovement || i == 0) {
                     if ((i != 0 && i != heightStepAmount) ||
                         (i == 0 && !groundCeilingCheckIsFine) ||
@@ -177,17 +180,17 @@ PP.CollisionCheck.prototype._horizontalMovementCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._horizontalMovementVerticalCheck = function () {
-    let movementStep = PP.vec3_create();
-    let movementDirection = PP.vec3_create();
-    let firstPosition = PP.vec3_create();
-    let secondPosition = PP.vec3_create();
-    let firstMovementPosition = PP.vec3_create();
-    let secondMovementPosition = PP.vec3_create();
-    let firstHeightPosition = PP.vec3_create();
-    let secondHeightPosition = PP.vec3_create();
-    let firstHeightMovementPosition = PP.vec3_create();
-    let secondHeightMovementPosition = PP.vec3_create();
+CollisionCheck.prototype._horizontalMovementVerticalCheck = function () {
+    let movementStep = vec3_create();
+    let movementDirection = vec3_create();
+    let firstPosition = vec3_create();
+    let secondPosition = vec3_create();
+    let firstMovementPosition = vec3_create();
+    let secondMovementPosition = vec3_create();
+    let firstHeightPosition = vec3_create();
+    let secondHeightPosition = vec3_create();
+    let firstHeightMovementPosition = vec3_create();
+    let secondHeightMovementPosition = vec3_create();
     return function _horizontalMovementVerticalCheck(movement, feetPosition, checkPositions, heightOffset, heightStep, up, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
         let isHorizontalCheckOk = true;
 
@@ -369,13 +372,13 @@ PP.CollisionCheck.prototype._horizontalMovementVerticalCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._horizontalMovementHorizontalCheck = function () {
-    let movementStep = PP.vec3_create();
-    let movementDirection = PP.vec3_create();
-    let firstPosition = PP.vec3_create();
-    let secondPosition = PP.vec3_create();
-    let firstMovementPosition = PP.vec3_create();
-    let secondMovementPosition = PP.vec3_create();
+CollisionCheck.prototype._horizontalMovementHorizontalCheck = function () {
+    let movementStep = vec3_create();
+    let movementDirection = vec3_create();
+    let firstPosition = vec3_create();
+    let secondPosition = vec3_create();
+    let firstMovementPosition = vec3_create();
+    let secondMovementPosition = vec3_create();
     return function _horizontalMovementHorizontalCheck(movement, feetPosition, checkPositions, heightOffset, up, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
         let isHorizontalCheckOk = true;
 
@@ -400,7 +403,7 @@ PP.CollisionCheck.prototype._horizontalMovementHorizontalCheck = function () {
                     if (collisionCheckParams.myHorizontalMovementCheckDiagonalOutward) {
                         firstMovementPosition = firstPosition.vec3_add(movementStep, firstMovementPosition);
 
-                        //#TODO ignore hits if inside could be a paramter, so you can specify if u want to be able to exit from a collision
+                        // #TODO Ignore hits if inside could be a paramter, so you can specify if u want to be able to exit from a collision
                         isHorizontalCheckOk = this._horizontalCheckRaycast(secondPosition, firstMovementPosition, movementDirection, up,
                             true, ignoreGroundAngleCallback, ignoreCeilingAngleCallback,
                             feetPosition, true,
@@ -470,6 +473,6 @@ PP.CollisionCheck.prototype._horizontalMovementHorizontalCheck = function () {
 
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalMovementCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalMovementVerticalCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalMovementHorizontalCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalMovementCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalMovementVerticalCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalMovementHorizontalCheck", { enumerable: false });

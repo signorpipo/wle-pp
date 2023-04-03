@@ -1,28 +1,17 @@
-WL.registerComponent("pp-easy-text-color", {
-    _myVariableName: { type: WL.Type.String, default: "" },
-    _mySetAsDefault: { type: WL.Type.Bool, default: false },
-    _myUseTuneTarget: { type: WL.Type.Bool, default: false },
-    _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'], default: 'hsv' },
-    _myColorType: { type: WL.Type.Enum, values: ['color', 'effect color'], default: 'color' }
+import { ColorUtils } from "../../../cauldron/utils/color_utils";
+import { getLeftGamepad, getRightGamepad } from "../../../input/cauldron/input_globals";
+import { GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
+import { vec4_create } from "../../../plugin/js/extensions/array_extension";
+import { EasyTuneIntArray } from "../easy_tune_variable_types";
+import { EasyObjectTuner } from "./easy_object_tuner";
 
-}, {
-    init: function () {
-        this._myEasyObjectTuner = new PP.EasyTextColor(this._myColorModel, this._myColorType, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
-    },
-    start: function () {
-        this._myEasyObjectTuner.start();
-    },
-    update: function (dt) {
-        this._myEasyObjectTuner.update(dt);
-    }
-});
+export class EasyTextColor extends EasyObjectTuner {
 
-PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
-    constructor(colorModel, colorType, object, variableName, setAsDefault, useTuneTarget) {
-        super(object, variableName, setAsDefault, useTuneTarget);
+    constructor(colorModel, colorType, object, variableName, setAsDefault, useTuneTarget, engine) {
+        super(object, variableName, setAsDefault, useTuneTarget, engine);
         this._myColorModel = colorModel;
         this._myColorType = colorType;
-        this._myColorVariableNames = ['color', 'effectColor'];
+        this._myColorVariableNames = ["color", "effectColor"];
     }
 
     _getVariableNamePrefix() {
@@ -38,7 +27,7 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new PP.EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
+        return new EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
     }
 
     _getObjectValue(object) {
@@ -49,9 +38,9 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
             color = textMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
 
             if (this._myColorModel == 0) {
-                color = PP.ColorUtils.rgbCodeToHuman(color);
+                color = ColorUtils.rgbCodeToHuman(color);
             } else {
-                color = PP.ColorUtils.hsvCodeToHuman(PP.ColorUtils.rgbToHsv(color));
+                color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHsv(color));
             }
         } else {
             color = this._getDefaultValue();
@@ -61,16 +50,16 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
     }
 
     _getDefaultValue() {
-        return PP.vec4_create();
+        return vec4_create();
     }
 
     _updateObjectValue(object, value) {
         let color = value;
 
         if (this._myColorModel == 0) {
-            color = PP.ColorUtils.rgbHumanToCode(color);
+            color = ColorUtils.rgbHumanToCode(color);
         } else {
-            color = PP.ColorUtils.hsvToRgb(PP.ColorUtils.hsvHumanToCode(color));
+            color = ColorUtils.hsvToRgb(ColorUtils.hsvHumanToCode(color));
         }
 
         let textMaterial = this._getTextMaterial(object);
@@ -78,11 +67,11 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
             textMaterial[this._myColorVariableNames[this._myColorType]] = color;
         }
 
-        if ((PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed) ||
-            (PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed)) {
+        if ((getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed) ||
+            (getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed)) {
 
-            let hsvColor = PP.ColorUtils.color1To255(PP.ColorUtils.rgbToHsv(color));
-            let rgbColor = PP.ColorUtils.color1To255(color);
+            let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHsv(color));
+            let rgbColor = ColorUtils.color1To255(color);
 
             console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
         }
@@ -90,11 +79,11 @@ PP.EasyTextColor = class EasyTextColor extends PP.EasyObjectTuner {
 
     _getTextMaterial(object) {
         let material = null;
-        let text = object.pp_getComponentHierarchy("text");
+        let text = object.pp_getComponent(TextComponent);
         if (text) {
             material = text.material;
         }
 
         return material;
     }
-};
+}

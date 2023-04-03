@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerLocomotionTeleport } from "../teleport/player_locomotion_teleport";
 
-PP.PlayerLocomotionTeleportComponent = class PlayerLocomotionTeleportComponent extends Component {
-    static TypeName = 'pp-player-locomotion-teleport';
+export class PlayerLocomotionTeleportComponent extends Component {
+    static TypeName = "pp-player-locomotion-teleport";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerLocomotionTeleport = new PP.PlayerLocomotionTeleport();
+        this._myPlayerLocomotionTeleport = new PlayerLocomotionTeleport();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerLocomotionTeleportComponent = class PlayerLocomotionTeleportComponent e
     getPlayerLocomotionTeleport() {
         return this._myPlayerLocomotionTeleport;
     }
-};
-
-WL.registerComponent(PP.PlayerLocomotionTeleportComponent);
+}

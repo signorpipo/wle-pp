@@ -1,11 +1,14 @@
-PP.CADummyServer = class CADummyServer {
+import { CAUtils } from "./ca_utils";
+
+export class CADummyServer {
+
     constructor() {
     }
 
     getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
         let leaderboard = null;
 
-        if (PP.CAUtils.isSDKAvailable()) {
+        if (CAUtils.isSDKAvailable()) {
             leaderboard = [
                 { rank: 0, displayName: "An", score: 0 },
                 { rank: 1, displayName: "Error", score: 0 },
@@ -71,4 +74,4 @@ PP.CADummyServer = class CADummyServer {
             callbackOnDone(user);
         }
     }
-};
+}

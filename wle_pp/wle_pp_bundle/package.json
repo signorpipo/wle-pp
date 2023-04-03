@@ -1,6 +1,6 @@
 {
   "name": "wle_pp_bundle",
-  "version": "0.3.5",
+  "version": "0.4.0",
   "author": "Pipo",
   "description": "A library for the Wonderland Engine - Bundled Version",
   "homepage": "https://github.com/SignorPipo/wle_pp",
@@ -13,12 +13,24 @@
     "js"
   ],
   "keywords": [
+    "pp",
+    "pipo",
     "wonderland",
     "wonderlandengine",
+    "wonderland-engine",
     "wonderland engine",
     "wle",
     "webxr"
   ],
+  "type": "module",
   "main": "./js/wle_pp_bundle.js",
-  "exports": "./js/wle_pp_bundle.js"
+  "exports": "./js/wle_pp_bundle.js",
+  "module": "./js/wle_pp_bundle.js",
+  "wonderlandengine": {},
+  "peerDependencies": {
+    "@wonderlandengine/api": "^1.0.0-rc.2",
+    "@wonderlandengine/components": "^1.0.0-rc.2",
+    "gl-matrix": "^3.4.3",
+    "howler": "^2.2.3"
+  }
 }

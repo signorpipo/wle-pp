@@ -1,9 +1,9 @@
-PP.VirtualGamepadGamepadCore = class VirtualGamepadGamepadCore extends PP.GamepadCore {
+import { GamepadCore } from "./gamepad_core";
 
-    constructor(virtualGamepad, handedness, handPose = null) {
-        super(handedness, handPose);
+export class VirtualGamepadGamepadCore extends GamepadCore {
 
-        this._myHandPoseUpdateActive = false;
+    constructor(virtualGamepad, handPose) {
+        super(handPose);
 
         this._myVirtualGamepad = virtualGamepad;
 
@@ -13,28 +13,8 @@ PP.VirtualGamepadGamepadCore = class VirtualGamepadGamepadCore extends PP.Gamepa
         this._myHapticActuators = [];
     }
 
-    setHandPoseUpdateActive(active) {
-        this._myHandPoseUpdateActive = active;
-    }
-
-    isHandPoseUpdateActive() {
-        return this._myHandPoseUpdateActive;
-    }
-
     isGamepadCoreActive() {
         return this._myVirtualGamepad.isVisible();
-    }
-
-    start() {
-        if (this._myHandPose && this._myHandPoseUpdateActive) {
-            this._myHandPose.start();
-        }
-    }
-
-    preUpdate(dt) {
-        if (this._myHandPose && this._myHandPoseUpdateActive) {
-            this._myHandPose.update(dt);
-        }
     }
 
     getButtonData(buttonID) {
@@ -43,7 +23,7 @@ PP.VirtualGamepadGamepadCore = class VirtualGamepadGamepadCore extends PP.Gamepa
         this._myButtonData.myValue = 0;
 
         if (this.isGamepadCoreActive()) {
-            if (this._myVirtualGamepad.isButtonPressed(this._myHandedness, buttonID)) {
+            if (this._myVirtualGamepad.isButtonPressed(this.getHandedness(), buttonID)) {
                 this._myButtonData.myIsPressed = true;
                 this._myButtonData.myIsTouched = true;
                 this._myButtonData.myValue = 1;
@@ -57,7 +37,7 @@ PP.VirtualGamepadGamepadCore = class VirtualGamepadGamepadCore extends PP.Gamepa
         this._myAxesData.vec2_zero();
 
         if (this.isGamepadCoreActive()) {
-            this._myVirtualGamepad.getAxes(this._myHandedness, this._myAxesData);
+            this._myVirtualGamepad.getAxes(this.getHandedness(), axesID, this._myAxesData);
         }
 
         return this._myAxesData;
@@ -66,4 +46,4 @@ PP.VirtualGamepadGamepadCore = class VirtualGamepadGamepadCore extends PP.Gamepa
     getHapticActuators() {
         return this._myHapticActuators;
     }
-};
+}

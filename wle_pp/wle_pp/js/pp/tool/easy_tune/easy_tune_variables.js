@@ -1,4 +1,5 @@
-PP.EasyTuneVariables = class EasyTuneVariables {
+export class EasyTuneVariables {
+
     constructor() {
         this._myVariables = new Map();
     }
@@ -48,7 +49,7 @@ PP.EasyTuneVariables = class EasyTuneVariables {
         return this._myVariables.get(variableName);
     }
 
-    getEasyTuneVariables() {
+    getEasyTuneVariablesList() {
         return Array.from(this._myVariables.values());
     }
 
@@ -84,4 +85,4 @@ PP.EasyTuneVariables = class EasyTuneVariables {
     unregisterValueChangedEventListener(variableName, callbackID, callback) {
         this._myVariables.get(variableName).unregisterValueChangedEventListener(callbackID);
     }
-};
+}

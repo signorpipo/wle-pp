@@ -1,11 +1,14 @@
-PP.ClassicGamepadCore = class ClassicGamepadCore extends PP.GamepadCore {
+import { Handedness } from "../../cauldron/input_types";
+import { HandPose } from "../../pose/hand_pose";
+import { GamepadButtonID } from "../gamepad_buttons";
+import { GamepadCore } from "./gamepad_core";
 
-    constructor(gamepadIndex, handedness, handPose = null) {
-        super(handedness, handPose);
+export class ClassicGamepadCore extends GamepadCore {
+
+    constructor(gamepadIndex, handPose) {
+        super(handPose);
 
         this._myGamepadIndex = gamepadIndex;    // null means any active gamepad
-
-        this._myHandPoseUpdateActive = false;
 
         // Support Variables
         this._myButtonData = this._createButtonData();
@@ -13,29 +16,9 @@ PP.ClassicGamepadCore = class ClassicGamepadCore extends PP.GamepadCore {
         this._myHapticActuators = [];
     }
 
-    setHandPoseUpdateActive(active) {
-        this._myHandPoseUpdateActive = active;
-    }
-
-    isHandPoseUpdateActive() {
-        return this._myHandPoseUpdateActive;
-    }
-
     isGamepadCoreActive() {
         let classicGamepad = this._getClassicGamepad();
         return classicGamepad != null && (classicGamepad.connected == null || classicGamepad.connected);
-    }
-
-    start() {
-        if (this._myHandPose && this._myHandPoseUpdateActive) {
-            this._myHandPose.start();
-        }
-    }
-
-    preUpdate(dt) {
-        if (this._myHandPose && this._myHandPoseUpdateActive) {
-            this._myHandPose.update(dt);
-        }
     }
 
     getButtonData(buttonID) {
@@ -46,51 +29,51 @@ PP.ClassicGamepadCore = class ClassicGamepadCore extends PP.GamepadCore {
         let classicGamepad = this._getClassicGamepad();
         if (classicGamepad != null && this.isGamepadCoreActive()) {
             let button = null;
-            if (this.getHandedness() == PP.Handedness.LEFT) {
+            if (this.getHandedness() == Handedness.LEFT) {
                 switch (buttonID) {
-                    case PP.GamepadButtonID.SELECT:
+                    case GamepadButtonID.SELECT:
                         button = classicGamepad.buttons[4];
                         break;
-                    case PP.GamepadButtonID.SQUEEZE:
+                    case GamepadButtonID.SQUEEZE:
                         button = classicGamepad.buttons[6];
                         break;
-                    case PP.GamepadButtonID.TOUCHPAD:
+                    case GamepadButtonID.TOUCHPAD:
                         button = null;
                         break;
-                    case PP.GamepadButtonID.THUMBSTICK:
+                    case GamepadButtonID.THUMBSTICK:
                         button = classicGamepad.buttons[10];
                         break;
-                    case PP.GamepadButtonID.BOTTOM_BUTTON:
+                    case GamepadButtonID.BOTTOM_BUTTON:
                         button = classicGamepad.buttons[13];
                         break;
-                    case PP.GamepadButtonID.TOP_BUTTON:
+                    case GamepadButtonID.TOP_BUTTON:
                         button = classicGamepad.buttons[12];
                         break;
-                    case PP.GamepadButtonID.THUMB_REST:
+                    case GamepadButtonID.THUMB_REST:
                         button = null;
                         break;
                 }
             } else {
                 switch (buttonID) {
-                    case PP.GamepadButtonID.SELECT:
+                    case GamepadButtonID.SELECT:
                         button = classicGamepad.buttons[5];
                         break;
-                    case PP.GamepadButtonID.SQUEEZE:
+                    case GamepadButtonID.SQUEEZE:
                         button = classicGamepad.buttons[7];
                         break;
-                    case PP.GamepadButtonID.TOUCHPAD:
+                    case GamepadButtonID.TOUCHPAD:
                         button = null;
                         break;
-                    case PP.GamepadButtonID.THUMBSTICK:
+                    case GamepadButtonID.THUMBSTICK:
                         button = classicGamepad.buttons[11];
                         break;
-                    case PP.GamepadButtonID.BOTTOM_BUTTON:
+                    case GamepadButtonID.BOTTOM_BUTTON:
                         button = classicGamepad.buttons[0];
                         break;
-                    case PP.GamepadButtonID.TOP_BUTTON:
+                    case GamepadButtonID.TOP_BUTTON:
                         button = classicGamepad.buttons[3];
                         break;
-                    case PP.GamepadButtonID.THUMB_REST:
+                    case GamepadButtonID.THUMB_REST:
                         button = null;
                         break;
                 }
@@ -111,7 +94,7 @@ PP.ClassicGamepadCore = class ClassicGamepadCore extends PP.GamepadCore {
 
         let classicGamepad = this._getClassicGamepad();
         if (classicGamepad != null && this.isGamepadCoreActive()) {
-            if (this.getHandedness() == PP.Handedness.LEFT) {
+            if (this.getHandedness() == Handedness.LEFT) {
                 this._myAxesData[0] = classicGamepad.axes[0];
                 this._myAxesData[1] = classicGamepad.axes[1];
             } else {
@@ -159,4 +142,4 @@ PP.ClassicGamepadCore = class ClassicGamepadCore extends PP.GamepadCore {
 
         return classicGamepad;
     }
-};
+}

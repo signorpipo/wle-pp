@@ -1,9 +1,13 @@
 // xr-standard mapping is assumed
 
-PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
+import { XRUtils } from "../../../cauldron/utils/xr_utils";
+import { GamepadButtonID } from "../gamepad_buttons";
+import { GamepadCore } from "./gamepad_core";
 
-    constructor(handedness, handPoseParams = new PP.HandPoseParams()) {
-        super(handedness, new PP.HandPose(handedness, handPoseParams));
+export class XRGamepadCore extends GamepadCore {
+
+    constructor(handPose) {
+        super(handPose);
 
         this._mySelectPressed = false;
         this._mySqueezePressed = false;
@@ -23,18 +27,17 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         return this._myIsXRSessionActive && this._myGamepad != null && (this._myGamepad.connected == null || this._myGamepad.connected);
     }
 
-    start() {
-        this._myHandPose.start();
-
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
+    _startHook() {
+        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this.getEngine());
     }
 
-    preUpdate(dt) {
-        this._updateHandPose(dt);
+    _preUpdateHook(dt) {
+        this._myInputSource = this.getHandPose().getInputSource();
+        if (this._myInputSource != null) {
+            this._myGamepad = this._myInputSource.gamepad;
+        } else {
+            this._myGamepad = null;
+        }
     }
 
     getButtonData(buttonID) {
@@ -46,7 +49,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
             if (buttonID < this._myGamepad.buttons.length) {
                 let gamepadButton = this._myGamepad.buttons[buttonID];
 
-                if (buttonID != PP.GamepadButtonID.SELECT && buttonID != PP.GamepadButtonID.SQUEEZE) {
+                if (buttonID != GamepadButtonID.SELECT && buttonID != GamepadButtonID.SQUEEZE) {
                     this._myButtonData.myIsPressed = gamepadButton.pressed;
                 } else {
                     this._myButtonData.myIsPressed = this._getSpecialButtonPressed(buttonID);
@@ -54,7 +57,7 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
 
                 this._myButtonData.myIsTouched = gamepadButton.touched;
                 this._myButtonData.myValue = gamepadButton.value;
-            } else if (buttonID == PP.GamepadButtonID.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
+            } else if (buttonID == GamepadButtonID.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
                 // This way if you are using a basic touch gamepad, top button will work anyway
 
                 let touchButton = this._myGamepad.buttons[2];
@@ -118,25 +121,14 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
         return this._myHapticActuators;
     }
 
-    _updateHandPose(dt) {
-        this._myHandPose.update(dt);
-
-        this._myInputSource = this._myHandPose.getInputSource();
-        if (this._myInputSource != null) {
-            this._myGamepad = this._myInputSource.gamepad;
-        } else {
-            this._myGamepad = null;
-        }
-    }
-
     // This is to be more compatible
     _getSpecialButtonPressed(buttonID) {
         let isPressed = false;
 
         if (this.isGamepadCoreActive()) {
-            if (buttonID == PP.GamepadButtonID.SELECT) {
+            if (buttonID == GamepadButtonID.SELECT) {
                 isPressed = this._mySelectPressed;
-            } else if (buttonID == PP.GamepadButtonID.SQUEEZE) {
+            } else if (buttonID == GamepadButtonID.SQUEEZE) {
                 isPressed = this._mySqueezePressed;
             }
         }
@@ -182,4 +174,4 @@ PP.XRGamepadCore = class XRGamepadCore extends PP.GamepadCore {
             this._mySqueezePressed = false;
         }
     }
-};
+}

@@ -1,6 +1,6 @@
 {
   "name": "wle_pp",
-  "version": "0.3.5",
+  "version": "0.4.0",
   "author": "Pipo",
   "description": "A library for the Wonderland Engine - Unbundled Version",
   "homepage": "https://github.com/SignorPipo/wle_pp",
@@ -13,23 +13,31 @@
     "js"
   ],
   "keywords": [
+    "pp",
+    "pipo",
     "wonderland",
     "wonderlandengine",
+    "wonderland-engine",
     "wonderland engine",
     "wle",
     "webxr"
   ],
-  "main": "./js/bundle.js",
-  "exports": "./js/bundle.js",
-  "dependencies": {
-    "@wonderlandengine/api": "0.9.4",
+  "type": "module",
+  "main": "./js/pp/index.js",
+  "exports": "./js/pp/index.js",
+  "module": "./js/pp/index.js",
+  "wonderlandengine": {},
+  "peerDependencies": {
+    "@wonderlandengine/api": "^1.0.0-rc.2",
+    "@wonderlandengine/components": "^1.0.0-rc.2",
     "gl-matrix": "^3.4.3",
     "howler": "^2.2.3"
   },
   "devDependencies": {
-    "esbuild": "^0.14.54"
+    "esbuild": "^0.14.54",
+    "esbuild-node-externals": "^1.7.0"
   },
   "scripts": {
-    "build": "esbuild ./js/bundle.js --minify --sourcemap --bundle --outfile=\"deploy/wle_pp_bundler-bundle.js\""
+    "build": "node tools/build.js"
   }
 }

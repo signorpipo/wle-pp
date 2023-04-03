@@ -1,13 +1,18 @@
+import { GamepadAxesID } from "../../../../input/gamepad/gamepad_buttons";
+import { getMainEngine } from "../../../../cauldron/wl/engine_globals";
+import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget";
+import { EasyTuneNumberArrayWidgetSetup } from "./easy_tune_number_array_widget_setup";
+import { EasyTuneNumberArrayWidgetUI } from "./easy_tune_number_array_widget_ui";
 
-PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTuneBaseWidget {
+export class EasyTuneNumberArrayWidget extends EasyTuneBaseWidget {
 
-    constructor(params, arraySize, gamepad) {
+    constructor(params, arraySize, gamepad, engine = getMainEngine()) {
         super(params);
 
         this._myGamepad = gamepad;
 
-        this._mySetup = new PP.EasyTuneNumberArrayWidgetSetup(arraySize);
-        this._myUI = new PP.EasyTuneNumberArrayWidgetUI();
+        this._mySetup = new EasyTuneNumberArrayWidgetSetup(arraySize);
+        this._myUI = new EasyTuneNumberArrayWidgetUI(engine);
 
         this._myValueEditIndex = -1;
 
@@ -40,7 +45,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTu
 
 
     _startHook(parentObject, additionalSetup) {
-        this._myUI.setAdditionalButtonsActive(additionalSetup.myEnableAdditionalButtons);
+        this._myUI.setAdditionalButtonsActive(additionalSetup.myAdditionalButtonsEnabled);
     }
 
     _updateHook(dt) {
@@ -51,7 +56,7 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTu
         let stickVariableIntensity = 0;
 
         if (this._myGamepad) {
-            let y = this._myGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes[1];
+            let y = this._myGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes[1];
 
             if (Math.abs(y) > this._mySetup.myEditThumbstickMinThreshold) {
                 let normalizedEditAmount = (Math.abs(y) - this._mySetup.myEditThumbstickMinThreshold) / (1 - this._mySetup.myEditThumbstickMinThreshold);
@@ -233,9 +238,9 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTu
             if (active) {
                 this._myValueRealValue = this._myVariable.myValue[index];
                 this._myValueEditIndex = index;
-                text.scale(this._mySetup.myTextHoverScaleMultiplier);
+                text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
             } else {
-                text.scalingWorld = this._mySetup.myValueTextScale;
+                text.pp_setScaleWorld(this._mySetup.myValueTextScale);
             }
 
             this._myValueEditActive = active;
@@ -245,9 +250,9 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTu
     _setStepEditActive(text, active) {
         if (this._isActive() || !active) {
             if (active) {
-                text.scale(this._mySetup.myTextHoverScaleMultiplier);
+                text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
             } else {
-                text.scalingWorld = this._mySetup.myStepTextScale;
+                text.pp_setScaleWorld(this._mySetup.myStepTextScale);
             }
 
             this._myStepEditActive = active;
@@ -280,10 +285,10 @@ PP.EasyTuneNumberArrayWidget = class EasyTuneNumberArrayWidget extends PP.EasyTu
     }
 
     _genericTextHover(text) {
-        text.scale(this._mySetup.myTextHoverScaleMultiplier);
+        text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
     }
 
     _genericTextUnHover(text, originalScale) {
-        text.scalingWorld = originalScale;
+        text.pp_setScaleWorld(originalScale);
     }
-};
+}

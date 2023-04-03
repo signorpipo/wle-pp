@@ -1,17 +1,21 @@
-PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel = {
+import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags";
+import { CharacterColliderSetup, CharacterColliderSlideFlickerPreventionMode } from "./character_collider_setup";
+
+export let CharacterColliderSetupSimplifiedCreationAccuracyLevel = {
     VERY_LOW: 0,
     LOW: 1,
     MEDIUM: 2,
     HIGH: 3,
-    VERY_HIGH: 4,
+    VERY_HIGH: 4
 };
 
-PP.CharacterColliderSetupSimplifiedCreationParams = class CharacterColliderSetupSimplifiedCreationParams {
+export class CharacterColliderSetupSimplifiedCreationParams {
+
     constructor() {
         this.myHeight = 0;
         this.myRadius = 0;
 
-        this.myAccuracyLevel = PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW;
+        this.myAccuracyLevel = CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW;
 
         this.myIsPlayer = false;
 
@@ -30,41 +34,18 @@ PP.CharacterColliderSetupSimplifiedCreationParams = class CharacterColliderSetup
         this.myMaxWalkableGroundStepHeight = 0;
         this.myShouldNotFallFromEdges = false;
 
-        this.myHorizontalCheckBlockLayerFlags = new PP.PhysicsLayerFlags();
+        this.myHorizontalCheckBlockLayerFlags = new PhysicsLayerFlags();
         this.myHorizontalCheckObjectsToIgnore = [];
 
-        this.myVerticalCheckBlockLayerFlags = new PP.PhysicsLayerFlags();
+        this.myVerticalCheckBlockLayerFlags = new PhysicsLayerFlags();
         this.myVerticalCheckObjectsToIgnore = [];
 
         this.myHorizontalCheckDebugActive = false;
         this.myVerticalCheckDebugActive = false;
     }
-};
+}
 
-PP.CharacterColliderUtils = {
-    createCharacterColliderSetupSimplified: function (simplifiedCreationParams, outCharacterColliderSetup = new PP.CharacterColliderSetup()) {
-        // implemented outside class definition
-    },
-    createTeleportColliderFromMovementCollider: function (movementColliderSetup, outTeleportColliderSetup = new PP.CharacterColliderSetup()) {
-        outTeleportColliderSetup.copy(movementColliderSetup);
-
-        outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle = 180;
-        outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalPositionCheckConeHalfSlices =
-            Math.round((outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle / movementColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle)
-                * movementColliderSetup.myHorizontalCheckSetup.myHorizontalPositionCheckConeHalfSlices);
-
-        outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckFixedForwardEnabled = true;
-        outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckFixedForward.vec3_set(0, 0, 1);
-
-        return outTeleportColliderSetup;
-    },
-};
-
-
-
-// IMPLEMENTATION
-
-PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function createCharacterColliderSetupSimplified(simplifiedCreationParams, outCharacterColliderSetup = new PP.CharacterColliderSetup()) {
+export function createCharacterColliderSetupSimplified(simplifiedCreationParams, outCharacterColliderSetup = new CharacterColliderSetup()) {
     outCharacterColliderSetup.myHeight = simplifiedCreationParams.myHeight;
     outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeRadius = simplifiedCreationParams.myRadius;
     outCharacterColliderSetup.myVerticalCheckSetup.myVerticalCheckCircumferenceRadius = simplifiedCreationParams.myRadius / 2;
@@ -154,13 +135,13 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
 
     // ACCURACY
 
-    if (simplifiedCreationParams.myAccuracyLevel >= PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW) {
+    if (simplifiedCreationParams.myAccuracyLevel >= CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW) {
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle = 60;
 
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementHeightVerticalCheckEnabled = true;
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalPositionHeightVerticalCheckEnabled = true;
 
-        // activate based on speed?
+        // Activate based on speed?
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementCheckEnabled = false;
 
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalPositionCheckEnabled = true;
@@ -183,7 +164,7 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
         outCharacterColliderSetup.myVerticalCheckSetup.myVerticalCheckAllowHitsInsideCollisionIfOneValid = true;
     }
 
-    if (simplifiedCreationParams.myAccuracyLevel >= PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel.LOW) {
+    if (simplifiedCreationParams.myAccuracyLevel >= CharacterColliderSetupSimplifiedCreationAccuracyLevel.LOW) {
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementCheckEnabled = true;
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementCheckRadialSteps = 1;
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementHeightCheckSteps = 1;
@@ -199,7 +180,7 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
 
         outCharacterColliderSetup.myWallSlideSetup.myWallSlideMaxAttempts = 1;
         outCharacterColliderSetup.myWallSlideSetup.myCheckBothWallSlideDirections = false;
-        outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionMode = PP.CharacterColliderSlideFlickerPreventionMode.NONE;
+        outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionMode = CharacterColliderSlideFlickerPreventionMode.NONE;
         outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionCheckOnlyIfAlreadySliding = false;
         outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionForceCheckCounter = 0;
         outCharacterColliderSetup.myWallSlideSetup.my90DegreesWallSlideAdjustDirectionSign = false;
@@ -209,7 +190,7 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
         outCharacterColliderSetup.myWallSlideSetup.myWallSlideMaxAttempts = 2;
     }
 
-    if (simplifiedCreationParams.myAccuracyLevel >= PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel.MEDIUM) {
+    if (simplifiedCreationParams.myAccuracyLevel >= CharacterColliderSetupSimplifiedCreationAccuracyLevel.MEDIUM) {
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementHeightHorizontalCheckEnabled = true;
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementHorizontalDiagonalOutwardCheckEnabled = true;
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementVerticalDiagonalOutwardUpwardCheckEnabled = true;
@@ -232,13 +213,13 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
         outCharacterColliderSetup.myWallSlideSetup.my90DegreesWallSlideAdjustDirectionSign = true;
 
         if (simplifiedCreationParams.myIsPlayer) {
-            outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionMode = PP.CharacterColliderSlideFlickerPreventionMode.USE_PREVIOUS_RESULTS;
+            outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionMode = CharacterColliderSlideFlickerPreventionMode.USE_PREVIOUS_RESULTS;
             outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionCheckOnlyIfAlreadySliding = true;
             outCharacterColliderSetup.myWallSlideSetup.myWallSlideFlickerPreventionForceCheckCounter = 4;
         }
     }
 
-    if (simplifiedCreationParams.myAccuracyLevel >= PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel.HIGH) {
+    if (simplifiedCreationParams.myAccuracyLevel >= CharacterColliderSetupSimplifiedCreationAccuracyLevel.HIGH) {
         if (outCharacterColliderSetup.myWallSlideSetup.myWallSlideEnabled) {
             outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementCheckGetBetterReferenceHit = true;
 
@@ -284,7 +265,7 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
         }
     }
 
-    if (simplifiedCreationParams.myAccuracyLevel >= PP.CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_HIGH) {
+    if (simplifiedCreationParams.myAccuracyLevel >= CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_HIGH) {
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementHeightCheckSteps = 2;
 
         outCharacterColliderSetup.myHorizontalCheckSetup.myHorizontalMovementHorizontalRadialCheckEnabled = true;
@@ -311,4 +292,23 @@ PP.CharacterColliderUtils.createCharacterColliderSetupSimplified = function crea
     }
 
     return outCharacterColliderSetup;
-};
+}
+
+export function createTeleportColliderFromMovementCollider(movementColliderSetup, outTeleportColliderSetup = new CharacterColliderSetup()) {
+    outTeleportColliderSetup.copy(movementColliderSetup);
+
+    outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle = 180;
+    outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalPositionCheckConeHalfSlices =
+        Math.round((outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle / movementColliderSetup.myHorizontalCheckSetup.myHorizontalCheckConeHalfAngle)
+            * movementColliderSetup.myHorizontalCheckSetup.myHorizontalPositionCheckConeHalfSlices);
+
+    outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckFixedForwardEnabled = true;
+    outTeleportColliderSetup.myHorizontalCheckSetup.myHorizontalCheckFixedForward.vec3_set(0, 0, 1);
+
+    return outTeleportColliderSetup;
+}
+
+export let CharacterColliderUtils = {
+    createCharacterColliderSetupSimplified,
+    createTeleportColliderFromMovementCollider
+}

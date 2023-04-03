@@ -1,27 +1,31 @@
-PP.CollisionCheck.prototype._move = function () {
-    let transformUp = PP.vec3_create();
-    let transformForward = PP.vec3_create();
-    let feetPosition = PP.vec3_create();
+import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
+import { CollisionRuntimeParams } from "./collision_params";
 
-    let transformOffsetLocalQuat = PP.quat2_create();
-    let offsetTransformQuat = PP.quat2_create();
+CollisionCheck.prototype._move = function () {
+    let transformUp = vec3_create();
+    let transformForward = vec3_create();
+    let feetPosition = vec3_create();
 
-    let horizontalMovement = PP.vec3_create();
-    let verticalMovement = PP.vec3_create();
+    let transformOffsetLocalQuat = quat2_create();
+    let offsetTransformQuat = quat2_create();
 
-    let movementStep = PP.vec3_create();
-    let currentMovementStep = PP.vec3_create();
-    let movementChecked = PP.vec3_create();
-    let fixedMovement = PP.vec3_create();
-    let newFeetPosition = PP.vec3_create();
-    let fixedMovementStep = PP.vec3_create();
+    let horizontalMovement = vec3_create();
+    let verticalMovement = vec3_create();
 
-    let previousCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-    let previousFixedMovement = PP.vec3_create();
-    let previousMovementChecked = PP.vec3_create();
+    let movementStep = vec3_create();
+    let currentMovementStep = vec3_create();
+    let movementChecked = vec3_create();
+    let fixedMovement = vec3_create();
+    let newFeetPosition = vec3_create();
+    let fixedMovementStep = vec3_create();
+
+    let previousCollisionRuntimeParams = new CollisionRuntimeParams();
+    let previousFixedMovement = vec3_create();
+    let previousMovementChecked = vec3_create();
     return function _move(movement, transformQuat, collisionCheckParams, collisionRuntimeParams) {
-        //return PP.vec3_create();
-        //movement = PP.vec3_create(0, 0, -1);
+        //return vec3_create();
+        //movement = vec3_create(0, 0, -1);
 
         transformOffsetLocalQuat.quat2_setPositionRotationQuat(collisionCheckParams.myPositionOffsetLocal, collisionCheckParams.myRotationOffsetLocalQuat);
         offsetTransformQuat = transformOffsetLocalQuat.quat2_toWorld(transformQuat, offsetTransformQuat);
@@ -34,7 +38,7 @@ PP.CollisionCheck.prototype._move = function () {
         feetPosition = offsetTransformQuat.quat2_getPosition(feetPosition);
 
         let height = collisionCheckParams.myHeight;
-        height = height - 0.00001; // this makes it easier to setup things at the same exact height of a character so that it can go under it
+        height = height - 0.00001; // This makes it easier to setup things at the same exact height of a character so that it can go under it
         if (height < 0.00001) {
             height = 0;
         }
@@ -147,29 +151,29 @@ PP.CollisionCheck.prototype._move = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._moveStep = function () {
-    let horizontalMovement = PP.vec3_create();
-    let verticalMovement = PP.vec3_create();
-    let fixedHorizontalMovement = PP.vec3_create();
-    let fixedVerticalMovement = PP.vec3_create();
-    let horizontalDirection = PP.vec3_create();
-    let forwardForHorizontal = PP.vec3_create();
-    let forwardForVertical = PP.vec3_create();
-    let forwardForPerceivedAngle = PP.vec3_create();
-    let newFeetPosition = PP.vec3_create();
-    let surfaceAdjustedVerticalMovement = PP.vec3_create();
-    let surfaceAdjustedHorizontalMovement = PP.vec3_create();
-    let fixedMovement = PP.vec3_create();
+CollisionCheck.prototype._moveStep = function () {
+    let horizontalMovement = vec3_create();
+    let verticalMovement = vec3_create();
+    let fixedHorizontalMovement = vec3_create();
+    let fixedVerticalMovement = vec3_create();
+    let horizontalDirection = vec3_create();
+    let forwardForHorizontal = vec3_create();
+    let forwardForVertical = vec3_create();
+    let forwardForPerceivedAngle = vec3_create();
+    let newFeetPosition = vec3_create();
+    let surfaceAdjustedVerticalMovement = vec3_create();
+    let surfaceAdjustedHorizontalMovement = vec3_create();
+    let fixedMovement = vec3_create();
 
-    let zAxis = PP.vec3_create(0, 0, 1);
-    let xAxis = PP.vec3_create(1, 0, 0);
+    let zAxis = vec3_create(0, 0, 1);
+    let xAxis = vec3_create(1, 0, 0);
     return function _moveStep(movement, feetPosition, transformUp, transformForward, height, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, outFixedMovement) {
-        // #TODO refactor and split horizontal check and vertical check into: hMovement + vMovement + hPosition + vPosition?
+        // #TODO Refactor and split horizontal check and vertical check into: hMovement + vMovement + hPosition + vPosition?
         // Will make the sliding heavier, if I slide repeating all the 4 steps instead of 2 as now, but would be more correct
 
-        // #TODO when on high slopes where u are not allowed to move the check does not manage to slide
+        // #TODO When on high slopes where u are not allowed to move the check does not manage to slide
 
-        // #TODO when moving upward on the edge of a slope, the edge can be detected as a wall and prevent movement, while it should just keep moving
+        // #TODO When moving upward on the edge of a slope, the edge can be detected as a wall and prevent movement, while it should just keep moving
 
         horizontalMovement = movement.vec3_removeComponentAlongAxis(transformUp, horizontalMovement);
         if (horizontalMovement.vec3_isZero(0.000001)) {
@@ -182,7 +186,7 @@ PP.CollisionCheck.prototype._moveStep = function () {
         }
 
         if (horizontalMovement.vec3_isZero()) {
-            //return PP.vec3_create();
+            //return vec3_create();
         }
 
         //this._myTotalRaycasts = 0;
@@ -231,7 +235,7 @@ PP.CollisionCheck.prototype._moveStep = function () {
                 fixedHorizontalMovement = this._horizontalCheck(surfaceAdjustedHorizontalMovement, feetPosition, height, transformUp, forwardForHorizontal, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, this._myPrevCollisionRuntimeParams, false, fixedHorizontalMovement);
                 //console.error(this._myTotalRaycasts );
                 //collisionRuntimeParams.myIsCollidingHorizontally = true;
-                //collisionRuntimeParams.myHorizontalCollisionHit.myNormal = PP.vec3_create(0, 0, 1);
+                //collisionRuntimeParams.myHorizontalCollisionHit.myNormal = vec3_create(0, 0, 1);
                 if (collisionCheckParams.mySlidingEnabled && collisionRuntimeParams.myIsCollidingHorizontally && this._isSlidingNormalValid(surfaceAdjustedHorizontalMovement, transformUp, collisionRuntimeParams)) {
                     fixedHorizontalMovement = this._horizontalSlide(surfaceAdjustedHorizontalMovement, feetPosition, height, transformUp, forwardForHorizontal, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, this._myPrevCollisionRuntimeParams, fixedHorizontalMovement);
                 } else {
@@ -280,7 +284,7 @@ PP.CollisionCheck.prototype._moveStep = function () {
             }
 
             //console.error(this._myTotalRaycasts );
-            // collisionCheckParams.myDebugActive = false;
+            //collisionCheckParams.myDebugActive = false;
 
             surfaceAdjustedVerticalMovement = this._adjustVerticalMovementWithSurface(fixedHorizontalMovement, verticalMovement, transformUp, collisionCheckParams, collisionRuntimeParams, this._myPrevCollisionRuntimeParams, surfaceAdjustedVerticalMovement);
 
@@ -391,7 +395,7 @@ PP.CollisionCheck.prototype._moveStep = function () {
             if (collisionCheckParams.mySlidingAdjustSign90Degrees) {
                 if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myIsSliding && !fixedHorizontalMovement.vec3_isZero()) {
                     /* let angleWithPreviousThreshold = 0.5;
-                    check use surfaceAdjustedHorizontalMovement instead of horizontalMovement if reenable this
+                    check use surfaceAdjustedHorizontalMovement instead of horizontalMovement if re-enable this
                     if (!this._myPrevCollisionRuntimeParams.myLastValidOriginalHorizontalMovement.vec3_isZero() && !horizontalMovement.vec3_isZero() &&
                         horizontalMovement.vec3_angle(this._myPrevCollisionRuntimeParams.myLastValidOriginalHorizontalMovement) > angleWithPreviousThreshold) {
                         collisionRuntimeParams.mySliding90DegreesSign = horizontalMovement.vec3_signTo(this._myPrevCollisionRuntimeParams.myLastValidOriginalHorizontalMovement, transformUp);
@@ -473,8 +477,8 @@ PP.CollisionCheck.prototype._moveStep = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._syncCollisionRuntimeParamsWithPrevious = function () {
-    let previousFixedHorizontalMovement = PP.vec3_create();
+CollisionCheck.prototype._syncCollisionRuntimeParamsWithPrevious = function () {
+    let previousFixedHorizontalMovement = vec3_create();
     return function _syncCollisionRuntimeParamsWithPrevious(surfaceAdjustedHorizontalMovement, verticalMovement, up, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams) {
         collisionRuntimeParams.myIsSlidingFlickerPrevented = previousCollisionRuntimeParams.myIsSlidingFlickerPrevented;
         //console.error("prevented", collisionRuntimeParams.myIsSlidingFlickerPrevented);
@@ -516,6 +520,6 @@ PP.CollisionCheck.prototype._syncCollisionRuntimeParamsWithPrevious = function (
 
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_move", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_moveStep", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_syncCollisionRuntimeParamsWithPrevious", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_move", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_moveStep", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_syncCollisionRuntimeParamsWithPrevious", { enumerable: false });

@@ -1,12 +1,18 @@
-PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBaseWidget {
+import { GamepadAxesID } from "../../../../input/gamepad/gamepad_buttons";
+import { getMainEngine } from "../../../../cauldron/wl/engine_globals";
+import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget";
+import { EasyTuneTransformWidgetSetup } from "./easy_tune_transform_widget_setup";
+import { EasyTuneTransformWidgetUI } from "./easy_tune_transform_widget_ui";
 
-    constructor(params, gamepad) {
+export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
+
+    constructor(params, gamepad, engine = getMainEngine()) {
         super(params);
 
         this._myGamepad = gamepad;
 
-        this._mySetup = new PP.EasyTuneTransformWidgetSetup();
-        this._myUI = new PP.EasyTuneTransformWidgetUI();
+        this._mySetup = new EasyTuneTransformWidgetSetup();
+        this._myUI = new EasyTuneTransformWidgetUI(engine);
 
         this._myValueButtonEditIntensity = 0;
         this._myValueButtonEditIntensityTimer = 0;
@@ -63,7 +69,7 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBa
     }
 
     _startHook(parentObject, additionalSetup) {
-        this._myUI.setAdditionalButtonsActive(additionalSetup.myEnableAdditionalButtons);
+        this._myUI.setAdditionalButtonsActive(additionalSetup.myAdditionalButtonsEnabled);
     }
 
     _updateHook(dt) {
@@ -74,7 +80,7 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBa
         let stickVariableIntensity = 0;
 
         if (this._myGamepad) {
-            let y = this._myGamepad.getAxesInfo(PP.GamepadAxesID.THUMBSTICK).myAxes[1];
+            let y = this._myGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes[1];
 
             if (Math.abs(y) > this._mySetup.myEditThumbstickMinThreshold) {
                 let normalizedEditAmount = (Math.abs(y) - this._mySetup.myEditThumbstickMinThreshold) / (1 - this._mySetup.myEditThumbstickMinThreshold);
@@ -411,9 +417,9 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBa
 
                 this._myValueEditIndex = index;
                 this._myComponentIndex = componentIndex;
-                text.scale(this._mySetup.myTextHoverScaleMultiplier);
+                text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
             } else {
-                text.scalingWorld = this._mySetup.myValueTextScale;
+                text.pp_setScaleWorld(this._mySetup.myValueTextScale);
             }
 
             this._myValueEditActive = active;
@@ -423,9 +429,9 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBa
     _setStepEditActive(index, text, active) {
         if (this._isActive() || !active) {
             if (active) {
-                text.scale(this._mySetup.myTextHoverScaleMultiplier);
+                text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
             } else {
-                text.scalingWorld = this._mySetup.myStepTextScale;
+                text.pp_setScaleWorld(this._mySetup.myStepTextScale);
             }
 
             this._myStepEditActive = active;
@@ -507,10 +513,10 @@ PP.EasyTuneTransformWidget = class EasyTuneTransformWidget extends PP.EasyTuneBa
     }
 
     _genericTextHover(text) {
-        text.scale(this._mySetup.myTextHoverScaleMultiplier);
+        text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
     }
 
     _genericTextUnHover(text, originalScale) {
-        text.scalingWorld = originalScale;
+        text.pp_setScaleWorld(originalScale);
     }
-};
+}

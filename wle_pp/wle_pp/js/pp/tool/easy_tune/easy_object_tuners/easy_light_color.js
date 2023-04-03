@@ -1,24 +1,15 @@
-WL.registerComponent("pp-easy-light-color", {
-    _myVariableName: { type: WL.Type.String, default: "" },
-    _mySetAsDefault: { type: WL.Type.Bool, default: false },
-    _myUseTuneTarget: { type: WL.Type.Bool, default: false },
-    _myColorModel: { type: WL.Type.Enum, values: ['rgb', 'hsv'], default: 'hsv' }
+import { LightComponent } from "@wonderlandengine/api";
+import { ColorUtils } from "../../../cauldron/utils/color_utils";
+import { getLeftGamepad, getRightGamepad } from "../../../input/cauldron/input_globals";
+import { GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
+import { vec3_create } from "../../../plugin/js/extensions/array_extension";
+import { EasyTuneIntArray } from "../easy_tune_variable_types";
+import { EasyObjectTuner } from "./easy_object_tuner";
 
-}, {
-    init: function () {
-        this._myEasyObjectTuner = new PP.EasyLightColor(this._myColorModel, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
-    },
-    start: function () {
-        this._myEasyObjectTuner.start();
-    },
-    update: function (dt) {
-        this._myEasyObjectTuner.update(dt);
-    }
-});
+export class EasyLightColor extends EasyObjectTuner {
 
-PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
-    constructor(colorModel, object, variableName, setAsDefault, useTuneTarget) {
-        super(object, variableName, setAsDefault, useTuneTarget);
+    constructor(colorModel, object, variableName, setAsDefault, useTuneTarget, engine) {
+        super(object, variableName, setAsDefault, useTuneTarget, engine);
         this._myColorModel = colorModel;
     }
 
@@ -35,7 +26,7 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new PP.EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
+        return new EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
     }
 
     _getObjectValue(object) {
@@ -44,9 +35,9 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
         let lightColor = this._getLightColor(object);
         if (lightColor) {
             if (this._myColorModel == 0) {
-                color = PP.ColorUtils.rgbCodeToHuman(lightColor);
+                color = ColorUtils.rgbCodeToHuman(lightColor);
             } else {
-                color = PP.ColorUtils.hsvCodeToHuman(PP.ColorUtils.rgbToHsv(lightColor));
+                color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHsv(lightColor));
             }
         } else {
             color = this._getDefaultValue();
@@ -56,19 +47,19 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
     }
 
     _getDefaultValue() {
-        return PP.vec3_create();
+        return vec3_create();
     }
 
     _updateObjectValue(object, value) {
         let color = value;
 
         if (this._myColorModel == 0) {
-            color = PP.ColorUtils.rgbHumanToCode(color);
+            color = ColorUtils.rgbHumanToCode(color);
         } else {
-            color = PP.ColorUtils.hsvToRgb(PP.ColorUtils.hsvHumanToCode(color));
+            color = ColorUtils.hsvToRgb(ColorUtils.hsvHumanToCode(color));
         }
 
-        let light = object.pp_getComponent("light");
+        let light = object.pp_getComponent(LightComponent);
         if (light) {
             light.color[0] = color[0];
             light.color[1] = color[1];
@@ -76,11 +67,11 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
             light.color[3] = light.color[3];
         }
 
-        if ((PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed) ||
-            (PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressStart() && PP.myRightGamepad.getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).myIsPressed)) {
+        if ((getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed) ||
+            (getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed)) {
 
-            let hsvColor = PP.ColorUtils.color1To255(PP.ColorUtils.rgbToHsv(color));
-            let rgbColor = PP.ColorUtils.color1To255(color);
+            let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHsv(color));
+            let rgbColor = ColorUtils.color1To255(color);
 
             console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
         }
@@ -88,11 +79,11 @@ PP.EasyLightColor = class EasyLightColor extends PP.EasyObjectTuner {
 
     _getLightColor(object) {
         let color = null;
-        let light = object.pp_getComponent("light");
+        let light = object.pp_getComponent(LightComponent);
         if (light) {
             color = light.color.slice(0, 3);
         }
 
         return color;
     }
-};
+}

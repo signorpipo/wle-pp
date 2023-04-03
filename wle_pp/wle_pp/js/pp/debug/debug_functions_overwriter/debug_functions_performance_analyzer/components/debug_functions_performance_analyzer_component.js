@@ -1,67 +1,89 @@
+import { Component, Property } from "@wonderlandengine/api";
+import { Timer } from "../../../../cauldron/cauldron/timer";
+import { getLeftGamepad } from "../../../../input/cauldron/input_globals";
+import { GamepadButtonID } from "../../../../input/gamepad/gamepad_buttons";
+import { isDebugEnabled } from "../../../debug_globals";
+import { DebugFunctionsPerformanceAnalysisResultsLogger, DebugFunctionsPerformanceAnalysisResultsLoggerParams } from "../debug_functions_performance_analysis_results_logger";
+import { DebugFunctionsPerformanceAnalyzer, DebugFunctionsPerformanceAnalyzerParams } from "../debug_functions_performance_analyzer";
 
-WL.registerComponent('pp-debug-functions-performance-analyzer', {
-    _myObjectsByPath: { type: WL.Type.String, default: "" },
-    _myClassesByPath: { type: WL.Type.String, default: "" },
-    _myFunctionsByPath: { type: WL.Type.String, default: "" },
-    _myDelayStart: { type: WL.Type.Float, default: 0.0 },
-    _myLogTitle: { type: WL.Type.String, default: "Functions Performance Analysis Results" },
-    _myLogFunction: { type: WL.Type.Enum, values: ["log", "error", "warn", "debug"], default: "log" },
-    _mySecondsBetweenLogs: { type: WL.Type.Float, default: 1.0 },
-    _myLogMaxResults: { type: WL.Type.Bool, default: false },
-    _myLogSortOrder: { type: WL.Type.Enum, values: ["none", "calls count", "total execution time", "average execution time"], default: "none" },
-    _myLogCallsCountResults: { type: WL.Type.Bool, default: true },
-    _myLogTotalExecutionTimeResults: { type: WL.Type.Bool, default: true },
-    _myLogTotalExecutionTimePercentageResults: { type: WL.Type.Bool, default: true },
-    _myLogAverageExecutionTimeResults: { type: WL.Type.Bool, default: true },
-    _myLogMaxAmountOfFunctions: { type: WL.Type.Int, default: -1 },
-    _myLogFunctionsWithCallsCountAbove: { type: WL.Type.Int, default: -1 },
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: { type: WL.Type.Float, default: -1 },
-    _myFunctionPathsToInclude: { type: WL.Type.String, default: "" },
-    _myFunctionPathsToExclude: { type: WL.Type.String, default: "" },
-    _myExcludeConstructors: { type: WL.Type.Bool, default: false },
-    _myExcludeJavascriptObjectFunctions: { type: WL.Type.Bool, default: true },
-    _myAddPathPrefixToFunctionID: { type: WL.Type.Bool, default: true },
-    _myObjectAddObjectDescendantsDepthLevel: { type: WL.Type.Int, default: 0 },
-    _myObjectAddClassDescendantsDepthLevel: { type: WL.Type.Int, default: 0 },
-    _myClearConsoleBeforeLog: { type: WL.Type.Bool, default: false },
-    _myResetMaxResultsShortcutEnabled: { type: WL.Type.Bool, default: false }
-}, {
+export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
+    static TypeName = "pp-debug-functions-performance-analyzer";
+    static Properties = {
+        _myObjectsByPath: Property.string(""),
+        _myClassesByPath: Property.string(""),
+        _myFunctionsByPath: Property.string(""),
+        _myDelayStart: Property.float(0.0),
+        _myLogTitle: Property.string("Functions Performance Analysis Results"),
+        _myLogFunction: Property.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+        _mySecondsBetweenLogs: Property.float(1.0),
+        _myLogMaxResults: Property.bool(false),
+        _myLogSortOrder: Property.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+        _myLogCallsCountResults: Property.bool(true),
+        _myLogTotalExecutionTimeResults: Property.bool(true),
+        _myLogTotalExecutionTimePercentageResults: Property.bool(true),
+        _myLogAverageExecutionTimeResults: Property.bool(true),
+        _myLogMaxAmountOfFunctions: Property.int(-1),
+        _myLogFunctionsWithCallsCountAbove: Property.int(-1),
+        _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property.float(-1),
+        _myFunctionPathsToInclude: Property.string(""),
+        _myFunctionPathsToExclude: Property.string(""),
+        _myExcludeConstructors: Property.bool(false),
+        _myExcludeJSObjectFunctions: Property.bool(true),
+        _myAddPathPrefixToFunctionID: Property.bool(true),
+        _myObjectAddObjectDescendantsDepthLevel: Property.int(0),
+        _myObjectAddClassDescendantsDepthLevel: Property.int(0),
+        _myClearConsoleBeforeLog: Property.bool(false),
+        _myResetMaxResultsShortcutEnabled: Property.bool(false),
+        _myClassesByReference: Property.enum(["Code Driven"], "Code Driven"),
+        _myObjectsByReference: Property.enum(["Code Driven"], "Code Driven")
+    };
+
     init() {
-        this._myFunctionsPerformanceAnalyzer = null;
-        this._myFunctionsPerformanceAnalysisResultsLogger = null;
+        this._myActive = false;
 
-        this._mySkipFirstUpdate = true;
-        this._myStartTimer = new PP.Timer(this._myDelayStart);
-        if (this._myDelayStart == 0) {
-            this._myStartTimer.end();
-            this._mySkipFirstUpdate = false;
-            this._start();
-        }
-    },
-    update(dt) {
-        if (this._mySkipFirstUpdate) {
-            this._mySkipFirstUpdate = false;
-            return;
-        }
+        if (isDebugEnabled(this.engine)) {
+            this._myActive = true;
 
-        if (this._myStartTimer.isRunning()) {
-            this._myStartTimer.update(dt);
-            if (this._myStartTimer.isDone()) {
+            this._myFunctionsPerformanceAnalyzer = null;
+            this._myFunctionsPerformanceAnalysisResultsLogger = null;
+
+            this._mySkipFirstUpdate = true;
+            this._myStartTimer = new Timer(this._myDelayStart);
+            if (this._myDelayStart == 0) {
+                this._myStartTimer.end();
+                this._mySkipFirstUpdate = false;
                 this._start();
             }
-        } else {
-            this._myFunctionsPerformanceAnalysisResultsLogger.update(dt);
-            this._myFunctionsPerformanceAnalyzer.resetResults();
         }
+    }
 
-        if (this._myResetMaxResultsShortcutEnabled) {
-            if (PP.myLeftGamepad.getButtonInfo(PP.GamepadButtonID.SELECT).isPressEnd(3)) {
-                this._myFunctionsPerformanceAnalyzer.resetMaxResults();
+    update(dt) {
+        if (this._myActive) {
+            if (this._mySkipFirstUpdate) {
+                this._mySkipFirstUpdate = false;
+                return;
+            }
+
+            if (this._myStartTimer.isRunning()) {
+                this._myStartTimer.update(dt);
+                if (this._myStartTimer.isDone()) {
+                    this._start();
+                }
+            } else {
+                this._myFunctionsPerformanceAnalysisResultsLogger.update(dt);
+                this._myFunctionsPerformanceAnalyzer.resetResults();
+            }
+
+            if (this._myResetMaxResultsShortcutEnabled) {
+                if (getLeftGamepad(this.engine).getButtonInfo(GamepadButtonID.SELECT).isPressEnd(3)) {
+                    this._myFunctionsPerformanceAnalyzer.resetMaxResults();
+                }
             }
         }
-    },
+    }
+
     _start() {
-        let functionsPerformanceAnalyzerParams = new PP.DebugFunctionsPerformanceAnalyzerParams();
+        let functionsPerformanceAnalyzerParams = new DebugFunctionsPerformanceAnalyzerParams();
 
         if (this._myObjectsByPath.length > 0) {
             let toIncludeList = [...this._myObjectsByPath.split(",")];
@@ -88,7 +110,7 @@ WL.registerComponent('pp-debug-functions-performance-analyzer', {
         }
 
         functionsPerformanceAnalyzerParams.myExcludeConstructors = this._myExcludeConstructors;
-        functionsPerformanceAnalyzerParams.myExcludeJavascriptObjectFunctions = this._myExcludeJavascriptObjectFunctions;
+        functionsPerformanceAnalyzerParams.myExcludeJSObjectFunctions = this._myExcludeJSObjectFunctions;
         functionsPerformanceAnalyzerParams.myAddPathPrefixToFunctionID = this._myAddPathPrefixToFunctionID;
 
         if (this._myFunctionPathsToInclude.length > 0) {
@@ -112,18 +134,18 @@ WL.registerComponent('pp-debug-functions-performance-analyzer', {
 
         functionsPerformanceAnalyzerParams.myExecutionTimeAnalysisEnabled = this._myLogTotalExecutionTimeResults || this._myLogTotalExecutionTimePercentageResults || this._myLogAverageExecutionTimeResults;
 
-        functionsPerformanceAnalyzerParams.myClassesByReference = (this._myClassesByReference != null) ? this._myClassesByReference : [];
-        functionsPerformanceAnalyzerParams.myObjectsByReference = (this._myObjectsByReference != null) ? this._myObjectsByReference : [];
+        functionsPerformanceAnalyzerParams.myClassesByReference = (this._myClassesByReference != 0) ? this._myClassesByReference : [];
+        functionsPerformanceAnalyzerParams.myObjectsByReference = (this._myObjectsByReference != 0) ? this._myObjectsByReference : [];
 
-        this._myFunctionsPerformanceAnalyzer = new PP.DebugFunctionsPerformanceAnalyzer(functionsPerformanceAnalyzerParams);
+        this._myFunctionsPerformanceAnalyzer = new DebugFunctionsPerformanceAnalyzer(functionsPerformanceAnalyzerParams);
         this._myFunctionsPerformanceAnalyzer.overwriteFunctions();
 
-        let functionsPerformanceAnalysisResultsLoggerParams = new PP.DebugFunctionsPerformanceAnalysisResultsLoggerParams();
+        let functionsPerformanceAnalysisResultsLoggerParams = new DebugFunctionsPerformanceAnalysisResultsLoggerParams();
         functionsPerformanceAnalysisResultsLoggerParams.myPerformanceAnalyzer = this._myFunctionsPerformanceAnalyzer;
         functionsPerformanceAnalysisResultsLoggerParams.myLogTitle = this._myLogTitle;
 
         functionsPerformanceAnalysisResultsLoggerParams.mySecondsBetweenLogs = this._mySecondsBetweenLogs;
-        functionsPerformanceAnalysisResultsLoggerParams.myLogFunction = ['log', 'error', 'warn', 'debug'][this._myLogFunction];
+        functionsPerformanceAnalysisResultsLoggerParams.myLogFunction = ["log", "error", "warn", "debug"][this._myLogFunction];
         functionsPerformanceAnalysisResultsLoggerParams.myLogMaxAmountOfFunctions = (this._myLogMaxAmountOfFunctions >= 0) ? this._myLogMaxAmountOfFunctions : null;
         functionsPerformanceAnalysisResultsLoggerParams.myLogFunctionsWithCallsCountAbove = (this._myLogFunctionsWithCallsCountAbove >= 0) ? this._myLogFunctionsWithCallsCountAbove : null;
         functionsPerformanceAnalysisResultsLoggerParams.myLogFunctionsWithTotalExecutionTimePercentageAbove = (this._myLogFunctionsWithTotalExecutionTimePercentageAbove >= 0) ? this._myLogFunctionsWithTotalExecutionTimePercentageAbove : null;
@@ -137,6 +159,6 @@ WL.registerComponent('pp-debug-functions-performance-analyzer', {
         functionsPerformanceAnalysisResultsLoggerParams.myLogTotalExecutionTimePercentageResults = this._myLogTotalExecutionTimePercentageResults;
         functionsPerformanceAnalysisResultsLoggerParams.myLogAverageExecutionTimeResults = this._myLogAverageExecutionTimeResults;
 
-        this._myFunctionsPerformanceAnalysisResultsLogger = new PP.DebugFunctionsPerformanceAnalysisResultsLogger(functionsPerformanceAnalysisResultsLoggerParams);
-    },
-});
+        this._myFunctionsPerformanceAnalysisResultsLogger = new DebugFunctionsPerformanceAnalysisResultsLogger(functionsPerformanceAnalysisResultsLoggerParams);
+    }
+}

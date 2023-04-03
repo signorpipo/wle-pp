@@ -1,8 +1,11 @@
-PP.BrowserUtils = {
-    isMobile: function () {
-        return /Mobi/i.test(window.navigator.userAgent);
-    },
-    isDesktop: function () {
-        return !PP.BrowserUtils.isMobile();
-    },
+export function isMobile() {
+    return /Mobi/i.test(window.navigator.userAgent);
+}
+export function isDesktop() {
+    return !isMobile();
+}
+
+export let BrowserUtils = {
+    isMobile,
+    isDesktop
 };

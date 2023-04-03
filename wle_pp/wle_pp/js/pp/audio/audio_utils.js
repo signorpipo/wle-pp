@@ -1,11 +1,15 @@
-PP.AudioUtils = {
-    isAudioPlaybackBlocked: function () {
-        let isBlocked = false;
+import { Howler } from "howler";
 
-        if (Howler != null && Howler.state != "running") {
-            isBlocked = true;
-        }
+export function isAudioPlaybackBlocked() {
+    let isBlocked = false;
 
-        return isBlocked;
+    if (Howler != null && Howler.state != "running") {
+        isBlocked = true;
     }
+
+    return isBlocked;
 }
+
+export let AudioUtils = {
+    isAudioPlaybackBlocked
+};

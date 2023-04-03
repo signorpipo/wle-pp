@@ -1,4 +1,8 @@
-PP.DebugFunctionsPerformanceAnalysisResultsLoggerParams = class DebugFunctionsPerformanceAnalysisResultsLoggerParams {
+import { Timer } from "../../../cauldron/cauldron/timer";
+import { DebugFunctionsPerformanceAnalyzerSortOrder } from "./debug_functions_performance_analyzer";
+
+export class DebugFunctionsPerformanceAnalysisResultsLoggerParams {
+
     constructor() {
         this.myPerformanceAnalyzer = null;
 
@@ -11,7 +15,7 @@ PP.DebugFunctionsPerformanceAnalysisResultsLoggerParams = class DebugFunctionsPe
 
         this.myLogMaxResults = false;
 
-        this.myLogSortOrder = PP.DebugFunctionsPerformanceAnalyzerSortOrder.NONE;
+        this.myLogSortOrder = DebugFunctionsPerformanceAnalyzerSortOrder.NONE;
 
         this.myLogMaxAmountOfFunctions = null;
 
@@ -25,13 +29,14 @@ PP.DebugFunctionsPerformanceAnalysisResultsLoggerParams = class DebugFunctionsPe
 
         this.myClearConsoleBeforeLog = false;
     }
-};
+}
 
-PP.DebugFunctionsPerformanceAnalysisResultsLogger = class DebugFunctionsPerformanceAnalysisResultsLogger {
+export class DebugFunctionsPerformanceAnalysisResultsLogger {
+
     constructor(params) {
         this._myParams = params;
 
-        this._myLogTimer = new PP.Timer(this._myParams.mySecondsBetweenLogs);
+        this._myLogTimer = new Timer(this._myParams.mySecondsBetweenLogs);
 
         this._myMaxNameLength = 0;
         this._myMaxCallsCountLength = 0;
@@ -209,19 +214,19 @@ PP.DebugFunctionsPerformanceAnalysisResultsLogger = class DebugFunctionsPerforma
                 }
 
                 switch (this._myParams.myLogSortOrder) {
-                    case PP.DebugFunctionsPerformanceAnalyzerSortOrder.CALLS_COUNT:
+                    case DebugFunctionsPerformanceAnalyzerSortOrder.CALLS_COUNT:
                         textOrdered.push(callsCountText);
                         textOrdered.push(totalExecutionTimeText);
                         textOrdered.push(totalExecutionTimePercentageText);
                         textOrdered.push(averageExecutionTimeText);
                         break;
-                    case PP.DebugFunctionsPerformanceAnalyzerSortOrder.TOTAL_EXECUTION_TIME:
+                    case DebugFunctionsPerformanceAnalyzerSortOrder.TOTAL_EXECUTION_TIME:
                         textOrdered.push(totalExecutionTimeText);
                         textOrdered.push(totalExecutionTimePercentageText);
                         textOrdered.push(averageExecutionTimeText);
                         textOrdered.push(callsCountText);
                         break;
-                    case PP.DebugFunctionsPerformanceAnalyzerSortOrder.AVERAGE_EXECUTION_TIME:
+                    case DebugFunctionsPerformanceAnalyzerSortOrder.AVERAGE_EXECUTION_TIME:
                         textOrdered.push(averageExecutionTimeText);
                         textOrdered.push(totalExecutionTimeText);
                         textOrdered.push(totalExecutionTimePercentageText);
@@ -267,4 +272,4 @@ PP.DebugFunctionsPerformanceAnalysisResultsLogger = class DebugFunctionsPerforma
             }
         }
     }
-};
+}

@@ -1,4 +1,4 @@
-PP.VisualElementType = {
+export let VisualElementType = {
     MESH: 0,
     LINE: 1,
     POINT: 2,
@@ -6,5 +6,5 @@ PP.VisualElementType = {
     ARROW: 4,
     TRANSFORM: 5,
     RAYCAST: 6,
-    TORUS: 7,
+    TORUS: 7
 };

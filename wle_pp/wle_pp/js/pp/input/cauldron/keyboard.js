@@ -1,4 +1,4 @@
-PP.KeyID = {
+export let KeyID = {
     _0: "0",
     _1: "1",
     _2: "2",
@@ -79,15 +79,16 @@ PP.KeyID = {
     CONTROL_LEFT: "ControlLeft",
     CONTROL_RIGHT: "ControlRight",
     ALT_LEFT: "AltLeft",
-    ALT_RIGHT: "AltRight",
+    ALT_RIGHT: "AltRight"
 };
 
-PP.Keyboard = class Keyboard {
+export class Keyboard {
+
     constructor() {
         this._myKeyInfos = new Map();
 
-        for (let key in PP.KeyID) {
-            this.addKey(PP.KeyID[key]);
+        for (let key in KeyID) {
+            this.addKey(KeyID[key]);
         }
     }
 
@@ -126,8 +127,8 @@ PP.Keyboard = class Keyboard {
     }
 
     start() {
-        window.addEventListener('keydown', this._keyDown.bind(this));
-        window.addEventListener('keyup', this._keyUp.bind(this));
+        window.addEventListener("keydown", this._keyDown.bind(this));
+        window.addEventListener("keyup", this._keyUp.bind(this));
     }
 
     update(dt) {
@@ -179,4 +180,4 @@ PP.Keyboard = class Keyboard {
     _createKeyInfo() {
         return { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, };
     }
-};
+}

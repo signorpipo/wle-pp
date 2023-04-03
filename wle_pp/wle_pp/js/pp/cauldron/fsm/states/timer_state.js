@@ -1,11 +1,15 @@
-PP.TimerState = class TimerState extends PP.State {
+import { Timer } from "../../cauldron/timer";
+import { State } from "../state";
+
+export class TimerState extends State {
+
     constructor(duration = 0, transitionToPerformOnEnd = null, ...transitionArgs) {
         super();
 
         this._myTransitionToPerformOnEnd = transitionToPerformOnEnd;
         this._myTransitionArgs = transitionArgs;
 
-        this._myTimer = new PP.Timer(duration, false);
+        this._myTimer = new Timer(duration, false);
     }
 
     setDuration(duration) {
@@ -49,4 +53,4 @@ PP.TimerState = class TimerState extends PP.State {
             this._myTransitionArgs = transitionArgs;
         }
     }
-};
+}

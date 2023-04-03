@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerCharacterController } from "../player_character_controller";
 
-PP.PlayerCharacterControllerComponent = class PlayerCharacterControllerComponent extends Component {
-    static TypeName = 'pp-player-character-controller';
+export class PlayerCharacterControllerComponent extends Component {
+    static TypeName = "pp-player-character-controller";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerCharacterController = new PP.PlayerCharacterController();
+        this._myPlayerCharacterController = new PlayerCharacterController();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerCharacterControllerComponent = class PlayerCharacterControllerComponent
     getPlayerCharacterController() {
         return this._myPlayerCharacterController;
     }
-};
-
-WL.registerComponent(PP.PlayerCharacterControllerComponent);
+}

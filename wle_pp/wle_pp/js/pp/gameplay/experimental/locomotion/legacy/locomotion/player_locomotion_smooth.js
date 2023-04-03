@@ -1,5 +1,20 @@
-PP.PlayerLocomotionSmoothParams = class PlayerLocomotionSmoothParams {
-    constructor() {
+import { Timer } from "../../../../../cauldron/cauldron/timer";
+import { getGamepads } from "../../../../../input/cauldron/input_globals";
+import { Handedness } from "../../../../../input/cauldron/input_types";
+import { InputUtils } from "../../../../../input/cauldron/input_utils";
+import { GamepadAxesID, GamepadButtonID } from "../../../../../input/gamepad/gamepad_buttons";
+import { quat2_create, vec3_create } from "../../../../../plugin/js/extensions/array_extension";
+import { getMainEngine } from "../../../../../cauldron/wl/engine_globals";
+import { getPlayerObjects } from "../../../../../pp/player_objects_global";
+import { Direction2DTo3DConverter, Direction2DTo3DConverterParams } from "../../../../cauldron/cauldron/direction_2D_to_3D_converter";
+import { PlayerLocomotionDirectionReferenceType } from "./player_locomotion";
+import { getCollisionCheck } from "./player_locomotion_component";
+import { PlayerLocomotionMovement } from "./player_locomotion_movement";
+import { XRUtils } from "../../../../../cauldron/utils/xr_utils";
+
+export class PlayerLocomotionSmoothParams {
+
+    constructor(engine = getMainEngine()) {
         this.myPlayerHeadManager = null;
         this.myPlayerTransformManager = null;
 
@@ -18,27 +33,30 @@ PP.PlayerLocomotionSmoothParams = class PlayerLocomotionSmoothParams {
 
         this.myGravityAcceleration = 0;
 
-        this.myVRDirectionReferenceType = PP.PlayerLocomotionDirectionReferenceType.HEAD;
+        this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
         this.myVRDirectionReferenceObject = null;
 
-        this.myHandedness = PP.Handedness.LEFT;
+        this.myHandedness = Handedness.LEFT;
 
         this.myMoveThroughCollisionShortcutEnabled = false;
         this.myMoveHeadShortcutEnabled = false;
-    }
-};
 
-PP.PlayerLocomotionSmooth = class PlayerLocomotionSmooth extends PP.PlayerLocomotionMovement {
+        this.myEngine = engine;
+    }
+}
+
+export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
+
     constructor(params, locomotionRuntimeParams) {
         super(locomotionRuntimeParams);
 
         this._myParams = params;
 
-        this._myDirectionReference = PP.myPlayerObjects.myHead;
+        this._myDirectionReference = getPlayerObjects(this._myParams.myEngine).myHead;
 
-        this._myStickIdleTimer = new PP.Timer(0.25, false);
+        this._myStickIdleTimer = new Timer(0.25, false);
 
-        let directionConverterNonVRParams = new PP.Direction2DTo3DConverterParams();
+        let directionConverterNonVRParams = new Direction2DTo3DConverterParams();
         directionConverterNonVRParams.myAutoUpdateFlyForward = this._myParams.myFlyEnabled;
         directionConverterNonVRParams.myAutoUpdateFlyRight = this._myParams.myFlyEnabled;
         directionConverterNonVRParams.myMinAngleToFlyForwardUp = this._myParams.myMinAngleToFlyUpNonVR;
@@ -46,7 +64,7 @@ PP.PlayerLocomotionSmooth = class PlayerLocomotionSmooth extends PP.PlayerLocomo
         directionConverterNonVRParams.myMinAngleToFlyRightUp = this._myParams.myMinAngleToFlyRight;
         directionConverterNonVRParams.myMinAngleToFlyRightDown = this._myParams.myMinAngleToFlyRight;
 
-        let directionConverterVRParams = new PP.Direction2DTo3DConverterParams();
+        let directionConverterVRParams = new Direction2DTo3DConverterParams();
         directionConverterVRParams.myAutoUpdateFlyForward = this._myParams.myFlyEnabled;
         directionConverterVRParams.myAutoUpdateFlyRight = this._myParams.myFlyEnabled;
         directionConverterVRParams.myMinAngleToFlyForwardUp = this._myParams.myMinAngleToFlyUpVR;
@@ -54,39 +72,38 @@ PP.PlayerLocomotionSmooth = class PlayerLocomotionSmooth extends PP.PlayerLocomo
         directionConverterVRParams.myMinAngleToFlyRightUp = this._myParams.myMinAngleToFlyRight;
         directionConverterVRParams.myMinAngleToFlyRightDown = this._myParams.myMinAngleToFlyRight;
 
-        this._myDirectionConverterNonVR = new PP.Direction2DTo3DConverter(directionConverterNonVRParams);
-        this._myDirectionConverterVR = new PP.Direction2DTo3DConverter(directionConverterVRParams);
+        this._myDirectionConverterNonVR = new Direction2DTo3DConverter(directionConverterNonVRParams);
+        this._myDirectionConverterVR = new Direction2DTo3DConverter(directionConverterVRParams);
         this._myCurrentDirectionConverter = this._myDirectionConverterNonVR;
 
         this._myLocomotionRuntimeParams.myIsFlying = false;
 
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
+        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myParams.myEngine);
     }
 
     update(dt) {
-        // implemented outside class definition
+        // Implemented outside class definition
     }
-};
+}
 
-PP.PlayerLocomotionSmooth.prototype.update = function () {
-    let playerUp = PP.vec3_create();
-    let headMovement = PP.vec3_create();
-    let direction = PP.vec3_create();
-    let directionOnUp = PP.vec3_create();
-    let verticalMovement = PP.vec3_create();
-    let feetTransformQuat = PP.quat2_create();
 
-    let directionReferenceTransformQuat = PP.quat2_create();
+// IMPLEMENTATION
+
+PlayerLocomotionSmooth.prototype.update = function () {
+    let playerUp = vec3_create();
+    let headMovement = vec3_create();
+    let direction = vec3_create();
+    let directionOnUp = vec3_create();
+    let verticalMovement = vec3_create();
+    let feetTransformQuat = quat2_create();
+
+    let directionReferenceTransformQuat = quat2_create();
     return function update(dt) {
         playerUp = this._myParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
 
         headMovement.vec3_zero();
 
-        let axes = PP.myGamepads[this._myParams.myHandedness].getAxesInfo(PP.GamepadAxesID.THUMBSTICK).getAxes();
+        let axes = getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getAxesInfo(GamepadAxesID.THUMBSTICK).getAxes();
         axes[0] = Math.abs(axes[0]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[0] : 0;
         axes[1] = Math.abs(axes[1]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[1] : 0;
 
@@ -102,7 +119,7 @@ PP.PlayerLocomotionSmooth.prototype.update = function () {
                 }
 
                 let movementIntensity = axes.vec2_length();
-                if (PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.SELECT).isPressed()) {
+                if (getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SELECT).isPressed()) {
                     movementIntensity = 0.1;
                 }
                 let speed = Math.pp_lerp(0, this._myParams.myMaxSpeed, movementIntensity);
@@ -125,37 +142,37 @@ PP.PlayerLocomotionSmooth.prototype.update = function () {
             }
         }
 
-        if (!PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.SQUEEZE).isPressed()) {
-            if (PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.TOP_BUTTON).isPressed()) {
+        if (!getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
+            if (getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
                 verticalMovement = playerUp.vec3_scale(this._myParams.myMaxSpeed * dt, verticalMovement);
                 headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 this._myLocomotionRuntimeParams.myIsFlying = true;
-            } else if (PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
+            } else if (getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
                 verticalMovement = playerUp.vec3_scale(-this._myParams.myMaxSpeed * dt, verticalMovement);
                 headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 this._myLocomotionRuntimeParams.myIsFlying = true;
             }
         }
 
-        if (PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
+        if (getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
             this._myLocomotionRuntimeParams.myIsFlying = false;
         }
 
-        if (PP.myGamepads[PP.InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
-            if (!PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.THUMBSTICK).isPressed()) {
+        if (getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
+            if (!getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
                 if (!this._myLocomotionRuntimeParams.myIsFlying && false) {
                     let gravity = -2;
                     verticalMovement = playerUp.vec3_scale(gravity * dt, verticalMovement);
                     headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 }
 
-                if (PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.SQUEEZE).isPressed()) {
+                if (getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
                     headMovement.vec3_zero();
                 }
 
                 feetTransformQuat = this._myParams.myPlayerHeadManager.getTransformFeetQuat(feetTransformQuat);
 
-                PP.myCollisionCheck.move(headMovement, feetTransformQuat, this._myParams.myCollisionCheckParams, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
+                getCollisionCheck(this._myParams.myEngine).move(headMovement, feetTransformQuat, this._myParams.myCollisionCheckParams, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
                 headMovement.vec3_copy(this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myFixedMovement);
             }
 
@@ -163,14 +180,14 @@ PP.PlayerLocomotionSmooth.prototype.update = function () {
                 this._myParams.myPlayerHeadManager.moveFeet(headMovement);
             }
         } else {
-            if (!PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.THUMBSTICK).isPressed()) {
+            if (!getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
                 if (!this._myLocomotionRuntimeParams.myIsFlying) {
                     let gravity = -2;
                     verticalMovement = playerUp.vec3_scale(gravity * dt, verticalMovement);
                     headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 }
 
-                if (PP.myGamepads[this._myParams.myHandedness].getButtonInfo(PP.GamepadButtonID.SQUEEZE).isPressed()) {
+                if (getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
                     headMovement.vec3_zero();
                 }
 
@@ -189,14 +206,14 @@ PP.PlayerLocomotionSmooth.prototype.update = function () {
     };
 }();
 
-PP.PlayerLocomotionSmooth.prototype._onXRSessionStart = function () {
+PlayerLocomotionSmooth.prototype._onXRSessionStart = function () {
     return function _onXRSessionStart(session) {
         switch (this._myParams.myVRDirectionReferenceType) {
             case 0:
-                this._myDirectionReference = PP.myPlayerHeadManager.myHead;
+                this._myDirectionReference = getPlayerObjects(this._myParams.myEngine).myHead;
                 break;
             case 1:
-                this._myDirectionReference = PP.myPlayerObjects.myHands[this._myParams.myHandedness];
+                this._myDirectionReference = getPlayerObjects(this._myParams.myEngine).myHands[this._myParams.myHandedness];
                 break;
             case 2:
                 this._myDirectionReference = this._myParams.myVRDirectionReferenceObject;
@@ -208,10 +225,10 @@ PP.PlayerLocomotionSmooth.prototype._onXRSessionStart = function () {
     };
 }();
 
-PP.PlayerLocomotionSmooth.prototype._onXRSessionEnd = function () {
-    let playerUp = PP.vec3_create();
+PlayerLocomotionSmooth.prototype._onXRSessionEnd = function () {
+    let playerUp = vec3_create();
     return function _onXRSessionEnd(session) {
-        this._myDirectionReference = PP.myPlayerObjects.myHead;
+        this._myDirectionReference = getPlayerObjects(this._myParams.myEngine).myHead;
         this._myCurrentDirectionConverter = this._myDirectionConverterNonVR;
 
         this._myCurrentDirectionConverter.resetFly();
@@ -220,6 +237,5 @@ PP.PlayerLocomotionSmooth.prototype._onXRSessionEnd = function () {
 
 
 
-Object.defineProperty(PP.PlayerLocomotionSmooth.prototype, "update", { enumerable: false });
-Object.defineProperty(PP.PlayerLocomotionSmooth.prototype, "_onXRSessionStart", { enumerable: false });
-Object.defineProperty(PP.PlayerLocomotionSmooth.prototype, "_onXRSessionEnd", { enumerable: false });
+Object.defineProperty(PlayerLocomotionSmooth.prototype, "_onXRSessionStart", { enumerable: false });
+Object.defineProperty(PlayerLocomotionSmooth.prototype, "_onXRSessionEnd", { enumerable: false });

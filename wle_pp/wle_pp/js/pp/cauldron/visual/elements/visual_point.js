@@ -1,41 +1,48 @@
 /*
-let visualParams = new PP.VisualPointParams();
+let visualParams = new VisualPointParams();
 visualParams.myPosition.vec3_copy(position);
 visualParams.myRadius = 0.005;
-visualParams.myMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = PP.vec4_create(1, 1, 1, 1);
-PP.myVisualManager.draw(visualParams);
+visualParams.myMaterial = myDefaultResources.myMaterials.myFlatOpaque.clone();
+visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
+getVisualManager().draw(visualParams);
 
 or
 
-let visualPoint = new PP.VisualPoint(visualParams);
+let visualPoint = new VisualPoint(visualParams);
 */
 
-PP.VisualPointParams = class VisualPointParams {
+import { vec3_create } from "../../../plugin/js/extensions/array_extension";
+import { getMainEngine } from "../../wl/engine_globals";
+import { getVisualData } from "../visual_globals";
+import { MeshComponent } from "@wonderlandengine/api";
+import { VisualElementType } from "./visual_element_types";
+import { getDefaultResources } from "../../../pp/default_resources_global";
 
-    constructor() {
-        this.myPosition = PP.vec3_create();
+export class VisualPointParams {
+
+    constructor(engine = getMainEngine()) {
+        this.myPosition = vec3_create();
         this.myRadius = 0.005;
 
-        this.myMesh = null;         // the mesh is scaled along up axis, null means it will default on PP.myDefaultResources.myMeshes.mySphere
+        this.myMesh = null;         // The mesh is scaled along up axis, null means it will default on myDefaultResources.myMeshes.mySphere
 
-        this.myMaterial = null;     // null means it will default on PP.myDefaultResources.myMaterials.myFlatOpaque
-        this.myColor = null;        // if this is set and material is null, it will use the default flat opaque material with this color
+        this.myMaterial = null;     // null means it will default on myDefaultResources.myMaterials.myFlatOpaque
+        this.myColor = null;        // If this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = PP.myVisualData.myRootObject;
+        this.myParent = getVisualData(engine).myRootObject;
         this.myIsLocal = false;
 
-        this.myType = PP.VisualElementType.POINT;
+        this.myType = VisualElementType.POINT;
     }
 
     copy(other) {
-        // implemented outside class definition
+        // Implemented outside class definition
     }
-};
+}
 
-PP.VisualPoint = class VisualPoint {
+export class VisualPoint {
 
-    constructor(params = new PP.VisualPointParams()) {
+    constructor(params = new VisualPointParams()) {
         this._myParams = params;
 
         this._myVisible = false;
@@ -100,9 +107,9 @@ PP.VisualPoint = class VisualPoint {
     }
 
     _build() {
-        this._myPointObject = WL.scene.addObject(null);
+        this._myPointObject = this._myParams.myParent.pp_getEngine().scene.pp_addObject();
 
-        this._myPointMeshComponent = this._myPointObject.addComponent('mesh');
+        this._myPointMeshComponent = this._myPointObject.pp_addComponent(MeshComponent);
     }
 
     _markDirty() {
@@ -114,20 +121,28 @@ PP.VisualPoint = class VisualPoint {
     }
 
     clone() {
-        let clonedParams = new PP.VisualPointParams();
+        let clonedParams = new VisualPointParams(this._myParams.myParent.pp_getEngine());
         clonedParams.copy(this._myParams);
 
-        let clone = new PP.VisualPoint(clonedParams);
+        let clone = new VisualPoint(clonedParams);
         clone.setAutoRefresh(this._myAutoRefresh);
         clone.setVisible(this._myVisible);
         clone._myDirty = this._myDirty;
 
         return clone;
     }
-};
 
-PP.VisualPoint.prototype._refresh = function () {
-    let rotation = PP.vec3_create(0, 0, 0);
+    _refresh() {
+        // Implemented outside class definition
+    }
+}
+
+
+
+// IMPLEMENTATION
+
+VisualPoint.prototype._refresh = function () {
+    let rotation = vec3_create(0, 0, 0);
     return function _refresh() {
         this._myPointObject.pp_setParent(this._myParams.myParent, false);
 
@@ -144,15 +159,15 @@ PP.VisualPoint.prototype._refresh = function () {
         if (this._myParams.myMesh != null) {
             this._myPointMeshComponent.mesh = this._myParams.myMesh;
         } else {
-            this._myPointMeshComponent.mesh = PP.myDefaultResources.myMeshes.mySphere;
+            this._myPointMeshComponent.mesh = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMeshes.mySphere;
         }
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {
-                this._myPointMeshComponent.material = PP.myVisualData.myDefaultMaterials.myDefaultMeshMaterial;
+                this._myPointMeshComponent.material = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myMesh;
             } else {
                 if (this._myFlatOpaqueMaterial == null) {
-                    this._myFlatOpaqueMaterial = PP.myDefaultResources.myMaterials.myFlatOpaque.clone();
+                    this._myFlatOpaqueMaterial = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMaterials.myFlatOpaque.clone();
                 }
                 this._myPointMeshComponent.material = this._myFlatOpaqueMaterial;
                 this._myFlatOpaqueMaterial.color = this._myParams.myColor;
@@ -163,7 +178,7 @@ PP.VisualPoint.prototype._refresh = function () {
     }
 }();
 
-PP.VisualPointParams.prototype.copy = function copy(other) {
+VisualPointParams.prototype.copy = function copy(other) {
     this.myPosition.vec3_copy(other.myPosition);
     this.myRadius = other.myRadius;
 
@@ -190,8 +205,3 @@ PP.VisualPointParams.prototype.copy = function copy(other) {
 
     this.myType = other.myType;
 };
-
-
-
-Object.defineProperty(PP.VisualPoint.prototype, "_refresh", { enumerable: false });
-Object.defineProperty(PP.VisualPointParams.prototype, "copy", { enumerable: false });

@@ -1,5 +1,5 @@
 /*
-let raycastSetup = new PP.RaycastSetup();
+let raycastSetup = new RaycastSetup();
 
 raycastSetup.myOrigin.vec3_copy(origin);
 raycastSetup.myDirection.vec3_copy(direction);
@@ -8,19 +8,26 @@ raycastSetup.myBlockLayerFlags.setMask(flags);
 raycastSetup.myObjectsToIgnore.pp_clear();
 raycastSetup.myIgnoreHitsInsideCollision = false;
 
-let raycastResults = PP.PhysicsUtils.raycast(raycastSetup);
+let raycastResults = PhysicsUtils.raycast(raycastSetup);
 */
 
-PP.RaycastSetup = class RaycastSetup {
-    constructor() {
-        this.myOrigin = PP.vec3_create();
-        this.myDirection = PP.vec3_create();
+import { vec3_create } from "../../plugin/js/extensions/array_extension";
+import { getMainEngine } from "../wl/engine_globals";
+import { PhysicsLayerFlags } from "./physics_layer_flags";
+
+export class RaycastSetup {
+
+    constructor(physics = (getMainEngine() != null) ? getMainEngine().physics : null) {
+        this.myOrigin = vec3_create();
+        this.myDirection = vec3_create();
         this.myDistance = 0;
 
-        this.myBlockLayerFlags = new PP.PhysicsLayerFlags();
+        this.myBlockLayerFlags = new PhysicsLayerFlags();
 
         this.myObjectsToIgnore = [];
         this.myIgnoreHitsInsideCollision = false;
+
+        this.myPhysics = physics;
     }
 
     copy(setup) {
@@ -32,6 +39,8 @@ PP.RaycastSetup = class RaycastSetup {
 
         this.myObjectsToIgnore.pp_copy(setup.myObjectsToIgnore);
         this.myIgnoreHitsInsideCollision = setup.myIgnoreHitsInsideCollision;
+
+        this.myPhysics = setup.myPhysics;
     }
 
     reset() {
@@ -44,9 +53,10 @@ PP.RaycastSetup = class RaycastSetup {
         this.myObjectsToIgnore.pp_clear();
         this.myIgnoreHitsInsideCollision = false;
     }
-};
+}
 
-PP.RaycastResults = class RaycastResult {
+export class RaycastResults {
+
     constructor() {
         this.myRaycastSetup = null;
         this.myHits = [];
@@ -133,7 +143,7 @@ PP.RaycastResults = class RaycastResult {
     }
 
     copy(result) {
-        // implemented outside class definition
+        // Implemented outside class definition
     }
 
     reset() {
@@ -143,12 +153,13 @@ PP.RaycastResults = class RaycastResult {
 
         this.removeAllHits();
     }
-};
+}
 
-PP.RaycastHit = class RaycastHit {
+export class RaycastHit {
+
     constructor() {
-        this.myPosition = PP.vec3_create();
-        this.myNormal = PP.vec3_create();
+        this.myPosition = vec3_create();
+        this.myNormal = vec3_create();
         this.myDistance = 0;
         this.myObject = null;
 
@@ -174,16 +185,16 @@ PP.RaycastHit = class RaycastHit {
         this.myObject = null;
         this.myIsInsideCollision = false;
     }
-};
+}
 
 
 
 // IMPLEMENTATION
 
-PP.RaycastResults.prototype.copy = function () {
+RaycastResults.prototype.copy = function () {
     let copyHitCallback = function (currentElement, elementToCopy) {
         if (currentElement == null) {
-            currentElement = new PP.RaycastHit();
+            currentElement = new RaycastHit();
         }
 
         currentElement.copy(elementToCopy);
@@ -196,7 +207,7 @@ PP.RaycastResults.prototype.copy = function () {
             this.myRaycastSetup = null;
         } else {
             if (this.myRaycastSetup == null) {
-                this.myRaycastSetup = new PP.RaycastSetup();
+                this.myRaycastSetup = new RaycastSetup(result.myRaycastSetup.myPhysics);
             }
 
             this.myRaycastSetup.copy(result.myRaycastSetup);
@@ -223,7 +234,3 @@ PP.RaycastResults.prototype.copy = function () {
         this.myHits.pp_copy(result.myHits, copyHitCallback);
     };
 }();
-
-
-
-Object.defineProperty(PP.RaycastResults.prototype, "copy", { enumerable: false });

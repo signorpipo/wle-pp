@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerViewOcclusion } from "../player_view_occlusion";
 
-PP.PlayerViewOcclusionComponent = class PlayerViewOcclusionComponent extends Component {
-    static TypeName = 'pp-player-occlusion';
+export class PlayerViewOcclusionComponent extends Component {
+    static TypeName = "pp-player-occlusion";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerViewOcclusion = new PP.PlayerViewOcclusion();
+        this._myPlayerViewOcclusion = new PlayerViewOcclusion();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerViewOcclusionComponent = class PlayerViewOcclusionComponent extends Com
     getPlayerViewOcclusion() {
         return this._myPlayerViewOcclusion;
     }
-};
-
-WL.registerComponent(PP.PlayerViewOcclusionComponent);
+}

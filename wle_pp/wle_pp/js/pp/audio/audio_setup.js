@@ -1,4 +1,5 @@
-PP.AudioSetup = class AudioSetup {
+export class AudioSetup {
+
     constructor(audioFilePath = null) {
         this.myAudioFilePath = (audioFilePath) ? audioFilePath.slice(0) : null;
 
@@ -21,7 +22,7 @@ PP.AudioSetup = class AudioSetup {
     }
 
     clone() {
-        let audioSetup = new PP.AudioSetup();
+        let audioSetup = new AudioSetup();
 
         audioSetup.myAudioFilePath = this.myAudioFilePath.slice(0);
 
@@ -66,4 +67,4 @@ PP.AudioSetup = class AudioSetup {
     set myRate(rate) {
         this._myRate = rate;
     }
-};
+}

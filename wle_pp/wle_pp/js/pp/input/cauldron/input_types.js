@@ -1,20 +1,20 @@
 
-PP.Handedness = {
+export let Handedness = {
     LEFT: "left",
     RIGHT: "right"
 };
 
-PP.HandednessIndex = {
+export let HandednessIndex = {
     LEFT: 0,
     RIGHT: 1
 };
 
-PP.InputSourceType = {
+export let InputSourceType = {
     GAMEPAD: 0,
     TRACKED_HAND: 1
 };
 
-PP.TrackedHandJointID = {
+export let TrackedHandJointID = {
     WRIST: "wrist",
 
     THUMB_METACARPAL: "thumb-metacarpal",
@@ -47,7 +47,7 @@ PP.TrackedHandJointID = {
     PINKY_FINGER_TIP: "pinky-finger-tip",
 };
 
-PP.TrackedHandJointIDIndex = {
+export let TrackedHandJointIDIndex = {
     WRIST: 0,
 
     THUMB_METACARPAL: 1,
@@ -77,5 +77,5 @@ PP.TrackedHandJointIDIndex = {
     PINKY_FINGER_PHALANX_PROXIMAL: 21,
     PINKY_FINGER_PHALANX_INTERMEDIATE: 22,
     PINKY_FINGER_PHALANX_DISTAL: 23,
-    PINKY_FINGER_TIP: 24,
+    PINKY_FINGER_TIP: 24
 };

@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerHandCharacterController } from "../player_hand_character_controller";
 
-PP.PlayerHandCharacterControllerComponent = class PlayerHandCharacterControllerComponent extends Component {
-    static TypeName = 'pp-player-hand-character-controller';
+export class PlayerHandCharacterControllerComponent extends Component {
+    static TypeName = "pp-player-hand-character-controller";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerHandCharacterController = new PP.PlayerHandCharacterController();
+        this._myPlayerHandCharacterController = new PlayerHandCharacterController();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerHandCharacterControllerComponent = class PlayerHandCharacterControllerC
     getPlayerHandCharacterController() {
         return this._myPlayerHandCharacterController;
     }
-};
-
-WL.registerComponent(PP.PlayerHandCharacterControllerComponent);
+}

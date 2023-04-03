@@ -1,5 +1,7 @@
-PP.HeadPose = class HeadPose extends PP.BasePose {
+import { BasePose } from "./base_pose";
+
+export class HeadPose extends BasePose {
     _getPose(xrFrame) {
         return xrFrame.getViewerPose(this._myReferenceSpace);
     }
-};
+}

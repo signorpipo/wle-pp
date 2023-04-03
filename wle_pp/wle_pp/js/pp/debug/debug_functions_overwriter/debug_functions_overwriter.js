@@ -1,47 +1,50 @@
-// #TODO add getter/setter accessors overwrite
-// #TODO if both a class and the parent class are in the list, they should be overwritten in parent first order
-// #TODO how to overwrite class and objects from modules?
-// #TODO some functions, like glMatrix.vec3.copy, are defined as getter, how to overwrite them?
+// #TODO Add getter/setter accessors overwrite
+// #TODO If both a class and the parent class are in the list, they should be overwritten in parent first order
+// #TODO How to overwrite class and objects from modules?
+// #TODO Some functions, like glMatrix.vec3.copy, are defined as getter, how to overwrite them?
 
-PP.DebugFunctionsOverwriterParams = class DebugFunctionsOverwriterParams {
+import { JSUtils } from "../../cauldron/utils/js_utils";
+
+export class DebugFunctionsOverwriterParams {
+
     constructor() {
         this.myObjectsByReference = [];         // You can specify to count the call on a specific object instance
         this.myObjectsByPath = [];              // If you want you can specify the instance by path, but it means it must be reachable from window
 
-        this.myClassesByReference = [];         // By Reference means by using a reference to the class, like doing PP.Timer, but also let ref = PP.Timer and use ref
-        this.myClassesByPath = [];              // By Path means by using the full class path, like "PP.Timer", this is requiredneeded if u want to count the constructor
+        this.myClassesByReference = [];         // By Reference means by using a reference to the class, like doing Timer, but also let ref = Timer and use ref
+        this.myClassesByPath = [];              // By Path means by using the full class path, like "Timer", this is requiredneeded if u want to count the constructor
 
         this.myFunctionsByPath = [];
         // You can also count the call to a specific function, but it must be reachable from window, no reference way
         // It's mostly for global functions, which could be tracked anyway using window as object reference
 
-        this.myExcludeConstructors = false;      // constructor calls count can be a problem for some classes (like Array)
-        this.myExcludeJavascriptObjectFunctions = false;
+        this.myExcludeConstructors = false;      // Constructor calls count can be a problem for some classes (like Array)
+        this.myExcludeJSObjectFunctions = false;
 
-        this.myFunctionNamesToInclude = [];     // empty means every function is included, can be a regex (. must be escaped with \\.)
-        this.myFunctionNamesToExclude = [];     // empty means no function is excluded, can be a regex (. must be escaped with \\.)
+        this.myFunctionNamesToInclude = [];     // Empty means every function is included, can be a regex (. must be escaped with \\.)
+        this.myFunctionNamesToExclude = [];     // Empty means no function is excluded, can be a regex (. must be escaped with \\.)
 
-        // these can be used if u want to have a bit more control on function name filtering
-        this.myFunctionPathsToInclude = [];         // empty means every function is included, can be a regex (. must be escaped with \\.)
-        this.myFunctionPathsToExclude = [];         // empty means no function is excluded, can be a regex (. must be escaped with \\.)
+        // These can be used if u want to have a bit more control on function name filtering
+        this.myFunctionPathsToInclude = [];         // Empty means every function is included, can be a regex (. must be escaped with \\.)
+        this.myFunctionPathsToExclude = [];         // Empty means no function is excluded, can be a regex (. must be escaped with \\.)
 
-        this.myObjectAddObjectDescendantsDepthLevel = 0;        // you can specify if you want to also count the OBJECT descendants of the objects you have specified
-        this.myObjectAddClassDescendantsDepthLevel = 0;       // you can specify if you want to also count the CLASS descendants of the objects you have specified
-        // the depth level specify how deep in the hierarchy, level 0 means no recursion, 1 only children, 2 also grand children, and so on
+        this.myObjectAddObjectDescendantsDepthLevel = 0;      // You can specify if you want to also count the OBJECT descendants of the objects you have specified
+        this.myObjectAddClassDescendantsDepthLevel = 0;       // You can specify if you want to also count the CLASS descendants of the objects you have specified
+        // The depth level specify how deep in the hierarchy, level 0 means no recursion, 1 only children, 2 also grand children, and so on
         // -1 to select all the hierarchy
 
-        // these filters are only useful if u are doing recursion
-        this.myObjectNamesToInclude = [];           // empty means every object is included, can be a regex (. must be escaped with \\.)
-        this.myObjectNamesToExclude = [];           // empty means no object is excluded, can be a regex (. must be escaped with \\.)
+        // These filters are only useful if u are doing recursion
+        this.myObjectNamesToInclude = [];           // Empty means every object is included, can be a regex (. must be escaped with \\.)
+        this.myObjectNamesToExclude = [];           // Empty means no object is excluded, can be a regex (. must be escaped with \\.)
 
-        this.myClassNamesToInclude = [];            // empty means every class is included, can be a regex (. must be escaped with \\.)
-        this.myClassNamesToExclude = [];            // empty means no class is excluded, can be a regex (. must be escaped with \\.)
+        this.myClassNamesToInclude = [];            // Empty means every class is included, can be a regex (. must be escaped with \\.)
+        this.myClassNamesToExclude = [];            // Empty means no class is excluded, can be a regex (. must be escaped with \\.)
 
-        this.myObjectPathsToInclude = [];           // empty means every object is included, can be a regex (. must be escaped with \\.)
-        this.myObjectPathsToExclude = [];           // empty means no object is excluded, can be a regex (. must be escaped with \\.)
+        this.myObjectPathsToInclude = [];           // Empty means every object is included, can be a regex (. must be escaped with \\.)
+        this.myObjectPathsToExclude = [];           // Empty means no object is excluded, can be a regex (. must be escaped with \\.)
 
-        this.myClassPathsToInclude = [];            // empty means every class is included, can be a regex (. must be escaped with \\.)
-        this.myClassPathsToExclude = [];            // empty means no class is excluded, can be a regex (. must be escaped with \\.)
+        this.myClassPathsToInclude = [];            // Empty means every class is included, can be a regex (. must be escaped with \\.)
+        this.myClassPathsToExclude = [];            // Empty means no class is excluded, can be a regex (. must be escaped with \\.)
 
         // Tricks
         // - you can specify an object/class/function as a pair [object, "name"] instead of just object
@@ -50,10 +53,11 @@ PP.DebugFunctionsOverwriterParams = class DebugFunctionsOverwriterParams {
 
         this.myDebugLogActive = false;
     }
-};
+}
 
-PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
-    constructor(params = new PP.DebugFunctionsOverwriterParams()) {
+export class DebugFunctionsOverwriter {
+
+    constructor(params = new DebugFunctionsOverwriterParams()) {
         this._myParams = params;
 
         this._myPropertiesAlreadyOverwritten = new Map();
@@ -98,11 +102,11 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
     // Hooks
 
     _getOverwrittenFunction(reference, propertyName, referencePath, isClass, isFunction) {
-        return PP.JSUtils.getReferenceProperty(reference, propertyName);
+        return JSUtils.getObjectProperty(reference, propertyName);
     }
 
     _getOverwrittenConstructor(reference, propertyName, referencePath, isClass, isFunction) {
-        return PP.JSUtils.getReferenceProperty(reference, propertyName);
+        return JSUtils.getObjectProperty(reference, propertyName);
     }
 
     _onOverwriteSuccess(reference, propertyName, referenceParentForConstructor, referenceNameForConstructor, referencePath, isClass, isFunction, isConstructor) {
@@ -130,9 +134,9 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
         let isValidReferencePath = this._filterName(referencePath, includePathList, excludePathList);
         let isValidReferenceName = this._filterName(referenceNameForFilter, includeNameList, excludeNameList);
         if (isValidReferencePath && isValidReferenceName) {
-            let propertyNames = PP.JSUtils.getReferencePropertyNames(reference);
+            let propertyNames = JSUtils.getObjectPropertyNames(reference);
             if (propertyNames.pp_hasEqual("constructor")) {
-                propertyNames.unshift("constructor"); // be sure it's added first to spot bugs, not important that it appears twice in the list
+                propertyNames.unshift("constructor"); // Be sure it's added first to spot bugs, not important that it appears twice in the list
             }
 
             for (let propertyName of propertyNames) {
@@ -156,7 +160,7 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
                         overwriteTargetReference = fixedReference;
                     } else {
                         try {
-                            let referenceProperty = PP.JSUtils.getReferenceProperty(overwriteTargetReference, propertyName);
+                            let referenceProperty = JSUtils.getObjectProperty(overwriteTargetReference, propertyName);
                             if (referenceProperty == null) {
                                 overwriteTargetReference = fixedReference;
                             }
@@ -181,8 +185,8 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
         try {
             let isPropertyCountedAlready = this._myPropertiesAlreadyOverwritten.get(propertyName) != null && this._myPropertiesAlreadyOverwritten.get(propertyName).pp_hasEqual(reference);
             if (!isPropertyCountedAlready) {
-                if (PP.JSUtils.isFunctionByName(reference, propertyName)) {
-                    if (!this._myParams.myExcludeJavascriptObjectFunctions || !this._isJavascriptObjectFunction(propertyName)) {
+                if (JSUtils.isFunctionByName(reference, propertyName)) {
+                    if (!this._myParams.myExcludeJSObjectFunctions || !this._isJSObjectFunction(propertyName)) {
                         let isValidFunctionName = this._filterName(propertyName, this._myParams.myFunctionNamesToInclude, this._myParams.myFunctionNamesToExclude);
                         let isValidFunctionPath = this._filterName((referencePath != null ? referencePath + "." : "") + propertyName, this._myParams.myFunctionPathsToInclude, this._myParams.myFunctionPathsToExclude);
                         if (isValidFunctionName && isValidFunctionPath) {
@@ -195,8 +199,8 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
                             if (propertyName != "constructor") {
                                 try {
                                     let newFunction = this._getOverwrittenFunction(reference, propertyName, referencePath, isClass, isFunction);
-                                    if (newFunction != PP.JSUtils.getReferenceProperty(reference, propertyName)) {
-                                        overwriteSuccess = PP.JSUtils.overwriteReferenceProperty(newFunction, reference, propertyName, false, true, this._myParams.myDebugLogActive);
+                                    if (newFunction != JSUtils.getObjectProperty(reference, propertyName)) {
+                                        overwriteSuccess = JSUtils.overwriteObjectProperty(newFunction, reference, propertyName, false, true, this._myParams.myDebugLogActive);
                                     } else {
                                         overwriteSuccess = true;
                                     }
@@ -208,16 +212,16 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
                                     }
                                 }
                             } else if (!this._myParams.myExcludeConstructors && isClass && referenceParentForConstructor != null) {
-                                let referenceForConstructor = PP.JSUtils.getReferenceProperty(referenceParentForConstructor, referenceNameForConstructor);
+                                let referenceForConstructor = JSUtils.getObjectProperty(referenceParentForConstructor, referenceNameForConstructor);
                                 if (referenceForConstructor != null && referenceForConstructor.prototype != null) {
                                     isConstructor = true;
 
                                     try {
                                         let newConstructor = this._getOverwrittenConstructor(referenceParentForConstructor, referenceNameForConstructor, referencePath, isClass, isFunction);
                                         if (newConstructor != referenceForConstructor) {
-                                            overwriteSuccess = PP.JSUtils.overwriteReferenceProperty(newConstructor, referenceParentForConstructor, referenceNameForConstructor, false, true, this._myParams.myDebugLogActive);
+                                            overwriteSuccess = JSUtils.overwriteObjectProperty(newConstructor, referenceParentForConstructor, referenceNameForConstructor, false, true, this._myParams.myDebugLogActive);
                                             if (overwriteSuccess) {
-                                                overwriteSuccess = PP.JSUtils.overwriteReferenceProperty(newConstructor, referenceForConstructor.prototype, propertyName, false, true, this._myParams.myDebugLogActive);
+                                                overwriteSuccess = JSUtils.overwriteObjectProperty(newConstructor, referenceForConstructor.prototype, propertyName, false, true, this._myParams.myDebugLogActive);
                                             }
                                         } else {
                                             overwriteSuccess = true;
@@ -265,11 +269,11 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
                 referencePath = pathPair[1];
             }
 
-            referenceName = PP.JSUtils.getReferenceNameFromPath(path);
-            referenceNameForFilter = PP.JSUtils.getReferenceNameFromPath(referencePath);
+            referenceName = JSUtils.getObjectNameFromPath(path);
+            referenceNameForFilter = JSUtils.getObjectNameFromPath(referencePath);
 
-            let reference = PP.JSUtils.getReferenceFromPath(path);
-            let referenceParent = PP.JSUtils.getReferenceParentFromPath(path);
+            let reference = JSUtils.getObjectFromPath(path);
+            let referenceParent = JSUtils.getObjectParentFromPath(path);
 
             if (reference != null) {
                 referenceAndParents.pp_pushUnique([reference, referenceParent, referenceName, referencePath, referenceNameForFilter], equalCallback);
@@ -285,7 +289,7 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
             if (referencePair != null && referencePair.length != null && referencePair.length == 2 && typeof referencePair[1] == "string") {
                 reference = referencePair[0];
                 referencePath = referencePair[1];
-                referenceNameForFilter = PP.JSUtils.getReferenceNameFromPath(referencePath);
+                referenceNameForFilter = JSUtils.getObjectNameFromPath(referencePath);
             } else {
                 referencePath = isClass ? reference.name : null;
                 referenceNameForFilter = isClass ? reference.name : null;
@@ -294,7 +298,7 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
             if (isClass) {
                 referenceName = reference.name;
             } else {
-                referenceName = PP.JSUtils.getReferenceNameFromPath(referencePath);
+                referenceName = JSUtils.getObjectNameFromPath(referencePath);
             }
 
             if (reference != null) {
@@ -324,13 +328,18 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
                 objectLevel + 1 <= this._myParams.myObjectAddObjectDescendantsDepthLevel || this._myParams.myObjectAddObjectDescendantsDepthLevel == -1) ||
                 objectLevel + 1 <= this._myParams.myObjectAddClassDescendantsDepthLevel || this._myParams.myObjectAddClassDescendantsDepthLevel == -1) {
 
-                let propertyNames = PP.JSUtils.getReferencePropertyNames(object);
+                let propertyNames = null;
+                try {
+                    propertyNames = JSUtils.getObjectPropertyNames(object);
+                } catch (error) {
+                    continue;
+                }
 
                 for (let propertyName of propertyNames) {
                     let objectProperty = null;
 
                     try {
-                        objectProperty = PP.JSUtils.getReferenceProperty(object, propertyName);
+                        objectProperty = JSUtils.getObjectProperty(object, propertyName);
                         if (objectProperty == null) {
                             continue;
                         }
@@ -351,13 +360,15 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
                             currentName = propertyName;
                             currentPath = objectPath + "." + currentName;
                         }
+                        currentName = propertyName;
+                        currentPath = objectPath + "." + currentName;
                     } else {
                         currentName = propertyName;
                         currentPath = currentName;
                     }
 
-                    let isClass = PP.JSUtils.isClassByName(object, propertyName);
-                    let isObject = PP.JSUtils.isObjectByName(object, propertyName);
+                    let isClass = JSUtils.isClassByName(object, propertyName);
+                    let isObject = JSUtils.isObjectByName(object, propertyName);
 
                     let includePathList = this._myParams.myObjectPathsToInclude;
                     let excludePathList = this._myParams.myObjectPathsToExclude;
@@ -410,19 +421,21 @@ PP.DebugFunctionsOverwriter = class DebugFunctionsOverwriter {
 
         return isValidName;
     }
-};
+
+    _isJSObjectFunction(propertyName) {
+        // Implemented outside class definition
+    }
+}
 
 
 
-PP.DebugFunctionsOverwriter.prototype._isJavascriptObjectFunction = function () {
-    let javascriptObjectFunctions = [
+// IMPLEMENTATION
+
+DebugFunctionsOverwriter.prototype._isJSObjectFunction = function () {
+    let jsObjectFunctions = [
         "__defineGetter__", "__defineSetter__", "hasOwnProperty", "__lookupGetter__", "__lookupSetter__", "isPrototypeOf",
         "propertyIsEnumerable", "toString", "valueOf", "__proto__", "toLocaleString", "arguments", "caller", "apply", "bind", "call", "callee"];
-    return function _isJavascriptObjectFunction(propertyName) {
-        return javascriptObjectFunctions.pp_hasEqual(propertyName);
+    return function _isJSObjectFunction(propertyName) {
+        return jsObjectFunctions.pp_hasEqual(propertyName);
     };
 }();
-
-
-
-Object.defineProperty(PP.DebugFunctionsOverwriter.prototype, "_isJavascriptObjectFunction", { enumerable: false });

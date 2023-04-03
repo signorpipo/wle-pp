@@ -1,8 +1,11 @@
-PP.CollisionCheck.prototype._horizontalCheck = function () {
-    let fixedFeetPosition = PP.vec3_create();
-    let newFixedFeetPosition = PP.vec3_create();
-    let newFeetPosition = PP.vec3_create();
-    let horizontalDirection = PP.vec3_create();
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
+
+CollisionCheck.prototype._horizontalCheck = function () {
+    let fixedFeetPosition = vec3_create();
+    let newFixedFeetPosition = vec3_create();
+    let newFeetPosition = vec3_create();
+    let horizontalDirection = vec3_create();
     return function _horizontalCheck(movement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, avoidSlidingExtraCheck, outFixedMovement) {
         collisionRuntimeParams.myIsCollidingHorizontally = false;
         collisionRuntimeParams.myHorizontalCollisionHit.reset();
@@ -45,10 +48,10 @@ PP.CollisionCheck.prototype._horizontalCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._horizontalCheckRaycast = function () {
-    let direction = PP.vec3_create();
-    let fixedFeetPosition = PP.vec3_create();
-    let fixedHitPosition = PP.vec3_create();
+CollisionCheck.prototype._horizontalCheckRaycast = function () {
+    let direction = vec3_create();
+    let fixedFeetPosition = vec3_create();
+    let fixedHitPosition = vec3_create();
     return function _horizontalCheckRaycast(startPosition, endPosition, movementDirection, up,
         ignoreHitsInsideCollision, ignoreGroundAngleCallback, ignoreCeilingAngleCallback,
         feetPosition, fixHitOnCollision,
@@ -97,17 +100,17 @@ PP.CollisionCheck.prototype._horizontalCheckRaycast = function () {
             let directionOffsetEpsilonValue = 0.0001;
             direction = direction.vec3_componentAlongAxis(up, direction);
             if (!direction.vec3_isZero(0.000001)) {
-                // if the check has an up part move the hit a bit on the that direction
+                // If the check has an up part move the hit a bit on the that direction
                 direction.vec3_normalize(direction);
                 direction.vec3_scale(directionOffsetEpsilonValue, direction);
 
-                // this offset is a workaround for objects that in the editor are aligned but due to clamp get a bit tilted when in the game
+                // This offset is a workaround for objects that in the editor are aligned but due to clamp get a bit tilted when in the game
                 // and therefore trying an horizontal cast on the vertical hit position could result in hitting the bottom which in theory should be parallel and therefore not possible
                 fixedFeetPosition.vec3_add(direction, fixedFeetPosition);
                 fixedHitPosition.vec3_add(direction, fixedHitPosition);
             }
 
-            // move the hit a bit further to prevent miss
+            // Move the hit a bit further to prevent miss
             direction = fixedHitPosition.vec3_sub(fixedFeetPosition, direction);
             direction.vec3_normalize(direction);
             direction.vec3_scale(directionOffsetEpsilonValue, direction);
@@ -133,13 +136,13 @@ PP.CollisionCheck.prototype._horizontalCheckRaycast = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._ignoreSurfaceAngle = function () {
+CollisionCheck.prototype._ignoreSurfaceAngle = function () {
     let objectsEqualCallback = (first, second) => first.pp_equals(second);
 
-    let movementDirection = PP.vec3_create();
-    let hitDirection = PP.vec3_create();
-    let hitMovement = PP.vec3_create();
-    let projectAlongAxis = PP.vec3_create();
+    let movementDirection = vec3_create();
+    let hitDirection = vec3_create();
+    let hitMovement = vec3_create();
+    let projectAlongAxis = vec3_create();
     return function _ignoreSurfaceAngle(feetPosition, height, movementOrForward, objectsToIgnore, outIgnoredObjects, isGround, isMovementCheck, up, collisionCheckParams, hit, ignoreHitsInsideCollisionIfObjectToIgnore) {
         let isIgnorable = false;
 
@@ -242,7 +245,7 @@ PP.CollisionCheck.prototype._ignoreSurfaceAngle = function () {
                 }
             }
         } else if (ignoreHitsInsideCollisionIfObjectToIgnore) {
-            // #TODO when raycast pierce will work, if it gives the normal even when inside check if the angle is ok and only ignore if that's the case
+            // #TODO When raycast pierce will work, if it gives the normal even when inside check if the angle is ok and only ignore if that's the case
             if (objectsToIgnore == null || objectsToIgnore.pp_hasEqual(hit.myObject, objectsEqualCallback)) {
                 isIgnorable = true;
             }
@@ -261,7 +264,6 @@ PP.CollisionCheck.prototype._ignoreSurfaceAngle = function () {
 
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalCheckRaycast", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_ignoreSurfaceAngle", { enumerable: false });
-
+Object.defineProperty(CollisionCheck.prototype, "_horizontalCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalCheckRaycast", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_ignoreSurfaceAngle", { enumerable: false });

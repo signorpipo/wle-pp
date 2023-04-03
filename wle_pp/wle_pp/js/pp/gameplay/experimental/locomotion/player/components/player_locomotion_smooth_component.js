@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerLocomotionSmooth } from "../player_locomotion_smooth";
 
-PP.PlayerLocomotionSmoothComponent = class PlayerLocomotionSmoothComponent extends Component {
-    static TypeName = 'pp-player-locomotion-smooth';
+export class PlayerLocomotionSmoothComponent extends Component {
+    static TypeName = "pp-player-locomotion-smooth";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerLocomotionSmooth = new PP.PlayerLocomotionSmooth();
+        this._myPlayerLocomotionSmooth = new PlayerLocomotionSmooth();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerLocomotionSmoothComponent = class PlayerLocomotionSmoothComponent exten
     getPlayerLocomotionSmooth() {
         return this._myPlayerLocomotionSmooth;
     }
-};
-
-WL.registerComponent(PP.PlayerLocomotionSmoothComponent);
+}

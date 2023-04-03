@@ -1,4 +1,7 @@
-PP.HowlerAudioPlayer = class HowlerAudioPlayer extends PP.AudioPlayer {
+import { AudioPlayer } from "../audio_player";
+
+export class HowlerAudioPlayer extends AudioPlayer {
+
     constructor(howl, audioSetup = null) {
         super(audioSetup, false);
 

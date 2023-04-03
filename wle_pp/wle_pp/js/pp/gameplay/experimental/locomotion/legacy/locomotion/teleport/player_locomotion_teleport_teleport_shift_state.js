@@ -1,8 +1,16 @@
-PP.PlayerLocomotionTeleportTeleportShiftState = class PlayerLocomotionTeleportTeleportShiftState extends PP.PlayerLocomotionTeleportState {
+import { Timer } from "../../../../../../cauldron/cauldron/timer";
+import { FSM } from "../../../../../../cauldron/fsm/fsm";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { getEasyTuneVariables } from "../../../../../../tool/easy_tune/easy_tune_globals";
+import { EasyTuneNumber } from "../../../../../../tool/easy_tune/easy_tune_variable_types";
+import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state";
+
+export class PlayerLocomotionTeleportTeleportShiftState extends PlayerLocomotionTeleportState {
+
     constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
         super(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
 
-        this._myFSM = new PP.FSM();
+        this._myFSM = new FSM();
         //this._myFSM.setDebugLogActive(true, "Locomotion Teleport Teleport Shift");
 
         this._myFSM.addState("init");
@@ -21,17 +29,17 @@ PP.PlayerLocomotionTeleportTeleportShiftState = class PlayerLocomotionTeleportTe
         this._myFSM.init("init");
         this._myFSM.perform("start");
 
-        this._myShiftMovementTimer = new PP.Timer(this._myTeleportParams.myTeleportParams.myShiftMovementSeconds);
-        this._myShiftRotateTimer = new PP.Timer(this._myTeleportParams.myTeleportParams.myShiftRotateSeconds, false);
+        this._myShiftMovementTimer = new Timer(this._myTeleportParams.myTeleportParams.myShiftMovementSeconds);
+        this._myShiftRotateTimer = new Timer(this._myTeleportParams.myTeleportParams.myShiftRotateSeconds, false);
 
-        this._myFeetStartPosition = new PP.vec3_create();
+        this._myFeetStartPosition = vec3_create();
 
         this._myCurrentRotationOnUp = 0;
         this._myStartRotationOnUp = 0;
 
-        //PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Shift Movement Seconds", this._myTeleportParams.myTeleportParams.myShiftMovementSeconds, 0.5, 3, 0));
-        //PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Shift Rotate Seconds", this._myTeleportParams.myTeleportParams.myShiftRotateSeconds, 0.5, 3, 0));
-        //PP.myEasyTuneVariables.add(new PP.EasyTuneNumber("Shift Rotate Start Percentage", this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage, 0.5, 3, 0, 1));
+        //getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Movement Seconds", this._myTeleportParams.myTeleportParams.myShiftMovementSeconds, 0.5, 3, 0, undefined, this._myTeleportParams.myEngine));
+        //getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Rotate Seconds", this._myTeleportParams.myTeleportParams.myShiftRotateSeconds, 0.5, 3, 0, undefined, this._myTeleportParams.myEngine));
+        //getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Rotate Start Percentage", this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage, 0.5, 3, 0, 1, this._myTeleportParams.myEngine));
     }
 
     start(fsm) {
@@ -45,9 +53,9 @@ PP.PlayerLocomotionTeleportTeleportShiftState = class PlayerLocomotionTeleportTe
     }
 
     update(dt, fsm) {
-        //this._myTeleportParams.myTeleportParams.myShiftMovementSeconds = PP.myEasyTuneVariables.get("Shift Movement Seconds");
-        //this._myTeleportParams.myTeleportParams.myShiftRotateSeconds = PP.myEasyTuneVariables.get("Shift Rotate Seconds");
-        //this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage = PP.myEasyTuneVariables.get("Shift Rotate Start Percentage");
+        //this._myTeleportParams.myTeleportParams.myShiftMovementSeconds = getEasyTuneVariables(this._myTeleportParams.myEngine).get("Shift Movement Seconds");
+        //this._myTeleportParams.myTeleportParams.myShiftRotateSeconds = getEasyTuneVariables(this._myTeleportParams.myEngine).get("Shift Rotate Seconds");
+        //this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage = getEasyTuneVariables(this._myTeleportParams.myEngine).get("Shift Rotate Start Percentage");
 
         this._myFSM.update(dt);
     }
@@ -91,11 +99,15 @@ PP.PlayerLocomotionTeleportTeleportShiftState = class PlayerLocomotionTeleportTe
         this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
         this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myStartRotationOnUp - this._myCurrentRotationOnUp, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
     }
-};
+}
 
-PP.PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = function () {
-    let movementToTeleportFeet = PP.vec3_create();
-    let newFeetPosition = PP.vec3_create();
+
+
+// IMPLEMENTATION
+
+PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = function () {
+    let movementToTeleportFeet = vec3_create();
+    let newFeetPosition = vec3_create();
     return function _shiftingUpdate(dt, fsm) {
         this._myShiftMovementTimer.update(dt);
         this._myShiftRotateTimer.update(dt);
@@ -136,4 +148,4 @@ PP.PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = functi
 
 
 
-Object.defineProperty(PP.PlayerLocomotionTeleportTeleportShiftState.prototype, "_shiftingUpdate", { enumerable: false });
+Object.defineProperty(PlayerLocomotionTeleportTeleportShiftState.prototype, "_shiftingUpdate", { enumerable: false });

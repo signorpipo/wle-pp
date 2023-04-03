@@ -1,16 +1,19 @@
-PP.CollisionCheck.prototype._updateSurfaceInfo = function () {
-    let transformUp = PP.vec3_create();
-    let transformForward = PP.vec3_create();
-    let feetPosition = PP.vec3_create();
+import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
 
-    let transformOffsetLocalQuat = PP.quat2_create();
-    let offsetTransformQuat = PP.quat2_create();
+CollisionCheck.prototype._updateSurfaceInfo = function () {
+    let transformUp = vec3_create();
+    let transformForward = vec3_create();
+    let feetPosition = vec3_create();
 
-    let forwardForPerceivedAngle = PP.vec3_create();
-    let forwardForVertical = PP.vec3_create();
+    let transformOffsetLocalQuat = quat2_create();
+    let offsetTransformQuat = quat2_create();
 
-    let zAxis = PP.vec3_create(0, 0, 1);
-    let xAxis = PP.vec3_create(1, 0, 0);
+    let forwardForPerceivedAngle = vec3_create();
+    let forwardForVertical = vec3_create();
+
+    let zAxis = vec3_create(0, 0, 1);
+    let xAxis = vec3_create(1, 0, 0);
     return function _updateSurfaceInfo(transformQuat, collisionCheckParams, collisionRuntimeParams) {
         transformOffsetLocalQuat.quat2_setPositionRotationQuat(collisionCheckParams.myPositionOffsetLocal, collisionCheckParams.myRotationOffsetLocalQuat);
         offsetTransformQuat = transformOffsetLocalQuat.quat2_toWorld(transformQuat, offsetTransformQuat);
@@ -23,7 +26,7 @@ PP.CollisionCheck.prototype._updateSurfaceInfo = function () {
         feetPosition = offsetTransformQuat.quat2_getPosition(feetPosition);
 
         let height = collisionCheckParams.myHeight;
-        height = height - 0.00001; // this makes it easier to setup things at the same exact height of a character so that it can go under it
+        height = height - 0.00001; // This makes it easier to setup things at the same exact height of a character so that it can go under it
         if (height < 0.00001) {
             height = 0;
         }
@@ -60,8 +63,8 @@ PP.CollisionCheck.prototype._updateSurfaceInfo = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._postSurfaceCheck = function () {
-    let horizontalDirection = PP.vec3_create();
+CollisionCheck.prototype._postSurfaceCheck = function () {
+    let horizontalDirection = vec3_create();
     return function _postSurfaceCheck(fixedHorizontalMovement, originalVerticalMovement, transformUp, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams) {
 
         let isVerticalMovementZero = originalVerticalMovement.vec3_isZero(0.00001);
@@ -185,7 +188,7 @@ PP.CollisionCheck.prototype._postSurfaceCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._surfaceTooSteep = function () {
+CollisionCheck.prototype._surfaceTooSteep = function () {
     let surfaceSteepResults = [false, false];
     return function _surfaceTooSteep(up, direction, collisionCheckParams, collisionRuntimeParams) {
         let groundTooSteep = false;
@@ -225,9 +228,9 @@ PP.CollisionCheck.prototype._surfaceTooSteep = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
-    let horizontalDirection = PP.vec3_create();
-    let extraVerticalMovement = PP.vec3_create();
+CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
+    let horizontalDirection = vec3_create();
+    let extraVerticalMovement = vec3_create();
     return function _adjustVerticalMovementWithSurface(horizontalMovement, verticalMovement, up, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, outAdjustedVerticalMovement) {
         outAdjustedVerticalMovement.vec3_copy(verticalMovement);
 
@@ -307,7 +310,7 @@ PP.CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
             } else if (!sameSignThanExtra && (
                 collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill ||
                 collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill)) {
-                // do not add for downhill, since it means the vertical movement was about to go away from surface and u should not cancel that
+                // Do not add for downhill, since it means the vertical movement was about to go away from surface and u should not cancel that
                 outAdjustedVerticalMovement = verticalMovement.vec3_add(extraVerticalMovement, outAdjustedVerticalMovement);
             } else {
                 collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = false;
@@ -325,13 +328,13 @@ PP.CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
     }
 }();
 
-PP.CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
-    let extraHorizontalMovement = PP.vec3_create();
-    let groundHorizontalDirection = PP.vec3_create();
-    let ceilingHorizontalDirection = PP.vec3_create();
-    let scaledCeilingHorizontalDirection = PP.vec3_create();
-    let scaledCeilingHorizontalDirectionAlongGroundHorizontalDirection = PP.vec3_create();
-    let scaledCeilingHorizontalDirectionWithoutGroundHorizontalDirection = PP.vec3_create();
+CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
+    let extraHorizontalMovement = vec3_create();
+    let groundHorizontalDirection = vec3_create();
+    let ceilingHorizontalDirection = vec3_create();
+    let scaledCeilingHorizontalDirection = vec3_create();
+    let scaledCeilingHorizontalDirectionAlongGroundHorizontalDirection = vec3_create();
+    let scaledCeilingHorizontalDirectionWithoutGroundHorizontalDirection = vec3_create();
     return function _adjustHorizontalMovementWithSurface(horizontalMovement, verticalMovement, up, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, outAdjustedHorizontalMovement) {
         outAdjustedHorizontalMovement.vec3_copy(horizontalMovement);
 
@@ -420,10 +423,10 @@ PP.CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
     }
 }();
 
-// useless now
-PP.CollisionCheck.prototype._computeExtraSurfaceVerticalMovement = function () {
-    let direction = PP.vec3_create();
-    let tempVector = PP.vec3_create();
+// Useless now
+CollisionCheck.prototype._computeExtraSurfaceVerticalMovement = function () {
+    let direction = vec3_create();
+    let tempVector = vec3_create();
     return function _computeExtraSurfaceVerticalMovement(horizontalMovement, up, collisionCheckParams, collisionRuntimeParams, outExtraSurfaceVerticalMovement) {
         outExtraSurfaceVerticalMovement.vec3_zero();
 
@@ -460,20 +463,20 @@ PP.CollisionCheck.prototype._computeExtraSurfaceVerticalMovement = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._gatherSurfaceInfo = function () {
-    let verticalDirection = PP.vec3_create();
-    let startOffset = PP.vec3_create();
-    let endOffset = PP.vec3_create();
-    let heightOffset = PP.vec3_create();
-    let smallOffset = PP.vec3_create();
-    let smallStartPosition = PP.vec3_create();
-    let smallEndPosition = PP.vec3_create();
-    let surfaceNormal = PP.vec3_create();
-    let surfaceHitMaxNormal = PP.vec3_create();
-    let hitFromCurrentPosition = PP.vec3_create();
-    let startPosition = PP.vec3_create();
-    let endPosition = PP.vec3_create();
-    let direction = PP.vec3_create();
+CollisionCheck.prototype._gatherSurfaceInfo = function () {
+    let verticalDirection = vec3_create();
+    let startOffset = vec3_create();
+    let endOffset = vec3_create();
+    let heightOffset = vec3_create();
+    let smallOffset = vec3_create();
+    let smallStartPosition = vec3_create();
+    let smallEndPosition = vec3_create();
+    let surfaceNormal = vec3_create();
+    let surfaceHitMaxNormal = vec3_create();
+    let hitFromCurrentPosition = vec3_create();
+    let startPosition = vec3_create();
+    let endPosition = vec3_create();
+    let direction = vec3_create();
     return function _gatherSurfaceInfo(feetPosition, height, up, forwardForPerceivedAngle, forwardForVertical, isGround, collisionCheckParams, collisionRuntimeParams) {
         this._myDebugActive = collisionCheckParams.myDebugActive && ((isGround && collisionCheckParams.myDebugGroundInfoActive) || (!isGround && collisionCheckParams.myDebugCeilingInfoActive));
 
@@ -643,9 +646,9 @@ PP.CollisionCheck.prototype._gatherSurfaceInfo = function () {
     };
 }();
 
-PP.CollisionCheck.prototype.computeSurfacePerceivedAngle = function () {
-    let forwardOnSurface = PP.vec3_create();
-    let verticalDirection = PP.vec3_create();
+CollisionCheck.prototype.computeSurfacePerceivedAngle = function () {
+    let forwardOnSurface = vec3_create();
+    let verticalDirection = vec3_create();
     return function computeSurfacePerceivedAngle(surfaceNormal, forward, up, isGround = true) {
         let surfacePerceivedAngle = 0;
 
@@ -682,7 +685,7 @@ PP.CollisionCheck.prototype.computeSurfacePerceivedAngle = function () {
 }();
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_surfaceTooSteep", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_computeExtraSurfaceVerticalMovement", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_gatherSurfaceInfo", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_updateSurfaceInfo", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_surfaceTooSteep", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_computeExtraSurfaceVerticalMovement", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_gatherSurfaceInfo", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_updateSurfaceInfo", { enumerable: false });

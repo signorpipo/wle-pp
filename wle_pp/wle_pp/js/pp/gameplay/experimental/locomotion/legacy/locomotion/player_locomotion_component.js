@@ -1,32 +1,51 @@
-WL.registerComponent('pp-player-locomotion', {
-    _myPhysicsBlockLayerFlags: { type: WL.Type.String, default: "1, 0, 0, 0, 0, 0, 0, 0" },
-    _myMaxSpeed: { type: WL.Type.Float, default: 2 },
-    _myMaxRotationSpeed: { type: WL.Type.Float, default: 100 },
-    _myCharacterRadius: { type: WL.Type.Float, default: 0.3 },
-    _myIsSnapTurn: { type: WL.Type.Bool, default: true },
-    _mySnapTurnOnlyVR: { type: WL.Type.Bool, default: true },
-    _mySnapTurnAngle: { type: WL.Type.Float, default: 30 },
-    _mySnapTurnSpeedDegrees: { type: WL.Type.Float, default: 0 },
-    _myFlyEnabled: { type: WL.Type.Bool, default: false },
-    _myMinAngleToFlyUpNonVR: { type: WL.Type.Float, default: 30 },
-    _myMinAngleToFlyDownNonVR: { type: WL.Type.Float, default: 50 },
-    _myMinAngleToFlyUpVR: { type: WL.Type.Float, default: 60 },
-    _myMinAngleToFlyDownVR: { type: WL.Type.Float, default: 1 },
-    _myMinAngleToFlyRight: { type: WL.Type.Float, default: 60 },
-    _myMainHand: { type: WL.Type.Enum, values: ['left', 'right'], default: 'left' },
-    _myVRDirectionReferenceType: { type: WL.Type.Enum, values: ['head', 'hand', 'custom object'], default: 'hand' },
-    _myVRDirectionReferenceObject: { type: WL.Type.Object },
-    _myTeleportParableStartReferenceObject: { type: WL.Type.Object },
-    _myTeleportPositionObject: { type: WL.Type.Object },
-    _myUseCleanedVersion: { type: WL.Type.Bool, default: true },
-    _myMoveThroughCollisionShortcutEnabled: { type: WL.Type.Bool, default: false },
-    _myMoveHeadShortcutEnabled: { type: WL.Type.Bool, default: false },
-}, {
-    init() {
-    },
+import { Component, Property } from "@wonderlandengine/api";
+import { PhysicsLayerFlags } from "../../../../../cauldron/physics/physics_layer_flags";
+import { InputUtils } from "../../../../../input/cauldron/input_utils";
+import { CollisionCheck } from "../../../character_controller/collision/legacy/collision_check/collision_check";
+import { CleanedPlayerLocomotion } from "./cleaned/player_locomotion_cleaned";
+import { PlayerLocomotion, PlayerLocomotionParams } from "./player_locomotion";
+
+let _myCollisionChecks = new WeakMap();
+
+export function getCollisionCheck(engine = getMainEngine()) {
+    return _myCollisionChecks.get(engine);
+}
+
+export function setCollisionCheck(collisionCheck, engine = getMainEngine()) {
+    _myCollisionChecks.set(engine, collisionCheck);
+}
+
+export class PlayerLocomotionComponent extends Component {
+    static TypeName = "pp-player-locomotion";
+    static Properties = {
+        _myPhysicsBlockLayerFlags: Property.string("1, 0, 0, 0, 0, 0, 0, 0"),
+        _myMaxSpeed: Property.float(2),
+        _myMaxRotationSpeed: Property.float(100),
+        _myCharacterRadius: Property.float(0.3),
+        _myIsSnapTurn: Property.bool(true),
+        _mySnapTurnOnlyVR: Property.bool(true),
+        _mySnapTurnAngle: Property.float(30),
+        _mySnapTurnSpeedDegrees: Property.float(0),
+        _myFlyEnabled: Property.bool(false),
+        _myMinAngleToFlyUpNonVR: Property.float(30),
+        _myMinAngleToFlyDownNonVR: Property.float(50),
+        _myMinAngleToFlyUpVR: Property.float(60),
+        _myMinAngleToFlyDownVR: Property.float(1),
+        _myMinAngleToFlyRight: Property.float(60),
+        _myMainHand: Property.enum(["Left", "Right"], "Left"),
+        _myVRDirectionReferenceType: Property.enum(["Head", "Hand", "Custom Object"], "Hand"),
+        _myVRDirectionReferenceObject: Property.object(),
+        _myTeleportParableStartReferenceObject: Property.object(),
+        _myTeleportPositionObject: Property.object(),
+        _myUseCleanedVersion: Property.bool(true),
+        _myMoveThroughCollisionShortcutEnabled: Property.bool(false),
+        _myMoveHeadShortcutEnabled: Property.bool(false)
+    };
+
     start() {
-        PP.myCollisionCheck = new PP.CollisionCheck();
-        let params = new PP.PlayerLocomotionParams();
+        setCollisionCheck(new CollisionCheck(this.engine), this.engine);
+
+        let params = new PlayerLocomotionParams(this.engine);
         params.myMaxSpeed = this._myMaxSpeed;
         params.myMaxRotationSpeed = this._myMaxRotationSpeed;
 
@@ -44,7 +63,7 @@ WL.registerComponent('pp-player-locomotion', {
         params.myMinAngleToFlyDownVR = this._myMinAngleToFlyDownVR;
         params.myMinAngleToFlyRight = this._myMinAngleToFlyRight;
 
-        params.myMainHand = PP.InputUtils.getHandednessByIndex(this._myMainHand);
+        params.myMainHand = InputUtils.getHandednessByIndex(this._myMainHand);
 
         params.myVRDirectionReferenceType = this._myVRDirectionReferenceType;
         params.myVRDirectionReferenceObject = this._myVRDirectionReferenceObject;
@@ -61,13 +80,14 @@ WL.registerComponent('pp-player-locomotion', {
         params.myPhysicsBlockLayerFlags.copy(this._getPhysicsBlockLayersFlags());
 
         if (this._myUseCleanedVersion) {
-            this._myPlayerLocomotion = new PP.CleanedPlayerLocomotion(params);
+            this._myPlayerLocomotion = new CleanedPlayerLocomotion(params);
         } else {
-            this._myPlayerLocomotion = new PP.PlayerLocomotion(params);
+            this._myPlayerLocomotion = new PlayerLocomotion(params);
         }
 
         this._myStartCounter = 1;
-    },
+    }
+
     update(dt) {
         if (this._myStartCounter > 0) {
             this._myStartCounter--;
@@ -80,31 +100,34 @@ WL.registerComponent('pp-player-locomotion', {
 
             this._myPlayerLocomotion._myPlayerHeadManager.update(dt);
         } else {
-            PP.myCollisionCheck._myTotalRaycasts = 0; // #TODO debug stuff, remove later
+            getCollisionCheck(this.engine)._myTotalRaycasts = 0; // #TODO Debug stuff, remove later
 
             this._myPlayerLocomotion.update(dt);
         }
 
-        //PP.myCollisionCheck._myTotalRaycastsMax = Math.max(PP.myCollisionCheck._myTotalRaycasts, PP.myCollisionCheck._myTotalRaycastsMax);
-        //console.error(PP.myCollisionCheck._myTotalRaycastsMax);
-        //console.error(PP.myCollisionCheck._myTotalRaycasts);
-    },
+        //getCollisionCheck(this.engine)._myTotalRaycastsMax = Math.max(getCollisionCheck(this.engine)._myTotalRaycasts, getCollisionCheck(this.engine)._myTotalRaycastsMax);
+        //console.error(getCollisionCheck(this.engine)._myTotalRaycastsMax);
+        //console.error(getCollisionCheck(this.engine)._myTotalRaycasts);
+    }
+
     onActivate() {
         if (this._myStartCounter == 0) {
             if (this._myPlayerLocomotion != null) {
                 this._myPlayerLocomotion.setActive(true);
             }
         }
-    },
+    }
+
     onDeactivate() {
         if (this._myStartCounter == 0) {
             if (this._myPlayerLocomotion != null) {
                 this._myPlayerLocomotion.setActive(false);
             }
         }
-    },
+    }
+
     _getPhysicsBlockLayersFlags() {
-        let physicsFlags = new PP.PhysicsLayerFlags();
+        let physicsFlags = new PhysicsLayerFlags();
 
         let flags = [...this._myPhysicsBlockLayerFlags.split(",")];
         for (let i = 0; i < flags.length; i++) {
@@ -113,6 +136,4 @@ WL.registerComponent('pp-player-locomotion', {
 
         return physicsFlags;
     }
-});
-
-PP.myCollisionCheck = null;
+}

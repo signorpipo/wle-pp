@@ -1,9 +1,13 @@
-PP.TextUtils = {
-    setClonedMaterials: function (object) {
-        let textComponents = object.pp_getComponentsHierarchy("text");
+import { TextComponent } from "@wonderlandengine/api";
 
-        for (let textComponent of textComponents) {
-            textComponent.material = textComponent.material.clone();
-        }
-    },
+export function setClonedMaterials(object) {
+    let textComponents = object.pp_getComponents(TextComponent);
+
+    for (let textComponent of textComponents) {
+        textComponent.material = textComponent.material.clone();
+    }
+}
+
+export let TextUtils = {
+    setClonedMaterials
 };

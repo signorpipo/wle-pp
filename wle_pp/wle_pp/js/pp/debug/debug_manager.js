@@ -1,6 +1,12 @@
-PP.DebugManager = class DebugManager {
-    constructor() {
-        this._myDebugVisualManager = new PP.DebugVisualManager();
+import { getMainEngine } from "../cauldron/wl/engine_globals";
+import { isDebugEnabled } from "./debug_globals";
+import { DebugVisualManager } from "./debug_visual_manager";
+
+export class DebugManager {
+
+    constructor(engine = getMainEngine()) {
+        this._myEngine = engine;
+        this._myDebugVisualManager = new DebugVisualManager(this._myEngine);
     }
 
     getDebugVisualManager() {
@@ -12,6 +18,7 @@ PP.DebugManager = class DebugManager {
     }
 
     update(dt) {
+        this._myDebugVisualManager.setActive(isDebugEnabled(this._myEngine));
         this._myDebugVisualManager.update(dt);
     }
-};
+}

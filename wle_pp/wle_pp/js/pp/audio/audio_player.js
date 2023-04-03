@@ -1,6 +1,7 @@
-import { Howl } from 'howler';
+import { Howl } from "howler";
+import { AudioSetup } from "./audio_setup";
 
-PP.AudioEvent = {
+export let AudioEvent = {
     END: "end",
     STOP: "stop",
     LOAD: "load",
@@ -16,12 +17,13 @@ PP.AudioEvent = {
     UNLOCK: "unlock"
 };
 
-PP.AudioPlayer = class AudioPlayer {
+export class AudioPlayer {
+
     constructor(audioSetupOrAudioFilePath, createAudio = true) {
         if (audioSetupOrAudioFilePath == null) {
-            this._myAudioSetup = new PP.AudioSetup();
-        } else if (typeof audioSetupOrAudioFilePath === 'string') {
-            this._myAudioSetup = new PP.AudioSetup(audioSetupOrAudioFile);
+            this._myAudioSetup = new AudioSetup();
+        } else if (typeof audioSetupOrAudioFilePath === "string") {
+            this._myAudioSetup = new AudioSetup(audioSetupOrAudioFilePath);
         } else {
             this._myAudioSetup = audioSetupOrAudioFilePath.clone();
         }
@@ -47,8 +49,8 @@ PP.AudioPlayer = class AudioPlayer {
         this._myLastAudioID = null;
 
         this._myCallbacks = new Map();
-        for (let eventKey in PP.AudioEvent) {
-            this._myCallbacks.set(PP.AudioEvent[eventKey], new Map());    // Signature: callback(audioID)
+        for (let eventKey in AudioEvent) {
+            this._myCallbacks.set(AudioEvent[eventKey], new Map());    // Signature: callback(audioID)
         }
 
         if (createAudio) {
@@ -202,8 +204,8 @@ PP.AudioPlayer = class AudioPlayer {
 
     _addListeners() {
         if (this._myAudio != null) {
-            for (let eventKey in PP.AudioEvent) {
-                let event = PP.AudioEvent[eventKey];
+            for (let eventKey in AudioEvent) {
+                let event = AudioEvent[eventKey];
                 this._myAudio.on(event, function (audioID) {
                     let callbacks = this._myCallbacks.get(event);
                     for (let callback of callbacks.values()) {
@@ -213,4 +215,4 @@ PP.AudioPlayer = class AudioPlayer {
             }
         }
     }
-};
+}

@@ -1,4 +1,5 @@
-PP.Timer = class Timer {
+export class Timer {
+
     constructor(duration, autoStart = true) {
         this._myDuration = duration;
         this._myOnEndCallbacks = new Map();     // Signature: callback()
@@ -106,4 +107,4 @@ PP.Timer = class Timer {
             }
         }
     }
-};
+}

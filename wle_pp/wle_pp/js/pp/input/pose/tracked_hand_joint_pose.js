@@ -1,6 +1,10 @@
-PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
+import { InputSourceType } from "../cauldron/input_types";
+import { InputUtils } from "../cauldron/input_utils";
+import { BasePose, BasePoseParams } from "./base_pose";
 
-    constructor(handedness, trackedHandJointID, basePoseParams = new PP.BasePoseParams()) {
+export class TrackedHandJointPose extends BasePose {
+
+    constructor(handedness, trackedHandJointID, basePoseParams = new BasePoseParams()) {
         super(basePoseParams);
 
         this._myInputSource = null;
@@ -9,6 +13,10 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
         this._myTrackedHandJointID = trackedHandJointID;
 
         this._myJointRadius = 0;
+    }
+
+    getHandedness() {
+        return this._myHandedness;
     }
 
     getTrackedHandJointID() {
@@ -37,8 +45,8 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
         }
     }
 
-    _onXRSessionStartHook(manualStart, session) {
-        session.addEventListener('inputsourceschange', function (event) {
+    _onXRSessionStartHook(manualCall, session) {
+        session.addEventListener("inputsourceschange", function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
                     if (item == this._myInputSource) {
@@ -50,7 +58,7 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
             if (event.added) {
                 for (let item of event.added) {
                     if (item.handedness == this._myHandedness) {
-                        if (PP.InputUtils.getInputSourceType(item) == PP.InputSourceType.TRACKED_HAND) {
+                        if (InputUtils.getInputSourceType(item) == InputSourceType.TRACKED_HAND) {
                             this._myInputSource = item;
                         }
                     }
@@ -58,10 +66,10 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
             }
         }.bind(this));
 
-        if (manualStart && this._myInputSource == null && session.inputSources) {
+        if (manualCall && this._myInputSource == null && session.inputSources) {
             for (let item of session.inputSources) {
                 if (item.handedness == this._myHandedness) {
-                    if (PP.InputUtils.getInputSourceType(item) == PP.InputSourceType.TRACKED_HAND) {
+                    if (InputUtils.getInputSourceType(item) == InputSourceType.TRACKED_HAND) {
                         this._myInputSource = item;
                     }
                 }
@@ -72,4 +80,4 @@ PP.TrackedHandJointPose = class TrackedHandJointPose extends PP.BasePose {
     _onXRSessionEndHook() {
         this._myInputSource = null;
     }
-};
+}

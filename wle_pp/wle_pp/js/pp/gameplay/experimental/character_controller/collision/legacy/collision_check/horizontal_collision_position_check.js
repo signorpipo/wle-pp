@@ -1,11 +1,15 @@
-PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
+import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_data";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
+
+CollisionCheck.prototype._horizontalPositionCheck = function () {
     let checkPositions = [];
     let cachedCheckPositions = [];
     let currentCachedCheckPositionIndex = 0;
     let _localGetCachedCheckPosition = function () {
         let item = null;
         while (cachedCheckPositions.length <= currentCachedCheckPositionIndex) {
-            cachedCheckPositions.push(PP.vec3_create());
+            cachedCheckPositions.push(vec3_create());
         }
 
         item = cachedCheckPositions[currentCachedCheckPositionIndex];
@@ -19,17 +23,17 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
 
     let objectsEqualCallback = (first, second) => first.pp_equals(second);
 
-    let heightOffset = PP.vec3_create();
-    let heightStep = PP.vec3_create();
-    let currentHeightOffset = PP.vec3_create();
-    let hitHeightOffset = PP.vec3_create();
-    let hitHeightOffsetEpsilon = PP.vec3_create();
-    let downwardHeightOffset = PP.vec3_create();
-    let downwardHeightStep = PP.vec3_create();
+    let heightOffset = vec3_create();
+    let heightStep = vec3_create();
+    let currentHeightOffset = vec3_create();
+    let hitHeightOffset = vec3_create();
+    let hitHeightOffsetEpsilon = vec3_create();
+    let downwardHeightOffset = vec3_create();
+    let downwardHeightStep = vec3_create();
 
-    let verticalDirection = PP.vec3_create();
+    let verticalDirection = vec3_create();
 
-    let vertilCheckHit = new PP.RaycastHit();
+    let vertilCheckHit = new RaycastHit();
 
     return function _horizontalPositionCheck(originalFeetPosition, originalHeight, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams) {
         this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugHorizontalPositionActive;
@@ -58,7 +62,7 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
         let groundCeilingObjectsToIgnore = null;
 
         if (collisionCheckParams.myGroundAngleToIgnore > 0) {
-            // gather ground objects to ignore
+            // Gather ground objects to ignore
             groundObjectsToIgnore = _localGroundObjectsToIgnore;
             groundObjectsToIgnore.length = 0;
             groundCeilingObjectsToIgnore = _localGroundCeilingObjectsToIgnore;
@@ -76,7 +80,7 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
         }
 
         if (collisionCheckParams.myCeilingAngleToIgnore > 0) {
-            // gather ceiling objects to ignore
+            // Gather ceiling objects to ignore
             if (!collisionRuntimeParams.myIsCollidingHorizontally && collisionCheckParams.myCheckHeight) {
                 ceilingObjectsToIgnore = _localCeilingObjectsToIgnore;
                 ceilingObjectsToIgnore.length = 0;
@@ -98,7 +102,7 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
             let groundCeilingCheckIsFine = true;
 
             if (groundCeilingObjectsToIgnore != null) {
-                // check that the ceiling objects ignored by the ground are the correct ones, that is the one ignored by the upper check
+                // Check that the ceiling objects ignored by the ground are the correct ones, that is the one ignored by the upper check
                 for (let object of groundCeilingObjectsToIgnore) {
                     if (!ceilingObjectsToIgnore.pp_hasEqual(object, objectsEqualCallback)) {
                         groundCeilingCheckIsFine = false;
@@ -127,8 +131,8 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
             for (let i = 0; i <= heightStepAmount; i++) {
                 currentHeightOffset = heightStep.vec3_scale(i, currentHeightOffset);
 
-                // we can skip the ground check since we have already done that, but if there was an error do it again with the proper set of objects to ignore
-                // the ceiling check can always be ignored, it used the proper ground objects already
+                // We can skip the ground check since we have already done that, but if there was an error do it again with the proper set of objects to ignore
+                // The ceiling check can always be ignored, it used the proper ground objects already
                 if (collisionCheckParams.myCheckHeightTopPosition || i == 0) {
                     if ((i != 0 && i != heightStepAmount) ||
                         (i == 0 && !groundCeilingCheckIsFine) ||
@@ -144,7 +148,7 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
 
                 if (i > 0) {
                     if (collisionCheckParams.myCheckHeightVerticalPosition) {
-                        // this offset is a workaround for objects that in the editor are aligned but due to clamp get a bit tilted when in the game
+                        // This offset is a workaround for objects that in the editor are aligned but due to clamp get a bit tilted when in the game
                         // and therefore trying an horizontal cast on the vertical hit position could result in hitting the bottom which in theory should be parallel and therefore not possible
                         let hitHeightOffsetEpsilonValue = 0.0001;
 
@@ -210,11 +214,11 @@ PP.CollisionCheck.prototype._horizontalPositionCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._horizontalPositionHorizontalCheck = function () {
-    let basePosition = PP.vec3_create();
-    let forwardNegate = PP.vec3_create();
-    let currentRadialPosition = PP.vec3_create();
-    let previousRadialPosition = PP.vec3_create();
+CollisionCheck.prototype._horizontalPositionHorizontalCheck = function () {
+    let basePosition = vec3_create();
+    let forwardNegate = vec3_create();
+    let currentRadialPosition = vec3_create();
+    let previousRadialPosition = vec3_create();
     return function _horizontalPositionHorizontalCheck(feetPosition, checkPositions, heightOffset, up, forward, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
         let isHorizontalCheckOk = true;
 
@@ -290,13 +294,13 @@ PP.CollisionCheck.prototype._horizontalPositionHorizontalCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._horizontalPositionVerticalCheck = function () {
-    let basePosition = PP.vec3_create();
-    let previousBasePosition = PP.vec3_create();
-    let currentRadialPosition = PP.vec3_create();
-    let previousRadialPosition = PP.vec3_create();
-    let previousCurrentRadialPosition = PP.vec3_create();
-    let previousPreviousRadialPosition = PP.vec3_create();
+CollisionCheck.prototype._horizontalPositionVerticalCheck = function () {
+    let basePosition = vec3_create();
+    let previousBasePosition = vec3_create();
+    let currentRadialPosition = vec3_create();
+    let previousRadialPosition = vec3_create();
+    let previousCurrentRadialPosition = vec3_create();
+    let previousPreviousRadialPosition = vec3_create();
     return function _horizontalPositionVerticalCheck(feetPosition, checkPositions, heightOffset, heightStep, verticalDirection, up, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
         let isHorizontalCheckOk = true;
 
@@ -439,6 +443,6 @@ PP.CollisionCheck.prototype._horizontalPositionVerticalCheck = function () {
 
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalPositionCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalPositionHorizontalCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_horizontalPositionVerticalCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalPositionCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalPositionHorizontalCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_horizontalPositionVerticalCheck", { enumerable: false });

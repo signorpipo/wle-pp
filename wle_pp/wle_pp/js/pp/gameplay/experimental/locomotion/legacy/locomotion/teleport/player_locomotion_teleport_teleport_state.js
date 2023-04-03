@@ -1,46 +1,55 @@
-PP.PlayerLocomotionTeleportTeleportType = {
+import { FSM } from "../../../../../../cauldron/fsm/fsm";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { EasingFunction } from "../../../../../../plugin/js/extensions/math_extension";
+import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state";
+import { PlayerLocomotionTeleportTeleportBlinkState } from "./player_locomotion_teleport_teleport_blink_state";
+import { PlayerLocomotionTeleportTeleportShiftState } from "./player_locomotion_teleport_teleport_shift_state";
+
+export let PlayerLocomotionTeleportTeleportType = {
     INSTANT: 0,
     BLINK: 1,
-    SHIFT: 2,
+    SHIFT: 2
 };
 
-PP.PlayerLocomotionTeleportTeleportParams = class PlayerLocomotionTeleportTeleportParams {
+export class PlayerLocomotionTeleportTeleportParams {
+
     constructor() {
-        this.myTeleportType = PP.PlayerLocomotionTeleportTeleportType.SHIFT;
+        this.myTeleportType = PlayerLocomotionTeleportTeleportType.SHIFT;
 
         this.myBlinkFadeOutSeconds = 0.1;
         this.myBlinkFadeInSeconds = 0.1;
         this.myBlinkWaitSeconds = 0.1;
-        this.myBlinkSphereColor = PP.vec3_create();
+        this.myBlinkSphereColor = vec3_create();
         this.myBlinkSphereScale = 0.1;
 
         this.myShiftMovementSeconds = 0.15;
         this.myShiftMovementSecondsMultiplierOverDistanceFunction = null;
-        this.myShiftMovementEasingFunction = PP.EasingFunction.easeInOut;
+        this.myShiftMovementEasingFunction = EasingFunction.easeInOut;
 
         this.myShiftRotateSeconds = 1;
         this.myShiftRotateSecondsMultiplierOverAngleFunction = null;
-        this.myShiftRotateEasingFunction = PP.EasingFunction.easeOut;
+        this.myShiftRotateEasingFunction = EasingFunction.easeOut;
         this.myShiftRotateStartAfterMovementPercentage = 0.7;
 
         this.myShiftRotateSecondsMultiplierOverAngleFunction = function (angle) {
-            return PP.EasingFunction.easeOut(angle / 180);
+            return EasingFunction.easeOut(angle / 180);
         };
     }
-};
+}
 
-PP.PlayerLocomotionTeleportTeleportState = class PlayerLocomotionTeleportTeleportState extends PP.PlayerLocomotionTeleportState {
+export class PlayerLocomotionTeleportTeleportState extends PlayerLocomotionTeleportState {
+
     constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
         super(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
 
-        this._myFSM = new PP.FSM();
+        this._myFSM = new FSM();
         //this._myFSM.setDebugLogActive(true, "Locomotion Teleport Teleport");
 
         this._myFSM.addState("init");
         this._myFSM.addState("idle");
 
-        this._myBlinkState = new PP.PlayerLocomotionTeleportTeleportBlinkState(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
-        this._myShiftState = new PP.PlayerLocomotionTeleportTeleportShiftState(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
+        this._myBlinkState = new PlayerLocomotionTeleportTeleportBlinkState(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
+        this._myShiftState = new PlayerLocomotionTeleportTeleportShiftState(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
 
         this._myFSM.addState("instant_teleport", this._instantUpdate.bind(this));
         this._myFSM.addState("blink_teleport", this._myBlinkState);
@@ -69,13 +78,13 @@ PP.PlayerLocomotionTeleportTeleportState = class PlayerLocomotionTeleportTelepor
         this._myParentFSM = fsm;
 
         switch (this._myTeleportParams.myTeleportParams.myTeleportType) {
-            case PP.PlayerLocomotionTeleportTeleportType.INSTANT:
+            case PlayerLocomotionTeleportTeleportType.INSTANT:
                 this._myFSM.perform("start_instant");
                 break;
-            case PP.PlayerLocomotionTeleportTeleportType.BLINK:
+            case PlayerLocomotionTeleportTeleportType.BLINK:
                 this._myFSM.perform("start_blink");
                 break;
-            case PP.PlayerLocomotionTeleportTeleportType.SHIFT:
+            case PlayerLocomotionTeleportTeleportType.SHIFT:
                 this._myFSM.perform("start_shift");
                 break;
             default:
@@ -105,14 +114,10 @@ PP.PlayerLocomotionTeleportTeleportState = class PlayerLocomotionTeleportTelepor
         this._instantUpdate(0, fsm);
     }
 
-    _completeTeleport() {
-        fsm.perform("stop");
-    }
-
     _teleportDone() {
         this._myTeleportParams.myPlayerTransformManager.resetReal(true, false, false);
         this._myTeleportParams.myPlayerTransformManager.resetHeadToReal();
 
         this._myParentFSM.performDelayed("done");
     }
-};
+}

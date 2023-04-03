@@ -1,14 +1,20 @@
-PP.HandPoseParams = class HandPoseParams extends PP.BasePoseParams {
-    constructor() {
-        super();
+import { quat_create, vec3_create } from "../../plugin/js/extensions/array_extension";
+import { Handedness, InputSourceType } from "../cauldron/input_types";
+import { InputUtils } from "../cauldron/input_utils";
+import { BasePose, BasePoseParams } from "./base_pose";
+
+export class HandPoseParams extends BasePoseParams {
+
+    constructor(engine) {
+        super(engine);
 
         this.myFixTrackedHandRotation = true;
     }
-};
+}
 
-PP.HandPose = class HandPose extends PP.BasePose {
+export class HandPose extends BasePose {
 
-    constructor(handedness, handPoseParams = new PP.HandPoseParams()) {
+    constructor(handedness, handPoseParams = new HandPoseParams()) {
         super(handPoseParams);
 
         this._myInputSource = null;
@@ -19,12 +25,20 @@ PP.HandPose = class HandPose extends PP.BasePose {
         this._myIsTrackedHand = false;
     }
 
+    getHandedness() {
+        return this._myHandedness;
+    }
+
+    getInputSource() {
+        return this._myInputSource;
+    }
+
     getInputSourceType() {
         if (this._myInputSource == null) {
             return null;
         }
 
-        return PP.InputUtils.getInputSourceType(this._myInputSource);
+        return InputUtils.getInputSourceType(this._myInputSource);
     }
 
     isFixTrackedHandRotation() {
@@ -43,8 +57,8 @@ PP.HandPose = class HandPose extends PP.BasePose {
         return xrFrame.getPose(this._myInputSource.gripSpace, this._myReferenceSpace);
     }
 
-    _onXRSessionStartHook(manualStart, session) {
-        session.addEventListener('inputsourceschange', function (event) {
+    _onXRSessionStartHook(manualCall, session) {
+        session.addEventListener("inputsourceschange", function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
                     if (item == this._myInputSource) {
@@ -57,17 +71,17 @@ PP.HandPose = class HandPose extends PP.BasePose {
                 for (let item of event.added) {
                     if (item.handedness == this._myHandedness) {
                         this._myInputSource = item;
-                        this._myIsTrackedHand = PP.InputUtils.getInputSourceType(this._myInputSource) == PP.InputSourceType.TRACKED_HAND;
+                        this._myIsTrackedHand = InputUtils.getInputSourceType(this._myInputSource) == InputSourceType.TRACKED_HAND;
                     }
                 }
             }
         }.bind(this));
 
-        if (manualStart && this._myInputSource == null && session.inputSources) {
+        if (manualCall && this._myInputSource == null && session.inputSources) {
             for (let item of session.inputSources) {
                 if (item.handedness == this._myHandedness) {
                     this._myInputSource = item;
-                    this._myIsTrackedHand = PP.InputUtils.getInputSourceType(this._myInputSource) == PP.InputSourceType.TRACKED_HAND;
+                    this._myIsTrackedHand = InputUtils.getInputSourceType(this._myInputSource) == InputSourceType.TRACKED_HAND;
                 }
             }
         }
@@ -76,14 +90,18 @@ PP.HandPose = class HandPose extends PP.BasePose {
     _onXRSessionEndHook() {
         this._myInputSource = null;
     }
-};
+}
 
-PP.HandPose.prototype.getRotationQuat = function () {
-    let rotationQuat = PP.quat_create();
-    let playerRotationQuat = PP.quat_create();
-    let up = PP.vec3_create();
-    let right = PP.vec3_create();
-    let forward = PP.vec3_create();
+
+
+// IMPLEMENTATION
+
+HandPose.prototype.getRotationQuat = function () {
+    let rotationQuat = quat_create();
+    let playerRotationQuat = quat_create();
+    let up = vec3_create();
+    let right = vec3_create();
+    let forward = vec3_create();
     return function getRotationQuat() {
         rotationQuat.quat_copy(this._myRotationQuat);
 
@@ -95,7 +113,7 @@ PP.HandPose.prototype.getRotationQuat = function () {
             rotationQuat.quat_rotateAxis(-60, rotationQuat.quat_getRight(right), rotationQuat);
 
             let forwardRotation = 20;
-            forwardRotation = (this._myHandedness == PP.Handedness.LEFT) ? forwardRotation : -forwardRotation;
+            forwardRotation = (this._myHandedness == Handedness.LEFT) ? forwardRotation : -forwardRotation;
             rotationQuat.quat_rotateAxis(forwardRotation, rotationQuat.quat_getForward(forward), rotationQuat);
         }
 
@@ -106,7 +124,3 @@ PP.HandPose.prototype.getRotationQuat = function () {
         return rotationQuat.quat_toWorld(this._myReferenceObject.pp_getRotationQuat(playerRotationQuat), rotationQuat);
     };
 }();
-
-
-
-Object.defineProperty(PP.HandPose.prototype, "getRotationQuat", { enumerable: false });

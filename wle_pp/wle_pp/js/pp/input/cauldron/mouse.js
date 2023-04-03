@@ -1,27 +1,39 @@
-PP.MouseButtonID = {
+import { ViewComponent } from "@wonderlandengine/api";
+import { Timer } from "../../cauldron/cauldron/timer";
+import { RaycastResults } from "../../cauldron/physics/physics_raycast_data";
+import { PhysicsUtils } from "../../cauldron/physics/physics_utils";
+import { XRUtils } from "../../cauldron/utils/xr_utils";
+import { mat4_create, quat_create, vec2_create, vec3_create } from "../../plugin/js/extensions/array_extension";
+import { getMainEngine } from "../../cauldron/wl/engine_globals";
+import { getPlayerObjects } from "../../pp/player_objects_global";
+
+export let MouseButtonID = {
     LEFT: 0,
     MIDDLE: 1,
-    RIGHT: 2,
+    RIGHT: 2
 };
 
-PP.Mouse = class Mouse {
-    constructor() {
-        // #TODO refactor Mouse/Keyboard/Gamepad and create a sort of parent ButtonHandler that have the base ButtonInfo and all of them inherit
+// #TODO Refactor Mouse/Keyboard/Gamepad and create a sort of parent ButtonHandler that have the base ButtonInfo and all of them inherit
+export class Mouse {
+
+    constructor(engine = getMainEngine()) {
+
+        this._myEngine = engine;
 
         this._myButtonInfos = new Map();
-        for (let key in PP.MouseButtonID) {
-            this._myButtonInfos.set(PP.MouseButtonID[key], this._createButtonInfo());
+        for (let key in MouseButtonID) {
+            this._myButtonInfos.set(MouseButtonID[key], this._createButtonInfo());
         }
 
         this._myPreventContextMenuCallback = this._preventContextMenu.bind(this);
         this._myPreventMiddleButtonScrollCallback = this._preventMiddleButtonScroll.bind(this);
 
-        this._myInternalMousePosition = PP.vec2_create();
-        this._myScreenSize = PP.vec2_create();
+        this._myInternalMousePosition = vec2_create();
+        this._myScreenSize = vec2_create();
         this._updateScreenSize();
 
         this._myResetMovingDelay = 0.15;
-        this._myResetMovingTimer = new PP.Timer(this._myResetMovingDelay, false);
+        this._myResetMovingTimer = new Timer(this._myResetMovingDelay, false);
         this._myIsMoving = false;
 
         this._myIsInsideView = false;
@@ -38,10 +50,10 @@ PP.Mouse = class Mouse {
         this._myPointerEventValidCallbacks = new Map();      // Signature: callback(event)
 
         // Support Variables
-        this._myProjectionMatrixInverse = PP.mat4_create();
-        this._myRotationQuat = PP.quat_create();
-        this._myOriginWorld = PP.vec3_create();
-        this._myDirectionWorld = PP.vec3_create();
+        this._myProjectionMatrixInverse = mat4_create();
+        this._myRotationQuat = quat_create();
+        this._myOriginWorld = vec3_create();
+        this._myDirectionWorld = vec3_create();
     }
 
     start() {
@@ -56,7 +68,7 @@ PP.Mouse = class Mouse {
         this._myOnPointerEnterCallback = this._onPointerEnter.bind(this);
         document.body.addEventListener("pointerenter", this._myOnPointerEnterCallback);
 
-        // these are needed to being able to detect for example left and right click together, pointer only allow one down at a time
+        // These are needed to being able to detect for example left and right click together, pointer only allow one down at a time
         this._myOnMouseDownCallback = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
         document.body.addEventListener("mousedown", this._myOnMouseDownCallback);
         this._myOnMouseUpCallback = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
@@ -167,25 +179,25 @@ PP.Mouse = class Mouse {
     }
 
     isTargetingRenderCanvas() {
-        return this.isInsideView() && this._myLastValidPointerEvent != null && this._myLastValidPointerEvent.target == WL.canvas;
+        return this.isInsideView() && this._myLastValidPointerEvent != null && this._myLastValidPointerEvent.target == this._myEngine.canvas;
     }
 
-    // the origin and direction are set by the mouse
-    raycastWorld(raycastSetup, raycastResults = new PP.RaycastResults()) {
+    // The origin and direction are set by the mouse
+    raycastWorld(raycastSetup, raycastResults = new RaycastResults()) {
         this.getOriginWorld(raycastSetup.myOrigin);
         this.getDirectionWorld(raycastSetup.myDirection);
-        raycastResults = PP.PhysicsUtils.raycast(raycastSetup, raycastResults);
+        raycastResults = PhysicsUtils.raycast(raycastSetup, raycastResults);
         return raycastResults;
     }
 
-    getPositionScreen(out = PP.vec2_create()) {
+    getPositionScreen(out = vec2_create()) {
         let mousePosition = out;
         mousePosition[0] = this._myInternalMousePosition[0];
         mousePosition[1] = this._myScreenSize[1] - 1 - this._myInternalMousePosition[1];
         return mousePosition;
     }
 
-    getPositionScreenNormalized(out = PP.vec2_create()) {
+    getPositionScreenNormalized(out = vec2_create()) {
         let mousePosition = out;
         mousePosition[0] = (this._myScreenSize[0] == 0) ? 0 : ((this._myInternalMousePosition[0] / this._myScreenSize[0]) * 2 - 1);
         mousePosition[1] = (this._myScreenSize[1] == 0) ? 0 : (((this._myScreenSize[1] - 1 - this._myInternalMousePosition[1]) / this._myScreenSize[1]) * 2 - 1);
@@ -196,7 +208,7 @@ PP.Mouse = class Mouse {
         return this._myScreenSize;
     }
 
-    getPositionWorld(distanceFromCamera, out = PP.vec3_create()) {
+    getPositionWorld(distanceFromCamera, out = vec3_create()) {
         let originWorld = this.getOriginWorld(this._myOriginWorld);
         let directionWorld = this.getDirectionWorld(this._myDirectionWorld);
 
@@ -204,17 +216,17 @@ PP.Mouse = class Mouse {
         return out;
     }
 
-    getOriginWorld(out = PP.vec3_create()) {
-        if (PP.XRUtils.isSessionActive()) {
-            PP.myPlayerObjects.myEyeLeft.pp_getPosition(out); // in theory mouse should not be used inside the session, but may make sense for AR which uses eye left
+    getOriginWorld(out = vec3_create()) {
+        if (XRUtils.isSessionActive(this._myEngine)) {
+            getPlayerObjects(this._myEngine).myEyeLeft.pp_getPosition(out); // In theory mouse should not be used inside the session, but may make sense for AR which uses eye left
         } else {
-            PP.myPlayerObjects.myNonVRCamera.pp_getPosition(out);
+            getPlayerObjects(this._myEngine).myCameraNonVR.pp_getPosition(out);
         }
 
         return out;
     }
 
-    getDirectionWorld(out = PP.vec3_create()) {
+    getDirectionWorld(out = vec3_create()) {
         let right = this._myInternalMousePosition[0] / this._myScreenSize[0];
         let up = this._myInternalMousePosition[1] / this._myScreenSize[1];
 
@@ -222,20 +234,20 @@ PP.Mouse = class Mouse {
         directionLocal.vec3_set(right * 2 - 1, -up * 2 + 1, -1.0);
 
         let projectionMatrixInvert = this._myProjectionMatrixInverse;
-        if (PP.XRUtils.isSessionActive()) {
-            projectionMatrixInvert = PP.myPlayerObjects.myEyeLeft.pp_getComponentHierarchy("view").projectionMatrix.mat4_invert(projectionMatrixInvert);
+        if (XRUtils.isSessionActive(this._myEngine)) {
+            projectionMatrixInvert = getPlayerObjects(this._myEngine).myEyeLeft.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
         } else {
-            projectionMatrixInvert = PP.myPlayerObjects.myNonVRCamera.pp_getComponentHierarchy("view").projectionMatrix.mat4_invert(projectionMatrixInvert);
+            projectionMatrixInvert = getPlayerObjects(this._myEngine).myCameraNonVR.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
         }
 
         directionLocal.vec3_transformMat4(projectionMatrixInvert, directionLocal);
         directionLocal.vec3_normalize(directionLocal);
 
         let directionWorld = directionLocal;
-        if (PP.XRUtils.isSessionActive()) {
-            directionWorld = directionLocal.vec3_transformQuat(PP.myPlayerObjects.myEyeLeft.pp_getRotationQuat(this._myRotationQuat), directionLocal);
+        if (XRUtils.isSessionActive(this._myEngine)) {
+            directionWorld = directionLocal.vec3_transformQuat(getPlayerObjects(this._myEngine).myEyeLeft.pp_getRotationQuat(this._myRotationQuat), directionLocal);
         } else {
-            directionWorld = directionLocal.vec3_transformQuat(PP.myPlayerObjects.myNonVRCamera.pp_getRotationQuat(this._myRotationQuat), directionLocal);
+            directionWorld = directionLocal.vec3_transformQuat(getPlayerObjects(this._myEngine).myCameraNonVR.pp_getRotationQuat(this._myRotationQuat), directionLocal);
         }
 
         directionWorld.vec3_normalize(directionWorld);
@@ -244,7 +256,7 @@ PP.Mouse = class Mouse {
     }
 
     setTouchValid(touchValid) {
-        let callbackID = "internal_touch_valid_callback";
+        let callbackID = "pp_internal_touch_valid_callback";
         if (touchValid) {
             this.removePointerEventValidCallback(callbackID);
         } else {
@@ -255,10 +267,10 @@ PP.Mouse = class Mouse {
     }
 
     setTargetOnlyRenderCanvas(targetOnlyRenderCanvas) {
-        let callbackID = "internal_target_only_render_canvas_callback";
+        let callbackID = "pp_internal_target_only_render_canvas_callback";
         if (targetOnlyRenderCanvas) {
             this.addPointerEventValidCallback(callbackID, function (event) {
-                return event.target == WL.canvas;
+                return event.target == this._myEngine.canvas;
             });
         } else {
             this.removePointerEventValidCallback(callbackID);
@@ -269,7 +281,7 @@ PP.Mouse = class Mouse {
         return this._myLastValidPointerEvent;
     }
 
-    // can be used to specify that only some pointerType are valid (eg: mouse, touch, pen) or just some target (eg: WL.canvas)
+    // Can be used to specify that only some pointerType are valid (eg: mouse, touch, pen) or just some target (eg: this._myEngine.canvas)
     addPointerEventValidCallback(id, callback) {
         this._myPointerEventValidCallbacks.set(id, callback);
     }
@@ -458,11 +470,11 @@ PP.Mouse = class Mouse {
     }
 
     _isMouseAllowed() {
-        // mouse events are valid only if the last pointer event was a mouse (id==1)
+        // Mouse events are valid only if the last pointer event was a mouse (id==1)
         return this._myLastValidPointerEvent != null && this._myLastValidPointerEvent.pointerId == 1;
     }
 
     _createButtonInfo() {
         return { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, };
     }
-};
+}

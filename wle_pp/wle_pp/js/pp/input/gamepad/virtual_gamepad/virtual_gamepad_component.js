@@ -1,73 +1,84 @@
-WL.registerComponent("pp-virtual-gamepad", {
-    _myShowOnDesktop: { type: WL.Type.Bool, default: false },   // you may have to enable headset too
-    _myShowOnMobile: { type: WL.Type.Bool, default: true },
-    _myShowOnHeadset: { type: WL.Type.Bool, default: false },   // not 100% reliable, this is true if the device supports vr and it is desktop
-    _myAddToUniversalGamepad: { type: WL.Type.Bool, default: true },
-    _myOpacity: { type: WL.Type.Float, default: 0.5 },
-    _myIconColor: { type: WL.Type.String, default: "#e0e0e0" },
-    _myBackgroundColor: { type: WL.Type.String, default: "#616161" },
-    _myInterfaceScale: { type: WL.Type.Float, default: 1 },
-    _myMarginScale: { type: WL.Type.Float, default: 1 },
+import { Component, Property } from "@wonderlandengine/api";
+import { getLeftGamepad, getRightGamepad } from "../../cauldron/input_globals";
+import { Handedness } from "../../cauldron/input_types";
+import { GamepadButtonID } from "../gamepad_buttons";
+import { VirtualGamepadGamepadCore } from "../gamepad_cores/virtual_gamepad_gamepad_core";
+import { VirtualGamepad } from "./virtual_gamepad";
+import { VirtualGamepadParams } from "./virtual_gamepad_params";
 
-    ADVANCED_PARAMS_BELOW: { type: WL.Type.String, default: '' },
+export class VirtualGamepadComponent extends Component {
+    static TypeName = "pp-virtual-gamepad";
+    static Properties = {
+        _myShowOnDesktop: Property.bool(false),   // You may have to enable headset too
+        _myShowOnMobile: Property.bool(true),
+        _myShowOnHeadset: Property.bool(false),   // Not 100% reliable, this is true if the device supports VR and it is Desktop
+        _myAddToUniversalGamepad: Property.bool(true),
+        _myOpacity: Property.float(0.5),
+        _myIconColor: Property.string("#e0e0e0"),
+        _myBackgroundColor: Property.string("#616161"),
+        _myInterfaceScale: Property.float(1),
+        _myMarginScale: Property.float(1),
 
-    _myLabelFontSize: { type: WL.Type.Float, default: 2 },
-    _myLabelFontFamily: { type: WL.Type.String, default: 'sans-serif' },
-    _myLabelFontWeight: { type: WL.Type.String, default: 'bold' },
-    _myImagePressedBrightness: { type: WL.Type.Float, default: 0.5 },
+        ADVANCED_PARAMS_BELOW: Property.string(""),
 
-    _myLeftSelectButtonVisible: { type: WL.Type.Bool, default: true },
-    _myLeftSelectButtonOrderIndex: { type: WL.Type.Int, default: 1 },
-    _myLeftSelectButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'frame' },
-    _myLeftSelectButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myLabelFontSize: Property.float(2),
+        _myLabelFontFamily: Property.string("sans-serif"),
+        _myLabelFontWeight: Property.string("bold"),
+        _myImagePressedBrightness: Property.float(0.5),
 
-    _myLeftSqueezeButtonVisible: { type: WL.Type.Bool, default: true },
-    _myLeftSqueezeButtonOrderIndex: { type: WL.Type.Int, default: 0 },
-    _myLeftSqueezeButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'square' },
-    _myLeftSqueezeButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myLeftSelectButtonVisible: Property.bool(true),
+        _myLeftSelectButtonOrderIndex: Property.int(1),
+        _myLeftSelectButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Frame"),
+        _myLeftSelectButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myLeftThumbstickButtonVisible: { type: WL.Type.Bool, default: true },
-    _myLeftThumbstickButtonOrderIndex: { type: WL.Type.Int, default: 4 },
-    _myLeftThumbstickButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'dot' },
-    _myLeftThumbstickButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myLeftSqueezeButtonVisible: Property.bool(true),
+        _myLeftSqueezeButtonOrderIndex: Property.int(0),
+        _myLeftSqueezeButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Square"),
+        _myLeftSqueezeButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myLeftTopButtonVisible: { type: WL.Type.Bool, default: true },
-    _myLeftTopButtonOrderIndex: { type: WL.Type.Int, default: 2 },
-    _myLeftTopButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'circle' },
-    _myLeftTopButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myLeftThumbstickButtonVisible: Property.bool(true),
+        _myLeftThumbstickButtonOrderIndex: Property.int(4),
+        _myLeftThumbstickButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Dot"),
+        _myLeftThumbstickButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myLeftBottomButtonVisible: { type: WL.Type.Bool, default: true },
-    _myLeftBottomButtonOrderIndex: { type: WL.Type.Int, default: 3 },
-    _myLeftBottomButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'ring' },
-    _myLeftBottomButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myLeftTopButtonVisible: Property.bool(true),
+        _myLeftTopButtonOrderIndex: Property.int(2),
+        _myLeftTopButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Circle"),
+        _myLeftTopButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myRightSelectButtonVisible: { type: WL.Type.Bool, default: true },
-    _myRightSelectButtonOrderIndex: { type: WL.Type.Int, default: 1 },
-    _myRightSelectButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'frame' },
-    _myRightSelectButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myLeftBottomButtonVisible: Property.bool(true),
+        _myLeftBottomButtonOrderIndex: Property.int(3),
+        _myLeftBottomButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Ring"),
+        _myLeftBottomButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myRightSqueezeButtonVisible: { type: WL.Type.Bool, default: true },
-    _myRightSqueezeButtonOrderIndex: { type: WL.Type.Int, default: 0 },
-    _myRightSqueezeButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'square' },
-    _myRightSqueezeButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myRightSelectButtonVisible: Property.bool(true),
+        _myRightSelectButtonOrderIndex: Property.int(1),
+        _myRightSelectButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Frame"),
+        _myRightSelectButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myRightThumbstickButtonVisible: { type: WL.Type.Bool, default: true },
-    _myRightThumbstickButtonOrderIndex: { type: WL.Type.Int, default: 4 },
-    _myRightThumbstickButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'dot' },
-    _myRightThumbstickButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myRightSqueezeButtonVisible: Property.bool(true),
+        _myRightSqueezeButtonOrderIndex: Property.int(0),
+        _myRightSqueezeButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Square"),
+        _myRightSqueezeButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myRightTopButtonVisible: { type: WL.Type.Bool, default: true },
-    _myRightTopButtonOrderIndex: { type: WL.Type.Int, default: 2 },
-    _myRightTopButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'circle' },
-    _myRightTopButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' },
+        _myRightThumbstickButtonVisible: Property.bool(true),
+        _myRightThumbstickButtonOrderIndex: Property.int(4),
+        _myRightThumbstickButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Dot"),
+        _myRightThumbstickButtonIconLabelOrImageUrl: Property.string(""),
 
-    _myRightBottomButtonVisible: { type: WL.Type.Bool, default: true },
-    _myRightBottomButtonOrderIndex: { type: WL.Type.Int, default: 3 },
-    _myRightBottomButtonIconType: { type: WL.Type.Enum, values: ['none', 'label', 'image', 'dot', 'circle', 'square', 'ring', 'frame'], default: 'ring' },
-    _myRightBottomButtonIconLabelOrImageUrl: { type: WL.Type.String, default: '' }
-}, {
+        _myRightTopButtonVisible: Property.bool(true),
+        _myRightTopButtonOrderIndex: Property.int(2),
+        _myRightTopButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Circle"),
+        _myRightTopButtonIconLabelOrImageUrl: Property.string(""),
+
+        _myRightBottomButtonVisible: Property.bool(true),
+        _myRightBottomButtonOrderIndex: Property.int(3),
+        _myRightBottomButtonIconType: Property.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Ring"),
+        _myRightBottomButtonIconLabelOrImageUrl: Property.string("")
+    };
+
     start() {
-        let params = new PP.VirtualGamepadParams();
+        let params = new VirtualGamepadParams(this.engine);
         params.defaultSetup();
 
         for (let handedness in params.myButtonParams) {
@@ -81,12 +92,14 @@ WL.registerComponent("pp-virtual-gamepad", {
         }
 
         for (let handedness in params.myThumbstickParams) {
-            let thumbstickParams = params.myThumbstickParams[handedness];
-            thumbstickParams.myBackgroundColor = this._myBackgroundColor;
-            thumbstickParams.myIconParams.myBackgroundColor = this._myIconColor;
-            thumbstickParams.myIconParams.myBackgroundPressedColor = this._myIconColor;
-            thumbstickParams.myIconParams.myIconColor = this._myBackgroundColor;
-            thumbstickParams.myIconParams.myIconPressedColor = this._myBackgroundColor;
+            for (let gamepadAxesID in params.myThumbstickParams[handedness]) {
+                let thumbstickParams = params.myThumbstickParams[handedness][gamepadAxesID];
+                thumbstickParams.myBackgroundColor = this._myBackgroundColor;
+                thumbstickParams.myIconParams.myBackgroundColor = this._myIconColor;
+                thumbstickParams.myIconParams.myBackgroundPressedColor = this._myIconColor;
+                thumbstickParams.myIconParams.myIconColor = this._myBackgroundColor;
+                thumbstickParams.myIconParams.myIconPressedColor = this._myBackgroundColor;
+            }
         }
 
         params.myOpacity = this._myOpacity;
@@ -106,7 +119,7 @@ WL.registerComponent("pp-virtual-gamepad", {
 
         this._advancedSetup(params);
 
-        this._myVirtualGamepad = new PP.VirtualGamepad(params);
+        this._myVirtualGamepad = new VirtualGamepad(params);
         if (!params.myAutoUpdateVisibility) {
             this._myVirtualGamepad.setVisible(false);
         }
@@ -114,28 +127,30 @@ WL.registerComponent("pp-virtual-gamepad", {
         this._myVirtualGamepad.start();
 
         this._myFirstUpdate = true;
-    },
+    }
+
     update(dt) {
         if (this._myFirstUpdate) {
             this._myFirstUpdate = false;
 
             if (this._myAddToUniversalGamepad) {
-                let leftVirtualGamepadGamepadCore = new PP.VirtualGamepadGamepadCore(this._myVirtualGamepad, PP.Handedness.LEFT, PP.myLeftGamepad.getGamepadCore("left_xr_gamepad").getHandPose());
-                let rightVirtualGamepadGamepadCore = new PP.VirtualGamepadGamepadCore(this._myVirtualGamepad, PP.Handedness.RIGHT, PP.myRightGamepad.getGamepadCore("right_xr_gamepad").getHandPose());
+                let leftVirtualGamepadGamepadCore = new VirtualGamepadGamepadCore(this._myVirtualGamepad, getLeftGamepad(this.engine).getGamepadCore("pp_left_xr_gamepad").getHandPose());
+                let rightVirtualGamepadGamepadCore = new VirtualGamepadGamepadCore(this._myVirtualGamepad, getRightGamepad(this.engine).getGamepadCore("pp_right_xr_gamepad").getHandPose());
 
-                PP.myLeftGamepad.addGamepadCore("left_virtual_gamepad", leftVirtualGamepadGamepadCore);
-                PP.myRightGamepad.addGamepadCore("right_virtual_gamepad", rightVirtualGamepadGamepadCore);
+                getLeftGamepad(this.engine).addGamepadCore("pp_left_virtual_gamepad", leftVirtualGamepadGamepadCore);
+                getRightGamepad(this.engine).addGamepadCore("pp_right_virtual_gamepad", rightVirtualGamepadGamepadCore);
             }
         }
 
         this._myVirtualGamepad.update(dt);
-    },
+    }
+
     _advancedSetup(params) {
-        params.myButtonsOrder[PP.Handedness.LEFT] = [null, null, null, null, null];
-        params.myButtonsOrder[PP.Handedness.RIGHT] = [null, null, null, null, null];
+        params.myButtonsOrder[Handedness.LEFT] = [null, null, null, null, null];
+        params.myButtonsOrder[Handedness.RIGHT] = [null, null, null, null, null];
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.SELECT];
+            let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT];
             buttonParams.myIconParams.myIconType = this._myLeftSelectButtonIconType;
             buttonParams.myIconParams.myLabel = this._myLeftSelectIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myLeftSelectIconLabelOrImageUrl;
@@ -145,12 +160,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myLeftSelectButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.LEFT][this._myLeftSelectButtonOrderIndex] = [PP.Handedness.LEFT, PP.GamepadButtonID.SELECT];
+                params.myButtonsOrder[Handedness.LEFT][this._myLeftSelectButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.SELECT];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.SQUEEZE];
+            let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE];
             buttonParams.myIconParams.myIconType = this._myLeftSqueezeButtonIconType;
             buttonParams.myIconParams.myLabel = this._myLeftSqueezeIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myLeftSqueezeIconLabelOrImageUrl;
@@ -160,12 +175,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myLeftSqueezeButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.LEFT][this._myLeftSqueezeButtonOrderIndex] = [PP.Handedness.LEFT, PP.GamepadButtonID.SQUEEZE];
+                params.myButtonsOrder[Handedness.LEFT][this._myLeftSqueezeButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.SQUEEZE];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.THUMBSTICK];
+            let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.THUMBSTICK];
             buttonParams.myIconParams.myIconType = this._myLeftThumbstickButtonIconType;
             buttonParams.myIconParams.myLabel = this._myLeftThumbstickButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myLeftThumbstickButtonIconLabelOrImageUrl;
@@ -175,12 +190,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myLeftThumbstickButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.LEFT][this._myLeftThumbstickButtonOrderIndex] = [PP.Handedness.LEFT, PP.GamepadButtonID.THUMBSTICK];
+                params.myButtonsOrder[Handedness.LEFT][this._myLeftThumbstickButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.THUMBSTICK];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.TOP_BUTTON];
+            let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.TOP_BUTTON];
             buttonParams.myIconParams.myIconType = this._myLeftTopButtonIconType;
             buttonParams.myIconParams.myLabel = this._myLeftTopButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myLeftTopButtonIconLabelOrImageUrl;
@@ -190,12 +205,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myLeftTopButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.LEFT][this._myLeftTopButtonOrderIndex] = [PP.Handedness.LEFT, PP.GamepadButtonID.TOP_BUTTON];
+                params.myButtonsOrder[Handedness.LEFT][this._myLeftTopButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.TOP_BUTTON];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.LEFT][PP.GamepadButtonID.BOTTOM_BUTTON];
+            let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON];
             buttonParams.myIconParams.myIconType = this._myLeftBottomButtonIconType;
             buttonParams.myIconParams.myLabel = this._myLeftBottomButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myLeftBottomButtonIconLabelOrImageUrl;
@@ -205,12 +220,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myLeftBottomButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.LEFT][this._myLeftBottomButtonOrderIndex] = [PP.Handedness.LEFT, PP.GamepadButtonID.BOTTOM_BUTTON];
+                params.myButtonsOrder[Handedness.LEFT][this._myLeftBottomButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.BOTTOM_BUTTON];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.SELECT];
+            let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT];
             buttonParams.myIconParams.myIconType = this._myRightSelectButtonIconType;
             buttonParams.myIconParams.myLabel = this._myRightSelectIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myRightSelectIconLabelOrImageUrl;
@@ -220,12 +235,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myRightSelectButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.RIGHT][this._myRightSelectButtonOrderIndex] = [PP.Handedness.RIGHT, PP.GamepadButtonID.SELECT];
+                params.myButtonsOrder[Handedness.RIGHT][this._myRightSelectButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.SELECT];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.SQUEEZE];
+            let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE];
             buttonParams.myIconParams.myIconType = this._myRightSqueezeButtonIconType;
             buttonParams.myIconParams.myLabel = this._myRightSqueezeIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myRightSqueezeIconLabelOrImageUrl;
@@ -235,12 +250,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myRightSqueezeButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.RIGHT][this._myRightSqueezeButtonOrderIndex] = [PP.Handedness.RIGHT, PP.GamepadButtonID.SQUEEZE];
+                params.myButtonsOrder[Handedness.RIGHT][this._myRightSqueezeButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.SQUEEZE];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.THUMBSTICK];
+            let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.THUMBSTICK];
             buttonParams.myIconParams.myIconType = this._myRightThumbstickButtonIconType;
             buttonParams.myIconParams.myLabel = this._myRightThumbstickButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myRightThumbstickButtonIconLabelOrImageUrl;
@@ -250,12 +265,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myRightThumbstickButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.RIGHT][this._myRightThumbstickButtonOrderIndex] = [PP.Handedness.RIGHT, PP.GamepadButtonID.THUMBSTICK];
+                params.myButtonsOrder[Handedness.RIGHT][this._myRightThumbstickButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.THUMBSTICK];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.TOP_BUTTON];
+            let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON];
             buttonParams.myIconParams.myIconType = this._myRightTopButtonIconType;
             buttonParams.myIconParams.myLabel = this._myRightTopButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myRightTopButtonIconLabelOrImageUrl;
@@ -265,12 +280,12 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myRightTopButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.RIGHT][this._myRightTopButtonOrderIndex] = [PP.Handedness.RIGHT, PP.GamepadButtonID.TOP_BUTTON];
+                params.myButtonsOrder[Handedness.RIGHT][this._myRightTopButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.TOP_BUTTON];
             }
         }
 
         {
-            let buttonParams = params.myButtonParams[PP.Handedness.RIGHT][PP.GamepadButtonID.BOTTOM_BUTTON];
+            let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON];
             buttonParams.myIconParams.myIconType = this._myRightBottomButtonIconType;
             buttonParams.myIconParams.myLabel = this._myRightBottomButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myImageURL = this._myRightBottomButtonIconLabelOrImageUrl;
@@ -280,8 +295,8 @@ WL.registerComponent("pp-virtual-gamepad", {
             buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
 
             if (this._myRightBottomButtonVisible) {
-                params.myButtonsOrder[PP.Handedness.RIGHT][this._myRightBottomButtonOrderIndex] = [PP.Handedness.RIGHT, PP.GamepadButtonID.BOTTOM_BUTTON];
+                params.myButtonsOrder[Handedness.RIGHT][this._myRightBottomButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.BOTTOM_BUTTON];
             }
         }
     }
-});
+}

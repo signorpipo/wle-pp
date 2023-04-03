@@ -1,34 +1,46 @@
-PP.CollisionCheckUtils = {
-    generate360TeleportParamsFromMovementParams: function (movementParams, outTeleportParams = new PP.CollisionCheckParams()) {
-        outTeleportParams.copy(movementParams);
+import { RaycastHit, RaycastResults, RaycastSetup } from "../../../../../../cauldron/physics/physics_raycast_data";
+import { PhysicsUtils } from "../../../../../../cauldron/physics/physics_utils";
+import { getDebugVisualManager } from "../../../../../../debug/debug_globals";
+import { vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { getMainEngine } from "../../../../../../cauldron/wl/engine_globals";
+import { CollisionCheckParams, CollisionRuntimeParams } from "./collision_params";
 
-        outTeleportParams.myHalfConeAngle = 180;
-        outTeleportParams.myHalfConeSliceAmount = Math.round((outTeleportParams.myHalfConeAngle / movementParams.myHalfConeAngle) * movementParams.myHalfConeSliceAmount);
+export function generate360TeleportParamsFromMovementParams(movementParams, outTeleportParams = new CollisionCheckParams()) {
+    outTeleportParams.copy(movementParams);
 
-        outTeleportParams.myCheckHorizontalFixedForwardEnabled = true;
-        outTeleportParams.myCheckHorizontalFixedForward = PP.vec3_create(0, 0, 1);
+    outTeleportParams.myHalfConeAngle = 180;
+    outTeleportParams.myHalfConeSliceAmount = Math.round((outTeleportParams.myHalfConeAngle / movementParams.myHalfConeAngle) * movementParams.myHalfConeSliceAmount);
 
-        return outTeleportParams;
-    },
+    outTeleportParams.myCheckHorizontalFixedForwardEnabled = true;
+    outTeleportParams.myCheckHorizontalFixedForward = vec3_create(0, 0, 1);
+
+    return outTeleportParams;
+}
+
+export let CollisionCheckUtils = {
+    generate360TeleportParamsFromMovementParams
 };
 
-PP.CollisionCheck = class CollisionCheck {
-    constructor() {
-        this._myRaycastSetup = new PP.RaycastSetup();
-        this._myRaycastResult = new PP.RaycastResults();
-        this._myFixRaycastResult = new PP.RaycastResults();
+export class CollisionCheck {
 
-        this._myBackupRaycastHit = new PP.RaycastHit();
+    constructor(engine = getMainEngine()) {
+        this._myEngine = engine;
 
-        this._myPrevCollisionRuntimeParams = new PP.CollisionRuntimeParams();
+        this._myRaycastSetup = new RaycastSetup(this._myEngine.physics);
+        this._myRaycastResult = new RaycastResults();
+        this._myFixRaycastResult = new RaycastResults();
 
-        this._mySlidingCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-        this._myCheckBetterSlidingNormalCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-        this._myInternalSlidingCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-        this._mySlidingFlickeringFixCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-        this._mySlidingFlickeringFixSlidingCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-        this._mySlidingOppositeDirectionCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-        this._mySlidingOnVerticalCheckCollisionRuntimeParams = new PP.CollisionRuntimeParams();
+        this._myBackupRaycastHit = new RaycastHit();
+
+        this._myPrevCollisionRuntimeParams = new CollisionRuntimeParams();
+
+        this._mySlidingCollisionRuntimeParams = new CollisionRuntimeParams();
+        this._myCheckBetterSlidingNormalCollisionRuntimeParams = new CollisionRuntimeParams();
+        this._myInternalSlidingCollisionRuntimeParams = new CollisionRuntimeParams();
+        this._mySlidingFlickeringFixCollisionRuntimeParams = new CollisionRuntimeParams();
+        this._mySlidingFlickeringFixSlidingCollisionRuntimeParams = new CollisionRuntimeParams();
+        this._mySlidingOppositeDirectionCollisionRuntimeParams = new CollisionRuntimeParams();
+        this._mySlidingOnVerticalCheckCollisionRuntimeParams = new CollisionRuntimeParams();
 
         this._myDebugActive = false;
 
@@ -40,7 +52,7 @@ PP.CollisionCheck = class CollisionCheck {
         this._move(movement, transformQuat, collisionCheckParams, collisionRuntimeParams);
     }
 
-    //#TODO add teleport position/transform and return originalteleportransform
+    // #TODO Add teleport position/transform and return originalteleportransform
     // instead of position old transform / new transform
     teleport(position, transformQuat, collisionCheckParams, collisionRuntimeParams) {
         this._teleport(position, transformQuat, collisionCheckParams, collisionRuntimeParams);
@@ -65,45 +77,49 @@ PP.CollisionCheck = class CollisionCheck {
         if (!originalHorizontalMovement.vec3_isZero()) {
             originalHorizontalMovement.vec3_normalize(originalHorizontalMovement);
 
-            PP.myDebugVisualManager.drawArrow(0, feetPositionPlusOffset, originalHorizontalMovement, 0.2, PP.vec4_create(0.5, 0.5, 1, 1));
+            getDebugVisualManager(this._myEngine).drawArrow(0, feetPositionPlusOffset, originalHorizontalMovement, 0.2, vec4_create(0.5, 0.5, 1, 1));
         }
 
         if (!horizontalMovement.vec3_isZero()) {
             horizontalMovement.vec3_normalize(horizontalMovement);
 
-            PP.myDebugVisualManager.drawArrow(0, feetPositionPlusOffset, horizontalMovement, 0.2, PP.vec4_create(0, 0, 1, 1));
+            getDebugVisualManager(this._myEngine).drawArrow(0, feetPositionPlusOffset, horizontalMovement, 0.2, vec4_create(0, 0, 1, 1));
         }
 
         if (!verticalMovement.vec3_isZero()) {
             verticalMovement.vec3_normalize(verticalMovement);
 
-            PP.myDebugVisualManager.drawArrow(0, feetPosition, verticalMovement, 0.2, PP.vec4_create(0, 0, 1, 1));
+            getDebugVisualManager(this._myEngine).drawArrow(0, feetPosition, verticalMovement, 0.2, vec4_create(0, 0, 1, 1));
         }
     }
 
     _debugRuntimeParams(collisionRuntimeParams) {
         if (collisionRuntimeParams.myHorizontalCollisionHit.isValid()) {
-            PP.myDebugVisualManager.drawArrow(0,
+            getDebugVisualManager(this._myEngine).drawArrow(0,
                 collisionRuntimeParams.myHorizontalCollisionHit.myPosition,
-                collisionRuntimeParams.myHorizontalCollisionHit.myNormal, 0.2, PP.vec4_create(1, 0, 0, 1));
+                collisionRuntimeParams.myHorizontalCollisionHit.myNormal, 0.2, vec4_create(1, 0, 0, 1));
         }
 
         if (collisionRuntimeParams.mySlidingCollisionHit.isValid()) {
-            PP.myDebugVisualManager.drawArrow(0,
+            getDebugVisualManager(this._myEngine).drawArrow(0,
                 collisionRuntimeParams.mySlidingCollisionHit.myPosition,
-                collisionRuntimeParams.mySlidingCollisionHit.myNormal, 0.2, PP.vec4_create(1, 0, 0, 1));
+                collisionRuntimeParams.mySlidingCollisionHit.myNormal, 0.2, vec4_create(1, 0, 0, 1));
         }
 
         if (collisionRuntimeParams.myVerticalCollisionHit.isValid()) {
-            PP.myDebugVisualManager.drawArrow(0,
+            getDebugVisualManager(this._myEngine).drawArrow(0,
                 collisionRuntimeParams.myVerticalCollisionHit.myPosition,
-                collisionRuntimeParams.myVerticalCollisionHit.myNormal, 0.2, PP.vec4_create(1, 0, 0, 1));
+                collisionRuntimeParams.myVerticalCollisionHit.myNormal, 0.2, vec4_create(1, 0, 0, 1));
         }
+    }
+
+    _raycastAndDebug(origin, direction, distance, ignoreHitsInsideCollision, isHorizontal, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
     }
 };
 
-PP.CollisionCheck.prototype._raycastAndDebug = function () {
-    let tempRaycastResult = new PP.RaycastResults();
+CollisionCheck.prototype._raycastAndDebug = function () {
+    let tempRaycastResult = new RaycastResults();
     return function _raycastAndDebug(origin, direction, distance, ignoreHitsInsideCollision, isHorizontal, collisionCheckParams, collisionRuntimeParams) {
         this._myRaycastSetup.myOrigin.vec3_copy(origin);
         this._myRaycastSetup.myDirection.vec3_copy(direction);
@@ -121,13 +137,13 @@ PP.CollisionCheck.prototype._raycastAndDebug = function () {
 
         let raycastResult = null;
         if (true) {
-            raycastResult = PP.PhysicsUtils.raycast(this._myRaycastSetup, this._myRaycastResult);
+            raycastResult = PhysicsUtils.raycast(this._myRaycastSetup, this._myRaycastResult);
         } else {
-            // quick debug to remove raycasts and/or let all raycasts fail
+            // Quick debug to remove raycasts and/or let all raycasts fail
 
             let raycastAlways = false;
             if (raycastAlways || !this._myRaycastResult.isColliding()) {
-                raycastResult = PP.PhysicsUtils.raycast(this._myRaycastSetup, tempRaycastResult);
+                raycastResult = PhysicsUtils.raycast(this._myRaycastSetup, tempRaycastResult);
             }
 
             if (!this._myRaycastResult.isColliding() && tempRaycastResult.isColliding()) {
@@ -142,14 +158,9 @@ PP.CollisionCheck.prototype._raycastAndDebug = function () {
         //raycastResult.myHits = [];
 
         if (this._myDebugActive) {
-            PP.myDebugVisualManager.drawRaycast(0, raycastResult);
+            getDebugVisualManager(this._myEngine).drawRaycast(0, raycastResult);
         }
 
         return raycastResult;
     };
 }();
-
-
-
-Object.defineProperty(PP.CollisionCheck.prototype, "_raycastAndDebug", { enumerable: false });
-

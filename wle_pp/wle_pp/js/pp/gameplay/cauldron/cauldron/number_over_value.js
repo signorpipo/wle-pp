@@ -1,13 +1,9 @@
-//This is added just to make it easy to just use plain number instead of doing new PP.NumberOverValue(<number>) 
-//You can remove this if it cause issues but you won't be able anymore to use plain number and will have to use new PP.NumberOverValue(<number>) 
-Number.prototype.get = function get() {
-    return this.valueOf();
-};
-Object.defineProperty(Number.prototype, "get", { enumerable: false });
+import { EasingFunction } from "../../../plugin/js/extensions/math_extension";
 
-//You can just put startNumber if u want a number that doesn't actually change -> new PP.NumberOverValue(13)
-PP.NumberOverValue = class NumberOverValue {
-    constructor(startNumber, endNumber = null, startInterpolationValue = 0, endInterpolationValue = 0, easingFunction = PP.EasingFunction.linear, roundingFunction = null) {
+// You can just put startNumber if u want a number that doesn't actually change -> new NumberOverValue(0)
+export class NumberOverValue {
+
+    constructor(startNumber, endNumber = null, startInterpolationValue = 0, endInterpolationValue = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
         if (endNumber == null) {
             endNumber = startNumber;
         }
@@ -19,7 +15,7 @@ PP.NumberOverValue = class NumberOverValue {
         this._myEndInterpolationValue = endInterpolationValue;
 
         this._myEasingFunction = easingFunction;
-        this._myRoundingFunction = roundingFunction; // function(numberToRound, startNumber = null, endNumber = null), Math.round/floor/ceil can be used, must return an int
+        this._myRoundingFunction = roundingFunction; // Signature: function(numberToRound, startNumber = null, endNumber = null) -> int, Math.round/floor/ceil can be used
     }
 
     get(interpolationValue) {
@@ -77,10 +73,11 @@ PP.NumberOverValue = class NumberOverValue {
 
         return clampedNumber == clampedCurrentNumber;
     }
-};
+}
 
-PP.IntOverValue = class IntOverValue extends PP.NumberOverValue {
-    constructor(startNumber, endNumber, startInterpolationValue, endInterpolationValue, easingFunction = PP.EasingFunction.linear, roundingFunction = null) {
+export class IntOverValue extends NumberOverValue {
+
+    constructor(startNumber, endNumber, startInterpolationValue, endInterpolationValue, easingFunction = EasingFunction.linear, roundingFunction = null) {
         if (roundingFunction == null) {
             roundingFunction = function (numberToRound, startNumber, endNumber) {
                 let roundedNumber = null;
@@ -98,19 +95,20 @@ PP.IntOverValue = class IntOverValue extends PP.NumberOverValue {
 
         super(startNumber, endNumber, startInterpolationValue, endInterpolationValue, easingFunction, roundingFunction);
     }
-};
+}
 
-//You can just put startRange if u want a range that doesn't actually change -> new PP.NumberOverValue([1,25])
-PP.NumberRangeOverValue = class NumberRangeOverValue {
-    constructor(startRange, endRange = null, startInterpolationValue = 0, endInterpolationValue = 0, easingFunction = PP.EasingFunction.linear, roundingFunction = null) {
+// You can just put startRange if u want a range that doesn't actually change -> new NumberOverValue([1,25])
+export class NumberRangeOverValue {
+
+    constructor(startRange, endRange = null, startInterpolationValue = 0, endInterpolationValue = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
         if (endRange == null) {
             endRange = startRange;
         }
 
-        this._myStartNumberOverValue = new PP.NumberOverValue(startRange[0], endRange[0], startInterpolationValue, endInterpolationValue, easingFunction, roundingFunction);
-        this._myEndNumberOverValue = new PP.NumberOverValue(startRange[1], endRange[1], startInterpolationValue, endInterpolationValue, easingFunction, roundingFunction);
+        this._myStartNumberOverValue = new NumberOverValue(startRange[0], endRange[0], startInterpolationValue, endInterpolationValue, easingFunction, roundingFunction);
+        this._myEndNumberOverValue = new NumberOverValue(startRange[1], endRange[1], startInterpolationValue, endInterpolationValue, easingFunction, roundingFunction);
 
-        this._myRoundingFunction = roundingFunction; // function(numberToRound, startNumber = null, endNumber = null), Math.round/floor/ceil can be used, must return an int
+        this._myRoundingFunction = roundingFunction; // Signature: function(numberToRound, startNumber = null, endNumber = null) -> int, Math.round/floor/ceil can be used
     }
 
     get(interpolationValue) {
@@ -188,10 +186,11 @@ PP.NumberRangeOverValue = class NumberRangeOverValue {
 
         return Math.pp_isInsideAngleRangeRadians(number, startNumber, endNumber);
     }
-};
+}
 
-PP.IntRangeOverValue = class IntRangeOverValue extends PP.NumberRangeOverValue {
-    constructor(startRange, endRange, startInterpolationValue, endInterpolationValue, easingFunction = PP.EasingFunction.linear, roundingFunction = null) {
+export class IntRangeOverValue extends NumberRangeOverValue {
+
+    constructor(startRange, endRange, startInterpolationValue, endInterpolationValue, easingFunction = EasingFunction.linear, roundingFunction = null) {
         if (roundingFunction == null) {
             roundingFunction = function (numberToRound, startNumber, endNumber) {
                 let roundedNumber = null;
@@ -209,4 +208,4 @@ PP.IntRangeOverValue = class IntRangeOverValue extends PP.NumberRangeOverValue {
 
         super(startRange, endRange, startInterpolationValue, endInterpolationValue, easingFunction, roundingFunction);
     }
-};
+}

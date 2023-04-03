@@ -1,19 +1,23 @@
-PP.SaveManager = class SaveManager {
-    constructor() {
+import { getMainEngine } from "../wl/engine_globals";
+import { SaveUtils } from "../utils/save_utils";
+import { XRUtils } from "../utils/xr_utils";
+import { Timer } from "./timer";
+
+export class SaveManager {
+
+    constructor(engine = getMainEngine()) {
+        this._myEngine = engine;
+
         this._mySaveCache = new Map();
         this._myCacheEnabled = true;
 
-        this._myCommitSavesDelayTimer = new PP.Timer(0, false);
+        this._myCommitSavesDelayTimer = new Timer(0, false);
         this._myDelaySavesCommit = true;
         this._myIDsToCommit = [];
 
         this._myCacheDefaultValueOnFail = true;
 
-        if (WL.xrSession) {
-            this._onXRSessionStart(WL.xrSession);
-        }
-        WL.onXRSessionStart.push(this._onXRSessionStart.bind(this));
-        WL.onXRSessionEnd.push(this._onXRSessionEnd.bind(this));
+        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
 
         this._myClearCallbacks = new Map();                 // Signature: callback()
         this._myDeleteCallbacks = new Map();                // Signature: callback(id)
@@ -124,12 +128,12 @@ PP.SaveManager = class SaveManager {
     }
 
     has(id, overrideCacheEnabled = null) {
-        return (this._mySaveCache.has(id) && this._isCacheEnabled(overrideCacheEnabled)) || PP.SaveUtils.has(id);
+        return (this._mySaveCache.has(id) && this._isCacheEnabled(overrideCacheEnabled)) || SaveUtils.has(id);
     }
 
-    delete(id) {
+    remove(id) {
         this._mySaveCache.delete(id);
-        PP.SaveUtils.delete(id);
+        SaveUtils.remove(id);
 
         if (this._myDeleteCallbacks.size > 0) {
             this._myDeleteCallbacks.forEach(function (callback) { callback(id); });
@@ -145,7 +149,7 @@ PP.SaveManager = class SaveManager {
 
     clear() {
         this._mySaveCache.clear();
-        PP.SaveUtils.clear();
+        SaveUtils.clear();
 
         if (this._myClearCallbacks.size > 0) {
             this._myClearCallbacks.forEach(function (callback) { callback(); });
@@ -189,7 +193,7 @@ PP.SaveManager = class SaveManager {
         let failed = false;
 
         try {
-            PP.SaveUtils.save(id, value);
+            SaveUtils.save(id, value);
         } catch (error) {
             failed = true;
         }
@@ -227,7 +231,7 @@ PP.SaveManager = class SaveManager {
         } else {
             let saveResult = null;
             try {
-                saveResult = PP.SaveUtils[functionName](id, null);
+                saveResult = SaveUtils[functionName](id, null);
             } catch (error) {
                 // Error is managed as if it worked but there was no value
                 saveResult = null;
@@ -262,7 +266,7 @@ PP.SaveManager = class SaveManager {
     }
 
     _onXRSessionStart(session) {
-        session.addEventListener('visibilitychange', function (event) {
+        session.addEventListener("visibilitychange", function (event) {
             if (event.session.visibilityState != "visible") {
                 this._onXRSessionInterrupt();
             }
@@ -441,4 +445,4 @@ PP.SaveManager = class SaveManager {
     _isCacheEnabled(overrideCacheEnabled = null) {
         return (this._myCacheEnabled && overrideCacheEnabled == null) || (overrideCacheEnabled != null && overrideCacheEnabled);
     }
-};
+}

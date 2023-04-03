@@ -1,26 +1,29 @@
-PP.CollisionCheck.prototype._teleport = function () {
-    let transformUp = PP.vec3_create();
-    let transformForward = PP.vec3_create();
-    let feetPosition = PP.vec3_create();
-    let originalFeetPosition = PP.vec3_create();
+import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
 
-    let transformOffsetLocalQuat = PP.quat2_create();
-    let offsetTransformQuat = PP.quat2_create();
+CollisionCheck.prototype._teleport = function () {
+    let transformUp = vec3_create();
+    let transformForward = vec3_create();
+    let feetPosition = vec3_create();
+    let originalFeetPosition = vec3_create();
 
-    let feetPositionOffsetToOriginal = PP.vec3_create();
-    let offsetTeleportPosition = PP.vec3_create();
+    let transformOffsetLocalQuat = quat2_create();
+    let offsetTransformQuat = quat2_create();
 
-    let zero = PP.vec3_create();
-    let forwardForHorizontal = PP.vec3_create();
-    let forwardForVertical = PP.vec3_create();
-    let forwardForPerceivedAngle = PP.vec3_create();
-    let fixedHorizontalMovement = PP.vec3_create();
-    let fixedVerticalMovement = PP.vec3_create();
-    let newFeetPosition = PP.vec3_create();
-    let endPosition = PP.vec3_create();
+    let feetPositionOffsetToOriginal = vec3_create();
+    let offsetTeleportPosition = vec3_create();
 
-    let zAxis = PP.vec3_create(0, 0, 1);
-    let xAxis = PP.vec3_create(1, 0, 0);
+    let zero = vec3_create();
+    let forwardForHorizontal = vec3_create();
+    let forwardForVertical = vec3_create();
+    let forwardForPerceivedAngle = vec3_create();
+    let fixedHorizontalMovement = vec3_create();
+    let fixedVerticalMovement = vec3_create();
+    let newFeetPosition = vec3_create();
+    let endPosition = vec3_create();
+
+    let zAxis = vec3_create(0, 0, 1);
+    let xAxis = vec3_create(1, 0, 0);
     return function _teleport(teleportPosition, transformQuat, collisionCheckParams, collisionRuntimeParams, isPositionCheck = false) {
         transformOffsetLocalQuat.quat2_setPositionRotationQuat(collisionCheckParams.myPositionOffsetLocal, collisionCheckParams.myRotationOffsetLocalQuat);
         offsetTransformQuat = transformOffsetLocalQuat.quat2_toWorld(transformQuat, offsetTransformQuat);
@@ -43,7 +46,7 @@ PP.CollisionCheck.prototype._teleport = function () {
 
 
         let height = collisionCheckParams.myHeight;
-        height = height - 0.00001; // this makes it easier to setup things at the same exact height of a character so that it can go under it
+        height = height - 0.00001; // This makes it easier to setup things at the same exact height of a character so that it can go under it
         if (height < 0.00001) {
             height = 0;
         }
@@ -195,7 +198,7 @@ PP.CollisionCheck.prototype._teleport = function () {
                     }
                 }
 
-                //regather surface if invalid else use before
+                // Regather surface if invalid else use before
             } else {
                 collisionRuntimeParams.myTeleportCanceled = true;
             }
@@ -248,4 +251,4 @@ PP.CollisionCheck.prototype._teleport = function () {
 
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_teleport", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_teleport", { enumerable: false });

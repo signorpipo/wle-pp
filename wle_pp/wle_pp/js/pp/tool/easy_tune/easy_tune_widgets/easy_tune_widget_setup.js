@@ -1,11 +1,13 @@
-PP.EasyTuneWidgetSetup = class EasyTuneWidgetSetup {
+import { ToolHandedness } from "../../cauldron/tool_types";
+
+export class EasyTuneWidgetSetup {
 
     constructor() {
         this._initializeRuntimeSetup();
     }
 
     _initializeRuntimeSetup() {
-        this.myGamepadHandedness = PP.ToolHandedness.RIGHT;
+        this.myGamepadHandedness = ToolHandedness.RIGHT;
 
         this.myScrollVariableDelay = 0.5;
         this.myScrollVariableMinXThreshold = 0.6;
@@ -14,4 +16,4 @@ PP.EasyTuneWidgetSetup = class EasyTuneWidgetSetup {
 
         this.myRefreshVariablesDelay = null;
     }
-};
+}

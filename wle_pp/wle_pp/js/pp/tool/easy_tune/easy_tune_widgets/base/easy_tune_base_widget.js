@@ -1,11 +1,14 @@
-PP.EasyTuneBaseWidgetParams = class EasyTuneBaseWidgetParams {
+import { Timer } from "../../../../cauldron/cauldron/timer";
+
+export class EasyTuneBaseWidgetParams {
+
     constructor() {
         this.myVariablesImportCallback = null;   // Signature: callback()
         this.myVariablesExportCallback = null;   // Signature: callback()
     }
-};
+}
 
-PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
+export class EasyTuneBaseWidget {
 
     constructor(params) {
         this._mySetup = null;
@@ -27,8 +30,8 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
         this._myScrollVariableTimer = 0;
         this._myHasScrolled = false;
 
-        this._myResetImportLabelTimer = new PP.Timer(0, false);
-        this._myResetExportLabelTimer = new PP.Timer(0, false);
+        this._myResetImportLabelTimer = new Timer(0, false);
+        this._myResetExportLabelTimer = new Timer(0, false);
     }
 
     setVisible(visible) {
@@ -44,7 +47,7 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
     setEasyTuneVariable(variable, appendToVariableName) {
         this._myVariable = variable;
 
-        if ((typeof appendToVariableName) !== 'undefined') {
+        if ((typeof appendToVariableName) !== undefined) {
             this._myAppendToVariableName = appendToVariableName;
         } else {
             this._myAppendToVariableName = "";
@@ -138,7 +141,7 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
         this._myResetExportLabelTimer.setDuration(this._mySetup.myImportExportResetLabelSeconds);
 
         this._myUI.build(parentObject, this._mySetup, additionalSetup);
-        this._myUI.setImportExportButtonsActive(this._myAdditionalSetup.myEnableVariablesImportExportButtons);
+        this._myUI.setImportExportButtonsActive(this._myAdditionalSetup.myVariablesImportExportButtonsEnabled);
 
         this._startHook(parentObject, additionalSetup);
 
@@ -297,4 +300,4 @@ PP.EasyTuneBaseWidget = class EasyTuneBaseWidget {
             this._myParams.myVariablesExportCallback();
         }
     }
-};
+}

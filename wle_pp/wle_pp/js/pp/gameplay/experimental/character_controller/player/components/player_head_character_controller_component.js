@@ -1,14 +1,15 @@
-import { Component, Type } from '@wonderlandengine/api';
+import { Component, Property } from "@wonderlandengine/api";
+import { PlayerHeadCharacterController } from "../player_head_character_controller";
 
-PP.PlayerHeadCharacterControllerComponent = class PlayerHeadCharacterControllerComponent extends Component {
-    static TypeName = 'pp-player-head-character-controller';
+export class PlayerHeadCharacterControllerComponent extends Component {
+    static TypeName = "pp-player-head-character-controller";
     static Properties = {};
 
     init() {
     }
 
     start() {
-        this._myPlayerHeadCharacterController = new PP.PlayerHeadCharacterController();
+        this._myPlayerHeadCharacterController = new PlayerHeadCharacterController();
     }
 
     update(dt) {
@@ -18,6 +19,4 @@ PP.PlayerHeadCharacterControllerComponent = class PlayerHeadCharacterControllerC
     getPlayerHeadCharacterController() {
         return this._myPlayerHeadCharacterController;
     }
-};
-
-WL.registerComponent(PP.PlayerHeadCharacterControllerComponent);
+}

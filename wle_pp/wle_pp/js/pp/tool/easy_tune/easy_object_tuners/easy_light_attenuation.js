@@ -1,21 +1,9 @@
-WL.registerComponent("pp-easy-light-attenuation", {
-    _myVariableName: { type: WL.Type.String, default: "" },
-    _mySetAsDefault: { type: WL.Type.Bool, default: false },
-    _myUseTuneTarget: { type: WL.Type.Bool, default: false }
+import { LightComponent } from "@wonderlandengine/api";
+import { EasyTuneNumber } from "../easy_tune_variable_types";
+import { EasyObjectTuner } from "./easy_object_tuner";
 
-}, {
-    init: function () {
-        this._myEasyObjectTuner = new PP.EasyLightAttenuation(this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
-    },
-    start: function () {
-        this._myEasyObjectTuner.start();
-    },
-    update: function (dt) {
-        this._myEasyObjectTuner.update(dt);
-    }
-});
+export class EasyLightAttenuation extends EasyObjectTuner {
 
-PP.EasyLightAttenuation = class EasyLightAttenuation extends PP.EasyObjectTuner {
     constructor(object, variableName, setAsDefault, useTuneTarget) {
         super(object, variableName, setAsDefault, useTuneTarget);
     }
@@ -26,7 +14,7 @@ PP.EasyLightAttenuation = class EasyLightAttenuation extends PP.EasyObjectTuner 
     }
 
     _createEasyTuneVariable(variableName) {
-        return new PP.EasyTuneNumber(variableName, this._getDefaultValue(), 0.01, 3, 0, 1);
+        return new EasyTuneNumber(variableName, this._getDefaultValue(), 0.01, 3, 0, 1);
     }
 
     _getObjectValue(object) {
@@ -41,7 +29,7 @@ PP.EasyLightAttenuation = class EasyLightAttenuation extends PP.EasyObjectTuner 
     _updateObjectValue(object, value) {
         let attenuation = value;
 
-        let light = object.pp_getComponent("light");
+        let light = object.pp_getComponent(LightComponent);
         if (light) {
             light.color[3] = attenuation;
         }
@@ -50,11 +38,11 @@ PP.EasyLightAttenuation = class EasyLightAttenuation extends PP.EasyObjectTuner 
     _getLightAttenuation(object) {
         let attenuation = this._getDefaultValue();
 
-        let light = object.pp_getComponent("light");
+        let light = object.pp_getComponent(LightComponent);
         if (light) {
             attenuation = light.color[3];
         }
 
         return attenuation;
     }
-};
+}

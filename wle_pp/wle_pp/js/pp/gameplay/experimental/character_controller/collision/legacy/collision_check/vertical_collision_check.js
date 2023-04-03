@@ -1,8 +1,10 @@
-PP.CollisionCheck.prototype._verticalCheck = function () {
-    let newFeetPosition = PP.vec3_create();
-    let additionalFixedMovement = PP.vec3_create();
-    let zero = PP.vec3_create();
-    zero.vec3_zero();
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionCheck } from "./collision_check";
+
+CollisionCheck.prototype._verticalCheck = function () {
+    let newFeetPosition = vec3_create();
+    let additionalFixedMovement = vec3_create();
+    let zero = vec3_create(0, 0, 0);
     return function _verticalCheck(verticalMovement, originalMovementSign, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, outFixedMovement) {
         collisionRuntimeParams.myIsCollidingVertically = false;
         collisionRuntimeParams.myVerticalCollisionHit.reset();
@@ -31,7 +33,7 @@ PP.CollisionCheck.prototype._verticalCheck = function () {
             if (!canStay) {
                 outFixedMovement.vec3_zero();
 
-                // #TODO probably this should not be reset, you should be required to check if the movement was ok to be sure this values have a meaning
+                // #TODO Probably this should not be reset, you should be required to check if the movement was ok to be sure this values have a meaning
                 collisionRuntimeParams.myHasSnappedOnGround = false;
                 collisionRuntimeParams.myHasSnappedOnCeiling = false;
                 collisionRuntimeParams.myHasPoppedOutGround = false;
@@ -44,15 +46,15 @@ PP.CollisionCheck.prototype._verticalCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._verticalMovementAdjustment = function () {
-    let startOffset = PP.vec3_create();
-    let endOffset = PP.vec3_create();
-    let tempVector = PP.vec3_create();
-    let furtherDirection = PP.vec3_create();
-    let furtherDirectionPosition = PP.vec3_create();
-    let upNegate = PP.vec3_create();
-    let origin = PP.vec3_create();
-    let direction = PP.vec3_create();
+CollisionCheck.prototype._verticalMovementAdjustment = function () {
+    let startOffset = vec3_create();
+    let endOffset = vec3_create();
+    let tempVector = vec3_create();
+    let furtherDirection = vec3_create();
+    let furtherDirectionPosition = vec3_create();
+    let upNegate = vec3_create();
+    let origin = vec3_create();
+    let direction = vec3_create();
     return function _verticalMovementAdjustment(verticalMovement, isMovementDownward, originalMovementSign, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, outFixedMovement) {
         this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugVerticalMovementActive;
 
@@ -180,12 +182,12 @@ PP.CollisionCheck.prototype._verticalMovementAdjustment = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._verticalPositionCheck = function () {
-    let smallHeightFixOffset = PP.vec3_create();
-    let heightOffset = PP.vec3_create();
-    let startPosition = PP.vec3_create();
-    let endPosition = PP.vec3_create();
-    let direction = PP.vec3_create();
+CollisionCheck.prototype._verticalPositionCheck = function () {
+    let smallHeightFixOffset = vec3_create();
+    let heightOffset = vec3_create();
+    let startPosition = vec3_create();
+    let endPosition = vec3_create();
+    let direction = vec3_create();
     return function _verticalPositionCheck(feetPosition, checkUpward, height, up, forward, collisionCheckParams, collisionRuntimeParams) {
         if (height < 0.00001) {
             return true;
@@ -249,14 +251,14 @@ PP.CollisionCheck.prototype._verticalPositionCheck = function () {
     };
 }();
 
-PP.CollisionCheck.prototype._getVerticalCheckPositions = function () {
+CollisionCheck.prototype._getVerticalCheckPositions = function () {
     let checkPositions = [];
     let cachedCheckPositions = [];
     let currentCachedCheckPositionIndex = 0;
     let _localGetCachedCheckPosition = function () {
         let item = null;
         while (cachedCheckPositions.length <= currentCachedCheckPositionIndex) {
-            cachedCheckPositions.push(PP.vec3_create());
+            cachedCheckPositions.push(vec3_create());
         }
 
         item = cachedCheckPositions[currentCachedCheckPositionIndex];
@@ -264,7 +266,7 @@ PP.CollisionCheck.prototype._getVerticalCheckPositions = function () {
         return item;
     };
 
-    let currentDirection = PP.vec3_create();
+    let currentDirection = vec3_create();
     return function _getVerticalCheckPositions(feetPosition, up, forward, collisionCheckParams, collisionRuntimeParams) {
         checkPositions.length = 0;
         currentCachedCheckPositionIndex = 0;
@@ -297,7 +299,7 @@ PP.CollisionCheck.prototype._getVerticalCheckPositions = function () {
 
 
 
-Object.defineProperty(PP.CollisionCheck.prototype, "_verticalCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_verticalMovementAdjustment", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_verticalPositionCheck", { enumerable: false });
-Object.defineProperty(PP.CollisionCheck.prototype, "_getVerticalCheckPositions", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_verticalCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_verticalMovementAdjustment", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_verticalPositionCheck", { enumerable: false });
+Object.defineProperty(CollisionCheck.prototype, "_getVerticalCheckPositions", { enumerable: false });

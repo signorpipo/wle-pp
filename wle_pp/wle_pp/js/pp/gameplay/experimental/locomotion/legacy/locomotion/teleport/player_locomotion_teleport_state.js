@@ -1,4 +1,13 @@
-PP.PlayerLocomotionTeleportState = class PlayerLocomotionTeleportState extends PP.State {
+import { State } from "../../../../../../cauldron/fsm/state";
+import { getGamepads } from "../../../../../../input/cauldron/input_globals";
+import { InputUtils } from "../../../../../../input/cauldron/input_utils";
+import { GamepadButtonID } from "../../../../../../input/gamepad/gamepad_buttons";
+import { quat2_create, quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { CollisionRuntimeParams } from "../../../../character_controller/collision/legacy/collision_check/collision_params";
+import { getCollisionCheck } from "../player_locomotion_component";
+
+export class PlayerLocomotionTeleportState extends State {
+
     constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
         super();
 
@@ -9,38 +18,42 @@ PP.PlayerLocomotionTeleportState = class PlayerLocomotionTeleportState extends P
 
         this._myTeleportAsMovementFailed = false;
     }
-};
+}
 
-PP.PlayerLocomotionTeleportState.prototype._checkTeleport = function () {
+
+
+// IMPLEMENTATION
+
+PlayerLocomotionTeleportState.prototype._checkTeleport = function () {
     return function _checkTeleport(teleportPosition, feetTransformQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
-        PP.myCollisionCheck.teleport(teleportPosition, feetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
+        getCollisionCheck(this._myTeleportParams.myEngine).teleport(teleportPosition, feetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
         if (checkTeleportCollisionRuntimeParams != null) {
             checkTeleportCollisionRuntimeParams.copy(collisionRuntimeParams);
         }
     };
 }();
 
-PP.PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function () {
-    let checkTeleportMovementCollisionRuntimeParams = new PP.CollisionRuntimeParams();
-    let feetRotationQuat = PP.quat_create();
-    let feetPosition = PP.vec3_create();
-    let feetUp = PP.vec3_create();
-    let teleportFeetForward = PP.vec3_create();
-    let teleportFeetRotationQuat = PP.quat_create();
-    let teleportFeetTransformQuat = PP.quat2_create();
+PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function () {
+    let checkTeleportMovementCollisionRuntimeParams = new CollisionRuntimeParams();
+    let feetRotationQuat = quat_create();
+    let feetPosition = vec3_create();
+    let feetUp = vec3_create();
+    let teleportFeetForward = vec3_create();
+    let teleportFeetRotationQuat = quat_create();
+    let teleportFeetTransformQuat = quat2_create();
 
-    let currentFeetPosition = PP.vec3_create();
-    let fixedTeleportPosition = PP.vec3_create();
+    let currentFeetPosition = vec3_create();
+    let fixedTeleportPosition = vec3_create();
 
-    let teleportMovement = PP.vec3_create();
-    let extraVerticalMovement = PP.vec3_create();
-    let movementToTeleportPosition = PP.vec3_create();
-    let movementFeetTransformQuat = PP.quat2_create();
+    let teleportMovement = vec3_create();
+    let extraVerticalMovement = vec3_create();
+    let movementToTeleportPosition = vec3_create();
+    let movementFeetTransformQuat = quat2_create();
     return function _checkTeleportAsMovement(teleportPosition, feetTransformQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams) {
         feetPosition = feetTransformQuat.quat2_getPosition(feetPosition);
         feetRotationQuat = feetTransformQuat.quat2_getRotationQuat(feetRotationQuat);
 
-        // first try a normal teleport
+        // First try a normal teleport
         feetUp = feetRotationQuat.quat_getUp(feetUp);
         teleportFeetForward = teleportPosition.vec3_sub(feetPosition, teleportFeetForward).vec3_removeComponentAlongAxis(feetUp, teleportFeetForward);
         teleportFeetForward.vec3_normalize(teleportFeetForward);
@@ -53,7 +66,7 @@ PP.PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function (
 
         this._checkTeleport(teleportPosition, teleportFeetTransformQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams);
 
-        // if teleport is ok then we can check movement knowing we have to move toward the teleported position (which has also snapped/fixed the position)
+        // If teleport is ok then we can check movement knowing we have to move toward the teleported position (which has also snapped/fixed the position)
         if (!collisionRuntimeParams.myTeleportCanceled) {
             let teleportMovementValid = false;
 
@@ -75,7 +88,7 @@ PP.PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function (
                 }
 
                 movementFeetTransformQuat.quat2_setPositionRotationQuat(currentFeetPosition, feetRotationQuat);
-                PP.myCollisionCheck.move(teleportMovement, movementFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, checkTeleportMovementCollisionRuntimeParams);
+                getCollisionCheck(this._myTeleportParams.myEngine).move(teleportMovement, movementFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, checkTeleportMovementCollisionRuntimeParams);
 
                 if (!checkTeleportMovementCollisionRuntimeParams.myHorizontalMovementCanceled && !checkTeleportMovementCollisionRuntimeParams.myVerticalMovementCanceled) {
                     movementToTeleportPosition = fixedTeleportPosition.vec3_sub(checkTeleportMovementCollisionRuntimeParams.myNewPosition, movementToTeleportPosition);
@@ -101,12 +114,12 @@ PP.PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function (
     };
 }();
 
-PP.PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
-    let playerUp = PP.vec3_create();
-    let feetTransformQuat = PP.quat2_create();
-    let newFeetTransformQuat = PP.quat2_create();
-    let newFeetRotationQuat = PP.quat_create();
-    let teleportRotation = PP.quat_create();
+PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
+    let playerUp = vec3_create();
+    let feetTransformQuat = quat2_create();
+    let newFeetTransformQuat = quat2_create();
+    let newFeetRotationQuat = quat_create();
+    let teleportRotation = quat_create();
     return function _teleportToPosition(teleportPosition, rotationOnUp, collisionRuntimeParams, forceTeleport = false) {
         this._myTeleportAsMovementFailed = false;
 
@@ -120,8 +133,8 @@ PP.PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
 
         newFeetTransformQuat.quat2_setPositionRotationQuat(teleportPosition, newFeetRotationQuat);
 
-        if (PP.myGamepads[PP.InputUtils.getOppositeHandedness(this._myTeleportParams.myHandedness)].getButtonInfo(PP.GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
-            PP.myCollisionCheck.positionCheck(true, newFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
+        if (getGamepads(this._myTeleportParams.myEngine)[InputUtils.getOppositeHandedness(this._myTeleportParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
+            getCollisionCheck(this._myTeleportParams.myEngine).positionCheck(true, newFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
 
             this._myTeleportParams.myPlayerHeadManager.teleportPositionFeet(teleportPosition);
             if (rotationOnUp != 0) {
@@ -129,7 +142,7 @@ PP.PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
                 this._myTeleportParams.myPlayerHeadManager.rotateFeetQuat(teleportRotation);
             }
         } else {
-            //should teleport then rotate
+            // Should teleport then rotate
             this._myTeleportParams.myPlayerTransformManager.teleportTransformQuat(newFeetTransformQuat, collisionRuntimeParams, forceTeleport);
         }
     };
