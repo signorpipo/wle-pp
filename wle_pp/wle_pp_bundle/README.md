@@ -9,10 +9,10 @@ A collection of playground template projects that already include the PP library
 A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
 
 You can download the library through `npm`: 
-  * [`npm install wle_pp`](https://www.npmjs.com/package/wle_pp)
+  * [`npm install wle-pp`](https://www.npmjs.com/package/wle-pp)
     * unbundled version of the library
     * install the library as a list of files
-  * [`npm install wle_pp_bundle`](https://www.npmjs.com/package/wle_pp_bundle)
+  * [`npm install wle-pp-bundle`](https://www.npmjs.com/package/wle-pp-bundle)
     * bundled version of the library
     * install the library as a single bundle file
 
