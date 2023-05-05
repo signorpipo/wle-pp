@@ -1,3 +1,27 @@
+# :warning: Warning
+
+The following documentation has not been updated yet since the migration to Wonderland Engine version 1.0.0.  
+You can get the library and the template projects with the following links.
+
+A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).  
+A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle_pplaygrounds).
+
+A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
+
+You can download the library through `npm`: 
+  * [`npm install wle_pp`](https://www.npmjs.com/package/wle_pp)
+    * unbundled version of the library
+    * install the library as a list of files
+  * [`npm install wle_pp_bundle`](https://www.npmjs.com/package/wle_pp_bundle)
+    * bundled version of the library
+    * install the library as a single bundle file
+
+You can download the unbundled version of the library through the following link:
+  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+
+You can download the bundle file through the following link:
+  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
+
 # Overview
 
 A library for the [Wonderland Engine](https://wonderlandengine.com/).
@@ -573,7 +597,7 @@ The configuration is pretty straight forward:
 
 Gameplay features that are integrations of already existing functionalities so that they are easier to use and more compliant to the PP library.
 
-#### Construct Arcade
+### Construct Arcade
 
 [Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp/gameplay/integrations/construct_arcade)
 
