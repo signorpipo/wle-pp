@@ -1,5 +1,5 @@
 import { PhysicsLayerFlags } from "../../../../../../cauldron/physics/physics_layer_flags";
-import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_data";
+import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params";
 import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
 
 export class CollisionCheckParams {
@@ -244,17 +244,17 @@ export class CollisionCheckParams {
         this.myExtraTeleportCheckCallback = null;              // Signature: callback(collisionRuntimeParams) -> bool
         this.myExtraCheckTransformCheckCallback = null;        // Signature: callback(collisionRuntimeParams) -> bool
 
-        this.myDebugActive = false;
+        this.myDebugEnabled = false;
 
-        this.myDebugHorizontalMovementActive = false;
-        this.myDebugHorizontalPositionActive = false;
-        this.myDebugVerticalMovementActive = false;
-        this.myDebugVerticalPositionActive = false;
-        this.myDebugSlidingActive = false;
-        this.myDebugGroundInfoActive = false;
-        this.myDebugCeilingInfoActive = false;
-        this.myDebugRuntimeParamsActive = false;
-        this.myDebugMovementActive = false;
+        this.myDebugHorizontalMovementEnabled = false;
+        this.myDebugHorizontalPositionEnabled = false;
+        this.myDebugVerticalMovementEnabled = false;
+        this.myDebugVerticalPositionEnabled = false;
+        this.myDebugSlidingEnabled = false;
+        this.myDebugGroundInfoEnabled = false;
+        this.myDebugCeilingInfoEnabled = false;
+        this.myDebugRuntimeParamsEnabled = false;
+        this.myDebugMovementEnabled = false;
     }
 
     copy(other) {
@@ -454,17 +454,17 @@ export class CollisionCheckParams {
         this.myExtraTeleportCheckCallback = other.myExtraTeleportCheckCallback;
         this.myExtraCheckTransformCheckCallback = other.myExtraCheckTransformCheckCallback;
 
-        this.myDebugActive = other.myDebugActive;
+        this.myDebugEnabled = other.myDebugEnabled;
 
-        this.myDebugHorizontalMovementActive = other.myDebugHorizontalMovementActive;
-        this.myDebugHorizontalPositionActive = other.myDebugHorizontalPositionActive;
-        this.myDebugVerticalMovementActive = other.myDebugVerticalMovementActive;
-        this.myDebugVerticalPositionActive = other.myDebugVerticalPositionActive;
-        this.myDebugSlidingActive = other.myDebugSlidingActive;
-        this.myDebugGroundInfoActive = other.myDebugGroundInfoActive;
-        this.myDebugCeilingInfoActive = other.myDebugCeilingInfoActive;
-        this.myDebugRuntimeParamsActive = other.myDebugRuntimeParamsActive;
-        this.myDebugMovementActive = other.myDebugMovementActive;
+        this.myDebugHorizontalMovementEnabled = other.myDebugHorizontalMovementEnabled;
+        this.myDebugHorizontalPositionEnabled = other.myDebugHorizontalPositionEnabled;
+        this.myDebugVerticalMovementEnabled = other.myDebugVerticalMovementEnabled;
+        this.myDebugVerticalPositionEnabled = other.myDebugVerticalPositionEnabled;
+        this.myDebugSlidingEnabled = other.myDebugSlidingEnabled;
+        this.myDebugGroundInfoEnabled = other.myDebugGroundInfoEnabled;
+        this.myDebugCeilingInfoEnabled = other.myDebugCeilingInfoEnabled;
+        this.myDebugRuntimeParamsEnabled = other.myDebugRuntimeParamsEnabled;
+        this.myDebugMovementEnabled = other.myDebugMovementEnabled;
     }
 }
 

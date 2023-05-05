@@ -1,4 +1,4 @@
-import { Component, Property } from "@wonderlandengine/api";
+import { Component } from "@wonderlandengine/api";
 import { CharacterController } from "../character_controller";
 
 export class CharacterControllerComponent extends Component {

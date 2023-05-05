@@ -1,4 +1,4 @@
-import { Component, Property } from "@wonderlandengine/api";
+import { Component } from "@wonderlandengine/api";
 import { PlayerViewOcclusion } from "../player_view_occlusion";
 
 export class PlayerViewOcclusionComponent extends Component {

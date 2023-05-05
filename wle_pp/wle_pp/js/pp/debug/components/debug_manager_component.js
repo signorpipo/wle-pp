@@ -1,5 +1,5 @@
-import { Component, Property } from "@wonderlandengine/api";
-import { getDebugManager, hasDebugManager, removeDebugManager, setDebugManager } from "../debug_globals";
+import { Component } from "@wonderlandengine/api";
+import { Globals } from "../../pp/globals";
 import { DebugManager } from "../debug_manager";
 
 export class DebugManagerComponent extends Component {
@@ -10,10 +10,10 @@ export class DebugManagerComponent extends Component {
         this._myDebugManager = null;
 
         // Prevents double global from same engine
-        if (!hasDebugManager(this.engine)) {
+        if (!Globals.hasDebugManager(this.engine)) {
             this._myDebugManager = new DebugManager(this.engine);
 
-            setDebugManager(this._myDebugManager, this.engine);
+            Globals.setDebugManager(this._myDebugManager, this.engine);
         }
     }
 
@@ -30,8 +30,10 @@ export class DebugManagerComponent extends Component {
     }
 
     onDestroy() {
-        if (this._myDebugManager != null && getDebugManager(this.engine) == this._myDebugManager) {
-            removeDebugManager(this.engine);
+        if (this._myDebugManager != null && Globals.getDebugManager(this.engine) == this._myDebugManager) {
+            Globals.removeDebugManager(this.engine);
+
+            this._myDebugManager.destroy();
         }
     }
 }

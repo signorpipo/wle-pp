@@ -1,27 +1,14 @@
-import { Component, Property } from "@wonderlandengine/api";
+import { Component } from "@wonderlandengine/api";
 import { XRUtils } from "../../../cauldron/utils/xr_utils";
 import { quat2_create, quat_create, vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { BasePoseParams } from "../base_pose";
-import { HeadPose } from "../head_pose";
+import { Globals } from "../../../pp/globals";
 
 export class SetHeadLocalTransformComponent extends Component {
     static TypeName = "pp-set-head-local-transform";
-    static Properties = {
-        _myCameraNonVR: Property.object(),
-        _myFixForward: Property.bool(true),
-        _myUpdateOnViewReset: Property.bool(true)
-    };
-
-    init() {
-        this._myHeadPose = new HeadPose(new BasePoseParams(this.engine));
-        this._myHeadPose.setFixForward(this._myFixForward);
-        this._myHeadPose.setUpdateOnViewReset(this._myUpdateOnViewReset);
-        this._myHeadPose.registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
-    }
+    static Properties = {};
 
     start() {
-        this._myHeadPose.start();
-        this.update(0);
+        Globals.getHeadPose().registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
     }
 
     update(dt) {
@@ -31,6 +18,10 @@ export class SetHeadLocalTransformComponent extends Component {
     onPoseUpdated() {
         // Implemented outside class definition
     }
+
+    onDestroy() {
+        Globals.getHeadPose()?.unregisterPoseUpdatedEventListener(this);
+    }
 }
 
 
@@ -38,28 +29,28 @@ export class SetHeadLocalTransformComponent extends Component {
 // IMPLEMENTATION
 
 SetHeadLocalTransformComponent.prototype.update = function () {
-    let cameraNonVRRotation = quat_create();
-    let cameraNonVRUp = vec3_create();
-    let cameraNonVRPosition = vec3_create();
+    let cameraNonXRRotation = quat_create();
+    let cameraNonXRUp = vec3_create();
+    let cameraNonXRPosition = vec3_create();
     return function update(dt) {
-        if (XRUtils.isSessionActive(this.engine)) {
-            this._myHeadPose.update(dt);
-        } else {
-            cameraNonVRRotation = this._myCameraNonVR.pp_getRotationLocalQuat(cameraNonVRRotation);
-            if (this._myFixForward) {
-                cameraNonVRRotation.quat_rotateAxisRadians(Math.PI, cameraNonVRRotation.quat_getUp(cameraNonVRUp), cameraNonVRRotation);
+        if (!XRUtils.isSessionActive(this.engine)) {
+            let cameraNonXR = Globals.getPlayerObjects(this.engine).myCameraNonXR;
+
+            cameraNonXRRotation = cameraNonXR.pp_getRotationLocalQuat(cameraNonXRRotation);
+            if (Globals.isPoseForwardFixed(this.engine)) {
+                cameraNonXRRotation.quat_rotateAxisRadians(Math.PI, cameraNonXRRotation.quat_getUp(cameraNonXRUp), cameraNonXRRotation);
             }
-            this.object.pp_setPositionLocal(this._myCameraNonVR.pp_getPositionLocal(cameraNonVRPosition));
-            this.object.pp_setRotationLocalQuat(cameraNonVRRotation);
+            this.object.pp_setPositionLocal(cameraNonXR.pp_getPositionLocal(cameraNonXRPosition));
+            this.object.pp_setRotationLocalQuat(cameraNonXRRotation);
         }
     };
 }();
 
 SetHeadLocalTransformComponent.prototype.onPoseUpdated = function () {
     let headPoseTransform = quat2_create();
-    return function onPoseUpdated() {
-        if (XRUtils.isSessionActive(this.engine)) {
-            this.object.pp_setTransformLocalQuat(this._myHeadPose.getTransformQuat(headPoseTransform));
+    return function onPoseUpdated(pose) {
+        if (this.active && XRUtils.isSessionActive(this.engine)) {
+            this.object.pp_setTransformLocalQuat(pose.getTransformQuat(headPoseTransform, null));
         }
     }
 }();

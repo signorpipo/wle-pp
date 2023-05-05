@@ -1,4 +1,5 @@
-import { JSUtils } from "../../../cauldron/utils/js_utils";
+import { JSUtils } from "../../../cauldron/js/utils/js_utils";
+import { Globals } from "../../../pp/globals";
 import { DebugFunctionsOverwriter, DebugFunctionsOverwriterParams } from "../debug_functions_overwriter";
 
 export class DebugFunctionsPerformanceAnalyzerParams extends DebugFunctionsOverwriterParams {
@@ -88,7 +89,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
             myLastFunctionExecutionTime: 0,
             myOriginalFunctionOverheadExecutionTimes: []
         };
-        this._myTimeOfLastReset = window.performance.now();
+        this._myTimeOfLastReset = Globals.getWindow(this._myParams.myEngine).performance.now();
         this._myMaxTimeElapsedSinceLastReset = 0;
 
         let originalPush = Array.prototype["push"];
@@ -105,7 +106,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
     }
 
     getTimeElapsedSinceLastReset() {
-        return window.performance.now() - this._myTimeOfLastReset - this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset;
+        return Globals.getWindow(this._myParams.myEngine).performance.now() - this._myTimeOfLastReset - this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset;
     }
 
     getMaxTimeElapsedSinceLastReset() {
@@ -123,7 +124,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
 
         this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset = 0;
 
-        this._myTimeOfLastReset = window.performance.now();
+        this._myTimeOfLastReset = Globals.getWindow(this._myParams.myEngine).performance.now();
     }
 
     resetMaxResults() {
@@ -226,7 +227,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
 
     _updateDerivatesResults() {
         let timeElapsedSinceLastReset = this.getTimeElapsedSinceLastReset();
-        let beforeTime = window.performance.now();
+        let beforeTime = Globals.getWindow(this._myParams.myEngine).performance.now();
 
         for (let property of this._myFunctionPerformanceAnalysisResults.keys()) {
             let results = this._myFunctionPerformanceAnalysisResults.get(property);
@@ -250,11 +251,11 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
             results.myTimeElapsedSinceLastReset = timeElapsedSinceLastReset;
         }
 
-        this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
+        this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += Globals.getWindow(this._myParams.myEngine).performance.now() - beforeTime;
     }
 
     _updateMaxResults() {
-        let beforeTime = window.performance.now();
+        let beforeTime = Globals.getWindow(this._myParams.myEngine).performance.now();
 
         this._myMaxTimeElapsedSinceLastReset = Math.max(this._myMaxTimeElapsedSinceLastReset, this.getTimeElapsedSinceLastReset());
 
@@ -268,7 +269,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
             }
         }
 
-        this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
+        this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += Globals.getWindow(this._myParams.myEngine).performance.now() - beforeTime;
     }
 
     _getOverwrittenFunctionInternal(reference, propertyName, referencePath, isClass, isFunction, isConstructor) {
@@ -289,6 +290,8 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
                 this._myFunctionPerformanceAnalysisResults.set(propertyID, analysisResults);
 
                 try {
+                    let window = Globals.getWindow(this._myParams.myEngine);
+
                     let functionPerformanceAnalysisResults = this._myFunctionPerformanceAnalysisResults.get(propertyID);
                     let executionTimes = this._myExecutionTimes;
 
@@ -462,7 +465,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
                         });
                     }
                 } catch (error) {
-                    if (this._myParams.myDebugLogActive) {
+                    if (this._myParams.myLogEnabled) {
                         console.error("Function:", propertyName, "of:", reference, "can't be overwritten.\nError:", error);
                     }
                 }

@@ -1,5 +1,4 @@
-import { getOriginalConsoleAssert, getOriginalConsoleClear, getOriginalConsoleDebug, getOriginalConsoleError, getOriginalConsoleInfo, getOriginalConsoleLog, getOriginalConsoleWarn } from "./console_original_functions";
-
+import { ConsoleOriginalFunctions } from "./console_original_functions";
 
 export class ConsoleVR {
 
@@ -9,43 +8,43 @@ export class ConsoleVR {
 
     log(...args) {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleLog().apply(console, args);
+            ConsoleOriginalFunctions.getConsoleOriginalLog().apply(console, args);
         }
     }
 
     error(...args) {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleError().apply(console, args);
+            ConsoleOriginalFunctions.getConsoleOriginalError().apply(console, args);
         }
     }
 
     warn(...args) {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleWarn().apply(console, args);
+            ConsoleOriginalFunctions.getConsoleOriginalWarn().apply(console, args);
         }
     }
 
     info(...args) {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleInfo().apply(console, args);
+            ConsoleOriginalFunctions.getConsoleOriginalInfo().apply(console, args);
         }
     }
 
     debug(...args) {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleDebug().apply(console, args);
+            ConsoleOriginalFunctions.getConsoleOriginalDebug().apply(console, args);
         }
     }
 
     assert(...args) {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleAssert().apply(console, args);
+            ConsoleOriginalFunctions.getConsoleOriginalAssert().apply(console, args);
         }
     }
 
     clear() {
         if (this._myForwardToBrowserConsole) {
-            getOriginalConsoleClear().apply(console);
+            ConsoleOriginalFunctions.getConsoleOriginalClear().apply(console);
         }
     }
 

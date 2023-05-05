@@ -56,7 +56,7 @@ CollisionCheck.prototype._verticalMovementAdjustment = function () {
     let origin = vec3_create();
     let direction = vec3_create();
     return function _verticalMovementAdjustment(verticalMovement, isMovementDownward, originalMovementSign, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, outFixedMovement) {
-        this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugVerticalMovementActive;
+        this._myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugVerticalMovementEnabled;
 
         startOffset.vec3_zero();
         endOffset.vec3_zero();
@@ -193,7 +193,7 @@ CollisionCheck.prototype._verticalPositionCheck = function () {
             return true;
         }
 
-        this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugVerticalPositionActive;
+        this._myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugVerticalPositionEnabled;
 
         let checkPositions = this._getVerticalCheckPositions(feetPosition, up, forward, collisionCheckParams, collisionRuntimeParams);
 

@@ -1,6 +1,6 @@
 import { Mesh, MeshAttribute, MeshIndexType } from "@wonderlandengine/api";
 import { vec2_create, vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../wl/engine_globals";
+import { Globals } from "../../pp/globals";
 
 export class MeshCreationVertexParams {
 
@@ -21,7 +21,7 @@ export class MeshCreationTriangleParams {
 
 export class MeshCreationParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myVertexes = [];
         this.myTriangles = [];
 
@@ -29,50 +29,7 @@ export class MeshCreationParams {
     }
 }
 
-export function createPlaneMesh() {
-    let vertexCount = 4;
-
-    let meshParams = new MeshCreationParams();
-
-    for (let i = 0; i < vertexCount; ++i) {
-        let vertexParams = new MeshCreationVertexParams();
-
-        vertexParams.myPosition = new vec3_create();
-        vertexParams.myPosition[0] = -1 + (i & 1) * 2;
-        vertexParams.myPosition[1] = -1 + ((i & 2) >> 1) * 2; // This is a quick way to have positions (-1,-1) (1,-1) (1,-1) (1,1)
-        vertexParams.myPosition[2] = 0;
-
-        vertexParams.myTextureCoordinates = new vec2_create();
-        vertexParams.myTextureCoordinates[0] = (i & 1);
-        vertexParams.myTextureCoordinates[1] = ((i & 2) >> 1);
-
-        vertexParams.myNormal = new vec3_create();
-        vertexParams.myNormal[0] = 0;
-        vertexParams.myNormal[1] = 0;
-        vertexParams.myNormal[2] = 1;
-
-        meshParams.myVertexes.push(vertexParams);
-    }
-
-    let firstTriangle = new MeshCreationTriangleParams();
-    firstTriangle.myIndexes[0] = 0;
-    firstTriangle.myIndexes[1] = 1;
-    firstTriangle.myIndexes[2] = 2;
-
-    let secondTriangle = new MeshCreationTriangleParams();
-    secondTriangle.myIndexes[0] = 2;
-    secondTriangle.myIndexes[1] = 1;
-    secondTriangle.myIndexes[2] = 3;
-
-    meshParams.myTriangles.push(firstTriangle);
-    meshParams.myTriangles.push(secondTriangle);
-
-    let mesh = createMesh(meshParams);
-
-    return mesh;
-}
-
-export function createMesh(meshCreationParams) {
+export function create(meshCreationParams) {
     let indexData = [];
     for (let triangle of meshCreationParams.myTriangles) {
         indexData.push(triangle.myIndexes[0]);
@@ -138,21 +95,18 @@ export function createMesh(meshCreationParams) {
     return mesh;
 }
 
-export let cloneMesh = function () {
+export let clone = function () {
     let position = vec3_create();
     let textureCoordinates = vec2_create();
     let normal = vec3_create();
     let color = vec4_create();
 
-    return function cloneMesh(mesh) {
+    return function clone(mesh) {
         if (mesh == null) {
             return null;
         }
 
-        let clonedIndexData = new Uint32Array(mesh.indexData.length);
-        for (let i = 0; i < mesh.indexData.length; i++) {
-            clonedIndexData[i] = mesh.indexData[i];
-        }
+        let clonedIndexData = mesh.indexData.pp_clone();
 
         let clonedMesh = new Mesh(mesh.engine, {
             vertexCount: mesh.vertexCount,
@@ -222,13 +176,13 @@ export let cloneMesh = function () {
     };
 }();
 
-export let invertMesh = function () {
+export let invert = function () {
     let position = vec3_create();
     let textureCoordinates = vec2_create();
     let normal = vec3_create();
     let color = vec4_create();
 
-    return function invertMesh(mesh) {
+    return function invert(mesh) {
         if (mesh == null) {
             return null;
         }
@@ -310,9 +264,52 @@ export let invertMesh = function () {
     };
 }();
 
+export function createPlane(engine = Globals.getMainEngine()) {
+    let vertexCount = 4;
+
+    let meshCreationParams = new MeshCreationParams(engine);
+
+    for (let i = 0; i < vertexCount; ++i) {
+        let vertexCreationParams = new MeshCreationVertexParams();
+
+        vertexCreationParams.myPosition = new vec3_create();
+        vertexCreationParams.myPosition[0] = -1 + (i & 1) * 2;
+        vertexCreationParams.myPosition[1] = -1 + ((i & 2) >> 1) * 2; // This is a quick way to have positions (-1,-1) (1,-1) (1,-1) (1,1)
+        vertexCreationParams.myPosition[2] = 0;
+
+        vertexCreationParams.myTextureCoordinates = new vec2_create();
+        vertexCreationParams.myTextureCoordinates[0] = (i & 1);
+        vertexCreationParams.myTextureCoordinates[1] = ((i & 2) >> 1);
+
+        vertexCreationParams.myNormal = new vec3_create();
+        vertexCreationParams.myNormal[0] = 0;
+        vertexCreationParams.myNormal[1] = 0;
+        vertexCreationParams.myNormal[2] = 1;
+
+        meshCreationParams.myVertexes.push(vertexCreationParams);
+    }
+
+    let firstTriangle = new MeshCreationTriangleParams();
+    firstTriangle.myIndexes[0] = 0;
+    firstTriangle.myIndexes[1] = 1;
+    firstTriangle.myIndexes[2] = 2;
+
+    let secondTriangle = new MeshCreationTriangleParams();
+    secondTriangle.myIndexes[0] = 2;
+    secondTriangle.myIndexes[1] = 1;
+    secondTriangle.myIndexes[2] = 3;
+
+    meshCreationParams.myTriangles.push(firstTriangle);
+    meshCreationParams.myTriangles.push(secondTriangle);
+
+    let mesh = MeshUtils.create(meshCreationParams);
+
+    return mesh;
+}
+
 export let MeshUtils = {
-    createPlaneMesh,
-    createMesh,
-    cloneMesh,
-    invertMesh
+    create,
+    clone,
+    invert,
+    createPlane
 };

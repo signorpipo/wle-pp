@@ -1,7 +1,7 @@
 import { ColorUtils } from "../../../cauldron/utils/color_utils";
-import { getLeftGamepad, getRightGamepad } from "../../../input/cauldron/input_globals";
 import { GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
 import { vec4_create } from "../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../pp/globals";
 import { EasyTuneIntArray } from "../easy_tune_variable_types";
 import { EasyObjectTuner } from "./easy_object_tuner";
 
@@ -40,7 +40,7 @@ export class EasyTextColor extends EasyObjectTuner {
             if (this._myColorModel == 0) {
                 color = ColorUtils.rgbCodeToHuman(color);
             } else {
-                color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHsv(color));
+                color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHSV(color));
             }
         } else {
             color = this._getDefaultValue();
@@ -59,7 +59,7 @@ export class EasyTextColor extends EasyObjectTuner {
         if (this._myColorModel == 0) {
             color = ColorUtils.rgbHumanToCode(color);
         } else {
-            color = ColorUtils.hsvToRgb(ColorUtils.hsvHumanToCode(color));
+            color = ColorUtils.hsvToRGB(ColorUtils.hsvHumanToCode(color));
         }
 
         let textMaterial = this._getTextMaterial(object);
@@ -67,10 +67,10 @@ export class EasyTextColor extends EasyObjectTuner {
             textMaterial[this._myColorVariableNames[this._myColorType]] = color;
         }
 
-        if ((getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed) ||
-            (getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed)) {
+        if ((Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) ||
+            (Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed())) {
 
-            let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHsv(color));
+            let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHSV(color));
             let rgbColor = ColorUtils.color1To255(color);
 
             console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));

@@ -14,7 +14,7 @@ export class AudioSetup {
 
         this.myPreventPlayWhenAudioContextNotRunning = false;
 
-        // Spatial Setup
+        // Spatial Params
 
         this.myPosition = null;
         this.mySpatial = true;

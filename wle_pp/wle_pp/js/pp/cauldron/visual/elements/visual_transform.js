@@ -2,7 +2,7 @@
 let visualParams = new VisualTransformParams();
 visualParams.myTransform.mat4_copy(transform);
 visualParams.myLength = 0.2;
-getVisualManager().draw(visualParams);
+Globals.getVisualManager().draw(visualParams);
 
 or
 
@@ -10,14 +10,13 @@ let visualTransform = new VisualTransform(visualParams);
 */
 
 import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../wl/engine_globals";
-import { getVisualData } from "../visual_globals";
+import { Globals } from "../../../pp/globals";
 import { VisualArrow, VisualArrowParams } from "./visual_arrow";
 import { VisualElementType } from "./visual_element_types";
 
 export class VisualTransformParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myTransform = mat4_create();
         this.myLength = 0.2;
         this.myThickness = 0.005;
@@ -26,8 +25,8 @@ export class VisualTransformParams {
         this.myUpMaterial = null;
         this.myRightMaterial = null;
 
-        this.myParent = getVisualData(engine).myRootObject;
-        this.myIsLocal = false;
+        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
+        this.myLocal = false;
 
         this.myType = VisualElementType.TRANSFORM;
     }
@@ -54,6 +53,8 @@ export class VisualTransform {
         this._myVisualRight.setAutoRefresh(false);
         this._myVisualUp.setAutoRefresh(false);
         this._myVisualForward.setAutoRefresh(false);
+
+        this._myDestroyed = false;
 
         this.forceRefresh();
 
@@ -138,6 +139,18 @@ export class VisualTransform {
     _refresh() {
         // Implemented outside class definition
     }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myVisualRight.destroy();
+        this._myVisualUp.destroy();
+        this._myVisualForward.destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
+    }
 }
 
 
@@ -176,13 +189,13 @@ VisualTransform.prototype._refresh = function () {
             visualArrowParams.myThickness = this._myParams.myThickness;
 
             if (this._myParams.myRightMaterial == null) {
-                visualArrowParams.myMaterial = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myRight;
+                visualArrowParams.myMaterial = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myRight;
             } else {
                 visualArrowParams.myMaterial = this._myParams.myRightMaterial;
             }
 
             visualArrowParams.myParent = this._myParams.myParent;
-            visualArrowParams.myIsLocal = this._myParams.myIsLocal;
+            visualArrowParams.myLocal = this._myParams.myLocal;
 
             this._myVisualRight.paramsUpdated();
         }
@@ -195,13 +208,13 @@ VisualTransform.prototype._refresh = function () {
             visualArrowParams.myThickness = this._myParams.myThickness;
 
             if (this._myParams.myUpMaterial == null) {
-                visualArrowParams.myMaterial = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myUp;
+                visualArrowParams.myMaterial = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myUp;
             } else {
                 visualArrowParams.myMaterial = this._myParams.myUpMaterial;
             }
 
             visualArrowParams.myParent = this._myParams.myParent;
-            visualArrowParams.myIsLocal = this._myParams.myIsLocal;
+            visualArrowParams.myLocal = this._myParams.myLocal;
 
             this._myVisualUp.paramsUpdated();
         }
@@ -214,13 +227,13 @@ VisualTransform.prototype._refresh = function () {
             visualArrowParams.myThickness = this._myParams.myThickness;
 
             if (this._myParams.myForwardMaterial == null) {
-                visualArrowParams.myMaterial = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myForward;
+                visualArrowParams.myMaterial = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myForward;
             } else {
                 visualArrowParams.myMaterial = this._myParams.myForwardMaterial;
             }
 
             visualArrowParams.myParent = this._myParams.myParent;
-            visualArrowParams.myIsLocal = this._myParams.myIsLocal;
+            visualArrowParams.myLocal = this._myParams.myLocal;
 
             this._myVisualForward.paramsUpdated();
         }
@@ -251,7 +264,7 @@ VisualTransformParams.prototype.copy = function copy(other) {
     }
 
     this.myParent = other.myParent;
-    this.myIsLocal = other.myIsLocal;
+    this.myLocal = other.myLocal;
 
     this.myType = other.myType;
 };

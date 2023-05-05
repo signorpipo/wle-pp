@@ -1,3 +1,4 @@
+import { XRUtils } from "../../cauldron/utils/xr_utils";
 import { InputSourceType } from "../cauldron/input_types";
 import { InputUtils } from "../cauldron/input_utils";
 import { BasePose, BasePoseParams } from "./base_pose";
@@ -13,6 +14,8 @@ export class TrackedHandJointPose extends BasePose {
         this._myTrackedHandJointID = trackedHandJointID;
 
         this._myJointRadius = 0;
+
+        this._myInputSourcesChangeEventListener = null;
     }
 
     getHandedness() {
@@ -36,7 +39,7 @@ export class TrackedHandJointPose extends BasePose {
     }
 
     _getPose(xrFrame) {
-        return xrFrame.getJointPose(this._myInputSource.hand.get(this._myTrackedHandJointID), this._myReferenceSpace);
+        return xrFrame.getJointPose(this._myInputSource.hand.get(this._myTrackedHandJointID), this.getReferenceSpace());
     }
 
     _updateHook(dt, updateVelocity, xrPose) {
@@ -46,7 +49,7 @@ export class TrackedHandJointPose extends BasePose {
     }
 
     _onXRSessionStartHook(manualCall, session) {
-        session.addEventListener("inputsourceschange", function (event) {
+        this._myInputSourcesChangeEventListener = function (event) {
             if (event.removed) {
                 for (let item of event.removed) {
                     if (item == this._myInputSource) {
@@ -64,7 +67,9 @@ export class TrackedHandJointPose extends BasePose {
                     }
                 }
             }
-        }.bind(this));
+        }.bind(this);
+
+        session.addEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
 
         if (manualCall && this._myInputSource == null && session.inputSources) {
             for (let item of session.inputSources) {
@@ -79,5 +84,11 @@ export class TrackedHandJointPose extends BasePose {
 
     _onXRSessionEndHook() {
         this._myInputSource = null;
+
+        this._myInputSourcesChangeEventListener = null;
+    }
+
+    _destroyHook() {
+        XRUtils.getSession(this.getEngine())?.removeEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
     }
 }

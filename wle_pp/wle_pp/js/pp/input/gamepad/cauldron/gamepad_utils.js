@@ -39,7 +39,7 @@ export function isAnyButtonPressStart(...gamepadButtonIDsList) {
         }
     }
 
-    let isOnePressStart = false;
+    let atLeastOneButtonPressStart = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
@@ -47,17 +47,17 @@ export function isAnyButtonPressStart(...gamepadButtonIDsList) {
             let button = gamepad.getButtonInfo(buttonID);
 
             if (button.isPressStart(multiplePressCount)) {
-                isOnePressStart = true;
+                atLeastOneButtonPressStart = true;
                 break;
             }
         }
 
-        if (isOnePressStart) {
+        if (atLeastOneButtonPressStart) {
             break;
         }
     }
 
-    return isOnePressStart;
+    return atLeastOneButtonPressStart;
 }
 
 // gamepadButtonIDsList is a sequence of a gamepads and a list of buttonIDs like this ([gamepad1, squeeze, top, select], [gamepad2, bottom, squeeze, select], ...)
@@ -80,20 +80,20 @@ export function areButtonsPressStart(...gamepadButtonIDsList) {
     }
 
     let areButtonPressedRecently = true;
-    let isOnePressStart = false;
+    let atLeastOneButtonPressStart = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
             let buttonID = gamepadButtonIDs[i];
             let button = gamepad.getButtonInfo(buttonID);
 
-            if (!(button.myIsPressed && (multiplePressCount == null || button.myMultiplePressStartCount == multiplePressCount) && button.myTimePressed < _mySimultaneousPressMaxDelay)) {
+            if (!(button.myPressed && (multiplePressCount == null || button.myMultiplePressStartCount == multiplePressCount) && button.myTimePressed < _mySimultaneousPressMaxDelay)) {
                 areButtonPressedRecently = false;
                 break;
             }
 
             if (button.isPressStart(multiplePressCount)) {
-                isOnePressStart = true;
+                atLeastOneButtonPressStart = true;
             }
         }
 
@@ -102,7 +102,7 @@ export function areButtonsPressStart(...gamepadButtonIDsList) {
         }
     }
 
-    return areButtonPressedRecently && isOnePressStart;
+    return areButtonPressedRecently && atLeastOneButtonPressStart;
 }
 
 export function isAnyButtonPressEnd(...gamepadButtonIDsList) {
@@ -121,7 +121,7 @@ export function isAnyButtonPressEnd(...gamepadButtonIDsList) {
         }
     }
 
-    let isOnePressEnd = false;
+    let atLeastOneButtonPressEnd = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
@@ -129,17 +129,17 @@ export function isAnyButtonPressEnd(...gamepadButtonIDsList) {
             let button = gamepad.getButtonInfo(buttonID);
 
             if (button.isPressEnd(multiplePressCount)) {
-                isOnePressEnd = true;
+                atLeastOneButtonPressEnd = true;
                 break;
             }
         }
 
-        if (isOnePressEnd) {
+        if (atLeastOneButtonPressEnd) {
             break;
         }
     }
 
-    return isOnePressEnd;
+    return atLeastOneButtonPressEnd;
 }
 
 export function areButtonsPressEnd(...gamepadButtonIDsList) {
@@ -159,20 +159,20 @@ export function areButtonsPressEnd(...gamepadButtonIDsList) {
     }
 
     let areButtonNotPressedRecently = true;
-    let isOnePressEnd = false;
+    let atLeastOneButtonPressEnd = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
             let buttonID = gamepadButtonIDs[i];
             let button = gamepad.getButtonInfo(buttonID);
 
-            if (!(!button.myIsPressed && (multiplePressCount == null || button.myMultiplePressEndCount == multiplePressCount) && button.myTimeNotPressed < _mySimultaneousPressMaxDelay)) {
+            if (!(!button.myPressed && (multiplePressCount == null || button.myMultiplePressEndCount == multiplePressCount) && button.myTimeNotPressed < _mySimultaneousPressMaxDelay)) {
                 areButtonNotPressedRecently = false;
                 break;
             }
 
             if (button.isPressEnd(multiplePressCount)) {
-                isOnePressEnd = true;
+                atLeastOneButtonPressEnd = true;
             }
         }
 
@@ -181,7 +181,7 @@ export function areButtonsPressEnd(...gamepadButtonIDsList) {
         }
     }
 
-    return areButtonNotPressedRecently && isOnePressEnd;
+    return areButtonNotPressedRecently && atLeastOneButtonPressEnd;
 }
 
 export function isAnyButtonTouchStart(...gamepadButtonIDsList) {
@@ -200,7 +200,7 @@ export function isAnyButtonTouchStart(...gamepadButtonIDsList) {
         }
     }
 
-    let isOneTouchStart = false;
+    let atLeastOneButtonTouchStart = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
@@ -208,17 +208,17 @@ export function isAnyButtonTouchStart(...gamepadButtonIDsList) {
             let button = gamepad.getButtonInfo(buttonID);
 
             if (button.isTouchStart(multiplePressCount)) {
-                isOneTouchStart = true;
+                atLeastOneButtonTouchStart = true;
                 break;
             }
         }
 
-        if (isOneTouchStart) {
+        if (atLeastOneButtonTouchStart) {
             break;
         }
     }
 
-    return isOneTouchStart;
+    return atLeastOneButtonTouchStart;
 }
 
 export function areButtonsTouchStart(...gamepadButtonIDsList) {
@@ -238,20 +238,20 @@ export function areButtonsTouchStart(...gamepadButtonIDsList) {
     }
 
     let areButtonTouchedRecently = true;
-    let isOneTouchStart = false;
+    let atLeastOneButtonTouchStart = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
             let buttonID = gamepadButtonIDs[i];
             let button = gamepad.getButtonInfo(buttonID);
 
-            if (!(button.myIsTouched && (multipleTouchCount == null || button.myMultipleTouchStartCount == multipleTouchCount) && button.myTimeTouched < _mySimultaneousTouchMaxDelay)) {
+            if (!(button.myTouched && (multipleTouchCount == null || button.myMultipleTouchStartCount == multipleTouchCount) && button.myTimeTouched < _mySimultaneousTouchMaxDelay)) {
                 areButtonTouchedRecently = false;
                 break;
             }
 
             if (button.isTouchStart(multipleTouchCount)) {
-                isOneTouchStart = true;
+                atLeastOneButtonTouchStart = true;
             }
         }
 
@@ -260,7 +260,7 @@ export function areButtonsTouchStart(...gamepadButtonIDsList) {
         }
     }
 
-    return areButtonTouchedRecently && isOneTouchStart;
+    return areButtonTouchedRecently && atLeastOneButtonTouchStart;
 }
 
 export function isAnyButtonTouchEnd(...gamepadButtonIDsList) {
@@ -279,7 +279,7 @@ export function isAnyButtonTouchEnd(...gamepadButtonIDsList) {
         }
     }
 
-    let isOneTouchEnd = false;
+    let atLeastOneButtonTouchEnd = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
@@ -287,17 +287,17 @@ export function isAnyButtonTouchEnd(...gamepadButtonIDsList) {
             let button = gamepad.getButtonInfo(buttonID);
 
             if (button.isTouchEnd(multiplePressCount)) {
-                isOneTouchEnd = true;
+                atLeastOneButtonTouchEnd = true;
                 break;
             }
         }
 
-        if (isOneTouchEnd) {
+        if (atLeastOneButtonTouchEnd) {
             break;
         }
     }
 
-    return isOneTouchEnd;
+    return atLeastOneButtonTouchEnd;
 }
 
 export function areButtonsTouchEnd(...gamepadButtonIDsList) {
@@ -317,20 +317,20 @@ export function areButtonsTouchEnd(...gamepadButtonIDsList) {
     }
 
     let areButtonNotTouchedRecently = true;
-    let isOneTouchEnd = false;
+    let atLeastOneButtonTouchEnd = false;
     for (let gamepadButtonIDs of realGamepadButtonIDsList) {
         let gamepad = gamepadButtonIDs[0];
         for (let i = 1; i < gamepadButtonIDs.length; i++) {
             let buttonID = gamepadButtonIDs[i];
             let button = gamepad.getButtonInfo(buttonID);
 
-            if (!(!button.myIsTouched && (multipleTouchCount == null || button.myMultipleTouchEndCount == multipleTouchCount) && button.myTimeNotTouched < _mySimultaneousTouchMaxDelay)) {
+            if (!(!button.myTouched && (multipleTouchCount == null || button.myMultipleTouchEndCount == multipleTouchCount) && button.myTimeNotTouched < _mySimultaneousTouchMaxDelay)) {
                 areButtonNotTouchedRecently = false;
                 break;
             }
 
             if (button.isTouchEnd(multipleTouchCount)) {
-                isOneTouchEnd = true;
+                atLeastOneButtonTouchEnd = true;
             }
         }
 
@@ -339,7 +339,7 @@ export function areButtonsTouchEnd(...gamepadButtonIDsList) {
         }
     }
 
-    return areButtonNotTouchedRecently && isOneTouchEnd;
+    return areButtonNotTouchedRecently && atLeastOneButtonTouchEnd;
 }
 
 export let GamepadUtils = {

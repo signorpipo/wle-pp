@@ -1,6 +1,6 @@
 import { FSM } from "../../../../../../cauldron/fsm/fsm";
+import { EasingFunction } from "../../../../../../cauldron/js/utils/math_utils";
 import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { EasingFunction } from "../../../../../../plugin/js/extensions/math_extension";
 import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state";
 import { PlayerLocomotionTeleportTeleportBlinkState } from "./player_locomotion_teleport_teleport_blink_state";
 import { PlayerLocomotionTeleportTeleportShiftState } from "./player_locomotion_teleport_teleport_shift_state";
@@ -43,7 +43,7 @@ export class PlayerLocomotionTeleportTeleportState extends PlayerLocomotionTelep
         super(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
 
         this._myFSM = new FSM();
-        //this._myFSM.setDebugLogActive(true, "Locomotion Teleport Teleport");
+        //this._myFSM.setLogEnabled(true, "Locomotion Teleport Teleport");
 
         this._myFSM.addState("init");
         this._myFSM.addState("idle");

@@ -1,11 +1,11 @@
 import { quat2_create } from "../../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../../../cauldron/wl/engine_globals";
+import { Globals } from "../../../../pp/globals";
 import { CharacterCollisionResults } from "./character_collision_results";
 import { CollisionCheckBridge, getCollisionCheck } from "./collision_check_bridge";
 
 export class CharacterCollisionSystem {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this._myLastCheckRaycastsPerformed = 0;
         this._myCurrentFrameRaycastsPerformed = 0;
         this._myMaxFrameRaycastsPerformed = 0;

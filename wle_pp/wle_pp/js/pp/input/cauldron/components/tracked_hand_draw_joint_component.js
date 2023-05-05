@@ -1,13 +1,12 @@
 import { Component, MeshComponent, Property } from "@wonderlandengine/api";
-import { BasePoseParams } from "../../pose/base_pose";
-import { TrackedHandJointPose } from "../../pose/tracked_hand_joint_pose";
+import { quat2_create } from "../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../pp/globals";
 import { InputUtils } from "../input_utils";
 
 export class TrackedHandDrawJointComponent extends Component {
     static TypeName = "pp-tracked-hand-draw-joint";
     static Properties = {
         _myHandedness: Property.enum(["Left", "Right"], "Left"),
-        _myFixForward: Property.bool(true),
         _myJointID: Property.enum(
             [
                 "Wrist",
@@ -22,24 +21,15 @@ export class TrackedHandDrawJointComponent extends Component {
         _myJointMaterial: Property.material()
     };
 
-    init() {
-        this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
-        this._myJointIDInternal = InputUtils.getJointIDByIndex(this._myJointID);
-
-        this._myTrackedHandJointPose = new TrackedHandJointPose(this._myHandednessType, this._myJointIDInternal, new BasePoseParams(this.engine));
-        this._myTrackedHandJointPose.setFixForward(this._myFixForward);
-    }
-
     start() {
-        this._myTrackedHandJointPose.start();
+        this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
+        this._myJointIDType = InputUtils.getJointIDByIndex(this._myJointID);
 
         this._buildTrackedHandHierarchy();
     }
 
     update(dt) {
-        this._myTrackedHandJointPose.update(dt);
-        this._myJointMeshObject.pp_setTransformLocalQuat(this._myTrackedHandJointPose.getTransformQuat());
-        this._myJointMeshObject.pp_setScaleLocal(this._myTrackedHandJointPose.getJointRadius());
+        // Implemented outside class definition
     }
 
     _buildTrackedHandHierarchy() {
@@ -52,3 +42,17 @@ export class TrackedHandDrawJointComponent extends Component {
         this._myJointMeshObject.pp_setScaleLocal(0);
     }
 }
+
+
+
+// IMPLEMENTATION
+
+TrackedHandDrawJointComponent.prototype.update = function () {
+    let transformQuat = quat2_create()
+    return function update(dt) {
+        let jointPose = Globals.getTrackedHandPose(this._myHandednessType).getJointPose(this._myJointIDType);
+
+        this._myJointMeshObject.pp_setTransformLocalQuat(jointPose.getTransformQuat(transformQuat, null));
+        this._myJointMeshObject.pp_setScaleLocal(jointPose.getJointRadius());
+    };
+}();

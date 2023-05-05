@@ -1,29 +1,34 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { getPlayerObjects } from "../../../pp/player_objects_global";
+import { Globals } from "../../../pp/globals";
 import { ClassicGamepadCore } from "../../gamepad/gamepad_cores/classic_gamepad_core";
 import { KeyboardGamepadCore } from "../../gamepad/gamepad_cores/keyboard_gamepad_core";
 import { XRGamepadCore } from "../../gamepad/gamepad_cores/xr_gamepad_core";
-import { HandPose, HandPoseParams } from "../../pose/hand_pose";
-import { hasInputManager, setInputManager } from "../input_globals";
 import { InputManager } from "../input_manager";
-import { Handedness } from "../input_types";
 
 export class InputManagerComponent extends Component {
     static TypeName = "pp-input-manager";
     static Properties = {
-        _myGamepadFixForward: Property.bool(true),
+        _myPoseForwardFixed: Property.bool(true),
         _myMousePreventContextMenu: Property.bool(true),
         _myMousePreventMiddleButtonScroll: Property.bool(true)
     };
 
     init() {
         this._myInputManager = null;
+        this._myPoseForwardFixedGlobal = null;
 
         // Prevents double global from same engine
-        if (!hasInputManager(this.engine)) {
+        if (!Globals.hasInputManager(this.engine)) {
             this._myInputManager = new InputManager(this.engine);
 
-            setInputManager(this._myInputManager, this.engine);
+            Globals.setInputManager(this._myInputManager, this.engine);
+        }
+
+        // Prevents double global from same engine
+        if (!Globals.hasPoseForwardFixed(this.engine)) {
+            this._myPoseForwardFixedGlobal = this._myPoseForwardFixed;
+
+            Globals.setPoseForwardFixed(this._myPoseForwardFixedGlobal, this.engine);
         }
     }
 
@@ -32,6 +37,7 @@ export class InputManagerComponent extends Component {
             this._myInputManager.start();
 
             this._setupMousePrevent();
+
             this._addGamepadCores();
         }
     }
@@ -53,19 +59,11 @@ export class InputManagerComponent extends Component {
     }
 
     _addGamepadCores() {
-        let handPoseParams = new HandPoseParams(this.engine);
-        handPoseParams.myReferenceObject = getPlayerObjects(this.engine).myPlayerPivot;
-        handPoseParams.myFixForward = this._myGamepadFixForward;
-        handPoseParams.myForceEmulatedVelocities = false;
-
-        let leftHandPose = new HandPose(Handedness.LEFT, handPoseParams);
-        let rightHandPose = new HandPose(Handedness.RIGHT, handPoseParams);
+        let leftHandPose = this._myInputManager.getLeftHandPose();
+        let rightHandPose = this._myInputManager.getRightHandPose();
 
         let leftXRGamepadCore = new XRGamepadCore(leftHandPose);
         let rightXRGamepadCore = new XRGamepadCore(rightHandPose);
-
-        leftXRGamepadCore.setManageHandPose(true);
-        rightXRGamepadCore.setManageHandPose(true);
 
         this._myInputManager.getGamepadsManager().getLeftGamepad().addGamepadCore("pp_left_xr_gamepad", leftXRGamepadCore);
         this._myInputManager.getGamepadsManager().getRightGamepad().addGamepadCore("pp_right_xr_gamepad", rightXRGamepadCore);
@@ -81,5 +79,17 @@ export class InputManagerComponent extends Component {
 
         this._myInputManager.getGamepadsManager().getLeftGamepad().addGamepadCore("pp_left_classic_gamepad", leftClassicGamepadCore);
         this._myInputManager.getGamepadsManager().getRightGamepad().addGamepadCore("pp_right_classic_gamepad", rightClassicGamepadCore);
+    }
+
+    onDestroy() {
+        if (this._myInputManager != null && Globals.getInputManager(this.engine) == this._myInputManager) {
+            Globals.removeInputManager(this.engine);
+
+            this._myInputManager.destroy();
+        }
+
+        if (this._myPoseForwardFixedGlobal != null && Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixedGlobal) {
+            Globals.removePoseForwardFixed(this.engine);
+        }
     }
 }

@@ -1,12 +1,11 @@
-import { Component, MeshComponent, TextComponent, Property } from "@wonderlandengine/api";
+import { Alignment, Component, Justification, MeshComponent, Property, TextComponent } from "@wonderlandengine/api";
 import { vec2_create, vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
-import { CloneParams } from "../../plugin/wl/extensions/object_extension";
+import { Globals } from "../../pp/globals";
+import { ObjectPool, ObjectPoolParams } from "../cauldron/object_pool";
 import { Timer } from "../cauldron/timer";
 import { MeshCreationParams, MeshCreationTriangleParams, MeshCreationVertexParams, MeshUtils } from "../utils/mesh_utils";
-import { ObjectPool, ObjectPoolParams } from "../cauldron/object_pool";
-import { getPlayerObjects } from "../../pp/player_objects_global";
 import { XRUtils } from "../utils/xr_utils";
-import { EasyTransformComponent } from "../../tool/easy_tune/easy_object_tuners/components/easy_transform_component";
+import { CloneParams } from "../wl/utils/object_utils";
 
 export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     static TypeName = "pp-benchmark-max-visible-triangles";
@@ -20,7 +19,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         _myCloneMaterial: Property.bool(false),
         _myCloneMesh: Property.bool(false),
 
-        _myLogActive: Property.bool(true),
+        _myLogEnabled: Property.bool(true),
 
         _myStartOnXRStart: Property.bool(false),
         _myDisplayInFrontOfPlayer: Property.bool(true),
@@ -35,10 +34,10 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         this._myBackgroundSize = 4;
         this._myBackgroundObject.pp_setActive(true);
         this._myBackgroundObject.pp_setScale(this._myBackgroundSize + 0.1);
-        this._myBackgroundObject.pp_translate(vec3_create(0, 0, -0.001));
+        this._myBackgroundObject.pp_translateLocal(vec3_create(0, 0, -0.001));
 
         this._myDoubleTimer = new Timer(this._mySecondsBeforeDoubling);
-        this._myIsDone = false;
+        this._myDone = false;
 
         this._myCurrentPlanes = this._myStartPlaneCount;
 
@@ -76,7 +75,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
             }
         }
 
-        if (!this._myIsDone) {
+        if (!this._myDone) {
             this._myDoubleTimer.update(dt);
 
             this._myDTHistory.push(dt);
@@ -91,11 +90,11 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                 } else {
 
                     // If there is not lag, the current plane count is a good lower limit, otherwise the current count is now a upper threshold, we have to search below it
-                    let isLagging = false;
+                    let lagging = false;
                     if (frameRate < this._myStableFrameRate - this._myTargetFrameRateThreshold) {
                         this._myUpperLimit = this._myCurrentPlanes;
 
-                        isLagging = true;
+                        lagging = true;
 
                         if (this._myUpperLimit == 1) {
                             this._myLowerLimit = 1;
@@ -111,7 +110,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                     this._myPlaneTextComponent.text = "Planes: " + this._myCurrentPlanes;
                     this._myFPSTextComponent.text = "FPS: " + frameRate + " / " + this._myStableFrameRate;
 
-                    if (isLagging) {
+                    if (lagging) {
                         this._myTriangleTextComponent.material.color = this._myLagColor;
                         this._myPlaneTextComponent.material.color = this._myLagColor;
                         this._myFPSTextComponent.material.color = this._myLagColor;
@@ -125,22 +124,22 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
 
                     // Check if the binary search is completed
                     if ((this._myUpperLimit > 0 &&
-                        (!isLagging && (this._myUpperLimit - this._myLowerLimit) <= Math.max(2, 1000 / this._myRealTrianglesAmount)) ||
-                        (isLagging && (this._myUpperLimit - this._myLowerLimit) <= 1)) ||
-                        (!isLagging && this._myMaxPlanesReached)) {
+                        (!lagging && (this._myUpperLimit - this._myLowerLimit) <= Math.max(2, 1000 / this._myRealTrianglesAmount)) ||
+                        (lagging && (this._myUpperLimit - this._myLowerLimit) <= 1)) ||
+                        (!lagging && this._myMaxPlanesReached)) {
                         if (frameRate < this._myStableFrameRate - this._myTargetFrameRateThreshold) {
                             // Going a bit back with the binary search, maybe the lower limit was not lower after all cause of a bad assumption of average FPS
                             this._myLowerLimit = Math.max(1, Math.floor(this._myUpperLimit / 2.5));
                             this._myUpperLimit = 0;
                             reset = true;
 
-                            if (this._myLogActive) {
+                            if (this._myLogEnabled) {
                                 // Reset
                                 console.log("Rst - Triangles:", this._myCurrentPlanes * this._myRealTrianglesAmount, "- Planes:", this._myCurrentPlanes, "- Frame Rate:", frameRate);
                             }
                         } else {
                             if (this._myMaxPlanesReached) {
-                                if (this._myLogActive) {
+                                if (this._myLogEnabled) {
                                     console.log("Aborted - Max Planes Reached");
 
                                     this._myDoneTextComponent.text = "Aborted - Max Planes Reached";
@@ -148,7 +147,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                             } else {
                                 this._displayPlanes(this._myLowerLimit);
 
-                                if (this._myLogActive) {
+                                if (this._myLogEnabled) {
                                     console.log("\nEnd - Triangles:", this._myLowerLimit * this._myRealTrianglesAmount, "- Planes:", this._myLowerLimit, "- Frame Rate:", frameRate);
                                     console.log("Plane Triangles (Adjusted):", this._myRealTrianglesAmount);
                                     console.log("Target Frame Rate:", this._myStableFrameRate, "- Threshold: ", (this._myStableFrameRate - this._myTargetFrameRateThreshold));
@@ -160,17 +159,17 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
 
                                 this._myDoneTextComponent.text = "End";
                             }
-                            this._myIsDone = true;
+                            this._myDone = true;
                         }
                     }
 
-                    if (isLagging && !reset) {
-                        if (this._myLogActive) {
+                    if (lagging && !reset) {
+                        if (this._myLogEnabled) {
                             console.log("Lag - Triangles:", this._myCurrentPlanes * this._myRealTrianglesAmount, "- Planes:", this._myCurrentPlanes, "- Frame Rate:", frameRate);
                         }
                     }
 
-                    if (!this._myIsDone) {
+                    if (!this._myDone) {
                         // Sort of binary search, if there is no upper limit yet, just double
                         if (this._myUpperLimit > 0) {
                             this._myCurrentPlanes = Math.floor((this._myUpperLimit + this._myLowerLimit) / 2);
@@ -190,7 +189,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                     }
                 }
 
-                if (!this._myIsDone) {
+                if (!this._myDone) {
                     this._displayPlanes(this._myCurrentPlanes);
                     this._myElapsedTime = 0;
                     this._myFrameCount = 0;
@@ -239,14 +238,38 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     }
 
     start() {
-        this._myLagColor = vec4_create(0.5, 0, 0, 1);
-        this._myNormalColor = vec4_create(0, 0, 0, 1);
+        this._myValid = false;
+
+        if (!Globals.isDebugEnabled(this.engine)) return;
+
+        this._myValid = true;
+
+        if (this._myPlaneMaterial == null) {
+            this._myPlaneMaterial = Globals.getDefaultMaterials(this.engine).myPhongOpaque.clone();
+            this._myPlaneMaterial.diffuseColor = vec4_create(0.95, 0.95, 0.95, 1);
+            this._myPlaneMaterial.ambientColor = vec4_create(0, 0, 0, 1);
+            this._myPlaneMaterial.ambientFactor = 0.5;
+        }
+
+        if (this._myBackgroundMaterial == null) {
+            this._myBackgroundMaterial = Globals.getDefaultMaterials(this.engine).myPhongOpaque.clone();
+            this._myBackgroundMaterial.diffuseColor = vec4_create(0.25, 0.25, 0.25, 1);
+            this._myBackgroundMaterial.ambientColor = vec4_create(0, 0, 0, 1);
+            this._myBackgroundMaterial.ambientFactor = 0.5;
+        }
+
+        if (this._myTextMaterial == null) {
+            this._myTextMaterial = Globals.getDefaultMaterials(this.engine).myText.clone();
+        }
+
+        this._myLagColor = vec4_create(0.6, 0, 0, 1);
+        this._myNormalColor = vec4_create(0.25, 0.25, 0.25, 1);
 
         this._myRealTrianglesAmount = 0;
 
         let parent = this.object;
         if (this._myDisplayInFrontOfPlayer) {
-            parent = getPlayerObjects().myHead.pp_addObject();
+            parent = Globals.getPlayerObjects().myHead.pp_addObject();
             parent.pp_rotateAxis(180, vec3_create(0, 1, 0));
             parent.pp_translateLocal(vec3_create(0, 0, this._myDisplayInFrontOfPlayerDistance));
         }
@@ -256,7 +279,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         this._myBackgroundObject = this._myTrianglesObject.pp_addObject();
         {
             let meshComponent = this._myBackgroundObject.pp_addComponent(MeshComponent);
-            meshComponent.mesh = MeshUtils.createPlaneMesh();
+            meshComponent.mesh = MeshUtils.createPlane(this.engine);
             meshComponent.material = this._myBackgroundMaterial.clone();
         }
 
@@ -285,8 +308,8 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         poolParams.myPercentageToAddWhenEmpty = 0;
         poolParams.myAmountToAddWhenEmpty = 10000;
         poolParams.myCloneParams = new CloneParams();
-        poolParams.myCloneParams.myDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "material", this._myCloneMaterial);
-        poolParams.myCloneParams.myDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "mesh", this._myCloneMesh);
+        poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "material", this._myCloneMaterial);
+        poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "mesh", this._myCloneMesh);
         this._myPlanePool = new ObjectPool(this._myPlaneObject, poolParams);
 
         this._myBackgroundObject.pp_setActive(false);
@@ -299,12 +322,12 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         //this._myTextsObject.pp_addComponent(EasyTransformComponent);
 
         this._myTriangleTextObject = this._myTextsObject.pp_addObject();
-        //this._myTriangleTextObject.pp_addComponent(EasyTransformComponent, { _myIsLocal: true });
+        //this._myTriangleTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
 
         this._myTriangleTextComponent = this._myTriangleTextObject.pp_addComponent(TextComponent);
 
-        this._myTriangleTextComponent.alignment = this.engine.Alignment.Left;
-        this._myTriangleTextComponent.justification = this.engine.Justification.Line;
+        this._myTriangleTextComponent.alignment = Alignment.Left;
+        this._myTriangleTextComponent.justification = Justification.Line;
         this._myTriangleTextComponent.material = this._myTextMaterial.clone();
         this._myTriangleTextComponent.material.color = this._myNormalColor;
         this._myTriangleTextComponent.text = " ";
@@ -313,10 +336,10 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         this._myPlaneTextObject = this._myTextsObject.pp_addObject();
 
         this._myPlaneTextComponent = this._myPlaneTextObject.pp_addComponent(TextComponent);
-        //this._myPlaneTextObject.pp_addComponent(EasyTransformComponent, { _myIsLocal: true });
+        //this._myPlaneTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
 
-        this._myPlaneTextComponent.alignment = this.engine.Alignment.Left;
-        this._myPlaneTextComponent.justification = this.engine.Justification.Line;
+        this._myPlaneTextComponent.alignment = Alignment.Left;
+        this._myPlaneTextComponent.justification = Justification.Line;
         this._myPlaneTextComponent.material = this._myTextMaterial.clone();
         this._myPlaneTextComponent.material.color = this._myNormalColor;
         this._myPlaneTextComponent.text = " ";
@@ -325,10 +348,10 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         this._myFPSTextObject = this._myTextsObject.pp_addObject();
 
         this._myFPSTextComponent = this._myFPSTextObject.pp_addComponent(TextComponent);
-        //this._myFPSTextObject.pp_addComponent(EasyTransformComponent, { _myIsLocal: true });
+        //this._myFPSTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
 
-        this._myFPSTextComponent.alignment = this.engine.Alignment.Left;
-        this._myFPSTextComponent.justification = this.engine.Justification.Line;
+        this._myFPSTextComponent.alignment = Alignment.Left;
+        this._myFPSTextComponent.justification = Justification.Line;
         this._myFPSTextComponent.material = this._myTextMaterial.clone();
         this._myFPSTextComponent.material.color = this._myNormalColor;
         this._myFPSTextComponent.text = " ";
@@ -337,10 +360,10 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         this._myDoneTextObject = this._myTrianglesObject.pp_addObject();
 
         this._myDoneTextComponent = this._myDoneTextObject.pp_addComponent(TextComponent);
-        //this._myDoneTextObject.pp_addComponent(EasyTransformComponent, { _myIsLocal: true });
+        //this._myDoneTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
 
-        this._myDoneTextComponent.alignment = this.engine.Alignment.Center;
-        this._myDoneTextComponent.justification = this.engine.Justification.Line;
+        this._myDoneTextComponent.alignment = Alignment.Center;
+        this._myDoneTextComponent.justification = Justification.Line;
         this._myDoneTextComponent.material = this._myTextMaterial.clone();
         this._myDoneTextComponent.material.color = this._myNormalColor;
         this._myDoneTextComponent.text = " ";
@@ -359,6 +382,8 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     }
 
     update(dt) {
+        if (!this._myValid) return;
+
         if (this._mySessionStarted || !this._myStartOnXRStart) {
             if (this._myStartTimer.isRunning()) {
                 this._myStartTimer.update(dt);
@@ -371,7 +396,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                         this._myStableFrameRate = this._myTargetFrameRate;
                     }
 
-                    if (this._myLogActive) {
+                    if (this._myLogEnabled) {
                         console.log("\nPlane Triangles (Adjusted):", this._myRealTrianglesAmount);
                         console.log("Target Frame Rate:", this._myStableFrameRate, "- Threshold: ", (this._myStableFrameRate - this._myTargetFrameRateThreshold));
                         console.log("");
@@ -386,11 +411,11 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         }
     }
 
-    _computeAverageFrameRate(isStart) {
+    _computeAverageFrameRate(firstCompute) {
         let frameRate = 0;
 
         this._myDTHistory.sort();
-        let elementToRemove = Math.floor(this._myDTHistory.length) * Math.min(0.9, this._myDTHistoryToIgnorePercentage * (isStart ? 2 : 1));
+        let elementToRemove = Math.floor(this._myDTHistory.length) * Math.min(0.9, this._myDTHistoryToIgnorePercentage * (firstCompute ? 2 : 1));
         for (let i = 0; i < elementToRemove; i++) {
             this._myDTHistory.pop();
         }
@@ -425,7 +450,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
             row--;
         }
 
-        let meshParams = new MeshCreationParams(this.engine);
+        let meshCreationParams = new MeshCreationParams(this.engine);
 
         for (let i = 0; i < row + 1; i++) {
             for (let j = 0; j < column + 1; j++) {
@@ -433,23 +458,23 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                 let x = (2 / column) * j;
                 let y = (2 / row) * i;
 
-                let vertexParams = new MeshCreationVertexParams();
+                let vertexCreationParams = new MeshCreationVertexParams();
 
-                vertexParams.myPosition = vec3_create();
-                vertexParams.myPosition[0] = x - 1;
-                vertexParams.myPosition[1] = y - 1;
-                vertexParams.myPosition[2] = 0;
+                vertexCreationParams.myPosition = vec3_create();
+                vertexCreationParams.myPosition[0] = x - 1;
+                vertexCreationParams.myPosition[1] = y - 1;
+                vertexCreationParams.myPosition[2] = 0;
 
-                vertexParams.myTextureCoordinates = vec2_create();
-                vertexParams.myTextureCoordinates[0] = x / 2;
-                vertexParams.myTextureCoordinates[1] = y / 2;
+                vertexCreationParams.myTextureCoordinates = vec2_create();
+                vertexCreationParams.myTextureCoordinates[0] = x / 2;
+                vertexCreationParams.myTextureCoordinates[1] = y / 2;
 
-                vertexParams.myNormal = vec3_create();
-                vertexParams.myNormal[0] = 0;
-                vertexParams.myNormal[1] = 0;
-                vertexParams.myNormal[2] = 1;
+                vertexCreationParams.myNormal = vec3_create();
+                vertexCreationParams.myNormal[0] = 0;
+                vertexCreationParams.myNormal[1] = 0;
+                vertexCreationParams.myNormal[2] = 1;
 
-                meshParams.myVertexes.push(vertexParams);
+                meshCreationParams.myVertexes.push(vertexCreationParams);
             }
         }
 
@@ -465,12 +490,12 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                 secondTriangle.myIndexes[1] = (i * (column + 1)) + j + 1;
                 secondTriangle.myIndexes[2] = ((i + 1) * (column + 1)) + j + 1;
 
-                meshParams.myTriangles.push(firstTriangle);
-                meshParams.myTriangles.push(secondTriangle);
+                meshCreationParams.myTriangles.push(firstTriangle);
+                meshCreationParams.myTriangles.push(secondTriangle);
             }
         }
 
-        let mesh = MeshUtils.createMesh(meshParams);
+        let mesh = MeshUtils.create(meshCreationParams);
 
         return mesh;
     }

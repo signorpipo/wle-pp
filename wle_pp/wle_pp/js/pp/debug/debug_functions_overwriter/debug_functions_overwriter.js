@@ -3,11 +3,12 @@
 // #TODO How to overwrite class and objects from modules?
 // #TODO Some functions, like glMatrix.vec3.copy, are defined as getter, how to overwrite them?
 
-import { JSUtils } from "../../cauldron/utils/js_utils";
+import { JSUtils } from "../../cauldron/js/utils/js_utils";
+import { Globals } from "../../pp/globals";
 
 export class DebugFunctionsOverwriterParams {
 
-    constructor() {
+    constructor(engine = Globals.getMainEngine()) {
         this.myObjectsByReference = [];         // You can specify to count the call on a specific object instance
         this.myObjectsByPath = [];              // If you want you can specify the instance by path, but it means it must be reachable from window
 
@@ -51,7 +52,9 @@ export class DebugFunctionsOverwriterParams {
         //   and the name, if not null, will be used as path instead of the default one
         //   WARNING: this means that there is a specific case, an array of 2 elements with a string, which can't be tracked if you don't put it inside an array like above
 
-        this.myDebugLogActive = false;
+        this.myLogEnabled = false;
+
+        this.myEngine = engine;
     }
 }
 
@@ -131,9 +134,9 @@ export class DebugFunctionsOverwriter {
             excludeNameList = this._myParams.myClassNamesToExclude;
         }
 
-        let isValidReferencePath = this._filterName(referencePath, includePathList, excludePathList);
-        let isValidReferenceName = this._filterName(referenceNameForFilter, includeNameList, excludeNameList);
-        if (isValidReferencePath && isValidReferenceName) {
+        let validReferencePath = this._filterName(referencePath, includePathList, excludePathList);
+        let validReferenceName = this._filterName(referenceNameForFilter, includeNameList, excludeNameList);
+        if (validReferencePath && validReferenceName) {
             let propertyNames = JSUtils.getObjectPropertyNames(reference);
             if (propertyNames.pp_hasEqual("constructor")) {
                 propertyNames.unshift("constructor"); // Be sure it's added first to spot bugs, not important that it appears twice in the list
@@ -183,13 +186,13 @@ export class DebugFunctionsOverwriter {
 
     _overwriteFunction(reference, propertyName, referenceParentForConstructor, referenceNameForConstructor, referencePath, isClass, isFunction) {
         try {
-            let isPropertyCountedAlready = this._myPropertiesAlreadyOverwritten.get(propertyName) != null && this._myPropertiesAlreadyOverwritten.get(propertyName).pp_hasEqual(reference);
-            if (!isPropertyCountedAlready) {
+            let propertyCountedAlready = this._myPropertiesAlreadyOverwritten.get(propertyName) != null && this._myPropertiesAlreadyOverwritten.get(propertyName).pp_hasEqual(reference);
+            if (!propertyCountedAlready) {
                 if (JSUtils.isFunctionByName(reference, propertyName)) {
                     if (!this._myParams.myExcludeJSObjectFunctions || !this._isJSObjectFunction(propertyName)) {
-                        let isValidFunctionName = this._filterName(propertyName, this._myParams.myFunctionNamesToInclude, this._myParams.myFunctionNamesToExclude);
-                        let isValidFunctionPath = this._filterName((referencePath != null ? referencePath + "." : "") + propertyName, this._myParams.myFunctionPathsToInclude, this._myParams.myFunctionPathsToExclude);
-                        if (isValidFunctionName && isValidFunctionPath) {
+                        let validFunctionName = this._filterName(propertyName, this._myParams.myFunctionNamesToInclude, this._myParams.myFunctionNamesToExclude);
+                        let validFunctionPath = this._filterName((referencePath != null ? referencePath + "." : "") + propertyName, this._myParams.myFunctionPathsToInclude, this._myParams.myFunctionPathsToExclude);
+                        if (validFunctionName && validFunctionPath) {
                             if (!this._myPropertiesAlreadyOverwritten.has(propertyName)) {
                                 this._myPropertiesAlreadyOverwritten.set(propertyName, []);
                             }
@@ -200,14 +203,14 @@ export class DebugFunctionsOverwriter {
                                 try {
                                     let newFunction = this._getOverwrittenFunction(reference, propertyName, referencePath, isClass, isFunction);
                                     if (newFunction != JSUtils.getObjectProperty(reference, propertyName)) {
-                                        overwriteSuccess = JSUtils.overwriteObjectProperty(newFunction, reference, propertyName, false, true, this._myParams.myDebugLogActive);
+                                        overwriteSuccess = JSUtils.overwriteObjectProperty(newFunction, reference, propertyName, false, true, this._myParams.myLogEnabled);
                                     } else {
                                         overwriteSuccess = true;
                                     }
                                 } catch (error) {
                                     overwriteSuccess = false;
 
-                                    if (this._myParams.myDebugLogActive) {
+                                    if (this._myParams.myLogEnabled) {
                                         console.error(error);
                                     }
                                 }
@@ -219,9 +222,9 @@ export class DebugFunctionsOverwriter {
                                     try {
                                         let newConstructor = this._getOverwrittenConstructor(referenceParentForConstructor, referenceNameForConstructor, referencePath, isClass, isFunction);
                                         if (newConstructor != referenceForConstructor) {
-                                            overwriteSuccess = JSUtils.overwriteObjectProperty(newConstructor, referenceParentForConstructor, referenceNameForConstructor, false, true, this._myParams.myDebugLogActive);
+                                            overwriteSuccess = JSUtils.overwriteObjectProperty(newConstructor, referenceParentForConstructor, referenceNameForConstructor, false, true, this._myParams.myLogEnabled);
                                             if (overwriteSuccess) {
-                                                overwriteSuccess = JSUtils.overwriteObjectProperty(newConstructor, referenceForConstructor.prototype, propertyName, false, true, this._myParams.myDebugLogActive);
+                                                overwriteSuccess = JSUtils.overwriteObjectProperty(newConstructor, referenceForConstructor.prototype, propertyName, false, true, this._myParams.myLogEnabled);
                                             }
                                         } else {
                                             overwriteSuccess = true;
@@ -229,7 +232,7 @@ export class DebugFunctionsOverwriter {
                                     } catch (error) {
                                         overwriteSuccess = false;
 
-                                        if (this._myParams.myDebugLogActive) {
+                                        if (this._myParams.myLogEnabled) {
                                             console.error(error);
                                         }
                                     }
@@ -247,7 +250,7 @@ export class DebugFunctionsOverwriter {
                 }
             }
         } catch (error) {
-            if (this._myParams.myDebugLogActive) {
+            if (this._myParams.myLogEnabled) {
                 console.error(error);
             }
         }
@@ -272,8 +275,8 @@ export class DebugFunctionsOverwriter {
             referenceName = JSUtils.getObjectNameFromPath(path);
             referenceNameForFilter = JSUtils.getObjectNameFromPath(referencePath);
 
-            let reference = JSUtils.getObjectFromPath(path);
-            let referenceParent = JSUtils.getObjectParentFromPath(path);
+            let reference = JSUtils.getObjectFromPath(path, Globals.getWindow(this._myParams.myEngine));
+            let referenceParent = JSUtils.getObjectParentFromPath(path, Globals.getWindow(this._myParams.myEngine));
 
             if (reference != null) {
                 referenceAndParents.pp_pushUnique([reference, referenceParent, referenceName, referencePath, referenceNameForFilter], equalCallback);
@@ -350,16 +353,6 @@ export class DebugFunctionsOverwriter {
                     let currentPath = "";
                     let currentName = "";
                     if (objectPath != null) {
-                        if (objectPath == "_WL._components" && (objectProperty._type != null)) {
-                            currentName = "[" + propertyName + "]" + "{\"" + objectProperty._type + "\"}";
-                            currentPath = objectPath + currentName;
-                        } else if (objectPath == "_WL._componentTypes" && (objectProperty.TypeName != null)) {
-                            currentName = objectProperty.TypeName;
-                            currentPath = objectPath + "[\"" + currentName + "\"]";
-                        } else {
-                            currentName = propertyName;
-                            currentPath = objectPath + "." + currentName;
-                        }
                         currentName = propertyName;
                         currentPath = objectPath + "." + currentName;
                     } else {
@@ -381,9 +374,9 @@ export class DebugFunctionsOverwriter {
                         excludeNameList = this._myParams.myClassNamesToExclude;
                     }
 
-                    let isValidReferencePath = this._filterName(currentPath, includePathList, excludePathList);
-                    let isValidReferenceName = this._filterName(propertyName, includeNameList, excludeNameList);
-                    if (isValidReferencePath && isValidReferenceName) {
+                    let validReferencePath = this._filterName(currentPath, includePathList, excludePathList);
+                    let validReferenceName = this._filterName(propertyName, includeNameList, excludeNameList);
+                    if (validReferencePath && validReferenceName) {
                         if (isObject && (objectLevel + 1 <= this._myParams.myObjectAddObjectDescendantsDepthLevel || this._myParams.myObjectAddObjectDescendantsDepthLevel == -1)) {
                             objectsAndParents.pp_pushUnique([objectProperty, object, propertyName, currentPath, currentName], equalCallback);
                         }
@@ -402,24 +395,24 @@ export class DebugFunctionsOverwriter {
     }
 
     _filterName(name, includeList, excludeList) {
-        let isValidName = includeList.length == 0;
+        let validName = includeList.length == 0;
         for (let includeName of includeList) {
             if (name.match(new RegExp(includeName)) != null) {
-                isValidName = true;
+                validName = true;
                 break;
             }
         }
 
-        if (isValidName) {
+        if (validName) {
             for (let excludeName of excludeList) {
                 if (name.match(new RegExp(excludeName)) != null) {
-                    isValidName = false;
+                    validName = false;
                     break;
                 }
             }
         }
 
-        return isValidName;
+        return validName;
     }
 
     _isJSObjectFunction(propertyName) {

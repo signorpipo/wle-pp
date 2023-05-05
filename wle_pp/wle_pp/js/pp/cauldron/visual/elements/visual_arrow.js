@@ -5,24 +5,22 @@ visualParams.myDirection.vec3_copy(direction);
 visualParams.myLength = 0.2;
 visualParams.myMaterial = myDefaultResources.myMaterials.myFlatOpaque.clone();
 visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-getVisualManager().draw(visualParams);
+Globals.getVisualManager().draw(visualParams);
 
 or
 
 let visualArrow = new VisualArrow(visualParams);
 */
 
+import { MeshComponent } from "@wonderlandengine/api";
 import { vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../wl/engine_globals";
-import { getDefaultResources } from "../../../pp/default_resources_global";
-import { getVisualData } from "../visual_globals";
+import { Globals } from "../../../pp/globals";
 import { VisualElementType } from "./visual_element_types";
 import { VisualLine, VisualLineParams } from "./visual_line";
-import { MeshComponent } from "@wonderlandengine/api";
 
 export class VisualArrowParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myStart = vec3_create();
         this.myDirection = vec3_create(0, 0, 1);
         this.myLength = 0;
@@ -35,8 +33,8 @@ export class VisualArrowParams {
         this.myMaterial = null;     // null means it will default on myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // If this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = getVisualData(engine).myRootObject;
-        this.myIsLocal = false;
+        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
+        this.myLocal = false;
 
         this.myType = VisualElementType.ARROW;
     }
@@ -68,11 +66,13 @@ export class VisualArrow {
         this._myVisualLine = new VisualLine(new VisualLineParams(this._myParams.myParent.pp_getEngine()));
         this._myVisualLine.setAutoRefresh(false);
 
-        this._myArrowRootObject = null;
+        this._myArrowParentObject = null;
         this._myArrowObject = null;
         this._myArrowMeshComponent = null;
 
         this._myFlatOpaqueMaterial = null;
+
+        this._myDestroyed = false;
 
         this._build();
         this.forceRefresh();
@@ -84,7 +84,7 @@ export class VisualArrow {
         if (this._myVisible != visible) {
             this._myVisible = visible;
             this._myVisualLine.setVisible(visible);
-            this._myArrowRootObject.pp_setActive(visible);
+            this._myArrowParentObject.pp_setActive(visible);
         }
     }
 
@@ -130,8 +130,8 @@ export class VisualArrow {
     }
 
     _build() {
-        this._myArrowRootObject = this._myParams.myParent.pp_getEngine().scene.pp_addObject();
-        this._myArrowObject = this._myArrowRootObject.pp_addObject();
+        this._myArrowParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
+        this._myArrowObject = this._myArrowParentObject.pp_addObject();
 
         this._myArrowMeshComponent = this._myArrowObject.pp_addComponent(MeshComponent);
     }
@@ -159,6 +159,17 @@ export class VisualArrow {
     _refresh() {
         // Implemented outside class definition
     }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myVisualLine.destroy();
+        this._myArrowParentObject.pp_destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
+    }
 }
 
 
@@ -167,30 +178,30 @@ export class VisualArrow {
 
 VisualArrow.prototype._refresh = function () {
     let end = vec3_create();
-    let translateRoot = vec3_create();
+    let translateParent = vec3_create();
     let scaleArrow = vec3_create();
     let direction = vec3_create();
 
     let forward = vec3_create(0, 1, 0);
     return function _refresh() {
-        this._myArrowRootObject.pp_setParent(this._myParams.myParent, false);
+        this._myArrowParentObject.pp_setParent(this._myParams.myParent, false);
 
         this._myParams.myDirection.vec3_scale(Math.max(0.001, this._myParams.myLength - this._myParams.myThickness * 4), end);
         end.vec3_add(this._myParams.myStart, end);
 
-        if (this._myParams.myIsLocal) {
-            this._myArrowRootObject.pp_setPositionLocal(end);
-            this._myArrowRootObject.pp_setUpLocal(this._myParams.myDirection, forward);
+        if (this._myParams.myLocal) {
+            this._myArrowParentObject.pp_setPositionLocal(end);
+            this._myArrowParentObject.pp_setUpLocal(this._myParams.myDirection, forward);
         } else {
-            this._myArrowRootObject.pp_setPosition(end);
-            this._myArrowRootObject.pp_setUp(this._myParams.myDirection, forward);
+            this._myArrowParentObject.pp_setPosition(end);
+            this._myArrowParentObject.pp_setUp(this._myParams.myDirection, forward);
         }
 
-        translateRoot.vec3_set(0, this._myParams.myThickness * 2 - 0.00001, 0);
-        this._myArrowRootObject.pp_translateObject(translateRoot);
+        translateParent.vec3_set(0, this._myParams.myThickness * 2 - 0.00001, 0);
+        this._myArrowParentObject.pp_translateObject(translateParent);
 
         scaleArrow.vec3_set(this._myParams.myThickness * 1.25, this._myParams.myThickness * 2, this._myParams.myThickness * 1.25);
-        if (this._myParams.myIsLocal) {
+        if (this._myParams.myLocal) {
             this._myArrowObject.pp_setScaleLocal(scaleArrow);
         } else {
             this._myArrowObject.pp_setScale(scaleArrow);
@@ -199,15 +210,15 @@ VisualArrow.prototype._refresh = function () {
         if (this._myParams.myArrowMesh != null) {
             this._myArrowMeshComponent.mesh = this._myParams.myArrowMesh;
         } else {
-            this._myArrowMeshComponent.mesh = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMeshes.myCone;
+            this._myArrowMeshComponent.mesh = Globals.getDefaultMeshes(this._myParams.myParent.pp_getEngine()).myCone;
         }
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {
-                this._myArrowMeshComponent.material = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myMesh;
+                this._myArrowMeshComponent.material = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myMesh;
             } else {
                 if (this._myFlatOpaqueMaterial == null) {
-                    this._myFlatOpaqueMaterial = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMaterials.myFlatOpaque.clone();
+                    this._myFlatOpaqueMaterial = Globals.getDefaultMaterials(this._myParams.myParent.pp_getEngine()).myFlatOpaque.clone();
                 }
                 this._myArrowMeshComponent.material = this._myFlatOpaqueMaterial;
                 this._myFlatOpaqueMaterial.color = this._myParams.myColor;
@@ -227,7 +238,7 @@ VisualArrow.prototype._refresh = function () {
         visualLineParams.myMaterial = this._myArrowMeshComponent.material;
 
         visualLineParams.myParent = this._myParams.myParent;
-        visualLineParams.myIsLocal = this._myParams.myIsLocal;
+        visualLineParams.myLocal = this._myParams.myLocal;
 
         this._myVisualLine.paramsUpdated();
     };
@@ -259,7 +270,7 @@ VisualArrowParams.prototype.copy = function copy(other) {
     }
 
     this.myParent = other.myParent;
-    this.myIsLocal = other.myIsLocal;
+    this.myLocal = other.myLocal;
 
     this.myType = other.myType;
 };

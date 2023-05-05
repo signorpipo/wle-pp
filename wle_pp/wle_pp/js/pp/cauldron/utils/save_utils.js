@@ -5,7 +5,7 @@ export function save(id, value) {
 }
 
 export function has(id) {
-    return loadString(id, null) != null;
+    return SaveUtils.loadString(id, null) != null;
 }
 
 export function remove(id) {
@@ -17,7 +17,7 @@ export function clear() {
 }
 
 export function load(id, defaultValue = null) {
-    return loadString(id, defaultValue);
+    return SaveUtils.loadString(id, defaultValue);
 }
 
 export function loadString(id, defaultValue = null) {
@@ -31,7 +31,7 @@ export function loadString(id, defaultValue = null) {
 }
 
 export function loadNumber(id, defaultValue = null) {
-    let item = loadString(id);
+    let item = SaveUtils.loadString(id);
 
     if (item != null) {
         return Number(item);
@@ -41,7 +41,7 @@ export function loadNumber(id, defaultValue = null) {
 }
 
 export function loadBool(id, defaultValue = null) {
-    let item = loadString(id);
+    let item = SaveUtils.loadString(id);
 
     if (item == "true") {
         return true;

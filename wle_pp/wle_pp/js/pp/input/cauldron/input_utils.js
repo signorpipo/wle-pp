@@ -1,5 +1,5 @@
 import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
+import { Globals } from "../../pp/globals";
 import { Handedness, HandednessIndex, InputSourceType, TrackedHandJointID, TrackedHandJointIDIndex } from "./input_types";
 
 export function getHandednessByIndex(index) {
@@ -17,7 +17,7 @@ export function getHandednessByIndex(index) {
     return handedness;
 }
 
-export function getInputSource(handedness, inputSourceType = null, engine = getMainEngine()) {
+export function getInputSource(handedness, inputSourceType = null, engine = Globals.getMainEngine()) {
     let inputSource = null;
 
     let xrSession = XRUtils.getSession(engine);
@@ -25,8 +25,8 @@ export function getInputSource(handedness, inputSourceType = null, engine = getM
         for (let i = 0; i < xrSession.inputSources.length; i++) {
             let input = xrSession.inputSources[i];
 
-            let isCorrectType = (!inputSourceType) || (inputSourceType == InputSourceType.GAMEPAD && !input.hand) || (inputSourceType == InputSourceType.TRACKED_HAND && input.hand);
-            if (isCorrectType && input.handedness == handedness) {
+            let correctType = (!inputSourceType) || (inputSourceType == InputSourceType.GAMEPAD && !input.hand) || (inputSourceType == InputSourceType.TRACKED_HAND && input.hand);
+            if (correctType && input.handedness == handedness) {
                 inputSource = input;
                 break;
             }
@@ -37,9 +37,9 @@ export function getInputSource(handedness, inputSourceType = null, engine = getM
 }
 
 export function getInputSourceTypeByHandedness(handedness, engine) {
-    let inputSource = getInputSource(handedness, undefined, engine);
+    let inputSource = InputUtils.getInputSource(handedness, undefined, engine);
 
-    return getInputSourceType(inputSource);
+    return InputUtils.getInputSourceType(inputSource);
 }
 
 export function getInputSourceType(inputSource) {

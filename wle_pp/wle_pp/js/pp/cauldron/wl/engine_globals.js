@@ -1,3 +1,5 @@
+import { SceneUtils } from "./utils/scene_utils";
+
 let _myMainEngine = null;
 let _myEngines = [];
 
@@ -39,4 +41,65 @@ export function removeEngine(engine) {
 
 export function hasEngine(engine) {
     return _myEngines.indexOf(engine) >= 0;
+}
+
+export function getScene(engine = getMainEngine()) {
+    let scene = null;
+
+    if (engine != null) {
+        scene = engine.scene;
+    }
+
+    return scene;
+}
+
+export function getRoot(engine = getMainEngine()) {
+    let root = null;
+
+    let scene = getScene(engine);
+    if (scene != null) {
+        root = SceneUtils.getRoot(scene);
+    }
+
+    return root;
+}
+
+export function getPhysics(engine = getMainEngine()) {
+    let physics = null;
+
+    if (engine != null) {
+        physics = engine.physics;
+    }
+
+    return physics;
+}
+
+export function getCanvas(engine = getMainEngine()) {
+    let canvas = null;
+
+    if (engine != null) {
+        canvas = engine.canvas;
+    }
+
+    return canvas;
+}
+
+export function getWASM(engine = getMainEngine()) {
+    let wasm = null;
+
+    if (engine != null) {
+        wasm = engine.wasm;
+    }
+
+    return wasm;
+}
+
+export function getXR(engine = getMainEngine()) {
+    let xr = null;
+
+    if (engine != null) {
+        xr = engine.xr;
+    }
+
+    return xr;
 }

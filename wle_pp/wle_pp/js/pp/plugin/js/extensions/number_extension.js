@@ -1,4 +1,4 @@
-import { ExtensionUtils } from "../../utils/extension_utils";
+import { PluginUtils } from "../../utils/plugin_utils";
 
 export function initNumberExtension(engine) {
     initNumberExtensionPrototype();
@@ -15,6 +15,5 @@ export function initNumberExtensionPrototype() {
 
 
 
-    ExtensionUtils.assignProperties(numberExtension, Number.prototype, false, true, true);
-
+    PluginUtils.injectProperties(numberExtension, Number.prototype, false, true, true);
 }

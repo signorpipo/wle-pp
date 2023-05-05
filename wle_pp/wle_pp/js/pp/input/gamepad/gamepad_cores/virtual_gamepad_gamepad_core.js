@@ -18,14 +18,14 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
     }
 
     getButtonData(buttonID) {
-        this._myButtonData.myIsPressed = false;
-        this._myButtonData.myIsTouched = false;
+        this._myButtonData.myPressed = false;
+        this._myButtonData.myTouched = false;
         this._myButtonData.myValue = 0;
 
         if (this.isGamepadCoreActive()) {
             if (this._myVirtualGamepad.isButtonPressed(this.getHandedness(), buttonID)) {
-                this._myButtonData.myIsPressed = true;
-                this._myButtonData.myIsTouched = true;
+                this._myButtonData.myPressed = true;
+                this._myButtonData.myTouched = true;
                 this._myButtonData.myValue = 1;
             }
         }

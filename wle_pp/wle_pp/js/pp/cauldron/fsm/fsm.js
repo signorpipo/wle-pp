@@ -7,6 +7,8 @@
         function transition(fsm, transitionData)
 */
 
+import { Emitter } from "@wonderlandengine/api";
+
 export class StateData {
 
     constructor(stateID, stateObject) {
@@ -52,19 +54,19 @@ export class FSM {
         this._myStates = new Map();
         this._myTransitions = new Map();
 
-        this._myDebugLogActive = false;
-        this._myDebugShowDelayedInfo = false;
-        this._myDebugLogName = "FSM";
+        this._myLogEnabled = false;
+        this._myLogShowDelayedInfo = false;
+        this._myLogFSMName = "FSM";
 
         this._myPerformMode = performMode;
         this._myPerformDelayedMode = performDelayedMode;
         this._myPendingPerforms = [];
         this._myCurrentlyPerformedTransition = null;
 
-        this._myInitCallbacks = new Map();            // Signature: callback(fsm, initStateData, initTransitionObject, ...args)
-        this._myInitIDCallbacks = new Map();          // Signature: callback(fsm, initStateData, initTransitionObject, ...args)
-        this._myTransitionCallbacks = new Map();      // Signature: callback(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
-        this._myTransitionIDCallbacks = [];           // Signature: callback(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
+        this._myInitEmitter = new Emitter();             // Signature: listener(fsm, initStateData, initTransitionObject, ...args)
+        this._myInitIDEmitters = new Map();              // Signature: listener(fsm, initStateData, initTransitionObject, ...args)
+        this._myTransitionEmitter = new Emitter();       // Signature: listener(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
+        this._myTransitionIDEmitters = [];               // Signature: listener(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
     }
 
     addState(stateID, state = null) {
@@ -136,8 +138,8 @@ export class FSM {
         if (this.hasState(initStateID)) {
             let initStateData = this._myStates.get(initStateID);
 
-            if (this._myDebugLogActive) {
-                console.log(this._myDebugLogName, "- Init:", initStateID);
+            if (this._myLogEnabled) {
+                console.log(this._myLogFSMName, "- Init:", initStateID);
             }
 
             if (initTransitionObject && initTransitionObject.performInit) {
@@ -148,18 +150,16 @@ export class FSM {
 
             this._myCurrentStateData = initStateData;
 
-            if (this._myInitCallbacks.size > 0) {
-                this._myInitCallbacks.forEach(function (callback) { callback(this, initStateData, initTransitionObject, ...args); }.bind(this));
-            }
+            this._myInitEmitter.notify(this, initStateData, initTransitionObject, ...args);
 
-            if (this._myInitIDCallbacks.size > 0) {
-                let callbacks = this._myInitIDCallbacks.get(initStateID);
-                if (callbacks != null) {
-                    callbacks.forEach(function (callback) { callback(this, initStateData, initTransitionObject, ...args); }.bind(this));
+            if (this._myInitIDEmitters.size > 0) {
+                let emitter = this._myInitIDEmitters.get(initStateID);
+                if (emitter != null) {
+                    emitter.notify(this, initStateData, initTransitionObject, ...args);
                 }
             }
-        } else if (this._myDebugLogActive) {
-            console.warn(this._myDebugLogName, "- Init state not found:", initStateID);
+        } else if (this._myLogEnabled) {
+            console.warn(this._myLogFSMName, "- Init state not found:", initStateID);
         }
     }
 
@@ -189,18 +189,18 @@ export class FSM {
 
         switch (this._myPerformDelayedMode) {
             case PerformDelayedMode.QUEUE:
-                this._myPendingPerforms.push(new PendingPerform(transitionID, ...args));
+                this._myPendingPerforms.push(new _PendingPerform(transitionID, ...args));
                 performDelayed = true;
                 break;
             case PerformDelayedMode.KEEP_FIRST:
                 if (!this.hasPendingPerforms()) {
-                    this._myPendingPerforms.push(new PendingPerform(transitionID, ...args));
+                    this._myPendingPerforms.push(new _PendingPerform(transitionID, ...args));
                     performDelayed = true;
                 }
                 break;
             case PerformDelayedMode.KEEP_LAST:
                 this.resetPendingPerforms();
-                this._myPendingPerforms.push(new PendingPerform(transitionID, ...args));
+                this._myPendingPerforms.push(new _PendingPerform(transitionID, ...args));
                 performDelayed = true;
                 break;
         }
@@ -393,9 +393,9 @@ export class FSM {
 
         let cloneFSM = new FSM();
 
-        cloneFSM._myDebugLogActive = this._myDebugLogActive;
-        cloneFSM._myDebugShowDelayedInfo = this._myDebugShowDelayedInfo;
-        cloneFSM._myDebugLogName = this._myDebugLogName.slice(0);
+        cloneFSM._myLogEnabled = this._myLogEnabled;
+        cloneFSM._myLogShowDelayedInfo = this._myLogShowDelayedInfo;
+        cloneFSM._myLogFSMName = this._myLogFSMName.slice(0);
 
         cloneFSM._myPerformMode = this._myPerformMode;
         cloneFSM._myPerformDelayedMode = this._myPerformDelayedMode;
@@ -445,106 +445,106 @@ export class FSM {
             return true;
         }
 
-        let isDeepCloneable = true;
+        let deepCloneable = true;
 
         for (let entry of this._myStates.entries()) {
-            isDeepCloneable = isDeepCloneable && entry[1].myObject.clone != null;
+            deepCloneable = deepCloneable && entry[1].myObject.clone != null;
         }
 
         for (let entry of this._myTransitions.entries()) {
             for (let transitonEntry of entry[1].entries()) {
-                isDeepCloneable = isDeepCloneable && transitonEntry[1].myObject.clone != null;
+                deepCloneable = deepCloneable && transitonEntry[1].myObject.clone != null;
             }
         }
 
-        return isDeepCloneable;
+        return deepCloneable;
     }
 
-    setDebugLogActive(active, debugLogName = null, showDelayedInfo = false) {
-        this._myDebugLogActive = active;
-        this._myDebugShowDelayedInfo = showDelayedInfo;
-        if (debugLogName) {
-            this._myDebugLogName = "FSM: ".concat(debugLogName);
+    setLogEnabled(active, fsmName = null, showDelayedInfo = false) {
+        this._myLogEnabled = active;
+        this._myLogShowDelayedInfo = showDelayedInfo;
+        if (fsmName) {
+            this._myLogFSMName = "FSM: ".concat(fsmName);
         }
     }
 
-    registerInitEventListener(callbackID, callback) {
-        this._myInitCallbacks.set(callbackID, callback);
+    registerInitEventListener(listenerID, listener) {
+        this._myInitEmitter.add(listener, { id: listenerID });
     }
 
-    unregisterInitEventListener(callbackID) {
-        this._myInitCallbacks.delete(callbackID);
+    unregisterInitEventListener(listenerID) {
+        this._myInitEmitter.remove(listenerID);
     }
 
-    registerInitIDEventListener(initStateID, callbackID, callback) {
-        let initStateIDCallbacks = this._myInitIDCallbacks.get(initStateID);
-        if (initStateIDCallbacks == null) {
-            this._myInitIDCallbacks.set(initStateID, new Map());
-            initStateIDCallbacks = this._myInitIDCallbacks.get(initStateID);
+    registerInitIDEventListener(initStateID, listenerID, listener) {
+        let initStateIDEmitter = this._myInitIDEmitters.get(initStateID);
+        if (initStateIDEmitter == null) {
+            this._myInitIDEmitters.set(initStateID, new Emitter());
+            initStateIDEmitter = this._myInitIDEmitters.get(initStateID);
         }
 
-        initStateIDCallbacks.set(callbackID, callback);
+        initStateIDEmitter.add(listener, { id: listenerID });
     }
 
-    unregisterInitIDEventListener(initStateID, callbackID) {
-        let initStateIDCallbacks = this._myInitIDCallbacks.get(initStateID);
-        if (initStateIDCallbacks != null) {
-            initStateIDCallbacks.delete(callbackID);
+    unregisterInitIDEventListener(initStateID, listenerID) {
+        let initStateIDEmitter = this._myInitIDEmitters.get(initStateID);
+        if (initStateIDEmitter != null) {
+            initStateIDEmitter.remove(listenerID);
 
-            if (initStateIDCallbacks.size <= 0) {
-                this._myInitIDCallbacks.delete(initStateID);
+            if (initStateIDEmitter.pp_isEmpty()) {
+                this._myInitIDEmitters.delete(initStateID);
             }
         }
     }
 
-    registerTransitionEventListener(callbackID, callback) {
-        this._myTransitionCallbacks.set(callbackID, callback);
+    registerTransitionEventListener(listenerID, listener) {
+        this._myTransitionEmitter.add(listener, { id: listenerID });
     }
 
-    unregisterTransitionEventListener(callbackID) {
-        this._myTransitionCallbacks.delete(callbackID);
+    unregisterTransitionEventListener(listenerID) {
+        this._myTransitionEmitter.remove(listenerID);
     }
 
-    // The fsm IDs can be null, that means that the callback is called whenever only the valid IDs match
+    // The fsm IDs can be null, that means that the listener is called whenever only the valid IDs match
     // This let you register to all the transitions with a specific ID and from of a specific state but to every state (toStateID == null)
-    registerTransitionIDEventListener(fromStateID, toStateID, transitionID, callbackID, callback) {
-        let internalTransitionIDCallbacks = null;
-        for (let value of this._myTransitionIDCallbacks) {
+    registerTransitionIDEventListener(fromStateID, toStateID, transitionID, listenerID, listener) {
+        let internalTransitionIDEmitter = null;
+        for (let value of this._myTransitionIDEmitters) {
             if (value[0] == fromStateID && value[1] == toStateID && value[2] == transitionID) {
-                internalTransitionIDCallbacks = value[3];
+                internalTransitionIDEmitter = value[3];
                 break;
             }
         }
 
-        if (internalTransitionIDCallbacks == null) {
-            let transitionIDCallbacks = [];
-            transitionIDCallbacks[0] = fromStateID;
-            transitionIDCallbacks[1] = toStateID;
-            transitionIDCallbacks[2] = transitionID;
-            transitionIDCallbacks[3] = new Map();
+        if (internalTransitionIDEmitter == null) {
+            let transitionIDEmitter = [];
+            transitionIDEmitter[0] = fromStateID;
+            transitionIDEmitter[1] = toStateID;
+            transitionIDEmitter[2] = transitionID;
+            transitionIDEmitter[3] = new Emitter();
 
-            internalTransitionIDCallbacks = transitionIDCallbacks[3];
+            internalTransitionIDEmitter = transitionIDEmitter[3];
 
-            this._myTransitionIDCallbacks.push(transitionIDCallbacks);
+            this._myTransitionIDEmitters.push(transitionIDEmitter);
         }
 
-        internalTransitionIDCallbacks.set(callbackID, callback);
+        internalTransitionIDEmitter.add(listener, { id: listenerID });
     }
 
-    unregisterTransitionIDEventListener(fromStateID, toStateID, transitionID, callbackID) {
-        let internalTransitionIDCallbacks = null;
-        for (let value of this._myTransitionIDCallbacks) {
+    unregisterTransitionIDEventListener(fromStateID, toStateID, transitionID, listenerID) {
+        let internalTransitionIDEmitter = null;
+        for (let value of this._myTransitionIDEmitters) {
             if (value[0] == fromStateID && value[1] == toStateID && value[2] == transitionID) {
-                internalTransitionIDCallbacks = value[3];
+                internalTransitionIDEmitter = value[3];
                 break;
             }
         }
 
-        if (internalTransitionIDCallbacks != null) {
-            internalTransitionIDCallbacks.delete(callbackID);
+        if (internalTransitionIDEmitter != null) {
+            internalTransitionIDEmitter.remove(listenerID);
 
-            if (internalTransitionIDCallbacks.size <= 0) {
-                this._myTransitionIDCallbacks.pp_remove(element => element[0] == fromStateID && element[1] == toStateID && element[2] == transitionID);
+            if (internalTransitionIDEmitter.pp_isEmpty()) {
+                this._myTransitionIDEmitters.pp_remove(element => element[0] == fromStateID && element[1] == toStateID && element[2] == transitionID);
             }
         }
     }
@@ -552,8 +552,8 @@ export class FSM {
     _perform(transitionID, performMode, ...args) {
         if (this.isPerformingTransition()) {
             let currentlyPerformedTransition = this.getCurrentlyPerformedTransition();
-            let consoleArguments = [this._myDebugLogName, "- Trying to perform:", transitionID];
-            if (this._myDebugShowDelayedInfo) {
+            let consoleArguments = [this._myLogFSMName, "- Trying to perform:", transitionID];
+            if (this._myLogShowDelayedInfo) {
                 consoleArguments.push(performMode == PerformMode.DELAYED ? "- Delayed" : "- Immediate");
             }
             consoleArguments.push("- But another transition is currently being performed -", currentlyPerformedTransition.myID);
@@ -572,9 +572,9 @@ export class FSM {
                 let fromState = this._myCurrentStateData;
                 let toState = this._myStates.get(transitionToPerform.myToState.myID);
 
-                if (this._myDebugLogActive) {
-                    let consoleArguments = [this._myDebugLogName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID];
-                    if (this._myDebugShowDelayedInfo) {
+                if (this._myLogEnabled) {
+                    let consoleArguments = [this._myLogFSMName, "- From:", fromState.myID, "- To:", toState.myID, "- With:", transitionID];
+                    if (this._myLogShowDelayedInfo) {
                         consoleArguments.push(performMode == PerformMode.DELAYED ? "- Delayed" : "- Immediate");
                     }
                     console.log(...consoleArguments);
@@ -596,38 +596,36 @@ export class FSM {
 
                 this._myCurrentStateData = transitionToPerform.myToState;
 
-                if (this._myTransitionCallbacks.size > 0) {
-                    this._myTransitionCallbacks.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performMode, ...args); }.bind(this));
-                }
+                this._myTransitionEmitter.notify(this, fromState, toState, transitionToPerform, performMode, ...args);
 
-                if (this._myTransitionIDCallbacks.length > 0) {
-                    let internalTransitionIDCallbacks = [];
-                    for (let value of this._myTransitionIDCallbacks) {
+                if (this._myTransitionIDEmitters.length > 0) {
+                    let internalTransitionIDEmitters = [];
+                    for (let value of this._myTransitionIDEmitters) {
                         if ((value[0] == null || value[0] == fromState.myID) &&
                             (value[1] == null || value[1] == toState.myID) &&
                             (value[2] == null || value[2] == transitionToPerform.myID)) {
-                            internalTransitionIDCallbacks.push(value[3]);
+                            internalTransitionIDEmitters.push(value[3]);
                         }
                     }
 
-                    for (let callbacks of this.internalTransitionIDCallbacks) {
-                        callbacks.forEach(function (callback) { callback(this, fromState, toState, transitionToPerform, performMode, ...args); }.bind(this));
+                    for (let emitter of internalTransitionIDEmitters) {
+                        emitter.notify(this, fromState, toState, transitionToPerform, performMode, ...args);
                     }
                 }
 
                 this._myCurrentlyPerformedTransition = null;
 
                 return true;
-            } else if (this._myDebugLogActive) {
-                let consoleArguments = [this._myDebugLogName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myID];
-                if (this._myDebugShowDelayedInfo) {
+            } else if (this._myLogEnabled) {
+                let consoleArguments = [this._myLogFSMName, "- No Transition:", transitionID, "- From:", this._myCurrentStateData.myID];
+                if (this._myLogShowDelayedInfo) {
                     consoleArguments.push(performMode == PerformMode.DELAYED ? "- Delayed" : "- Immediate");
                 }
                 console.warn(...consoleArguments);
             }
-        } else if (this._myDebugLogActive) {
-            let consoleArguments = [this._myDebugLogName, "- FSM not initialized yet"];
-            if (this._myDebugShowDelayedInfo) {
+        } else if (this._myLogEnabled) {
+            let consoleArguments = [this._myLogFSMName, "- FSM not initialized yet"];
+            if (this._myLogShowDelayedInfo) {
                 consoleArguments.push(performMode == PerformMode.DELAYED ? "- Delayed" : "- Immediate");
             }
             console.warn(...consoleArguments);
@@ -641,7 +639,7 @@ export class FSM {
     }
 }
 
-class PendingPerform {
+class _PendingPerform {
 
     constructor(transitionID, ...args) {
         this.myID = transitionID;

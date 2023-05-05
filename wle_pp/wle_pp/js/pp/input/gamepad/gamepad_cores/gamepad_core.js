@@ -1,12 +1,13 @@
 import { vec2_create } from "../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../../cauldron/wl/engine_globals";
 
 export class GamepadCore {
 
     constructor(handPose) {
         this._myHandPose = handPose;
 
-        this._myManageHandPose = false;
+        this._myManagingHandPose = false;
+
+        this._myDestroyed = false;
     }
 
     getHandedness() {
@@ -26,15 +27,15 @@ export class GamepadCore {
     }
 
     setManageHandPose(manageHandPose) {
-        this._myManageHandPose = manageHandPose;
+        this._myManagingHandPose = manageHandPose;
     }
 
     isManagingHandPose() {
-        return this._myManageHandPose;
+        return this._myManagingHandPose;
     }
 
     start() {
-        if (this.getHandPose() && this._myManageHandPose) {
+        if (this.getHandPose() && this.isManagingHandPose()) {
             this.getHandPose().start();
         }
 
@@ -42,7 +43,7 @@ export class GamepadCore {
     }
 
     preUpdate(dt) {
-        if (this.getHandPose() && this._myManageHandPose) {
+        if (this.getHandPose() && this.isManagingHandPose()) {
             this.getHandPose().update(dt);
         }
 
@@ -82,13 +83,31 @@ export class GamepadCore {
 
     }
 
+    _destroyHook() {
+
+    }
+
     // Hooks end
 
     _createButtonData() {
-        return { myIsPressed: false, myIsTouched: false, myValue: 0 };
+        return { myPressed: false, myTouched: false, myValue: 0 };
     }
 
     _createAxesData() {
         return vec2_create(0, 0);
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._destroyHook();
+
+        if (this.isManagingHandPose()) {
+            this.getHandPose().destroy();
+        }
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

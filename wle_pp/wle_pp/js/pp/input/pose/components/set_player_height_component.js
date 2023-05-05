@@ -21,9 +21,9 @@ export class SetPlayerHeightComponent extends Component {
     _onXRSessionStart() {
         if (this.active && (!this._mySetOnlyOnStart || !this._myHeightSetOnce)) {
             let localPosition = this.object.pp_getPositionLocal();
-            if (XRUtils.isReferenceSpaceLocalFloor(this.engine)) {
+            if (XRUtils.isReferenceSpaceFloorBased(this.engine)) {
                 this.object.pp_setPositionLocal(vec3_create(localPosition[0], 0, localPosition[2]));
-            } else if (XRUtils.isDeviceEmulated()) {
+            } else if (XRUtils.isDeviceEmulated(this.engine)) {
                 this.object.pp_setPositionLocal(vec3_create(localPosition[0], 0, localPosition[2]));
             } else {
                 this.object.pp_setPositionLocal(vec3_create(localPosition[0], this._myEyesHeight, localPosition[2]));

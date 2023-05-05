@@ -1,8 +1,7 @@
 import { PhysicsLayerFlags } from "../../../../../cauldron/physics/physics_layer_flags";
 import { XRUtils } from "../../../../../cauldron/utils/xr_utils";
-import { getDebugVisualManager } from "../../../../../debug/debug_globals";
 import { quat2_create, quat_create, vec3_create, vec4_create } from "../../../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../../../../cauldron/wl/engine_globals";
+import { Globals } from "../../../../../pp/globals";
 import { CollisionCheckUtils } from "../../../character_controller/collision/legacy/collision_check/collision_check";
 import { CollisionCheckParams, CollisionRuntimeParams } from "../../../character_controller/collision/legacy/collision_check/collision_params";
 import { getCollisionCheck } from "./player_locomotion_component";
@@ -16,7 +15,7 @@ export let PlayerTransformManagerSyncFlag = {
 
 export class PlayerTransformManagerParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myPlayerHeadManager = null;
 
         this.myMovementCollisionCheckParams = null;
@@ -71,7 +70,7 @@ export class PlayerTransformManagerParams {
         this.myFloatingSplitCheckStepEqualLength = false;
         this.myFloatingSplitCheckStepEqualLengthMinLength = 0;
 
-        this.myIsMaxDistanceFromRealToSyncEnabled = false;
+        this.myMaxDistanceFromRealToSyncEnabled = false;
         this.myMaxDistanceFromRealToSync = 0;
         // Max distance to resync valid with head, if you head is further do not resync
 
@@ -138,7 +137,17 @@ export class PlayerTransformManagerParams {
 
         this.myEngine = engine;
 
-        this.myDebugActive = false;
+        this.myDebugEnabled = false;
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }
 
@@ -176,6 +185,8 @@ export class PlayerTransformManager {
         this._myIsPositionValid = false;
 
         this._myResetRealOnSynced = false;
+
+        this._myDestroyed = false;
     }
 
     start() {
@@ -468,17 +479,17 @@ export class PlayerTransformManager {
         params.myVerticalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlags);
         params.myVerticalObjectsToIgnore.pp_copy(this._myParams.myHeadCollisionObjectsToIgnore);
 
-        params.myDebugActive = false;
+        params.myDebugEnabled = false;
 
-        params.myDebugHorizontalMovementActive = true;
-        params.myDebugHorizontalPositionActive = false;
-        params.myDebugVerticalMovementActive = false;
-        params.myDebugVerticalPositionActive = false;
-        params.myDebugSlidingActive = false;
-        params.myDebugGroundInfoActive = false;
-        params.myDebugCeilingInfoActive = false;
-        params.myDebugRuntimeParamsActive = false;
-        params.myDebugMovementActive = false;
+        params.myDebugHorizontalMovementEnabled = true;
+        params.myDebugHorizontalPositionEnabled = false;
+        params.myDebugVerticalMovementEnabled = false;
+        params.myDebugVerticalPositionEnabled = false;
+        params.myDebugSlidingEnabled = false;
+        params.myDebugGroundInfoEnabled = false;
+        params.myDebugCeilingInfoEnabled = false;
+        params.myDebugRuntimeParamsEnabled = false;
+        params.myDebugMovementEnabled = false;
     }
 
     _generateTeleportParamsFromMovementParams() {
@@ -529,17 +540,17 @@ export class PlayerTransformManager {
 
         params.myIsOnGroundIfInsideHit = true;
 
-        params.myDebugActive = false;
+        params.myDebugEnabled = false;
 
-        params.myDebugHorizontalMovementActive = false;
-        params.myDebugHorizontalPositionActive = false;
-        params.myDebugVerticalMovementActive = false;
-        params.myDebugVerticalPositionActive = false;
-        params.myDebugSlidingActive = false;
-        params.myDebugGroundInfoActive = true;
-        params.myDebugCeilingInfoActive = true;
-        params.myDebugRuntimeParamsActive = false;
-        params.myDebugMovementActive = false;
+        params.myDebugHorizontalMovementEnabled = false;
+        params.myDebugHorizontalPositionEnabled = false;
+        params.myDebugVerticalMovementEnabled = false;
+        params.myDebugVerticalPositionEnabled = false;
+        params.myDebugSlidingEnabled = false;
+        params.myDebugGroundInfoEnabled = true;
+        params.myDebugCeilingInfoEnabled = true;
+        params.myDebugRuntimeParamsEnabled = false;
+        params.myDebugMovementEnabled = false;
     }
 
     _onXRSessionStart(manualCall, session) {
@@ -555,11 +566,11 @@ export class PlayerTransformManager {
     }
 
     _debugUpdate(dt) {
-        getDebugVisualManager(this._myParams.myEngine).drawPoint(0, this._myValidPosition, vec4_create(1, 0, 0, 1), 0.05);
-        getDebugVisualManager(this._myParams.myEngine).drawLineEnd(0, this._myValidPosition, this.getPositionReal(), vec4_create(1, 0, 0, 1), 0.05);
-        getDebugVisualManager(this._myParams.myEngine).drawLine(0, this._myValidPosition, this._myValidRotationQuat.quat_getForward(), 0.15, vec4_create(0, 1, 0, 1), 0.025);
+        Globals.getDebugVisualManager(this._myParams.myEngine).drawPoint(0, this._myValidPosition, vec4_create(1, 0, 0, 1), 0.05);
+        Globals.getDebugVisualManager(this._myParams.myEngine).drawLineEnd(0, this._myValidPosition, this.getPositionReal(), vec4_create(1, 0, 0, 1), 0.05);
+        Globals.getDebugVisualManager(this._myParams.myEngine).drawLine(0, this._myValidPosition, this._myValidRotationQuat.quat_getForward(), 0.15, vec4_create(0, 1, 0, 1), 0.025);
 
-        getDebugVisualManager(this._myParams.myEngine).drawPoint(0, this._myValidPositionHead, vec4_create(1, 1, 0, 1), 0.05);
+        Globals.getDebugVisualManager(this._myParams.myEngine).drawPoint(0, this._myValidPositionHead, vec4_create(1, 1, 0, 1), 0.05);
     }
 }
 
@@ -652,14 +663,14 @@ PlayerTransformManager.prototype.update = function () {
                 rotationQuat.quat_setForward(horizontalDirection);
                 transformQuat.quat2_setRotationQuat(rotationQuat);
             }
-            let debugBackup = this._myParams.myMovementCollisionCheckParams.myDebugActive;
-            this._myParams.myMovementCollisionCheckParams.myDebugActive = false;
+            let debugBackup = this._myParams.myMovementCollisionCheckParams.myDebugEnabled;
+            this._myParams.myMovementCollisionCheckParams.myDebugEnabled = false;
             getCollisionCheck(this._myParams.myEngine).positionCheck(true, transformQuat, this._myParams.myMovementCollisionCheckParams, collisionRuntimeParams);
-            this._myParams.myMovementCollisionCheckParams.myDebugActive = debugBackup;
+            this._myParams.myMovementCollisionCheckParams.myDebugEnabled = debugBackup;
             this._myIsPositionValid = collisionRuntimeParams.myIsPositionOk;
         }
 
-        if (this._myParams.myDebugActive) {
+        if (this._myParams.myDebugEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
             this._debugUpdate(dt);
         }
     }
@@ -702,7 +713,7 @@ PlayerTransformManager.prototype._updateReal = function () {
 
             // Far
             if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FAR)) {
-                if (this._myParams.myIsMaxDistanceFromRealToSyncEnabled && movementToCheck.vec3_length() > this._myParams.myMaxDistanceFromRealToSync) {
+                if (this._myParams.myMaxDistanceFromRealToSyncEnabled && movementToCheck.vec3_length() > this._myParams.myMaxDistanceFromRealToSync) {
                     this._myIsFar = true;
                 } else if (this._myParams.myIsFarExtraCheckCallback != null && this._myParams.myIsFarExtraCheckCallback(this)) {
                     this._myIsFar = true;
@@ -917,11 +928,11 @@ PlayerTransformManager.prototype._updateReal = function () {
                     transformQuat.quat2_setRotationQuat(rotationQuat);
                 }
 
-                let debugBackup = this._myParams.myMovementCollisionCheckParams.myDebugActive;
-                this._myParams.myMovementCollisionCheckParams.myDebugActive = false;
+                let debugBackup = this._myParams.myMovementCollisionCheckParams.myDebugEnabled;
+                this._myParams.myMovementCollisionCheckParams.myDebugEnabled = false;
                 getCollisionCheck(this._myParams.myEngine).positionCheck(true, transformQuat, this._myParams.myMovementCollisionCheckParams, this._myRealCollisionRuntimeParams);
                 this._myIsRealPositionValid = this._myRealCollisionRuntimeParams.myIsPositionOk;
-                this._myParams.myMovementCollisionCheckParams.myDebugActive = debugBackup;
+                this._myParams.myMovementCollisionCheckParams.myDebugEnabled = debugBackup;
             }
         }
     }

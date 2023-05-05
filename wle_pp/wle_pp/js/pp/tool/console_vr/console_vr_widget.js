@@ -1,24 +1,21 @@
-import { getLeftGamepad, getRightGamepad } from "../../input/cauldron/input_globals";
 import { GamepadAxesID, GamepadButtonID } from "../../input/gamepad/gamepad_buttons";
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
+import { Globals } from "../../pp/globals";
 import { ToolHandedness } from "../cauldron/tool_types";
-import { WidgetFrame } from "../widget_frame/widget_frame";
-import { getOriginalConsoleClear } from "./console_original_functions";
-import { getConsoleVR } from "./console_vr_global";
+import { WidgetFrame, WidgetParams } from "../widget_frame/widget_frame";
+import { ConsoleOriginalFunctions } from "./console_original_functions";
 import { ConsoleVRWidgetConsoleFunction, ConsoleVRWidgetMessageType, ConsoleVRWidgetPulseOnNewMessage, ConsoleVRWidgetSender } from "./console_vr_types";
-import { ConsoleVRWidgetSetup } from "./console_vr_widget_setup";
+import { ConsoleVRWidgetConfig } from "./console_vr_widget_config";
 import { ConsoleVRWidgetUI } from "./console_vr_widget_ui";
 
-export class ConsoleVRWidgetAdditionalSetup {
+export class ConsoleVRWidgetParams extends WidgetParams {
 
     constructor() {
-        this.myHandedness = ToolHandedness.NONE;
+        super();
+
         this.myOverrideBrowserConsole = false;
         this.myShowOnStart = false;
         this.myShowVisibilityButton = false;
         this.myPulseOnNewMessage = ConsoleVRWidgetPulseOnNewMessage.NEVER;
-        this.myPlaneMaterial = null;
-        this.myTextMaterial = null;
     }
 }
 
@@ -52,12 +49,12 @@ export class ConsoleVRWidgetMessage {
 //  - Placeholder like %d and other similar kind of way to build strings
 export class ConsoleVRWidget {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this._myWidgetFrame = new WidgetFrame("C", 0, engine);
         this._myWidgetFrame.registerWidgetVisibleChangedEventListener(this, this._widgetVisibleChanged.bind(this));
 
-        this._mySetup = new ConsoleVRWidgetSetup();
-        this._myAdditionalSetup = null;
+        this._myConfig = new ConsoleVRWidgetConfig();
+        this._myParams = null;
 
         this._myUI = new ConsoleVRWidgetUI(engine);
 
@@ -79,12 +76,17 @@ export class ConsoleVRWidget {
 
         this._myPulseTimer = 0;
 
-        this._myGamepadScrollActive = true;
-        if (this._mySetup.myGamepadScrollOnlyOnHover) {
-            this._myGamepadScrollActive = false;
+        this._myGamepadScrollEnabled = true;
+        if (this._myConfig.myGamepadScrollOnlyOnHover) {
+            this._myGamepadScrollEnabled = false;
         }
 
+        this._myErrorEventListener = null;
+        this._myUnhandledRejectionEventListener = null;
+
         this._myEngine = engine;
+
+        this._myDestroyed = false;
     }
 
     setVisible(visible) {
@@ -95,16 +97,16 @@ export class ConsoleVRWidget {
         return this._myWidgetFrame.isVisible();
     }
 
-    start(parentObject, additionalSetup) {
-        this._myLeftGamepad = getLeftGamepad(this._myEngine);
-        this._myRightGamepad = getRightGamepad(this._myEngine);
+    start(parentObject, params) {
+        this._myLeftGamepad = Globals.getLeftGamepad(this._myEngine);
+        this._myRightGamepad = Globals.getRightGamepad(this._myEngine);
 
-        this._myAdditionalSetup = additionalSetup;
+        this._myParams = params;
 
-        this._myWidgetFrame.start(parentObject, additionalSetup);
+        this._myWidgetFrame.start(parentObject, params);
 
-        this._myUI.build(this._myWidgetFrame.getWidgetObject(), this._mySetup, additionalSetup);
-        this._myUI.setVisible(this._myWidgetFrame.myIsWidgetVisible);
+        this._myUI.build(this._myWidgetFrame.getWidgetObject(), this._myConfig, params);
+        this._myUI.setVisible(this._myWidgetFrame.isVisible());
         this._setNotifyIconActive(false);
 
         this._addListeners();
@@ -122,7 +124,7 @@ export class ConsoleVRWidget {
         this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ASSERT] = console.assert;
         this._myOldBrowserConsoleClear = console.clear;
 
-        if (this._myAdditionalSetup.myOverrideBrowserConsole) {
+        if (this._myParams.myOverrideBrowserConsole) {
             console.log = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.LOG, ConsoleVRWidgetSender.BROWSER_CONSOLE);
             console.error = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.BROWSER_CONSOLE);
             console.warn = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.WARN, ConsoleVRWidgetSender.BROWSER_CONSOLE);
@@ -131,40 +133,43 @@ export class ConsoleVRWidget {
             console.assert = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.ASSERT, ConsoleVRWidgetSender.BROWSER_CONSOLE);
             console.clear = this._clearConsole.bind(this, true, ConsoleVRWidgetSender.BROWSER_CONSOLE);
 
-            window.addEventListener("error", function (errorEvent) {
+            this._myErrorEventListener = function (errorEvent) {
                 if (errorEvent.error != null) {
                     this._consolePrint(ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.WINDOW, "Uncaught", errorEvent.error.stack);
                 } else {
                     this._consolePrint(ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.WINDOW, "Uncaught", errorEvent.message);
                 }
-            }.bind(this));
+            }.bind(this);
 
-            window.addEventListener("unhandledrejection", function (errorEvent) {
+            this._myUnhandledRejectionEventListener = function (errorEvent) {
                 this._consolePrint(ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.WINDOW, "Uncaught (in promise)", errorEvent.reason);
-            }.bind(this));
+            }.bind(this);
+
+            Globals.getWindow(this._myEngine).addEventListener("error", this._myErrorEventListener);
+            Globals.getWindow(this._myEngine).addEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
         }
 
-        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG] = getConsoleVR(this._myEngine).log;
-        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ERROR] = getConsoleVR(this._myEngine).error;
-        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.WARN] = getConsoleVR(this._myEngine).warn;
-        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.INFO] = getConsoleVR(this._myEngine).info;
-        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.DEBUG] = getConsoleVR(this._myEngine).debug;
-        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ASSERT] = getConsoleVR(this._myEngine).assert;
-        this._myOldConsoleVRClear = getConsoleVR(this._myEngine).clear;
+        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG] = Globals.getConsoleVR(this._myEngine).log;
+        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ERROR] = Globals.getConsoleVR(this._myEngine).error;
+        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.WARN] = Globals.getConsoleVR(this._myEngine).warn;
+        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.INFO] = Globals.getConsoleVR(this._myEngine).info;
+        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.DEBUG] = Globals.getConsoleVR(this._myEngine).debug;
+        this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ASSERT] = Globals.getConsoleVR(this._myEngine).assert;
+        this._myOldConsoleVRClear = Globals.getConsoleVR(this._myEngine).clear;
 
-        getConsoleVR(this._myEngine).log = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.LOG, ConsoleVRWidgetSender.CONSOLE_VR);
-        getConsoleVR(this._myEngine).error = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.CONSOLE_VR);
-        getConsoleVR(this._myEngine).warn = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.WARN, ConsoleVRWidgetSender.CONSOLE_VR);
-        getConsoleVR(this._myEngine).info = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.INFO, ConsoleVRWidgetSender.CONSOLE_VR);
-        getConsoleVR(this._myEngine).debug = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.DEBUG, ConsoleVRWidgetSender.CONSOLE_VR);
-        getConsoleVR(this._myEngine).assert = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.ASSERT, ConsoleVRWidgetSender.CONSOLE_VR);
-        getConsoleVR(this._myEngine).clear = this._clearConsole.bind(this, true, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).log = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.LOG, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).error = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).warn = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.WARN, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).info = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.INFO, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).debug = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.DEBUG, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).assert = this._consolePrint.bind(this, ConsoleVRWidgetConsoleFunction.ASSERT, ConsoleVRWidgetSender.CONSOLE_VR);
+        Globals.getConsoleVR(this._myEngine).clear = this._clearConsole.bind(this, true, ConsoleVRWidgetSender.CONSOLE_VR);
     }
 
     update(dt) {
         this._myWidgetFrame.update(dt);
 
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             this._updateScroll(dt);
         }
 
@@ -182,7 +187,7 @@ export class ConsoleVRWidget {
 
             let scrollLinesToSkip = Math.round(this._myScrollOffset);
 
-            while (i >= 0 && linesCount < this._mySetup.myMaxLines) {
+            while (i >= 0 && linesCount < this._myConfig.myMaxLines) {
                 let message = this._myMessages[i];
 
                 // Skip filtered messages
@@ -198,7 +203,7 @@ export class ConsoleVRWidget {
                 if (scrollLinesToSkip > 0) {
                     let additionalEmptyLines = 0;
                     if (i != this._myMessages.length - 1) {
-                        additionalEmptyLines = this._mySetup.myLinesBetweenMessages;
+                        additionalEmptyLines = this._myConfig.myLinesBetweenMessages;
                     }
 
                     if (scrollLinesToSkip >= messageLines + additionalEmptyLines) { // + empty lines between messages
@@ -212,9 +217,9 @@ export class ConsoleVRWidget {
 
                 // Add empty lines between messages
                 if (i != this._myMessages.length - 1) {
-                    let emptyLinesToSkip = this._mySetup.myLinesBetweenMessages - Math.max(this._mySetup.myLinesBetweenMessages - linesToSkip, 0);
-                    let emptyLinesToShow = this._mySetup.myLinesBetweenMessages - emptyLinesToSkip;
-                    if (linesCount + emptyLinesToShow > this._mySetup.myMaxLines) {
+                    let emptyLinesToSkip = this._myConfig.myLinesBetweenMessages - Math.max(this._myConfig.myLinesBetweenMessages - linesToSkip, 0);
+                    let emptyLinesToShow = this._myConfig.myLinesBetweenMessages - emptyLinesToSkip;
+                    if (linesCount + emptyLinesToShow > this._myConfig.myMaxLines) {
                         emptyLinesToShow = this._myMaxLines - linesCount;
                     }
 
@@ -228,8 +233,8 @@ export class ConsoleVRWidget {
 
                 // Computing the number of message lines to show
                 let linesToShow = messageLines - linesToSkip;
-                if (linesCount + linesToShow > this._mySetup.myMaxLines) {
-                    linesToShow = this._mySetup.myMaxLines - linesCount;
+                if (linesCount + linesToShow > this._myConfig.myMaxLines) {
+                    linesToShow = this._myConfig.myMaxLines - linesCount;
                 }
 
                 if (linesToShow > 0) {
@@ -256,7 +261,7 @@ export class ConsoleVRWidget {
             }
         }
 
-        consoleText = this._mySetup.myMessagesTextStartString.concat(consoleText);
+        consoleText = this._myConfig.myMessagesTextStartString.concat(consoleText);
 
         this._myUI.myMessagesTextComponents[messageType].text = consoleText;
     }
@@ -266,8 +271,8 @@ export class ConsoleVRWidget {
             let message = this._argsToMessage(consoleFunction, ...args);
             this._addMessage(message);
 
-            if (this._myMessages.length >= this._mySetup.myMaxMessages + this._mySetup.myMaxMessagesDeletePad) {
-                this._myMessages = this._myMessages.slice(this._myMessages.length - this._mySetup.myMaxMessages);
+            if (this._myMessages.length >= this._myConfig.myMaxMessages + this._myConfig.myMaxMessagesDeletePad) {
+                this._myMessages = this._myMessages.slice(this._myMessages.length - this._myConfig.myMaxMessages);
                 this._clampScrollOffset();
             }
 
@@ -281,7 +286,7 @@ export class ConsoleVRWidget {
                 this._myOldBrowserConsole[consoleFunction].apply(console, args);
                 break;
             case ConsoleVRWidgetSender.CONSOLE_VR:
-                this._myOldConsoleVR[consoleFunction].apply(getConsoleVR(this._myEngine), args);
+                this._myOldConsoleVR[consoleFunction].apply(Globals.getConsoleVR(this._myEngine), args);
                 break;
             default:
                 this._myOldBrowserConsole[consoleFunction].apply(console, args);
@@ -292,7 +297,7 @@ export class ConsoleVRWidget {
     _argsToMessage(consoleFunction, ...args) {
         if (consoleFunction == ConsoleVRWidgetConsoleFunction.ASSERT) {
             args = args.slice(1);
-            args.splice(0, 0, this._mySetup.myAssertStartString);
+            args.splice(0, 0, this._myConfig.myAssertStartString);
         }
 
         let messageType = this._consoleFunctionToMessageType(consoleFunction);
@@ -382,14 +387,14 @@ export class ConsoleVRWidget {
         for (let i = 0; i < linesToSplit.length; i++) {
             let lineToSplit = linesToSplit[i];
 
-            if (lineToSplit.length > this._mySetup.myMaxCharactersPerLine) {
+            if (lineToSplit.length > this._myConfig.myMaxCharactersPerLine) {
                 let spacesAtStart = this._getSpacesAtStart(lineToSplit);
-                let spaceToAdd = this._mySetup.myTabString.concat(spacesAtStart);
+                let spaceToAdd = this._myConfig.myTabString.concat(spacesAtStart);
                 let lineSplits = 0;
 
-                while (lineToSplit.length > this._mySetup.myMaxCharactersPerLine && lineSplits < this._mySetup.myMaxLineSplits) {
-                    let firstSub = lineToSplit.substr(0, this._mySetup.myMaxCharactersPerLine - 1);
-                    let secondSub = lineToSplit.substr(this._mySetup.myMaxCharactersPerLine - 1);
+                while (lineToSplit.length > this._myConfig.myMaxCharactersPerLine && lineSplits < this._myConfig.myMaxLineSplits) {
+                    let firstSub = lineToSplit.substr(0, this._myConfig.myMaxCharactersPerLine - 1);
+                    let secondSub = lineToSplit.substr(this._myConfig.myMaxCharactersPerLine - 1);
                     secondSub = spaceToAdd.concat(secondSub);
 
                     lines.push(firstSub);
@@ -439,12 +444,12 @@ export class ConsoleVRWidget {
     // If you have scrolled, new messages does not move the scroll position
     _adjustScrollOffsetAfterMessageAdded(message, hasSameInfoAsPrev) {
         if (!hasSameInfoAsPrev && !(this._myTypeFilters[message.myType]) && this._myScrollOffset > 0) {
-            this._myScrollOffset += message.myLines.length + this._mySetup.myLinesBetweenMessages;
+            this._myScrollOffset += message.myLines.length + this._myConfig.myLinesBetweenMessages;
         }
     }
 
     _updateAllTexts() {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             for (let key in ConsoleVRWidgetMessageType) {
                 this._updateText(ConsoleVRWidgetMessageType[key]);
             }
@@ -460,15 +465,15 @@ export class ConsoleVRWidget {
     _updateScroll(dt) {
         if (this._myScrollUp) {
             this._myScrollTimer += dt;
-            while (this._myScrollTimer > this._mySetup.myScrollDelay) {
-                this._myScrollTimer -= this._mySetup.myScrollDelay;
-                this._myScrollOffset += this._mySetup.myScrollAmount;
+            while (this._myScrollTimer > this._myConfig.myScrollDelay) {
+                this._myScrollTimer -= this._myConfig.myScrollDelay;
+                this._myScrollOffset += this._myConfig.myScrollAmount;
             }
         } else if (this._myScrollDown) {
             this._myScrollTimer += dt;
-            while (this._myScrollTimer > this._mySetup.myScrollDelay) {
-                this._myScrollTimer -= this._mySetup.myScrollDelay;
-                this._myScrollOffset -= this._mySetup.myScrollAmount;
+            while (this._myScrollTimer > this._myConfig.myScrollDelay) {
+                this._myScrollTimer -= this._myConfig.myScrollDelay;
+                this._myScrollOffset -= this._myConfig.myScrollAmount;
             }
         }
 
@@ -489,17 +494,17 @@ export class ConsoleVRWidget {
     }
 
     _getMaxScrollOffset() {
-        return Math.max(this._getLinesCount() - this._mySetup.myMaxLines, 0);
+        return Math.max(this._getLinesCount() - this._myConfig.myMaxLines, 0);
     }
 
     _getLinesCount() {
         let linesCount = 0;
         for (let message of this._myMessages) {
             if (!this._myTypeFilters[message.myType]) {
-                linesCount += message.myLines.length + this._mySetup.myLinesBetweenMessages;
+                linesCount += message.myLines.length + this._myConfig.myLinesBetweenMessages;
             }
         }
-        linesCount -= this._mySetup.myLinesBetweenMessages; // Empty line is added only between messages
+        linesCount -= this._myConfig.myLinesBetweenMessages; // Empty line is added only between messages
         linesCount = Math.max(linesCount, 0);
 
         return linesCount;
@@ -515,69 +520,71 @@ export class ConsoleVRWidget {
             let backgroundMaterial = ui.myFilterButtonsBackgroundComponents[ConsoleVRWidgetMessageType[key]].material;
             let textMaterial = ui.myFilterButtonsTextComponents[ConsoleVRWidgetMessageType[key]].material;
 
-            cursorTarget.addTripleClickFunction(this._resetFilters.bind(this, ConsoleVRWidgetMessageType[key]));
-            cursorTarget.addDoubleClickFunction(this._filterAllButOne.bind(this, ConsoleVRWidgetMessageType[key], textMaterial));
-            cursorTarget.addClickFunction(this._toggleFilter.bind(this, ConsoleVRWidgetMessageType[key], textMaterial));
-            cursorTarget.addHoverFunction(this._filterHover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._filterUnHover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
+            cursorTarget.onSingleClick.add(this._toggleFilter.bind(this, ConsoleVRWidgetMessageType[key], textMaterial));
+            cursorTarget.onDoubleClick.add(this._filterAllButOne.bind(this, ConsoleVRWidgetMessageType[key], textMaterial));
+            cursorTarget.onTripleClick.add(this._resetFilters.bind(this, ConsoleVRWidgetMessageType[key]));
+            cursorTarget.onHover.add(this._filterHover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
+            cursorTarget.onUnhover.add(this._filterUnHover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myClearButtonCursorTargetComponent;
             let backgroundMaterial = ui.myClearButtonBackgroundComponent.material;
 
-            cursorTarget.addClickFunction(this._clearConsole.bind(this, false, null));
-            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
+            cursorTarget.onClick.add(this._clearConsole.bind(this, false, null));
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
+            cursorTarget.onUnhover.add(this._genericUnHover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myUpButtonCursorTargetComponent;
             let backgroundMaterial = ui.myUpButtonBackgroundComponent.material;
 
-            cursorTarget.addDoubleClickFunction(this._instantScrollUp.bind(this, true));
-            cursorTarget.addDownFunction(this._setScrollUp.bind(this, true));
-            cursorTarget.addUpFunction(this._setScrollUp.bind(this, false));
-            cursorTarget.addUnHoverFunction(this._setScrollUp.bind(this, false));
-            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
+            cursorTarget.onDoubleClick.add(this._instantScrollUp.bind(this, true));
+            cursorTarget.onDown.add(this._setScrollUp.bind(this, true));
+            cursorTarget.onDownOnHover.add(this._setScrollUp.bind(this, true));
+            cursorTarget.onUp.add(this._setScrollUp.bind(this, false));
+            cursorTarget.onUnhover.add(this._setScrollUp.bind(this, false));
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
+            cursorTarget.onUnhover.add(this._genericUnHover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myDownButtonCursorTargetComponent;
             let backgroundMaterial = ui.myDownButtonBackgroundComponent.material;
 
-            cursorTarget.addDoubleClickFunction(this._instantScrollDown.bind(this));
-            cursorTarget.addDownFunction(this._setScrollDown.bind(this, true));
-            cursorTarget.addUpFunction(this._setScrollDown.bind(this, false));
-            cursorTarget.addUnHoverFunction(this._setScrollDown.bind(this, false));
-            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._genericUnHover.bind(this, backgroundMaterial));
+            cursorTarget.onDoubleClick.add(this._instantScrollDown.bind(this));
+            cursorTarget.onDown.add(this._setScrollDown.bind(this, true));
+            cursorTarget.onDownOnHover.add(this._setScrollDown.bind(this, true));
+            cursorTarget.onUp.add(this._setScrollDown.bind(this, false));
+            cursorTarget.onUnhover.add(this._setScrollDown.bind(this, false));
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
+            cursorTarget.onUnhover.add(this._genericUnHover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myNotifyIconCursorTargetComponent;
             let backgroundMaterial = ui.myNotifyIconBackgroundComponent.material;
 
-            cursorTarget.addClickFunction(this._instantScrollDown.bind(this));
-            cursorTarget.addHoverFunction(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.addUnHoverFunction(this._notifyIconUnHover.bind(this));
+            cursorTarget.onClick.add(this._instantScrollDown.bind(this));
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
+            cursorTarget.onUnhover.add(this._notifyIconUnHover.bind(this));
         }
 
-        ui.myPointerCursorTargetComponent.addHoverFunction(this._setGamepadScrollActive.bind(this, true));
-        ui.myPointerCursorTargetComponent.addUnHoverFunction(this._setGamepadScrollActive.bind(this, false));
+        ui.myPointerCursorTargetComponent.onHover.add(this._setGamepadScrollEnabled.bind(this, true));
+        ui.myPointerCursorTargetComponent.onUnhover.add(this._setGamepadScrollEnabled.bind(this, false));
     }
 
     _resetFilters(messageType) {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             for (let key in ConsoleVRWidgetMessageType) {
                 let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[ConsoleVRWidgetMessageType[key]].material;
                 let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[ConsoleVRWidgetMessageType[key]].material;
 
                 this._myTypeFilters[ConsoleVRWidgetMessageType[key]] = false;
-                filterTextMaterial.color = this._mySetup.myMessageTypeColors[ConsoleVRWidgetMessageType[key]];
+                filterTextMaterial.color = this._myConfig.myMessageTypeColors[ConsoleVRWidgetMessageType[key]];
                 if (ConsoleVRWidgetMessageType[key] != messageType) {
-                    backgroundMaterial.color = this._mySetup.myBackgroundColor;
+                    backgroundMaterial.color = this._myConfig.myBackgroundColor;
                 }
             }
 
@@ -587,17 +594,17 @@ export class ConsoleVRWidget {
     }
 
     _filterAllButOne(messageType) {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             for (let key in ConsoleVRWidgetMessageType) {
                 let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[ConsoleVRWidgetMessageType[key]].material;
                 let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[ConsoleVRWidgetMessageType[key]].material;
                 if (ConsoleVRWidgetMessageType[key] != messageType) {
                     this._myTypeFilters[ConsoleVRWidgetMessageType[key]] = true;
-                    backgroundMaterial.color = this._mySetup.myFilterButtonDisabledBackgroundColor;
-                    filterTextMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
+                    backgroundMaterial.color = this._myConfig.myFilterButtonDisabledBackgroundColor;
+                    filterTextMaterial.color = this._myConfig.myFilterButtonDisabledTextColor;
                 } else {
                     this._myTypeFilters[ConsoleVRWidgetMessageType[key]] = false;
-                    filterTextMaterial.color = this._mySetup.myMessageTypeColors[messageType];
+                    filterTextMaterial.color = this._myConfig.myMessageTypeColors[messageType];
                 }
             }
 
@@ -607,13 +614,13 @@ export class ConsoleVRWidget {
     }
 
     _toggleFilter(messageType, textMaterial) {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
 
             this._myTypeFilters[messageType] = !this._myTypeFilters[messageType];
             if (this._myTypeFilters[messageType]) {
-                textMaterial.color = this._mySetup.myFilterButtonDisabledTextColor;
+                textMaterial.color = this._myConfig.myFilterButtonDisabledTextColor;
             } else {
-                textMaterial.color = this._mySetup.myMessageTypeColors[messageType];
+                textMaterial.color = this._myConfig.myMessageTypeColors[messageType];
             }
 
             this._clampScrollOffset();
@@ -622,7 +629,7 @@ export class ConsoleVRWidget {
     }
 
     _clearConsole(codeDrivenClear = false, sender = null) {
-        if (this._myWidgetFrame.myIsWidgetVisible || codeDrivenClear) {
+        if (this._myWidgetFrame.isVisible() || codeDrivenClear) {
             this._myMessages = [];
             this._clampScrollOffset();
             this._updateAllTexts();
@@ -633,19 +640,19 @@ export class ConsoleVRWidget {
                         this._myOldBrowserConsoleClear.apply(console);
                         break;
                     case ConsoleVRWidgetSender.CONSOLE_VR:
-                        this._myOldConsoleVRClear.apply(getConsoleVR(this._myEngine));
+                        this._myOldConsoleVRClear.apply(Globals.getConsoleVR(this._myEngine));
                         break;
                     default:
                         break;
                 }
-            } else if (this._mySetup.myClearBrowserConsoleWhenClearPressed) {
-                getOriginalConsoleClear()();
+            } else if (this._myConfig.myClearBrowserConsoleWhenClearPressed) {
+                ConsoleOriginalFunctions.getConsoleOriginalClear()();
             }
         }
     }
 
     _setScrollUp(value) {
-        if (this._myWidgetFrame.myIsWidgetVisible || !value) {
+        if (this._myWidgetFrame.isVisible() || !value) {
             if (value) {
                 this._myScrollTimer = 0;
             }
@@ -655,7 +662,7 @@ export class ConsoleVRWidget {
     }
 
     _setScrollDown(value) {
-        if (this._myWidgetFrame.myIsWidgetVisible || !value) {
+        if (this._myWidgetFrame.isVisible() || !value) {
             if (value) {
                 this._myScrollTimer = 0;
             }
@@ -665,14 +672,14 @@ export class ConsoleVRWidget {
     }
 
     _instantScrollUp() {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             this._myScrollOffset = this._getMaxScrollOffset();
             this._updateAllTexts();
         }
     }
 
     _instantScrollDown() {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             this._myScrollOffset = 0;
             this._setNotifyIconActive(false);
             this._updateAllTexts();
@@ -680,12 +687,12 @@ export class ConsoleVRWidget {
     }
 
     _setNotifyIconActive(active) {
-        this._myUI.myNotifyIconPanel.pp_setActive(active && this._myWidgetFrame.myIsWidgetVisible);
+        this._myUI.myNotifyIconPanel.pp_setActive(active && this._myWidgetFrame.isVisible());
     }
 
     _notifyIconUnHover() {
         let material = this._myUI.myNotifyIconBackgroundComponent.material;
-        material.color = this._mySetup.myNotifyIconColor;
+        material.color = this._myConfig.myNotifyIconColor;
     }
 
     _filterHover(messageType, material) {
@@ -694,26 +701,26 @@ export class ConsoleVRWidget {
 
     _filterUnHover(messageType, material) {
         if (this._myTypeFilters[messageType]) {
-            material.color = this._mySetup.myFilterButtonDisabledBackgroundColor;
+            material.color = this._myConfig.myFilterButtonDisabledBackgroundColor;
         } else {
-            material.color = this._mySetup.myBackgroundColor;
+            material.color = this._myConfig.myBackgroundColor;
         }
     }
 
     _genericHover(material) {
-        material.color = this._mySetup.myButtonHoverColor;
+        material.color = this._myConfig.myButtonHoverColor;
     }
 
     _genericUnHover(material) {
-        material.color = this._mySetup.myBackgroundColor;
+        material.color = this._myConfig.myBackgroundColor;
     }
 
     // Gamepad section
 
     _updateGamepadsExtraActions(dt) {
         if (this._myLeftGamepad && this._myRightGamepad) {
-            if ((this._myLeftGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).isPressStart() && this._myRightGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).myIsPressed) ||
-                (this._myRightGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).isPressStart() && this._myLeftGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).myIsPressed)) {
+            if ((this._myLeftGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).isPressStart() && this._myRightGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) ||
+                (this._myRightGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).isPressStart() && this._myLeftGamepad.getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed())) {
                 this._toggleVisibility();
             }
 
@@ -735,22 +742,22 @@ export class ConsoleVRWidget {
     }
 
     _updateScrollWithThumbstick(dt) {
-        if (this._myWidgetFrame.myIsWidgetVisible && this._myGamepadScrollActive) {
+        if (this._myWidgetFrame.isVisible() && this._myGamepadScrollEnabled) {
             let axes = [0, 0];
-            if (this._mySetup.myScrollThumbstickHandedness == ToolHandedness.LEFT) {
+            if (this._myConfig.myScrollThumbstickHandedness == ToolHandedness.LEFT) {
                 axes = this._myLeftGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes;
-            } else if (this._mySetup.myScrollThumbstickHandedness == ToolHandedness.RIGHT) {
+            } else if (this._myConfig.myScrollThumbstickHandedness == ToolHandedness.RIGHT) {
                 axes = this._myRightGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes;
             }
 
-            if (Math.abs(axes[1]) > this._mySetup.myScrollThumbstickMinThreshold) {
+            if (Math.abs(axes[1]) > this._myConfig.myScrollThumbstickMinThreshold) {
                 this._myScrollThumbstickTimer += dt;
 
-                while (this._myScrollThumbstickTimer > this._mySetup.myScrollThumbstickDelay) {
-                    this._myScrollThumbstickTimer -= this._mySetup.myScrollThumbstickDelay;
+                while (this._myScrollThumbstickTimer > this._myConfig.myScrollThumbstickDelay) {
+                    this._myScrollThumbstickTimer -= this._myConfig.myScrollThumbstickDelay;
 
-                    let normalizedScrollAmount = (Math.abs(axes[1]) - this._mySetup.myScrollThumbstickMinThreshold) / (1 - this._mySetup.myScrollThumbstickMinThreshold);
-                    this._myScrollOffset += Math.sign(axes[1]) * normalizedScrollAmount * this._mySetup.myScrollThumbstickAmount;
+                    let normalizedScrollAmount = (Math.abs(axes[1]) - this._myConfig.myScrollThumbstickMinThreshold) / (1 - this._myConfig.myScrollThumbstickMinThreshold);
+                    this._myScrollOffset += Math.sign(axes[1]) * normalizedScrollAmount * this._myConfig.myScrollThumbstickAmount;
                 }
 
                 this._clampScrollOffset();
@@ -763,15 +770,15 @@ export class ConsoleVRWidget {
 
     _pulseGamepad() {
         if (this._myLeftGamepad && this._myRightGamepad) {
-            let pulseType = this._myAdditionalSetup.myPulseOnNewMessage;
-            let pulseEnabled = pulseType == ConsoleVRWidgetPulseOnNewMessage.ALWAYS || (!this._myWidgetFrame.myIsWidgetVisible && pulseType == ConsoleVRWidgetPulseOnNewMessage.WHEN_HIDDEN);
+            let pulseType = this._myParams.myPulseOnNewMessage;
+            let pulseEnabled = pulseType == ConsoleVRWidgetPulseOnNewMessage.ALWAYS || (!this._myWidgetFrame.isVisible() && pulseType == ConsoleVRWidgetPulseOnNewMessage.WHEN_HIDDEN);
             if (pulseEnabled && this._myPulseTimer == 0) {
-                if (this._myAdditionalSetup.myHandedness == ToolHandedness.RIGHT) {
-                    this._myRightGamepad.pulse(this._mySetup.myPulseIntensity, this._mySetup.myPulseDuration);
+                if (this._myParams.myHandedness == ToolHandedness.RIGHT) {
+                    this._myRightGamepad.pulse(this._myConfig.myPulseIntensity, this._myConfig.myPulseDuration);
                 } else {
-                    this._myLeftGamepad.pulse(this._mySetup.myPulseIntensity, this._mySetup.myPulseDuration);
+                    this._myLeftGamepad.pulse(this._myConfig.myPulseIntensity, this._myConfig.myPulseDuration);
                 }
-                this._myPulseTimer = this._mySetup.myPulseDelay;
+                this._myPulseTimer = this._myConfig.myPulseDelay;
             }
         }
     }
@@ -780,15 +787,15 @@ export class ConsoleVRWidget {
         if (this._isSpecialSimpleArray(array)) {
             return true;
         } else if (Array.isArray(array)) {
-            let isBuiltIn = true;
+            let builtInArray = true;
             for (let element of array) {
                 if (element instanceof Object) {
-                    isBuiltIn = false;
+                    builtInArray = false;
                     break;
                 }
             }
 
-            return isBuiltIn;
+            return builtInArray;
         }
 
         return false;
@@ -812,11 +819,11 @@ export class ConsoleVRWidget {
             );
     }
 
-    _setGamepadScrollActive(active) {
-        this._myGamepadScrollActive = active;
+    _setGamepadScrollEnabled(enabled) {
+        this._myGamepadScrollEnabled = enabled;
 
-        if (!this._mySetup.myGamepadScrollOnlyOnHover) {
-            this._myGamepadScrollActive = true;
+        if (!this._myConfig.myGamepadScrollOnlyOnHover) {
+            this._myGamepadScrollEnabled = true;
         }
     }
 
@@ -840,5 +847,19 @@ export class ConsoleVRWidget {
         } else {
             return value;
         }
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        Globals.getWindow(this._myEngine).removeEventListener("error", this._myErrorEventListener);
+        Globals.getWindow(this._myEngine).removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+
+        this._myUI.destroy();
+        this._myWidgetFrame.destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

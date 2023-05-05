@@ -29,7 +29,7 @@ export function setObjectAlpha(object, alpha) {
 
     for (let meshComponent of meshComponents) {
         if (meshComponent.material != null) {
-            setAlpha(meshComponent.material, alpha);
+            MaterialUtils.setAlpha(meshComponent.material, alpha);
         }
     }
 }

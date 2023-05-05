@@ -5,23 +5,21 @@ visualParams.myDirection.vec3_copy(direction);
 visualParams.myLength = 0.2;
 visualParams.myMaterial = myDefaultResources.myMaterials.myFlatOpaque.clone();
 visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-getVisualManager().draw(visualParams);
+Globals.getVisualManager().draw(visualParams);
 
 or
 
 let visualLine = new VisualLine(visualParams);
 */
 
-import { vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../wl/engine_globals";
-import { getVisualData } from "../visual_globals";
-import { VisualElementType } from "./visual_element_types";
 import { MeshComponent } from "@wonderlandengine/api";
-import { getDefaultResources } from "../../../pp/default_resources_global";
+import { vec3_create } from "../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../pp/globals";
+import { VisualElementType } from "./visual_element_types";
 
 export class VisualLineParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myStart = vec3_create();
         this.myDirection = vec3_create(0, 0, 1);
         this.myLength = 0;
@@ -33,8 +31,8 @@ export class VisualLineParams {
         this.myMaterial = null;     // null means it will default on myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // If this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = getVisualData(engine).myRootObject;
-        this.myIsLocal = false;
+        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
+        this.myLocal = false;
 
         this.myType = VisualElementType.LINE;
     }
@@ -63,11 +61,13 @@ export class VisualLine {
 
         this._myDirty = false;
 
-        this._myLineRootObject = null;
+        this._myLineParentObject = null;
         this._myLineObject = null;
         this._myLineMeshComponent = null;
 
         this._myFlatOpaqueMaterial = null;
+
+        this._myDestroyed = false;
 
         this._build();
         this.forceRefresh();
@@ -78,7 +78,7 @@ export class VisualLine {
     setVisible(visible) {
         if (this._myVisible != visible) {
             this._myVisible = visible;
-            this._myLineRootObject.pp_setActive(visible);
+            this._myLineParentObject.pp_setActive(visible);
         }
     }
 
@@ -121,8 +121,8 @@ export class VisualLine {
     }
 
     _build() {
-        this._myLineRootObject = this._myParams.myParent.pp_getEngine().scene.pp_addObject();
-        this._myLineObject = this._myLineRootObject.pp_addObject();
+        this._myLineParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
+        this._myLineObject = this._myLineParentObject.pp_addObject();
 
         this._myLineMeshComponent = this._myLineObject.pp_addComponent(MeshComponent);
     }
@@ -150,6 +150,16 @@ export class VisualLine {
     _refresh() {
         // Implemented outside class definition
     }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myLineParentObject.pp_destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
+    }
 }
 
 
@@ -162,22 +172,22 @@ VisualLine.prototype._refresh = function () {
 
     let forward = vec3_create(0, 1, 0);
     return function _refresh() {
-        this._myLineRootObject.pp_setParent(this._myParams.myParent, false);
+        this._myLineParentObject.pp_setParent(this._myParams.myParent, false);
 
-        if (this._myParams.myIsLocal) {
-            this._myLineRootObject.pp_setPositionLocal(this._myParams.myStart);
+        if (this._myParams.myLocal) {
+            this._myLineParentObject.pp_setPositionLocal(this._myParams.myStart);
         } else {
-            this._myLineRootObject.pp_setPosition(this._myParams.myStart);
+            this._myLineParentObject.pp_setPosition(this._myParams.myStart);
         }
 
         scaleLine.vec3_set(this._myParams.myThickness / 2, this._myParams.myLength / 2, this._myParams.myThickness / 2);
-        if (this._myParams.myIsLocal) {
+        if (this._myParams.myLocal) {
             this._myLineObject.pp_setScaleLocal(scaleLine);
         } else {
             this._myLineObject.pp_setScale(scaleLine);
         }
 
-        if (this._myParams.myIsLocal) {
+        if (this._myParams.myLocal) {
             this._myLineObject.pp_setUpLocal(this._myParams.myDirection, forward);
         } else {
             this._myLineObject.pp_setUp(this._myParams.myDirection, forward);
@@ -190,15 +200,15 @@ VisualLine.prototype._refresh = function () {
         if (this._myParams.myMesh != null) {
             this._myLineMeshComponent.mesh = this._myParams.myMesh;
         } else {
-            this._myLineMeshComponent.mesh = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMeshes.myCylinder;
+            this._myLineMeshComponent.mesh = Globals.getDefaultMeshes(this._myParams.myParent.pp_getEngine()).myCylinder;
         }
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {
-                this._myLineMeshComponent.material = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myMesh;
+                this._myLineMeshComponent.material = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myMesh;
             } else {
                 if (this._myFlatOpaqueMaterial == null) {
-                    this._myFlatOpaqueMaterial = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMaterials.myFlatOpaque.clone();
+                    this._myFlatOpaqueMaterial = Globals.getDefaultMaterials(this._myParams.myParent.pp_getEngine()).myFlatOpaque.clone();
                 }
                 this._myLineMeshComponent.material = this._myFlatOpaqueMaterial;
                 this._myFlatOpaqueMaterial.color = this._myParams.myColor;
@@ -234,7 +244,7 @@ VisualLineParams.prototype.copy = function copy(other) {
     }
 
     this.myParent = other.myParent;
-    this.myIsLocal = other.myIsLocal;
+    this.myLocal = other.myLocal;
 
     this.myType = other.myType;
 };

@@ -14,13 +14,13 @@ export class EasyTuneNoneWidgetUI extends EasyTuneBaseWidgetUI {
     }
 
     _setTransformHook() {
-        this.myTypeNotSupportedPanel.pp_setPositionLocal(this._mySetup.myTypeNotSupportedPanelPosition);
-        this.myTypeNotSupportedText.pp_scaleObject(this._mySetup.myTypeNotSupportedTextScale);
+        this.myTypeNotSupportedPanel.pp_setPositionLocal(this._myConfig.myTypeNotSupportedPanelPosition);
+        this.myTypeNotSupportedText.pp_scaleObject(this._myConfig.myTypeNotSupportedTextScale);
     }
 
     _addComponentsHook() {
         this.myTypeNotSupportedTextComponent = this.myTypeNotSupportedText.pp_addComponent(TextComponent);
         this._setupTextComponent(this.myTypeNotSupportedTextComponent);
-        this.myTypeNotSupportedTextComponent.text = this._mySetup.myTypeNotSupportedText;
+        this.myTypeNotSupportedTextComponent.text = this._myConfig.myTypeNotSupportedText;
     }
 }

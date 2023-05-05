@@ -1,32 +1,37 @@
-import { getMainEngine } from "../../../../cauldron/wl/engine_globals";
+import { Emitter } from "@wonderlandengine/api";
+import { Globals } from "../../../../pp/globals";
 
 export class EasyTuneBaseArrayWidgetSelector {
 
-    constructor(params, gamepad, engine = getMainEngine()) {
+    constructor(params, gamepad, engine = Globals.getMainEngine()) {
         this._myGamepad = gamepad;
 
         this._myParentObject = null;
 
         this._myParams = params;
-        this._myAdditionalSetup = null;
+        this._myEasyTuneParams = null;
 
         this._myWidgets = new Map();
 
         this._myVariable = null;
-        this._myIsVisible = true;
+        this._myVisible = true;
 
         this._myAppendToVariableName = null;
 
-        this._myScrollVariableRequestCallbacks = new Map();     // Signature: callback(scrollAmount)
+        this._myScrollVariableRequestEmitter = new Emitter();     // Signature: listener(scrollAmount)
 
-        this._myCurrentArraySize = 0;
+        this._myCurrentArraySize = null;
 
         this._myEngine = engine;
+
+        this._myDestroyed = false;
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
         this._myVariable = variable;
-        this._myCurrentArraySize = this._myVariable.myValue.length;
+
+        this._myCurrentArraySize = this._myVariable.getValue().length; // null for non array variable
+
         this._myAppendToVariableName = appendToVariableName;
 
         if (!this._myWidgets.has(this._myCurrentArraySize)) {
@@ -38,7 +43,7 @@ export class EasyTuneBaseArrayWidgetSelector {
             widget.setEasyTuneVariable(variable, appendToVariableName);
         }
 
-        this.setVisible(this._myIsVisible);
+        this.setVisible(this._myVisible);
     }
 
     setVisible(visible) {
@@ -55,7 +60,7 @@ export class EasyTuneBaseArrayWidgetSelector {
             }
         }
 
-        this._myIsVisible = visible;
+        this._myVisible = visible;
     }
 
     isScrollVariableActive() {
@@ -87,17 +92,17 @@ export class EasyTuneBaseArrayWidgetSelector {
         return this._myWidgets.get(this._myCurrentArraySize);
     }
 
-    registerScrollVariableRequestEventListener(id, callback) {
-        this._myScrollVariableRequestCallbacks.set(id, callback);
+    registerScrollVariableRequestEventListener(id, listener) {
+        this._myScrollVariableRequestEmitter.add(listener, { id: id });
     }
 
     unregisterScrollVariableRequestEventListener(id) {
-        this._myScrollVariableRequestCallbacks.delete(id);
+        this._myScrollVariableRequestEmitter.remove(id);
     }
 
-    start(parentObject, additionalSetup) {
+    start(parentObject, easyTuneParams) {
         this._myParentObject = parentObject;
-        this._myAdditionalSetup = additionalSetup;
+        this._myEasyTuneParams = easyTuneParams;
 
         this._createWidget(1);
 
@@ -146,29 +151,39 @@ export class EasyTuneBaseArrayWidgetSelector {
     }
 
     _isActive() {
-        return this._myIsVisible && this._myVariable;
+        return this._myVisible && this._myVariable;
     }
 
     _scrollVariableRequest(amount) {
-        for (let callback of this._myScrollVariableRequestCallbacks.values()) {
-            callback(amount);
-        }
+        this._myScrollVariableRequestEmitter.notify(amount);
     }
 
     _createWidget(arraySize) {
         this._myWidgets.set(arraySize, this._getEasyTuneArrayWidget(arraySize));
-        this._myWidgets.get(arraySize).start(this._myParentObject, this._myAdditionalSetup);
+        this._myWidgets.get(arraySize).start(this._myParentObject, this._myEasyTuneParams);
         this._myWidgets.get(arraySize).setVisible(false);
         this._myWidgets.get(arraySize).registerScrollVariableRequestEventListener(this, this._scrollVariableRequest.bind(this));
     }
 
     _sizeChangedCheck() {
-        if (this._myVariable.myValue.length != this._myCurrentArraySize) {
+        if (this._myVariable.getValue().length != this._myCurrentArraySize) {
             this.setEasyTuneVariable(this._myVariable, this._myAppendToVariableName);
         }
     }
 
     _getEasyTuneArrayWidget(arraySize) {
         return null;
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        for (let widget of this._myWidgets.values()) {
+            widget.destroy();
+        }
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

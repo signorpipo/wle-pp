@@ -1,17 +1,18 @@
 /*
 Easy Tune Variables Examples
 
-Number:         getEasyTuneVariables().add(new EasyTuneNumber("Float", 1.00, 0.1, 3));
-Number Array:   getEasyTuneVariables().add(new EasyTuneNumberArray("Float Array", [1.00, 2.00, 3.00], 0.1, 3));
-Int:            getEasyTuneVariables().add(new EasyTuneInt("Int", 1, 1));
-Int Array:      getEasyTuneVariables().add(new EasyTuneIntArray("Int Array", [1, 2, 3], 1));
-Bool:           getEasyTuneVariables().add(new EasyTuneBool("Bool", false));
-Bool Array:     getEasyTuneVariables().add(new EasyTuneBoolArray("Bool Array", [false, true, false]));
-Transform:      getEasyTuneVariables().add(new EasyTuneTransform("Transform", mat4_create(), true));
+Number:         Globals.getEasyTuneVariables().add(new EasyTuneNumber("Float", 1.00, 0.1, 3));
+Number Array:   Globals.getEasyTuneVariables().add(new EasyTuneNumberArray("Float Array", [1.00, 2.00, 3.00], 0.1, 3));
+Int:            Globals.getEasyTuneVariables().add(new EasyTuneInt("Int", 1, 1));
+Int Array:      Globals.getEasyTuneVariables().add(new EasyTuneIntArray("Int Array", [1, 2, 3], 1));
+Bool:           Globals.getEasyTuneVariables().add(new EasyTuneBool("Bool", false));
+Bool Array:     Globals.getEasyTuneVariables().add(new EasyTuneBoolArray("Bool Array", [false, true, false]));
+Transform:      Globals.getEasyTuneVariables().add(new EasyTuneTransform("Transform", mat4_create(), true));
 */
 
+import { Emitter } from "@wonderlandengine/api";
 import { mat4_create } from "../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
+import { Globals } from "../../pp/globals";
 import { EasyTuneUtils } from "./easy_tune_utils";
 
 export let EasyTuneVariableType = {
@@ -23,41 +24,62 @@ export let EasyTuneVariableType = {
 
 export class EasyTuneVariable {
 
-    constructor(name, type, engine = getMainEngine()) {
-        this.myName = name.slice(0);
-        this.myType = type;
+    constructor(name, type, engine = Globals.getMainEngine()) {
+        this._myName = name.slice(0);
+        this._myType = type;
 
-        this.myValue = null;
-        this.myDefaultValue = null;
+        this._myValue = null;
+        this._myDefaultValue = null;
 
-        this.myIsActive = false;
+        this._myActive = false;
 
-        this._myValueChangedCallbacks = new Map();      // Signature: callback(name, value)
+        this._myValueChangedEmitter = new Emitter();      // Signature: listener(value, easyTuneVariables)
 
         this._myEngine = engine;
     }
 
+    getName() {
+        return this._myName;
+    }
+
+    getType() {
+        return this._myType;
+    }
+
+    isActive() {
+        return this._myActive;
+    }
+
+    setActive(active) {
+        this._myActive = active;
+    }
+
     getValue() {
-        return this.myValue;
+        return this._myValue;
     }
 
     setValue(value, resetDefaultValue = false) {
-        let oldValue = this.myValue;
-        this.myValue = value;
+        let valueChanged = this._myValue != value;
+
+        this._myValue = value;
 
         if (resetDefaultValue) {
             EasyTuneVariable.prototype.setDefaultValue.call(this, value);
         }
 
-        EasyTuneUtils.refreshEasyTuneWidget(this._myEngine);
+        EasyTuneUtils.refreshWidget(this._myEngine);
 
-        if (oldValue != value) {
-            this._triggerValueChangedCallback();
+        if (valueChanged) {
+            this._myValueChangedEmitter.notify(this.getValue(), this);
         }
     }
 
+    getDefaultValue() {
+        return this._myDefaultValue;
+    }
+
     setDefaultValue(value) {
-        this.myDefaultValue = value;
+        this._myDefaultValue = value;
     }
 
     fromJSON(valueJSON, resetDefaultValue = false) {
@@ -68,18 +90,12 @@ export class EasyTuneVariable {
         return JSON.stringify(this.getValue());
     }
 
-    registerValueChangedEventListener(id, callback) {
-        this._myValueChangedCallbacks.set(id, callback);
+    registerValueChangedEventListener(id, listener) {
+        this._myValueChangedEmitter.add(listener, { id: id });
     }
 
     unregisterValueChangedEventListener(id) {
-        this._myValueChangedCallbacks.delete(id);
-    }
-
-    _triggerValueChangedCallback() {
-        if (this._myValueChangedCallbacks.size > 0) {
-            this._myValueChangedCallbacks.forEach(function (callback) { callback(this.myName, this.getValue()); }.bind(this));
-        }
+        this._myValueChangedEmitter.remove(id);
     }
 }
 
@@ -91,27 +107,32 @@ export class EasyTuneVariableArray extends EasyTuneVariable {
         EasyTuneVariableArray.prototype.setValue.call(this, value, true);
     }
 
-    getValue() {
-        return this.myValue.pp_clone();
-    }
-
     setValue(value, resetDefaultValue = false) {
-        let oldValue = this.myValue;
-        this.myValue = value.pp_clone();
+        let valueChanged = this._myValue != null && !this._myValue.pp_equals(value);
+
+        if (this._myValue == null) {
+            this._myValue = value.pp_clone();
+        } else {
+            this._myValue.pp_copy(value);
+        }
 
         if (resetDefaultValue) {
             EasyTuneVariableArray.prototype.setDefaultValue.call(this, value);
         }
 
-        EasyTuneUtils.refreshEasyTuneWidget(this._myEngine);
+        EasyTuneUtils.refreshWidget(this._myEngine);
 
-        if (oldValue == null || !oldValue.pp_equals(value)) {
-            this._triggerValueChangedCallback();
+        if (valueChanged) {
+            this._myValueChangedEmitter.notify(this.getValue(), this);
         }
     }
 
     setDefaultValue(value) {
-        this.myDefaultValue = value.pp_clone();
+        if (this._myDefaultValue == null) {
+            this._myDefaultValue = value.pp_clone();
+        } else {
+            this._myDefaultValue.pp_copy(value);
+        }
     }
 }
 
@@ -122,35 +143,35 @@ export class EasyTuneNumberArray extends EasyTuneVariableArray {
     constructor(name, value, stepPerSecond, decimalPlaces, min = null, max = null, editAllValuesTogether = false, engine) {
         super(name, EasyTuneVariableType.NUMBER, value, engine);
 
-        this.myDecimalPlaces = decimalPlaces;
-        this.myStepPerSecond = stepPerSecond;
+        this._myDecimalPlaces = decimalPlaces;
+        this._myStepPerSecond = stepPerSecond;
 
-        this.myDefaultStepPerSecond = this.myStepPerSecond;
+        this._myDefaultStepPerSecond = this._myStepPerSecond;
 
-        this.myMin = min;
-        this.myMax = max;
+        this._myMin = min;
+        this._myMax = max;
 
-        this.myEditAllValuesTogether = editAllValuesTogether;
+        this._myEditAllValuesTogether = editAllValuesTogether;
 
         this._clampValue(true);
     }
 
     setMax(max) {
-        this.myMax = max;
+        this._myMax = max;
         this._clampValue(false);
     }
 
     setMin(min) {
-        this.myMin = min;
+        this._myMin = min;
         this._clampValue(false);
     }
 
     _clampValue(resetDefaultValue) {
-        let clampedValue = this.myValue.vec_clamp(this.myMin, this.myMax);
+        let clampedValue = this._myValue.vec_clamp(this._myMin, this._myMax);
 
         if (!resetDefaultValue) {
-            let clampedDefaultValue = this.myDefaultValue.vec_clamp(this.myMin, this.myMax);
-            let defaultValueChanged = !clampedDefaultValue.vec_equals(this.myDefaultValue, 0.00001);
+            let clampedDefaultValue = this.getDefaultValue().vec_clamp(this._myMin, this._myMax);
+            let defaultValueChanged = !clampedDefaultValue.vec_equals(this.getDefaultValue(), 0.00001);
             if (defaultValueChanged) {
                 EasyTuneVariableArray.prototype.setDefaultValue.call(this, clampedDefaultValue);
             }
@@ -164,18 +185,27 @@ export class EasyTuneNumber extends EasyTuneNumberArray {
 
     constructor(name, value, stepPerSecond, decimalPlaces, min, max, engine) {
         super(name, [value], stepPerSecond, decimalPlaces, min, max, engine);
+
+        this._myTempValue = [0];
+        this._myTempDefaultValue = [0];
     }
 
     getValue() {
-        return this.myValue[0];
+        return super.getValue()[0];
     }
 
     setValue(value, resetDefaultValue = false) {
-        super.setValue([value], resetDefaultValue);
+        this._myTempValue[0] = value;
+        super.setValue(this._myTempValue, resetDefaultValue);
+    }
+
+    getDefaultValue() {
+        return super.getDefaultValue()[0];
     }
 
     setDefaultValue(value) {
-        super.setDefaultValue([value]);
+        this._myTempDefaultValue[0] = value;
+        super.setDefaultValue(this._myTempValue);
     }
 }
 
@@ -212,18 +242,27 @@ export class EasyTuneBool extends EasyTuneBoolArray {
 
     constructor(name, value, engine) {
         super(name, [value], engine);
+
+        this._myTempValue = [0];
+        this._myTempDefaultValue = [0];
     }
 
     getValue() {
-        return this.myValue[0];
+        return super.getValue()[0];
     }
 
     setValue(value, resetDefaultValue = false) {
-        super.setValue([value], resetDefaultValue);
+        this._myTempValue[0] = value;
+        super.setValue(this._myTempValue, resetDefaultValue);
+    }
+
+    getDefaultValue() {
+        return super.getDefaultValue()[0];
     }
 
     setDefaultValue(value) {
-        super.setDefaultValue([value]);
+        this._myTempDefaultValue[0] = value;
+        super.setDefaultValue(this._myTempValue);
     }
 }
 
@@ -234,66 +273,68 @@ export class EasyTuneTransform extends EasyTuneVariable {
     constructor(name, value, scaleAsOne = true, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1, engine) {
         super(name, EasyTuneVariableType.TRANSFORM, engine);
 
-        this.myDecimalPlaces = 3;
+        this._myDecimalPlaces = 3;
 
-        this.myPosition = value.mat4_getPosition();
-        this.myRotation = value.mat4_getRotationDegrees();
-        this.myScale = value.mat4_getScale();
+        this._myPosition = value.mat4_getPosition();
+        this._myRotation = value.mat4_getRotationDegrees();
+        this._myScale = value.mat4_getScale();
 
-        let decimalPlacesMultiplier = Math.pow(10, this.myDecimalPlaces);
+        let decimalPlacesMultiplier = Math.pow(10, this._myDecimalPlaces);
         for (let i = 0; i < 3; i++) {
-            this.myScale[i] = Math.max(this.myScale[i], 1 / decimalPlacesMultiplier);
+            this._myScale[i] = Math.max(this._myScale[i], 1 / decimalPlacesMultiplier);
         }
 
-        this.myScaleAsOne = scaleAsOne;
+        this._myScaleAsOne = scaleAsOne;
 
-        this.myPositionStepPerSecond = positionStepPerSecond;
-        this.myRotationStepPerSecond = rotationStepPerSecond;
-        this.myScaleStepPerSecond = scaleStepPerSecond;
+        this._myPositionStepPerSecond = positionStepPerSecond;
+        this._myRotationStepPerSecond = rotationStepPerSecond;
+        this._myScaleStepPerSecond = scaleStepPerSecond;
 
-        this.myDefaultPosition = this.myPosition.vec3_clone();
-        this.myDefaultRotation = this.myRotation.vec3_clone();
-        this.myDefaultScale = this.myScale.vec3_clone();
+        this._myDefaultPosition = this._myPosition.vec3_clone();
+        this._myDefaultRotation = this._myRotation.vec3_clone();
+        this._myDefaultScale = this._myScale.vec3_clone();
 
-        this.myDefaultPositionStepPerSecond = this.myPositionStepPerSecond;
-        this.myDefaultRotationStepPerSecond = this.myRotationStepPerSecond;
-        this.myDefaultScaleStepPerSecond = this.myScaleStepPerSecond;
+        this._myDefaultPositionStepPerSecond = this._myPositionStepPerSecond;
+        this._myDefaultRotationStepPerSecond = this._myRotationStepPerSecond;
+        this._myDefaultScaleStepPerSecond = this._myScaleStepPerSecond;
 
-        this.myTransform = mat4_create();
-        this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
+        this._myTransform = mat4_create();
+        this._myTransform.mat4_setPositionRotationDegreesScale(this._myPosition, this._myRotation, this._myScale);
 
-        this.myTempTransform = mat4_create();
+        this._myTempTransform = mat4_create();
     }
 
     getValue() {
-        this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
-        return this.myTransform.pp_clone();
+        this._myTransform.mat4_setPositionRotationDegreesScale(this._myPosition, this._myRotation, this._myScale);
+        return this._myTransform;
     }
 
     setValue(value, resetDefaultValue = false) {
-        this.myTempTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
+        this._myTempTransform.mat4_setPositionRotationDegreesScale(this._myPosition, this._myRotation, this._myScale);
 
-        value.mat4_getPosition(this.myPosition);
-        value.mat4_getRotationDegrees(this.myRotation);
-        value.mat4_getScale(this.myScale);
+        value.mat4_getPosition(this._myPosition);
+        value.mat4_getRotationDegrees(this._myRotation);
+        value.mat4_getScale(this._myScale);
 
-        this.myTransform.mat4_setPositionRotationDegreesScale(this.myPosition, this.myRotation, this.myScale);
+        this._myTransform.mat4_setPositionRotationDegreesScale(this._myPosition, this._myRotation, this._myScale);
+
+        let valueChanged = !this._myTempTransform.pp_equals(this._myTransform)
 
         if (resetDefaultValue) {
             EasyTuneTransform.prototype.setDefaultValue.call(this, value);
         }
 
-        EasyTuneUtils.refreshEasyTuneWidget(this._myEngine);
+        EasyTuneUtils.refreshWidget(this._myEngine);
 
-        if (!this.myTempTransform.pp_equals(this.myTransform)) {
-            this._triggerValueChangedCallback();
+        if (valueChanged) {
+            this._myValueChangedEmitter.notify(this.getValue(), this);
         }
     }
 
     setDefaultValue(value) {
-        this.myDefaultPosition = value.mat4_getPosition();
-        this.myDefaultRotation = value.mat4_getRotationDegrees();
-        this.myDefaultScale = value.mat4_getScale();
+        this._myDefaultPosition = value.mat4_getPosition();
+        this._myDefaultRotation = value.mat4_getRotationDegrees();
+        this._myDefaultScale = value.mat4_getScale();
     }
 
     fromJSON(valueJSON, resetDefaultValue = false) {

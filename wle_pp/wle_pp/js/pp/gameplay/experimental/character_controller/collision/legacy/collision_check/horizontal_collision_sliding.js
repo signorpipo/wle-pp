@@ -1,7 +1,5 @@
-import { VisualArrowParams } from "../../../../../../cauldron/visual/elements/visual_arrow";
-import { getDebugVisualManager } from "../../../../../../debug/debug_globals";
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { getDefaultResources } from "../../../../../../pp/default_resources_global";
+import { vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../../../pp/globals";
 import { CollisionCheck } from "./collision_check";
 
 CollisionCheck.prototype._horizontalSlide = function () {
@@ -109,9 +107,9 @@ CollisionCheck.prototype._horizontalSlideCheckOpposite = function () {
                     visualParams.myStart = feetPosition;
                     visualParams.myDirection = slideMovement.vec3_normalize();
                     visualParams.myLength = 0.2;
-                    visualParams.myMaterial = getDefaultResources(this._myEngine).myMaterials.myFlatOpaque.clone();
+                    visualParams.myMaterial = Globals.getDefaultMaterials(this._myEngine).myFlatOpaque.clone();
                     visualParams.myMaterial.color =  vec4_create(0, 0, 1, 1);
-                    getDebugVisualManager(this._myEngine).draw(visualParams, 1);
+                    Globals.getDebugVisualManager(this._myEngine).draw(visualParams, 1);
                 }
  
                 {
@@ -119,9 +117,9 @@ CollisionCheck.prototype._horizontalSlideCheckOpposite = function () {
                     visualParams.myStart = feetPosition;
                     visualParams.myDirection = oppositeSlideMovement.vec3_normalize();
                     visualParams.myLength = 0.2;
-                    visualParams.myMaterial = getDefaultResources(this._myEngine).myMaterials.myFlatOpaque.clone();
+                    visualParams.myMaterial = Globals.getDefaultMaterials(this._myEngine).myFlatOpaque.clone();
                     visualParams.myMaterial.color =  vec4_create(1, 0, 1, 1);
-                    getDebugVisualManager(this._myEngine).draw(visualParams, 1);
+                    Globals.getDebugVisualManager(this._myEngine).draw(visualParams, 1);
                 }
  
                 {
@@ -129,9 +127,9 @@ CollisionCheck.prototype._horizontalSlideCheckOpposite = function () {
                     visualParams.myStart = feetPosition;
                     visualParams.myDirection = hitNormal.vec3_normalize();
                     visualParams.myLength = 0.2;
-                    visualParams.myMaterial = getDefaultResources(this._myEngine).myMaterials.myFlatOpaque.clone();
+                    visualParams.myMaterial = Globals.getDefaultMaterials(this._myEngine).myFlatOpaque.clone();
                     visualParams.myMaterial.color =  vec4_create(1, 1, 1, 1);
-                    getDebugVisualManager(this._myEngine).draw(visualParams, 1);
+                    Globals.getDebugVisualManager(this._myEngine).draw(visualParams, 1);
                 } */
 
                 outSlideMovement.vec3_copy(oppositeSlideMovement);
@@ -208,12 +206,12 @@ CollisionCheck.prototype._horizontalSlideFlickerCheck = function () {
                 //console.error("slide movement", slideMovement.vec_toString(), feetPosition.vec_toString());
                 newFeetPosition = feetPosition.vec3_add(slideMovement, newFeetPosition);
 
-                let backupDebugActive = collisionCheckParams.myDebugActive;
-                collisionCheckParams.myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugSlidingActive;
+                let backupDebugEnabled = collisionCheckParams.myDebugEnabled;
+                collisionCheckParams.myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugSlidingEnabled;
 
                 fixedMovement.vec3_zero();
                 fixedMovement = this._horizontalCheck(movement, newFeetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, this._mySlidingFlickeringFixCollisionRuntimeParams, previousCollisionRuntimeParams, false, fixedMovement);
-                collisionCheckParams.myDebugActive = backupDebugActive;
+                collisionCheckParams.myDebugEnabled = backupDebugEnabled;
 
                 if (fixedMovement.vec3_isZero(0.00001)) {
                     this._mySlidingFlickeringFixSlidingCollisionRuntimeParams.copy(this._mySlidingFlickeringFixCollisionRuntimeParams);
@@ -234,9 +232,9 @@ CollisionCheck.prototype._horizontalSlideFlickerCheck = function () {
                                 visualParams.myStart = feetPosition;
                                 visualParams.myDirection = slideMovement.vec3_normalize();
                                 visualParams.myLength = 0.2;
-                                visualParams.myMaterial = getDefaultResources(this._myEngine).myMaterials.myFlatOpaque.clone();
+                                visualParams.myMaterial = Globals.getDefaultMaterials(this._myEngine).myFlatOpaque.clone();
                                 visualParams.myMaterial.color = vec4_create(0.5, 0.5, 0.5, 1);
-                                getDebugVisualManager(this._myEngine).draw(visualParams, 2);
+                                Globals.getDebugVisualManager(this._myEngine).draw(visualParams, 2);
                             }
     
                             {
@@ -244,9 +242,9 @@ CollisionCheck.prototype._horizontalSlideFlickerCheck = function () {
                                 visualParams.myStart = feetPosition;
                                 visualParams.myDirection = flickerFixSlideMovement.vec3_normalize();
                                 visualParams.myLength = 0.2;
-                                visualParams.myMaterial = getDefaultResources(this._myEngine).myMaterials.myFlatOpaque.clone();
+                                visualParams.myMaterial = Globals.getDefaultMaterials(this._myEngine).myFlatOpaque.clone();
                                 visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-                                getDebugVisualManager(this._myEngine).draw(visualParams, 2);
+                                Globals.getDebugVisualManager(this._myEngine).draw(visualParams, 2);
                             }
     
                             {
@@ -254,9 +252,9 @@ CollisionCheck.prototype._horizontalSlideFlickerCheck = function () {
                                 visualParams.myStart = feetPosition;
                                 visualParams.myDirection = hitNormal.vec3_normalize();
                                 visualParams.myLength = 0.2;
-                                visualParams.myMaterial = getDefaultResources(this._myEngine).myMaterials.myFlatOpaque.clone();
+                                visualParams.myMaterial = Globals.getDefaultMaterials(this._myEngine).myFlatOpaque.clone();
                                 visualParams.myMaterial.color = vec4_create(1, 0, 0.5, 1);
-                                getDebugVisualManager(this._myEngine).draw(visualParams, 2);
+                                Globals.getDebugVisualManager(this._myEngine).draw(visualParams, 2);
                             } */
 
                             isFlickering = true;
@@ -375,8 +373,8 @@ CollisionCheck.prototype._internalHorizontalSlide = function () {
 
             currentMovement.vec3_zero();
 
-            let backupDebugActive = collisionCheckParams.myDebugActive;
-            collisionCheckParams.myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugSlidingActive;
+            let backupDebugEnabled = collisionCheckParams.myDebugEnabled;
+            collisionCheckParams.myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugSlidingEnabled;
 
             let originalCurrentAngle = currentAngle;
             for (let i = 0; i < collisionCheckParams.mySlidingMaxAttempts; i++) {
@@ -421,7 +419,7 @@ CollisionCheck.prototype._internalHorizontalSlide = function () {
                 }
             }
 
-            collisionCheckParams.myDebugActive = backupDebugActive;
+            collisionCheckParams.myDebugEnabled = backupDebugEnabled;
         }
 
         if (!collisionRuntimeParams.myIsSliding) {
@@ -468,8 +466,8 @@ CollisionCheck.prototype._horizontalCheckBetterSlideNormal = function () {
             fixedMovement.vec3_zero();
         }
 
-        if (collisionCheckParams.myDebugActive && collisionCheckParams.myDebugHorizontalMovementActive) {
-            getDebugVisualManager(this._myEngine).drawArrow(0, feetPosition, movementDirection, fixedMovement.vec3_length(), vec4_create(1, 0, 1, 1));
+        if (collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugHorizontalMovementEnabled && Globals.isDebugEnabled(this._myEngine)) {
+            Globals.getDebugVisualManager(this._myEngine).drawArrow(0, feetPosition, movementDirection, fixedMovement.vec3_length(), vec4_create(1, 0, 1, 1));
         }
 
         this._myCheckBetterSlidingNormalCollisionRuntimeParams.copy(collisionRuntimeParams);
@@ -479,17 +477,17 @@ CollisionCheck.prototype._horizontalCheckBetterSlideNormal = function () {
         newFixedFeetPosition = feetPosition.vec3_add(fixedMovement, newFixedFeetPosition);
         newFeetPosition = feetPosition.vec3_add(fixedMovement, newFeetPosition);
 
-        let backupDebugActive = collisionCheckParams.myDebugActive;
-        collisionCheckParams.myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugSlidingActive;
+        let backupDebugEnabled = collisionCheckParams.myDebugEnabled;
+        collisionCheckParams.myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugSlidingEnabled;
 
         if (collisionCheckParams.myHorizontalPositionCheckEnabled) {
             this._horizontalPositionCheck(originalFeetPosition, originalHeight, newFixedFeetPosition, height, up, forward, collisionCheckParams, this._myCheckBetterSlidingNormalCollisionRuntimeParams);
         }
 
-        collisionCheckParams.myDebugActive = backupDebugActive;
+        collisionCheckParams.myDebugEnabled = backupDebugEnabled;
 
         if (this._myCheckBetterSlidingNormalCollisionRuntimeParams.myIsCollidingHorizontally &&
-            !this._myCheckBetterSlidingNormalCollisionRuntimeParams.myHorizontalCollisionHit.myIsInsideCollision) {
+            !this._myCheckBetterSlidingNormalCollisionRuntimeParams.myHorizontalCollisionHit.myInsideCollision) {
             collisionRuntimeParams.copy(this._myCheckBetterSlidingNormalCollisionRuntimeParams);
         }
     };

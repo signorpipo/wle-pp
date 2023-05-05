@@ -1,12 +1,11 @@
-import { Component, Property, PhysXComponent } from "@wonderlandengine/api";
+import { Component, Emitter, PhysXComponent, Property } from "@wonderlandengine/api";
+import { EasingFunction } from "../../cauldron/js/utils/math_utils";
 import { PhysicsCollisionCollector } from "../../cauldron/physics/physics_collision_collector";
-import { getDebugVisualManager } from "../../debug/debug_globals";
-import { getLeftGamepad, getRightGamepad } from "../../input/cauldron/input_globals";
 import { HandednessIndex } from "../../input/cauldron/input_types";
 import { InputUtils } from "../../input/cauldron/input_utils";
 import { GamepadButtonEvent, GamepadButtonID } from "../../input/gamepad/gamepad_buttons";
 import { vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
-import { EasingFunction } from "../../plugin/js/extensions/math_extension";
+import { Globals } from "../../pp/globals";
 import { GrabbableComponent } from "./grabbable_component";
 
 export class GrabberHandComponent extends Component {
@@ -49,17 +48,17 @@ export class GrabberHandComponent extends Component {
 
         this._myThrowMaxAngularSpeedRadians = Math.pp_toRadians(this._myThrowMaxAngularSpeed);
 
-        this._myGrabCallbacks = new Map();      // Signature: callback(grabber, grabbable)
-        this._myThrowCallbacks = new Map();     // Signature: callback(grabber, grabbable)
+        this._myGrabEmitter = new Emitter();      // Signature: listener(grabber, grabbable)
+        this._myThrowEmitter = new Emitter();     // Signature: listener(grabber, grabbable)
 
-        this._myDebugActive = false;
+        this._myDebugEnabled = false;
     }
 
     start() {
         if (this._myHandedness == HandednessIndex.LEFT) {
-            this._myGamepad = getLeftGamepad(this.engine);
+            this._myGamepad = Globals.getLeftGamepad(this.engine);
         } else {
-            this._myGamepad = getRightGamepad(this.engine);
+            this._myGamepad = Globals.getRightGamepad(this.engine);
         }
 
         this._myPhysX = this.object.pp_getComponent(PhysXComponent);
@@ -91,59 +90,57 @@ export class GrabberHandComponent extends Component {
         return InputUtils.getHandednessByIndex(this._myHandedness);
     }
 
-    registerGrabEventListener(id, callback) {
-        this._myGrabCallbacks.set(id, callback);
+    registerGrabEventListener(id, listener) {
+        this._myGrabEmitter.add(listener, { id: id });
     }
 
     unregisterGrabEventListener(id) {
-        this._myGrabCallbacks.delete(id);
+        this._myGrabEmitter.remove(id);
     }
 
-    registerThrowEventListener(id, callback) {
-        this._myThrowCallbacks.set(id, callback);
+    registerThrowEventListener(id, listener) {
+        this._myThrowEmitter.add(listener, { id: id });
     }
 
     unregisterThrowEventListener(id) {
-        this._myThrowCallbacks.delete(id);
+        this._myThrowEmitter.remove(id);
     }
 
     onActivate() {
-        if (this._myGamepad == null) {
-            return;
-        }
+        if (this._myGamepad != null) {
+            if (this._myGrabButton == 0) {
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SELECT));
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SELECT));
+            } else if (this._myGrabButton == 1) {
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SQUEEZE));
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SQUEEZE));
+            } else {
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SQUEEZE));
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SQUEEZE));
 
-        if (this._myGrabButton == 0) {
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SELECT));
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SELECT));
-        } else if (this._myGrabButton == 1) {
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SQUEEZE));
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SQUEEZE));
-        } else {
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SQUEEZE));
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SQUEEZE));
-
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SELECT));
-            this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SELECT));
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SELECT));
+                this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SELECT));
+            }
         }
     }
 
     onDeactivate() {
-        if (this._myGamepad == null) {
-            return;
-        }
+        this.throw();
 
-        if (this._myGrabButton == 0) {
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this);
-        } else if (this._myGrabButton == 1) {
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this);
-        } else {
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this);
+        if (this._myGamepad != null) {
+            if (this._myGrabButton == 0) {
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this);
+            } else if (this._myGrabButton == 1) {
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this);
+            } else {
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this);
 
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this);
-            this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this);
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this);
+                this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this);
+            }
         }
     }
 
@@ -185,7 +182,7 @@ export class GrabberHandComponent extends Component {
                         grabbableToGrab.object.pp_resetPositionLocal();
                     }
 
-                    this._myGrabCallbacks.forEach(function (callback) { callback(this, grabbableToGrab); }.bind(this));
+                    this._myGrabEmitter.notify(this, grabbableToGrab);
                 }
 
                 if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
@@ -224,7 +221,7 @@ export class GrabberHandComponent extends Component {
 
                     grabbable.throw(linearVelocity, angularVelocity);
 
-                    this._myThrowCallbacks.forEach(function (callback) { callback(this, grabbable); }.bind(this));
+                    this._myThrowEmitter.notify(this, grabbable);
                 }
 
                 this._myGrabbables = [];
@@ -245,7 +242,7 @@ export class GrabberHandComponent extends Component {
 
     _updateLinearVelocityHistory() {
         let handPose = this._myGamepad.getHandPose();
-        this._myHandLinearVelocityHistory.unshift(handPose.getLinearVelocity().pp_clone());
+        this._myHandLinearVelocityHistory.unshift(handPose.getLinearVelocity());
         this._myHandLinearVelocityHistory.pop();
 
         for (let grabbable of this._myGrabbables) {
@@ -255,7 +252,7 @@ export class GrabberHandComponent extends Component {
 
     _updateAngularVelocityHistory() {
         let handPose = this._myGamepad.getHandPose();
-        this._myHandAngularVelocityHistory.unshift(handPose.getAngularVelocityRadians().pp_clone());
+        this._myHandAngularVelocityHistory.unshift(handPose.getAngularVelocityRadians());
         this._myHandAngularVelocityHistory.pop();
 
         for (let grabbable of this._myGrabbables) {
@@ -282,7 +279,7 @@ export class GrabberHandComponent extends Component {
         speed *= this._myThrowLinearVelocityMultiplier;
         speed = Math.pp_clamp(speed, 0, this._myThrowMaxLinearSpeed);
 
-        if (this._myDebugActive) {
+        if (this._myDebugEnabled && Globals.isDebugEnabled(this.engine)) {
             this._debugDirectionLines(linearVelocityHistory);
         }
 
@@ -338,7 +335,7 @@ export class GrabberHandComponent extends Component {
 
             let color = 1 / j;
 
-            getDebugVisualManager(this.engine).drawLine(5, this.object.pp_getPosition(), direction, 0.2, vec4_create(olor, color, color, 1));
+            Globals.getDebugVisualManager(this.engine).drawLine(5, this.object.pp_getPosition(), direction, 0.2, vec4_create(olor, color, color, 1));
         }
     }
 
@@ -387,5 +384,9 @@ class _GrabberHandComponentGrabbableData {
             this._myAngularVelocityHistory.unshift(this._myGrabbable.getAngularVelocityRadians());
             this._myAngularVelocityHistory.pop();
         }
+    }
+
+    onDestroy() {
+        this._myCollisionsCollector.destroy();
     }
 }

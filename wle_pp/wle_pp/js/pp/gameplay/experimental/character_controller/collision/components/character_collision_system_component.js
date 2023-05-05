@@ -1,6 +1,6 @@
-import { Component, Property } from "@wonderlandengine/api";
+import { Component } from "@wonderlandengine/api";
+import { Globals } from "../../../../../pp/globals";
 import { CharacterCollisionSystem } from "../character_collision_system";
-import { getCharacterCollisionSystem, hasCharacterCollisionSystem, removeCharacterCollisionSystem, setCharacterCollisionSystem } from "../character_collision_system_global";
 
 export class CharacterCollisionSystemComponent extends Component {
     static TypeName = "pp-character-collision-system";
@@ -10,10 +10,10 @@ export class CharacterCollisionSystemComponent extends Component {
         this._myCharacterCollisionSystem = null;
 
         // Prevents double global from same engine
-        if (!hasCharacterCollisionSystem(this.engine)) {
+        if (!Globals.hasCharacterCollisionSystem(this.engine)) {
             this._myCharacterCollisionSystem = new CharacterCollisionSystem(this.engine);
 
-            setCharacterCollisionSystem(this._myCharacterCollisionSystem, this.engine);
+            Globals.setCharacterCollisionSystem(this._myCharacterCollisionSystem, this.engine);
         }
     }
 
@@ -24,8 +24,8 @@ export class CharacterCollisionSystemComponent extends Component {
     }
 
     onDestroy() {
-        if (this._myCharacterCollisionSystem != null && getCharacterCollisionSystem(this.engine) == this._myCharacterCollisionSystem) {
-            removeCharacterCollisionSystem(this.engine);
+        if (this._myCharacterCollisionSystem != null && Globals.getCharacterCollisionSystem(this.engine) == this._myCharacterCollisionSystem) {
+            Globals.removeCharacterCollisionSystem(this.engine);
         }
     }
 }

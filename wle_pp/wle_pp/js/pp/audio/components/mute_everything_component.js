@@ -1,4 +1,4 @@
-import { Component, Property } from "@wonderlandengine/api";
+import { Component } from "@wonderlandengine/api";
 import { Howler } from "howler";
 
 export class MuteEverythingComponent extends Component {

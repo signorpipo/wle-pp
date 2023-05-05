@@ -1,11 +1,10 @@
 import { ViewComponent } from "@wonderlandengine/api";
 import { Timer } from "../../cauldron/cauldron/timer";
-import { RaycastResults } from "../../cauldron/physics/physics_raycast_data";
+import { RaycastResults } from "../../cauldron/physics/physics_raycast_params";
 import { PhysicsUtils } from "../../cauldron/physics/physics_utils";
 import { XRUtils } from "../../cauldron/utils/xr_utils";
 import { mat4_create, quat_create, vec2_create, vec3_create } from "../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
-import { getPlayerObjects } from "../../pp/player_objects_global";
+import { Globals } from "../../pp/globals";
 
 export let MouseButtonID = {
     LEFT: 0,
@@ -16,8 +15,7 @@ export let MouseButtonID = {
 // #TODO Refactor Mouse/Keyboard/Gamepad and create a sort of parent ButtonHandler that have the base ButtonInfo and all of them inherit
 export class Mouse {
 
-    constructor(engine = getMainEngine()) {
-
+    constructor(engine = Globals.getMainEngine()) {
         this._myEngine = engine;
 
         this._myButtonInfos = new Map();
@@ -25,8 +23,8 @@ export class Mouse {
             this._myButtonInfos.set(MouseButtonID[key], this._createButtonInfo());
         }
 
-        this._myPreventContextMenuCallback = this._preventContextMenu.bind(this);
-        this._myPreventMiddleButtonScrollCallback = this._preventMiddleButtonScroll.bind(this);
+        this._myPreventContextMenuEventListener = this._preventContextMenu.bind(this);
+        this._myPreventMiddleButtonScrollEventListener = this._preventMiddleButtonScroll.bind(this);
 
         this._myInternalMousePosition = vec2_create();
         this._myScreenSize = vec2_create();
@@ -34,10 +32,10 @@ export class Mouse {
 
         this._myResetMovingDelay = 0.15;
         this._myResetMovingTimer = new Timer(this._myResetMovingDelay, false);
-        this._myIsMoving = false;
+        this._myMoving = false;
 
-        this._myIsInsideView = false;
-        this._myIsValid = false;
+        this._myInsideView = false;
+        this._myValid = false;
 
         this._myPointerUpOnPointerLeave = true;
 
@@ -49,6 +47,16 @@ export class Mouse {
 
         this._myPointerEventValidCallbacks = new Map();      // Signature: callback(event)
 
+        this._myPointerMoveEventListener = null;
+        this._myPointerDownEventListener = null;
+        this._myPointerUpEventListener = null;
+        this._myPointerLeaveEventListener = null;
+        this._myPointerEnterEventListener = null;
+        this._myMouseDownEventListener = null;
+        this._myMouseUpEventListener = null;
+
+        this._myDestroyed = false;
+
         // Support Variables
         this._myProjectionMatrixInverse = mat4_create();
         this._myRotationQuat = quat_create();
@@ -57,22 +65,22 @@ export class Mouse {
     }
 
     start() {
-        this._myOnPointerMoveCallback = this._onPointerAction.bind(this, this._onPointerMove.bind(this));
-        document.body.addEventListener("pointermove", this._myOnPointerMoveCallback);
-        this._myOnPointerDownCallback = this._onPointerAction.bind(this, this._onPointerDown.bind(this));
-        document.body.addEventListener("pointerdown", this._myOnPointerDownCallback);
-        this._myOnPointerUpCallback = this._onPointerAction.bind(this, this._onPointerUp.bind(this));
-        document.body.addEventListener("pointerup", this._myOnPointerUpCallback);
-        this._myOnPointerLeaveCallback = this._onPointerLeave.bind(this);
-        document.body.addEventListener("pointerleave", this._myOnPointerLeaveCallback);
-        this._myOnPointerEnterCallback = this._onPointerEnter.bind(this);
-        document.body.addEventListener("pointerenter", this._myOnPointerEnterCallback);
+        this._myPointerMoveEventListener = this._onPointerAction.bind(this, this._onPointerMove.bind(this));
+        Globals.getBody(this._myEngine).addEventListener("pointermove", this._myPointerMoveEventListener);
+        this._myPointerDownEventListener = this._onPointerAction.bind(this, this._onPointerDown.bind(this));
+        Globals.getBody(this._myEngine).addEventListener("pointerdown", this._myPointerDownEventListener);
+        this._myPointerUpEventListener = this._onPointerAction.bind(this, this._onPointerUp.bind(this));
+        Globals.getBody(this._myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
+        this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
+        Globals.getBody(this._myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+        this._myPointerEnterEventListener = this._onPointerEnter.bind(this);
+        Globals.getBody(this._myEngine).addEventListener("pointerenter", this._myPointerEnterEventListener);
 
         // These are needed to being able to detect for example left and right click together, pointer only allow one down at a time
-        this._myOnMouseDownCallback = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
-        document.body.addEventListener("mousedown", this._myOnMouseDownCallback);
-        this._myOnMouseUpCallback = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
-        document.body.addEventListener("mouseup", this._myOnMouseUpCallback);
+        this._myMouseDownEventListener = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
+        Globals.getBody(this._myEngine).addEventListener("mousedown", this._myMouseDownEventListener);
+        this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
+        Globals.getBody(this._myEngine).addEventListener("mouseup", this._myMouseUpEventListener);
     }
 
     update(dt) {
@@ -80,27 +88,27 @@ export class Mouse {
             this._myResetMovingTimer.update(dt);
             if (this._myResetMovingTimer.isDone()) {
                 this._myResetMovingTimer.reset();
-                this._myIsMoving = false;
+                this._myMoving = false;
             }
         }
 
         for (let buttonInfo of this._myButtonInfos.values()) {
-            buttonInfo.myIsPressStart = buttonInfo.myIsPressStartToProcess;
-            buttonInfo.myIsPressEnd = buttonInfo.myIsPressEndToProcess;
-            buttonInfo.myIsPressStartToProcess = false;
-            buttonInfo.myIsPressEndToProcess = false;
+            buttonInfo.myPressStart = buttonInfo.myPressStartToProcess;
+            buttonInfo.myPressEnd = buttonInfo.myPressEndToProcess;
+            buttonInfo.myPressStartToProcess = false;
+            buttonInfo.myPressEndToProcess = false;
         }
 
         this._updateScreenSize();
 
-        if (!this.isAnyButtonPressed() && !this._myIsMoving) {
+        if (!this.isAnyButtonPressed() && !this._myMoving) {
             this._myPointerID = null;
         }
 
         if (this._myLastValidPointerEvent != null) {
-            let isLastValidPointerEventStillValid = this._isPointerEventValid(this._myLastValidPointerEvent);
-            if (!isLastValidPointerEventStillValid) {
-                if (this._myIsInsideView) {
+            let lastValidPointerEventStillValid = this._isPointerEventValid(this._myLastValidPointerEvent);
+            if (!lastValidPointerEventStillValid) {
+                if (this._myInsideView) {
                     this._onPointerLeave(this._myLastValidPointerEvent);
                 }
 
@@ -109,84 +117,70 @@ export class Mouse {
         }
     }
 
-    destroy() {
-        document.body.removeEventListener("pointermove", this._myOnPointerMoveCallback);
-        document.body.removeEventListener("pointerdown", this._myOnPointerDownCallback);
-        document.body.removeEventListener("pointerup", this._myOnPointerUpCallback);
-        document.body.removeEventListener("pointerleave", this._myOnPointerLeaveCallback);
-        document.body.removeEventListener("pointerenter", this._myOnPointerEnterCallback);
-
-        document.body.removeEventListener("mousedown", this._myOnMouseDownCallback);
-        document.body.removeEventListener("mouseup", this._myOnMouseUpCallback);
-
-        document.body.removeEventListener("contextmenu", this._myPreventContextMenuCallback);
-        document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollCallback);
-    }
-
     isValid() {
-        return this._myIsValid;
+        return this._myValid;
     }
 
     isButtonPressed(buttonID) {
-        let isPressed = false;
+        let pressed = false;
 
         if (this._myButtonInfos.has(buttonID)) {
-            isPressed = this._myButtonInfos.get(buttonID).myIsPressed;
+            pressed = this._myButtonInfos.get(buttonID).myPressed;
         }
 
-        return isPressed;
+        return pressed;
     }
 
     isAnyButtonPressed() {
-        let isPressed = false;
+        let pressed = false;
 
         for (let buttonInfo of this._myButtonInfos.values()) {
-            if (buttonInfo.myIsPressed) {
-                isPressed = true;
+            if (buttonInfo.myPressed) {
+                pressed = true;
                 break;
             }
         }
 
-        return isPressed;
+        return pressed;
     }
 
     isButtonPressStart(buttonID) {
-        let isPressStart = false;
+        let pressStart = false;
 
         if (this._myButtonInfos.has(buttonID)) {
-            isPressStart = this._myButtonInfos.get(buttonID).myIsPressStart;
+            pressStart = this._myButtonInfos.get(buttonID).myPressStart;
         }
 
-        return isPressStart;
+        return pressStart;
     }
 
     isButtonPressEnd(buttonID = null) {
-        let isPressEnd = false;
+        let pressEnd = false;
 
         if (this._myButtonInfos.has(buttonID)) {
-            isPressEnd = this._myButtonInfos.get(buttonID).myIsPressEnd;
+            pressEnd = this._myButtonInfos.get(buttonID).myPressEnd;
         }
 
-        return isPressEnd;
+        return pressEnd;
     }
 
     isMoving() {
-        return this._myIsMoving;
+        return this._myMoving;
     }
 
     isInsideView() {
-        return this._myIsInsideView;
+        return this._myInsideView;
     }
 
     isTargetingRenderCanvas() {
-        return this.isInsideView() && this._myLastValidPointerEvent != null && this._myLastValidPointerEvent.target == this._myEngine.canvas;
+        return this.isInsideView() && this._myLastValidPointerEvent != null && this._myLastValidPointerEvent.target == Globals.getCanvas(this._myEngine);
     }
 
     // The origin and direction are set by the mouse
-    raycastWorld(raycastSetup, raycastResults = new RaycastResults()) {
-        this.getOriginWorld(raycastSetup.myOrigin);
-        this.getDirectionWorld(raycastSetup.myDirection);
-        raycastResults = PhysicsUtils.raycast(raycastSetup, raycastResults);
+    raycastWorld(raycastParams, raycastResults = new RaycastResults()) {
+        this.getOriginWorld(raycastParams.myOrigin);
+        this.getDirectionWorld(raycastParams.myDirection);
+        raycastResults = PhysicsUtils.raycast(raycastParams, raycastResults, Globals.getPhysics(this._myEngine));
         return raycastResults;
     }
 
@@ -218,9 +212,9 @@ export class Mouse {
 
     getOriginWorld(out = vec3_create()) {
         if (XRUtils.isSessionActive(this._myEngine)) {
-            getPlayerObjects(this._myEngine).myEyeLeft.pp_getPosition(out); // In theory mouse should not be used inside the session, but may make sense for AR which uses eye left
+            Globals.getPlayerObjects(this._myEngine).myEyeLeft.pp_getPosition(out); // In theory mouse should not be used inside the session, but may make sense for AR which uses eye left
         } else {
-            getPlayerObjects(this._myEngine).myCameraNonVR.pp_getPosition(out);
+            Globals.getPlayerObjects(this._myEngine).myCameraNonXR.pp_getPosition(out);
         }
 
         return out;
@@ -235,9 +229,9 @@ export class Mouse {
 
         let projectionMatrixInvert = this._myProjectionMatrixInverse;
         if (XRUtils.isSessionActive(this._myEngine)) {
-            projectionMatrixInvert = getPlayerObjects(this._myEngine).myEyeLeft.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
+            projectionMatrixInvert = Globals.getPlayerObjects(this._myEngine).myEyeLeft.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
         } else {
-            projectionMatrixInvert = getPlayerObjects(this._myEngine).myCameraNonVR.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
+            projectionMatrixInvert = Globals.getPlayerObjects(this._myEngine).myCameraNonXR.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
         }
 
         directionLocal.vec3_transformMat4(projectionMatrixInvert, directionLocal);
@@ -245,9 +239,9 @@ export class Mouse {
 
         let directionWorld = directionLocal;
         if (XRUtils.isSessionActive(this._myEngine)) {
-            directionWorld = directionLocal.vec3_transformQuat(getPlayerObjects(this._myEngine).myEyeLeft.pp_getRotationQuat(this._myRotationQuat), directionLocal);
+            directionWorld = directionLocal.vec3_transformQuat(Globals.getPlayerObjects(this._myEngine).myEyeLeft.pp_getRotationQuat(this._myRotationQuat), directionLocal);
         } else {
-            directionWorld = directionLocal.vec3_transformQuat(getPlayerObjects(this._myEngine).myCameraNonVR.pp_getRotationQuat(this._myRotationQuat), directionLocal);
+            directionWorld = directionLocal.vec3_transformQuat(Globals.getPlayerObjects(this._myEngine).myCameraNonXR.pp_getRotationQuat(this._myRotationQuat), directionLocal);
         }
 
         directionWorld.vec3_normalize(directionWorld);
@@ -270,7 +264,7 @@ export class Mouse {
         let callbackID = "pp_internal_target_only_render_canvas_callback";
         if (targetOnlyRenderCanvas) {
             this.addPointerEventValidCallback(callbackID, function (event) {
-                return event.target == this._myEngine.canvas;
+                return event.target == Globals.getCanvas(this._myEngine);
             });
         } else {
             this.removePointerEventValidCallback(callbackID);
@@ -281,7 +275,7 @@ export class Mouse {
         return this._myLastValidPointerEvent;
     }
 
-    // Can be used to specify that only some pointerType are valid (eg: mouse, touch, pen) or just some target (eg: this._myEngine.canvas)
+    // Can be used to specify that only some pointerType are valid (eg: mouse, touch, pen) or just some target (eg: Globals.getCanvas(this._myEngine))
     addPointerEventValidCallback(id, callback) {
         this._myPointerEventValidCallbacks.set(id, callback);
     }
@@ -305,9 +299,9 @@ export class Mouse {
     setContextMenuActive(active) {
         if (this._myContextMenuActive != active) {
             if (active) {
-                document.body.removeEventListener("contextmenu", this._myPreventContextMenuCallback);
+                Globals.getBody(this._myEngine).removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
             } else {
-                document.body.addEventListener("contextmenu", this._myPreventContextMenuCallback, false);
+                Globals.getBody(this._myEngine).addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
             }
             this._myContextMenuActive = active;
         }
@@ -320,9 +314,9 @@ export class Mouse {
     setMiddleButtonScrollActive(active) {
         if (this._myMiddleButtonScrollActive != active) {
             if (active) {
-                document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollCallback);
+                Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
             } else {
-                document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollCallback, false);
+                Globals.getBody(this._myEngine).addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
             }
             this._myMiddleButtonScrollActive = active;
         }
@@ -340,13 +334,13 @@ export class Mouse {
         if (!this._isPointerEventIDValid(event)) return;
 
         if (!this._isPointerEventValid(event)) {
-            if (this._myIsInsideView) {
+            if (this._myInsideView) {
                 this._onPointerLeave(event);
             }
             return;
         }
 
-        if (!this._myIsInsideView) {
+        if (!this._myInsideView) {
             this._onPointerEnter(event);
         }
 
@@ -357,7 +351,7 @@ export class Mouse {
     }
 
     _onMouseAction(actionCallback, event) {
-        if (!this._myIsInsideView) return;
+        if (!this._myInsideView) return;
         if (!this._isMouseAllowed()) return;
         if (!this._isPointerEventIDValid(this._myLastValidPointerEvent)) return;
         if (!this._isPointerEventValid(this._myLastValidPointerEvent)) return;
@@ -367,37 +361,37 @@ export class Mouse {
 
     _onPointerMove(event) {
         this._myResetMovingTimer.start(this._myResetMovingDelay);
-        this._myIsMoving = true;
+        this._myMoving = true;
     }
 
     _onPointerDown(event) {
         let buttonInfo = this._myButtonInfos.get(event.button);
-        if (!buttonInfo.myIsPressed) {
-            buttonInfo.myIsPressed = true;
-            buttonInfo.myIsPressStartToProcess = true;
+        if (!buttonInfo.myPressed) {
+            buttonInfo.myPressed = true;
+            buttonInfo.myPressStartToProcess = true;
         }
     }
 
     _onPointerUp(event) {
         let buttonInfo = this._myButtonInfos.get(event.button);
-        if (buttonInfo.myIsPressed) {
-            buttonInfo.myIsPressed = false;
-            buttonInfo.myIsPressEndToProcess = true;
+        if (buttonInfo.myPressed) {
+            buttonInfo.myPressed = false;
+            buttonInfo.myPressEndToProcess = true;
         }
     }
 
     _onPointerLeave(event) {
-        if (!this._myIsInsideView || this._myLastValidPointerEvent == null || event.pointerId != this._myLastValidPointerEvent.pointerId) return;
+        if (!this._myInsideView || this._myLastValidPointerEvent == null || event.pointerId != this._myLastValidPointerEvent.pointerId) return;
 
-        this._myIsInsideView = false;
+        this._myInsideView = false;
 
-        this._myIsMoving = false;
+        this._myMoving = false;
 
         if (this._myPointerUpOnPointerLeave) {
             for (let buttonInfo of this._myButtonInfos.values()) {
-                if (buttonInfo.myIsPressed) {
-                    buttonInfo.myIsPressed = false;
-                    buttonInfo.myIsPressEndToProcess = true;
+                if (buttonInfo.myPressed) {
+                    buttonInfo.myPressed = false;
+                    buttonInfo.myPressEndToProcess = true;
                 }
             }
         }
@@ -406,9 +400,9 @@ export class Mouse {
     }
 
     _onPointerEnter(event) {
-        if ((this._myIsInsideView && this._myPointerID != null) || !this._isPointerEventIDValid(event) || !this._isPointerEventValid(event)) return;
+        if ((this._myInsideView && this._myPointerID != null) || !this._isPointerEventIDValid(event) || !this._isPointerEventValid(event)) return;
 
-        this._myIsInsideView = true;
+        this._myInsideView = true;
 
         this._updatePositionAndScreen(event);
         this._updatePointerData(event);
@@ -434,11 +428,11 @@ export class Mouse {
         this._myInternalMousePosition[0] = event.clientX;
         this._myInternalMousePosition[1] = event.clientY;
 
-        this._myIsValid = true;
+        this._myValid = true;
     }
 
     _updateScreenSize() {
-        let bounds = document.body.getBoundingClientRect();
+        let bounds = Globals.getBody(this._myEngine).getBoundingClientRect();
         this._myScreenSize[0] = bounds.width;
         this._myScreenSize[1] = bounds.height;
     }
@@ -457,16 +451,16 @@ export class Mouse {
     _isPointerEventValid(event) {
         if (event == null) return false;
 
-        let isValid = true;
+        let valid = true;
 
         for (let callback of this._myPointerEventValidCallbacks.values()) {
             if (!callback(event)) {
-                isValid = false;
+                valid = false;
                 break;
             };
         }
 
-        return isValid;
+        return valid;
     }
 
     _isMouseAllowed() {
@@ -475,6 +469,26 @@ export class Mouse {
     }
 
     _createButtonInfo() {
-        return { myIsPressed: false, myIsPressStart: false, myIsPressStartToProcess: false, myIsPressEnd: false, myIsPressEndToProcess: false, };
+        return { myPressed: false, myPressStart: false, myPressStartToProcess: false, myPressEnd: false, myPressEndToProcess: false, };
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        Globals.getBody(this._myEngine).removeEventListener("pointermove", this._myPointerMoveEventListener);
+        Globals.getBody(this._myEngine).removeEventListener("pointerdown", this._myPointerDownEventListener);
+        Globals.getBody(this._myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
+        Globals.getBody(this._myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+        Globals.getBody(this._myEngine).removeEventListener("pointerenter", this._myPointerEnterEventListener);
+
+        Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myMouseDownEventListener);
+        Globals.getBody(this._myEngine).removeEventListener("mouseup", this._myMouseUpEventListener);
+
+        Globals.getBody(this._myEngine).removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+        Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

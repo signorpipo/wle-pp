@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { isToolEnabled } from "../../../cauldron/tool_globals";
+import { Globals } from "../../../../pp/globals";
 import { EasyLightColor } from "../easy_light_color";
 
 export class EasyLightColorComponent extends Component {
@@ -14,13 +14,13 @@ export class EasyLightColorComponent extends Component {
     init() {
         this._myEasyObjectTuner = null;
 
-        if (isToolEnabled(this.engine)) {
+        if (Globals.isToolEnabled(this.engine)) {
             this._myEasyObjectTuner = new EasyLightColor(this._myColorModel, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
         }
     }
 
     start() {
-        if (isToolEnabled(this.engine)) {
+        if (Globals.isToolEnabled(this.engine)) {
             if (this._myEasyObjectTuner != null) {
                 this._myEasyObjectTuner.start();
             }
@@ -28,7 +28,7 @@ export class EasyLightColorComponent extends Component {
     }
 
     update(dt) {
-        if (isToolEnabled(this.engine)) {
+        if (Globals.isToolEnabled(this.engine)) {
             if (this._myEasyObjectTuner != null) {
                 this._myEasyObjectTuner.update(dt);
             }

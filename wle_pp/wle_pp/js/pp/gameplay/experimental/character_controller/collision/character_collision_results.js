@@ -1,4 +1,4 @@
-import { RaycastHit } from "../../../../cauldron/physics/physics_raycast_data";
+import { RaycastHit } from "../../../../cauldron/physics/physics_raycast_params";
 import { quat2_create, vec3_create } from "../../../../plugin/js/extensions/array_extension";
 
 export class CharacterCollisionResults {
@@ -52,7 +52,7 @@ export let CharacterCollisionCheckType = {
 export class CharacterCollisionSurfaceInfo {
 
     constructor() {
-        this.myIsOnSurface = false;
+        this.myOnSurface = false;
 
         this.mySurfaceAngle = 0;
         this.mySurfacePerceivedAngle = 0;
@@ -63,7 +63,7 @@ export class CharacterCollisionSurfaceInfo {
 
         this.mySurfaceDistance = null;
 
-        this.myIsBaseInsideCollision = false;
+        this.myBaseInsideCollision = false;
     }
 
     reset() {
@@ -115,7 +115,7 @@ export class CharacterCollisionMovementResults {
         this.myStartMovement = vec3_create();
         this.myEndMovement = vec3_create();
         this.myMovementFailed = false;
-        this.myIsColliding = false;
+        this.myMovementCollided = false;
         this.myReferenceCollisionHit = new RaycastHit();
     }
 
@@ -299,7 +299,7 @@ CharacterCollisionResults.prototype.copy = function copy(other) {
 };
 
 CharacterCollisionSurfaceInfo.prototype.reset = function reset() {
-    this.myIsOnSurface = false;
+    this.myOnSurface = false;
 
     this.mySurfaceAngle = 0;
     this.mySurfacePerceivedAngle = 0;
@@ -310,11 +310,11 @@ CharacterCollisionSurfaceInfo.prototype.reset = function reset() {
 
     this.mySurfaceDistance = null;
 
-    this.myIsBaseInsideCollision = false;
+    this.myBaseInsideCollision = false;
 };
 
 CharacterCollisionSurfaceInfo.prototype.copy = function copy(other) {
-    this.myIsOnSurface = other.myIsOnSurface;
+    this.myOnSurface = other.myOnSurface;
 
     this.mySurfaceAngle = other.mySurfaceAngle;
     this.mySurfacePerceivedAngle = other.mySurfacePerceivedAngle;
@@ -325,7 +325,7 @@ CharacterCollisionSurfaceInfo.prototype.copy = function copy(other) {
 
     this.mySurfaceDistance = other.mySurfaceDistance;
 
-    this.myIsBaseInsideCollision = other.myIsBaseInsideCollision;
+    this.myBaseInsideCollision = other.myBaseInsideCollision;
 };
 
 CharacterCollisionWallSlideResults.prototype.reset = function reset() {
@@ -356,7 +356,7 @@ CharacterCollisionMovementResults.prototype.reset = function reset() {
     this.myStartMovement.vec3_zero();
     this.myEndMovement.vec3_zero();
     this.myMovementFailed = false;
-    this.myIsColliding = false;
+    this.myMovementCollided = false;
     this.myReferenceCollisionHit.reset();
 };
 
@@ -364,7 +364,7 @@ CharacterCollisionMovementResults.prototype.copy = function copy(other) {
     this.myStartMovement.vec3_copy(other.myStartMovement);
     this.myEndMovement.vec3_copy(other.myEndMovement);
     this.myMovementFailed = other.myMovementFailed;
-    this.myIsColliding = other.myIsColliding;
+    this.myMovementCollided = other.myMovementCollided;
     this.myReferenceCollisionHit.copy(other.myReferenceCollisionHit);
 };
 

@@ -1,14 +1,15 @@
+import { Emitter } from "@wonderlandengine/api";
 import { XRUtils } from "../../cauldron/utils/xr_utils";
 import { mat4_create, quat2_create, quat_create, vec3_create } from "../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
+import { Globals } from "../../pp/globals";
 
 export class BasePoseParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myReferenceObject = null;
-        this.myFixForward = true;
+        this.myForwardFixed = true;
+        this.myUpdateOnViewReset = true;
         this.myForceEmulatedVelocities = false;
-        this.myUpdateOnViewReset = false;
 
         this.myEngine = engine;
     }
@@ -19,11 +20,10 @@ export class BasePoseParams {
 export class BasePose {
 
     constructor(basePoseParams = new BasePoseParams()) {
-        this._myFixForward = basePoseParams.myFixForward;
+        this._myForwardFixed = basePoseParams.myForwardFixed;
         this._myForceEmulatedVelocities = basePoseParams.myForceEmulatedVelocities;
         this._myUpdateOnViewReset = basePoseParams.myUpdateOnViewReset;
 
-        this._myReferenceSpace = null;
         this._myReferenceObject = basePoseParams.myReferenceObject;
 
         this._myEngine = basePoseParams.myEngine;
@@ -37,11 +37,15 @@ export class BasePose {
         this._myLinearVelocity = vec3_create();
         this._myAngularVelocityRadians = vec3_create();
 
-        this._myIsValid = false;
-        this._myIsLinearVelocityEmulated = true;
-        this._myIsAngularVelocityEmulated = true;
+        this._myValid = false;
+        this._myLinearVelocityEmulated = true;
+        this._myAngularVelocityEmulated = true;
 
-        this._myPoseUpdatedCallbacks = new Map();   // Signature: callback(thisPose)
+        this._myPoseUpdatedEmitter = new Emitter();   // Signature: listener(thisPose)
+
+        this._myViewResetEventListener = null;
+
+        this._myDestroyed = false;
     }
 
     getEngine() {
@@ -58,12 +62,12 @@ export class BasePose {
         return this._myReferenceObject;
     }
 
-    setFixForward(fixForward) {
-        this._myFixForward = fixForward;
+    setForwardFixed(forwardFixed) {
+        this._myForwardFixed = forwardFixed;
     }
 
-    isFixForward() {
-        return this._myFixForward;
+    isForwardFixed() {
+        return this._myForwardFixed;
     }
 
     setForceEmulatedVelocities(forceEmulatedVelocities) {
@@ -83,76 +87,75 @@ export class BasePose {
     }
 
     getReferenceSpace() {
-        return this._myReferenceSpace;
+        return XRUtils.getReferenceSpace(this._myEngine);
     }
 
-    getPosition() {
+    getPosition(out = vec3_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
-    getRotation() {
-        return this.getRotationDegrees();
+    getRotation(out = vec3_create(), referenceObjectOverride = undefined) {
+        return this.getRotationDegrees(out, referenceObjectOverride);
     }
 
-    getRotationDegrees() {
-        return this.getRotationQuat().quat_toDegrees();
-
-    }
-
-    getRotationRadians() {
-        return this.getRotationQuat().quat_toRadians();
-    }
-
-    getRotationQuat() {
+    getRotationDegrees(out = vec3_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
-    getTransform() {
-        return this.getTransformMatrix();
-    }
-
-    getTransformMatrix() {
+    getRotationRadians(out = vec3_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
-    getTransformQuat() {
+    getRotationQuat(out = quat_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
-    getLinearVelocity() {
+    getTransform(out = mat4_create(), referenceObjectOverride = undefined) {
+        return this.getTransformMatrix(out, referenceObjectOverride);
+    }
+
+    getTransformMatrix(out = mat4_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
-    getAngularVelocity() {
-        return this.getAngularVelocityDegrees();
-    }
-
-    getAngularVelocityDegrees() {
+    getTransformQuat(out = quat2_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
-    getAngularVelocityRadians() {
+    getLinearVelocity(out = vec3_create(), referenceObjectOverride = undefined) {
+        // Implemented outside class definition
+    }
+
+    getAngularVelocity(out = vec3_create(), referenceObjectOverride = undefined) {
+        return this.getAngularVelocityDegrees(out, referenceObjectOverride);
+    }
+
+    getAngularVelocityDegrees(out = vec3_create(), referenceObjectOverride = undefined) {
+        // Implemented outside class definition
+    }
+
+    getAngularVelocityRadians(out = vec3_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
     isValid() {
-        return this._myIsValid;
+        return this._myValid;
     }
 
     isLinearVelocityEmulated() {
-        return this._myIsLinearVelocityEmulated;
+        return this._myLinearVelocityEmulated;
     }
 
     isAngularVelocityEmulated() {
-        return this._myIsAngularVelocityEmulated;
+        return this._myAngularVelocityEmulated;
     }
 
-    registerPoseUpdatedEventListener(id, callback) {
-        this._myPoseUpdatedCallbacks.set(id, callback);
+    registerPoseUpdatedEventListener(id, listener) {
+        this._myPoseUpdatedEmitter.add(listener, { id: id });
     }
 
     unregisterPoseUpdatedEventListener(id) {
-        this._myPoseUpdatedCallbacks.delete(id);
+        this._myPoseUpdatedEmitter.remove(id);
     }
 
     start() {
@@ -188,7 +191,11 @@ export class BasePose {
 
     }
 
-    // Hooks end
+    _destroyHook() {
+
+    }
+
+    // Hooks End
 
     _update(dt, updateVelocity) {
         this._myPrevPosition.vec3_copy(this._myPosition);
@@ -220,11 +227,11 @@ export class BasePose {
                         this._myLinearVelocity[1] = xrPose.linearVelocity.y;
                         this._myLinearVelocity[2] = xrPose.linearVelocity.z;
 
-                        this._myIsLinearVelocityEmulated = false;
+                        this._myLinearVelocityEmulated = false;
                     } else {
                         this._computeEmulatedLinearVelocity(dt);
 
-                        this._myIsLinearVelocityEmulated = true;
+                        this._myLinearVelocityEmulated = true;
                     }
 
                     if (xrPose.angularVelocity && !this._myForceEmulatedVelocities) {
@@ -232,15 +239,15 @@ export class BasePose {
                         this._myAngularVelocityRadians[1] = xrPose.angularVelocity.y;
                         this._myAngularVelocityRadians[2] = xrPose.angularVelocity.z;
 
-                        this._myIsAngularVelocityEmulated = false;
+                        this._myAngularVelocityEmulated = false;
                     } else {
                         this._computeEmulatedAngularVelocity(dt);
 
-                        this._myIsAngularVelocityEmulated = true;
+                        this._myAngularVelocityEmulated = true;
                     }
                 }
 
-                this._myIsValid = true;
+                this._myValid = true;
             } else {
                 // Keep previous position and rotation but reset velocity because reasons
 
@@ -254,9 +261,9 @@ export class BasePose {
                     this._myAngularVelocityRadians[2] = 0;
                 }
 
-                this._myIsValid = false;
-                this._myIsLinearVelocityEmulated = true;
-                this._myIsAngularVelocityEmulated = true;
+                this._myValid = false;
+                this._myLinearVelocityEmulated = true;
+                this._myAngularVelocityEmulated = true;
             }
 
             this._updateHook(dt, updateVelocity, xrPose);
@@ -273,14 +280,14 @@ export class BasePose {
                 this._myAngularVelocityRadians[2] = 0;
             }
 
-            this._myIsValid = false;
-            this._myIsLinearVelocityEmulated = true;
-            this._myIsAngularVelocityEmulated = true;
+            this._myValid = false;
+            this._myLinearVelocityEmulated = true;
+            this._myAngularVelocityEmulated = true;
 
             this._updateHook(dt, updateVelocity, null);
         }
 
-        this._myPoseUpdatedCallbacks.forEach(function (callback) { callback(this); }.bind(this));
+        this._myPoseUpdatedEmitter.notify(this);
     }
 
     _computeEmulatedLinearVelocity(dt) {
@@ -295,13 +302,12 @@ export class BasePose {
     }
 
     _onXRSessionStart(manualCall, session) {
-        session.requestReferenceSpace(XRUtils.getReferenceSpaceType(this._myEngine)).then(function (referenceSpace) {
-            this._myReferenceSpace = referenceSpace;
+        let referenceSpace = XRUtils.getReferenceSpace(this._myEngine);
 
-            if (referenceSpace.addEventListener != null) {
-                referenceSpace.addEventListener("reset", this._onViewReset.bind(this));
-            }
-        }.bind(this));
+        if (referenceSpace.addEventListener != null) {
+            this._myViewResetEventListener = this._onViewReset.bind(this);
+            referenceSpace.addEventListener("reset", this._myViewResetEventListener);
+        }
 
         this._onXRSessionStartHook(manualCall, session);
     }
@@ -309,7 +315,7 @@ export class BasePose {
     _onXRSessionEnd() {
         this._onXRSessionEndHook();
 
-        this._myReferenceSpace = null;
+        this._myViewResetEventListener = null;
     }
 
     _onViewReset() {
@@ -323,6 +329,19 @@ export class BasePose {
     _computeEmulatedAngularVelocity() {
         // Implemented outside class definition
     }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._destroyHook();
+
+        XRUtils.getReferenceSpace(this._myEngine)?.removeEventListener?.("reset", this._myViewResetEventListener);
+        XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
+    }
 }
 
 
@@ -330,85 +349,112 @@ export class BasePose {
 // IMPLEMENTATION
 
 BasePose.prototype.getPosition = function () {
-    let position = vec3_create();
     let transform = mat4_create();
-    return function getPosition() {
-        if (this._myReferenceObject == null) {
-            return this._myPosition;
+    return function getPosition(out = vec3_create(), referenceObjectOverride = undefined) {
+        let referenceObject = referenceObjectOverride === undefined ? this._myReferenceObject : referenceObjectOverride;
+
+        out.vec3_copy(this._myPosition);
+
+        if (referenceObject == null) {
+            return out;
         }
 
-        return this._myPosition.vec3_convertPositionToWorld(this._myReferenceObject.pp_getTransform(transform), position);
+        return out.vec3_convertPositionToWorld(referenceObject.pp_getTransform(transform), out);
     };
 }();
 
-BasePose.prototype.getRotationQuat = function () {
+BasePose.prototype.getRotationDegrees = function () {
     let rotationQuat = quat_create();
+    return function getRotationDegrees(out = vec3_create(), referenceObjectOverride = undefined) {
+        return this.getRotationQuat(rotationQuat, referenceObjectOverride).quat_toDegrees(out);
+    }
+}();
+
+BasePose.prototype.getRotationRadians = function () {
+    let rotationQuat = quat_create();
+    return function getRotationRadians(out = vec3_create(), referenceObjectOverride = undefined) {
+        return this.getRotationQuat(rotationQuat, referenceObjectOverride).quat_toRadians(out);
+    }
+}();
+
+BasePose.prototype.getRotationQuat = function () {
     let playerRotationQuat = quat_create();
     let up = vec3_create();
-    return function getRotationQuat() {
-        rotationQuat.quat_copy(this._myRotationQuat);
+    return function getRotationQuat(out = quat_create(), referenceObjectOverride = undefined) {
+        let referenceObject = referenceObjectOverride === undefined ? this._myReferenceObject : referenceObjectOverride;
 
-        if (this._myFixForward) {
-            rotationQuat.quat_rotateAxisRadians(Math.PI, rotationQuat.quat_getUp(up), rotationQuat);
+        out.quat_copy(this._myRotationQuat);
+
+        if (this._myForwardFixed) {
+            out.quat_rotateAxisRadians(Math.PI, out.quat_getUp(up), out);
         }
 
-        if (this._myReferenceObject == null) {
-            return rotationQuat;
+        if (referenceObject == null) {
+            return out;
         }
 
-        return rotationQuat.quat_toWorld(this._myReferenceObject.pp_getRotationQuat(playerRotationQuat), rotationQuat);
+        return out.quat_toWorld(referenceObject.pp_getRotationQuat(playerRotationQuat), out);
     };
 }();
 
 BasePose.prototype.getTransformMatrix = function () {
-    let transform = mat4_create();
-    return function getTransformMatrix() {
-        return this.getTransformQuat().quat2_toMatrix(transform);
+    let transformQuat = quat2_create();
+    return function getTransformMatrix(out = mat4_create(), referenceObjectOverride = undefined) {
+        return this.getTransformQuat(transformQuat, referenceObjectOverride).quat2_toMatrix(out);
     };
 }();
 
 BasePose.prototype.getTransformQuat = function () {
-    let transformQuat = quat2_create();
+    let rotationQuat = quat_create();
     let playerTransformQuat = quat2_create();
-    return function getTransformQuat() {
-        transformQuat.quat2_setPositionRotationQuat(this._myPosition, this.getRotationQuat());
+    return function getTransformQuat(out = quat2_create(), referenceObjectOverride = undefined) {
+        let referenceObject = referenceObjectOverride === undefined ? this._myReferenceObject : referenceObjectOverride;
 
-        if (this._myReferenceObject == null) {
-            return transformQuat;
+        out.quat2_identity();
+        out.quat2_setPositionRotationQuat(this._myPosition, this.getRotationQuat(rotationQuat, referenceObjectOverride));
+
+        if (referenceObject == null) {
+            return out;
         }
 
-        return transformQuat.quat_toWorld(this._myReferenceObject.pp_getTransformQuat(playerTransformQuat), transformQuat);
+        return out.quat_toWorld(referenceObject.pp_getTransformQuat(playerTransformQuat), out);
     };
 }();
 
 BasePose.prototype.getLinearVelocity = function () {
-    let position = vec3_create();
     let transform = mat4_create();
-    return function getLinearVelocity() {
-        if (this._myReferenceObject == null) {
-            return this._myLinearVelocity;
+    return function getLinearVelocity(out = vec3_create(), referenceObjectOverride = undefined) {
+        let referenceObject = referenceObjectOverride === undefined ? this._myReferenceObject : referenceObjectOverride;
+
+        out.vec3_copy(this._myLinearVelocity);
+
+        if (referenceObject == null) {
+            return out;
         }
 
-        return this._myLinearVelocity.vec3_convertDirectionToWorld(this._myReferenceObject.pp_getTransform(transform), position);
+        return out.vec3_convertDirectionToWorld(referenceObject.pp_getTransform(transform), out);
     };
 }();
 
 BasePose.prototype.getAngularVelocityDegrees = function () {
-    let rotationDegrees = vec3_create();
-    return function getAngularVelocityDegrees() {
-        this.getAngularVelocityRadians().vec3_toDegrees(rotationDegrees);
+    let velocityRadians = vec3_create();
+    return function getAngularVelocityDegrees(out = vec3_create(), referenceObjectOverride = undefined) {
+        return this.getAngularVelocityRadians(velocityRadians, referenceObjectOverride).vec3_toDegrees(out);
     };
 }();
 
 BasePose.prototype.getAngularVelocityRadians = function () {
-    let rotationRadians = vec3_create();
     let transform = mat4_create();
-    return function getAngularVelocityRadians() {
-        if (this._myReferenceObject == null) {
-            return this._myAngularVelocityRadians;
+    return function getAngularVelocityRadians(out = vec3_create(), referenceObjectOverride = undefined) {
+        let referenceObject = referenceObjectOverride === undefined ? this._myReferenceObject : referenceObjectOverride;
+
+        out.vec3_copy(this._myAngularVelocityRadians);
+
+        if (referenceObject == null) {
+            return out;
         }
 
-        return this._myAngularVelocityRadians.vec3_convertDirectionToWorld(this._myReferenceObject.pp_getTransform(transform), rotationRadians);
+        return out.vec3_convertDirectionToWorld(referenceObject.pp_getTransform(transform), out);
     };
 }();
 

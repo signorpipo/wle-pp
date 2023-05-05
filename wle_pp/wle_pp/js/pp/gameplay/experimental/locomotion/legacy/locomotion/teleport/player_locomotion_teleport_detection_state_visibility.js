@@ -1,7 +1,7 @@
-import { RaycastResults, RaycastSetup } from "../../../../../../cauldron/physics/physics_raycast_data";
+import { RaycastParams, RaycastResults } from "../../../../../../cauldron/physics/physics_raycast_params";
 import { PhysicsUtils } from "../../../../../../cauldron/physics/physics_utils";
-import { getDebugVisualManager } from "../../../../../../debug/debug_globals";
 import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../../../pp/globals";
 import { PlayerLocomotionTeleportDetectionState } from "./player_locomotion_teleport_detection_state";
 
 PlayerLocomotionTeleportDetectionState.prototype._isTeleportPositionVisible = function () {
@@ -60,7 +60,7 @@ PlayerLocomotionTeleportDetectionState.prototype._isPositionVisible = function (
     let fixedUp = vec3_create();
     let raycastEndPosition = vec3_create();
 
-    let raycastSetup = new RaycastSetup();
+    let raycastParams = new RaycastParams();
     let raycastResult = new RaycastResults();
 
     let objectsEqualCallback = (first, second) => first.pp_equals(second);
@@ -90,24 +90,24 @@ PlayerLocomotionTeleportDetectionState.prototype._isPositionVisible = function (
         let distance = headPosition.vec3_distance(position);
 
         for (let checkPosition of checkPositions) {
-            raycastSetup.myPhysics = this._myTeleportParams.myEngine.physics;
-            raycastSetup.myOrigin.vec3_copy(checkPosition);
-            raycastSetup.myDirection.vec3_copy(fixedForward);
-            raycastSetup.myDistance = distance;
+            raycastParams.myOrigin.vec3_copy(checkPosition);
+            raycastParams.myDirection.vec3_copy(fixedForward);
+            raycastParams.myDistance = distance;
+            raycastParams.myPhysics = Globals.getPhysics(this._myTeleportParams.myEngine);
 
-            raycastSetup.myBlockLayerFlags.setMask(this._myTeleportParams.myDetectionParams.myVisibilityBlockLayerFlags.getMask());
+            raycastParams.myBlockLayerFlags.setMask(this._myTeleportParams.myDetectionParams.myVisibilityBlockLayerFlags.getMask());
 
-            raycastSetup.myObjectsToIgnore.pp_copy(this._myTeleportParams.myCollisionCheckParams.myHorizontalObjectsToIgnore);
+            raycastParams.myObjectsToIgnore.pp_copy(this._myTeleportParams.myCollisionCheckParams.myHorizontalObjectsToIgnore);
             for (let objectToIgnore of this._myTeleportParams.myCollisionCheckParams.myVerticalObjectsToIgnore) {
-                raycastSetup.myObjectsToIgnore.pp_pushUnique(objectToIgnore, objectsEqualCallback);
+                raycastParams.myObjectsToIgnore.pp_pushUnique(objectToIgnore, objectsEqualCallback);
             }
 
-            raycastSetup.myIgnoreHitsInsideCollision = true;
+            raycastParams.myIgnoreHitsInsideCollision = true;
 
-            raycastResult = PhysicsUtils.raycast(raycastSetup, raycastResult);
+            raycastResult = PhysicsUtils.raycast(raycastParams, raycastResult);
 
-            if (this._myTeleportParams.myDebugActive && this._myTeleportParams.myDebugVisibilityActive) {
-                getDebugVisualManager(this._myTeleportParams.myEngine).drawRaycast(0, raycastResult);
+            if (this._myTeleportParams.myDebugEnabled && this._myTeleportParams.myDebugVisibilityEnabled && Globals.isDebugEnabled(this._myTeleportParams.myEngine)) {
+                Globals.getDebugVisualManager(this._myTeleportParams.myEngine).drawRaycast(0, raycastResult);
             }
 
             if (raycastResult.isColliding()) {

@@ -1,5 +1,5 @@
+import { Globals } from "../../../pp/globals";
 import { Handedness } from "../../cauldron/input_types";
-import { HandPose } from "../../pose/hand_pose";
 import { GamepadButtonID } from "../gamepad_buttons";
 import { GamepadCore } from "./gamepad_core";
 
@@ -22,8 +22,8 @@ export class ClassicGamepadCore extends GamepadCore {
     }
 
     getButtonData(buttonID) {
-        this._myButtonData.myIsPressed = false;
-        this._myButtonData.myIsTouched = false;
+        this._myButtonData.myPressed = false;
+        this._myButtonData.myTouched = false;
         this._myButtonData.myValue = 0;
 
         let classicGamepad = this._getClassicGamepad();
@@ -80,8 +80,8 @@ export class ClassicGamepadCore extends GamepadCore {
             }
 
             if (button != null) {
-                this._myButtonData.myIsPressed = button.pressed;
-                this._myButtonData.myIsTouched = button.touched;
+                this._myButtonData.myPressed = button.pressed;
+                this._myButtonData.myTouched = button.touched;
                 this._myButtonData.myValue = button.value;
             }
         }
@@ -126,7 +126,7 @@ export class ClassicGamepadCore extends GamepadCore {
     _getClassicGamepad() {
         let classicGamepad = null;
 
-        let gamepads = navigator.getGamepads();
+        let gamepads = Globals.getNavigator(this.getEngine()).getGamepads();
         if (this._myGamepadIndex != null) {
             if (this._myGamepadIndex < gamepads.length) {
                 classicGamepad = gamepads[this._myGamepadIndex];

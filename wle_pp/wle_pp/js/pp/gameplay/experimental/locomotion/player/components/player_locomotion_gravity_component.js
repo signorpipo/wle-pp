@@ -1,7 +1,6 @@
-import { Component, Property } from "@wonderlandengine/api";
-import { PlayerLocomotionGravity } from "../player_locomotion_gravity";
+import { Component } from "@wonderlandengine/api";
 
-export class PlayerLocomotionGravityComponent extends Component {
+class PlayerLocomotionGravityComponent extends Component {
     static TypeName = "pp-player-locomotion-gravity";
     static Properties = {};
 
@@ -9,7 +8,7 @@ export class PlayerLocomotionGravityComponent extends Component {
     }
 
     start() {
-        this._myPlayerLocomotionGravity = new PlayerLocomotionGravity();
+        //this._myPlayerLocomotionGravity = new PlayerLocomotionGravity();
     }
 
     update(dt) {

@@ -1,15 +1,18 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { AddPPToWindowComponent } from "./add_pp_to_window_component";
 import { AudioManagerComponent } from "../../audio/components/audio_manager_component";
 import { VisualManagerComponent } from "../../cauldron/visual/components/visual_manager_component";
 import { AddWLToWindowComponent } from "../../cauldron/wl/components/add_wl_to_window_component";
 import { DebugManagerComponent } from "../../debug/components/debug_manager_component";
+import { EnableDebugsComponent } from "../../debug/components/enable_debugs_component";
 import { InputManagerComponent } from "../../input/cauldron/components/input_manager_component";
 import { EnableToolsComponent } from "../../tool/cauldron/components/enable_tools_component";
-import { EnableDebugsComponent } from "../../debug/components/enable_debugs_component";
-import { GetDefaultResourcesComponent } from "./get_default_resources_component";
-import { GetPlayerObjectsComponent } from "./get_player_objects_component";
 import { InitEasyTuneVariablesComponent } from "../../tool/easy_tune/components/init_easy_tune_variables_component";
+import { initPP } from "../init_pp";
+import { AddPPToWindowComponent } from "./add_pp_to_window_component";
+import { GetDefaultResourcesComponent } from "./get_default_resources_component";
+import { GetSceneObjectsComponent } from "./get_scene_objects_component";
+
+let _alreadyRegisteredEngines = [];
 
 export class PPGatewayComponent extends Component {
     static TypeName = "pp-gateway";
@@ -23,11 +26,21 @@ export class PPGatewayComponent extends Component {
         ...AudioManagerComponent.Properties,
         ...VisualManagerComponent.Properties,
         ...DebugManagerComponent.Properties,
-        ...GetPlayerObjectsComponent.Properties,
+        ...GetSceneObjectsComponent.Properties,
         ...GetDefaultResourcesComponent.Properties
     };
 
+    static onRegister(engine) {
+        if (!_alreadyRegisteredEngines.includes(engine)) {
+            _alreadyRegisteredEngines.push(engine)
+            initPP(engine);
+        }
+    }
+
     init() {
+        this._myGetDefaultResourcesComponent = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties));
+        this._myGetSceneObjectsComponent = this.object.pp_addComponent(GetSceneObjectsComponent, this._getProperties(GetSceneObjectsComponent.Properties));
+
         this._myEnableDebugsComponent = null;
         if (this._myEnableDebugs) {
             this._myEnableDebugsComponent = this.object.pp_addComponent(EnableDebugsComponent, false);
@@ -57,12 +70,12 @@ export class PPGatewayComponent extends Component {
         this._myAudioManagerComponent = this.object.pp_addComponent(AudioManagerComponent, false);
         this._myVisualManagerComponent = this.object.pp_addComponent(VisualManagerComponent, false);
         this._myDebugManagerComponent = this.object.pp_addComponent(DebugManagerComponent, false);
-
-        this._myGetDefaultResourcesComponent = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties));
-        this._myGetPlayerObjectsComponent = this.object.pp_addComponent(GetPlayerObjectsComponent, this._getProperties(GetPlayerObjectsComponent.Properties));
     }
 
     start() {
+        this._myGetDefaultResourcesComponent.active = true;
+        this._myGetSceneObjectsComponent.active = true;
+
         if (this._myEnableDebugsComponent != null) {
             this._myEnableDebugsComponent.active = true;
         }
@@ -87,9 +100,6 @@ export class PPGatewayComponent extends Component {
         this._myAudioManagerComponent.active = true;
         this._myVisualManagerComponent.active = true;
         this._myDebugManagerComponent.active = true;
-
-        this._myGetDefaultResourcesComponent.active = true;
-        this._myGetPlayerObjectsComponent.active = true;
     }
 
     _getProperties(propertiesToGet, active = false) {

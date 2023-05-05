@@ -1,4 +1,4 @@
-import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_data";
+import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params";
 import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
 import { CollisionCheck } from "./collision_check";
 
@@ -36,7 +36,7 @@ CollisionCheck.prototype._horizontalPositionCheck = function () {
     let vertilCheckHit = new RaycastHit();
 
     return function _horizontalPositionCheck(originalFeetPosition, originalHeight, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams) {
-        this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugHorizontalPositionActive;
+        this._myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugHorizontalPositionEnabled;
 
         checkPositions.length = 0;
         currentCachedCheckPositionIndex = 0;

@@ -1,4 +1,4 @@
-import { EasingFunction } from "../../../plugin/js/extensions/math_extension";
+import { EasingFunction } from "../../../cauldron/js/utils/math_utils";
 
 // You can just put startNumber if u want a number that doesn't actually change -> new NumberOverValue(0)
 export class NumberOverValue {

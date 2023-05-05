@@ -1,4 +1,5 @@
 import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../../../pp/globals";
 import { CollisionCheck } from "./collision_check";
 import { CollisionRuntimeParams } from "./collision_params";
 
@@ -190,7 +191,7 @@ CollisionCheck.prototype._moveStep = function () {
         }
 
         //this._myTotalRaycasts = 0;
-        //collisionCheckParams.myDebugActive = true;
+        //collisionCheckParams.myDebugEnabled = true;
 
         this._myPrevCollisionRuntimeParams.copy(collisionRuntimeParams);
         collisionRuntimeParams.reset();
@@ -284,7 +285,7 @@ CollisionCheck.prototype._moveStep = function () {
             }
 
             //console.error(this._myTotalRaycasts );
-            //collisionCheckParams.myDebugActive = false;
+            //collisionCheckParams.myDebugEnabled = false;
 
             surfaceAdjustedVerticalMovement = this._adjustVerticalMovementWithSurface(fixedHorizontalMovement, verticalMovement, transformUp, collisionCheckParams, collisionRuntimeParams, this._myPrevCollisionRuntimeParams, surfaceAdjustedVerticalMovement);
 
@@ -396,6 +397,7 @@ CollisionCheck.prototype._moveStep = function () {
                 if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myIsSliding && !fixedHorizontalMovement.vec3_isZero()) {
                     /* let angleWithPreviousThreshold = 0.5;
                     check use surfaceAdjustedHorizontalMovement instead of horizontalMovement if re-enable this
+                    
                     if (!this._myPrevCollisionRuntimeParams.myLastValidOriginalHorizontalMovement.vec3_isZero() && !horizontalMovement.vec3_isZero() &&
                         horizontalMovement.vec3_angle(this._myPrevCollisionRuntimeParams.myLastValidOriginalHorizontalMovement) > angleWithPreviousThreshold) {
                         collisionRuntimeParams.mySliding90DegreesSign = horizontalMovement.vec3_signTo(this._myPrevCollisionRuntimeParams.myLastValidOriginalHorizontalMovement, transformUp);
@@ -426,7 +428,7 @@ CollisionCheck.prototype._moveStep = function () {
                 collisionRuntimeParams.myLastValidIsSliding = collisionRuntimeParams.myIsSliding;
                 collisionRuntimeParams.myIsSlidingFlickerPrevented = false;
                 collisionRuntimeParams.myLastValidEndHorizontalMovement.vec3_copy(fixedHorizontalMovement);
-                //fixedHorizontalMovement.vec3_error();
+                //fixedHorizontalMovement.vec_error();
 
                 if (!collisionRuntimeParams.myIsSliding) {
                     //console.error("not sliding");
@@ -464,11 +466,11 @@ CollisionCheck.prototype._moveStep = function () {
         }
 
         if (!moveStepFixed) {
-            if (collisionCheckParams.myDebugActive && collisionCheckParams.myDebugMovementActive) {
+            if (collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugMovementEnabled && Globals.isDebugEnabled(this._myEngine)) {
                 this._debugMovement(movement, outFixedMovement, newFeetPosition, transformUp, collisionCheckParams);
             }
 
-            if (collisionCheckParams.myDebugActive && collisionCheckParams.myDebugRuntimeParamsActive) {
+            if (collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugRuntimeParamsEnabled && Globals.isDebugEnabled(this._myEngine)) {
                 this._debugRuntimeParams(collisionRuntimeParams);
             }
         }

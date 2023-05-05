@@ -1,21 +1,35 @@
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
-import { WidgetFrameSetup } from "./widget_frame_setup";
+import { Emitter } from "@wonderlandengine/api";
+import { Globals } from "../../pp/globals";
+import { ToolHandedness } from "../cauldron/tool_types";
+import { WidgetFrameConfig } from "./widget_frame_config";
 import { WidgetFrameUI } from "./widget_frame_ui";
+
+export class WidgetParams {
+
+    constructor() {
+        this.myHandedness = ToolHandedness.NONE;
+
+        this.myPlaneMaterial = null;
+        this.myTextMaterial = null;
+    }
+}
 
 export class WidgetFrame {
 
-    constructor(widgetLetterID, buttonsColumnIndex, engine = getMainEngine()) {
-        this.myIsWidgetVisible = true;
-        this.myIsPinned = false;
+    constructor(widgetLetterID, buttonsColumnIndex, engine = Globals.getMainEngine()) {
+        this._myWidgetVisible = true;
+        this._myPinned = false;
 
-        this._mySetup = new WidgetFrameSetup(widgetLetterID, buttonsColumnIndex);
-        this._myAdditionalSetup = null;
+        this._myConfig = new WidgetFrameConfig(widgetLetterID, buttonsColumnIndex);
+        this._myParams = null;
 
         this._myUI = new WidgetFrameUI(engine);
         this._myShowVisibilityButton = false;
 
-        this._myWidgetVisibleChangedCallbacks = new Map();      // Signature: callback(isWidgetVisible)
-        this._myPinChangedCallbacks = new Map();                // Signature: callback(isPinned)
+        this._myWidgetVisibleChangedEmitter = new Emitter();      // Signature: listener(widgetVisible)
+        this._myPinChangedEmitter = new Emitter();                // Signature: listener(pinned)
+
+        this._myDestroyed = true;
     }
 
     getWidgetObject() {
@@ -23,12 +37,12 @@ export class WidgetFrame {
     }
 
     setVisible(visible) {
-        this.myIsWidgetVisible = !visible;
+        this._myWidgetVisible = !visible;
         this._toggleVisibility(false, true);
     }
 
     isVisible() {
-        return this.myIsWidgetVisible;
+        return this._myWidgetVisible;
     }
 
     toggleVisibility() {
@@ -39,29 +53,29 @@ export class WidgetFrame {
         this._togglePin(false);
     }
 
-    registerWidgetVisibleChangedEventListener(id, callback) {
-        this._myWidgetVisibleChangedCallbacks.set(id, callback);
+    registerWidgetVisibleChangedEventListener(id, listener) {
+        this._myWidgetVisibleChangedEmitter.add(listener, { id: id });
     }
 
     unregisterWidgetVisibleChangedEventListener(id) {
-        this._myWidgetVisibleChangedCallbacks.delete(id);
+        this._myWidgetVisibleChangedEmitter.remove(id);
     }
 
-    registerPinChangedEventListener(id, callback) {
-        this._myPinChangedCallbacks.set(id, callback);
+    registerPinChangedEventListener(id, listener) {
+        this._myPinChangedEmitter.add(listener, { id: id });
     }
 
     unregisterPinChangedEventListener(id) {
-        this._myPinChangedCallbacks.delete(id);
+        this._myPinChangedEmitter.remove(id);
     }
 
-    start(parentObject, additionalSetup) {
-        this._myAdditionalSetup = additionalSetup;
+    start(parentObject, params) {
+        this._myParams = params;
 
-        this._myUI.build(parentObject, this._mySetup, additionalSetup);
-        this._myUI.setVisibilityButtonVisible(additionalSetup.myShowVisibilityButton);
-        this._myShowVisibilityButton = additionalSetup.myShowVisibilityButton;
-        if (!additionalSetup.myShowOnStart) {
+        this._myUI.build(parentObject, this._myConfig, params);
+        this._myUI.setVisibilityButtonVisible(params.myShowVisibilityButton);
+        this._myShowVisibilityButton = params.myShowVisibilityButton;
+        if (!params.myShowOnStart) {
             this._toggleVisibility(false, false);
         }
 
@@ -75,86 +89,94 @@ export class WidgetFrame {
     _addListeners() {
         let ui = this._myUI;
 
-        ui.myPinButtonCursorTargetComponent.addClickFunction(this._togglePin.bind(this, true));
-        ui.myPinButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPinButtonBackgroundComponent.material));
-        ui.myPinButtonCursorTargetComponent.addUnHoverFunction(this._pinUnHover.bind(this, ui.myPinButtonBackgroundComponent.material));
+        ui.myPinButtonCursorTargetComponent.onClick.add(this._togglePin.bind(this, true));
+        ui.myPinButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPinButtonBackgroundComponent.material));
+        ui.myPinButtonCursorTargetComponent.onUnhover.add(this._pinUnHover.bind(this, ui.myPinButtonBackgroundComponent.material));
 
-        ui.myVisibilityButtonCursorTargetComponent.addClickFunction(this._toggleVisibility.bind(this, true, true));
-        ui.myVisibilityButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
-        ui.myVisibilityButtonCursorTargetComponent.addUnHoverFunction(this._visibilityUnHover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
+        ui.myVisibilityButtonCursorTargetComponent.onClick.add(this._toggleVisibility.bind(this, true, true));
+        ui.myVisibilityButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
+        ui.myVisibilityButtonCursorTargetComponent.onUnhover.add(this._visibilityUnHover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
     }
 
     _toggleVisibility(isButton, notify) {
-        this.myIsWidgetVisible = !this.myIsWidgetVisible;
+        this._myWidgetVisible = !this._myWidgetVisible;
 
-        this._myUI.setWidgetVisible(this.myIsWidgetVisible);
+        this._myUI.setWidgetVisible(this._myWidgetVisible);
 
         let textMaterial = this._myUI.myVisibilityButtonTextComponent.material;
         let backgroundMaterial = this._myUI.myVisibilityButtonBackgroundComponent.material;
-        if (this.myIsWidgetVisible) {
-            textMaterial.color = this._mySetup.myDefaultTextColor;
+        if (this._myWidgetVisible) {
+            textMaterial.color = this._myConfig.myDefaultTextColor;
             if (!isButton) {
-                backgroundMaterial.color = this._mySetup.myBackgroundColor;
+                backgroundMaterial.color = this._myConfig.myBackgroundColor;
             }
         } else {
-            textMaterial.color = this._mySetup.myButtonDisabledTextColor;
+            textMaterial.color = this._myConfig.myButtonDisabledTextColor;
             if (!isButton) {
-                backgroundMaterial.color = this._mySetup.myButtonDisabledBackgroundColor;
+                backgroundMaterial.color = this._myConfig.myButtonDisabledBackgroundColor;
             }
         }
 
         if (notify) {
-            for (let callback of this._myWidgetVisibleChangedCallbacks.values()) {
-                callback(this.myIsWidgetVisible);
-            }
+            this._myWidgetVisibleChangedEmitter.notify(this._myWidgetVisible);
         }
 
         this._myUI.setVisibilityButtonVisible(this._myShowVisibilityButton);
     }
 
     _togglePin(isButton) {
-        if (this.myIsWidgetVisible) {
-            this.myIsPinned = !this.myIsPinned;
+        if (this._myWidgetVisible) {
+            this._myPinned = !this._myPinned;
 
-            this._myUI.setPinned(this.myIsPinned);
+            this._myUI.setPinned(this._myPinned);
 
             let textMaterial = this._myUI.myPinButtonTextComponent.material;
             let backgroundMaterial = this._myUI.myPinButtonBackgroundComponent.material;
-            if (this.myIsPinned) {
-                textMaterial.color = this._mySetup.myDefaultTextColor;
+            if (this._myPinned) {
+                textMaterial.color = this._myConfig.myDefaultTextColor;
                 if (!isButton) {
-                    backgroundMaterial.color = this._mySetup.myBackgroundColor;
+                    backgroundMaterial.color = this._myConfig.myBackgroundColor;
                 }
             } else {
-                textMaterial.color = this._mySetup.myButtonDisabledTextColor;
+                textMaterial.color = this._myConfig.myButtonDisabledTextColor;
                 if (!isButton) {
-                    backgroundMaterial.color = this._mySetup.myButtonDisabledBackgroundColor;
+                    backgroundMaterial.color = this._myConfig.myButtonDisabledBackgroundColor;
                 }
             }
 
-            for (let callback of this._myPinChangedCallbacks.values()) {
-                callback(this.myIsPinned);
-            }
+            this._myPinChangedEmitter.notify(this._myPinned);
         }
     }
 
     _genericHover(material) {
-        material.color = this._mySetup.myButtonHoverColor;
+        material.color = this._myConfig.myButtonHoverColor;
     }
 
     _visibilityUnHover(material) {
-        if (this.myIsWidgetVisible) {
-            material.color = this._mySetup.myBackgroundColor;
+        if (this._myWidgetVisible) {
+            material.color = this._myConfig.myBackgroundColor;
         } else {
-            material.color = this._mySetup.myButtonDisabledBackgroundColor;
+            material.color = this._myConfig.myButtonDisabledBackgroundColor;
         }
     }
 
     _pinUnHover(material) {
-        if (this.myIsPinned) {
-            material.color = this._mySetup.myBackgroundColor;
+        if (this._myPinned) {
+            material.color = this._myConfig.myBackgroundColor;
         } else {
-            material.color = this._mySetup.myButtonDisabledBackgroundColor;
+            material.color = this._myConfig.myButtonDisabledBackgroundColor;
         }
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        if (this._myUI != null) {
+            this._myUI.destroy();
+        }
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

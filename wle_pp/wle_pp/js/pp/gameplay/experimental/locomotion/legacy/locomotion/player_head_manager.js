@@ -1,13 +1,11 @@
 import { Timer } from "../../../../../cauldron/cauldron/timer";
-import { getReferenceSpaceType, XRUtils } from "../../../../../cauldron/utils/xr_utils";
-import { getDebugVisualManager } from "../../../../../debug/debug_globals";
-import { quat2_create, quat_create, vec3_create } from "../../../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../../../../cauldron/wl/engine_globals";
-import { getPlayerObjects } from "../../../../../pp/player_objects_global";
+import { XRUtils } from "../../../../../cauldron/utils/xr_utils";
+import { quat2_create, quat_create, vec3_create, vec4_create } from "../../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../../pp/globals";
 
 export class PlayerHeadManagerParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.mySessionChangeResyncEnabled = false;
 
         this.myBlurEndResyncEnabled = false;
@@ -39,7 +37,7 @@ export class PlayerHeadManagerParams {
 
         this.myEngine = engine;
 
-        this.myDebugActive = false;
+        this.myDebugEnabled = false;
     }
 }
 
@@ -49,12 +47,11 @@ export class PlayerHeadManager {
     constructor(params = new PlayerHeadManagerParams()) {
         this._myParams = params;
 
-        this._myCurrentHead = getPlayerObjects(this._myParams.myEngine).myHeadNonVR;
+        this._myCurrentHead = Globals.getPlayerObjects(this._myParams.myEngine).myHead;
 
         this._mySessionChangeResyncHeadTransform = null;
         this._myBlurRecoverHeadTransform = null;
-        this._myCurrentHeadTransformQuat = quat2_create();
-        this._myPreviousHeadTransformQuat = quat2_create();
+        this._myCurrentHeadTransformLocalQuat = quat2_create();
 
         this._myDelaySessionChangeResyncCounter = 0; // Needed because VR head takes some frames to get the tracked position
         this._myDelayBlurEndResyncCounter = 0;
@@ -66,9 +63,12 @@ export class PlayerHeadManager {
 
         this._myIsSyncedDelayCounter = 0;
 
-        this._myActive = true;
+        this._myViewResetEventListener = null;
 
-        // Setup
+        this._myActive = true;
+        this._myDestroyed = false;
+
+        // Config
 
         this._myResyncCounterFrames = 3;
         this._myIsSyncedDelayCounterFrames = 1;
@@ -77,7 +77,7 @@ export class PlayerHeadManager {
     start() {
         this._updateHeightOffset();
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myEngine);
+        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myParams.myEngine);
     }
 
     setActive(active) {
@@ -93,7 +93,7 @@ export class PlayerHeadManager {
     }
 
     getPlayer() {
-        return getPlayerObjects(this._myParams.myEngine).myPlayer;
+        return Globals.getPlayerObjects(this._myParams.myEngine).myPlayer;
     }
 
     getHead() {
@@ -147,7 +147,7 @@ export class PlayerHeadManager {
             if (this._myParams.myHeightOffsetVRWithFloor == null) {
                 this._myParams.myHeightOffsetVRWithFloor = 0;
             }
-            let isFloor = XRUtils.isReferenceSpaceLocalFloor(this._myParams.myEngine) || XRUtils.isDeviceEmulated();
+            let isFloor = XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine) || XRUtils.isDeviceEmulated(this._myParams.myEngine);
             if (this._mySessionActive && isFloor) {
                 this._myParams.myHeightOffsetVRWithFloor = this._myParams.myHeightOffsetVRWithFloor + (height - this.getHeight());
             } else if (!this._mySessionActive) {
@@ -253,19 +253,30 @@ export class PlayerHeadManager {
         }
 
         if (this.isSynced()) {
-            this._myPreviousHeadTransformQuat.quat2_copy(this._myCurrentHeadTransformQuat);
-            this._myCurrentHead.pp_getTransformQuat(this._myCurrentHeadTransformQuat);
+            this._myCurrentHead.pp_getTransformLocalQuat(this._myCurrentHeadTransformLocalQuat);
         }
 
-        if (this._myParams.myDebugActive) {
+        if (this._myParams.myDebugEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
             this._debugUpdate(dt);
         }
     }
 
     _debugUpdate(dt) {
-        getDebugVisualManager(this._myParams.myEngine).drawLineEnd(0, this.getPositionFeet(), this.getPositionHead(), vec4_create(1, 0, 0, 1), 0.01);
+        Globals.getDebugVisualManager(this._myParams.myEngine).drawLineEnd(0, this.getPositionFeet(), this.getPositionHead(), vec4_create(1, 0, 0, 1), 0.01);
 
         console.error(this.getHeightEyes());
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        XRUtils.getReferenceSpace(this._myParams.myEngine)?.removeEventListener?.("reset", this._myViewResetEventListener);
+        XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
+        XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }
 
@@ -296,7 +307,7 @@ PlayerHeadManager.prototype.getRotationFeetQuat = function () {
     let playerUp = vec3_create();
     let headForward = vec3_create();
     return function getRotationFeetQuat(outRotationFeetQuat = quat_create()) {
-        playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+        playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
         headForward = this._myCurrentHead.pp_getForward(headForward);
 
         // Feet are considered to always be flat on the player up
@@ -323,7 +334,7 @@ PlayerHeadManager.prototype.getPositionFeet = function () {
         headPosition = this._myCurrentHead.pp_getPosition(headPosition);
         let headHeight = this._getPositionHeight(headPosition);
 
-        playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+        playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
         outPositionFeet = headPosition.vec3_sub(playerUp.vec3_scale(headHeight, outPositionFeet), outPositionFeet);
 
         return outPositionFeet;
@@ -331,7 +342,7 @@ PlayerHeadManager.prototype.getPositionFeet = function () {
 }();
 
 PlayerHeadManager.prototype.moveFeet = function moveFeet(movement) {
-    getPlayerObjects(this._myParams.myEngine).myPlayer.pp_translate(movement);
+    Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_translate(movement);
 };
 
 PlayerHeadManager.prototype.rotateFeetQuat = function () {
@@ -352,7 +363,7 @@ PlayerHeadManager.prototype.rotateFeetQuat = function () {
         }
 
         currentHeadPosition = this._myCurrentHead.pp_getPosition(currentHeadPosition);
-        playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+        playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
         rotationAxis = rotationQuat.quat_getAxis(rotationAxis);
 
         if (!rotationAxis.vec3_isOnAxis(playerUp) &&
@@ -370,7 +381,7 @@ PlayerHeadManager.prototype.rotateFeetQuat = function () {
             fixedRotation.quat_copy(rotationQuat);
         }
 
-        getPlayerObjects(this._myParams.myEngine).myPlayer.pp_rotateAroundQuat(fixedRotation, currentHeadPosition);
+        Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_rotateAroundQuat(fixedRotation, currentHeadPosition);
 
         newHeadPosition = this._myCurrentHead.pp_getPosition(newHeadPosition);
 
@@ -389,10 +400,10 @@ PlayerHeadManager.prototype.rotateHeadQuat = function () {
             this._myCurrentHead.pp_rotateQuat(rotationQuat);
             newHeadRotation = this._myCurrentHead.pp_getRotationQuat(newHeadRotation);
 
-            getPlayerObjects(this._myParams.myEngine).myHead.pp_setRotationQuat(newHeadRotation);
+            Globals.getPlayerObjects(this._myParams.myEngine).myHead.pp_setRotationQuat(newHeadRotation);
 
             newHeadRotation = newHeadRotation.quat_rotateAxisRadians(Math.PI, newHeadRotation.quat_getUp(newHeadUp), newHeadRotation);
-            getPlayerObjects(this._myParams.myEngine).myCameraNonVR.pp_setRotationQuat(newHeadRotation);
+            Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_setRotationQuat(newHeadRotation);
         }
     };
 }();
@@ -450,20 +461,20 @@ PlayerHeadManager.prototype.teleportPlayerToHeadTransformQuat = function () {
     return function teleportPlayerToHeadTransformQuat(headTransformQuat) {
         headPosition = headTransformQuat.quat2_getPosition(headPosition);
 
-        playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
-        flatCurrentPlayerPosition = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getPosition(flatCurrentPlayerPosition).vec3_removeComponentAlongAxis(playerUp, flatCurrentPlayerPosition);
+        playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+        flatCurrentPlayerPosition = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getPosition(flatCurrentPlayerPosition).vec3_removeComponentAlongAxis(playerUp, flatCurrentPlayerPosition);
         flatNewPlayerPosition = headPosition.vec3_removeComponentAlongAxis(playerUp, flatNewPlayerPosition);
 
         teleportMovement = flatNewPlayerPosition.vec3_sub(flatCurrentPlayerPosition, teleportMovement);
-        getPlayerObjects(this._myParams.myEngine).myPlayer.pp_translate(teleportMovement);
+        Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_translate(teleportMovement);
 
-        playerForward = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getForward(playerForward);
+        playerForward = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getForward(playerForward);
         headForward = headTransformQuat.quat2_getForward(headForward);
         headForwardNegated = headForward.vec3_negate(headForwardNegated); // The head is rotated 180 degrees from the player for rendering reasons
 
         rotationToPerform = playerForward.vec3_rotationToPivotedQuat(headForwardNegated, playerUp, rotationToPerform);
 
-        getPlayerObjects(this._myParams.myEngine).myPlayer.pp_rotateQuat(rotationToPerform);
+        Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_rotateQuat(rotationToPerform);
     };
 }();
 
@@ -512,8 +523,8 @@ PlayerHeadManager.prototype._getPositionHeight = function () {
     let playerUp = vec3_create();
     let heightVector = vec3_create();
     return function _getPositionHeight(position) {
-        playerPosition = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getPosition(playerPosition);
-        playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+        playerPosition = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getPosition(playerPosition);
+        playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
 
         heightVector = position.vec3_sub(playerPosition, heightVector).vec3_componentAlongAxis(playerUp, heightVector);
         let height = heightVector.vec3_length();
@@ -525,7 +536,7 @@ PlayerHeadManager.prototype._getPositionHeight = function () {
     };
 }();
 
-// #TODO What happens if the player go in the blurred state before wle has loaded?
+// #TODO What happens if the player go in the blurred state before the scene has loaded?
 PlayerHeadManager.prototype._onXRSessionStart = function () {
     return function _onXRSessionStart(manualCall, session) {
         this._myBlurRecoverHeadTransform = null;
@@ -535,13 +546,15 @@ PlayerHeadManager.prototype._onXRSessionStart = function () {
         this._myDelayBlurEndResyncCounter = 0;
         this._myDelayBlurEndResyncTimer.reset();
 
-        session.requestReferenceSpace(getReferenceSpaceType(this._myParams.myEngine)).then(function (referenceSpace) {
-            if (referenceSpace.addEventListener != null) {
-                referenceSpace.addEventListener("reset", this._onViewReset.bind(this));
-            }
-        }.bind(this));
+        let referenceSpace = XRUtils.getReferenceSpace(this._myParams.myEngine);
 
-        session.addEventListener("visibilitychange", function (event) {
+        if (referenceSpace.addEventListener != null) {
+
+            this._myViewResetEventListener = this._onViewReset.bind(this);
+            referenceSpace.addEventListener("reset", this._myViewResetEventListener);
+        }
+
+        this._myVisibilityChangeEventListener = function (event) {
             if (event.session.visibilityState != "visible") {
                 if (!this._mySessionBlurred) {
                     this._onXRSessionBlurStart(event.session);
@@ -555,12 +568,13 @@ PlayerHeadManager.prototype._onXRSessionStart = function () {
 
                 this._myVisibilityHidden = false;
             }
-        }.bind(this));
+        }.bind(this);
+
+        session.addEventListener("visibilitychange", this._myVisibilityChangeEventListener);
 
         if (this._myParams.mySessionChangeResyncEnabled && !manualCall && this._myActive) {
             if (this._myDelaySessionChangeResyncCounter == 0) {
-                let previousHeadObject = this._myCurrentHead;
-                this._mySessionChangeResyncHeadTransform = previousHeadObject.pp_getTransformQuat();
+                this._mySessionChangeResyncHeadTransform = this._getHeadTransformFromLocal(this._myCurrentHeadTransformLocalQuat);
             }
 
             this._myDelaySessionChangeResyncCounter = this._myResyncCounterFrames;
@@ -568,8 +582,6 @@ PlayerHeadManager.prototype._onXRSessionStart = function () {
             this._myDelaySessionChangeResyncCounter = 0;
             this._mySessionChangeResyncHeadTransform = null;
         }
-
-        this._myCurrentHead = getPlayerObjects(this._myParams.myEngine).myHeadVR;
 
         this._mySessionActive = true;
         this._mySessionBlurred = false;
@@ -584,7 +596,7 @@ PlayerHeadManager.prototype._onXRSessionEnd = function () {
     return function _onXRSessionEnd(session) {
         if (this._myParams.mySessionChangeResyncEnabled && this._myActive) {
             if (this._myDelaySessionChangeResyncCounter == 0) {
-                let previousHeadTransform = this._myCurrentHead.pp_getTransformQuat();
+                let previousHeadTransform = this._getHeadTransformFromLocal(this._myCurrentHeadTransformLocalQuat);
 
                 if (this._myBlurRecoverHeadTransform != null) {
                     previousHeadTransform = this._myBlurRecoverHeadTransform;
@@ -599,13 +611,15 @@ PlayerHeadManager.prototype._onXRSessionEnd = function () {
             this._mySessionChangeResyncHeadTransform = null;
         }
 
+
+        this._myVisibilityChangeEventListener = null;
+        this._myViewResetEventListener = null;
+
         this._myBlurRecoverHeadTransform = null;
         this._myVisibilityHidden = false;
 
         this._myDelayBlurEndResyncCounter = 0;
         this._myDelayBlurEndResyncTimer.reset();
-
-        this._myCurrentHead = getPlayerObjects(this._myParams.myEngine).myHeadNonVR;
 
         this._mySessionActive = false;
         this._mySessionBlurred = false;
@@ -623,7 +637,7 @@ PlayerHeadManager.prototype._onXRSessionBlurStart = function () {
                 if (this._myDelaySessionChangeResyncCounter > 0) {
                     this._myBlurRecoverHeadTransform = this._mySessionChangeResyncHeadTransform;
                 } else {
-                    this._myBlurRecoverHeadTransform = this._myCurrentHead.pp_getTransformQuat();
+                    this._myBlurRecoverHeadTransform = this._getHeadTransformFromLocal(this._myCurrentHeadTransformLocalQuat);
                 }
             } else if (!this._mySessionActive || !this._myParams.myBlurEndResyncEnabled) {
                 this._myBlurRecoverHeadTransform = null;
@@ -667,7 +681,7 @@ PlayerHeadManager.prototype._onViewReset = function () {
     return function _onViewReset() {
         if (this._myActive) {
             if (this._myParams.myResetTransformOnViewResetEnabled && this._mySessionActive && this.isSynced()) {
-                this.teleportPlayerToHeadTransformQuat(this._myPreviousHeadTransformQuat);
+                this.teleportPlayerToHeadTransformQuat(this._getHeadTransformFromLocal(this._myCurrentHeadTransformLocalQuat));
             }
         }
     };
@@ -689,7 +703,7 @@ PlayerHeadManager.prototype._blurEndResync = function () {
                 this._myBlurRecoverHeadTransform = null;
                 this._sessionChangeResync();
             } else {
-                playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+                playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
 
                 currentHeadPosition = this._myCurrentHead.pp_getPosition(currentHeadPosition);
                 recoverHeadPosition = this._myBlurRecoverHeadTransform.quat2_getPosition(recoverHeadPosition);
@@ -739,7 +753,7 @@ PlayerHeadManager.prototype._sessionChangeResync = function () {
                 resyncHeadPosition = this._mySessionChangeResyncHeadTransform.quat2_getPosition(resyncHeadPosition);
                 resyncHeadRotation = this._mySessionChangeResyncHeadTransform.quat2_getRotationQuat(resyncHeadRotation);
 
-                playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+                playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
 
                 flatCurrentHeadPosition = currentHeadPosition.vec3_removeComponentAlongAxis(playerUp, flatCurrentHeadPosition);
                 flatResyncHeadPosition = resyncHeadPosition.vec3_removeComponentAlongAxis(playerUp, flatResyncHeadPosition);
@@ -747,7 +761,7 @@ PlayerHeadManager.prototype._sessionChangeResync = function () {
                 resyncMovement = flatResyncHeadPosition.vec3_sub(flatCurrentHeadPosition, resyncMovement);
                 this.moveFeet(resyncMovement);
 
-                let isFloor = XRUtils.isReferenceSpaceLocalFloor(this._myParams.myEngine) || XRUtils.isDeviceEmulated();
+                let isFloor = XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine) || XRUtils.isDeviceEmulated(this._myParams.myEngine);
                 if (this._myParams.myEnterSessionResyncHeight || this._myParams.myNextEnterSessionResyncHeight) {
                     this._myParams.myNextEnterSessionResyncHeight = false;
                     let resyncHeadHeight = this._getPositionHeight(resyncHeadPosition);
@@ -775,16 +789,16 @@ PlayerHeadManager.prototype._sessionChangeResync = function () {
 
                 this._resyncHeadRotationForward(resyncHeadRotation);
             } else {
-                playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+                playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
 
                 resyncHeadPosition = this._mySessionChangeResyncHeadTransform.quat2_getPosition(resyncHeadPosition);
                 flatResyncHeadPosition = resyncHeadPosition.vec3_removeComponentAlongAxis(playerUp, flatResyncHeadPosition);
 
-                playerPosition = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getPosition(playerPosition);
+                playerPosition = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getPosition(playerPosition);
                 newPlayerPosition = flatResyncHeadPosition.vec3_add(playerPosition.vec3_componentAlongAxis(playerUp, newPlayerPosition), newPlayerPosition);
 
-                getPlayerObjects(this._myParams.myEngine).myPlayer.pp_setPosition(newPlayerPosition);
-                getPlayerObjects(this._myParams.myEngine).myCameraNonVR.pp_resetPositionLocal();
+                Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_setPosition(newPlayerPosition);
+                Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_resetPositionLocal();
 
                 if (this._myParams.myExitSessionResyncHeight) {
                     let resyncHeadHeight = this._getPositionHeight(resyncHeadPosition);
@@ -861,7 +875,7 @@ PlayerHeadManager.prototype._resyncHeadRotationForward = function () {
     let resyncHeadUp = vec3_create();
     let fixedResyncHeadRotation = quat_create();
     return function _resyncHeadRotationForward(resyncHeadRotation) {
-        playerUp = getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
+        playerUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp(playerUp);
         resyncHeadForward = resyncHeadRotation.quat_getForward(resyncHeadForward);
         resyncHeadUp = resyncHeadRotation.quat_getUp(resyncHeadUp);
         fixedResyncHeadRotation.quat_copy(resyncHeadRotation);
@@ -880,9 +894,9 @@ PlayerHeadManager.prototype._resyncHeadRotationForward = function () {
 PlayerHeadManager.prototype._updateHeightOffset = function () {
     return function _updateHeightOffset() {
         if (this._mySessionActive) {
-            if (XRUtils.isDeviceEmulated()) {
+            if (XRUtils.isDeviceEmulated(this._myParams.myEngine)) {
                 this._setPlayerPivotHeightOffset(0, 0);
-            } else if (XRUtils.isReferenceSpaceLocalFloor(this._myParams.myEngine)) {
+            } else if (XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine)) {
                 this._setPlayerPivotHeightOffset(this._myParams.myHeightOffsetVRWithFloor, 0);
             } else {
                 this._setPlayerPivotHeightOffset(this._myParams.myHeightOffsetVRWithoutFloor, this._myParams.myForeheadExtraHeight);
@@ -897,9 +911,15 @@ PlayerHeadManager.prototype._setPlayerPivotHeightOffset = function () {
     let playerPivotPosition = vec3_create();
     return function _setPlayerPivotHeightOffset(offset, amountToRemove) {
         if (offset != null) {
-            playerPivotPosition = getPlayerObjects(this._myParams.myEngine).myPlayerPivot.pp_getPositionLocal(playerPivotPosition);
-            getPlayerObjects(this._myParams.myEngine).myPlayerPivot.pp_setPositionLocal([playerPivotPosition[0], offset - amountToRemove, playerPivotPosition[2]]);
+            playerPivotPosition = Globals.getPlayerObjects(this._myParams.myEngine).myPlayerPivot.pp_getPositionLocal(playerPivotPosition);
+            Globals.getPlayerObjects(this._myParams.myEngine).myPlayerPivot.pp_setPositionLocal([playerPivotPosition[0], offset - amountToRemove, playerPivotPosition[2]]);
         }
+    }
+}();
+
+PlayerHeadManager.prototype._getHeadTransformFromLocal = function () {
+    return function _getHeadTransformFromLocal(transformLocal) {
+        return this._myCurrentHead.pp_convertTransformLocalToWorldQuat(transformLocal);
     }
 }();
 

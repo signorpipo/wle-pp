@@ -2,18 +2,16 @@
 
 import { Timer } from "../../../../../cauldron/cauldron/timer";
 import { FSM } from "../../../../../cauldron/fsm/fsm";
+import { EasingFunction } from "../../../../../cauldron/js/utils/math_utils";
 import { MaterialUtils } from "../../../../../cauldron/utils/material_utils";
 import { VisualMesh, VisualMeshParams } from "../../../../../cauldron/visual/elements/visual_mesh";
-import { getVisualData } from "../../../../../cauldron/visual/visual_globals";
 import { vec3_create, vec4_create } from "../../../../../plugin/js/extensions/array_extension";
-import { EasingFunction } from "../../../../../plugin/js/extensions/math_extension";
-import { getMainEngine } from "../../../../../cauldron/wl/engine_globals";
-import { getDefaultResources } from "../../../../../pp/default_resources_global";
+import { Globals } from "../../../../../pp/globals";
 
 // Occlude
 export class PlayerObscureManagerParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myPlayerTransformManager = null;
 
         this.myObscureObject = null;
@@ -57,7 +55,7 @@ export class PlayerObscureManager {
         this._myFadeTimer = new Timer(0, false);
 
         this._myFSM = new FSM();
-        //this._myFSM.setDebugLogActive(true, " Obscure");
+        //this._myFSM.setLogEnabled(true, " Obscure");
 
         this._myFSM.addState("init");
 
@@ -81,6 +79,8 @@ export class PlayerObscureManager {
         this._setupVisuals();
 
         this._myFSM.perform("end");
+
+        this._myDestroyed = false;
     }
 
     start() {
@@ -133,8 +133,8 @@ export class PlayerObscureManager {
         this._myCurrentObscureLevel;
     }
 
-    obscureLevelOverride(obscureLevel, instantFade = false) {
-        this._myObscurelevelOverride = obscureLevel;
+    overrideObscureLevel(obscureLevel, instantFade = false) {
+        this._myObscureLevelOverride = obscureLevel;
 
         if (instantFade && this.isStarted()) {
             this._setObscureLevel(obscureLevel);
@@ -142,7 +142,7 @@ export class PlayerObscureManager {
     }
 
     resetObscureLevelOverride() {
-        this._myObscurelevelOverride = null;
+        this._myObscureLevelOverride = null;
     }
 
     _idleUpdate(dt) {
@@ -248,8 +248,8 @@ export class PlayerObscureManager {
     _updateObscured() {
         this._myTargetObscureLevel = 0;
 
-        if (this._myObscurelevelOverride != null) {
-            this._myTargetObscureLevel = this._myObscurelevelOverride;
+        if (this._myObscureLevelOverride != null) {
+            this._myTargetObscureLevel = this._myObscureLevelOverride;
         } else {
             // #TODO Check if VALID head is colliding, in that case use max obscure level
             // This prevent being able to see when resetting head to real even though real is colliding
@@ -301,17 +301,17 @@ export class PlayerObscureManager {
         if (this._myParams.myObscureMaterial != null) {
             this._myObscureMaterial = this._myParams.myObscureMaterial;
         } else {
-            this._myObscureMaterial = getDefaultResources(this._myParams.myEngine).myMaterials.myFlatTransparentNoDepth.clone();
+            this._myObscureMaterial = Globals.getDefaultMaterials(this._myParams.myEngine).myFlatTransparentNoDepth.clone();
             this._myObscureMaterial.color = vec4_create(0, 0, 0, 1);
         }
 
-        this._myObscureParentObject = getVisualData(this._myParams.myEngine).myRootObject.pp_addObject();
+        this._myObscureParentObject = Globals.getPlayerObjects(this._myParams.myEngine).myPlayerCauldron.pp_addObject();
 
         let obscureVisualParams = new VisualMeshParams(this._myParams.myEngine);
-        obscureVisualParams.myMesh = getDefaultResources(this._myParams.myEngine).myMeshes.myInvertedSphere;
+        obscureVisualParams.myMesh = Globals.getDefaultMeshes(this._myParams.myEngine).myInvertedSphere;
         obscureVisualParams.myMaterial = (this._myParams.myObscureMaterial != null) ? this._myParams.myObscureMaterial : this._myObscureMaterial;
         obscureVisualParams.myParent = this._myObscureParentObject;
-        obscureVisualParams.myIsLocal = true;
+        obscureVisualParams.myLocal = true;
         obscureVisualParams.myTransform.mat4_setScale(vec3_create(this._myParams.myObscureRadius, this._myParams.myObscureRadius, this._myParams.myObscureRadius));
         this._myObscureVisual = new VisualMesh(obscureVisualParams);
 
@@ -334,7 +334,17 @@ export class PlayerObscureManager {
         if (visible) {
             this._myObscureParentObject.pp_setParent(this._myParams.myPlayerTransformManager.getHead(), false);
         } else {
-            this._myObscureParentObject.pp_setParent(null, false);
+            this._myObscureParentObject.pp_setParent(Globals.getPlayerObjects(this._myParams.myEngine)?.myPlayerCauldron, false);
         }
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myObscureVisual.destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

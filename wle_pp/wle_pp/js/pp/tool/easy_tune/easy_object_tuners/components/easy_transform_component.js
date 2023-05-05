@@ -1,5 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { isToolEnabled } from "../../../cauldron/tool_globals";
+import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils";
+import { Globals } from "../../../../pp/globals";
 import { EasyTransform } from "../easy_transform";
 
 export class EasyTransformComponent extends Component {
@@ -8,20 +9,20 @@ export class EasyTransformComponent extends Component {
         _myVariableName: Property.string(""),
         _mySetAsDefault: Property.bool(false),
         _myUseTuneTarget: Property.bool(false),
-        _myIsLocal: Property.bool(false),
+        _myLocal: Property.bool(false),
         _myScaleAsOne: Property.bool(true) // Edit all scale values together
     };
 
     init() {
         this._myEasyObjectTuner = null;
 
-        if (isToolEnabled(this.engine)) {
-            this._myEasyObjectTuner = new EasyTransform(this._myIsLocal, this._myScaleAsOne, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
+        if (Globals.isToolEnabled(this.engine)) {
+            this._myEasyObjectTuner = new EasyTransform(this._myLocal, this._myScaleAsOne, this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
         }
     }
 
     start() {
-        if (isToolEnabled(this.engine)) {
+        if (Globals.isToolEnabled(this.engine)) {
             if (this._myEasyObjectTuner != null) {
                 this._myEasyObjectTuner.start();
             }
@@ -29,7 +30,7 @@ export class EasyTransformComponent extends Component {
     }
 
     update(dt) {
-        if (isToolEnabled(this.engine)) {
+        if (Globals.isToolEnabled(this.engine)) {
             if (this._myEasyObjectTuner != null) {
                 this._myEasyObjectTuner.update(dt);
             }
@@ -37,15 +38,7 @@ export class EasyTransformComponent extends Component {
     }
 
     pp_clone(targetObject) {
-        let clonedComponent = targetObject.pp_addComponent(this.type, {
-            "_myVariableName": this._myVariableName,
-            "_mySetAsDefault": this._mySetAsDefault,
-            "_myUseTuneTarget": this._myUseTuneTarget,
-            "_myIsLocal": this._myIsLocal,
-            "_myScaleAsOne": this._myScaleAsOne,
-        });
-
-        clonedComponent.active = this.active;
+        let clonedComponent = ComponentUtils.cloneDefault(this, targetObject);
 
         return clonedComponent;
     }

@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { hasToolEnabled, isToolEnabled, removeToolEnabled, setToolEnabled } from "../tool_globals";
+import { Globals } from "../../../pp/globals";
 
 export class EnableToolsComponent extends Component {
     static TypeName = "pp-enable-tools";
@@ -11,16 +11,16 @@ export class EnableToolsComponent extends Component {
         this._myToolEnabled = null;
 
         // Prevents double global from same engine
-        if (!hasToolEnabled(this.engine)) {
+        if (!Globals.hasToolEnabled(this.engine)) {
             this._myToolEnabled = this._myEnable;
 
-            setToolEnabled(this._myToolEnabled, this.engine);
+            Globals.setToolEnabled(this._myToolEnabled, this.engine);
         }
     }
 
     onDestroy() {
-        if (this._myToolEnabled != null && isToolEnabled(this.engine) == this._myToolEnabled) {
-            removeToolEnabled(this.engine);
+        if (this._myToolEnabled != null && Globals.isToolEnabled(this.engine) == this._myToolEnabled) {
+            Globals.removeToolEnabled(this.engine);
         }
     }
 }

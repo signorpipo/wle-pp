@@ -1,8 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
 import { Timer } from "../../../../cauldron/cauldron/timer";
-import { getLeftGamepad } from "../../../../input/cauldron/input_globals";
 import { GamepadButtonID } from "../../../../input/gamepad/gamepad_buttons";
-import { isDebugEnabled } from "../../../debug_globals";
+import { Globals } from "../../../../pp/globals";
 import { DebugFunctionsPerformanceAnalysisResultsLogger, DebugFunctionsPerformanceAnalysisResultsLoggerParams } from "../debug_functions_performance_analysis_results_logger";
 import { DebugFunctionsPerformanceAnalyzer, DebugFunctionsPerformanceAnalyzerParams } from "../debug_functions_performance_analyzer";
 
@@ -41,7 +40,7 @@ export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
     init() {
         this._myActive = false;
 
-        if (isDebugEnabled(this.engine)) {
+        if (Globals.isDebugEnabled(this.engine)) {
             this._myActive = true;
 
             this._myFunctionsPerformanceAnalyzer = null;
@@ -75,7 +74,7 @@ export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
             }
 
             if (this._myResetMaxResultsShortcutEnabled) {
-                if (getLeftGamepad(this.engine).getButtonInfo(GamepadButtonID.SELECT).isPressEnd(3)) {
+                if (Globals.getLeftGamepad(this.engine).getButtonInfo(GamepadButtonID.SELECT).isPressEnd(3)) {
                     this._myFunctionsPerformanceAnalyzer.resetMaxResults();
                 }
             }
@@ -83,7 +82,7 @@ export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
     }
 
     _start() {
-        let functionsPerformanceAnalyzerParams = new DebugFunctionsPerformanceAnalyzerParams();
+        let functionsPerformanceAnalyzerParams = new DebugFunctionsPerformanceAnalyzerParams(this.engine);
 
         if (this._myObjectsByPath.length > 0) {
             let toIncludeList = [...this._myObjectsByPath.split(",")];

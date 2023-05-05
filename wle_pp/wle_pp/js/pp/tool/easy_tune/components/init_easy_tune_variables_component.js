@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { getEasyTuneVariables, hasEasyTuneVariables, removeEasyTuneVariables, setEasyTuneVariables } from "../easy_tune_globals";
+import { Globals } from "../../../pp/globals";
 import { EasyTuneVariables } from "../easy_tune_variables";
 
 export class InitEasyTuneVariablesComponent extends Component {
@@ -13,17 +13,17 @@ export class InitEasyTuneVariablesComponent extends Component {
 
         if (this._myInit) {
             // Prevents double global from same engine
-            if (!hasEasyTuneVariables(this.engine)) {
+            if (!Globals.hasEasyTuneVariables(this.engine)) {
                 this._myEasyTuneVariables = new EasyTuneVariables();
 
-                setEasyTuneVariables(this._myEasyTuneVariables, this.engine);
+                Globals.setEasyTuneVariables(this._myEasyTuneVariables, this.engine);
             }
         }
     }
 
     onDestroy() {
-        if (this._myEasyTuneVariables != null && getEasyTuneVariables(this.engine) == this._myEasyTuneVariables) {
-            removeEasyTuneVariables(this.engine);
+        if (this._myEasyTuneVariables != null && Globals.getEasyTuneVariables(this.engine) == this._myEasyTuneVariables) {
+            Globals.removeEasyTuneVariables(this.engine);
         }
     }
 }

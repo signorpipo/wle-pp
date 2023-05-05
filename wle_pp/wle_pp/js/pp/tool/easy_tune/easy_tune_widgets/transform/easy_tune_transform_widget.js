@@ -1,17 +1,18 @@
 import { GamepadAxesID } from "../../../../input/gamepad/gamepad_buttons";
-import { getMainEngine } from "../../../../cauldron/wl/engine_globals";
+import { mat4_create, vec3_create } from "../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../pp/globals";
 import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget";
-import { EasyTuneTransformWidgetSetup } from "./easy_tune_transform_widget_setup";
+import { EasyTuneTransformWidgetConfig } from "./easy_tune_transform_widget_config";
 import { EasyTuneTransformWidgetUI } from "./easy_tune_transform_widget_ui";
 
 export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
 
-    constructor(params, gamepad, engine = getMainEngine()) {
+    constructor(params, gamepad, engine = Globals.getMainEngine()) {
         super(params);
 
         this._myGamepad = gamepad;
 
-        this._mySetup = new EasyTuneTransformWidgetSetup();
+        this._myConfig = new EasyTuneTransformWidgetConfig();
         this._myUI = new EasyTuneTransformWidgetUI(engine);
 
         this._myValueButtonEditIntensity = 0;
@@ -19,8 +20,8 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         this._myStepButtonEditIntensity = 0;
         this._myStepButtonEditIntensityTimer = 0;
 
-        this._myValueEditActive = false;
-        this._myStepEditActive = false;
+        this._myValueEditEnabled = false;
+        this._myStepEditEnabled = false;
 
         this._myValueRealValue = 0;
         this._myComponentStepValue = 0;
@@ -30,22 +31,27 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         this._myValueEditIndex = -1;
         this._myComponentIndex = 0;
         this._myStepIndex = 0;
+
+        this._myTempTransformValue = mat4_create();
+        this._myTempPositionValue = vec3_create();
+        this._myTempRotationValue = vec3_create();
+        this._myTempScaleValue = vec3_create();
     }
 
     _setEasyTuneVariableHook() {
         if (this._myValueEditIndex >= 0) {
             switch (this._myComponentIndex) {
                 case 0:
-                    this._myValueRealValue = this._myVariable.myPosition[this._myValueEditIndex];
-                    this._myComponentStepValue = this._myVariable.myPositionStepPerSecond;
+                    this._myValueRealValue = this._myVariable._myPosition[this._myValueEditIndex];
+                    this._myComponentStepValue = this._myVariable._myPositionStepPerSecond;
                     break;
                 case 1:
-                    this._myValueRealValue = this._myVariable.myRotation[this._myValueEditIndex];
-                    this._myComponentStepValue = this._myVariable.myRotationStepPerSecond;
+                    this._myValueRealValue = this._myVariable._myRotation[this._myValueEditIndex];
+                    this._myComponentStepValue = this._myVariable._myRotationStepPerSecond;
                     break;
                 case 2:
-                    this._myValueRealValue = this._myVariable.myScale[this._myValueEditIndex];
-                    this._myComponentStepValue = this._myVariable.myScaleStepPerSecond;
+                    this._myValueRealValue = this._myVariable._myScale[this._myValueEditIndex];
+                    this._myComponentStepValue = this._myVariable._myScaleStepPerSecond;
                     break;
             }
         }
@@ -53,23 +59,31 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
 
     _refreshUIHook() {
         for (let i = 0; i < 3; i++) {
-            this._myUI.myPositionTextComponents[i].text = this._myVariable.myPosition[i].toFixed(this._myVariable.myDecimalPlaces);
+            this._myUI.myPositionTextComponents[i].text = this._myVariable._myPosition[i].toFixed(this._myVariable._myDecimalPlaces);
         }
-        this._myUI.myPositionStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myPositionStepPerSecond);
+        this._myUI.myPositionStepTextComponent.text = this._myConfig.myStepStartString.concat(this._myVariable._myPositionStepPerSecond);
 
         for (let i = 0; i < 3; i++) {
-            this._myUI.myRotationTextComponents[i].text = this._myVariable.myRotation[i].toFixed(this._myVariable.myDecimalPlaces);
+            this._myUI.myRotationTextComponents[i].text = this._myVariable._myRotation[i].toFixed(this._myVariable._myDecimalPlaces);
         }
-        this._myUI.myRotationStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myRotationStepPerSecond);
+        this._myUI.myRotationStepTextComponent.text = this._myConfig.myStepStartString.concat(this._myVariable._myRotationStepPerSecond);
 
         for (let i = 0; i < 3; i++) {
-            this._myUI.myScaleTextComponents[i].text = this._myVariable.myScale[i].toFixed(this._myVariable.myDecimalPlaces);
+            this._myUI.myScaleTextComponents[i].text = this._myVariable._myScale[i].toFixed(this._myVariable._myDecimalPlaces);
         }
-        this._myUI.myScaleStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myScaleStepPerSecond);
+        this._myUI.myScaleStepTextComponent.text = this._myConfig.myStepStartString.concat(this._myVariable._myScaleStepPerSecond);
     }
 
-    _startHook(parentObject, additionalSetup) {
-        this._myUI.setAdditionalButtonsActive(additionalSetup.myAdditionalButtonsEnabled);
+    _startHook(parentObject, easyTuneParams) {
+        this._myUI.setAdditionalButtonsVisible(easyTuneParams.myAdditionalButtonsVisible);
+    }
+
+    _setEasyTuneVariableHook() {
+        if (this._myVariable != null) {
+            this._myTempPositionValue.pp_copy(this._myVariable._myPosition);
+            this._myTempRotationValue.pp_copy(this._myVariable._myRotation);
+            this._myTempScaleValue.pp_copy(this._myVariable._myScale);
+        }
     }
 
     _updateHook(dt) {
@@ -82,14 +96,14 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         if (this._myGamepad) {
             let y = this._myGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes[1];
 
-            if (Math.abs(y) > this._mySetup.myEditThumbstickMinThreshold) {
-                let normalizedEditAmount = (Math.abs(y) - this._mySetup.myEditThumbstickMinThreshold) / (1 - this._mySetup.myEditThumbstickMinThreshold);
+            if (Math.abs(y) > this._myConfig.myEditThumbstickMinThreshold) {
+                let normalizedEditAmount = (Math.abs(y) - this._myConfig.myEditThumbstickMinThreshold) / (1 - this._myConfig.myEditThumbstickMinThreshold);
                 stickVariableIntensity = Math.sign(y) * normalizedEditAmount;
             }
         }
 
         let valueIntensity = 0;
-        if (this._myValueEditActive) {
+        if (this._myValueEditEnabled) {
             valueIntensity = stickVariableIntensity;
         } else if (this._myValueButtonEditIntensity != 0) {
             if (this._myValueButtonEditIntensityTimer <= 0) {
@@ -100,16 +114,20 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         }
 
         if (valueIntensity != 0) {
+            this._myTempPositionValue.pp_copy(this._myVariable._myPosition);
+            this._myTempRotationValue.pp_copy(this._myVariable._myRotation);
+            this._myTempScaleValue.pp_copy(this._myVariable._myScale);
+
             let amountToAdd = valueIntensity * this._myComponentStepValue * dt;
 
             this._myValueRealValue += amountToAdd;
 
-            let decimalPlacesMultiplier = Math.pow(10, this._myVariable.myDecimalPlaces);
+            let decimalPlacesMultiplier = Math.pow(10, this._myVariable._myDecimalPlaces);
 
             switch (this._myComponentIndex) {
                 case 0:
-                    this._myVariable.myPosition[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                    this._myUI.myPositionTextComponents[this._myValueEditIndex].text = this._myVariable.myPosition[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
+                    this._myTempPositionValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                    this._myUI.myPositionTextComponents[this._myValueEditIndex].text = this._myTempPositionValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
                     break;
                 case 1:
                     if (this._myValueRealValue > 180) {
@@ -126,46 +144,49 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
                         this._myValueRealValue = 180 - this._myValueRealValue;
                     }
 
-                    this._myVariable.myRotation[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                    this._myUI.myRotationTextComponents[this._myValueEditIndex].text = this._myVariable.myRotation[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
+                    this._myTempRotationValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                    this._myUI.myRotationTextComponents[this._myValueEditIndex].text = this._myTempRotationValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
                     break;
                 case 2:
                     if (this._myValueRealValue <= 0) {
                         this._myValueRealValue = 1 / decimalPlacesMultiplier;
                     }
 
-                    if (this._myVariable.myScaleAsOne) {
+                    if (this._myVariable._myScaleAsOne) {
                         let newValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                        let difference = newValue - this._myVariable.myScale[this._myValueEditIndex];
+                        let difference = newValue - this._myTempScaleValue[this._myValueEditIndex];
 
                         for (let i = 0; i < 3; i++) {
-                            this._myVariable.myScale[i] = Math.round((this._myVariable.myScale[i] + difference) * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                            this._myVariable.myScale[i] = Math.max(this._myVariable.myScale[i], 1 / decimalPlacesMultiplier);
-                            this._myUI.myScaleTextComponents[i].text = this._myVariable.myScale[i].toFixed(this._myVariable.myDecimalPlaces);
+                            this._myTempScaleValue[i] = Math.round((this._myTempScaleValue[i] + difference) * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                            this._myTempScaleValue[i] = Math.max(this._myTempScaleValue[i], 1 / decimalPlacesMultiplier);
+                            this._myUI.myScaleTextComponents[i].text = this._myTempScaleValue[i].toFixed(this._myVariable._myDecimalPlaces);
                         }
                     } else {
-                        this._myVariable.myScale[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                        this._myVariable.myScale[this._myValueEditIndex] = Math.max(this._myVariable.myScale[this._myValueEditIndex], 1 / decimalPlacesMultiplier);
-                        this._myUI.myScaleTextComponents[this._myValueEditIndex].text = this._myVariable.myScale[this._myValueEditIndex].toFixed(this._myVariable.myDecimalPlaces);
+                        this._myTempScaleValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                        this._myTempScaleValue[this._myValueEditIndex] = Math.max(this._myTempScaleValue[this._myValueEditIndex], 1 / decimalPlacesMultiplier);
+                        this._myUI.myScaleTextComponents[this._myValueEditIndex].text = this._myTempScaleValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
                     }
                     break;
             }
+
+            this._myTempTransformValue.mat4_setPositionRotationDegreesScale(this._myTempPositionValue, this._myTempRotationValue, this._myTempScaleValue);
+            this._myVariable.setValue(this._myTempTransformValue);
         } else {
             switch (this._myComponentIndex) {
                 case 0:
-                    this._myValueRealValue = this._myVariable.myPosition[this._myValueEditIndex];
+                    this._myValueRealValue = this._myVariable._myPosition[this._myValueEditIndex];
                     break;
                 case 1:
-                    this._myValueRealValue = this._myVariable.myRotation[this._myValueEditIndex];
+                    this._myValueRealValue = this._myVariable._myRotation[this._myValueEditIndex];
                     break;
                 case 2:
-                    this._myValueRealValue = this._myVariable.myScale[this._myValueEditIndex];
+                    this._myValueRealValue = this._myVariable._myScale[this._myValueEditIndex];
                     break;
             }
         }
 
         let stepIntensity = 0;
-        if (this._myStepEditActive) {
+        if (this._myStepEditEnabled) {
             stepIntensity = stickVariableIntensity;
         } else if (this._myStepButtonEditIntensity != 0) {
             if (this._myStepButtonEditIntensityTimer <= 0) {
@@ -181,7 +202,7 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
                 amountToAdd = Math.sign(stepIntensity) * 1;
                 this._myStepFastEdit = false;
             } else {
-                amountToAdd = stepIntensity * this._mySetup.myStepMultiplierStepPerSecond * dt;
+                amountToAdd = stepIntensity * this._myConfig.myStepMultiplierStepPerSecond * dt;
             }
 
             this._myStepMultiplierValue += amountToAdd;
@@ -189,13 +210,13 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
                 let stepValue = 0;
                 switch (this._myStepIndex) {
                     case 0:
-                        stepValue = this._myVariable.myPositionStepPerSecond;
+                        stepValue = this._myVariable._myPositionStepPerSecond;
                         break;
                     case 1:
-                        stepValue = this._myVariable.myRotationStepPerSecond;
+                        stepValue = this._myVariable._myRotationStepPerSecond;
                         break;
                     case 2:
-                        stepValue = this._myVariable.myScaleStepPerSecond;
+                        stepValue = this._myVariable._myScaleStepPerSecond;
                         break;
                     default:
                         stepValue = 0;
@@ -217,144 +238,132 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
     _addListenersHook() {
         let ui = this._myUI;
 
-        ui.myVariableLabelCursorTargetComponent.addClickFunction(this._resetAllValues.bind(this));
-        ui.myVariableLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myVariableLabelText));
-        ui.myVariableLabelCursorTargetComponent.addUnHoverFunction(this._genericTextUnHover.bind(this, ui.myVariableLabelText, this._mySetup.myVariableLabelTextScale));
+        ui.myVariableLabelCursorTargetComponent.onClick.add(this._resetAllValues.bind(this));
+        ui.myVariableLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myVariableLabelText));
+        ui.myVariableLabelCursorTargetComponent.onUnhover.add(this._genericTextUnHover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
 
-        ui.myPositionLabelCursorTargetComponent.addClickFunction(this._resetComponentValues.bind(this, 0));
-        ui.myPositionLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myPositionLabelText));
-        ui.myPositionLabelCursorTargetComponent.addUnHoverFunction(this._genericTextUnHover.bind(this, ui.myPositionLabelText, this._mySetup.myComponentLabelTextScale));
+        ui.myPositionLabelCursorTargetComponent.onClick.add(this._resetComponentValues.bind(this, 0));
+        ui.myPositionLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myPositionLabelText));
+        ui.myPositionLabelCursorTargetComponent.onUnhover.add(this._genericTextUnHover.bind(this, ui.myPositionLabelText, this._myConfig.myComponentLabelTextScale));
         for (let i = 0; i < 3; i++) {
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, 0, i, 1));
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addDownOnHoverFunction(this._setValueEditIntensity.bind(this, 0, i, 1));
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, 0, i, 0));
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addUpWithNoDownFunction(this._setValueEditIntensity.bind(this, 0, i, 0));
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, 0, i, 0));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, 0, i, -1));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addDownOnHoverFunction(this._setValueEditIntensity.bind(this, 0, i, -1));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, 0, i, 0));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addUpWithNoDownFunction(this._setValueEditIntensity.bind(this, 0, i, 0));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, 0, i, 0));
+            ui.myPositionIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 0, i, 1));
+            ui.myPositionIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 0, i, 1));
+            ui.myPositionIncreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 0, i, 0));
+            ui.myPositionIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 0, i, 0));
+            ui.myPositionDecreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 0, i, -1));
+            ui.myPositionDecreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 0, i, -1));
+            ui.myPositionDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 0, i, 0));
+            ui.myPositionDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 0, i, 0));
 
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
-            ui.myPositionIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
-            ui.myPositionDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
+            ui.myPositionIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
+            ui.myPositionIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
+            ui.myPositionDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
+            ui.myPositionDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
 
-            ui.myPositionCursorTargetComponents[i].addClickFunction(this._resetValue.bind(this, 0, i));
-            ui.myPositionCursorTargetComponents[i].addHoverFunction(this._setValueEditActive.bind(this, 0, i, ui.myPositionTexts[i], true));
-            ui.myPositionCursorTargetComponents[i].addUnHoverFunction(this._setValueEditActive.bind(this, 0, i, ui.myPositionTexts[i], false));
+            ui.myPositionCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, 0, i));
+            ui.myPositionCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, 0, i, ui.myPositionTexts[i], true));
+            ui.myPositionCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, 0, i, ui.myPositionTexts[i], false));
         }
 
-        ui.myRotationLabelCursorTargetComponent.addClickFunction(this._resetComponentValues.bind(this, 1));
-        ui.myRotationLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myRotationLabelText));
-        ui.myRotationLabelCursorTargetComponent.addUnHoverFunction(this._genericTextUnHover.bind(this, ui.myRotationLabelText, this._mySetup.myComponentLabelTextScale));
+        ui.myRotationLabelCursorTargetComponent.onClick.add(this._resetComponentValues.bind(this, 1));
+        ui.myRotationLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myRotationLabelText));
+        ui.myRotationLabelCursorTargetComponent.onUnhover.add(this._genericTextUnHover.bind(this, ui.myRotationLabelText, this._myConfig.myComponentLabelTextScale));
         for (let i = 0; i < 3; i++) {
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, 1, i, 1));
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addDownOnHoverFunction(this._setValueEditIntensity.bind(this, 1, i, 1));
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, 1, i, 0));
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addUpWithNoDownFunction(this._setValueEditIntensity.bind(this, 1, i, 0));
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, 1, i, 0));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, 1, i, -1));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addDownOnHoverFunction(this._setValueEditIntensity.bind(this, 1, i, -1));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, 1, i, 0));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addUpWithNoDownFunction(this._setValueEditIntensity.bind(this, 1, i, 0));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, 1, i, 0));
+            ui.myRotationIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 1, i, 1));
+            ui.myRotationIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 1, i, 1));
+            ui.myRotationIncreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 1, i, 0));
+            ui.myRotationIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 1, i, 0));
+            ui.myRotationDecreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 1, i, -1));
+            ui.myRotationDecreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 1, i, -1));
+            ui.myRotationDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 1, i, 0));
+            ui.myRotationDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 1, i, 0));
 
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
-            ui.myRotationIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
-            ui.myRotationDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
+            ui.myRotationIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
+            ui.myRotationIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
+            ui.myRotationDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
+            ui.myRotationDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
 
-            ui.myRotationCursorTargetComponents[i].addClickFunction(this._resetValue.bind(this, 1, i));
-            ui.myRotationCursorTargetComponents[i].addHoverFunction(this._setValueEditActive.bind(this, 1, i, ui.myRotationTexts[i], true));
-            ui.myRotationCursorTargetComponents[i].addUnHoverFunction(this._setValueEditActive.bind(this, 1, i, ui.myRotationTexts[i], false));
+            ui.myRotationCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, 1, i));
+            ui.myRotationCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, 1, i, ui.myRotationTexts[i], true));
+            ui.myRotationCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, 1, i, ui.myRotationTexts[i], false));
         }
 
-        ui.myScaleLabelCursorTargetComponent.addClickFunction(this._resetComponentValues.bind(this, 2));
-        ui.myScaleLabelCursorTargetComponent.addHoverFunction(this._genericTextHover.bind(this, ui.myScaleLabelText));
-        ui.myScaleLabelCursorTargetComponent.addUnHoverFunction(this._genericTextUnHover.bind(this, ui.myScaleLabelText, this._mySetup.myComponentLabelTextScale));
+        ui.myScaleLabelCursorTargetComponent.onClick.add(this._resetComponentValues.bind(this, 2));
+        ui.myScaleLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myScaleLabelText));
+        ui.myScaleLabelCursorTargetComponent.onUnhover.add(this._genericTextUnHover.bind(this, ui.myScaleLabelText, this._myConfig.myComponentLabelTextScale));
         for (let i = 0; i < 3; i++) {
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, 2, i, 1));
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addDownOnHoverFunction(this._setValueEditIntensity.bind(this, 2, i, 1));
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, 2, i, 0));
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addUpWithNoDownFunction(this._setValueEditIntensity.bind(this, 2, i, 0));
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, 2, i, 0));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addDownFunction(this._setValueEditIntensity.bind(this, 2, i, -1));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addDownOnHoverFunction(this._setValueEditIntensity.bind(this, 2, i, -1));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addUpFunction(this._setValueEditIntensity.bind(this, 2, i, 0));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addUpWithNoDownFunction(this._setValueEditIntensity.bind(this, 2, i, 0));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._setValueEditIntensity.bind(this, 2, i, 0));
+            ui.myScaleIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 2, i, 1));
+            ui.myScaleIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 2, i, 1));
+            ui.myScaleIncreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 2, i, 0));
+            ui.myScaleIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 2, i, 0));
+            ui.myScaleDecreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 2, i, -1));
+            ui.myScaleDecreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 2, i, -1));
+            ui.myScaleDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 2, i, 0));
+            ui.myScaleDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 2, i, 0));
 
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
-            ui.myScaleIncreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addHoverFunction(this._genericHover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
-            ui.myScaleDecreaseButtonCursorTargetComponents[i].addUnHoverFunction(this._genericUnHover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
+            ui.myScaleIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
+            ui.myScaleIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
+            ui.myScaleDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
+            ui.myScaleDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
 
-            ui.myScaleCursorTargetComponents[i].addClickFunction(this._resetValue.bind(this, 2, i));
-            ui.myScaleCursorTargetComponents[i].addHoverFunction(this._setValueEditActive.bind(this, 2, i, ui.myScaleTexts[i], true));
-            ui.myScaleCursorTargetComponents[i].addUnHoverFunction(this._setValueEditActive.bind(this, 2, i, ui.myScaleTexts[i], false));
+            ui.myScaleCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, 2, i));
+            ui.myScaleCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, 2, i, ui.myScaleTexts[i], true));
+            ui.myScaleCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, 2, i, ui.myScaleTexts[i], false));
         }
 
-        ui.myPositionStepCursorTargetComponent.addClickFunction(this._resetStep.bind(this, 0));
-        ui.myPositionStepCursorTargetComponent.addHoverFunction(this._setStepEditActive.bind(this, 0, ui.myPositionStepText, true));
-        ui.myPositionStepCursorTargetComponent.addUnHoverFunction(this._setStepEditActive.bind(this, 0, ui.myPositionStepText, false));
+        ui.myPositionStepCursorTargetComponent.onClick.add(this._resetStep.bind(this, 0));
+        ui.myPositionStepCursorTargetComponent.onHover.add(this._setStepEditEnabled.bind(this, 0, ui.myPositionStepText, true));
+        ui.myPositionStepCursorTargetComponent.onUnhover.add(this._setStepEditEnabled.bind(this, 0, ui.myPositionStepText, false));
 
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 0, 1));
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addDownOnHoverFunction(this._setStepEditIntensity.bind(this, 0, 1));
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 0, 0));
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addUpWithNoDownFunction(this._setStepEditIntensity.bind(this, 0, 0));
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, 0, 0));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 0, -1));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addDownOnHoverFunction(this._setStepEditIntensity.bind(this, 0, -1));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 0, 0));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addUpWithNoDownFunction(this._setStepEditIntensity.bind(this, 0, 0));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, 0, 0));
+        ui.myPositionStepIncreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 0, 1));
+        ui.myPositionStepIncreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 0, 1));
+        ui.myPositionStepIncreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 0, 0));
+        ui.myPositionStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 0, 0));
+        ui.myPositionStepDecreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 0, -1));
+        ui.myPositionStepDecreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 0, -1));
+        ui.myPositionStepDecreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 0, 0));
+        ui.myPositionStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 0, 0));
 
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
-        ui.myPositionStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
-        ui.myPositionStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
+        ui.myPositionStepIncreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
+        ui.myPositionStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
+        ui.myPositionStepDecreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
+        ui.myPositionStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
 
-        ui.myRotationStepCursorTargetComponent.addClickFunction(this._resetStep.bind(this, 1));
-        ui.myRotationStepCursorTargetComponent.addHoverFunction(this._setStepEditActive.bind(this, 1, ui.myRotationStepText, true));
-        ui.myRotationStepCursorTargetComponent.addUnHoverFunction(this._setStepEditActive.bind(this, 1, ui.myRotationStepText, false));
+        ui.myRotationStepCursorTargetComponent.onClick.add(this._resetStep.bind(this, 1));
+        ui.myRotationStepCursorTargetComponent.onHover.add(this._setStepEditEnabled.bind(this, 1, ui.myRotationStepText, true));
+        ui.myRotationStepCursorTargetComponent.onUnhover.add(this._setStepEditEnabled.bind(this, 1, ui.myRotationStepText, false));
 
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 1, 1));
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addDownOnHoverFunction(this._setStepEditIntensity.bind(this, 1, 1));
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 1, 0));
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addUpWithNoDownFunction(this._setStepEditIntensity.bind(this, 1, 0));
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, 1, 0));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 1, -1));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addDownOnHoverFunction(this._setStepEditIntensity.bind(this, 1, -1));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 1, 0));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addUpWithNoDownFunction(this._setStepEditIntensity.bind(this, 1, 0));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, 1, 0));
+        ui.myRotationStepIncreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 1, 1));
+        ui.myRotationStepIncreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 1, 1));
+        ui.myRotationStepIncreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 1, 0));
+        ui.myRotationStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 1, 0));
+        ui.myRotationStepDecreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 1, -1));
+        ui.myRotationStepDecreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 1, -1));
+        ui.myRotationStepDecreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 1, 0));
+        ui.myRotationStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 1, 0));
 
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
-        ui.myRotationStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
-        ui.myRotationStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
+        ui.myRotationStepIncreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
+        ui.myRotationStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
+        ui.myRotationStepDecreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
+        ui.myRotationStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
 
-        ui.myScaleStepCursorTargetComponent.addClickFunction(this._resetStep.bind(this, 2));
-        ui.myScaleStepCursorTargetComponent.addHoverFunction(this._setStepEditActive.bind(this, 2, ui.myScaleStepText, true));
-        ui.myScaleStepCursorTargetComponent.addUnHoverFunction(this._setStepEditActive.bind(this, 2, ui.myScaleStepText, false));
+        ui.myScaleStepCursorTargetComponent.onClick.add(this._resetStep.bind(this, 2));
+        ui.myScaleStepCursorTargetComponent.onHover.add(this._setStepEditEnabled.bind(this, 2, ui.myScaleStepText, true));
+        ui.myScaleStepCursorTargetComponent.onUnhover.add(this._setStepEditEnabled.bind(this, 2, ui.myScaleStepText, false));
 
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 2, 1));
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addDownOnHoverFunction(this._setStepEditIntensity.bind(this, 2, 1));
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 2, 0));
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addUpWithNoDownFunction(this._setStepEditIntensity.bind(this, 2, 0));
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, 2, 0));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addDownFunction(this._setStepEditIntensity.bind(this, 2, -1));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addDownOnHoverFunction(this._setStepEditIntensity.bind(this, 2, -1));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addUpFunction(this._setStepEditIntensity.bind(this, 2, 0));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addUpWithNoDownFunction(this._setStepEditIntensity.bind(this, 2, 0));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._setStepEditIntensity.bind(this, 2, 0));
+        ui.myScaleStepIncreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 2, 1));
+        ui.myScaleStepIncreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 2, 1));
+        ui.myScaleStepIncreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 2, 0));
+        ui.myScaleStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 2, 0));
+        ui.myScaleStepDecreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 2, -1));
+        ui.myScaleStepDecreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 2, -1));
+        ui.myScaleStepDecreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 2, 0));
+        ui.myScaleStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 2, 0));
 
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
-        ui.myScaleStepIncreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addHoverFunction(this._genericHover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
-        ui.myScaleStepDecreaseButtonCursorTargetComponent.addUnHoverFunction(this._genericUnHover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
+        ui.myScaleStepIncreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
+        ui.myScaleStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
+        ui.myScaleStepDecreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
+        ui.myScaleStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
 
     }
 
@@ -363,20 +372,20 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
             if (value != 0) {
                 switch (componentIndex) {
                     case 0:
-                        this._myValueRealValue = this._myVariable.myPosition[index];
-                        this._myComponentStepValue = this._myVariable.myPositionStepPerSecond;
+                        this._myValueRealValue = this._myVariable._myPosition[index];
+                        this._myComponentStepValue = this._myVariable._myPositionStepPerSecond;
                         break;
                     case 1:
-                        this._myValueRealValue = this._myVariable.myRotation[index];
-                        this._myComponentStepValue = this._myVariable.myRotationStepPerSecond;
+                        this._myValueRealValue = this._myVariable._myRotation[index];
+                        this._myComponentStepValue = this._myVariable._myRotationStepPerSecond;
                         break;
                     case 2:
-                        this._myValueRealValue = this._myVariable.myScale[index];
-                        this._myComponentStepValue = this._myVariable.myScaleStepPerSecond;
+                        this._myValueRealValue = this._myVariable._myScale[index];
+                        this._myComponentStepValue = this._myVariable._myScaleStepPerSecond;
                         break;
                 }
 
-                this._myValueButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
+                this._myValueButtonEditIntensityTimer = this._myConfig.myButtonEditDelay;
                 this._myValueEditIndex = index;
                 this._myComponentIndex = componentIndex;
             }
@@ -388,7 +397,7 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
     _setStepEditIntensity(index, value) {
         if (this._isActive() || value == 0) {
             if (value != 0) {
-                this._myStepButtonEditIntensityTimer = this._mySetup.myButtonEditDelay;
+                this._myStepButtonEditIntensityTimer = this._myConfig.myButtonEditDelay;
             }
 
             this._myStepButtonEditIntensity = value;
@@ -397,66 +406,72 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         }
     }
 
-    _setValueEditActive(componentIndex, index, text, active) {
-        if (this._isActive() || !active) {
-            if (active) {
+    _setValueEditEnabled(componentIndex, index, text, enabled) {
+        if (this._isActive() || !enabled) {
+            if (enabled) {
                 switch (componentIndex) {
                     case 0:
-                        this._myValueRealValue = this._myVariable.myPosition[index];
-                        this._myComponentStepValue = this._myVariable.myPositionStepPerSecond;
+                        this._myValueRealValue = this._myVariable._myPosition[index];
+                        this._myComponentStepValue = this._myVariable._myPositionStepPerSecond;
                         break;
                     case 1:
-                        this._myValueRealValue = this._myVariable.myRotation[index];
-                        this._myComponentStepValue = this._myVariable.myRotationStepPerSecond;
+                        this._myValueRealValue = this._myVariable._myRotation[index];
+                        this._myComponentStepValue = this._myVariable._myRotationStepPerSecond;
                         break;
                     case 2:
-                        this._myValueRealValue = this._myVariable.myScale[index];
-                        this._myComponentStepValue = this._myVariable.myScaleStepPerSecond;
+                        this._myValueRealValue = this._myVariable._myScale[index];
+                        this._myComponentStepValue = this._myVariable._myScaleStepPerSecond;
                         break;
                 }
 
                 this._myValueEditIndex = index;
                 this._myComponentIndex = componentIndex;
-                text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
+                text.pp_scaleObject(this._myConfig.myTextHoverScaleMultiplier);
             } else {
-                text.pp_setScaleWorld(this._mySetup.myValueTextScale);
+                text.pp_setScaleLocal(this._myConfig.myValueTextScale);
             }
 
-            this._myValueEditActive = active;
+            this._myValueEditEnabled = enabled;
         }
     }
 
-    _setStepEditActive(index, text, active) {
-        if (this._isActive() || !active) {
-            if (active) {
-                text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
+    _setStepEditEnabled(index, text, enabled) {
+        if (this._isActive() || !enabled) {
+            if (enabled) {
+                text.pp_scaleObject(this._myConfig.myTextHoverScaleMultiplier);
             } else {
-                text.pp_setScaleWorld(this._mySetup.myStepTextScale);
+                text.pp_setScaleLocal(this._myConfig.myStepTextScale);
             }
 
-            this._myStepEditActive = active;
+            this._myStepEditEnabled = enabled;
             this._myStepIndex = index;
         }
     }
 
     _resetValue(componentIndex, index) {
         if (this._isActive()) {
+            this._myTempPositionValue.pp_copy(this._myVariable._myPosition);
+            this._myTempRotationValue.pp_copy(this._myVariable._myRotation);
+            this._myTempScaleValue.pp_copy(this._myVariable._myScale);
+
             switch (componentIndex) {
                 case 0:
-                    this._myVariable.myPosition[index] = this._myVariable.myDefaultPosition[index];
-                    this._myUI.myPositionTextComponents[index].text = this._myVariable.myPosition[index].toFixed(this._myVariable.myDecimalPlaces);
+                    this._myTempPositionValue[index] = this._myVariable._myDefaultPosition[index];
+                    this._myUI.myPositionTextComponents[index].text = this._myTempPositionValue[index].toFixed(this._myVariable._myDecimalPlaces);
                     break;
                 case 1:
-                    this._myVariable.myRotation[index] = this._myVariable.myDefaultRotation[index];
-                    this._myUI.myRotationTextComponents[index].text = this._myVariable.myRotation[index].toFixed(this._myVariable.myDecimalPlaces);
+                    this._myTempRotationValue[index] = this._myVariable._myDefaultRotation[index];
+                    this._myUI.myRotationTextComponents[index].text = this._myTempRotationValue[index].toFixed(this._myVariable._myDecimalPlaces);
                     break;
                 case 2:
-                    this._myVariable.myScale[index] = this._myVariable.myDefaultScale[index];
-                    this._myUI.myScaleTextComponents[index].text = this._myVariable.myScale[index].toFixed(this._myVariable.myDecimalPlaces);
+                    this._myTempScaleValue[index] = this._myVariable._myDefaultScale[index];
+                    this._myUI.myScaleTextComponents[index].text = this._myTempScaleValue[index].toFixed(this._myVariable._myDecimalPlaces);
                     break;
-                default:
-                    defaultValue = 0;
+
             }
+
+            this._myTempTransformValue.mat4_setPositionRotationDegreesScale(this._myTempPositionValue, this._myTempRotationValue, this._myTempScaleValue);
+            this._myVariable.setValue(this._myTempTransformValue);
         }
     }
 
@@ -477,13 +492,13 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
             let defaultValue = 0;
             switch (index) {
                 case 0:
-                    defaultValue = this._myVariable.myDefaultPositionStepPerSecond;
+                    defaultValue = this._myVariable._myDefaultPositionStepPerSecond;
                     break;
                 case 1:
-                    defaultValue = this._myVariable.myDefaultRotationStepPerSecond;
+                    defaultValue = this._myVariable._myDefaultRotationStepPerSecond;
                     break;
                 case 2:
-                    defaultValue = this._myVariable.myDefaultScaleStepPerSecond;
+                    defaultValue = this._myVariable._myDefaultScaleStepPerSecond;
                     break;
                 default:
                     defaultValue = 0;
@@ -498,25 +513,25 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
 
         switch (index) {
             case 0:
-                this._myVariable.myPositionStepPerSecond = step;
-                this._myUI.myPositionStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myPositionStepPerSecond);
+                this._myVariable._myPositionStepPerSecond = step;
+                this._myUI.myPositionStepTextComponent.text = this._myConfig.myStepStartString.concat(this._myVariable._myPositionStepPerSecond);
                 break;
             case 1:
-                this._myVariable.myRotationStepPerSecond = step;
-                this._myUI.myRotationStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myRotationStepPerSecond);
+                this._myVariable._myRotationStepPerSecond = step;
+                this._myUI.myRotationStepTextComponent.text = this._myConfig.myStepStartString.concat(this._myVariable._myRotationStepPerSecond);
                 break;
             case 2:
-                this._myVariable.myScaleStepPerSecond = step;
-                this._myUI.myScaleStepTextComponent.text = this._mySetup.myStepStartString.concat(this._myVariable.myScaleStepPerSecond);
+                this._myVariable._myScaleStepPerSecond = step;
+                this._myUI.myScaleStepTextComponent.text = this._myConfig.myStepStartString.concat(this._myVariable._myScaleStepPerSecond);
                 break;
         }
     }
 
     _genericTextHover(text) {
-        text.pp_scaleObject(this._mySetup.myTextHoverScaleMultiplier);
+        text.pp_scaleObject(this._myConfig.myTextHoverScaleMultiplier);
     }
 
     _genericTextUnHover(text, originalScale) {
-        text.pp_setScaleWorld(originalScale);
+        text.pp_setScaleLocal(originalScale);
     }
 }

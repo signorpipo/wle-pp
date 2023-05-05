@@ -4,9 +4,9 @@ import { EasyObjectTuner } from "./easy_object_tuner";
 
 export class EasyTransform extends EasyObjectTuner {
 
-    constructor(isLocal, scaleAsOne, object, variableName, setAsDefault, useTuneTarget, engine) {
+    constructor(local, scaleAsOne, object, variableName, setAsDefault, useTuneTarget, engine) {
         super(object, variableName, setAsDefault, useTuneTarget, engine);
-        this._myIsLocal = isLocal;
+        this._myLocal = local;
         this._myScaleAsOne = scaleAsOne;
     }
 
@@ -19,7 +19,7 @@ export class EasyTransform extends EasyObjectTuner {
     }
 
     _getObjectValue(object) {
-        return this._myIsLocal ? object.pp_getTransformLocal() : object.pp_getTransform();
+        return this._myLocal ? object.pp_getTransformLocal() : object.pp_getTransform();
     }
 
     _getDefaultValue() {
@@ -27,7 +27,7 @@ export class EasyTransform extends EasyObjectTuner {
     }
 
     _updateObjectValue(object, value) {
-        if (this._myIsLocal) {
+        if (this._myLocal) {
             object.pp_setTransformLocal(value);
         } else {
             object.pp_setTransform(value);

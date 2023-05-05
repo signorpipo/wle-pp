@@ -40,10 +40,10 @@ export class GamepadButtonInfo {
         this.myID = id;
         this.myHandedness = handedness;
 
-        this.myIsPressed = false;
+        this.myPressed = false;
         this.myPrevIsPressed = false;
 
-        this.myIsTouched = false;
+        this.myTouched = false;
         this.myPrevIsTouched = false;
 
         this.myValue = 0.0;
@@ -85,34 +85,34 @@ export class GamepadButtonInfo {
     }
 
     isPressed() {
-        return this.myIsPressed;
+        return this.myPressed;
     }
 
     isTouched() {
-        return this.myIsTouched;
+        return this.myTouched;
     }
 
     isPressStart(multiplePressCount = null) {
-        return (this.myIsPressed && !this.myPrevIsPressed) && (multiplePressCount == null || this.myMultiplePressStartCount == multiplePressCount);
+        return (this.myPressed && !this.myPrevIsPressed) && (multiplePressCount == null || this.myMultiplePressStartCount == multiplePressCount);
     }
 
     isPressEnd(multiplePressCount = null) {
-        return (!this.myIsPressed && this.myPrevIsPressed) && (multiplePressCount == null || this.myMultiplePressEndCount == multiplePressCount);
+        return (!this.myPressed && this.myPrevIsPressed) && (multiplePressCount == null || this.myMultiplePressEndCount == multiplePressCount);
     }
 
     isTouchStart(multipleTouchCount = null) {
-        return (this.myIsTouched && !this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchStartCount == multipleTouchCount);
+        return (this.myTouched && !this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchStartCount == multipleTouchCount);
     }
 
     isTouchEnd(multipleTouchCount = null) {
-        return (!this.myIsTouched && this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchEndCount == multipleTouchCount);
+        return (!this.myTouched && this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchEndCount == multipleTouchCount);
     }
 
     clone() {
         let value = new GamepadButtonInfo(this.myID, this.myHandedness);
-        value.myIsPressed = this.myIsPressed;
+        value.myPressed = this.myPressed;
         value.myPrevIsPressed = this.myPrevIsPressed;
-        value.myIsTouched = this.myIsTouched;
+        value.myTouched = this.myTouched;
         value.myPrevIsTouched = this.myPrevIsTouched;
         value.myValue = this.myValue;
         value.myPrevValue = this.myPrevValue;
@@ -179,14 +179,14 @@ export class GamepadPulseInfo {
         this.myIntensity = 0.0;
         this.myDuration = 0.0;
 
-        this.myIsDevicePulsing = false; // true if the gamepad actually sent a request to pulse to the device
+        this.myDevicePulsing = false; // true if the gamepad actually sent a request to pulse to the device
     }
 
     clone() {
         let value = new GamepadPulseInfo();
         value.myIntensity = this.myIntensity;
         value.myDuration = this.myDuration;
-        value.myIsDevicePulsing = this.myIsDevicePulsing;
+        value.myDevicePulsing = this.myDevicePulsing;
 
         return value;
     }

@@ -1,20 +1,19 @@
-import { getMainEngine } from "../../cauldron/wl/engine_globals";
-import { getEasyTuneVariables } from "./easy_tune_globals";
+import { Globals } from "../../pp/globals";
 
-let _mySetEasyTuneWidgetActiveVariableCallbacks = new WeakMap();
-let _myRefreshEasyTuneWidgetCallbacks = new WeakMap();
+let _mySetWidgetActiveVariableCallbacks = new WeakMap();    // Signature: callback(variableName)
+let _myRefreshWidgetCallbacks = new WeakMap();              // Signature: callback()
 
-export function setEasyTuneWidgetActiveVariable(variableName, engine = getMainEngine()) {
-    if (_mySetEasyTuneWidgetActiveVariableCallbacks.has(engine)) {
-        for (let callback of _mySetEasyTuneWidgetActiveVariableCallbacks.get(engine).values()) {
+export function setWidgetActiveVariable(variableName, engine = Globals.getMainEngine()) {
+    if (_mySetWidgetActiveVariableCallbacks.has(engine)) {
+        for (let callback of _mySetWidgetActiveVariableCallbacks.get(engine).values()) {
             callback(variableName);
         }
     }
 }
 
-export function refreshEasyTuneWidget(engine = getMainEngine()) {
-    if (_myRefreshEasyTuneWidgetCallbacks.has(engine)) {
-        for (let callback of _myRefreshEasyTuneWidgetCallbacks.get(engine).values()) {
+export function refreshWidget(engine = Globals.getMainEngine()) {
+    if (_myRefreshWidgetCallbacks.has(engine)) {
+        for (let callback of _myRefreshWidgetCallbacks.get(engine).values()) {
             callback();
         }
     }
@@ -22,14 +21,14 @@ export function refreshEasyTuneWidget(engine = getMainEngine()) {
 
 // fileURL can contain parameters inside brackets, like {param}
 // Those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-export function importEasyTuneVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, onSuccessCallback = null, onFailureCallback = null, engine = getMainEngine()) {
+export function importVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
     if (fileURL == null || fileURL.length == 0) {
-        if (navigator.clipboard) {
-            navigator.clipboard.readText().then(
+        if (Globals.getNavigator(engine).clipboard) {
+            Globals.getNavigator(engine).clipboard.readText().then(
                 function (clipboard) {
-                    getEasyTuneVariables(engine).fromJSON(clipboard, resetVariablesDefaultValueOnImport);
+                    Globals.getEasyTuneVariables(engine).fromJSON(clipboard, resetVariablesDefaultValueOnImport);
 
-                    refreshEasyTuneWidget(engine);
+                    EasyTuneUtils.refreshWidget(engine);
 
                     if (onSuccessCallback != null) {
                         onSuccessCallback();
@@ -54,16 +53,16 @@ export function importEasyTuneVariables(fileURL = null, resetVariablesDefaultVal
             });
         }
     } else {
-        let replacedFileURL = _importExportEasyTuneVariablesReplaceFileURLParams(fileURL);
+        let replacedFileURL = _importExportVariablesReplaceFileURLParams(fileURL, engine);
 
         fetch(replacedFileURL).then(
             function (response) {
                 if (response.ok) {
                     response.text().then(
                         function (text) {
-                            getEasyTuneVariables(engine).fromJSON(text, resetVariablesDefaultValueOnImport);
+                            Globals.getEasyTuneVariables(engine).fromJSON(text, resetVariablesDefaultValueOnImport);
 
-                            refreshEasyTuneWidget(engine);
+                            EasyTuneUtils.refreshWidget(engine);
 
                             if (onSuccessCallback != null) {
                                 onSuccessCallback();
@@ -108,17 +107,17 @@ export function importEasyTuneVariables(fileURL = null, resetVariablesDefaultVal
         });
     }
 
-    refreshEasyTuneWidget(engine);
+    EasyTuneUtils.refreshWidget(engine);
 }
 
 // fileURL can contain parameters inside brackets, like {param}
 // Those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-export function exportEasyTuneVariables(fileURL = null, onSuccessCallback = null, onFailureCallback = null, engine = getMainEngine()) {
-    let jsonVariables = getEasyTuneVariables(engine).toJSON();
+export function exportVariables(fileURL = null, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
+    let jsonVariables = Globals.getEasyTuneVariables(engine).toJSON();
 
     if (fileURL == null || fileURL.length == 0) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(jsonVariables).then(
+        if (Globals.getNavigator(engine).clipboard) {
+            Globals.getNavigator(engine).clipboard.writeText(jsonVariables).then(
                 function () {
                     if (onSuccessCallback != null) {
                         onSuccessCallback();
@@ -144,7 +143,7 @@ export function exportEasyTuneVariables(fileURL = null, onSuccessCallback = null
             });
         }
     } else {
-        let replacedFileURL = _importExportEasyTuneVariablesReplaceFileURLParams(fileURL);
+        let replacedFileURL = _importExportVariablesReplaceFileURLParams(fileURL, engine);
 
         fetch(replacedFileURL, {
             headers: {
@@ -190,48 +189,48 @@ export function exportEasyTuneVariables(fileURL = null, onSuccessCallback = null
     }
 }
 
-export function addSetEasyTuneWidgetActiveVariableCallback(id, callback, engine = getMainEngine()) {
-    if (!_mySetEasyTuneWidgetActiveVariableCallbacks.has(engine)) {
-        _mySetEasyTuneWidgetActiveVariableCallbacks.set(engine, new Map());
+export function addSetWidgetActiveVariableCallback(id, callback, engine = Globals.getMainEngine()) {
+    if (!_mySetWidgetActiveVariableCallbacks.has(engine)) {
+        _mySetWidgetActiveVariableCallbacks.set(engine, new Map());
     }
 
-    _mySetEasyTuneWidgetActiveVariableCallbacks.get(engine).set(id, callback);
+    _mySetWidgetActiveVariableCallbacks.get(engine).set(id, callback);
 }
 
-export function removeSetEasyTuneWidgetActiveVariableCallback(id, engine = getMainEngine()) {
-    if (_mySetEasyTuneWidgetActiveVariableCallbacks.has(engine)) {
-        _mySetEasyTuneWidgetActiveVariableCallbacks.get(engine).delete(id);
+export function removeSetWidgetActiveVariableCallback(id, engine = Globals.getMainEngine()) {
+    if (_mySetWidgetActiveVariableCallbacks.has(engine)) {
+        _mySetWidgetActiveVariableCallbacks.get(engine).delete(id);
     }
 }
 
-export function addRefreshEasyTuneWidgetCallback(id, callback, engine = getMainEngine()) {
-    if (!_myRefreshEasyTuneWidgetCallbacks.has(engine)) {
-        _myRefreshEasyTuneWidgetCallbacks.set(engine, new Map());
+export function addRefreshWidgetCallback(id, callback, engine = Globals.getMainEngine()) {
+    if (!_myRefreshWidgetCallbacks.has(engine)) {
+        _myRefreshWidgetCallbacks.set(engine, new Map());
     }
 
-    _myRefreshEasyTuneWidgetCallbacks.get(engine).set(id, callback);
+    _myRefreshWidgetCallbacks.get(engine).set(id, callback);
 }
 
-export function removeRefreshEasyTuneWidgetCallback(id, engine = getMainEngine()) {
-    if (_myRefreshEasyTuneWidgetCallbacks.has(engine)) {
-        _myRefreshEasyTuneWidgetCallbacks.get(engine).delete(id);
+export function removeRefreshWidgetCallback(id, engine = Globals.getMainEngine()) {
+    if (_myRefreshWidgetCallbacks.has(engine)) {
+        _myRefreshWidgetCallbacks.get(engine).delete(id);
     }
 }
 
 export let EasyTuneUtils = {
-    setEasyTuneWidgetActiveVariable,
-    refreshEasyTuneWidget,
-    importEasyTuneVariables,
-    exportEasyTuneVariables,
-    addSetEasyTuneWidgetActiveVariableCallback,
-    removeSetEasyTuneWidgetActiveVariableCallback,
-    addRefreshEasyTuneWidgetCallback,
-    removeRefreshEasyTuneWidgetCallback
+    setWidgetActiveVariable,
+    refreshWidget,
+    importVariables,
+    exportVariables,
+    addSetWidgetActiveVariableCallback,
+    removeSetWidgetActiveVariableCallback,
+    addRefreshWidgetCallback,
+    removeRefreshWidgetCallback
 };
 
 
 
-function _importExportEasyTuneVariablesReplaceFileURLParams(fileURL) {
+function _importExportVariablesReplaceFileURLParams(fileURL, engine = Globals.getMainEngine()) {
     let params = fileURL.match(/\{.+?\}/g);
 
     if (params == null || params.length == 0) {
@@ -243,7 +242,7 @@ function _importExportEasyTuneVariablesReplaceFileURLParams(fileURL) {
         params[i] = params[i].replace("}", "");
     }
 
-    let urlSearchParams = new URL(document.location).searchParams;
+    let urlSearchParams = new URL(Globals.getDocument(engine).location).searchParams;
 
     let replacedFileURL = fileURL;
 

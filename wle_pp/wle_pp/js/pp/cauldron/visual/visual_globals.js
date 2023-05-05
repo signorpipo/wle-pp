@@ -1,36 +1,36 @@
-import { getMainEngine } from "../wl/engine_globals";
+import { Globals } from "../../pp/globals";
 
-let _myVisualDatas = new WeakMap();
+let _myVisualResourcesContainer = new WeakMap();
 let _myVisualManagers = new WeakMap();
 
-export function getVisualData(engine = getMainEngineinEngine()) {
-    return _myVisualDatas.get(engine);
+export function getVisualResources(engine = Globals.getMainEngineinEngine()) {
+    return _myVisualResourcesContainer.get(engine);
 }
 
-export function setVisualData(visualData, engine = getMainEngine()) {
-    _myVisualDatas.set(engine, visualData);
+export function setVisualResources(visualResources, engine = Globals.getMainEngine()) {
+    _myVisualResourcesContainer.set(engine, visualResources);
 }
 
-export function removeVisualData(engine = getMainEngine()) {
-    _myVisualDatas.delete(engine);
+export function removeVisualResources(engine = Globals.getMainEngine()) {
+    _myVisualResourcesContainer.delete(engine);
 }
 
-export function hasVisualData(engine = getMainEngine()) {
-    return _myVisualDatas.has(engine);
+export function hasVisualResources(engine = Globals.getMainEngine()) {
+    return _myVisualResourcesContainer.has(engine);
 }
 
-export function getVisualManager(engine = getMainEngine()) {
+export function getVisualManager(engine = Globals.getMainEngine()) {
     return _myVisualManagers.get(engine);
 }
 
-export function setVisualManager(visualManager, engine = getMainEngine()) {
+export function setVisualManager(visualManager, engine = Globals.getMainEngine()) {
     _myVisualManagers.set(engine, visualManager);
 }
 
-export function removeVisualManager(engine = getMainEngine()) {
+export function removeVisualManager(engine = Globals.getMainEngine()) {
     _myVisualManagers.delete(engine);
 }
 
-export function hasVisualManager(engine = getMainEngine()) {
+export function hasVisualManager(engine = Globals.getMainEngine()) {
     return _myVisualManagers.has(engine);
 }

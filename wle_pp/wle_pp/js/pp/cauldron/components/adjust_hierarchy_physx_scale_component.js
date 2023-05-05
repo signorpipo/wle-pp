@@ -1,4 +1,4 @@
-import { Component, Property, PhysXComponent } from "@wonderlandengine/api";
+import { Component, PhysXComponent, Property } from "@wonderlandengine/api";
 
 export class AdjustHierarchyPhysXScaleComponent extends Component {
     static TypeName = "pp-adjust-hierarchy-physx-scale";

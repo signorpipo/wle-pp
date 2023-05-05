@@ -164,7 +164,7 @@ CollisionCheck.prototype._ignoreSurfaceAngle = function () {
             }
         }
 
-        if (!hit.myIsInsideCollision) {
+        if (!hit.myInsideCollision) {
             movementDirection = movementOrForward.vec3_normalize(movementDirection);
 
             let surfaceAngle = hit.myNormal.vec3_angle(up);

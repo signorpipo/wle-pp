@@ -1,9 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
 import { quat2_create, vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
-import { getDefaultResources } from "../../pp/default_resources_global";
-import { getPlayerObjects } from "../../pp/player_objects_global";
-import { getEasyTuneVariables } from "../../tool/easy_tune/easy_tune_globals";
-import { EasyTuneNumber } from "../../tool/easy_tune/easy_tune_variable_types";
+import { Globals } from "../../pp/globals";
 import { Timer } from "../cauldron/timer";
 import { XRUtils } from "../utils/xr_utils";
 import { VisualText, VisualTextParams } from "../visual/elements/visual_text";
@@ -30,22 +27,26 @@ export class ShowFPSComponent extends Component {
         if (this._myTextMaterial != null) {
             visualParams.myMaterial = this._myTextMaterial.clone();
         } else {
-            visualParams.myMaterial = getDefaultResources(this.engine).myMaterials.myText.clone();
+            visualParams.myMaterial = Globals.getDefaultMaterials(this.engine).myText.clone();
             visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
         }
 
         visualParams.myParent = this._myVisualFPSParent;
-        visualParams.myIsLocal = true;
+        visualParams.myLocal = true;
 
         this._myVisualFPS = new VisualText(visualParams);
 
-        //getEasyTuneVariables(this.engine).add(new EasyTuneNumber("FPS X", -0.25, 0.1, 3, undefined, undefined, this.engine));
-        //getEasyTuneVariables(this.engine).add(new EasyTuneNumber("FPS Y", -0.130, 0.1, 3, undefined, undefined, this.engine));
-        //getEasyTuneVariables(this.engine).add(new EasyTuneNumber("FPS Z", 0.35, 0.1, 3, undefined, undefined, this.engine));
+        //Globals.getEasyTuneVariables(this.engine).add(new EasyTuneNumber("FPS X", -0.25, 0.1, 3, undefined, undefined, this.engine));
+        //Globals.getEasyTuneVariables(this.engine).add(new EasyTuneNumber("FPS Y", -0.130, 0.1, 3, undefined, undefined, this.engine));
+        //Globals.getEasyTuneVariables(this.engine).add(new EasyTuneNumber("FPS Z", 0.35, 0.1, 3, undefined, undefined, this.engine));
     }
 
     update(dt) {
         // Implemented outside class definition
+    }
+
+    onDestroy() {
+        this._myVisualFPS.destroy();
     }
 }
 
@@ -73,7 +74,7 @@ ShowFPSComponent.prototype.update = function () {
                 visualParams.myTransform.mat4_setPositionRotationScale(vec3_create(-0.25, -0.130, 0.35), vec3_create(0, 180, 0), vec3_create(0.3, 0.3, 0.3));
             }
 
-            //visualParams.myTransform.mat4_setPositionRotationScale([getEasyTuneVariables(this.engine).get("FPS X"), getEasyTuneVariables(this.engine).get("FPS Y"), getEasyTuneVariables(this.engine).get("FPS Z")], vec3_create(0, 180, 0), vec3_create(0.3, 0.3, 0.3));
+            //visualParams.myTransform.mat4_setPositionRotationScale([Globals.getEasyTuneVariables(this.engine).get("FPS X"), Globals.getEasyTuneVariables(this.engine).get("FPS Y"), Globals.getEasyTuneVariables(this.engine).get("FPS Z")], vec3_create(0, 180, 0), vec3_create(0.3, 0.3, 0.3));
 
             visualParams.myText = fps.toFixed(0);
             this._myVisualFPS.paramsUpdated();
@@ -82,6 +83,6 @@ ShowFPSComponent.prototype.update = function () {
             this._myFrames = 0;
         }
 
-        this._myVisualFPSParent.pp_setTransformQuat(getPlayerObjects(this.engine).myHead.pp_getTransformQuat(playerTransformQuat));
+        this._myVisualFPSParent.pp_setTransformQuat(Globals.getPlayerObjects(this.engine).myHead.pp_getTransformQuat(playerTransformQuat));
     };
 }();

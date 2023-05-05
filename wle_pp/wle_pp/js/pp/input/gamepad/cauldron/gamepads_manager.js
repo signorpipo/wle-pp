@@ -4,51 +4,51 @@ import { UniversalGamepad } from "../universal_gamepad";
 export class GamepadsManager {
 
     constructor() {
-        this._myLeftGamepad = new UniversalGamepad(Handedness.LEFT);
-        this._myRightGamepad = new UniversalGamepad(Handedness.RIGHT);
+        this._myGamepads = [];
+
+        this._myGamepads[Handedness.LEFT] = new UniversalGamepad(Handedness.LEFT);
+        this._myGamepads[Handedness.RIGHT] = new UniversalGamepad(Handedness.RIGHT);
+
+        this._myDestroyed = false;
     }
 
     start() {
-        this._myLeftGamepad.start();
-        this._myRightGamepad.start();
+        for (let key in this._myGamepads) {
+            this._myGamepads[key].start();
+        }
     }
 
     update(dt) {
-        this._myLeftGamepad.update(dt);
-        this._myRightGamepad.update(dt);
+        for (let key in this._myGamepads) {
+            this._myGamepads[key].update(dt);
+        }
     }
 
     getLeftGamepad() {
-        return this._myLeftGamepad;
+        return this._myGamepads[Handedness.LEFT];
     }
 
     getRightGamepad() {
-        return this._myRightGamepad;
+        return this._myGamepads[Handedness.RIGHT];
     }
 
     getGamepad(handedness) {
-        let gamepad = null;
-
-        switch (handedness) {
-            case Handedness.LEFT:
-                gamepad = this._myLeftGamepad;
-                break;
-            case Handedness.RIGHT:
-                gamepad = this._myRightGamepad;
-                break;
-            default:
-                gamepad = null;
-        }
-
-        return gamepad;
+        return this._myGamepads[handedness];
     }
 
     getGamepads() {
-        let gamepads = [];
+        return this._myGamepads;
+    }
 
-        gamepads[Handedness.LEFT] = this._myLeftGamepad;
-        gamepads[Handedness.RIGHT] = this._myRightGamepad;
+    destroy() {
+        this._myDestroyed = true;
 
-        return gamepads;
+        for (let key in this._myGamepads) {
+            this._myGamepads[key].destroy();
+        }
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

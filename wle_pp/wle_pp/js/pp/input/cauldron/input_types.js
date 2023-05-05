@@ -1,4 +1,3 @@
-
 export let Handedness = {
     LEFT: "left",
     RIGHT: "right"

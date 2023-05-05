@@ -1,35 +1,45 @@
-let _myOriginalConsoleLog = console.log;
-let _myOriginalConsoleError = console.error;
-let _myOriginalConsoleWarn = console.warn;
-let _myOriginalConsoleInfo = console.info;
-let _myOriginalConsoleDebug = console.debug;
-let _myOriginalConsoleAssert = console.assert;
-let _myOriginalConsoleClear = console.clear;
+let _myConsoleOriginalLog = console.log;
+let _myConsoleOriginalError = console.error;
+let _myConsoleOriginalWarn = console.warn;
+let _myConsoleOriginalInfo = console.info;
+let _myConsoleOriginalDebug = console.debug;
+let _myConsoleOriginalAssert = console.assert;
+let _myConsoleOriginalClear = console.clear;
 
-export function getOriginalConsoleLog() {
-    return _myOriginalConsoleLog;
+export function getConsoleOriginalLog() {
+    return _myConsoleOriginalLog;
 }
 
-export function getOriginalConsoleError() {
-    return _myOriginalConsoleError;
+export function getConsoleOriginalError() {
+    return _myConsoleOriginalError;
 }
 
-export function getOriginalConsoleWarn() {
-    return _myOriginalConsoleWarn;
+export function getConsoleOriginalWarn() {
+    return _myConsoleOriginalWarn;
 }
 
-export function getOriginalConsoleInfo() {
-    return _myOriginalConsoleInfo;
+export function getConsoleOriginalInfo() {
+    return _myConsoleOriginalInfo;
 }
 
-export function getOriginalConsoleDebug() {
-    return _myOriginalConsoleDebug;
+export function getConsoleOriginalDebug() {
+    return _myConsoleOriginalDebug;
 }
 
-export function getOriginalConsoleAssert() {
-    return _myOriginalConsoleAssert;
+export function getConsoleOriginalAssert() {
+    return _myConsoleOriginalAssert;
 }
 
-export function getOriginalConsoleClear() {
-    return _myOriginalConsoleClear;
+export function getConsoleOriginalClear() {
+    return _myConsoleOriginalClear;
+}
+
+export let ConsoleOriginalFunctions = {
+    getConsoleOriginalLog,
+    getConsoleOriginalError,
+    getConsoleOriginalWarn,
+    getConsoleOriginalInfo,
+    getConsoleOriginalDebug,
+    getConsoleOriginalAssert,
+    getConsoleOriginalClear
 }

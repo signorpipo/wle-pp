@@ -1,6 +1,7 @@
-import { AnimationComponent, CollisionComponent, Component, InputComponent, LightComponent, MeshComponent, TextComponent, Property, ViewComponent } from "@wonderlandengine/api";
-import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component";
+import { AnimationComponent, CollisionComponent, Component, InputComponent, LightComponent, MeshComponent, PhysXComponent, Property, TextComponent, ViewComponent } from "@wonderlandengine/api";
 import { Timer } from "../../../../cauldron/cauldron/timer";
+import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils";
+import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component";
 
 export class DebugWLComponentsFunctionsPerformanceAnalyzerComponent extends Component {
     static TypeName = "pp-debug-wl-components-functions-performance-analyzer";
@@ -47,17 +48,19 @@ export class DebugWLComponentsFunctionsPerformanceAnalyzerComponent extends Comp
     _start() {
 
         let objectsByReference = [];
+        let classesByReference = [];
 
         if (this._myAnalyzeComponentInstances) {
             this._addComponentInstanceReferences(objectsByReference);
         }
 
         if (this._myAnalyzeComponentTypes) {
-            this._addComponentTypeReferences(objectsByReference);
+            this._addComponentTypeReferences(classesByReference);
         }
 
         this._myAnalyzerComponent = this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
             _myObjectsByReference: objectsByReference,
+            _myClassesByReference: classesByReference,
             _myDelayStart: 0,
             _myLogTitle: "WL Components Performance Analysis Results",
             _myLogFunction: this._myLogFunction,
@@ -82,49 +85,50 @@ export class DebugWLComponentsFunctionsPerformanceAnalyzerComponent extends Comp
         });
     }
 
-    _addComponentTypeReferences(objectsByReference) {
+    _addComponentTypeReferences(classesByReference) {
         let nativeComponentTypes = [
-            MeshComponent,
             AnimationComponent,
             CollisionComponent,
             InputComponent,
             LightComponent,
+            MeshComponent,
+            PhysXComponent,
             TextComponent,
             ViewComponent
         ];
 
         for (let nativeComponentType of nativeComponentTypes) {
-            objectsByReference.push([Object.getPrototypeOf(this.engine._wrapComponent(nativeComponentType.TypeName, this.engine.wasm._typeIndexFor(nativeComponentType.TypeName), 0)),
-            "{\"" + nativeComponentType.TypeName + "\"}"]);
+            classesByReference.push([nativeComponentType.prototype, "{\"" + nativeComponentType.TypeName + "\"}"]);
         }
 
-        for (let componentType of this.engine.wasm._componentTypes) {
-            objectsByReference.push([componentType.prototype,
-            "{\"" + componentType.TypeName + "\"}"]);
+        for (let componentClass of ComponentUtils.getJavascriptComponentClassesByIndex(this.engine)) {
+            classesByReference.push([componentClass.prototype, "{\"" + componentClass.TypeName + "\"}"]);
         }
     }
 
     _addComponentInstanceReferences(objectsByReference) {
-        for (let component of this.engine.wasm._components) {
+        // #TODO add native components
+
+        for (let componentInstance of ComponentUtils.getJavascriptComponentInstances(this.engine)) {
             let id = "";
 
             switch (this._myComponentInstanceID) {
                 case 0:
-                    id = component.object.pp_getID();
+                    id = componentInstance.object.pp_getID();
                     break;
                 case 1:
-                    id = component.object.pp_getName();
+                    id = componentInstance.object.pp_getName();
                     break;
                 case 2:
-                    id = component.object.pp_getID();
-                    if (component.object.pp_getName().length > 0) {
-                        id = id + " - " + component.object.pp_getName();
+                    id = componentInstance.object.pp_getID();
+                    if (componentInstance.object.pp_getName().length > 0) {
+                        id = id + " - " + componentInstance.object.pp_getName();
                     }
                     break;
             }
 
-            objectsByReference.push([component,
-                "{\"" + component.type + "\"}[" + id + "]"]);
+            objectsByReference.push([componentInstance,
+                "{\"" + componentInstance.type + "\"}[" + id + "]"]);
         }
     }
 }

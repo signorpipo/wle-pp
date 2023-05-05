@@ -1,4 +1,4 @@
-export class PlayerLocomotionRotate {
+class PlayerLocomotionRotate {
 
     constructor() {
     }

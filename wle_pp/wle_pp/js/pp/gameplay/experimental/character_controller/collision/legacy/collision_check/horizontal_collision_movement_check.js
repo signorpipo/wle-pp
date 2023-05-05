@@ -33,7 +33,7 @@ CollisionCheck.prototype._horizontalMovementCheck = function () {
         // Also vertical check should check all hits like the position check
         // For now is ok as it is, the movement check is not as important and could also be disabled it the movement per frame is very small
 
-        this._myDebugActive = collisionCheckParams.myDebugActive && collisionCheckParams.myDebugHorizontalMovementActive;
+        this._myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugHorizontalMovementEnabled;
 
         let halfConeAngle = Math.min(collisionCheckParams.myHalfConeAngle, 90);
         movementDirection = movement.vec3_normalize(movementDirection);

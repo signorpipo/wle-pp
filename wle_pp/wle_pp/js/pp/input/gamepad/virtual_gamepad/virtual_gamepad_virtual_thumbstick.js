@@ -1,4 +1,5 @@
 import { vec2_create } from "../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../pp/globals";
 import { Handedness } from "../../cauldron/input_types";
 import { VirtualGamepadIcon } from "./virtual_gamepad_icon";
 
@@ -10,7 +11,7 @@ export class VirtualGamepadVirtualThumbstick {
         this._myThumbstickBackground = null;
         this._myThumbstickDetectionElement = null;
 
-        this._myIsActive = true;
+        this._myActive = true;
 
         this._myPointerID = null;
         this._myPointerButton = null
@@ -18,27 +19,36 @@ export class VirtualGamepadVirtualThumbstick {
         this._myThumbstickDragStartPosition = vec2_create();
 
         this._myAxes = vec2_create();
-        this._myIsPressed = false;
+        this._myPressed = false;
 
         this._myVirtualGamepadParams = virtualGamepadParams;
         this._myParams = this._myVirtualGamepadParams.myThumbstickParams[gamepadThumbstickHandedness][gamepadAxesID];
 
         this._build(thumbstickElementParent, virtualThumbstickHandedness);
 
-        this._myThumbstickDetectionElement.addEventListener("pointerdown", this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents));
-        document.body.addEventListener("pointerup", this._onPointerUp.bind(this));
-        document.body.addEventListener("pointermove", this._onPointerMove.bind(this));
+        this._myPointerDownEventListener = this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents);
+        this._myPointerUpEventListener = this._onPointerUp.bind(this);
+        this._myPointerMoveEventListener = this._onPointerMove.bind(this);
+        this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
+        this._myMouseEnterEventListener = this._onThumbstickEnter.bind(this);
+        this._myMouseLeaveEventListener = this._onThumbstickLeave.bind(this);
+
+        this._myThumbstickDetectionElement.addEventListener("pointerdown", this._myPointerDownEventListener);
+        Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
+        Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointermove", this._myPointerMoveEventListener);
 
         if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
-            document.body.addEventListener("pointerleave", this._onPointerLeave.bind(this));
+            Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
         }
 
-        this._myThumbstickDetectionElement.addEventListener("mouseenter", this._onThumbstickEnter.bind(this));
-        this._myThumbstickDetectionElement.addEventListener("mouseleave", this._onThumbstickLeave.bind(this));
+        this._myThumbstickDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
+        this._myThumbstickDetectionElement.addEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+
+        this._myDestroyed = false;
     }
 
     isPressed() {
-        return this._myIsActive && this._myIsPressed;
+        return this._myActive && this._myPressed;
     }
 
     getAxes() {
@@ -46,16 +56,16 @@ export class VirtualGamepadVirtualThumbstick {
     }
 
     setActive(active) {
-        if (this._myIsActive != active) {
+        if (this._myActive != active) {
             this.reset();
             this._myThumbstickIcon.reset();
         }
 
-        this._myIsActive = active;
+        this._myActive = active;
     }
 
-    setMouseHoverActive(hoverActive) {
-        this._myThumbstickIcon.setMouseHoverActive(hoverActive);
+    setMouseHoverEnabled(hoverActive) {
+        this._myThumbstickIcon.setMouseHoverEnabled(hoverActive);
     }
 
     reset() {
@@ -63,7 +73,7 @@ export class VirtualGamepadVirtualThumbstick {
 
         this._myAxes[0] = 0;
         this._myAxes[1] = 0;
-        this._myIsPressed = false;
+        this._myPressed = false;
         this._myPointerID = null;
         this._myPointerButton = null;
 
@@ -76,8 +86,8 @@ export class VirtualGamepadVirtualThumbstick {
     }
 
     _onPointerDown(stopPropagatingPointerDownEvents, event) {
-        if (!this._myIsActive) return;
-        if (this._myIsPressed) return;
+        if (!this._myActive) return;
+        if (this._myPressed) return;
         if (!this._myVirtualGamepadParams.myValidPointerButtons.pp_hasEqual(event.button)) return;
 
         if (stopPropagatingPointerDownEvents) {
@@ -93,12 +103,12 @@ export class VirtualGamepadVirtualThumbstick {
         this._myThumbstickDragStartPosition[0] = event.clientX;
         this._myThumbstickDragStartPosition[1] = event.clientY;
 
-        this._myIsPressed = true;
+        this._myPressed = true;
     }
 
     _onPointerUp(event) {
-        if (!this._myIsActive) return;
-        if (!this._myIsPressed) return;
+        if (!this._myActive) return;
+        if (!this._myPressed) return;
         if (this._myPointerID != event.pointerId) return;
         if (this._myPointerButton != null && this._myPointerButton != event.button) return;
 
@@ -106,7 +116,7 @@ export class VirtualGamepadVirtualThumbstick {
     }
 
     _onPointerLeave(event) {
-        if (!this._myIsActive) return;
+        if (!this._myActive) return;
         if (this._myPointerID != event.pointerId) return;
 
         this.reset();
@@ -121,8 +131,8 @@ export class VirtualGamepadVirtualThumbstick {
     }
 
     _onPointerMove(event) {
-        if (!this._myIsActive) return;
-        if (!this._myIsPressed) return;
+        if (!this._myActive) return;
+        if (!this._myPressed) return;
 
         if (event.pointerId != this._myPointerID) return;
 
@@ -149,7 +159,7 @@ export class VirtualGamepadVirtualThumbstick {
     }
 
     _build(thumbstickElementParent, virtualThumbstickHandedness) {
-        // Setup variables used for the sizes and the like
+        // Config variables used for the sizes and the like
 
         let thumbstickSize = this._myVirtualGamepadParams.myThumbstickSize * this._myVirtualGamepadParams.myInterfaceScale;
 
@@ -161,51 +171,51 @@ export class VirtualGamepadVirtualThumbstick {
 
         // Actual thumbstick creation
 
-        let thumbstickContainer = document.createElement("div");
-        thumbstickContainer.style.position = "absolute";
-        thumbstickContainer.style.width = this._createSizeValue(thumbstickSize, minSizeMultiplier);
-        thumbstickContainer.style.height = this._createSizeValue(thumbstickSize, minSizeMultiplier);
-        thumbstickContainer.style.bottom = this._createSizeValue(marginBottom, minSizeMultiplier);
+        this._myThumbstickContainer = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+        this._myThumbstickContainer.style.position = "absolute";
+        this._myThumbstickContainer.style.width = this._createSizeValue(thumbstickSize, minSizeMultiplier);
+        this._myThumbstickContainer.style.height = this._createSizeValue(thumbstickSize, minSizeMultiplier);
+        this._myThumbstickContainer.style.bottom = this._createSizeValue(marginBottom, minSizeMultiplier);
 
         if (virtualThumbstickHandedness == Handedness.LEFT) {
-            thumbstickContainer.style.left = this._createSizeValue(marginLeft, minSizeMultiplier);
+            this._myThumbstickContainer.style.left = this._createSizeValue(marginLeft, minSizeMultiplier);
         } else {
-            thumbstickContainer.style.right = this._createSizeValue(marginRight, minSizeMultiplier);
+            this._myThumbstickContainer.style.right = this._createSizeValue(marginRight, minSizeMultiplier);
         }
 
-        thumbstickElementParent.appendChild(thumbstickContainer);
+        thumbstickElementParent.appendChild(this._myThumbstickContainer);
 
-        let thumbstickContainerSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        let thumbstickContainerSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
         thumbstickContainerSVG.style.position = "absolute";
         thumbstickContainerSVG.style.width = "100%";
         thumbstickContainerSVG.style.height = "100%";
-        thumbstickContainer.appendChild(thumbstickContainerSVG);
+        this._myThumbstickContainer.appendChild(thumbstickContainerSVG);
 
-        this._myThumbstickBackground = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        this._myThumbstickBackground = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
         this._myThumbstickBackground.setAttributeNS(null, "cx", "50%");
         this._myThumbstickBackground.setAttributeNS(null, "cy", "50%");
         this._myThumbstickBackground.setAttributeNS(null, "r", "48%");
         this._myThumbstickBackground.style.fill = this._myParams.myBackgroundColor;
         thumbstickContainerSVG.appendChild(this._myThumbstickBackground);
 
-        this._myThumbstickElement = document.createElement("div");
+        this._myThumbstickElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
         this._myThumbstickElement.style.position = "absolute";
         this._myThumbstickElement.style.width = "34%";
         this._myThumbstickElement.style.height = "34%";
         this._myThumbstickElement.style.top = "33%";
         this._myThumbstickElement.style.left = "33%";
-        thumbstickContainer.appendChild(this._myThumbstickElement);
+        this._myThumbstickContainer.appendChild(this._myThumbstickElement);
 
-        this._myThumbstickIcon = new VirtualGamepadIcon(this._myThumbstickElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myScale);
+        this._myThumbstickIcon = new VirtualGamepadIcon(this._myThumbstickElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myScale, this._myVirtualGamepadParams.myEngine);
 
         if (this._myParams.myIncludeBackgroundToDetection) {
-            let thumbstickBackgroundDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            let thumbstickBackgroundDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
             thumbstickBackgroundDetectionElementSVG.style.position = "absolute";
             thumbstickBackgroundDetectionElementSVG.style.width = "100%";
             thumbstickBackgroundDetectionElementSVG.style.height = "100%";
-            thumbstickContainer.appendChild(thumbstickBackgroundDetectionElementSVG);
+            this._myThumbstickContainer.appendChild(thumbstickBackgroundDetectionElementSVG);
 
-            let thumbstickBackgroundDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            let thumbstickBackgroundDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
             thumbstickBackgroundDetectionElement.setAttributeNS(null, "cx", "50%");
             thumbstickBackgroundDetectionElement.setAttributeNS(null, "cy", "50%");
             thumbstickBackgroundDetectionElement.setAttributeNS(null, "r", "48%");
@@ -214,21 +224,21 @@ export class VirtualGamepadVirtualThumbstick {
 
             this._myThumbstickDetectionElement = thumbstickBackgroundDetectionElement;
         } else {
-            let thumbstickElementStill = document.createElement("div");
+            let thumbstickElementStill = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
             thumbstickElementStill.style.position = "absolute";
             thumbstickElementStill.style.width = "34%";
             thumbstickElementStill.style.height = "34%";
             thumbstickElementStill.style.top = "33%";
             thumbstickElementStill.style.left = "33%";
-            thumbstickContainer.appendChild(thumbstickElementStill);
+            this._myThumbstickContainer.appendChild(thumbstickElementStill);
 
-            let thumbstickDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            let thumbstickDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
             thumbstickDetectionElementSVG.style.position = "absolute";
             thumbstickDetectionElementSVG.style.width = "100%";
             thumbstickDetectionElementSVG.style.height = "100%";
             thumbstickElementStill.appendChild(thumbstickDetectionElementSVG);
 
-            let thumbstickDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            let thumbstickDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
             thumbstickDetectionElement.setAttributeNS(null, "cx", "50%");
             thumbstickDetectionElement.setAttributeNS(null, "cy", "50%");
             thumbstickDetectionElement.setAttributeNS(null, "r", "50%");
@@ -241,5 +251,26 @@ export class VirtualGamepadVirtualThumbstick {
 
     _createSizeValue(value, minSizeMultiplier) {
         return "min(" + value.toFixed(3) + "vmax," + (value * minSizeMultiplier).toFixed(3) + "vw)";
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myThumbstickDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
+
+        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
+        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointermove", this._myPointerMoveEventListener);
+        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+
+        this._myThumbstickDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
+        this._myThumbstickDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+
+        this._myThumbstickIcon.destroy();
+
+        this._myThumbstickContainer.remove();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

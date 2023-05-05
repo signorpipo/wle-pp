@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { hasDebugEnabled, isDebugEnabled, removeDebugEnabled, setDebugEnabled } from "../debug_globals";
+import { Globals } from "../../pp/globals";
 
 export class EnableDebugsComponent extends Component {
     static TypeName = "pp-enable-debugs";
@@ -11,16 +11,16 @@ export class EnableDebugsComponent extends Component {
         this._myDebugEnabled = null;
 
         // Prevents double global from same engine
-        if (!hasDebugEnabled(this.engine)) {
+        if (!Globals.hasDebugEnabled(this.engine)) {
             this._myDebugEnabled = this._myEnable;
 
-            setDebugEnabled(this._myDebugEnabled, this.engine);
+            Globals.setDebugEnabled(this._myDebugEnabled, this.engine);
         }
     }
 
     onDestroy() {
-        if (this._myDebugEnabled != null && isDebugEnabled(this.engine) == this._myDebugEnabled) {
-            removeDebugEnabled(this.engine);
+        if (this._myDebugEnabled != null && Globals.isDebugEnabled(this.engine) == this._myDebugEnabled) {
+            Globals.removeDebugEnabled(this.engine);
         }
     }
 }

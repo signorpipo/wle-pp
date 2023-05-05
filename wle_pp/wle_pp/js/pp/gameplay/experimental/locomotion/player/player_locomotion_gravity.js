@@ -1,4 +1,4 @@
-export class PlayerLocomotionGravity {
+class PlayerLocomotionGravity {
 
     constructor() {
     }

@@ -18,4 +18,8 @@ export class ClearConsoleOnXRSessionStartComponent extends Component {
             console.clear();
         }
     }
+
+    onDestroy() {
+        XRUtils.unregisterSessionStartEventListener(this, this.engine);
+    }
 }

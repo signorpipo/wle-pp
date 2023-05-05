@@ -1,14 +1,16 @@
+import { Globals } from "../../../pp/globals";
 import { CAUtils } from "./ca_utils";
 
 export class CADummyServer {
 
-    constructor() {
+    constructor(engine = Globals.getMainEngine()) {
+        this._myEngine = engine;
     }
 
-    getLeaderboard(leaderboardID, isAscending, isAroundPlayer, scoresAmount, callbackOnDone, callbackOnError) {
+    getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback) {
         let leaderboard = null;
 
-        if (CAUtils.isSDKAvailable()) {
+        if (CAUtils.isSDKAvailable(this._myEngine)) {
             leaderboard = [
                 { rank: 0, displayName: "An", score: 0 },
                 { rank: 1, displayName: "Error", score: 0 },
@@ -22,7 +24,7 @@ export class CADummyServer {
                 { rank: 9, displayName: "Leaderboard", score: 0 }
             ];
         } else {
-            if (isAroundPlayer) {
+            if (aroundPlayer) {
                 leaderboard = [
                     { rank: 0, displayName: "Sign In", score: 0 },
                     { rank: 1, displayName: "And", score: 0 },
@@ -55,23 +57,23 @@ export class CADummyServer {
             leaderboard.pop();
         }
 
-        if (callbackOnDone) {
-            callbackOnDone(leaderboard);
+        if (onDoneCallback) {
+            onDoneCallback(leaderboard);
         }
     }
 
-    submitScore(leaderboardID, scoreToSubmit, callbackOnDone, callbackOnError) {
-        if (callbackOnDone) {
-            callbackOnDone();
+    submitScore(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback) {
+        if (onDoneCallback) {
+            onDoneCallback();
         }
     }
 
-    getUser(callbackOnDone, callbackOnError) {
+    getUser(onDoneCallback, onErrorCallback) {
         let user = {};
         user.displayName = "J";
 
-        if (callbackOnDone) {
-            callbackOnDone(user);
+        if (onDoneCallback) {
+            onDoneCallback(user);
         }
     }
 }

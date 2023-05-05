@@ -6,7 +6,6 @@ export class TrackedHandDrawAllJointsComponent extends Component {
     static TypeName = "pp-tracked-hand-draw-all-joints";
     static Properties = {
         _myHandedness: Property.enum(["Left", "Right"], "Left"),
-        _myFixForward: Property.bool(true),
         _myHideMetacarpals: Property.bool(true),
         _myJointMesh: Property.mesh(),
         _myJointMaterial: Property.material()
@@ -34,7 +33,6 @@ export class TrackedHandDrawAllJointsComponent extends Component {
                 jointObject.pp_addComponent(TrackedHandDrawJointComponent,
                     {
                         "_myHandedness": this._myHandedness,
-                        "_myFixForward": this._myFixForward,
                         "_myJointID": TrackedHandJointIDIndex[jointIDKey],
                         "_myJointMesh": this._myJointMesh,
                         "_myJointMaterial": this._myJointMaterial,

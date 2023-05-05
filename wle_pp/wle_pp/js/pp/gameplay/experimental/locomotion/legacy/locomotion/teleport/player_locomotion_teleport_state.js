@@ -1,8 +1,8 @@
 import { State } from "../../../../../../cauldron/fsm/state";
-import { getGamepads } from "../../../../../../input/cauldron/input_globals";
 import { InputUtils } from "../../../../../../input/cauldron/input_utils";
 import { GamepadButtonID } from "../../../../../../input/gamepad/gamepad_buttons";
 import { quat2_create, quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../../../pp/globals";
 import { CollisionRuntimeParams } from "../../../../character_controller/collision/legacy/collision_check/collision_params";
 import { getCollisionCheck } from "../player_locomotion_component";
 
@@ -133,7 +133,7 @@ PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
 
         newFeetTransformQuat.quat2_setPositionRotationQuat(teleportPosition, newFeetRotationQuat);
 
-        if (getGamepads(this._myTeleportParams.myEngine)[InputUtils.getOppositeHandedness(this._myTeleportParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
+        if (Globals.getGamepads(this._myTeleportParams.myEngine)[InputUtils.getOppositeHandedness(this._myTeleportParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
             getCollisionCheck(this._myTeleportParams.myEngine).positionCheck(true, newFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
 
             this._myTeleportParams.myPlayerHeadManager.teleportPositionFeet(teleportPosition);

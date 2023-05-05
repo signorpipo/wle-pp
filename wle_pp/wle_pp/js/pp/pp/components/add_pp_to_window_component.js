@@ -1,5 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import * as PPAPI from "../../index";
+import * as PPAPI from "../..";
+import { Globals } from "../../pp/globals";
 
 export class AddPPToWindowComponent extends Component {
     static TypeName = "pp-add-pp-to-window";
@@ -9,7 +10,7 @@ export class AddPPToWindowComponent extends Component {
 
     init() {
         if (this._myAdd) {
-            window.PP = {};
+            Globals.getWindow(this.engine).PP = {};
             this._addProperties(PPAPI);
         }
     }
@@ -18,8 +19,12 @@ export class AddPPToWindowComponent extends Component {
         let propertyNames = Object.getOwnPropertyNames(object);
         for (let propertyName of propertyNames) {
             if (object[propertyName] != undefined) {
-                window.PP[propertyName] = object[propertyName];
+                Globals.getWindow(this.engine).PP[propertyName] = object[propertyName];
             }
         }
+    }
+
+    onDestroy() {
+        Globals.getWindow(this.engine).PP = undefined;
     }
 }

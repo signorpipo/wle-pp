@@ -1,4 +1,4 @@
-export class PlayerLocomotionSmooth {
+class PlayerLocomotionSmooth {
 
     constructor() {
     }

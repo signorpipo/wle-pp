@@ -1,27 +1,26 @@
-import { getLeftGamepad, getRightGamepad } from "../../../input/cauldron/input_globals";
 import { GamepadAxesID, GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
+import { Globals } from "../../../pp/globals";
 import { ToolHandedness } from "../../cauldron/tool_types";
-import { WidgetFrame } from "../../widget_frame/widget_frame";
+import { WidgetFrame, WidgetParams } from "../../widget_frame/widget_frame";
 import { EasyTuneVariableType } from "../easy_tune_variable_types";
 import { EasyTuneBaseWidgetParams } from "./base/easy_tune_base_widget";
 import { EasyTuneBoolArrayWidgetSelector } from "./bool/easy_tune_bool_array_widget_selector";
-import { EasyTuneWidgetSetup } from "./easy_tune_widget_setup";
+import { EasyTuneWidgetConfig } from "./easy_tune_widget_config";
 import { EasyTuneNoneWidget } from "./none/easy_tune_none_widget";
 import { EasyTuneNumberArrayWidgetSelector } from "./number/easy_tune_number_widget_selector";
 import { EasyTuneTransformWidget } from "./transform/easy_tune_transform_widget";
 
-export class EasyTuneWidgetAdditionalSetup {
+export class EasyTuneWidgetParams extends WidgetParams {
 
     constructor() {
-        this.myHandedness = ToolHandedness.NONE;
+        super();
+
         this.myShowOnStart = false;
         this.myShowVisibilityButton = false;
-        this.myAdditionalButtonsEnabled = false;
+        this.myAdditionalButtonsVisible = false;
         this.myGamepadScrollVariableEnabled = false;
-        this.myPlaneMaterial = null;
-        this.myTextMaterial = null;
 
-        this.myVariablesImportExportButtonsEnabled = false;
+        this.myVariablesImportExportButtonsVisible = false;
         this.myVariablesImportCallback = null;   // Signature: callback()
         this.myVariablesExportCallback = null;   // Signature: callback()
     }
@@ -29,15 +28,15 @@ export class EasyTuneWidgetAdditionalSetup {
 
 export class EasyTuneWidget {
 
-    constructor(engine = getMainEngine()) {
-        this._myIsStarted = false;
+    constructor(engine = Globals.getMainEngine()) {
+        this._myStarted = false;
         this._myStartVariable = null;
 
         this._myWidgetFrame = new WidgetFrame("E", 1, engine);
         this._myWidgetFrame.registerWidgetVisibleChangedEventListener(this, this._widgetVisibleChanged.bind(this));
 
-        this._mySetup = new EasyTuneWidgetSetup();
-        this._myAdditionalSetup = null;
+        this._myConfig = new EasyTuneWidgetConfig();
+        this._myParams = null;
 
         this._myWidgets = [];
 
@@ -57,10 +56,12 @@ export class EasyTuneWidget {
         this._myDirty = false;
 
         this._myEngine = engine;
+
+        this._myDestroyed = false;
     }
 
     setActiveVariable(variableName) {
-        if (!this._myIsStarted) {
+        if (!this._myStarted) {
             this._myStartVariable = variableName;
         } else if (this._myEasyTuneVariables.has(variableName)) {
             this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(variableName);
@@ -71,7 +72,7 @@ export class EasyTuneWidget {
     }
 
     refresh() {
-        if (this._myWidgetFrame.myIsWidgetVisible) {
+        if (this._myWidgetFrame.isVisible()) {
             this._myDirty = true;
         }
     }
@@ -84,20 +85,20 @@ export class EasyTuneWidget {
         return this._myWidgetFrame.isVisible();
     }
 
-    start(parentObject, additionalSetup, easyTuneVariables) {
-        this._myRightGamepad = getRightGamepad(this._myEngine);
-        this._myLeftGamepad = getLeftGamepad(this._myEngine);
-        if (this._mySetup.myGamepadHandedness == ToolHandedness.RIGHT) {
+    start(parentObject, params, easyTuneVariables) {
+        this._myRightGamepad = Globals.getRightGamepad(this._myEngine);
+        this._myLeftGamepad = Globals.getLeftGamepad(this._myEngine);
+        if (this._myConfig.myGamepadHandedness == ToolHandedness.RIGHT) {
             this._myGamepad = this._myRightGamepad;
-        } else if (this._mySetup.myGamepadHandedness == ToolHandedness.LEFT) {
+        } else if (this._myConfig.myGamepadHandedness == ToolHandedness.LEFT) {
             this._myGamepad = this._myLeftGamepad;
         }
 
-        this._myIsStarted = true;
+        this._myStarted = true;
 
-        this._myAdditionalSetup = additionalSetup;
+        this._myParams = params;
 
-        this._myWidgetFrame.start(parentObject, additionalSetup);
+        this._myWidgetFrame.start(parentObject, params);
 
         this._myEasyTuneVariables = easyTuneVariables;
         this._myEasyTuneLastSize = this._myEasyTuneVariables.length();
@@ -125,10 +126,10 @@ export class EasyTuneWidget {
             this._refreshEasyTuneVariables();
         }
 
-        if (this._myWidgetFrame.myIsWidgetVisible && this._myEasyTuneVariables.length() > 0) {
-            if (this._mySetup.myRefreshVariablesDelay != null) {
+        if (this._myWidgetFrame.isVisible() && this._myEasyTuneVariables.length() > 0) {
+            if (this._myConfig.myRefreshVariablesDelay != null) {
                 this._myRefreshVariablesTimer += dt;
-                if (this._myRefreshVariablesTimer > this._mySetup.myRefreshVariablesDelay) {
+                if (this._myRefreshVariablesTimer > this._myConfig.myRefreshVariablesDelay) {
                     this._myRefreshVariablesTimer = 0;
                     this._refreshEasyTuneVariables();
                 }
@@ -138,7 +139,7 @@ export class EasyTuneWidget {
                 this._myCurrentWidget.update(dt);
             }
 
-            if (this._myAdditionalSetup.myGamepadScrollVariableEnabled) {
+            if (this._myParams.myGamepadScrollVariableEnabled) {
                 this._updateGamepadScrollVariable(dt);
             }
         }
@@ -160,7 +161,7 @@ export class EasyTuneWidget {
 
         for (let widget of this._myWidgets) {
             if (widget != null) {
-                widget.start(this._myWidgetFrame.getWidgetObject(), this._myAdditionalSetup);
+                widget.start(this._myWidgetFrame.getWidgetObject(), this._myParams);
                 widget.setVisible(false);
                 widget.registerScrollVariableRequestEventListener(this, this._scrollVariable.bind(this));
             }
@@ -172,6 +173,9 @@ export class EasyTuneWidget {
     _selectCurrentWidget() {
         if (this._myEasyTuneVariables.length() <= 0) {
             return;
+        } else if (this._myCurrentVariable == null) {
+            this._myVariableNames = this._myEasyTuneVariables.getEasyTuneVariablesNames();
+            this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
         }
 
         let prevWidget = null;
@@ -179,8 +183,8 @@ export class EasyTuneWidget {
             prevWidget = this._myCurrentWidget.getWidget();
         }
 
-        if (this._myCurrentVariable.myType in this._myWidgets) {
-            this._myCurrentWidget = this._myWidgets[this._myCurrentVariable.myType];
+        if (this._myCurrentVariable.getType() in this._myWidgets) {
+            this._myCurrentWidget = this._myWidgets[this._myCurrentVariable.getType()];
         } else {
             this._myCurrentWidget = this._myWidgets[EasyTuneVariableType.NONE];
         }
@@ -192,7 +196,7 @@ export class EasyTuneWidget {
             prevWidget.setVisible(false);
         }
 
-        this._myCurrentWidget.setVisible(this._myWidgetFrame.myIsWidgetVisible);
+        this._myCurrentWidget.setVisible(this._myWidgetFrame.isVisible());
     }
 
     _refreshEasyTuneVariables() {
@@ -200,8 +204,8 @@ export class EasyTuneWidget {
         this._myEasyTuneLastSize = this._myEasyTuneVariables.length();
 
         if (this._myEasyTuneVariables.length() > 0) {
-            if (this._myCurrentVariable && this._myEasyTuneVariables.has(this._myCurrentVariable.myName)) {
-                this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myCurrentVariable.myName);
+            if (this._myCurrentVariable && this._myEasyTuneVariables.has(this._myCurrentVariable.getName())) {
+                this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myCurrentVariable.getName());
             } else {
                 this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
             }
@@ -220,8 +224,8 @@ export class EasyTuneWidget {
 
     _updateGamepadWidgetVisibility() {
         if (this._myGamepad) {
-            if ((this._myGamepad.getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(GamepadButtonID.TOP_BUTTON).myIsPressed) ||
-                (this._myGamepad.getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).myIsPressed)) {
+            if ((this._myGamepad.getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) ||
+                (this._myGamepad.getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && this._myGamepad.getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed())) {
                 this._toggleVisibility();
             }
         }
@@ -252,20 +256,20 @@ export class EasyTuneWidget {
     }
 
     _updateGamepadScrollVariable(dt) {
-        if (this._myGamepad && (!this._mySetup.myScrollVariableButtonID || this._myGamepad.getButtonInfo(this._mySetup.myScrollVariableButtonID).myIsPressed)) {
+        if (this._myGamepad && (!this._myConfig.myScrollVariableButtonID || this._myGamepad.getButtonInfo(this._myConfig.myScrollVariableButtonID).isPressed())) {
             let x = this._myGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes[0];
             let y = this._myGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes[1];
-            if (Math.abs(x) > this._mySetup.myScrollVariableMinXThreshold && Math.abs(y) < this._mySetup.myScrollVariableMaxYThreshold) {
+            if (Math.abs(x) > this._myConfig.myScrollVariableMinXThreshold && Math.abs(y) < this._myConfig.myScrollVariableMaxYThreshold) {
                 this._myScrollVariableTimer += dt;
-                while (this._myScrollVariableTimer > this._mySetup.myScrollVariableDelay) {
-                    this._myScrollVariableTimer -= this._mySetup.myScrollVariableDelay;
+                while (this._myScrollVariableTimer > this._myConfig.myScrollVariableDelay) {
+                    this._myScrollVariableTimer -= this._myConfig.myScrollVariableDelay;
                     this._scrollVariable(Math.sign(x));
                 }
             } else {
-                this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
+                this._myScrollVariableTimer = this._myConfig.myScrollVariableDelay;
             }
         } else {
-            this._myScrollVariableTimer = this._mySetup.myScrollVariableDelay;
+            this._myScrollVariableTimer = this._myConfig.myScrollVariableDelay;
         }
     }
 
@@ -303,26 +307,26 @@ export class EasyTuneWidget {
     }
 
     _getVariableIndex(variable) {
-        let variableIndex = this._myVariableNames.indexOf(variable.myName);
+        let variableIndex = this._myVariableNames.indexOf(variable.getName());
         return variableIndex;
     }
 
     _updateActiveVariable() {
-        this._myEasyTuneVariables.getEasyTuneVariablesList().forEach(function (value) {
-            value.myIsActive = false;
-        });
+        for (let variable of this._myEasyTuneVariables.getEasyTuneVariablesList()) {
+            variable.setActive(false);
+        }
 
-        if (this._myWidgetFrame.myIsWidgetVisible && this._myCurrentVariable) {
-            this._myCurrentVariable.myIsActive = true;
+        if (this._myWidgetFrame.isVisible() && this._myCurrentVariable) {
+            this._myCurrentVariable.setActive(true);
         }
     }
 
     _importVariables() {
-        this._myAdditionalSetup.myVariablesImportCallback(this._onImportSuccess.bind(this), this._onImportFailure.bind(this));
+        this._myParams.myVariablesImportCallback(this._onImportSuccess.bind(this), this._onImportFailure.bind(this));
     }
 
     _exportVariables() {
-        this._myAdditionalSetup.myVariablesExportCallback(this._onExportSuccess.bind(this), this._onExportFailure.bind(this));
+        this._myParams.myVariablesExportCallback(this._onExportSuccess.bind(this), this._onExportFailure.bind(this));
     }
 
     _onImportSuccess() {
@@ -347,5 +351,19 @@ export class EasyTuneWidget {
         if (this._myCurrentWidget) {
             this._myCurrentWidget.onExportFailure();
         }
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        for (let widget of this._myWidgets) {
+            widget.destroy();
+        }
+
+        this._myWidgetFrame.destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

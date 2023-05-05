@@ -13,9 +13,10 @@ export class ObjectPoolParams {
         this.myCloneCallback = undefined;                       // Signature: callback(object, cloneParams) -> clonedObject
         this.mySetActiveCallback = undefined;                   // Signature: callback(object, active)
         this.myEqualCallback = undefined;                       // Signature: callback(firstObject, secondObject) -> bool
+        this.myDestroyCallback = undefined;                     // Signature: callback(object)
         this.myOptimizeObjectsAllocationCallback = undefined;   // Signature: callback(object, numberOfObjectsToAllocate)
 
-        this.myDebugLogActive = false;
+        this.myLogEnabled = false;
     }
 }
 
@@ -29,6 +30,8 @@ export class ObjectPool {
         this._myBusyObjects = [];
 
         this._addToPool(objectPoolParams.myInitialPoolSize, false);
+
+        this._myDestroyed = false;
     }
 
     get() {
@@ -37,7 +40,7 @@ export class ObjectPool {
         if (object == null) {
             let amountToAdd = Math.ceil(this._myBusyObjects.length * this._myObjectPoolParams.myPercentageToAddWhenEmpty);
             amountToAdd += this._myObjectPoolParams.myAmountToAddWhenEmpty;
-            this._addToPool(amountToAdd, this._myObjectPoolParams.myDebugLogActive);
+            this._addToPool(amountToAdd, this._myObjectPoolParams.myLogEnabled);
             object = this._myAvailableObjects.shift();
         }
 
@@ -51,9 +54,16 @@ export class ObjectPool {
 
     release(object) {
         let released = this._myBusyObjects.pp_remove(this._equals.bind(this, object));
-        if (released) {
+        if (released != null) {
             this._setActive(released, false);
             this._myAvailableObjects.push(released);
+        }
+    }
+
+    releaseAll() {
+        for (let busyObject of this._myBusyObjects) {
+            this._setActive(busyObject, false);
+            this._myAvailableObjects.push(busyObject);
         }
     }
 
@@ -78,13 +88,13 @@ export class ObjectPool {
         return this._myAvailableObjects.length;
     }
 
-    _addToPool(size, log) {
+    _addToPool(size, logEnabled) {
         if (size <= 0) {
             return;
         }
 
         if (this._myObjectPoolParams.myOptimizeObjectsAllocation) {
-            if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback) {
+            if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback != null) {
                 this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myPrototype, size);
             } else if (this._myPrototype.pp_reserveObjects != null) {
                 this._myPrototype.pp_reserveObjects(size);
@@ -95,7 +105,7 @@ export class ObjectPool {
             this._myAvailableObjects.push(this._clone(this._myPrototype));
         }
 
-        if (log) {
+        if (logEnabled) {
             console.warn("Added new elements to the pool:", size);
         }
     }
@@ -144,5 +154,33 @@ export class ObjectPool {
         }
 
         return equals;
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        for (let object of this._myAvailableObjects) {
+            this._destroyObject(object);
+        }
+
+        for (let object of this._myBusyObjects) {
+            this._destroyObject(object);
+        }
+
+        this._destroyObject(this._myPrototype);
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
+    }
+
+    _destroyObject(object) {
+        if (this._myObjectPoolParams.myDestroyCallback != null) {
+            this._myObjectPoolParams.myDestroyCallback(object);
+        } else if (object.pp_destroy != null) {
+            object.pp_destroy(active);
+        } else if (object.destroy != null) {
+            object.destroy(active);
+        }
     }
 }

@@ -1,20 +1,21 @@
 //  PP
 export * from "./pp/init_pp";
 export * from "./pp/register_pp_components";
-export * from "./pp/player_objects";
-export * from "./pp/player_objects_global";
+export * from "./pp/globals";
+export * from "./pp/scene_objects";
+export * from "./pp/scene_objects_globals";
 export * from "./pp/default_resources";
-export * from "./pp/default_resources_global";
+export * from "./pp/default_resources_globals";
 
 export * from "./pp/components/pp_gateway_component";
-export * from "./pp/components/get_player_objects_component";
+export * from "./pp/components/get_scene_objects_component";
 export * from "./pp/components/get_default_resources_component";
 export * from "./pp/components/add_pp_to_window_component";
 
 //	PLUGIN
 export * from "./plugin/init_plugins";
 
-export * from "./plugin/utils/extension_utils";
+export * from "./plugin/utils/plugin_utils";
 
 export * from "./plugin/js/init_js_plugins";
 export * from "./plugin/js/extensions/init_js_extentions";
@@ -27,15 +28,15 @@ export * from "./plugin/wl/extensions/init_wl_extentions";
 export * from "./plugin/wl/extensions/object_extension";
 export * from "./plugin/wl/extensions/scene_extension";
 export * from "./plugin/wl/mods/init_wl_mods";
+export * from "./plugin/wl/mods/emitter_mod";
 export * from "./plugin/wl/mods/components/init_component_mods";
-export * from "./plugin/wl/mods/components/component_clone_mod";
 export * from "./plugin/wl/mods/components/cursor_component_mod";
 export * from "./plugin/wl/mods/components/cursor_target_component_mod";
 export * from "./plugin/wl/mods/components/mouse_look_component_mod";
 
 //	AUDIO
 export * from "./audio/audio_manager";
-export * from "./audio/audio_manager_global";
+export * from "./audio/audio_globals";
 export * from "./audio/audio_player";
 export * from "./audio/audio_setup";
 export * from "./audio/audio_utils";
@@ -54,6 +55,7 @@ export * from "./cauldron/cauldron/object_pool";
 export * from "./cauldron/cauldron/object_pools_manager";
 export * from "./cauldron/cauldron/save_manager";
 export * from "./cauldron/cauldron/timer";
+export * from "./cauldron/cauldron/window_globals";
 
 export * from "./cauldron/components/clear_console_on_xr_session_start_component";
 export * from "./cauldron/components/set_active_component";
@@ -65,6 +67,18 @@ export * from "./cauldron/fsm/state";
 export * from "./cauldron/fsm/transition";
 export * from "./cauldron/fsm/states/timer_state";
 
+export * from "./cauldron/js/utils/js_utils";
+export * from "./cauldron/js/utils/math_utils";
+export * from "./cauldron/js/utils/array_utils";
+export * from "./cauldron/js/utils/vec_utils";
+export * from "./cauldron/js/utils/vec2_utils";
+export * from "./cauldron/js/utils/vec3_utils";
+export * from "./cauldron/js/utils/vec4_utils";
+export * from "./cauldron/js/utils/quat_utils";
+export * from "./cauldron/js/utils/quat2_utils";
+export * from "./cauldron/js/utils/mat3_utils";
+export * from "./cauldron/js/utils/mat4_utils";
+
 export * from "./cauldron/utils/color_utils";
 export * from "./cauldron/utils/material_utils";
 export * from "./cauldron/utils/mesh_utils";
@@ -72,15 +86,14 @@ export * from "./cauldron/utils/save_utils";
 export * from "./cauldron/utils/text_utils";
 export * from "./cauldron/utils/xr_utils";
 export * from "./cauldron/utils/browser_utils";
-export * from "./cauldron/utils/js_utils";
 
 export * from "./cauldron/physics/physics_utils";
-export * from "./cauldron/physics/physics_raycast_data";
+export * from "./cauldron/physics/physics_raycast_params";
 export * from "./cauldron/physics/physics_layer_flags";
 export * from "./cauldron/physics/physics_collision_collector";
 
 export * from "./cauldron/visual/visual_manager";
-export * from "./cauldron/visual/visual_data";
+export * from "./cauldron/visual/visual_resources";
 export * from "./cauldron/visual/visual_globals";
 
 export * from "./cauldron/visual/elements/visual_element_types";
@@ -97,6 +110,10 @@ export * from "./cauldron/visual/components/visual_manager_component";
 
 export * from "./cauldron/wl/engine_globals";
 export * from "./cauldron/wl/register_wl_components";
+export * from "./cauldron/wl/utils/scene_utils";
+export * from "./cauldron/wl/utils/object_utils";
+export * from "./cauldron/wl/utils/component_utils";
+export * from "./cauldron/wl/utils/default_wl_component_clone_callbacks";
 export * from "./cauldron/wl/components/add_wl_to_window_component";
 
 //	DEBUG
@@ -156,10 +173,10 @@ export * from "./gameplay/experimental/character_controller/collision/legacy/col
 
 export * from "./gameplay/experimental/character_controller/collision/collision_check_bridge";
 export * from "./gameplay/experimental/character_controller/collision/character_collider_setup";
-export * from "./gameplay/experimental/character_controller/collision/character_collider_utils";
+export * from "./gameplay/experimental/character_controller/collision/character_collider_setup_utils";
 export * from "./gameplay/experimental/character_controller/collision/character_collision_results";
 export * from "./gameplay/experimental/character_controller/collision/character_collision_system";
-export * from "./gameplay/experimental/character_controller/collision/character_collision_system_global";
+export * from "./gameplay/experimental/character_controller/collision/character_collision_system_globals";
 export * from "./gameplay/experimental/character_controller/collision/components/character_collision_system_component";
 
 export * from "./gameplay/experimental/character_controller/character_controller";
@@ -191,7 +208,6 @@ export * from "./gameplay/experimental/locomotion/player/components/player_locom
 export * from "./gameplay/experimental/locomotion/player/components/player_locomotion_rotate_component";
 export * from "./gameplay/experimental/locomotion/player/components/player_locomotion_gravity_component";
 
-export * from "./gameplay/experimental/locomotion/legacy/locomotion/locomotion_utils";
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_head_manager";
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_transform_manager";
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_rotate";
@@ -259,8 +275,6 @@ export * from "./input/pose/tracked_hand_pose";
 export * from "./input/pose/components/set_player_height_component";
 export * from "./input/pose/components/set_hand_local_transform_component";
 export * from "./input/pose/components/set_head_local_transform_component";
-export * from "./input/pose/components/set_head_vr_local_transform_component";
-export * from "./input/pose/components/set_head_non_vr_local_transform_component";
 export * from "./input/pose/components/set_tracked_hand_joint_local_transform_component";
 export * from "./input/pose/components/copy_hand_transform_component";
 export * from "./input/pose/components/copy_head_transform_component";
@@ -273,12 +287,12 @@ export * from "./tool/cauldron/tool_globals";
 export * from "./tool/cauldron/components/tool_cursor_component";
 export * from "./tool/cauldron/components/enable_tools_component";
 
-export * from "./tool/console_vr/console_vr_widget_setup";
+export * from "./tool/console_vr/console_vr_widget_config";
 export * from "./tool/console_vr/console_vr_widget_ui";
 export * from "./tool/console_vr/console_vr_widget";
 export * from "./tool/console_vr/console_vr";
 export * from "./tool/console_vr/console_vr_types";
-export * from "./tool/console_vr/console_vr_global";
+export * from "./tool/console_vr/console_vr_globals";
 export * from "./tool/console_vr/console_original_functions";
 
 export * from "./tool/console_vr/components/console_vr_tool_component";
@@ -312,26 +326,26 @@ export * from "./tool/easy_tune/easy_object_tuners/components/easy_text_color_co
 export * from "./tool/easy_tune/easy_object_tuners/components/easy_transform_component";
 
 export * from "./tool/easy_tune/easy_tune_widgets/easy_tune_widget";
-export * from "./tool/easy_tune/easy_tune_widgets/easy_tune_widget_setup";
+export * from "./tool/easy_tune/easy_tune_widgets/easy_tune_widget_config";
 export * from "./tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget";
 export * from "./tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_ui";
-export * from "./tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_setup";
+export * from "./tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_config";
 export * from "./tool/easy_tune/easy_tune_widgets/base/easy_tune_base_array_widget_selector";
 export * from "./tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget";
 export * from "./tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui";
-export * from "./tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_setup";
+export * from "./tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_config";
 export * from "./tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_selector";
 export * from "./tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget";
 export * from "./tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_ui";
-export * from "./tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_setup";
+export * from "./tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_config";
 export * from "./tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget";
 export * from "./tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_ui";
-export * from "./tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_setup";
+export * from "./tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_config";
 export * from "./tool/easy_tune/easy_tune_widgets/number/easy_tune_number_widget_selector";
 export * from "./tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget";
 export * from "./tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_ui";
-export * from "./tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_setup";
+export * from "./tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_config";
 
-export * from "./tool/widget_frame/widget_frame_setup";
+export * from "./tool/widget_frame/widget_frame_config";
 export * from "./tool/widget_frame/widget_frame_ui";
 export * from "./tool/widget_frame/widget_frame";

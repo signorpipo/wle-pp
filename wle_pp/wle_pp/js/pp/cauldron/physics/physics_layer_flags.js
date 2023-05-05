@@ -29,14 +29,14 @@ export class PhysicsLayerFlags {
             index = PhysicsUtils.getLayerFlagsNames().pp_findIndexEqual(indexOrName);
         }
 
-        let isActive = false;
+        let active = false;
 
         if (index >= 0 && index < PhysicsUtils.getLayerFlagsNames().length) {
             let mask = 1 << index;
-            isActive = !!(this._myLayerMask & mask);
+            active = !!(this._myLayerMask & mask);
         }
 
-        return isActive;
+        return active;
     }
 
     setAllFlagsActive(active) {

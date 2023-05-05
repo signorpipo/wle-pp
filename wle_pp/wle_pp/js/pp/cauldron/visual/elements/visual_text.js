@@ -4,23 +4,21 @@ visualParams.myText = text;
 visualParams.myTransform.mat4_copy(transform);
 visualParams.myMaterial = myDefaultResources.myMaterials.myText.clone();
 visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-getVisualManager().draw(visualParams);
+Globals.getVisualManager().draw(visualParams);
 
 or
 
 let visualText = new VisualText(visualParams);
 */
 
-import { mat4_create } from "../../../plugin/js/extensions/array_extension";
-import { getMainEngine } from "../../wl/engine_globals";
-import { getVisualData } from "../visual_globals";
 import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
-import { getDefaultResources } from "../../../pp/default_resources_global";
+import { mat4_create } from "../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../pp/globals";
 import { VisualElementType } from "./visual_element_types";
 
 export class VisualTextParams {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this.myText = "";
         this.myAlignment = Alignment.Center;
         this.myJustification = Justification.Middle;
@@ -31,8 +29,8 @@ export class VisualTextParams {
 
         this.myColor = null;        // If this is set and material is null, it will use the default text material with this color
 
-        this.myParent = getVisualData(engine).myRootObject;
-        this.myIsLocal = false;
+        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
+        this.myLocal = false;
 
         this.myType = VisualElementType.TEXT;
     }
@@ -56,6 +54,8 @@ export class VisualText {
         this._myTextComponent = null;
 
         this._myTextMaterial = null;
+
+        this._myDestroyed = false;
 
         this._build();
         this.forceRefresh();
@@ -111,7 +111,7 @@ export class VisualText {
     _refresh() {
         this._myTextObject.pp_setParent(this._myParams.myParent, false);
 
-        if (this._myParams.myIsLocal) {
+        if (this._myParams.myLocal) {
             this._myTextObject.pp_setTransformLocal(this._myParams.myTransform);
         } else {
             this._myTextObject.pp_setTransform(this._myParams.myTransform);
@@ -119,10 +119,10 @@ export class VisualText {
 
         if (this._myParams.myMaterial == null) {
             if (this._myParams.myColor == null) {
-                this._myTextComponent.material = getVisualData(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myText;
+                this._myTextComponent.material = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myText;
             } else {
                 if (this._myTextMaterial == null) {
-                    this._myTextMaterial = getDefaultResources(this._myParams.myParent.pp_getEngine()).myMaterials.myText.clone();
+                    this._myTextMaterial = Globals.getDefaultMaterials(this._myParams.myParent.pp_getEngine()).myText.clone();
                 }
                 this._myTextComponent.material = this._myTextMaterial;
                 this._myTextMaterial.color = this._myParams.myColor;
@@ -139,7 +139,7 @@ export class VisualText {
     }
 
     _build() {
-        this._myTextObject = this._myParams.myParent.pp_getEngine().scene.pp_addObject();
+        this._myTextObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
         this._myTextComponent = this._myTextObject.pp_addComponent(TextComponent);
     }
 
@@ -161,6 +161,16 @@ export class VisualText {
         clone._myDirty = this._myDirty;
 
         return clone;
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myTextObject.pp_destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }
 
@@ -192,7 +202,7 @@ VisualTextParams.prototype.copy = function copy(other) {
     }
 
     this.myParent = other.myParent;
-    this.myIsLocal = other.myIsLocal;
+    this.myLocal = other.myLocal;
 
     this.myType = other.myType;
 };

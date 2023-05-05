@@ -1,4 +1,4 @@
-import { getMainEngine } from "../wl/engine_globals";
+import { Globals } from "../../pp/globals";
 import { ObjectPoolParams } from "../cauldron/object_pool";
 import { ObjectPoolsManager } from "../cauldron/object_pools_manager";
 import { Timer } from "../cauldron/timer";
@@ -14,7 +14,7 @@ import { VisualTransform, VisualTransformParams } from "./elements/visual_transf
 
 export class VisualManager {
 
-    constructor(engine = getMainEngine()) {
+    constructor(engine = Globals.getMainEngine()) {
         this._myEngine = engine;
 
         this._myVisualElementPrototypeCreationCallbacks = new Map();
@@ -25,6 +25,8 @@ export class VisualManager {
         this._myVisualElementsToShow = [];
 
         this._myActive = true;
+
+        this._myDestroyed = false;
 
         this._addStandardVisualElementTypes();
     }
@@ -126,7 +128,7 @@ export class VisualManager {
         if (elementID == null) {
             for (let visualElements of this._myVisualElementsTypeMap.values()) {
                 for (let visualElement of visualElements.values()) {
-                    this._myVisualElementsPool.releaseObject(visualElement[0].getParams().myType, visualElement[0]);
+                    this._myVisualElementsPool.release(visualElement[0].getParams().myType, visualElement[0]);
                 }
             }
 
@@ -137,7 +139,7 @@ export class VisualManager {
             for (let visualElements of this._myVisualElementsTypeMap.values()) {
                 if (visualElements.has(elementID)) {
                     let visualElementPair = visualElements.get(elementID);
-                    this._myVisualElementsPool.releaseObject(visualElementPair[0].getParams().myType, visualElementPair[0]);
+                    this._myVisualElementsPool.release(visualElementPair[0].getParams().myType, visualElementPair[0]);
                     visualElements.delete(elementID);
 
                     this._myVisualElementsToShow.pp_removeEqual(visualElementPair[0]);
@@ -179,7 +181,7 @@ export class VisualManager {
             for (let visualElementsEntry of visualElements.entries()) {
                 let visualElement = visualElementsEntry[1];
                 if (visualElement[1].isDone()) {
-                    this._myVisualElementsPool.releaseObject(visualElement[0].getParams().myType, visualElement[0]);
+                    this._myVisualElementsPool.release(visualElement[0].getParams().myType, visualElement[0]);
                     idsToRemove.push(visualElementsEntry[0]);
                 }
 
@@ -199,7 +201,7 @@ export class VisualManager {
             this._addVisualElementTypeToPool(params.myType);
         }
 
-        element = this._myVisualElementsPool.getObject(params.myType);
+        element = this._myVisualElementsPool.get(params.myType);
 
         if (element != null) {
             element.copyParams(params);
@@ -241,5 +243,15 @@ export class VisualManager {
         this.addVisualElementType(VisualElementType.TRANSFORM, () => new VisualTransform(new VisualTransformParams(this._myEngine)));
         this.addVisualElementType(VisualElementType.RAYCAST, () => new VisualRaycast(new VisualRaycastParams(this._myEngine)));
         this.addVisualElementType(VisualElementType.TORUS, () => new VisualTorus(new VisualTorusParams(this._myEngine)));
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myVisualElementsPool.destroy();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

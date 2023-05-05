@@ -1,43 +1,43 @@
 {
-  "name": "wle_pp",
-  "version": "0.4.0",
-  "author": "Pipo",
-  "description": "A library for the Wonderland Engine - Unbundled Version",
-  "homepage": "https://github.com/SignorPipo/wle_pp",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SignorPipo/wle_pp"
-  },
-  "license": "ISC",
-  "files": [
-    "js"
-  ],
-  "keywords": [
-    "pp",
-    "pipo",
-    "wonderland",
-    "wonderlandengine",
-    "wonderland-engine",
-    "wonderland engine",
-    "wle",
-    "webxr"
-  ],
-  "type": "module",
-  "main": "./js/pp/index.js",
-  "exports": "./js/pp/index.js",
-  "module": "./js/pp/index.js",
-  "wonderlandengine": {},
-  "peerDependencies": {
-    "@wonderlandengine/api": "^1.0.0-rc.2",
-    "@wonderlandengine/components": "^1.0.0-rc.2",
-    "gl-matrix": "^3.4.3",
-    "howler": "^2.2.3"
-  },
-  "devDependencies": {
-    "esbuild": "^0.14.54",
-    "esbuild-node-externals": "^1.7.0"
-  },
-  "scripts": {
-    "build": "node tools/build.js"
-  }
+    "name": "wle-pp",
+    "version": "0.4.0",
+    "author": "Pipo",
+    "description": "A library for the Wonderland Engine",
+    "homepage": "https://github.com/SignorPipo/wle_pp",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SignorPipo/wle_pp"
+    },
+    "license": "ISC",
+    "files": [
+        "js"
+    ],
+    "keywords": [
+        "pp",
+        "pipo",
+        "wonderland",
+        "wonderlandengine",
+        "wonderland-engine",
+        "wonderland engine",
+        "wle",
+        "webxr"
+    ],
+    "type": "module",
+    "main": "./js/pp/index.js",
+    "exports": "./js/pp/index.js",
+    "module": "./js/pp/index.js",
+    "wonderlandengine": {},
+    "peerDependencies": {
+        "@wonderlandengine/api": "^1.0.0",
+        "@wonderlandengine/components": "^1.0.3",
+        "gl-matrix": "^3.4.3",
+        "howler": "^2.2.3"
+    },
+    "devDependencies": {
+        "esbuild": "^0.14.54",
+        "esbuild-node-externals": "^1.7.0"
+    },
+    "scripts": {
+        "build": "node dev/build.js"
+    }
 }

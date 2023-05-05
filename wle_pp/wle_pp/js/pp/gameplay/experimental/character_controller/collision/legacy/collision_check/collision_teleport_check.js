@@ -1,4 +1,5 @@
 import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { Globals } from "../../../../../../pp/globals";
 import { CollisionCheck } from "./collision_check";
 
 CollisionCheck.prototype._teleport = function () {
@@ -243,7 +244,7 @@ CollisionCheck.prototype._teleport = function () {
 
         collisionRuntimeParams.myIsTeleport = true;
 
-        if (collisionCheckParams.myDebugActive && collisionCheckParams.myDebugRuntimeParamsActive) {
+        if (collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugRuntimeParamsEnabled && Globals.isDebugEnabled(this._myEngine)) {
             this._debugRuntimeParams(collisionRuntimeParams);
         }
     };
