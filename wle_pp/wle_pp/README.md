@@ -43,6 +43,7 @@ A collection of assets that can be useful while working with the Wonderland Engi
   * [Import through the entire code folder](#import-through-the-entire-code-folder)
 - [How to Setup the Project](#how-to-setup-the-project)
 - [License](#license)
+- [Credits](#credits)
 - [Documentation](#documentation)
 
 # Downloads
@@ -144,7 +145,12 @@ It's not mandatory to keep this structure but can make things easier so I advise
 
 # License
 
-You are free to use this in your projects, just remember to credit me somewhere!
+You are free to use this in your projects, just remember to credit it somewhere, if possible!
+
+# Credits
+
+- [glMatrix](https://glmatrix.net)
+- [howler.js](https://howlerjs.com)
 
 # Documentation
 
