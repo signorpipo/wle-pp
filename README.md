@@ -149,8 +149,11 @@ You are free to use this in your projects, just remember to credit it somewhere,
 
 # Credits
 
-- [glMatrix](https://glmatrix.net)
-- [howler.js](https://howlerjs.com)
+- [Yinch](https://twitter.com/yinch), without whom the PP library would have not been able to be developed
+- [Jonathan](https://twitter.com/squareys) and the whole [Wonderland Engine Team](https://wonderlandengine.com/), that have and still are supporting me with the issues or requests I have about the engine (and I have plenty)
+- [Florian](https://twitter.com/SrileXR), because he would be pissed to not be credited, but also for being a true friend since the start of this journey
+- [glMatrix](https://glmatrix.net), used as the main vector library
+- [howler.js](https://howlerjs.com), used as the main audio library
 
 # Documentation
 
