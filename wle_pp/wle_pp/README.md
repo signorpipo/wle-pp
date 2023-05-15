@@ -1,27 +1,3 @@
-# :warning: Warning
-
-The following documentation has not been updated yet since the migration to Wonderland Engine version 1.0.0.  
-You can get the library and the template projects with the following links.
-
-A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).  
-A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle_pplaygrounds).
-
-A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
-
-You can download the library through `npm`: 
-  * [`npm install wle-pp`](https://www.npmjs.com/package/wle-pp)
-    * unbundled version of the library
-    * install the library as a list of files
-  * [`npm install wle-pp-bundle`](https://www.npmjs.com/package/wle-pp-bundle)
-    * bundled version of the library
-    * install the library as a single bundle file
-
-You can download the unbundled version of the library through the following link:
-  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
-
-You can download the bundle file through the following link:
-  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
-
 # Overview
 
 A library for the [Wonderland Engine](https://wonderlandengine.com/).
@@ -38,29 +14,27 @@ A collection of assets that can be useful while working with the Wonderland Engi
 - [Downloads](#downloads)
 - [Quick Features Summary](#quick-features-summary)
 - [How To Import](#how-to-import)
-  * [Import through the bundle file](#import-through-the-bundle-file)
-  * [Import through npm](#import-through-npm)
-  * [Import through the entire code folder](#import-through-the-entire-code-folder)
-- [How to Setup the Project](#how-to-setup-the-project)
+- [How To Setup](#how-to-setup)
+- [Things To Know](#things-to-know)
 - [License](#license)
 - [Credits](#credits)
 - [Documentation](#documentation)
 
 # Downloads
 
-You can download the bundle file through the following link:
-  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
+You can get the library through `npm`: 
+  * [`npm install wle-pp`](https://www.npmjs.com/package/wle-pp)
+    * unbundled version of the library
+    * install the library as a list of files
+  * [`npm install wle-pp-bundle`](https://www.npmjs.com/package/wle-pp-bundle)
+    * bundled version of the library
+    * install the library as a single bundle file
 
 You can download the unbundled version of the library through the following link:
   * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
 
-You can download the library through `npm`: 
-  * [`npm install wle_pp`](https://www.npmjs.com/package/wle_pp)
-	* unbundled version of the library
-    * install the library as a list of files
-  * [`npm install wle_pp_bundle`](https://www.npmjs.com/package/wle_pp_bundle)
-    * bundled version of the library
-    * install the library as a single bundle file
+You can download the bundle file through the following link:
+  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
   
 # Quick Features Summary
 
@@ -95,53 +69,78 @@ Some of the features that you can get with this library are:
 
 You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle_ppefault).
 
-## Import through the bundle file
-
-If you want to import this library into your own projects through the bundle file, you have to:
-  - get the `wle_pp_bundle.js` file from [here](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
-  - if your project is a standard one (not `npm`), you have to:
-    * add the bundle file in the `Javascript source paths` section as any other javascript file u want to use in the project
-  - if your project is an `npm` one, you have to:
-    * require the bundle file as any other javascript file u want to use in the project
-    * require any additional WLE components (an error will be logged specifying the ones that are missing)
-      * these requires must be put before the PP one
-    * an official tutorial on how to setup an `npm` project and add the required WLE components can be found [here](https://wonderlandengine.com/tutorials/npm-project/)
-
 ## Import through npm
 
 If you want to import this library into your own project through `npm` you have to:
-  - install the PP package with `npm install wle_pp` / `npm install wle_pp_bundle`
-  - require the package inside your bundle file with: `require('wle_pp');` / `require('wle_pp_bundle');`
-  - require any additional WLE components (an error will be logged specifying the ones that are missing)
-    * these requires must be put before the PP one
-  - an official tutorial on how to setup an `npm` project and add the required WLE components can be found [here](https://wonderlandengine.com/tutorials/npm-project/)
+  - open a command prompt inside your project folder
+  - type `npm install wle-pp`
 
-## Import through the entire code folder
+## Import by getting the entire code folder
 
 You can also import this library by importing the entire code folder, which could be useful if you want to customize it while developing your project.  
-This is possible only if your project is an `npm` one.
 
 In this case, you have to:
   - get the unbundled version of the library from [here](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
-  - require the files found in the `js/pp` folder (you can use the `bundle.js` file found in the `js` folder to see the requires you need)
-  - add the dependencies found in the `package.json` file to your own `package.json`
-  - require any additional WLE components (an error will be logged specifying the ones that are missing)
-    * these requires must be put before the PP ones
-  - an official tutorial on how to setup an `npm` project and add the required WLE components can be found [here](https://wonderlandengine.com/tutorials/npm-project/)
+  - put the `pp` folder inside your project `js` folder
+  - add the `pp/index.js` script to the source paths inside the `Project Settings`
   
-# How to Setup the Project
+# How To Setup
 
-In order to use most of the PP library your project needs to have certain components in your scene properly setup.  
-Specifically, these components needs to be added:
-  - `pp-gateway`
-  - `pp-get-default-resources`
-  - `pp-get-player-objects`
-  
-The best approach is to start by using a `ppefault` template project, which can be found [here](https://github.com/SignorPipo/wle_ppefault).  
-If u need to integrate the bundle in an existing project you can still take a look at this template project to see how to setup the above components properly.
+The setup for the PP library is very simple but requires a few steps:
+  - add the `pp-gateway` component to your scene
+    - this components have some flags and options to customize the PP library behavior at runtime
+  - you have to fill in some fields in this component by either specifying an object in your scene or a resource like a material or a mesh
+  - for the meshes this should be quite trivial, since they are the default ones in the engine
+  - for the materials you might have to create some
+    - for example the `Flat Transparent No Depth` is a material that does not perform depth checks
+  - for the scene objects, you can mostly pick the ones u should already find in a default Wonderland Engine project, but some needs to be created
+    - u need to create a `Player Pivot`, which is just an empty object that must be a children of the `Player` and has every other objects (like the `Eyes` or the `Hands`) as children
+      - this will be used to adjust, for example, the player height
+    - u will have to create a `Head` object, on which u have to add the `pp-set-head-local-transform`
+    - it would be best to change the component on the `Hands` from the default `input` to `pp-set-hand-local-transform`
+      - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
 
-The `ppefault` template project also present a `Player` hierarchy structure that keeps things clean and organized.  
-It's not mandatory to keep this structure but can make things easier so I advise u to use it!
+My advice is, if possible, to start by using a `PP` template project like the default one, which can be found [here](https://github.com/SignorPipo/wle_ppefault).  
+You can also just give a look at it to better understand how to setup your own project properly.
+
+## Advanced Setup
+
+If u don't want to use every feature of the library, or need to customize its behavior in a more advanced way, you can go for an advanced setup.
+
+The advanced setup basically consists in checking out the `pp-gateway` component and the `initPP` function and only use the code u see there that u actually need.
+
+For example, if you don't need to register all the `WL` and `PP` components, something that the `pp-gateway` component does on register, you can avoid using that component and create a custom gateway component which only calls the functions that u need from `initPP`.  
+
+You can also avoid having a gateway component directly and call the functions u need directly in your `index.js`, right before the scene is loaded.
+For example, if u just wanted to setup the array extension, you could just call the `initArrayExtension` function before the scene is loaded.
+
+A lot of features relies on the proper setup of the library, so it might not be easy to customize it as you would like to, and you will probably need to do some trial and error to figure out what you can actually remove or change to get it working.
+Good luck!
+
+# Things To Know
+
+When using the PP library there are certain things to take into consideration, some of which are customizable (○):
+  - forward is positive Z axis, which is not the default
+    - Wonderland Engine default forward method returns negative Z, which is the default for some engines
+    - since I find it pretty hard to work with, I prefer to switch to positive
+    - the only downside of this is that right will now be negative X, but since the right axis is less useful, I opted for this compromise
+  - the library almost always assume that the pose forward is fixed, which is a setting on the `pp-gateway` component set to true by default
+    - you can switch it to false, by might not be able to use properly some of the features which assume it to be true
+    - having the pose forward fixed means that objects like the hands or the head have the forward in the direction they are looking at
+    - this is true by default in the Wonderland Engine only if you are ok with having the forward as negative Z
+  - ○ all components from the Wonderland Engine and from PP are always registered and therefore added to your final bundle project
+    - this is just to make it simplier, instead of having to specify the dependencies on components if u want to add them at runtime
+    - customizable with an advanced setup of the library
+  - ○ extensions, which are a way to add more features to a type, are injected on some types like the Wonderland Engine `Object` or the Javascript `Array`
+    - this might not work properly if u install the library as a link to another location instead of inside your own `node_modules` folder
+    - customizable with an advanced setup of the library
+  - ○ mods, which are a way to edit the behavior of a type, are injected on some types like the Wonderland Engine `Cursor` component
+    - this might not work properly if u install the library as a link to another location instead of inside your own `node_modules` folder
+    - customizable with an advanced setup of the library
+  - some of the features of the library uses extensions and mods
+    - if they are not setup, those features will not be able to work properly
+  - some of the features of the library uses globals variable that are usually setup by the `pp-gateway` component, like `Globals.getSceneObjects` or `Globals.getDefaultResources`
+    - if these variables are not setup, those features will not be able to work properly
 
 # License
 
@@ -149,10 +148,19 @@ You are free to use this in your projects, just remember to credit it somewhere,
 
 # Credits
 
-- [glMatrix](https://glmatrix.net)
-- [howler.js](https://howlerjs.com)
+- [Yinch](https://twitter.com/yinch), without whom the PP library would have not been able to be developed
+- [Jonathan](https://twitter.com/squareys) and the whole [Wonderland Engine Team](https://wonderlandengine.com/), that have and still are supporting me with the issues or requests I have about the engine (and I have plenty)
+- [Florian](https://twitter.com/SrileXR), because he would be pissed to not be credited, but also for being a true friend since the start of this journey
+- [glMatrix](https://glmatrix.net), used as the main vector library
+- [howler.js](https://howlerjs.com), used as the main audio library
 
 # Documentation
+
+## :warning: Warning
+
+The following documentation has not been updated yet since the migration to Wonderland Engine version 1.0.0.
+
+## 
 
 [Code Folder](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp)
 
