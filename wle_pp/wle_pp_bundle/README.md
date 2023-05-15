@@ -2,12 +2,12 @@
 
 A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
-The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp).
+The code folder can be found [here](https://github.com/SignorPipo/wle-pp/tree/main/wle_pp/wle_pp/js/pp).
 
-A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).  
-A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle_pplaygrounds).
+A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle-ppefault).  
+A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle-pplaygrounds).
 
-A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
+A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle-assets).
 
 ## Table Of Contents  
 
@@ -31,10 +31,10 @@ You can get the library through `npm`:
     * install the library as a single bundle file
 
 You can download the unbundled version of the library through the following link:
-  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+  * [`wle-pp`](https://github.com/SignorPipo/wle-pp/releases/latest/download/wle_pp.zip)
 
 You can download the bundle file through the following link:
-  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
+  * [`wle-pp-bundle`](https://github.com/SignorPipo/wle-pp/releases/latest/download/wle_pp_bundle.zip)
   
 # Quick Features Summary
 
@@ -45,29 +45,29 @@ Some of the features that you can get with this library are:
     * add to the Array object lots of functions that makes it easy to work with `vec3`, `quat` and more
   - Gamepad
     * manages the input from the gamepads, like reading the state of a button or the value of the thumbstick
-	* automatically works with the keyboard
-	* u can also add a virtual gamepad to use the gamepad on a mobile device
+	  * automatically works with the keyboard
+	  * u can also add a virtual gamepad to use the gamepad on a mobile device
   - Experimental Locomotion
     * smooth and teleport locomotion with physics collision check
-	* view obscuration when going inside walls
-	* the feature is in an experimental phase, this means u can use it but won't be very easy to adjust and may have weird bugs (please report them!)
+	  * view obscuration when going inside walls
+	  * the feature is in an experimental phase, this means u can use it but won't be simple to adjust and may have weird bugs (please report them!)
   - Grab & Throw
-    * a ready to use gameplay feature to grab and throw objects
+    * a ready to use gameplay feature for grabbing and throwing objects
   - FSM
     * a simple but powerful finite state machine, your best friend when developing a game
   - Debug Draw
     * easily draw some debug object in the scene using functions like `PP.myDebugVisualManager.drawLine`, `PP.myDebugVisualManager.drawArrow` or `PP.myDebugVisualManager.drawRaycast`
-	* this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
+	  * this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
   - Debug Functions Performance Analyzer
     * let you specify a class or an object instance and count all the calls that are being made on its functions as for its total execution time
   - Console VR
-    * a tool that let you see the console even when u are inside the VR session
+    * a tool that let you see the console even when u are inside a VR session
   - Easy Tune
-    * a tool that makes it easier to tune design values at runtime
+    * a tool that makes it easy to tune design values at runtime
 
 # How To Import
 
-You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle_ppefault).
+You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle-ppefault).
 
 ## Import through npm
 
@@ -80,7 +80,7 @@ If you want to import this library into your own project through `npm` you have 
 You can also import this library by importing the entire code folder, which could be useful if you want to customize it while developing your project.  
 
 In this case, you have to:
-  - get the unbundled version of the library from [here](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+  - get the unbundled version of the library from [here](https://github.com/SignorPipo/wle-pp/releases/latest/download/wle_pp.zip)
   - put the `pp` folder inside your project `js` folder
   - add the `pp/index.js` script to the source paths inside the `Project Settings`
   
@@ -100,7 +100,7 @@ The setup for the PP library is very simple but requires a few steps:
     - it would be best to change the component on the `Hands` from the default `input` to `pp-set-hand-local-transform`
       - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
 
-My advice is, if possible, to start by using a `PP` template project like the default one, which can be found [here](https://github.com/SignorPipo/wle_ppefault).  
+My advice is, if possible, to start by using a `PP` template project like the default one, which can be found [here](https://github.com/SignorPipo/wle-ppefault).  
 You can also just give a look at it to better understand how to setup your own project properly.
 
 ## Advanced Setup
