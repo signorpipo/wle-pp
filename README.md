@@ -2,12 +2,12 @@
 
 A library for the [Wonderland Engine](https://wonderlandengine.com/).
 
-The code folder can be found [here](https://github.com/SignorPipo/wle_pp/tree/main/wle_pp/wle_pp/js/pp).
+The code folder can be found [here](https://github.com/SignorPipo/wle-pp/tree/main/wle-pp/wle-pp/js/pp).
 
-A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle_ppefault).  
-A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle_pplaygrounds).
+A default template project that already includes the PP library can be found [here](https://github.com/SignorPipo/wle-ppefault).  
+A collection of playground template projects that already include the PP library can be found [here](https://github.com/SignorPipo/wle-pplaygrounds).
 
-A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle_assets).
+A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/SignorPipo/wle-assets).
 
 ## Table Of Contents  
 
@@ -31,10 +31,10 @@ You can get the library through `npm`:
     * install the library as a single bundle file
 
 You can download the unbundled version of the library through the following link:
-  * [`wle_pp`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+  * [`wle-pp`](https://github.com/SignorPipo/wle-pp/releases/latest/download/wle_pp.zip)
 
 You can download the bundle file through the following link:
-  * [`wle_pp_bundle`](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp_bundle.zip)
+  * [`wle-pp-bundle`](https://github.com/SignorPipo/wle-pp/releases/latest/download/wle_pp_bundle.zip)
   
 # Quick Features Summary
 
@@ -67,7 +67,7 @@ Some of the features that you can get with this library are:
 
 # How To Import
 
-You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle_ppefault).
+You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/SignorPipo/wle-ppefault).
 
 ## Import through npm
 
@@ -80,7 +80,7 @@ If you want to import this library into your own project through `npm` you have 
 You can also import this library by importing the entire code folder, which could be useful if you want to customize it while developing your project.  
 
 In this case, you have to:
-  - get the unbundled version of the library from [here](https://github.com/SignorPipo/wle_pp/releases/latest/download/wle_pp.zip)
+  - get the unbundled version of the library from [here](https://github.com/SignorPipo/wle-pp/releases/latest/download/wle_pp.zip)
   - put the `pp` folder inside your project `js` folder
   - add the `pp/index.js` script to the source paths inside the `Project Settings`
   
@@ -100,7 +100,7 @@ The setup for the PP library is very simple but requires a few steps:
     - it would be best to change the component on the `Hands` from the default `input` to `pp-set-hand-local-transform`
       - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
 
-My advice is, if possible, to start by using a `PP` template project like the default one, which can be found [here](https://github.com/SignorPipo/wle_ppefault).  
+My advice is, if possible, to start by using a `PP` template project like the default one, which can be found [here](https://github.com/SignorPipo/wle-ppefault).  
 You can also just give a look at it to better understand how to setup your own project properly.
 
 ## Advanced Setup
