@@ -45,25 +45,25 @@ Some of the features that you can get with this library are:
     * add to the Array object lots of functions that makes it easy to work with `vec3`, `quat` and more
   - Gamepad
     * manages the input from the gamepads, like reading the state of a button or the value of the thumbstick
-	* automatically works with the keyboard
-	* u can also add a virtual gamepad to use the gamepad on a mobile device
+	  * automatically works with the keyboard
+	  * u can also add a virtual gamepad to use the gamepad on a mobile device
   - Experimental Locomotion
     * smooth and teleport locomotion with physics collision check
-	* view obscuration when going inside walls
-	* the feature is in an experimental phase, this means u can use it but won't be very easy to adjust and may have weird bugs (please report them!)
+	  * view obscuration when going inside walls
+	  * the feature is in an experimental phase, this means u can use it but won't be simple to adjust and may have weird bugs (please report them!)
   - Grab & Throw
-    * a ready to use gameplay feature to grab and throw objects
+    * a ready to use gameplay feature for grabbing and throwing objects
   - FSM
     * a simple but powerful finite state machine, your best friend when developing a game
   - Debug Draw
     * easily draw some debug object in the scene using functions like `PP.myDebugVisualManager.drawLine`, `PP.myDebugVisualManager.drawArrow` or `PP.myDebugVisualManager.drawRaycast`
-	* this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
+	  * this is also available in a non debug mode by using `PP.myVisualManager`, even though the quick draw methods like `drawLine` are not available
   - Debug Functions Performance Analyzer
     * let you specify a class or an object instance and count all the calls that are being made on its functions as for its total execution time
   - Console VR
-    * a tool that let you see the console even when u are inside the VR session
+    * a tool that let you see the console even when u are inside a VR session
   - Easy Tune
-    * a tool that makes it easier to tune design values at runtime
+    * a tool that makes it easy to tune design values at runtime
 
 # How To Import
 
