@@ -90,6 +90,7 @@ In this case, you have to:
 The setup for the PP library is very simple but requires a few steps:
   - add the `pp-gateway` component to your scene
     - this components have some flags and options to customize the PP library behavior at runtime
+    - some of these flags are meant for development and should be disabled when u want to release your app!
   - you have to fill in some fields in this component by either specifying an object in your scene or a resource like a material or a mesh
   - for the meshes this should be quite trivial, since they are the default ones in the engine
   - for the materials you might have to create some
@@ -142,6 +143,8 @@ When using the PP library there are certain things to take into consideration, s
     - if they are not setup, those features will not be able to work properly
   - some of the features of the library uses globals variable that are usually setup by the `pp-gateway` component, like `Globals.getSceneObjects` or `Globals.getDefaultResources`
     - if these variables are not setup, those features will not be able to work properly
+  - when you are going to release your app, you most likely want to disable the following development flags on the `pp-gateway` component:
+    - `enableDebugs`, `enableTools`, `addPPToWindow`, `addWLToWindow`
 
 # License
 
