@@ -41,6 +41,14 @@ export function isReferenceSpaceFloorBased(engine = Globals.getMainEngine()) {
     return XRUtils.getReferenceSpaceType(engine).includes("floor");
 }
 
+export function exitSession(engine = Globals.getMainEngine()) {
+    let xrSession = XRUtils.getSession(engine);
+
+    if (xrSession != null) {
+        xrSession.end();
+    }
+}
+
 export function registerSessionStartEventListener(id, listener, manuallyCallSessionStartIfSessionAlreadyActive = false, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
     if (listener != null) {
         if (manuallyCallSessionStartIfSessionAlreadyActive && XRUtils.isSessionActive(engine)) {
@@ -103,6 +111,7 @@ export let XRUtils = {
     getReferenceSpaceType,
     getFrame,
     isSessionActive,
+    exitSession,
     registerSessionStartEventListener,
     unregisterSessionStartEventListener,
     registerSessionEndEventListener,

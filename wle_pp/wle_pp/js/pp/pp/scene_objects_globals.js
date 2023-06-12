@@ -19,7 +19,7 @@ export function hasSceneObjects(engine = Globals.getMainEngine()) {
 }
 
 export function getPlayerObjects(engine = Globals.getMainEngine()) {
-    let sceneObjects = Globals.getSceneObjects(engine);
+    let sceneObjects = getSceneObjects(engine);
 
     if (sceneObjects != null) {
         return sceneObjects.myPlayerObjects;

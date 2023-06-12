@@ -17,8 +17,9 @@ export class PlayerObjects {
 
     constructor() {
         this.myPlayer = null;
-        this.myPlayerCauldron = null;
-        this.myPlayerPivot = null;
+
+        this.myCauldron = null;
+        this.myReferenceSpace = null;
 
         this.myCameraNonXR = null;
 
@@ -31,5 +32,6 @@ export class PlayerObjects {
         this.myHandRight = null;
 
         this.myHead = null;
+        this.myHeadDebugs = null;
     }
 }

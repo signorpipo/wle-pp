@@ -1233,7 +1233,7 @@ export function initObjectExtensionProtoype() {
 
     // Active
 
-    objectExtension.pp_setActive = function pp_setActive(active, applyToHierarchy = true) {
+    objectExtension.pp_setActive = function pp_setActive(active) {
         return ObjectUtils.setActive(this, ...arguments);
     };
 

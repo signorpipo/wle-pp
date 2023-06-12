@@ -1,5 +1,0 @@
-class PlayerLocomotionGravity {
-
-    constructor() {
-    }
-}

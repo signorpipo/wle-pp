@@ -210,7 +210,6 @@ export let invert = function () {
         let invertedNormalAttribute = null;
         let invertedColorAttribute = null;
 
-
         try {
             positionAttribute = mesh.attribute(MeshAttribute.Position);
             invertedPositionAttribute = invertedMesh.attribute(MeshAttribute.Position);
@@ -247,20 +246,122 @@ export let invert = function () {
             if (positionAttribute != null && invertedPositionAttribute != null) {
                 invertedPositionAttribute.set(i, positionAttribute.get(i, position));
             }
+
             if (textureCoordinatesAttribute != null && invertedTextureCoordinatesAttribute != null) {
                 invertedTextureCoordinatesAttribute.set(i, textureCoordinatesAttribute.get(i, textureCoordinates));
             }
+
             if (normalAttribute != null && invertedNormalAttribute != null) {
                 normalAttribute.get(i, normal)
                 normal.vec3_negate(normal);
                 invertedNormalAttribute.set(i, normal);
             }
+
             if (colorAttribute != null && invertedColorAttribute != null) {
                 invertedColorAttribute.set(i, colorAttribute.get(i, color));
             }
         }
 
         return invertedMesh;
+    };
+}();
+
+export let makeDoubleSided = function () {
+    let position = vec3_create();
+    let textureCoordinates = vec2_create();
+    let normal = vec3_create();
+    let color = vec4_create();
+
+    return function makeDoubleSided(mesh) {
+        if (mesh == null) {
+            return null;
+        }
+
+        let doubleSidedIndexData = new Uint32Array(mesh.indexData.length * 2);
+        for (let i = 0; i < doubleSidedIndexData.length / 3; i++) {
+            doubleSidedIndexData[i * 3 * 2 + 0] = mesh.indexData[i * 3 + 0] * 2;
+            doubleSidedIndexData[i * 3 * 2 + 1] = mesh.indexData[i * 3 + 1] * 2;
+            doubleSidedIndexData[i * 3 * 2 + 2] = mesh.indexData[i * 3 + 2] * 2;
+
+            doubleSidedIndexData[i * 3 * 2 + 3] = mesh.indexData[i * 3 + 2] * 2 + 1;
+            doubleSidedIndexData[i * 3 * 2 + 4] = mesh.indexData[i * 3 + 1] * 2 + 1;
+            doubleSidedIndexData[i * 3 * 2 + 5] = mesh.indexData[i * 3 + 0] * 2 + 1;
+        }
+
+        let doubleSidedMesh = new Mesh(mesh.engine, {
+            vertexCount: mesh.vertexCount * 2,
+            indexData: doubleSidedIndexData,
+            indexType: MeshIndexType.UnsignedInt,
+        });
+
+        let positionAttribute = null;
+        let textureCoordinatesAttribute = null;
+        let normalAttribute = null;
+        let colorAttribute = null;
+
+        let doubleSidedPositionAttribute = null;
+        let doubleSidedTextureCoordinatesAttribute = null;
+        let doubleSidedNormalAttribute = null;
+        let doubleSidedColorAttribute = null;
+
+        try {
+            positionAttribute = mesh.attribute(MeshAttribute.Position);
+            doubleSidedPositionAttribute = doubleSidedMesh.attribute(MeshAttribute.Position);
+        } catch (error) {
+            positionAttribute = null;
+            doubleSidedPositionAttribute = null;
+        }
+
+        try {
+            textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
+            doubleSidedTextureCoordinatesAttribute = doubleSidedMesh.attribute(MeshAttribute.TextureCoordinate);
+        } catch (error) {
+            textureCoordinatesAttribute = null;
+            doubleSidedTextureCoordinatesAttribute = null;
+        }
+
+        try {
+            normalAttribute = mesh.attribute(MeshAttribute.Normal);
+            doubleSidedNormalAttribute = doubleSidedMesh.attribute(MeshAttribute.Normal);
+        } catch (error) {
+            normalAttribute = null;
+            doubleSidedNormalAttribute = null;
+        }
+
+        try {
+            colorAttribute = mesh.attribute(MeshAttribute.Color);
+            doubleSidedColorAttribute = doubleSidedMesh.attribute(MeshAttribute.Color);
+        } catch (error) {
+            colorAttribute = null;
+            doubleSidedColorAttribute = null;
+        }
+
+        for (let i = 0; i < mesh.vertexCount; i++) {
+            if (positionAttribute != null && doubleSidedPositionAttribute != null) {
+                doubleSidedPositionAttribute.set(i * 2, positionAttribute.get(i, position));
+                doubleSidedPositionAttribute.set(i * 2 + 1, positionAttribute.get(i, position));
+            }
+
+            if (textureCoordinatesAttribute != null && doubleSidedTextureCoordinatesAttribute != null) {
+                doubleSidedTextureCoordinatesAttribute.set(i * 2, textureCoordinatesAttribute.get(i, textureCoordinates));
+                doubleSidedTextureCoordinatesAttribute.set(i * 2 + 1, textureCoordinatesAttribute.get(i, textureCoordinates));
+            }
+
+            if (normalAttribute != null && doubleSidedNormalAttribute != null) {
+                normalAttribute.get(i, normal)
+                doubleSidedNormalAttribute.set(i * 2, normal);
+
+                let invertedNormal = normal.vec3_negate();
+                doubleSidedNormalAttribute.set(i * 2 + 1, invertedNormal);
+            }
+
+            if (colorAttribute != null && doubleSidedColorAttribute != null) {
+                doubleSidedColorAttribute.set(i * 2, colorAttribute.get(i, color));
+                doubleSidedColorAttribute.set(i * 2 + 1, colorAttribute.get(i, color));
+            }
+        }
+
+        return doubleSidedMesh;
     };
 }();
 
@@ -311,5 +412,6 @@ export let MeshUtils = {
     create,
     clone,
     invert,
+    makeDoubleSided,
     createPlane
 };

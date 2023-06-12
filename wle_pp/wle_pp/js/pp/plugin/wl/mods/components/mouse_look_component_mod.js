@@ -54,7 +54,7 @@ export function initMouseLookComponentModPrototype() {
                 if (this.mouseDown) {
                     if (event.button == this.mouseButtonIndex) {
                         this.mouseDown = false;
-                        Globals.getBody(this.engine).style.cursor = "initial";
+                        Globals.getBody(this.engine).style.cursor = "default";
                     }
                 }
             }
@@ -69,7 +69,7 @@ export function initMouseLookComponentModPrototype() {
 
                 if (this.mouseDown) {
                     this.mouseDown = false;
-                    Globals.getBody(this.engine).style.cursor = "initial";
+                    Globals.getBody(this.engine).style.cursor = "default";
                 }
             }
         }.bind(this);
@@ -93,7 +93,18 @@ export function initMouseLookComponentModPrototype() {
 
     mouseLookComponentMod.start = function start() { };
     mouseLookComponentMod.onActivate = function onActivate() { };
-    mouseLookComponentMod.onDeactivate = function onDeactivate() { };
+
+    mouseLookComponentMod.onDeactivate = function onDeactivate() {
+        if (this.mouseDown) {
+            Globals.getBody(this.engine).style.cursor = "default";
+        }
+
+        this.isMoving = false;
+        this.mouseDown = false;
+
+        this.pointerId = null;
+        this.prevMoveEvent = null;
+    };
 
     mouseLookComponentMod.onDestroy = function onDestroy() {
         Globals.getBody(this.engine).removeEventListener("pointermove", this.pointerMoveListener);

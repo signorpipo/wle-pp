@@ -22,6 +22,10 @@ export function setMainEngine(engine) {
     }
 }
 
+export function removeMainEngine() {
+    _myMainEngine = null;
+}
+
 export function getEngines() {
     return _myEngines;
 }
@@ -36,6 +40,10 @@ export function removeEngine(engine) {
 
     if (index >= 0) {
         _myEngines.splice(index, 1);
+
+        if (getMainEngine() == engine) {
+            removeMainEngine();
+        }
     }
 }
 

@@ -384,7 +384,7 @@ export class BaseGamepad {
             if (hapticActuators.length > 0) {
                 if (this._myPulseInfo.myIntensity > 0) {
                     for (let hapticActuator of hapticActuators) {
-                        hapticActuator.pulse(this._myPulseInfo.myIntensity, 1000); // Duration is managed by this class
+                        hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(500, this._myPulseInfo.myDuration * 1000)); // Duration is managed by this class
                     }
                     this._myPulseInfo.myDevicePulsing = true;
                 } else if (this._myPulseInfo.myDevicePulsing) {

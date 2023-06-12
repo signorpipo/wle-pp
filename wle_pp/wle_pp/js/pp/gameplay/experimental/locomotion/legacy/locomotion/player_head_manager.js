@@ -456,7 +456,6 @@ PlayerHeadManager.prototype.teleportPlayerToHeadTransformQuat = function () {
     let teleportMovement = vec3_create();
     let playerForward = vec3_create();
     let headForward = vec3_create();
-    let headForwardNegated = vec3_create();
     let rotationToPerform = quat_create();
     return function teleportPlayerToHeadTransformQuat(headTransformQuat) {
         headPosition = headTransformQuat.quat2_getPosition(headPosition);
@@ -470,9 +469,8 @@ PlayerHeadManager.prototype.teleportPlayerToHeadTransformQuat = function () {
 
         playerForward = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getForward(playerForward);
         headForward = headTransformQuat.quat2_getForward(headForward);
-        headForwardNegated = headForward.vec3_negate(headForwardNegated); // The head is rotated 180 degrees from the player for rendering reasons
 
-        rotationToPerform = playerForward.vec3_rotationToPivotedQuat(headForwardNegated, playerUp, rotationToPerform);
+        rotationToPerform = playerForward.vec3_rotationToPivotedQuat(headForward, playerUp, rotationToPerform);
 
         Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_rotateQuat(rotationToPerform);
     };
@@ -742,7 +740,7 @@ PlayerHeadManager.prototype._sessionChangeResync = function () {
     let playerPosition = vec3_create();
     let newPlayerPosition = vec3_create();
     let fixedHeadRight = vec3_create();
-    let fixedHeadRightNegate = vec3_create();
+    let fixedHeadLeft = vec3_create();
     let fixedHeadUp = vec3_create();
     let fixedHeadForward = vec3_create();
     let fixedHeadRotation = quat_create();
@@ -836,7 +834,7 @@ PlayerHeadManager.prototype._sessionChangeResync = function () {
                     fixedHeadForward = fixedHeadUp.vec3_cross(fixedHeadRight, fixedHeadForward);
                     fixedHeadForward.vec3_normalize(fixedHeadForward);
 
-                    fixedHeadRotation.quat_fromAxes(fixedHeadRight.vec3_negate(fixedHeadRightNegate), fixedHeadUp, fixedHeadForward);
+                    fixedHeadRotation.quat_fromAxes(fixedHeadRight.vec3_negate(fixedHeadLeft), fixedHeadUp, fixedHeadForward);
                     resyncHeadRotation.quat_copy(fixedHeadRotation);
                 }
 
@@ -894,25 +892,27 @@ PlayerHeadManager.prototype._resyncHeadRotationForward = function () {
 PlayerHeadManager.prototype._updateHeightOffset = function () {
     return function _updateHeightOffset() {
         if (this._mySessionActive) {
+            // #TODO As of now reference type is not properly updated for device emulated and is available the frame after the session started
+            // if this is fixed, then the emulator will behave like a normal headset for height and we can remove all these ifs
             if (XRUtils.isDeviceEmulated(this._myParams.myEngine)) {
-                this._setPlayerPivotHeightOffset(0, 0);
+                this._setReferenceSpaceHeightOffset(0, 0);
             } else if (XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine)) {
-                this._setPlayerPivotHeightOffset(this._myParams.myHeightOffsetVRWithFloor, 0);
+                this._setReferenceSpaceHeightOffset(this._myParams.myHeightOffsetVRWithFloor, 0);
             } else {
-                this._setPlayerPivotHeightOffset(this._myParams.myHeightOffsetVRWithoutFloor, this._myParams.myForeheadExtraHeight);
+                this._setReferenceSpaceHeightOffset(this._myParams.myHeightOffsetVRWithoutFloor, this._myParams.myForeheadExtraHeight);
             }
         } else {
-            this._setPlayerPivotHeightOffset(this._myParams.myHeightOffsetNonVR, this._myParams.myForeheadExtraHeight);
+            this._setReferenceSpaceHeightOffset(this._myParams.myHeightOffsetNonVR, this._myParams.myForeheadExtraHeight);
         }
     }
 }();
 
-PlayerHeadManager.prototype._setPlayerPivotHeightOffset = function () {
-    let playerPivotPosition = vec3_create();
-    return function _setPlayerPivotHeightOffset(offset, amountToRemove) {
+PlayerHeadManager.prototype._setReferenceSpaceHeightOffset = function () {
+    let referenceSpacePosition = vec3_create();
+    return function _setReferenceSpaceHeightOffset(offset, amountToRemove) {
         if (offset != null) {
-            playerPivotPosition = Globals.getPlayerObjects(this._myParams.myEngine).myPlayerPivot.pp_getPositionLocal(playerPivotPosition);
-            Globals.getPlayerObjects(this._myParams.myEngine).myPlayerPivot.pp_setPositionLocal([playerPivotPosition[0], offset - amountToRemove, playerPivotPosition[2]]);
+            referenceSpacePosition = Globals.getPlayerObjects(this._myParams.myEngine).myReferenceSpace.pp_getPositionLocal(referenceSpacePosition);
+            Globals.getPlayerObjects(this._myParams.myEngine).myReferenceSpace.pp_setPositionLocal([referenceSpacePosition[0], offset - amountToRemove, referenceSpacePosition[2]]);
         }
     }
 }();
@@ -933,4 +933,4 @@ Object.defineProperty(PlayerHeadManager.prototype, "_onXRSessionBlurEnd", { enum
 Object.defineProperty(PlayerHeadManager.prototype, "_onViewReset", { enumerable: false });
 Object.defineProperty(PlayerHeadManager.prototype, "_blurEndResync", { enumerable: false });
 Object.defineProperty(PlayerHeadManager.prototype, "_sessionChangeResync", { enumerable: false });
-Object.defineProperty(PlayerHeadManager.prototype, "_setPlayerPivotHeightOffset", { enumerable: false });
+Object.defineProperty(PlayerHeadManager.prototype, "_setReferenceSpaceHeightOffset", { enumerable: false });

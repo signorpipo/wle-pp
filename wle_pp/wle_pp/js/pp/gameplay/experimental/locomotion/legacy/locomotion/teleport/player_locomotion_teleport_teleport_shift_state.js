@@ -93,7 +93,7 @@ export class PlayerLocomotionTeleportTeleportShiftState extends PlayerLocomotion
 
     _teleport() {
         this._myTeleportParams.myPlayerTransformManager.getParams().mySyncPositionDisabled = false;
-        //this._myLocomotionRuntimeParams.myIsTeleporting = false;
+        this._myLocomotionRuntimeParams.myIsTeleporting = false;
         this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
         this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myStartRotationOnUp - this._myCurrentRotationOnUp, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
     }
@@ -117,23 +117,23 @@ PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = function 
 
             if (this._myShiftMovementTimer.isStarted() || this._myShiftMovementTimer.isJustDone()) {
 
-                let interpolationValue = this._myTeleportParams.myTeleportParams.myShiftMovementEasingFunction(this._myShiftMovementTimer.getPercentage());
+                let interpolationFactor = this._myTeleportParams.myTeleportParams.myShiftMovementEasingFunction(this._myShiftMovementTimer.getPercentage());
 
-                if (interpolationValue >= this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage && !this._myShiftRotateTimer.isStarted()) {
+                if (interpolationFactor >= this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage && !this._myShiftRotateTimer.isStarted()) {
                     this._myShiftRotateTimer.start();
                     this._myShiftRotateTimer.update(dt);
                 }
 
                 movementToTeleportFeet = this._myTeleportRuntimeParams.myTeleportPosition.vec3_sub(this._myFeetStartPosition, movementToTeleportFeet);
-                movementToTeleportFeet.vec3_scale(interpolationValue, movementToTeleportFeet);
+                movementToTeleportFeet.vec3_scale(interpolationFactor, movementToTeleportFeet);
                 newFeetPosition = this._myFeetStartPosition.vec3_add(movementToTeleportFeet, newFeetPosition);
             }
 
             let rotationOnUp = 0;
             if (this._myShiftRotateTimer.isRunning() || this._myShiftRotateTimer.isJustDone()) {
-                let interpolationValue = this._myTeleportParams.myTeleportParams.myShiftRotateEasingFunction(this._myShiftRotateTimer.getPercentage());
+                let interpolationFactor = this._myTeleportParams.myTeleportParams.myShiftRotateEasingFunction(this._myShiftRotateTimer.getPercentage());
 
-                let newCurrentRotationOnUp = this._myStartRotationOnUp * interpolationValue;
+                let newCurrentRotationOnUp = this._myStartRotationOnUp * interpolationFactor;
                 rotationOnUp = newCurrentRotationOnUp - this._myCurrentRotationOnUp;
 
                 this._myCurrentRotationOnUp = newCurrentRotationOnUp;

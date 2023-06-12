@@ -136,14 +136,13 @@ export let getForward = function () {
         QuatUtils.toMatrix(quat, rotationMatrix);
 
         Vec3Utils.set(out, rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
-        Vec3Utils.normalize(out, out);
 
         return out;
     };
 }();
 
 export function getBackward(quat, out) {
-    QuatUtils.getForward(quat, out);
+    out = QuatUtils.getForward(quat, out);
     Vec3Utils.negate(out, out);
     return out;
 }
@@ -154,14 +153,13 @@ export let getLeft = function () {
         QuatUtils.toMatrix(quat, rotationMatrix);
 
         Vec3Utils.set(out, rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
-        Vec3Utils.normalize(out, out);
 
         return out;
     };
 }();
 
 export function getRight(quat, out) {
-    QuatUtils.getLeft(quat, out);
+    out = QuatUtils.getLeft(quat, out);
     Vec3Utils.negate(out, out);
     return out;
 }
@@ -172,14 +170,13 @@ export let getUp = function () {
         QuatUtils.toMatrix(quat, rotationMatrix);
 
         Vec3Utils.set(out, rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
-        Vec3Utils.normalize(out, out);
 
         return out;
     };
 }();
 
 export function getDown(quat, out) {
-    QuatUtils.getUp(quat, out);
+    out = QuatUtils.getUp(quat, out);
     Vec3Utils.negate(out, out);
     return out;
 }
@@ -361,40 +358,56 @@ export let subRotationQuat = function () {
     return function subRotationQuat(first, second, out = QuatUtils.create()) {
         QuatUtils.invert(second, inverse);
         QuatUtils.mul(first, inverse, out);
-
-        if (QuatUtils.isNormalized(first) && QuatUtils.isNormalized(second)) {
-            // I would normally not normalize quat results since you may want the untouched sub
-            // But for normalized params it should be normalized
-            // It seems though that for some small error the quat will not be exactly normalized, so I fix it
-            QuatUtils.normalize(out, out);
-        }
-
         return out;
     };
 }();
 
-export function rotationTo(first, second, out) {
-    return QuatUtils.rotationToDegrees(first, second, out);
+export function rotationTo(from, to, out) {
+    return QuatUtils.rotationToDegrees(from, to, out);
 }
 
 export let rotationToDegrees = function () {
-    let secondQuat = create();
-    return function rotationToDegrees(first, second, out) {
-        Vec3Utils.degreesToQuat(second, secondQuat);
-        return QuatUtils.rotationToQuat(first, secondQuat, out);
+    let toQuat = create();
+    return function rotationToDegrees(from, to, out) {
+        Vec3Utils.degreesToQuat(to, toQuat);
+        return QuatUtils.rotationToQuat(from, toQuat, out);
     };
 }();
 
 export let rotationToRadians = function () {
-    let secondQuat = create();
-    return function rotationToRadians(first, second, out) {
-        Vec3Utils.radiansToQuat(second, secondQuat);
-        return QuatUtils.rotationToQuat(first, secondQuat, out);
+    let toQuat = create();
+    return function rotationToRadians(from, to, out) {
+        Vec3Utils.radiansToQuat(to, toQuat);
+        return QuatUtils.rotationToQuat(from, toQuat, out);
     };
 }();
 
-export function rotationToQuat(first, second, out) {
-    return QuatUtils.subRotationQuat(second, first, out);
+export function rotationToQuat(from, to, out) {
+    return QuatUtils.normalize(QuatUtils.subRotationQuat(to, from, out), out);
+}
+
+export function rotationAroundAxis(quat, axis, out) {
+    return QuatUtils.rotationAroundAxisDegrees(quat, axis, out);
+}
+
+export let rotationAroundAxisDegrees = function () {
+    let rotationAroundQuat = create();
+    return function rotationAroundAxisDegrees(quat, axis, out = Vec3Utils.create()) {
+        QuatUtils.rotationAroundAxisQuat(quat, axis, rotationAroundQuat);
+        return QuatUtils.toDegrees(rotationAroundQuat, out);
+    };
+}();
+
+export let rotationAroundAxisRadians = function () {
+    let rotationAroundQuat = create();
+    return function rotationAroundAxisRadians(quat, axis, out = Vec3Utils.create()) {
+        QuatUtils.rotationAroundAxisQuat(quat, axis, rotationAroundQuat);
+        return QuatUtils.toRadians(rotationAroundQuat, out);
+    };
+}();
+
+export function rotationAroundAxisQuat(quat, axis, out = QuatUtils.create()) {
+    return QuatUtils.getTwist(quat, axis, out);
 }
 
 export let getTwist = function () {
@@ -440,7 +453,7 @@ export function getSwingFromTwist(quat, twist, out = QuatUtils.create()) {
 export let getTwistFromSwing = function () {
     let inverse = create();
     return function getTwistFromSwing(quat, swing, out = QuatUtils.create()) {
-        QuatUtils.invert(swing, inverse);
+        QuatUtils.conjugate(swing, inverse);
         QuatUtils.addRotationQuat(quat, inverse, out);
         return out;
     };
@@ -491,40 +504,40 @@ export let rotateAxisRadians = function () {
     };
 }();
 
-export function lerp(from, to, interpolationValue, out = QuatUtils.create()) {
-    if (interpolationValue <= 0) {
+export function lerp(from, to, interpolationFactor, out = QuatUtils.create()) {
+    if (interpolationFactor <= 0) {
         QuatUtils.copy(from, out);
         return out;
-    } else if (interpolationValue >= 1) {
+    } else if (interpolationFactor >= 1) {
         QuatUtils.copy(to, out);
         return out;
     }
 
-    gl_quat.lerp(out, from, to, interpolationValue);
+    gl_quat.lerp(out, from, to, interpolationFactor);
     return out;
 }
 
-export function interpolate(from, to, interpolationValue, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
-    let lerpValue = easingFunction(interpolationValue);
-    return QuatUtils.lerp(from, to, lerpValue, out);
+export function interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
+    let lerpFactor = easingFunction(interpolationFactor);
+    return QuatUtils.lerp(from, to, lerpFactor, out);
 }
 
-export function slerp(from, to, interpolationValue, out = QuatUtils.create()) {
-    if (interpolationValue <= 0) {
+export function slerp(from, to, interpolationFactor, out = QuatUtils.create()) {
+    if (interpolationFactor <= 0) {
         QuatUtils.copy(from, out);
         return out;
-    } else if (interpolationValue >= 1) {
+    } else if (interpolationFactor >= 1) {
         QuatUtils.copy(to, out);
         return out;
     }
 
-    gl_quat.slerp(out, from, to, interpolationValue);
+    gl_quat.slerp(out, from, to, interpolationFactor);
     return out;
 }
 
-export function sinterpolate(from, to, interpolationValue, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
-    let lerpValue = easingFunction(interpolationValue);
-    return QuatUtils.slerp(from, to, lerpValue, out);
+export function sinterpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
+    let lerpFactor = easingFunction(interpolationFactor);
+    return QuatUtils.slerp(from, to, lerpFactor, out);
 }
 
 export let QuatUtils = {
@@ -583,6 +596,10 @@ export let QuatUtils = {
     rotationToDegrees,
     rotationToRadians,
     rotationToQuat,
+    rotationAroundAxis,
+    rotationAroundAxisDegrees,
+    rotationAroundAxisRadians,
+    rotationAroundAxisQuat,
     getTwist,
     getSwing,
     getSwingFromTwist,
@@ -683,7 +700,6 @@ let _setAxes = function () {
             );
 
             Mat3Utils.toQuat(rotationMat, rotationQuat);
-            QuatUtils.normalize(rotationQuat, rotationQuat);
 
             QuatUtils.copy(rotationQuat, quat);
         } else {

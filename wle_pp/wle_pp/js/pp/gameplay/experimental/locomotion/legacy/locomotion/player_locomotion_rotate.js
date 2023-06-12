@@ -46,6 +46,7 @@ export class PlayerLocomotionRotate {
     }
 
     start() {
+
     }
 
     stop() {
@@ -54,6 +55,10 @@ export class PlayerLocomotionRotate {
 
         this._mySmoothSnapVerticalRunning = false;
         this._mySmoothSnapVerticalAngleToPerform = 0;
+    }
+
+    getParams() {
+        return this._myParams;
     }
 
     update(dt) {

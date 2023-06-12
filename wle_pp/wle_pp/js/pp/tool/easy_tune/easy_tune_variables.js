@@ -4,8 +4,10 @@ export class EasyTuneVariables {
         this._myVariables = new Map();
     }
 
-    add(variable) {
-        this._myVariables.set(variable.getName(), variable);
+    add(variable, overwriteCurrentOne = false) {
+        if (overwriteCurrentOne || !this._myVariables.has(variable.getName())) {
+            this._myVariables.set(variable.getName(), variable);
+        }
     }
 
     remove(variableName) {
@@ -36,10 +38,10 @@ export class EasyTuneVariables {
         return this._myVariables.size;
     }
 
-    isActive(variableName) {
+    isWidgetCurrentVariable(variableName) {
         let variable = this._myVariables.get(variableName);
         if (variable) {
-            return variable.isActive();
+            return variable.isWidgetCurrentVariable();
         }
 
         return false;

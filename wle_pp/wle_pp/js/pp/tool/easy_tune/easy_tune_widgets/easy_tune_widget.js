@@ -17,10 +17,10 @@ export class EasyTuneWidgetParams extends WidgetParams {
 
         this.myShowOnStart = false;
         this.myShowVisibilityButton = false;
-        this.myAdditionalButtonsVisible = false;
+        this.myShowAdditionalButtons = false;
         this.myGamepadScrollVariableEnabled = false;
 
-        this.myVariablesImportExportButtonsVisible = false;
+        this.myShowVariablesImportExportButtons = false;
         this.myVariablesImportCallback = null;   // Signature: callback()
         this.myVariablesExportCallback = null;   // Signature: callback()
     }
@@ -60,7 +60,7 @@ export class EasyTuneWidget {
         this._myDestroyed = false;
     }
 
-    setActiveVariable(variableName) {
+    setCurrentVariable(variableName) {
         if (!this._myStarted) {
             this._myStartVariable = variableName;
         } else if (this._myEasyTuneVariables.has(variableName)) {
@@ -101,10 +101,10 @@ export class EasyTuneWidget {
         this._myWidgetFrame.start(parentObject, params);
 
         this._myEasyTuneVariables = easyTuneVariables;
-        this._myEasyTuneLastSize = this._myEasyTuneVariables.length();
-        this._myVariableNames = this._myEasyTuneVariables.getEasyTuneVariablesNames();
+        this._myEasyTuneLastSize = this.getValidEasyTuneVariablesLength();
+        this._myVariableNames = this.getValidEasyTuneVariablesNames();
 
-        if (this._myEasyTuneVariables.length() > 0) {
+        if (this.getValidEasyTuneVariablesLength() > 0) {
             this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
         }
 
@@ -122,11 +122,11 @@ export class EasyTuneWidget {
     update(dt) {
         this._myWidgetFrame.update(dt);
 
-        if (this._myEasyTuneVariables.length() != this._myEasyTuneLastSize || this._myDirty) {
+        if (this.getValidEasyTuneVariablesLength() != this._myEasyTuneLastSize || this._myDirty) {
             this._refreshEasyTuneVariables();
         }
 
-        if (this._myWidgetFrame.isVisible() && this._myEasyTuneVariables.length() > 0) {
+        if (this._myWidgetFrame.isVisible() && this.getValidEasyTuneVariablesLength() > 0) {
             if (this._myConfig.myRefreshVariablesDelay != null) {
                 this._myRefreshVariablesTimer += dt;
                 if (this._myRefreshVariablesTimer > this._myConfig.myRefreshVariablesDelay) {
@@ -146,7 +146,7 @@ export class EasyTuneWidget {
 
         this._updateGamepadWidgetVisibility();
 
-        this._updateActiveVariable();
+        this._updateWidgetCurrentVariable();
     }
 
     _initializeWidgets() {
@@ -171,10 +171,10 @@ export class EasyTuneWidget {
     }
 
     _selectCurrentWidget() {
-        if (this._myEasyTuneVariables.length() <= 0) {
+        if (this.getValidEasyTuneVariablesLength() <= 0) {
             return;
         } else if (this._myCurrentVariable == null) {
-            this._myVariableNames = this._myEasyTuneVariables.getEasyTuneVariablesNames();
+            this._myVariableNames = this.getValidEasyTuneVariablesNames();
             this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
         }
 
@@ -200,11 +200,11 @@ export class EasyTuneWidget {
     }
 
     _refreshEasyTuneVariables() {
-        this._myVariableNames = this._myEasyTuneVariables.getEasyTuneVariablesNames();
-        this._myEasyTuneLastSize = this._myEasyTuneVariables.length();
+        this._myVariableNames = this.getValidEasyTuneVariablesNames();
+        this._myEasyTuneLastSize = this.getValidEasyTuneVariablesLength();
 
-        if (this._myEasyTuneVariables.length() > 0) {
-            if (this._myCurrentVariable && this._myEasyTuneVariables.has(this._myCurrentVariable.getName())) {
+        if (this.getValidEasyTuneVariablesLength() > 0) {
+            if (this._myCurrentVariable && this._myVariableNames.pp_hasEqual(this._myCurrentVariable.getName())) {
                 this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myCurrentVariable.getName());
             } else {
                 this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
@@ -243,7 +243,7 @@ export class EasyTuneWidget {
         }
 
         if (this._myCurrentWidget) {
-            if (this._myEasyTuneVariables.length() > 0) {
+            if (this.getValidEasyTuneVariablesLength() > 0) {
                 this._myCurrentWidget.setVisible(visible);
             } else {
                 this._myCurrentWidget.setVisible(false);
@@ -274,7 +274,7 @@ export class EasyTuneWidget {
     }
 
     _scrollVariable(amount) {
-        if (this._myEasyTuneVariables.length() <= 0) {
+        if (this.getValidEasyTuneVariablesLength() <= 0) {
             return;
         }
 
@@ -296,7 +296,7 @@ export class EasyTuneWidget {
     _createIndexString() {
         let indexString = " (";
         let index = (this._getVariableIndex(this._myCurrentVariable) + 1).toString();
-        let length = (this._myEasyTuneVariables.length()).toString();
+        let length = (this.getValidEasyTuneVariablesLength()).toString();
         while (index.length < length.length) {
             index = "0".concat(index);
         }
@@ -311,13 +311,13 @@ export class EasyTuneWidget {
         return variableIndex;
     }
 
-    _updateActiveVariable() {
+    _updateWidgetCurrentVariable() {
         for (let variable of this._myEasyTuneVariables.getEasyTuneVariablesList()) {
-            variable.setActive(false);
+            variable.setWidgetCurrentVariable(false);
         }
 
         if (this._myWidgetFrame.isVisible() && this._myCurrentVariable) {
-            this._myCurrentVariable.setActive(true);
+            this._myCurrentVariable.setWidgetCurrentVariable(true);
         }
     }
 
@@ -365,5 +365,24 @@ export class EasyTuneWidget {
 
     isDestroyed() {
         return this._myDestroyed;
+    }
+
+
+    getValidEasyTuneVariablesLength() {
+        return this.getValidEasyTuneVariablesNames().length;
+    }
+
+    getValidEasyTuneVariablesNames() {
+        let names = this._myEasyTuneVariables.getEasyTuneVariablesNames();
+
+        let validNames = [];
+        for (let name of names) {
+            let variable = this._myEasyTuneVariables.getEasyTuneVariable(name);
+            if (variable.shouldShowOnWidget()) {
+                validNames.push(name);
+            }
+        }
+
+        return validNames;
     }
 }

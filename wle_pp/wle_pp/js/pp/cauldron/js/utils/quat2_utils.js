@@ -1,7 +1,7 @@
 import { mat4 as gl_mat4, quat2 as gl_quat2 } from "gl-matrix";
 import { create as mat3_utils_create } from "./mat3_utils";
 import { Mat4Utils } from "./mat4_utils";
-import { EasingFunction } from "./math_utils";
+import { EasingFunction, MathUtils } from "./math_utils";
 import { QuatUtils, create as quat_utils_create } from "./quat_utils";
 import { Vec3Utils, create as vec3_utils_create } from "./vec3_utils";
 
@@ -180,14 +180,13 @@ export let getForward = function () {
         QuatUtils.toMatrix(quat, rotationMatrix);
 
         Vec3Utils.set(out, rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]);
-        Vec3Utils.normalize(out, out);
 
         return out;
     };
 }();
 
 export function getBackward(quat, out) {
-    Quat2Utils.getForward(quat, out);
+    out = Quat2Utils.getForward(quat, out);
     Vec3Utils.negate(out, out);
     return out;
 }
@@ -198,14 +197,13 @@ export let getLeft = function () {
         QuatUtils.toMatrix(quat, rotationMatrix);
 
         Vec3Utils.set(out, rotationMatrix[0], rotationMatrix[1], rotationMatrix[2]);
-        Vec3Utils.normalize(out, out);
 
         return out;
     };
 }();
 
 export function getRight(quat, out) {
-    Quat2Utils.getLeft(quat, out);
+    out = Quat2Utils.getLeft(quat, out);
     Vec3Utils.negate(out, out);
     return out;
 }
@@ -216,14 +214,13 @@ export let getUp = function () {
         QuatUtils.toMatrix(quat, rotationMatrix);
 
         Vec3Utils.set(out, rotationMatrix[3], rotationMatrix[4], rotationMatrix[5]);
-        Vec3Utils.normalize(out, out);
 
         return out;
     };
 }();
 
 export function getDown(quat, out) {
-    Quat2Utils.getUp(quat, out);
+    out = Quat2Utils.getUp(quat, out);
     Vec3Utils.negate(out, out);
     return out;
 }
@@ -252,7 +249,7 @@ export function rotateAxisDegrees(quat, angle, axis, out) {
 
 export let rotateAxisRadians = function () {
     let rotationQuat = quat_utils_create();
-    return function rotateAxisRadians(quat, angle, axis, out) {
+    return function rotateAxisRadians(quat, angle, axis, out = Quat2Utils.create()) {
         Quat2Utils.getRotationQuat(quat, rotationQuat);
         QuatUtils.rotateAxisRadians(rotationQuat, angle, axis, rotationQuat);
         Quat2Utils.copy(quat, out);
@@ -271,22 +268,57 @@ export function fromMatrix(matrix, out = Quat2Utils.create()) {
     return out;
 }
 
-export function lerp(from, to, interpolationValue, out = Quat2Utils.create()) {
-    if (interpolationValue <= 0) {
+export function lerp(from, to, interpolationFactor, out = Quat2Utils.create()) {
+    if (interpolationFactor <= 0) {
         Quat2Utils.copy(from, out);
         return out;
-    } else if (interpolationValue >= 1) {
+    } else if (interpolationFactor >= 1) {
         Quat2Utils.copy(to, out);
         return out;
     }
 
-    gl_quat2.lerp(out, from, to, interpolationValue);
+    gl_quat2.lerp(out, from, to, interpolationFactor);
     return out;
 }
 
-export function interpolate(from, to, interpolationValue, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
-    let lerpValue = easingFunction(interpolationValue);
-    return Quat2Utils.lerp(from, to, lerpValue, out);
+export function interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
+    let lerpFactor = easingFunction(interpolationFactor);
+    return Quat2Utils.lerp(from, to, lerpFactor, out);
+}
+
+export let slerp = function () {
+    let fromPosition = vec3_utils_create();
+    let toPosition = vec3_utils_create();
+    let interpolatedPosition = vec3_utils_create();
+    let fromRotationQuat = quat_utils_create();
+    let toRotationQuat = quat_utils_create();
+    let interpolatedRotationQuat = quat_utils_create();
+    return function slerp(from, to, interpolationFactor, out = Quat2Utils.create()) {
+        if (interpolationFactor <= 0) {
+            Quat2Utils.copy(from, out);
+            return out;
+        } else if (interpolationFactor >= 1) {
+            Quat2Utils.copy(to, out);
+            return out;
+        }
+
+        Quat2Utils.getPosition(from, fromPosition);
+        Quat2Utils.getPosition(to, toPosition);
+
+        Quat2Utils.getRotationQuat(from, fromRotationQuat);
+        Quat2Utils.getRotationQuat(to, toRotationQuat);
+
+        Vec3Utils.lerp(fromPosition, toPosition, interpolationFactor, interpolatedPosition);
+        QuatUtils.slerp(fromRotationQuat, toRotationQuat, interpolationFactor, interpolatedRotationQuat);
+
+        Quat2Utils.setPositionRotationQuat(out, interpolatedPosition, interpolatedRotationQuat);
+        return out;
+    };
+}();
+
+export function sinterpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
+    let lerpFactor = easingFunction(interpolationFactor);
+    return Quat2Utils.slerp(from, to, lerpFactor, out);
 }
 
 export let Quat2Utils = {
@@ -330,5 +362,7 @@ export let Quat2Utils = {
     toMatrix,
     fromMatrix,
     lerp,
-    interpolate
+    interpolate,
+    slerp,
+    sinterpolate
 };

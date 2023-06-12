@@ -395,7 +395,7 @@ export class FSM {
 
         cloneFSM._myLogEnabled = this._myLogEnabled;
         cloneFSM._myLogShowDelayedInfo = this._myLogShowDelayedInfo;
-        cloneFSM._myLogFSMName = this._myLogFSMName.slice(0);
+        cloneFSM._myLogFSMName = this._myLogFSMName;
 
         cloneFSM._myPerformMode = this._myPerformMode;
         cloneFSM._myPerformDelayedMode = this._myPerformDelayedMode;
@@ -491,7 +491,7 @@ export class FSM {
         if (initStateIDEmitter != null) {
             initStateIDEmitter.remove(listenerID);
 
-            if (initStateIDEmitter.pp_isEmpty()) {
+            if (initStateIDEmitter.isEmpty) {
                 this._myInitIDEmitters.delete(initStateID);
             }
         }
@@ -543,7 +543,7 @@ export class FSM {
         if (internalTransitionIDEmitter != null) {
             internalTransitionIDEmitter.remove(listenerID);
 
-            if (internalTransitionIDEmitter.pp_isEmpty()) {
+            if (internalTransitionIDEmitter.isEmpty) {
                 this._myTransitionIDEmitters.pp_remove(element => element[0] == fromStateID && element[1] == toStateID && element[2] == transitionID);
             }
         }

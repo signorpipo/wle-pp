@@ -12,7 +12,7 @@ let visualText = new VisualText(visualParams);
 */
 
 import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
-import { mat4_create } from "../../../plugin/js/extensions/array_extension";
+import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array_extension";
 import { Globals } from "../../../pp/globals";
 import { VisualElementType } from "./visual_element_types";
 
@@ -31,6 +31,8 @@ export class VisualTextParams {
 
         this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
+
+        this.myLookAtObject = null;
 
         this.myType = VisualElementType.TEXT;
     }
@@ -101,7 +103,7 @@ export class VisualText {
     }
 
     update(dt) {
-        if (this._myDirty) {
+        if (this._myDirty || this._myParams.myLookAtObject != null) {
             this._refresh();
 
             this._myDirty = false;
@@ -109,33 +111,7 @@ export class VisualText {
     }
 
     _refresh() {
-        this._myTextObject.pp_setParent(this._myParams.myParent, false);
-
-        if (this._myParams.myLocal) {
-            this._myTextObject.pp_setTransformLocal(this._myParams.myTransform);
-        } else {
-            this._myTextObject.pp_setTransform(this._myParams.myTransform);
-        }
-
-        if (this._myParams.myMaterial == null) {
-            if (this._myParams.myColor == null) {
-                this._myTextComponent.material = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myText;
-            } else {
-                if (this._myTextMaterial == null) {
-                    this._myTextMaterial = Globals.getDefaultMaterials(this._myParams.myParent.pp_getEngine()).myText.clone();
-                }
-                this._myTextComponent.material = this._myTextMaterial;
-                this._myTextMaterial.color = this._myParams.myColor;
-            }
-        } else {
-            this._myTextComponent.material = this._myParams.myMaterial;
-        }
-
-        this._myTextComponent.text = this._myParams.myText;
-        this._myTextComponent.alignment = this._myParams.myAlignment;
-        this._myTextComponent.justification = this._myParams.myJustification;
-
-        this._myDirty = false;
+        // Implemented outside class definition
     }
 
     _build() {
@@ -204,5 +180,45 @@ VisualTextParams.prototype.copy = function copy(other) {
     this.myParent = other.myParent;
     this.myLocal = other.myLocal;
 
+    this.myLookAtObject = other.myLookAtObject;
+
     this.myType = other.myType;
 };
+
+VisualText.prototype._refresh = function () {
+    let lookAtPosition = vec3_create();
+    return function _refresh() {
+        this._myTextObject.pp_setParent(this._myParams.myParent, false);
+
+        if (this._myParams.myLocal) {
+            this._myTextObject.pp_setTransformLocal(this._myParams.myTransform);
+        } else {
+            this._myTextObject.pp_setTransform(this._myParams.myTransform);
+        }
+
+        if (this._myParams.myLookAtObject != null) {
+            this._myParams.myLookAtObject.pp_getPosition(lookAtPosition);
+            this._myTextObject.pp_lookAt(lookAtPosition);
+        }
+
+        if (this._myParams.myMaterial == null) {
+            if (this._myParams.myColor == null) {
+                this._myTextComponent.material = Globals.getVisualResources(this._myParams.myParent.pp_getEngine()).myDefaultMaterials.myText;
+            } else {
+                if (this._myTextMaterial == null) {
+                    this._myTextMaterial = Globals.getDefaultMaterials(this._myParams.myParent.pp_getEngine()).myText.clone();
+                }
+                this._myTextComponent.material = this._myTextMaterial;
+                this._myTextMaterial.color = this._myParams.myColor;
+            }
+        } else {
+            this._myTextComponent.material = this._myParams.myMaterial;
+        }
+
+        this._myTextComponent.text = this._myParams.myText;
+        this._myTextComponent.alignment = this._myParams.myAlignment;
+        this._myTextComponent.justification = this._myParams.myJustification;
+
+        this._myDirty = false;
+    };
+}();

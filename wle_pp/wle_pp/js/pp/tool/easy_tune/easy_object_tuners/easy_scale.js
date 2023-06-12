@@ -4,8 +4,8 @@ import { EasyObjectTuner } from "./easy_object_tuner";
 
 export class EasyScale extends EasyObjectTuner {
 
-    constructor(local, scaleAsOne, object, variableName, setAsDefault, useTuneTarget, engine) {
-        super(object, variableName, setAsDefault, useTuneTarget, engine);
+    constructor(local, scaleAsOne, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
+        super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
         this._myLocal = local;
         this._myScaleAsOne = scaleAsOne;
     }
@@ -15,7 +15,7 @@ export class EasyScale extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneNumberArray(variableName, this._getDefaultValue(), 1, 3, 0.001, null, this._myScaleAsOne);
+        return new EasyTuneNumberArray(variableName, this._getDefaultValue(), 3, 1, 0.001, null, this._myScaleAsOne);
     }
 
     _getObjectValue(object) {

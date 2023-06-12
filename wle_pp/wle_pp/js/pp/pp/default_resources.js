@@ -20,6 +20,13 @@ export class DefaultResourcesMeshes {
         this.myInvertedSphere = null;
         this.myInvertedCone = null;
         this.myInvertedCylinder = null;
+
+        this.myDoubleSidedPlane = null;
+        this.myDoubleSidedCube = null;
+        this.myDoubleSidedSphere = null;
+        this.myDoubleSidedCone = null;
+        this.myDoubleSidedCylinder = null;
+        this.myDoubleSidedCircle = null;
     }
 }
 

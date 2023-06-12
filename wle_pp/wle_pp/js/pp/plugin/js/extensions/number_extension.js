@@ -8,7 +8,7 @@ export function initNumberExtensionPrototype() {
 
     let numberExtension = {};
 
-    // Mostly added to make it easier to use plain numbers in combo with NumberOverValue
+    // Mostly added to make it easier to use plain numbers in combo with NumberOverFactor
     numberExtension.get = function get() {
         return this.valueOf();
     };

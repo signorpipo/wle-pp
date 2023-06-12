@@ -25,10 +25,6 @@ export function cloneCollision(componentToClone, targetObject, deepCloneParams =
 export function cloneText(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
 
-    if (deepCloneParams.isDeepCloneComponent(TextComponent.TypeName)) {
-        clonedComponent.text = componentToClone.text.slice(0);
-    }
-
     if (deepCloneParams.isDeepCloneComponentVariable(TextComponent.TypeName, "material")) {
         clonedComponent.material = componentToClone.material.clone();
     }

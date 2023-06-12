@@ -17,22 +17,22 @@ export class InputManager {
         this._myKeyboard = new Keyboard(this._myEngine);
 
         this._myHeadPose = new HeadPose(new BasePoseParams(this._myEngine));
-        this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+        this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
         this._myHeadPose.setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
 
         this._myHandPoses = [];
         this._myHandPoses[Handedness.LEFT] = new HandPose(Handedness.LEFT, new HandPoseParams(this._myEngine));
         this._myHandPoses[Handedness.RIGHT] = new HandPose(Handedness.RIGHT, new HandPoseParams(this._myEngine));
-        this._myHandPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
-        this._myHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+        this._myHandPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+        this._myHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
         this._myHandPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
         this._myHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
 
         this._myTrackedHandPoses = [];
         this._myTrackedHandPoses[Handedness.LEFT] = new TrackedHandPose(Handedness.LEFT, new TrackedHandPoseParams(true, this._myEngine));
         this._myTrackedHandPoses[Handedness.RIGHT] = new TrackedHandPose(Handedness.RIGHT, new TrackedHandPoseParams(true, this._myEngine));
-        this._myTrackedHandPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
-        this._myTrackedHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+        this._myTrackedHandPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+        this._myTrackedHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
         this._myTrackedHandPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
         this._myTrackedHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
 
@@ -45,18 +45,18 @@ export class InputManager {
         this._myMouse.start();
         this._myKeyboard.start();
 
-        this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+        this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
         this._myHeadPose.setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
         this._myHeadPose.start();
 
         for (let key in this._myHandPoses) {
-            this._myHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+            this._myHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
             this._myHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
             this._myHandPoses[key].start();
         }
 
         for (let key in this._myTrackedHandPoses) {
-            this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+            this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
             this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
             this._myTrackedHandPoses[key].start();
         }
@@ -68,18 +68,18 @@ export class InputManager {
         this._myMouse.update(dt);
         this._myKeyboard.update(dt);
 
-        this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+        this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
         this._myHeadPose.setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
         this._myHeadPose.update(dt);
 
         for (let key in this._myHandPoses) {
-            this._myHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+            this._myHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
             this._myHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
             this._myHandPoses[key].update(dt);
         }
 
         for (let key in this._myTrackedHandPoses) {
-            this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myPlayerPivot);
+            this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
             this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
             this._myTrackedHandPoses[key].update(dt);
         }

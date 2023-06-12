@@ -8,14 +8,14 @@ export class EasyMeshAmbientFactorComponent extends Component {
     static Properties = {
         _myVariableName: Property.string(""),
         _myUseTuneTarget: Property.bool(false),
-        _mySetAsDefault: Property.bool(false)
+        _mySetAsWidgetCurrentVariable: Property.bool(false)
     };
 
     init() {
         this._myEasyObjectTuner = null;
 
         if (Globals.isToolEnabled(this.engine)) {
-            this._myEasyObjectTuner = new EasyMeshAmbientFactor(this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
+            this._myEasyObjectTuner = new EasyMeshAmbientFactor(this.object, this._myVariableName, this._mySetAsWidgetCurrentVariable, this._myUseTuneTarget);
         }
     }
 

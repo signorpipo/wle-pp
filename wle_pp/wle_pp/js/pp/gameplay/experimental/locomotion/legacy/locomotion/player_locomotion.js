@@ -5,7 +5,10 @@ import { PhysicsLayerFlags } from "../../../../../cauldron/physics/physics_layer
 import { Handedness } from "../../../../../input/cauldron/input_types";
 import { InputUtils } from "../../../../../input/cauldron/input_utils";
 import { GamepadButtonID } from "../../../../../input/gamepad/gamepad_buttons";
+import { vec3_create } from "../../../../../plugin/js/extensions/array_extension";
 import { Globals } from "../../../../../pp/globals";
+import { CharacterColliderSetupSimplifiedCreationParams, CharacterColliderSetupUtils } from "../../../character_controller/collision/character_collider_setup_utils";
+import { CollisionCheckBridge } from "../../../character_controller/collision/collision_check_bridge";
 import { CollisionCheckUtils } from "../../../character_controller/collision/legacy/collision_check/collision_check";
 import { CollisionCheckParams, CollisionRuntimeParams } from "../../../character_controller/collision/legacy/collision_check/collision_params";
 import { PlayerHeadManager, PlayerHeadManagerParams } from "./player_head_manager";
@@ -13,8 +16,9 @@ import { PlayerLocomotionMovementRuntimeParams } from "./player_locomotion_movem
 import { PlayerLocomotionRotate, PlayerLocomotionRotateParams } from "./player_locomotion_rotate";
 import { PlayerLocomotionSmooth, PlayerLocomotionSmoothParams } from "./player_locomotion_smooth";
 import { PlayerObscureManager, PlayerObscureManagerParams } from "./player_obscure_manager";
-import { PlayerTransformManager, PlayerTransformManagerParams } from "./player_transform_manager";
+import { PlayerTransformManager, PlayerTransformManagerParams, PlayerTransformManagerSyncFlag } from "./player_transform_manager";
 import { PlayerLocomotionTeleport, PlayerLocomotionTeleportParams } from "./teleport/player_locomotion_teleport";
+import { PlayerLocomotionTeleportTeleportType } from "./teleport/player_locomotion_teleport_teleport_state";
 
 export let PlayerLocomotionDirectionReferenceType = {
     HEAD: 0,
@@ -30,7 +34,12 @@ export class PlayerLocomotionParams {
         this.myMaxSpeed = 0;
         this.myMaxRotationSpeed = 0;
 
+        this.myGravityAcceleration = 0;
+        this.myMaxGravitySpeed = 0;
+
         this.myCharacterRadius = 0;
+
+        this.mySpeedSlowDownPercentageOnWallSlid = 1;
 
         this.myIsSnapTurn = false;
         this.mySnapTurnOnlyVR = false;
@@ -48,20 +57,28 @@ export class PlayerLocomotionParams {
 
         this.myMainHand = Handedness.LEFT;
 
+        this.myDirectionInvertForwardWhenUpsideDown = true;
         this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
         this.myVRDirectionReferenceObject = null;
 
-        this.myTeleportParableStartReferenceObject = null;
-
         this.myForeheadExtraHeight = 0;
 
-        this.myTeleportPositionObject = null;
+        this.myTeleportType = PlayerLocomotionTeleportTeleportType.INSTANT;
         this.myTeleportMaxDistance = 0;
         this.myTeleportMaxHeightDifference = 0;
+        this.myTeleportRotationOnUpEnabled = null;
+        this.myTeleportValidMaterial = null;
+        this.myTeleportInvalidMaterial = null;
+        this.myTeleportPositionObject = null;
+        this.myTeleportPositionObjectRotateWithHead = null;
+        this.myTeleportParableStartReferenceObject = null;
+
+        this.mySyncWithRealWorldPositionOnlyIfValid = true;
+        this.myViewOcclusionInsideWallsEnabled = true;
 
         this.myColliderAccuracy = null;
         this.myColliderCheckOnlyFeet = false;
-        this.myColliderSlideAgainstWall = false;
+        this.myColliderSlideAlongWall = false;
         this.myColliderMaxWalkableGroundAngle = 0;
         this.myColliderSnapOnGround = false;
         this.myColliderMaxDistanceToSnapOnGround = 0;
@@ -92,7 +109,6 @@ export class PlayerLocomotion {
         this._setupCollisionCheckParamsMovement();
         this._myCollisionCheckParamsTeleport = null;
         this._setupCollisionCheckParamsTeleport();
-
 
         this._myCollisionRuntimeParams = new CollisionRuntimeParams();
         this._myMovementRuntimeParams = new PlayerLocomotionMovementRuntimeParams();
@@ -150,6 +166,18 @@ export class PlayerLocomotion {
 
             params.myHeadRadius = 0.15;
 
+            params.myAlwaysSyncPositionWithReal = !this._myParams.mySyncWithRealWorldPositionOnlyIfValid;
+            params.myAlwaysSyncHeadPositionWithReal = false;
+
+            if (!this._myParams.myViewOcclusionInsideWallsEnabled && !this._myParams.mySyncWithRealWorldPositionOnlyIfValid) {
+                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+
+                params.myAlwaysSyncHeadPositionWithReal = !this._myParams.mySyncWithRealWorldPositionOnlyIfValid;
+            }
+
             params.myMaxDistanceFromRealToSyncEnabled = true;
             params.myMaxDistanceFromRealToSync = 100;
 
@@ -190,9 +218,9 @@ export class PlayerLocomotion {
             params.myNeverResetRealRotationVR = false;
             params.myNeverResetRealHeightVR = true;
 
-            params.myResetRealOnMove = true;
+            params.myResetRealOnMove = false;
 
-            params.myDebugEnabled = true;
+            params.myDebugEnabled = false;
 
             this._myPlayerTransformManager = new PlayerTransformManager(params);
         }
@@ -201,6 +229,8 @@ export class PlayerLocomotion {
             let params = new PlayerObscureManagerParams(this._myParams.myEngine);
 
             params.myPlayerTransformManager = this._myPlayerTransformManager;
+
+            params.myEnabled = this._myParams.myViewOcclusionInsideWallsEnabled;
 
             params.myObscureObject = null;
             params.myObscureMaterial = null;
@@ -212,15 +242,15 @@ export class PlayerLocomotion {
             params.myObscureFadeEasingFunction = EasingFunction.linear;
             params.myObscureLevelRelativeDistanceEasingFunction = EasingFunction.linear;
 
-            params.myDistanceToStartObscureWhenBodyColliding = 0.2;
+            params.myDistanceToStartObscureWhenBodyColliding = 0.75;
             params.myDistanceToStartObscureWhenHeadColliding = 0;
-            params.myDistanceToStartObscureWhenFloating = 1;
-            params.myDistanceToStartObscureWhenFar = 1;
+            params.myDistanceToStartObscureWhenFloating = 0.75;
+            params.myDistanceToStartObscureWhenFar = 0.75;
 
             params.myRelativeDistanceToMaxObscureWhenBodyColliding = 0.5;
             params.myRelativeDistanceToMaxObscureWhenHeadColliding = 0.1;
-            params.myRelativeDistanceToMaxObscureWhenFloating = 5;
-            params.myRelativeDistanceToMaxObscureWhenFar = 5;
+            params.myRelativeDistanceToMaxObscureWhenFloating = 0.5;
+            params.myRelativeDistanceToMaxObscureWhenFar = 0.5;
 
             this._myPlayerObscureManager = new PlayerObscureManager(params);
         }
@@ -267,6 +297,7 @@ export class PlayerLocomotion {
                 params.myHandedness = this._myParams.myMainHand;
 
                 params.myMaxSpeed = this._myParams.myMaxSpeed;
+                params.mySpeedSlowDownPercentageOnWallSlid = this._myParams.mySpeedSlowDownPercentageOnWallSlid;
 
                 params.myMovementMinStickIntensityThreshold = 0.1;
 
@@ -277,13 +308,16 @@ export class PlayerLocomotion {
                 params.myMinAngleToFlyDownVR = this._myParams.myMinAngleToFlyDownVR;
                 params.myMinAngleToFlyRight = this._myParams.myMinAngleToFlyRight;
 
-                params.myGravityAcceleration = -20;
+                params.myGravityAcceleration = this._myParams.myGravityAcceleration;
+                params.myMaxGravitySpeed = this._myParams.myMaxGravitySpeed;
 
+                params.myDirectionInvertForwardWhenUpsideDown = this._myParams.myDirectionInvertForwardWhenUpsideDown;
                 params.myVRDirectionReferenceType = this._myParams.myVRDirectionReferenceType;
                 params.myVRDirectionReferenceObject = this._myParams.myVRDirectionReferenceObject;
 
                 params.myMoveThroughCollisionShortcutEnabled = this._myParams.myMoveThroughCollisionShortcutEnabled;
                 params.myMoveHeadShortcutEnabled = this._myParams.myMoveHeadShortcutEnabled;
+                params.myTripleSpeedShortcutEnabled = this._myParams.myTripleSpeedShortcutEnabled;
 
                 this._myPlayerLocomotionSmooth = new PlayerLocomotionSmooth(params, this._myMovementRuntimeParams);
             }
@@ -301,25 +335,33 @@ export class PlayerLocomotion {
                 params.myDetectionParams.myMaxDistance = this._myParams.myTeleportMaxDistance;
                 params.myDetectionParams.myMaxHeightDifference = this._myParams.myTeleportMaxHeightDifference;
                 params.myDetectionParams.myGroundAngleToIgnoreUpward = this._myCollisionCheckParamsMovement.myGroundAngleToIgnore;
+                params.myDetectionParams.myRotationOnUpEnabled = this._myParams.myTeleportRotationOnUpEnabled;
                 params.myDetectionParams.myMustBeOnGround = true;
 
                 params.myDetectionParams.myTeleportBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
                 params.myDetectionParams.myTeleportFloorLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
+
                 params.myDetectionParams.myTeleportFeetPositionMustBeVisible = false;
                 params.myDetectionParams.myTeleportHeadPositionMustBeVisible = false;
                 params.myDetectionParams.myTeleportHeadOrFeetPositionMustBeVisible = true;
 
                 params.myDetectionParams.myTeleportParableStartReferenceObject = this._myParams.myTeleportParableStartReferenceObject;
 
-                params.myDetectionParams.myVisibilityBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
+                params.myDetectionParams.myVisibilityBlockLayerFlags.copy(params.myDetectionParams.myTeleportBlockLayerFlags);
+
+                params.myTeleportParams.myTeleportType = this._myParams.myTeleportType;
 
                 params.myVisualizerParams.myTeleportPositionObject = this._myParams.myTeleportPositionObject;
+                params.myVisualizerParams.myTeleportValidMaterial = this._myParams.myTeleportValidMaterial;
+                params.myVisualizerParams.myTeleportInvalidMaterial = this._myParams.myTeleportInvalidMaterial;
+                params.myVisualizerParams.myTeleportPositionObjectRotateWithHead = this._myParams.myTeleportPositionObjectRotateWithHead;
 
                 params.myPerformTeleportAsMovement = false;
                 params.myTeleportAsMovementRemoveVerticalMovement = true;
                 params.myTeleportAsMovementExtraVerticalMovementPerMeter = -2;
 
-                params.myGravityAcceleration = 0;
+                params.myGravityAcceleration = this._myParams.myGravityAcceleration;
+                params.myMaxGravitySpeed = this._myParams.myMaxGravitySpeed;
 
                 params.myDebugEnabled = false;
                 params.myDebugDetectEnabled = true;
@@ -334,6 +376,8 @@ export class PlayerLocomotion {
 
         this._myIdle = false;
 
+        this._myActive = true;
+        this._myStarted = false;
         this._myDestroyed = false;
     }
 
@@ -348,6 +392,49 @@ export class PlayerLocomotion {
         this._myPlayerLocomotionRotate.start();
 
         this._myLocomotionMovementFSM.perform("start");
+
+        this._myStarted = true;
+
+        let currentActive = this._myActive
+        this._myActive = !this._myActive;
+        this.setActive(currentActive);
+    }
+
+    setActive(active) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (this._myStarted) {
+                if (this._myActive) {
+                    this._myPlayerObscureManager.start();
+                    if (!this._myIdle) {
+                        this._myLocomotionMovementFSM.perform("start");
+                    }
+                } else {
+                    this._myLocomotionMovementFSM.perform("idle");
+                    this._myPlayerObscureManager.stop();
+                }
+            }
+
+            this._myPlayerHeadManager.setActive(this._myActive);
+            this._myPlayerTransformManager.setActive(this._myActive);
+        }
+    }
+
+    isStarted() {
+        return this._myStarted;
+    }
+
+    canStop() {
+        let canStop = false;
+
+        if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
+            canStop = true;
+        } else if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
+            canStop = true;
+        }
+
+        return canStop;
     }
 
     update(dt) {
@@ -372,14 +459,7 @@ export class PlayerLocomotion {
             }
         }
 
-        //this._myPlayerObscureManager.update(dt);
-        if (Globals.getLeftGamepad(this._myParams.myEngine).getButtonInfo(GamepadButtonID.SELECT).isPressEnd(2)) {
-            if (this._myPlayerObscureManager.isFading()) {
-                this._myPlayerObscureManager.overrideObscureLevel(this._myPlayerObscureManager.isFadingOut() ? Math.pp_random(0, 0) : Math.pp_random(1, 1));
-            } else {
-                this._myPlayerObscureManager.overrideObscureLevel(this._myPlayerObscureManager.isObscured() ? Math.pp_random(0, 0) : Math.pp_random(1, 1));
-            }
-        }
+        this._myPlayerObscureManager.update(dt);
     }
 
     setIdle(idle) {
@@ -392,6 +472,30 @@ export class PlayerLocomotion {
         }
     }
 
+    getPlayerLocomotionSmooth() {
+        return this._myPlayerLocomotionSmooth;
+    }
+
+    getPlayerLocomotionTeleport() {
+        return this._myPlayerLocomotionTeleport;
+    }
+
+    getPlayerTransformManager() {
+        return this._myPlayerTransformManager;
+    }
+
+    getPlayerLocomotionRotate() {
+        return this._myPlayerLocomotionRotate;
+    }
+
+    getPlayerHeadManager() {
+        return this._myPlayerHeadManager;
+    }
+
+    getPlayerObscureManager() {
+        return this._myPlayerObscureManager;
+    }
+
     _updateCollisionHeight() {
         this._myCollisionCheckParamsMovement.myHeight = this._myPlayerHeadManager.getHeightHead();
         if (this._myCollisionCheckParamsMovement.myHeight <= 0.000001) {
@@ -401,159 +505,51 @@ export class PlayerLocomotion {
     }
 
     _setupCollisionCheckParamsMovement() {
-        this._myCollisionCheckParamsMovement.mySplitMovementEnabled = false;
-        this._myCollisionCheckParamsMovement.mySplitMovementMaxLength = 0;
+        let simplifiedParams = new CharacterColliderSetupSimplifiedCreationParams();
 
-        this._myCollisionCheckParamsMovement.myRadius = this._myParams.myCharacterRadius;
-        this._myCollisionCheckParamsMovement.myDistanceFromFeetToIgnore = 0.1;
-        this._myCollisionCheckParamsMovement.myDistanceFromHeadToIgnore = 0.1;
+        simplifiedParams.myHeight = this._myParams.myDefaultHeight;
+        simplifiedParams.myRadius = this._myParams.myCharacterRadius;
 
-        //this._myCollisionCheckParamsMovement.myPositionOffsetLocal.vec3_set(0, 1, 0)
-        //this._myCollisionCheckParamsMovement.myRotationOffsetLocalQuat.quat_fromAxis(45, vec3_create(1, 1, 0).vec3_normalize());
+        simplifiedParams.myAccuracyLevel = this._myParams.myColliderAccuracy;
 
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckEnabled = true;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementStepEnabled = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementStepMaxLength = 0;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementRadialStepAmount = 1;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckDiagonalOutward = true;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckDiagonalInward = true;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckStraight = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckHorizontalBorder = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalStraight = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalDiagonalUpwardOutward = true;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalDiagonalUpwardInward = true;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalDiagonalDownwardOutward = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalDiagonalDownwardInward = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalStraightDiagonalUpward = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalStraightDiagonalDownward = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalHorizontalBorderDiagonalOutward = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementCheckVerticalHorizontalBorderDiagonalInward = false;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementHorizontalStraightCentralCheckEnabled = true;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementVerticalStraightDiagonalUpwardCentralCheckEnabled = true;
+        simplifiedParams.myIsPlayer = true;
 
-        this._myCollisionCheckParamsMovement.myHorizontalPositionCheckEnabled = true;
-        this._myCollisionCheckParamsMovement.myHalfConeAngle = 60;
-        this._myCollisionCheckParamsMovement.myHalfConeSliceAmount = 2;
-        this._myCollisionCheckParamsMovement.myCheckConeBorder = true;
-        this._myCollisionCheckParamsMovement.myCheckConeRay = true;
-        this._myCollisionCheckParamsMovement.myHorizontalPositionCheckVerticalIgnoreHitsInsideCollision = false;
-        this._myCollisionCheckParamsMovement.myHorizontalPositionCheckVerticalDirectionType = 2; // Somewhat expensive, 2 times the check for the vertical check of the horizontal movement!
+        simplifiedParams.myCheckOnlyFeet = this._myParams.myColliderCheckOnlyFeet;
 
-        this._myCollisionCheckParamsMovement.myVerticalMovementCheckEnabled = true;
-        this._myCollisionCheckParamsMovement.myVerticalPositionCheckEnabled = true;
-        this._myCollisionCheckParamsMovement.myVerticalMovementReduceEnabled = true;
-        this._myCollisionCheckParamsMovement.myFeetRadius = 0.1;
-        this._myCollisionCheckParamsMovement.myAdjustVerticalMovementWithGroundAngleDownhill = true;
-        this._myCollisionCheckParamsMovement.myAdjustVerticalMovementWithGroundAngleUphill = true;
-        this._myCollisionCheckParamsMovement.myAdjustVerticalMovementWithCeilingAngleUphill = true;
-        this._myCollisionCheckParamsMovement.myAdjustHorizontalMovementWithGroundAngleDownhill = false;
-        this._myCollisionCheckParamsMovement.myAdjustHorizontalMovementWithCeilingAngleDownhill = false;
-        this._myCollisionCheckParamsMovement.myAdjustHorizontalMovementWithGroundAngleDownhillMinAngle = 30;
+        simplifiedParams.myMaxSpeed = this._myParams.myMaxSpeed;
 
-        this._myCollisionCheckParamsMovement.mySnapOnGroundEnabled = true;
-        this._myCollisionCheckParamsMovement.mySnapOnGroundExtraDistance = 0.1;
-        this._myCollisionCheckParamsMovement.mySnapOnCeilingEnabled = false;
-        this._myCollisionCheckParamsMovement.mySnapOnCeilingExtraDistance = 0.1;
+        simplifiedParams.myCanFly = this._myParams.myFlyEnabled;
 
-        this._myCollisionCheckParamsMovement.myGroundPopOutEnabled = true;
-        this._myCollisionCheckParamsMovement.myGroundPopOutExtraDistance = 0.1;
-        this._myCollisionCheckParamsMovement.myCeilingPopOutEnabled = true;
-        this._myCollisionCheckParamsMovement.myCeilingPopOutExtraDistance = 0.1;
+        simplifiedParams.myShouldSlideAlongWall = this._myParams.myColliderSlideAlongWall;
 
-        this._myCollisionCheckParamsMovement.myGroundCircumferenceAddCenter = true;
-        this._myCollisionCheckParamsMovement.myGroundCircumferenceSliceAmount = 8;
-        this._myCollisionCheckParamsMovement.myGroundCircumferenceStepAmount = 2;
-        this._myCollisionCheckParamsMovement.myGroundCircumferenceRotationPerStep = 22.5;
-        this._myCollisionCheckParamsMovement.myVerticalAllowHitInsideCollisionIfOneOk = true;
+        simplifiedParams.myCollectGroundInfo = true;
+        simplifiedParams.myMaxWalkableGroundAngle = this._myParams.myColliderMaxWalkableGroundAngle;
+        simplifiedParams.myShouldSnapOnGround = this._myParams.myColliderSnapOnGround;
+        simplifiedParams.myMaxDistanceToSnapOnGround = this._myParams.myColliderMaxDistanceToSnapOnGround;
+        simplifiedParams.myMaxWalkableGroundStepHeight = this._myParams.myColliderMaxWalkableGroundStepHeight;
+        simplifiedParams.myShouldNotFallFromEdges = this._myParams.myColliderPreventFallingFromEdges;
 
-        this._myCollisionCheckParamsMovement.myCheckHeight = true;
-        this._myCollisionCheckParamsMovement.myCheckHeightVerticalMovement = true;
-        this._myCollisionCheckParamsMovement.myCheckHeightVerticalPosition = true;
-        this._myCollisionCheckParamsMovement.myCheckHeightTopMovement = true;
-        this._myCollisionCheckParamsMovement.myCheckHeightTopPosition = true;
-        this._myCollisionCheckParamsMovement.myCheckHeightConeOnCollision = true;
-        this._myCollisionCheckParamsMovement.myCheckHeightConeOnCollisionKeepHit = false;
-        this._myCollisionCheckParamsMovement.myHeightCheckStepAmountMovement = 2;
-        this._myCollisionCheckParamsMovement.myHeightCheckStepAmountPosition = 2;
-        this._myCollisionCheckParamsMovement.myCheckVerticalFixedForwardEnabled = true;
-        this._myCollisionCheckParamsMovement.myCheckVerticalFixedForward = vec3_create(0, 0, 1);
-        this._myCollisionCheckParamsMovement.myCheckVerticalBothDirection = true;
-
-        this._myCollisionCheckParamsMovement.myCheckVerticalStraight = true;
-        this._myCollisionCheckParamsMovement.myCheckVerticalDiagonalRayOutward = false;
-        this._myCollisionCheckParamsMovement.myCheckVerticalDiagonalRayInward = false;
-        this._myCollisionCheckParamsMovement.myCheckVerticalDiagonalBorderOutward = false;
-        this._myCollisionCheckParamsMovement.myCheckVerticalDiagonalBorderInward = false;
-        this._myCollisionCheckParamsMovement.myCheckVerticalDiagonalBorderRayOutward = false;
-        this._myCollisionCheckParamsMovement.myCheckVerticalDiagonalBorderRayInward = false;
-        this._myCollisionCheckParamsMovement.myCheckVerticalSearchFartherVerticalHit = false;
-
-        this._myCollisionCheckParamsMovement.myGroundAngleToIgnore = 30;
-        this._myCollisionCheckParamsMovement.myCeilingAngleToIgnore = 30;
-
-        //this._myCollisionCheckParamsMovement.myHorizontalMovementGroundAngleIgnoreHeight = 0.1 * 3;
-        //this._myCollisionCheckParamsMovement.myHorizontalMovementCeilingAngleIgnoreHeight = 0.1 * 3;
-        //this._myCollisionCheckParamsMovement.myHorizontalPositionGroundAngleIgnoreHeight = 0.1;
-        //this._myCollisionCheckParamsMovement.myHorizontalPositionCeilingAngleIgnoreHeight = 0.1;
-
-        this._myCollisionCheckParamsMovement.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = 0.1;
-        this._myCollisionCheckParamsMovement.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = 0.1;
-
-        this._myCollisionCheckParamsMovement.myHeight = 1;
-
-        this._myCollisionCheckParamsMovement.myComputeGroundInfoEnabled = true;
-        this._myCollisionCheckParamsMovement.myComputeCeilingInfoEnabled = true;
-        this._myCollisionCheckParamsMovement.myDistanceToBeOnGround = 0.001;
-        this._myCollisionCheckParamsMovement.myDistanceToComputeGroundInfo = 0.1;
-        this._myCollisionCheckParamsMovement.myDistanceToBeOnCeiling = 0.001;
-        this._myCollisionCheckParamsMovement.myDistanceToComputeCeilingInfo = 0.1;
-        this._myCollisionCheckParamsMovement.myVerticalFixToBeOnGround = 0;
-        this._myCollisionCheckParamsMovement.myVerticalFixToComputeGroundInfo = 0;
-        this._myCollisionCheckParamsMovement.myVerticalFixToBeOnCeiling = 0;
-        this._myCollisionCheckParamsMovement.myVerticalFixToComputeCeilingInfo = 0;
-
-        this._myCollisionCheckParamsMovement.myMustStayOnGround = false;
-        this._myCollisionCheckParamsMovement.myMustStayOnCeiling = false;
-        this._myCollisionCheckParamsMovement.myRegatherGroundInfoOnSurfaceCheckFail = true;
-        this._myCollisionCheckParamsMovement.myRegatherCeilingInfoOnSurfaceCheckFail = true;
-        //this._myCollisionCheckParamsMovement.myExtraMovementCheckCallback = function () { return [0, 0, 0.01]; }
-
-        this._myCollisionCheckParamsMovement.mySlidingEnabled = true;
-        this._myCollisionCheckParamsMovement.mySlidingHorizontalMovementCheckBetterNormal = true;
-        this._myCollisionCheckParamsMovement.mySlidingMaxAttempts = 4;
-        this._myCollisionCheckParamsMovement.mySlidingCheckBothDirections = true;        // Expensive, 2 times the check for the whole horizontal movement!
-        this._myCollisionCheckParamsMovement.mySlidingFlickeringPreventionType = 1;      // Expensive, 2 times the check for the whole horizontal movement!
-        this._myCollisionCheckParamsMovement.mySlidingFlickeringPreventionCheckOnlyIfAlreadySliding = true;
-        this._myCollisionCheckParamsMovement.mySlidingFlickerPreventionCheckAnywayCounter = 4;
-        this._myCollisionCheckParamsMovement.mySlidingAdjustSign90Degrees = true;
-
-        this._myCollisionCheckParamsMovement.myHorizontalBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
+        simplifiedParams.myHorizontalCheckBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
         let physXComponents = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getComponents(PhysXComponent);
         for (let physXComponent of physXComponents) {
-            this._myCollisionCheckParamsMovement.myHorizontalObjectsToIgnore.pp_pushUnique(physXComponent.object, (first, second) => first.pp_equals(second));
+            simplifiedParams.myHorizontalCheckObjectsToIgnore.pp_pushUnique(physXComponent.object, (first, second) => first.pp_equals(second));
         }
+        simplifiedParams.myVerticalCheckBlockLayerFlags.copy(simplifiedParams.myHorizontalCheckBlockLayerFlags);
+        simplifiedParams.myVerticalCheckObjectsToIgnore.pp_copy(simplifiedParams.myHorizontalCheckObjectsToIgnore);
 
-        this._myCollisionCheckParamsMovement.myVerticalBlockLayerFlags.copy(this._myCollisionCheckParamsMovement.myHorizontalBlockLayerFlags);
-        this._myCollisionCheckParamsMovement.myVerticalObjectsToIgnore.pp_copy(this._myCollisionCheckParamsMovement.myHorizontalObjectsToIgnore);
+        simplifiedParams.myHorizontalCheckDebugEnabled = this._myParams.myDebugHorizontalEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
+        simplifiedParams.myVerticalCheckDebugEnabled = this._myParams.myDebugVerticalEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
 
-        this._myCollisionCheckParamsMovement.myDebugEnabled = false;
+        let colliderSetup = CharacterColliderSetupUtils.createSimplified(simplifiedParams);
 
-        this._myCollisionCheckParamsMovement.myDebugHorizontalMovementEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugHorizontalPositionEnabled = true;
-        this._myCollisionCheckParamsMovement.myDebugVerticalMovementEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugVerticalPositionEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugSlidingEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugGroundInfoEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugCeilingInfoEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugRuntimeParamsEnabled = false;
-        this._myCollisionCheckParamsMovement.myDebugMovementEnabled = false;
+        this._myCollisionCheckParamsMovement = CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(colliderSetup, this._myCollisionCheckParamsMovement, this._myParams.myEngine);
     }
 
     _setupCollisionCheckParamsTeleport() {
         this._myCollisionCheckParamsTeleport = CollisionCheckUtils.generate360TeleportParamsFromMovementParams(this._myCollisionCheckParamsMovement);
 
         // Increased so to let teleport on steep slopes from above (from below is fixed through detection myGroundAngleToIgnoreUpward)
-        this._myCollisionCheckParamsTeleport.myGroundAngleToIgnore = 60;
+        this._myCollisionCheckParamsTeleport.myGroundAngleToIgnore = 61;
         this._myCollisionCheckParamsTeleport.myTeleportMustBeOnIgnorableGroundAngle = true;
         this._myCollisionCheckParamsTeleport.myTeleportMustBeOnGround = true;
 

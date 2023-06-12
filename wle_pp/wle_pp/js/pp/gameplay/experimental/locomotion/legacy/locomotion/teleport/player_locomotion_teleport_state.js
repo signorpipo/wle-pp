@@ -3,8 +3,8 @@ import { InputUtils } from "../../../../../../input/cauldron/input_utils";
 import { GamepadButtonID } from "../../../../../../input/gamepad/gamepad_buttons";
 import { quat2_create, quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
 import { Globals } from "../../../../../../pp/globals";
+import { CollisionCheckBridge } from "../../../../character_controller/collision/collision_check_bridge";
 import { CollisionRuntimeParams } from "../../../../character_controller/collision/legacy/collision_check/collision_params";
-import { getCollisionCheck } from "../player_locomotion_component";
 
 export class PlayerLocomotionTeleportState extends State {
 
@@ -26,7 +26,7 @@ export class PlayerLocomotionTeleportState extends State {
 
 PlayerLocomotionTeleportState.prototype._checkTeleport = function () {
     return function _checkTeleport(teleportPosition, feetTransformQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
-        getCollisionCheck(this._myTeleportParams.myEngine).teleport(teleportPosition, feetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
+        CollisionCheckBridge.getCollisionCheck(this._myTeleportParams.myEngine).teleport(teleportPosition, feetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
         if (checkTeleportCollisionRuntimeParams != null) {
             checkTeleportCollisionRuntimeParams.copy(collisionRuntimeParams);
         }
@@ -88,7 +88,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function () {
                 }
 
                 movementFeetTransformQuat.quat2_setPositionRotationQuat(currentFeetPosition, feetRotationQuat);
-                getCollisionCheck(this._myTeleportParams.myEngine).move(teleportMovement, movementFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, checkTeleportMovementCollisionRuntimeParams);
+                CollisionCheckBridge.getCollisionCheck(this._myTeleportParams.myEngine).move(teleportMovement, movementFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, checkTeleportMovementCollisionRuntimeParams);
 
                 if (!checkTeleportMovementCollisionRuntimeParams.myHorizontalMovementCanceled && !checkTeleportMovementCollisionRuntimeParams.myVerticalMovementCanceled) {
                     movementToTeleportPosition = fixedTeleportPosition.vec3_sub(checkTeleportMovementCollisionRuntimeParams.myNewPosition, movementToTeleportPosition);
@@ -134,7 +134,7 @@ PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
         newFeetTransformQuat.quat2_setPositionRotationQuat(teleportPosition, newFeetRotationQuat);
 
         if (Globals.getGamepads(this._myTeleportParams.myEngine)[InputUtils.getOppositeHandedness(this._myTeleportParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
-            getCollisionCheck(this._myTeleportParams.myEngine).positionCheck(true, newFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
+            CollisionCheckBridge.getCollisionCheck(this._myTeleportParams.myEngine).positionCheck(true, newFeetTransformQuat, this._myTeleportParams.myCollisionCheckParams, collisionRuntimeParams);
 
             this._myTeleportParams.myPlayerHeadManager.teleportPositionFeet(teleportPosition);
             if (rotationOnUp != 0) {

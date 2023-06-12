@@ -254,14 +254,14 @@ CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
                         (collisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxPerceivedAngle == null || Math.abs(groundPerceivedAngle) <= collisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxPerceivedAngle) &&
                         (collisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxAngle == null || previousCollisionRuntimeParams.myGroundAngle <= collisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxAngle)) {
                         extraVerticalLength = groundExtraVerticalLength;
-                        collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = true;
+                        collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = true;
                     }
                 } else if (groundPerceivedAngle < 0) {
                     if (collisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhill &&
                         (collisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxPerceivedAngle == null || Math.abs(groundPerceivedAngle) <= collisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxPerceivedAngle) &&
                         (collisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxAngle == null || previousCollisionRuntimeParams.myGroundAngle <= collisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxAngle)) {
                         extraVerticalLength = groundExtraVerticalLength;
-                        collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = true;
+                        collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = true;
                     }
                 }
             }
@@ -283,16 +283,16 @@ CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
                             (collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxPerceivedAngle == null || Math.abs(ceilingPerceivedAngle) <= collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxPerceivedAngle) &&
                             (collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxAngle == null || previousCollisionRuntimeParams.myCeilingAngle <= collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxAngle)) {
                             extraVerticalLength = ceilingExtraVerticalLength;
-                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = true;
-                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = false;
+                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill = true;
+                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = false;
                         }
                     } else if (ceilingPerceivedAngle < 0) {
                         if (collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhill &&
                             (collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxPerceivedAngle == null || Math.abs(ceilingPerceivedAngle) <= collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxPerceivedAngle) &&
                             (collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxAngle == null || previousCollisionRuntimeParams.myCeilingAngle <= collisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxAngle)) {
                             extraVerticalLength = ceilingExtraVerticalLength;
-                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill = true;
-                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = false;
+                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill = true;
+                            collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = false;
                         }
                     }
                 }
@@ -308,15 +308,15 @@ CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
             } else if (sameSignThanExtra) {
                 outAdjustedVerticalMovement = verticalMovement.vec3_add(extraVerticalMovement, outAdjustedVerticalMovement);
             } else if (!sameSignThanExtra && (
-                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill ||
-                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill)) {
+                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill ||
+                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill)) {
                 // Do not add for downhill, since it means the vertical movement was about to go away from surface and u should not cancel that
                 outAdjustedVerticalMovement = verticalMovement.vec3_add(extraVerticalMovement, outAdjustedVerticalMovement);
             } else {
-                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = false;
-                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = false;
-                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill = false;
-                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = false;
+                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill = false;
+                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = false;
+                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill = false;
+                collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = false;
             }
         }
 
@@ -360,7 +360,7 @@ CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
                         if (collisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhill &&
                             (collisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhillMinAngle == null || previousCollisionRuntimeParams.myGroundAngle >= collisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhillMinAngle)) {
                             extraHorizontalMovement = groundHorizontalDirection.vec3_scale(groundExtraHorizontalLength, extraHorizontalMovement);
-                            collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill = true;
+                            collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill = true;
                         }
                     }
                 }
@@ -387,16 +387,16 @@ CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
                                     scaledCeilingHorizontalDirectionAlongGroundHorizontalDirection = scaledCeilingHorizontalDirection.vec3_componentAlongAxis(scaledCeilingHorizontalDirectionWithoutGroundHorizontalDirection);
 
                                     if (scaledCeilingHorizontalDirectionAlongGroundHorizontalDirection.vec3_isFartherAlongAxis(extraHorizontalMovement, groundHorizontalDirection)) {
-                                        collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill = false;
+                                        collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill = false;
                                         extraHorizontalMovement.vec3_copy(scaledCeilingHorizontalDirection);
-                                        collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = true;
+                                        collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = true;
                                     } else if (!scaledCeilingHorizontalDirectionWithoutGroundHorizontalDirection.vec3_isZero(0.00001)) {
                                         extraHorizontalMovement = extraHorizontalMovement.vec3_add(scaledCeilingHorizontalDirectionWithoutGroundHorizontalDirection, extraHorizontalMovement);
-                                        collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = true;
+                                        collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = true;
                                     }
                                 } else {
                                     extraHorizontalMovement.vec3_copy(scaledCeilingHorizontalDirection);
-                                    collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = true;
+                                    collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = true;
                                 }
                             }
                         }

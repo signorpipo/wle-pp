@@ -16,6 +16,18 @@ export class Direction2DTo3DConverterParams {
         this.myMinAngleToFlyForwardDown = 90;
         this.myMinAngleToFlyRightUp = 90;
         this.myMinAngleToFlyRightDown = 90;
+
+        // Settings when flying is not active, used to adjust the directions and flat them
+        this.myAdjustForwardWhenCloseToUp = true;
+        this.myAdjustRightWhenCloseToUp = true;
+        this.myAdjustForwardWhenCloseToUpAngleThreshold = 10;
+        this.myAdjustRightWhenCloseToUpAngleThreshold = 10;
+
+        this.myInvertForwardWhenUpsideDown = false;
+        this.myInvertRightWhenUpsideDown = false;
+
+        this.myAdjustLastValidFlatForwardOverConversionReferenceRotation = true;
+        this.myAdjustLastValidFlatRightOverConversionReferenceRotation = true;
     }
 }
 
@@ -27,17 +39,16 @@ export class Direction2DTo3DConverter {
         this._myFlyingForward = this._myParams.myStartFlyingForward;
         this._myFlyingRight = this._myParams.myStartFlyingRight;
 
+        this._myLastConvertRotationQuat = quat_create();
+        this._myLastConvertRotationQuatValid = false;
+
         this._myLastValidFlatForward = vec3_create();
         this._myLastValidFlatRight = vec3_create();
-
-        // Config
-
-        this._myMinAngleToBeValid = 5;
     }
 
     // @direction3DUp can be used to flat the direction if the @conversionTransform is not aligned with it
     // It's also needed to specify the fly axis, if different from the @conversionTransform up
-    // If @direction3DUp is null, conversionTransform up is used
+    // If @direction3DUp is null, @conversionTransform up is used
     convert(direction2D, conversionTransform, direction3DUp = null, outDirection3D = vec3_create()) {
         return this.convertTransform(direction2D, conversionTransform, direction3DUp, outDirection3D);
     }
@@ -91,8 +102,6 @@ export class Direction2DTo3DConverter {
         } else {
             this.stopFlyingForward();
         }
-
-        this._myLastValidFlatForward.vec3_zero();
     }
 
     resetFlyRight() {
@@ -101,15 +110,31 @@ export class Direction2DTo3DConverter {
         } else {
             this.stopFlyingRight();
         }
+    }
 
+    resetLastValidFlatDirections() {
+        this._myLastValidFlatForward.vec3_zero();
         this._myLastValidFlatRight.vec3_zero();
+    }
+
+    resetLastValidFlatForward() {
+        this._myLastValidFlatForward.vec3_zero();
+    }
+
+    resetLastValidFlatRight() {
+        this._myLastValidFlatRight.vec3_zero();
+    }
+
+    resetLastConvertTransform() {
+        this._myLastConvertRotationQuatValid = false;
+        this._myLastConvertRotationQuat.quat_identity();
     }
 
     // Convert Alternatives
 
     // If @direction3DUp is null, vec3_create(0, 1, 0) is used
-    // Does not work properly if forward is aligned with @direction3DUp
-    convertForward(direction2D, forward, direction3DUp = null, outDirection3D = vec3_create()) {
+    // Does not work properly if @conversionForward is aligned with @direction3DUp
+    convertForward(direction2D, conversionForward, direction3DUp = null, outDirection3D = vec3_create()) {
         // Implemented outside class definition
     }
 
@@ -135,9 +160,9 @@ export class Direction2DTo3DConverter {
 
 Direction2DTo3DConverter.prototype.convertForward = function () {
     let rotationQuat = quat_create();
-    return function convertForward(direction2D, forward, direction3DUp = null, outDirection3D = vec3_create()) {
+    return function convertForward(direction2D, conversionForward, direction3DUp = null, outDirection3D = vec3_create()) {
         rotationQuat.quat_identity();
-        rotationQuat.quat_setForward(forward, direction3DUp);
+        rotationQuat.quat_setForward(conversionForward, direction3DUp);
         return this.convertRotationQuat(direction2D, rotationQuat, direction3DUp, outDirection3D);
     }
 }();
@@ -161,10 +186,32 @@ Direction2DTo3DConverter.prototype.convertTransformQuat = function () {
 Direction2DTo3DConverter.prototype.convertRotationQuat = function () {
     let forward = vec3_create();
     let right = vec3_create();
+    let up = vec3_create();
     let direction3DUpNegate = vec3_create();
     let forwardScaled = vec3_create();
     let rightScaled = vec3_create();
+    let rotationToNewConvertPivoted = quat_create();
     return function convertRotationQuat(direction2D, conversionRotationQuat, direction3DUp = null, outDirection3D = vec3_create()) {
+        outDirection3D.vec3_zero();
+
+        if (this._myParams.myAdjustLastValidFlatForwardOverConversionReferenceRotation || this._myParams.myAdjustLastValidFlatRightOverConversionReferenceRotation) {
+            if (direction3DUp != null) {
+                if (this._myLastConvertRotationQuatValid) {
+                    rotationToNewConvertPivoted = this._myLastConvertRotationQuat.quat_rotationToQuat(conversionRotationQuat, rotationToNewConvertPivoted).
+                        quat_rotationAroundAxisQuat(direction3DUp, rotationToNewConvertPivoted);
+                    if (Math.pp_angleClamp(rotationToNewConvertPivoted.quat_getAngle(), true) > Math.PP_EPSILON_DEGREES) {
+                        if (this._myParams.myAdjustLastValidFlatForwardOverConversionReferenceRotation) {
+                            this._myLastValidFlatForward.vec3_rotateQuat(rotationToNewConvertPivoted, this._myLastValidFlatForward);
+                        }
+
+                        if (this._myParams.myAdjustLastValidFlatRightOverConversionReferenceRotation) {
+                            this._myLastValidFlatRight.vec3_rotateQuat(rotationToNewConvertPivoted, this._myLastValidFlatRight);
+                        }
+                    }
+                }
+            }
+        }
+
         if (direction2D.vec2_isZero()) {
             let resetFlyForward = this._myParams.myAutoUpdateFlyForward && this._myParams.myResetFlyForwardWhenZero;
             if (resetFlyForward) {
@@ -175,89 +222,102 @@ Direction2DTo3DConverter.prototype.convertRotationQuat = function () {
             if (resetFlyRight) {
                 this.resetFlyRight();
             }
-
-            outDirection3D.vec3_zero();
-            return outDirection3D;
         } else {
-            if (direction2D[0] == 0) {
-                this._myLastValidFlatRight.vec3_zero();
-            }
 
-            if (direction2D[1] == 0) {
-                this._myLastValidFlatForward.vec3_zero();
-            }
-        }
+            forward = conversionRotationQuat.quat_getForward(forward);
+            right = conversionRotationQuat.quat_getRight(right);
+            up = conversionRotationQuat.quat_getUp(up);
 
-        forward = conversionRotationQuat.quat_getForward(forward);
-        right = conversionRotationQuat.quat_getRight(right);
+            if (direction3DUp != null) {
+                let upsideDown = !direction3DUp.vec3_isConcordant(up);
 
-        if (direction3DUp != null) {
-            direction3DUpNegate = direction3DUp.vec3_negate(direction3DUpNegate);
+                direction3DUpNegate = direction3DUp.vec3_negate(direction3DUpNegate);
 
-            // Check if it is flying based on the convert transform orientation 
-            if (this._myParams.myAutoUpdateFlyForward) {
-                let angleForwardWithDirectionUp = forward.vec3_angle(direction3DUp);
-                this._myFlyingForward = this._myFlyingForward ||
-                    (angleForwardWithDirectionUp < 90 - this._myParams.myMinAngleToFlyForwardUp || angleForwardWithDirectionUp > 90 + this._myParams.myMinAngleToFlyForwardDown);
-            }
+                // Check if it is flying based on the convert transform orientation 
+                if (this._myParams.myAutoUpdateFlyForward) {
+                    let angleForwardWithDirectionUp = forward.vec3_angle(direction3DUp);
+                    this._myFlyingForward = this._myFlyingForward ||
+                        (angleForwardWithDirectionUp < 90 - this._myParams.myMinAngleToFlyForwardUp || angleForwardWithDirectionUp > 90 + this._myParams.myMinAngleToFlyForwardDown);
+                }
 
-            if (this._myParams.myAutoUpdateFlyRight) {
-                let angleRightWithDirectionUp = right.vec3_angle(direction3DUp);
-                this._myFlyingRight = this._myFlyingRight ||
-                    (angleRightWithDirectionUp < 90 - this._myParams.myMinAngleToFlyRightUp || angleRightWithDirectionUp > 90 + this._myParams.myMinAngleToFlyRightDown);
-            }
+                if (this._myParams.myAutoUpdateFlyRight) {
+                    let angleRightWithDirectionUp = right.vec3_angle(direction3DUp);
+                    this._myFlyingRight = this._myFlyingRight ||
+                        (angleRightWithDirectionUp < 90 - this._myParams.myMinAngleToFlyRightUp || angleRightWithDirectionUp > 90 + this._myParams.myMinAngleToFlyRightDown);
+                }
 
-            // Remove the component to prevent flying, if needed
-            if (!this._myFlyingForward) {
-                // If the forward is too similar to the up (or down) take the last valid forward
-                if (!this._myLastValidFlatForward.vec3_isZero(Math.PP_EPSILON) && (forward.vec3_angle(direction3DUp) < this._myMinAngleToBeValid || forward.vec3_angle(direction3DUpNegate) < this._myMinAngleToBeValid)) {
-                    if (forward.vec3_isConcordant(this._myLastValidFlatForward)) {
+                // Remove the component to prevent flying, if needed
+                if (!this._myFlyingForward) {
+                    // If the forward is too similar to the up (or down) take the last valid forward
+                    if (this._myParams.myAdjustForwardWhenCloseToUp && !this._myLastValidFlatForward.vec3_isZero(Math.PP_EPSILON) &&
+                        (forward.vec3_angle(direction3DUp) < this._myParams.myAdjustForwardWhenCloseToUpAngleThreshold ||
+                            forward.vec3_angle(direction3DUpNegate) < this._myParams.myAdjustForwardWhenCloseToUpAngleThreshold)) {
                         forward.pp_copy(this._myLastValidFlatForward);
-                    } else {
-                        forward = this._myLastValidFlatForward.vec3_negate(forward);
+                    } else if (upsideDown && this._myParams.myInvertForwardWhenUpsideDown) {
+                        forward.vec3_negate(forward);
+                    }
+
+                    forward = forward.vec3_removeComponentAlongAxis(direction3DUp, forward);
+                    forward.vec3_normalize(forward);
+
+
+                    if (forward.vec3_isZero(Math.PP_EPSILON)) {
+                        if (!this._myLastValidFlatForward.vec3_isZero(Math.PP_EPSILON)) {
+                            forward.pp_copy(this._myLastValidFlatForward);
+                        } else {
+                            forward.vec3_set(0, 0, 1);
+                        }
                     }
                 }
 
-                forward = forward.vec3_removeComponentAlongAxis(direction3DUp, forward);
-                forward.vec3_normalize(forward);
-            }
-
-            if (!this._myFlyingRight) {
-                // If the right is too similar to the up (or down) take the last valid right
-                if (!this._myLastValidFlatRight.vec3_isZero(Math.PP_EPSILON) && (right.vec3_angle(direction3DUp) < this._myMinAngleToBeValid || right.vec3_angle(direction3DUpNegate) < this._myMinAngleToBeValid)) {
-                    if (right.vec3_isConcordant(this._myLastValidFlatRight)) {
+                if (!this._myFlyingRight) {
+                    // If the right is too similar to the up (or down) take the last valid right
+                    if (this._myParams.myAdjustRightWhenCloseToUp && !this._myLastValidFlatRight.vec3_isZero(Math.PP_EPSILON) &&
+                        (right.vec3_angle(direction3DUp) < this._myParams.myAdjustRightWhenCloseToUpAngleThreshold ||
+                            right.vec3_angle(direction3DUpNegate) < this._myParams.myAdjustRightWhenCloseToUpAngleThreshold)) {
                         right.pp_copy(this._myLastValidFlatRight);
-                    } else {
-                        right = this._myLastValidFlatRight.vec3_negate(right);
+                    } else if (upsideDown && this._myParams.myInvertRightWhenUpsideDown) {
+                        right.vec3_negate(right);
+                    }
+
+                    right = right.vec3_removeComponentAlongAxis(direction3DUp, right);
+                    right.vec3_normalize(right);
+
+                    if (right.vec3_isZero(Math.PP_EPSILON)) {
+                        if (!this._myLastValidFlatRight.vec3_isZero(Math.PP_EPSILON)) {
+                            right.pp_copy(this._myLastValidFlatRight);
+                        } else {
+                            right.vec3_set(-1, 0, 0);
+                        }
                     }
                 }
 
-                right = right.vec3_removeComponentAlongAxis(direction3DUp, right);
-                right.vec3_normalize(right);
+                // Update last valid
+                if ((forward.vec3_angle(direction3DUp) >= this._myParams.myAdjustForwardWhenCloseToUpAngleThreshold && forward.vec3_angle(direction3DUpNegate) >= this._myParams.myAdjustForwardWhenCloseToUpAngleThreshold) ||
+                    (direction2D[1] != 0 && this._myLastValidFlatForward.vec3_isZero(Math.PP_EPSILON))) {
+                    this._myLastValidFlatForward = forward.vec3_removeComponentAlongAxis(direction3DUp, this._myLastValidFlatForward);
+                    this._myLastValidFlatForward.vec3_normalize(this._myLastValidFlatForward);
+                }
+
+                if ((right.vec3_angle(direction3DUp) >= this._myParams.myAdjustRightWhenCloseToUpAngleThreshold && right.vec3_angle(direction3DUpNegate) >= this._myParams.myAdjustRightWhenCloseToUpAngleThreshold) ||
+                    (direction2D[0] != 0 && this._myLastValidFlatRight.vec3_isZero(Math.PP_EPSILON))) {
+                    this._myLastValidFlatRight = right.vec3_removeComponentAlongAxis(direction3DUp, this._myLastValidFlatRight);
+                    this._myLastValidFlatRight.vec3_normalize(this._myLastValidFlatRight);
+                }
             }
 
-            // Update last valid
-            if ((forward.vec3_angle(direction3DUp) > this._myMinAngleToBeValid && forward.vec3_angle(direction3DUpNegate) > this._myMinAngleToBeValid) ||
-                (direction2D[1] != 0 && this._myLastValidFlatForward.vec3_isZero(Math.PP_EPSILON))) {
-                this._myLastValidFlatForward = forward.vec3_removeComponentAlongAxis(direction3DUp, this._myLastValidFlatForward);
-                this._myLastValidFlatForward.vec3_normalize(this._myLastValidFlatForward);
+            // Compute direction 3D
+            outDirection3D = right.vec3_scale(direction2D[0], rightScaled).vec3_add(forward.vec3_scale(direction2D[1], forwardScaled), outDirection3D);
+
+            if (direction3DUp != null && !this._myFlyingForward && !this._myFlyingRight) {
+                outDirection3D = outDirection3D.vec3_removeComponentAlongAxis(direction3DUp, outDirection3D);
             }
 
-            if ((right.vec3_angle(direction3DUp) > this._myMinAngleToBeValid && right.vec3_angle(direction3DUpNegate) > this._myMinAngleToBeValid) ||
-                (direction2D[0] != 0 && this._myLastValidFlatRight.vec3_isZero(Math.PP_EPSILON))) {
-                this._myLastValidFlatRight = right.vec3_removeComponentAlongAxis(direction3DUp, this._myLastValidFlatRight);
-                this._myLastValidFlatRight.vec3_normalize(this._myLastValidFlatRight);
-            }
+            outDirection3D.vec3_normalize(outDirection3D);
         }
 
-        // Compute direction 3D
-        outDirection3D = right.vec3_scale(direction2D[0], rightScaled).vec3_add(forward.vec3_scale(direction2D[1], forwardScaled), outDirection3D);
-
-        if (direction3DUp != null && !this._myFlyingForward && !this._myFlyingRight) {
-            outDirection3D = outDirection3D.vec3_removeComponentAlongAxis(direction3DUp, outDirection3D);
-        }
-
-        outDirection3D.vec3_normalize(outDirection3D);
+        this._myLastConvertRotationQuat.quat_copy(conversionRotationQuat);
+        this._myLastConvertRotationQuatValid = true;
 
         return outDirection3D;
     };

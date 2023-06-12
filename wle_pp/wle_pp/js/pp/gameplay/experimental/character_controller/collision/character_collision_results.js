@@ -96,8 +96,8 @@ export class CharacterCollisionWallSlideResults {
 export class CharacterCollisionTransformResults {
 
     constructor() {
-        this.myStartTransformQuat = quat2_create();
-        this.myEndTransformQuat = quat2_create();
+        this.myInitialTransformQuat = quat2_create();
+        this.myFinalTransformQuat = quat2_create();
     }
 
     reset() {
@@ -112,8 +112,8 @@ export class CharacterCollisionTransformResults {
 export class CharacterCollisionMovementResults {
 
     constructor() {
-        this.myStartMovement = vec3_create();
-        this.myEndMovement = vec3_create();
+        this.myInitialMovement = vec3_create();
+        this.myFinalMovement = vec3_create();
         this.myMovementFailed = false;
         this.myMovementCollided = false;
         this.myReferenceCollisionHit = new RaycastHit();
@@ -131,8 +131,8 @@ export class CharacterCollisionMovementResults {
 export class CharacterCollisionTeleportResults {
 
     constructor() {
-        this.myStartTeleportTransformQuat = quat2_create();
-        this.myEndTeleportTransformQuat = quat2_create();
+        this.myInitialTeleportTransformQuat = quat2_create();
+        this.myFinalTeleportTransformQuat = quat2_create();
         this.myTeleportFailed = false;
     }
 
@@ -148,8 +148,8 @@ export class CharacterCollisionTeleportResults {
 export class CharacterCollisionCheckTransformResults {
 
     constructor() {
-        this.myStartCheckTransformQuat = quat2_create();
-        this.myEndCheckTransformQuat = quat2_create();
+        this.myInitialCheckTransformQuat = quat2_create();
+        this.myFinalCheckTransformQuat = quat2_create();
         this.myCheckTransformFailed = false;
     }
 
@@ -167,9 +167,9 @@ export class CharacterCollisionSurfaceResults {
     constructor() {
         this.myHasSnappedOnSurface = false;
         this.myHasPoppedOutSurface = false;
-        this.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill = false;
-        this.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill = false;
-        this.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill = false;
+        this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill = false;
+        this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill = false;
+        this.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill = false;
     }
 
     reset() {
@@ -217,13 +217,13 @@ export class CharacterCollisionDebugResults {
 export class CharacterCollisionInternalResults {
 
     constructor() {
-        this.myLastRelevantStartHorizontalMovement = vec3_create();
-        this.myLastRelevantAdjustedStartHorizontalMovement = vec3_create();
-        this.myLastRelevantEndHorizontalMovement = vec3_create();
+        this.myLastRelevantInitialHorizontalMovement = vec3_create();
+        this.myLastRelevantAdjustedInitialHorizontalMovement = vec3_create();
+        this.myLastRelevantFinalHorizontalMovement = vec3_create();
 
-        this.myLastRelevantStartVerticalMovement = vec3_create();
-        this.myLastRelevantAdjustedStartVerticalMovement = vec3_create();
-        this.myLastRelevantEndVerticalMovement = vec3_create();
+        this.myLastRelevantInitialVerticalMovement = vec3_create();
+        this.myLastRelevantAdjustedInitialVerticalMovement = vec3_create();
+        this.myLastRelevantFinalVerticalMovement = vec3_create();
 
         this.myLastRelevantHasWallSlid = false;
         this.myHasWallSlidTowardOppositeDirection = false;
@@ -343,69 +343,69 @@ CharacterCollisionWallSlideResults.prototype.copy = function copy(other) {
 };
 
 CharacterCollisionTransformResults.prototype.reset = function reset() {
-    this.myStartTransformQuat.quat2_identity();
-    this.myEndTransformQuat.quat2_identity();
+    this.myInitialTransformQuat.quat2_identity();
+    this.myFinalTransformQuat.quat2_identity();
 };
 
 CharacterCollisionTransformResults.prototype.copy = function copy(other) {
-    this.myStartTransformQuat.quat2_copy(other.myStartTransformQuat);
-    this.myEndTransformQuat.quat2_copy(other.myEndTransformQuat);
+    this.myInitialTransformQuat.quat2_copy(other.myInitialTransformQuat);
+    this.myFinalTransformQuat.quat2_copy(other.myFinalTransformQuat);
 };
 
 CharacterCollisionMovementResults.prototype.reset = function reset() {
-    this.myStartMovement.vec3_zero();
-    this.myEndMovement.vec3_zero();
+    this.myInitialMovement.vec3_zero();
+    this.myFinalMovement.vec3_zero();
     this.myMovementFailed = false;
     this.myMovementCollided = false;
     this.myReferenceCollisionHit.reset();
 };
 
 CharacterCollisionMovementResults.prototype.copy = function copy(other) {
-    this.myStartMovement.vec3_copy(other.myStartMovement);
-    this.myEndMovement.vec3_copy(other.myEndMovement);
+    this.myInitialMovement.vec3_copy(other.myInitialMovement);
+    this.myFinalMovement.vec3_copy(other.myFinalMovement);
     this.myMovementFailed = other.myMovementFailed;
     this.myMovementCollided = other.myMovementCollided;
     this.myReferenceCollisionHit.copy(other.myReferenceCollisionHit);
 };
 
 CharacterCollisionTeleportResults.prototype.reset = function reset() {
-    this.myStartTeleportTransformQuat.quat2_identity();
-    this.myEndTeleportTransformQuat.quat2_identity();
+    this.myInitialTeleportTransformQuat.quat2_identity();
+    this.myFinalTeleportTransformQuat.quat2_identity();
     this.myTeleportFailed = false;
 };
 
 CharacterCollisionTeleportResults.prototype.copy = function copy(other) {
-    this.myStartTeleportTransformQuat.quat2_copy(other.myStartTeleportTransformQuat);
-    this.myEndTeleportTransformQuat.quat2_copy(other.myEndTeleportTransformQuat);
+    this.myInitialTeleportTransformQuat.quat2_copy(other.myInitialTeleportTransformQuat);
+    this.myFinalTeleportTransformQuat.quat2_copy(other.myFinalTeleportTransformQuat);
     this.myTeleportFailed = other.myTeleportFailed;
 };
 
 CharacterCollisionCheckTransformResults.prototype.reset = function reset() {
-    this.myStartCheckTransformQuat.quat2_identity();
-    this.myEndCheckTransformQuat.quat2_identity();
+    this.myInitialCheckTransformQuat.quat2_identity();
+    this.myFinalCheckTransformQuat.quat2_identity();
     this.myCheckTransformFailed = false;
 };
 
 CharacterCollisionCheckTransformResults.prototype.copy = function copy(other) {
-    this.myStartCheckTransformQuat.quat2_copy(other.myStartCheckTransformQuat);
-    this.myEndCheckTransformQuat.quat2_copy(other.myEndCheckTransformQuat);
+    this.myInitialCheckTransformQuat.quat2_copy(other.myInitialCheckTransformQuat);
+    this.myFinalCheckTransformQuat.quat2_copy(other.myFinalCheckTransformQuat);
     this.myCheckTransformFailed = other.myCheckTransformFailed;
 };
 
 CharacterCollisionSurfaceResults.prototype.reset = function reset() {
     this.myHasSnappedOnSurface = false;
     this.myHasPoppedOutSurface = false;
-    this.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill = false;
-    this.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill = false;
-    this.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill = false;
+    this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill = false;
+    this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill = false;
+    this.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill = false;
 };
 
 CharacterCollisionSurfaceResults.prototype.copy = function copy(other) {
     this.myHasSnappedOnSurface = other.myHasSnappedOnSurface;
     this.myHasPoppedOutSurface = other.myHasPoppedOutSurface;
-    this.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill = other.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill;
-    this.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill = other.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill;
-    this.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill = other.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill;
+    this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill = other.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill;
+    this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill = other.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill;
+    this.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill = other.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill;
 };
 
 CharacterCollisionSplitMovementResults.prototype.reset = function reset() {
@@ -434,13 +434,13 @@ CharacterCollisionInternalResults.prototype.reset = function reset() {
 };
 
 CharacterCollisionInternalResults.prototype.copy = function copy(other) {
-    this.myLastRelevantStartHorizontalMovement.vec3_copy(other.myLastRelevantStartHorizontalMovement);
-    this.myLastRelevantAdjustedStartHorizontalMovement.vec3_copy(other.myLastRelevantAdjustedStartHorizontalMovement);
-    this.myLastRelevantEndHorizontalMovement.vec3_copy(other.myLastRelevantEndHorizontalMovement);
+    this.myLastRelevantInitialHorizontalMovement.vec3_copy(other.myLastRelevantInitialHorizontalMovement);
+    this.myLastRelevantAdjustedInitialHorizontalMovement.vec3_copy(other.myLastRelevantAdjustedInitialHorizontalMovement);
+    this.myLastRelevantFinalHorizontalMovement.vec3_copy(other.myLastRelevantFinalHorizontalMovement);
 
-    this.myLastRelevantStartVerticalMovement.vec3_copy(other.myLastRelevantStartVerticalMovement);
-    this.myLastRelevantAdjustedStartVerticalMovement.vec3_copy(other.myLastRelevantAdjustedStartVerticalMovement);
-    this.myLastRelevantEndVerticalMovement.vec3_copy(other.myLastRelevantEndVerticalMovement);
+    this.myLastRelevantInitialVerticalMovement.vec3_copy(other.myLastRelevantInitialVerticalMovement);
+    this.myLastRelevantAdjustedInitialVerticalMovement.vec3_copy(other.myLastRelevantAdjustedInitialVerticalMovement);
+    this.myLastRelevantFinalVerticalMovement.vec3_copy(other.myLastRelevantFinalVerticalMovement);
 
     this.myLastRelevantHasWallSlid = other.myLastRelevantHasWallSlid;
     this.myHasWallSlidTowardOppositeDirection = other.myHasWallSlidTowardOppositeDirection;

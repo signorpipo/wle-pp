@@ -1,6 +1,4 @@
-import { ObjectPool, ObjectPoolParams } from "./object_pool";
-
-export class ObjectPoolsManager {
+export class ObjectPoolManager {
 
     constructor() {
         this._myPools = new Map();
@@ -8,13 +6,28 @@ export class ObjectPoolsManager {
         this._myDestroyed = false;
     }
 
-    addPool(poolID, poolObject, objectPoolParams = new ObjectPoolParams()) {
+    addPool(poolID, pool) {
         if (!this._myPools.has(poolID)) {
-            let pool = new ObjectPool(poolObject, objectPoolParams);
             this._myPools.set(poolID, pool);
         } else {
-            console.error("Pool already created with this ID");
+            console.warn("Trying to add a Pool with an ID that has been already used:", poolID);
         }
+    }
+
+    removePool(poolID) {
+        let poolToRemove = this._myPools.get(poolID);
+        if (poolToRemove != null) {
+            this._myPools.delete(poolID);
+            poolToRemove.destroy();
+        }
+    }
+
+    getPool(poolID) {
+        return this._myPools.get(poolID);
+    }
+
+    hasPool(poolID) {
+        return this._myPools.has(poolID);
     }
 
     get(poolID) {
@@ -57,14 +70,6 @@ export class ObjectPoolsManager {
         if (pool) {
             pool.increasePercentage(percentage);
         }
-    }
-
-    getPool(poolID) {
-        return this._myPools.get(poolID);
-    }
-
-    hasPool(poolID) {
-        return this._myPools.has(poolID);
     }
 
     destroy() {

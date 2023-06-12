@@ -241,18 +241,18 @@ export class CharacterColliderSurfaceParams {
         this.myFindSurfaceDistanceMaxOutsideDistance = 0;
         this.myFindSurfaceDistanceMaxInsideDistance = 0;
 
-        this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhill = false;
-        this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphill = false;
+        this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = false;
+        this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = false;
         // This make it so when a character moves horizontally on a slope it also add a vertical movement so that the movement is actually on the slope plane
-        this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfaceAngle = null;
-        this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfaceAngle = null;
-        this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle = null;
-        this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle = null;
+        this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle = null;
+        this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfaceAngle = null;
+        this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle = null;
+        this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle = null;
         // This can be used to limit the adjustment so that on steep slopes u can bounce off, or anyway don't add a huge vertical movement due to a very steep slope
 
-        this.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhill = false;
+        this.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhill = false;
         // This make it so when a character moves vertically on a slope (sort of sliding down the slope) it also add a horizontal movement so that the movement is actually on the slope plane
-        this.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhillMinSurfaceAngle = null;
+        this.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhillMinSurfaceAngle = null;
         // This can be used to make it so the movement (and therefore the slide) only happens above a certain angle, like u want to slide down only on steep surfaces
 
         this.myMovementMustStayOnSurface = false;
@@ -521,15 +521,15 @@ CharacterColliderSurfaceParams.prototype.copy = function copy(other) {
     this.myFindSurfaceDistanceMaxOutsideDistance = other.myFindSurfaceDistanceMaxOutsideDistance;
     this.myFindSurfaceDistanceMaxInsideDistance = other.myFindSurfaceDistanceMaxInsideDistance;
 
-    this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhill = other.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhill;
-    this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphill = other.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphill;
-    this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfaceAngle = other.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfaceAngle;
-    this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfaceAngle = other.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfaceAngle;
-    this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle = other.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle;
-    this.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle = other.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle;
+    this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
+    this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;
+    this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle;
+    this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfaceAngle = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfaceAngle;
+    this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle;
+    this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle;
 
-    this.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhill = other.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhill;
-    this.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhillMinSurfaceAngle = other.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhillMinSurfaceAngle;
+    this.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhill = other.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhill;
+    this.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhillMinSurfaceAngle = other.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhillMinSurfaceAngle;
 
     this.myMovementMustStayOnSurface = other.myMovementMustStayOnSurface;
     this.myMovementMustStayOnSurfaceHitMaxAngle = other.myMovementMustStayOnSurfaceHitMaxAngle;

@@ -89,7 +89,7 @@
             - vec3_projectOnPlane               / vec3_projectOnPlaneAlongAxis
             - vec3_convertPositionToWorld       / vec3_convertPositionToLocal 
             - vec3_convertDirectionToWorld      / vec3_convertDirectionToLocal   
-            - vec3_angle
+            - vec3_angle            / vec3_angleSigned          / vec3_anglePivoted
             - vec3_rotate           / vec3_rotateAxis           / vec3_rotateAround / vec3_rotateAroundAxis
             - vec3_rotationTo       / vec3_rotationToPivoted
             - vec3_toRadians        / vec3_toDegrees            / vec3_toQuat       / vec3_toMatrix
@@ -114,6 +114,7 @@
             - quat_toWorld          / quat_toLocal
             - quat_rotate           / quat_rotateAxis  
             - quat_rotationTo     
+            - quat_rotationAroundAxis    
             - quat_getTwist         / quat_getSwing         / quat_getTwistFromSwing    / quat_getSwingFromTwist    / quat_fromTwistSwing
             ○ quat_fromRadians      / quat_fromDegrees      / quat_fromAxis / quat_fromAxes
             - quat_toRadians        / quat_toDegrees        / quat_toMatrix
@@ -133,7 +134,7 @@
             - quat2_rotateAxis  
             - quat2_toMatrix
             ○ quat2_fromMatrix
-            - quat2_lerp        / quat2_interpolate
+            - quat2_lerp        / quat2_interpolate / quat2_slerp    / quat2_sinterpolate
 
         MATRIX 3:
             ○ mat3_set
@@ -499,16 +500,40 @@ export function initArrayExtensionProtoype() {
         return Vec3Utils.lengthSigned(this, ...arguments);
     };
 
-    vec3Extension.vec3_angleSigned = function vec3_angleSigned(vector, upAxis) {
+    vec3Extension.vec3_angleSigned = function vec3_angleSigned(vector, referenceAxis) {
         return Vec3Utils.angleSigned(this, ...arguments);
     };
 
-    vec3Extension.vec3_angleSignedDegrees = function vec3_angleSignedDegrees(vector, upAxis) {
+    vec3Extension.vec3_angleSignedDegrees = function vec3_angleSignedDegrees(vector, referenceAxis) {
         return Vec3Utils.angleSignedDegrees(this, ...arguments);
     };
 
-    vec3Extension.vec3_angleSignedRadians = function vec3_angleSignedRadians(vector, upAxis) {
+    vec3Extension.vec3_angleSignedRadians = function vec3_angleSignedRadians(vector, referenceAxis) {
         return Vec3Utils.angleSignedRadians(this, ...arguments);
+    };
+
+    vec3Extension.vec3_anglePivoted = function vec3_anglePivoted(vector, referenceAxis) {
+        return Vec3Utils.anglePivoted(this, ...arguments);
+    };
+
+    vec3Extension.vec3_anglePivotedDegrees = function vec3_anglePivotedDegrees(vector, referenceAxis) {
+        return Vec3Utils.anglePivotedDegrees(this, ...arguments);
+    };
+
+    vec3Extension.vec3_anglePivotedRadians = function vec3_anglePivotedRadians(vector, referenceAxis) {
+        return Vec3Utils.anglePivotedRadians(this, ...arguments);
+    };
+
+    vec3Extension.vec3_anglePivotedSigned = function vec3_anglePivotedSigned(vector, referenceAxis) {
+        return Vec3Utils.anglePivotedSigned(this, ...arguments);
+    };
+
+    vec3Extension.vec3_anglePivotedSignedDegrees = function vec3_anglePivotedSignedDegrees(vector, referenceAxis) {
+        return Vec3Utils.anglePivotedSignedDegrees(this, ...arguments);
+    };
+
+    vec3Extension.vec3_anglePivotedSignedRadians = function vec3_anglePivotedSignedRadians(vector, referenceAxis) {
+        return Vec3Utils.anglePivotedSignedRadians(this, ...arguments);
     };
 
     vec3Extension.vec3_toRadians = function vec3_toRadians(out = Vec3Utils.create()) {
@@ -563,11 +588,11 @@ export function initArrayExtensionProtoype() {
         return Vec3Utils.isFartherAlongAxis(this, ...arguments);
     };
 
-    vec3Extension.vec3_isToTheRight = function vec3_isToTheRight(vector, upAxis) {
+    vec3Extension.vec3_isToTheRight = function vec3_isToTheRight(vector, referenceAxis) {
         return Vec3Utils.isToTheRight(this, ...arguments);
     };
 
-    vec3Extension.vec3_signTo = function vec3_signTo(vector, upAxis, zeroSign = 1) {
+    vec3Extension.vec3_signTo = function vec3_signTo(vector, referenceAxis, zeroSign = 1) {
         return Vec3Utils.signTo(this, ...arguments);
     };
 
@@ -759,43 +784,43 @@ export function initArrayExtensionProtoype() {
         return Vec3Utils.radiansToMatrix(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationTo = function vec3_rotationTo(direction, out) {
+    vec3Extension.vec3_rotationTo = function vec3_rotationTo(to, out) {
         return Vec3Utils.rotationTo(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToDegrees = function vec3_rotationToDegrees(direction, out = Vec3Utils.create()) {
+    vec3Extension.vec3_rotationToDegrees = function vec3_rotationToDegrees(to, out = Vec3Utils.create()) {
         return Vec3Utils.rotationToDegrees(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToRadians = function vec3_rotationToRadians(direction, out = Vec3Utils.create()) {
+    vec3Extension.vec3_rotationToRadians = function vec3_rotationToRadians(to, out = Vec3Utils.create()) {
         return Vec3Utils.rotationToRadians(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToQuat = function vec3_rotationToQuat(direction, out = QuatUtils.create()) {
+    vec3Extension.vec3_rotationToQuat = function vec3_rotationToQuat(to, out = QuatUtils.create()) {
         return Vec3Utils.rotationToQuat(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToPivoted = function vec3_rotationToPivoted(direction, pivotAxis, out) {
+    vec3Extension.vec3_rotationToPivoted = function vec3_rotationToPivoted(to, pivotAxis, out) {
         return Vec3Utils.rotationToPivoted(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToPivotedDegrees = function vec3_rotationToPivotedDegrees(direction, pivotAxis, out = Vec3Utils.create()) {
+    vec3Extension.vec3_rotationToPivotedDegrees = function vec3_rotationToPivotedDegrees(to, pivotAxis, out = Vec3Utils.create()) {
         return Vec3Utils.rotationToPivotedDegrees(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToPivotedRadians = function vec3_rotationToPivotedRadians(direction, pivotAxis, out = Vec3Utils.create()) {
+    vec3Extension.vec3_rotationToPivotedRadians = function vec3_rotationToPivotedRadians(to, pivotAxis, out = Vec3Utils.create()) {
         return Vec3Utils.rotationToPivotedRadians(this, ...arguments);
     };
 
-    vec3Extension.vec3_rotationToPivotedQuat = function vec3_rotationToPivotedQuat(direction, pivotAxis, out = QuatUtils.create()) {
+    vec3Extension.vec3_rotationToPivotedQuat = function vec3_rotationToPivotedQuat(to, pivotAxis, out = QuatUtils.create()) {
         return Vec3Utils.rotationToPivotedQuat(this, ...arguments);
     };
 
-    vec3Extension.vec3_lerp = function vec3_lerp(to, interpolationValue, out = Vec3Utils.create()) {
+    vec3Extension.vec3_lerp = function vec3_lerp(to, interpolationFactor, out = Vec3Utils.create()) {
         return Vec3Utils.lerp(this, ...arguments);
     };
 
-    vec3Extension.vec3_interpolate = function vec3_interpolate(to, interpolationValue, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
+    vec3Extension.vec3_interpolate = function vec3_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
         return Vec3Utils.interpolate(this, ...arguments);
     };
 
@@ -814,11 +839,11 @@ export function initArrayExtensionProtoype() {
     };
 
     vec4Extension.vec4_copy = function vec4_copy(vector) {
-        return Vec4Utils.set(vector, this);
+        return Vec4Utils.copy(vector, this);
     };
 
     vec4Extension.vec4_clone = function vec4_clone(out = Vec4Utils.create()) {
-        return Vec4Utils.set(this, ...arguments);
+        return Vec4Utils.clone(this, ...arguments);
     };
 
     // QUAT
@@ -1029,20 +1054,36 @@ export function initArrayExtensionProtoype() {
         return QuatUtils.subRotationQuat(this, ...arguments);
     };
 
-    quatExtension.quat_rotationTo = function quat_rotationTo(rotation, out) {
+    quatExtension.quat_rotationTo = function quat_rotationTo(to, out) {
         return QuatUtils.rotationTo(this, ...arguments);
     };
 
-    quatExtension.quat_rotationToDegrees = function quat_rotationToDegrees(rotation, out) {
+    quatExtension.quat_rotationToDegrees = function quat_rotationToDegrees(to, out) {
         return QuatUtils.rotationToDegrees(this, ...arguments);
     };
 
-    quatExtension.quat_rotationToRadians = function quat_rotationToRadians(rotation, out) {
+    quatExtension.quat_rotationToRadians = function quat_rotationToRadians(to, out) {
         return QuatUtils.rotationToRadians(this, ...arguments);
     };
 
-    quatExtension.quat_rotationToQuat = function quat_rotationToQuat(rotation, out) {
+    quatExtension.quat_rotationToQuat = function quat_rotationToQuat(to, out) {
         return QuatUtils.rotationToQuat(this, ...arguments);
+    };
+
+    quatExtension.quat_rotationAroundAxis = function quat_rotationAroundAxis(axis, out) {
+        return QuatUtils.rotationAroundAxis(this, ...arguments);
+    };
+
+    quatExtension.quat_rotationAroundAxisDegrees = function quat_rotationAroundAxisDegrees(axis, out = Vec3Utils.create()) {
+        return QuatUtils.rotationAroundAxisDegrees(this, ...arguments);
+    };
+
+    quatExtension.quat_rotationAroundAxisRadians = function quat_rotationAroundAxisRadians(axis, out = Vec3Utils.create()) {
+        return QuatUtils.rotationAroundAxisRadians(this, ...arguments);
+    };
+
+    quatExtension.quat_rotationAroundAxisQuat = function quat_rotationAroundAxisQuat(axis, out = QuatUtils.create()) {
+        return QuatUtils.rotationAroundAxisQuat(this, ...arguments);
     };
 
     quatExtension.quat_getTwist = function quat_getTwist(axis, out = QuatUtils.create()) {
@@ -1097,19 +1138,19 @@ export function initArrayExtensionProtoype() {
         return QuatUtils.rotateAxisRadians(this, ...arguments);
     };
 
-    quatExtension.quat_lerp = function quat_lerp(to, interpolationValue, out = QuatUtils.create()) {
+    quatExtension.quat_lerp = function quat_lerp(to, interpolationFactor, out = QuatUtils.create()) {
         return QuatUtils.lerp(this, ...arguments);
     };
 
-    quatExtension.quat_interpolate = function quat_interpolate(to, interpolationValue, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
+    quatExtension.quat_interpolate = function quat_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
         return QuatUtils.interpolate(this, ...arguments);
     };
 
-    quatExtension.quat_slerp = function quat_slerp(to, interpolationValue, out = QuatUtils.create()) {
+    quatExtension.quat_slerp = function quat_slerp(to, interpolationFactor, out = QuatUtils.create()) {
         return QuatUtils.slerp(this, ...arguments);
     };
 
-    quatExtension.quat_sinterpolate = function quat_sinterpolate(to, interpolationValue, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
+    quatExtension.quat_sinterpolate = function quat_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
         return QuatUtils.sinterpolate(this, ...arguments);
     };
 
@@ -1261,7 +1302,7 @@ export function initArrayExtensionProtoype() {
         return Quat2Utils.rotateAxisDegrees(this, ...arguments);
     };
 
-    quat2Extension.quat2_rotateAxisRadians = function quat2_rotateAxisRadians(angle, axis, out) {
+    quat2Extension.quat2_rotateAxisRadians = function quat2_rotateAxisRadians(angle, axis, out = Quat2Utils.create()) {
         return Quat2Utils.rotateAxisRadians(this, ...arguments);
     };
 
@@ -1273,12 +1314,20 @@ export function initArrayExtensionProtoype() {
         return Quat2Utils.fromMatrix(matrix, this);
     };
 
-    quat2Extension.quat2_lerp = function quat2_lerp(to, interpolationValue, out = Quat2Utils.create()) {
+    quat2Extension.quat2_lerp = function quat2_lerp(to, interpolationFactor, out = Quat2Utils.create()) {
         return Quat2Utils.lerp(this, ...arguments);
     };
 
-    quat2Extension.quat2_interpolate = function quat2_interpolate(to, interpolationValue, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
+    quat2Extension.quat2_interpolate = function quat2_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
         return Quat2Utils.interpolate(this, ...arguments);
+    };
+
+    quat2Extension.quat2_slerp = function quat2_slerp(to, interpolationFactor, out = Quat2Utils.create()) {
+        return Quat2Utils.slerp(this, ...arguments);
+    };
+
+    quat2Extension.quat2_sinterpolate = function quat2_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
+        return Quat2Utils.sinterpolate(this, ...arguments);
     };
 
     // MATRIX 3

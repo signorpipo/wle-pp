@@ -51,7 +51,7 @@ export class FingerCursorComponent extends Component {
             this._myTripleClickTimer -= dt;
         }
 
-        this._myCursorParentObject.pp_setTransformQuat(Globals.getPlayerObjects(this.engine).myPlayerPivot.pp_getTransformQuat());
+        this._myCursorParentObject.pp_setTransformQuat(Globals.getPlayerObjects(this.engine).myReferenceSpace.pp_getTransformQuat());
         this._updateHand();
 
         if (this._myHandInputSource) {

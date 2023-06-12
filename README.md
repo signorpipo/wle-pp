@@ -96,8 +96,14 @@ The setup for the PP library is very simple but requires a few steps:
   - for the materials you might have to create some
     - for example the `Flat Transparent No Depth` is a material that does not perform depth checks
   - for the scene objects, you can mostly pick the ones u should already find in a default Wonderland Engine project, but some needs to be created
-    - u need to create a `Player Pivot`, which is just an empty object that must be a children of the `Player` and has every other objects (like the `Eyes` or the `Hands`) as children
+    - u need to create a `Reference Space`, which is just an empty object that must be a children of the `Player` and has every other player objects (like the `Eyes` or the `Hands`) as children
       - this will be used to adjust, for example, the player height
+      - u should not change this transform directly since it is already managed by the library
+      - if u need to add your own offsets to the reference space of the player, the approach would be:
+        - add an object to the `Reference Space` parent
+        - set the `Reference Space` object as a child of this newly created object
+        - use the new object to offset the reference space
+        - this way, u will be sure that every objects under `Reference Space` will always have all the offsets applied to them
     - u will have to create a `Head` object, on which u have to add the `pp-set-head-local-transform`
     - it would be best to change the component on the `Hands` from the default `input` to `pp-set-hand-local-transform`
       - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
@@ -144,7 +150,7 @@ When using the PP library there are certain things to take into consideration, s
   - some of the features of the library uses globals variable that are usually setup by the `pp-gateway` component, like `Globals.getSceneObjects` or `Globals.getDefaultResources`
     - if these variables are not setup, those features will not be able to work properly
   - when you are going to release your app, you most likely want to disable the following development flags on the `pp-gateway` component:
-    - `enableDebugs`, `enableTools`, `addPPToWindow`, `addWLToWindow`
+    - `enable debug`, `enable tool`, `add PP to Window`, `add WL to Window`
 
 # License
 

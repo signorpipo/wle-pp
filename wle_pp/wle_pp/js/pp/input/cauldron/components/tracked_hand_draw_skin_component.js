@@ -43,7 +43,7 @@ TrackedHandDrawSkinComponent.prototype.update = function () {
             let jointObject = this._myJoints[i];
 
             let jointID = jointObject.pp_getName(); // Joint name must match the TrackedHandJointID enum value
-            let jointPose = Globals.getTrackedHandPose(this._myHandednessType).getJointPose(jointID);
+            let jointPose = Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(jointID);
 
             jointObject.pp_setTransformLocalQuat(jointPose.getTransformQuat(transformQuat, null));
         }

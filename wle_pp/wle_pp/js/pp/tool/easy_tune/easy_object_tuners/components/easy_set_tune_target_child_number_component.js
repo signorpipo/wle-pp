@@ -6,7 +6,7 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
     static TypeName = "pp-easy-set-tune-target-child-number";
     static Properties = {
         _myVariableName: Property.string(""),
-        _mySetAsDefault: Property.bool(false),
+        _mySetAsWidgetCurrentVariable: Property.bool(false),
     };
 
     start() {
@@ -28,8 +28,8 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
             }
 
             Globals.getEasyTuneVariables(this.engine).add(new EasyTuneInt(this._myEasyTuneVariableName, 0, 10, min, max));
-            if (this._mySetAsDefault) {
-                EasyTuneUtils.setWidgetActiveVariable(this._myEasyTuneVariableName, this.engine);
+            if (this._mySetAsWidgetCurrentVariable) {
+                EasyTuneUtils.setWidgetCurrentVariable(this._myEasyTuneVariableName, this.engine);
             }
 
             this._myCurrentChildIndex = -1;
@@ -41,7 +41,7 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
 
     update(dt) {
         if (Globals.isToolEnabled(this.engine)) {
-            if (Globals.getEasyTuneVariables(this.engine).isActive(this._myEasyTuneVariableName)) {
+            if (Globals.getEasyTuneVariables(this.engine).isWidgetCurrentVariable(this._myEasyTuneVariableName)) {
                 let childrenCount = this.object.pp_getChildren().length;
                 if (childrenCount != this._myCurrentChildrenCount) {
                     this._myCurrentChildrenCount = childrenCount;

@@ -521,13 +521,13 @@ export class CollisionRuntimeParams {
         this.myHasPoppedOutCeiling = false;
         this.myHasReducedVerticalMovement = false;
 
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = false;
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = false;
-        this.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = false;
+        this.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill = false;
 
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill = false;
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = false;
-        this.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill = false;
+        this.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = false;
 
         this.myIsSliding = false;
         this.myIsSlidingIntoOppositeDirection = false;
@@ -618,13 +618,13 @@ export class CollisionRuntimeParams {
         this.myHasPoppedOutCeiling = false;
         this.myHasReducedVerticalMovement = false;
 
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = false;
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = false;
-        this.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = false;
+        this.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill = false;
 
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill = false;
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = false;
-        this.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill = false;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill = false;
+        this.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = false;
 
         this.myIsSliding = false;
         this.myIsSlidingIntoOppositeDirection = false;
@@ -714,13 +714,13 @@ export class CollisionRuntimeParams {
         this.myHasPoppedOutCeiling = other.myHasPoppedOutCeiling;
         this.myHasReducedVerticalMovement = other.myHasReducedVerticalMovement;
 
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = other.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill;
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = other.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill;
-        this.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill = other.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = other.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = other.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill;
+        this.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill = other.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill;
 
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill = other.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill;
-        this.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = other.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill;
-        this.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = other.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill = other.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill;
+        this.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill = other.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill;
+        this.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = other.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill;
 
         this.myIsSliding = other.myIsSliding;
         this.myIsSlidingIntoOppositeDirection = other.myIsSlidingIntoOppositeDirection;

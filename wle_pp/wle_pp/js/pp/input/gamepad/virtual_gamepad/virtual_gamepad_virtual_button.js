@@ -35,7 +35,7 @@ export class VirtualGamepadVirtualButton {
         }
 
         this._myButtonDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
-        this._myButtonDetectionElement.addEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+        this._myButtonDetectionElement.addEventListener("mouseleave", this._myMouseLeaveEventListener);
 
         this._myDestroyed = false;
     }

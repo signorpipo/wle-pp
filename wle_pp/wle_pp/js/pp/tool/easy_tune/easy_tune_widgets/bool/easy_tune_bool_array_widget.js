@@ -35,7 +35,7 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
     }
 
     _startHook(parentObject, easyTuneParams) {
-        this._myUI.setAdditionalButtonsVisible(easyTuneParams.myAdditionalButtonsVisible);
+        this._myUI.setAdditionalButtonsVisible(easyTuneParams.myShowAdditionalButtons);
     }
 
     _setEasyTuneVariableHook() {
@@ -79,7 +79,7 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
 
         ui.myVariableLabelCursorTargetComponent.onClick.add(this._resetAllValues.bind(this));
         ui.myVariableLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myVariableLabelText));
-        ui.myVariableLabelCursorTargetComponent.onUnhover.add(this._genericTextUnHover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
+        ui.myVariableLabelCursorTargetComponent.onUnhover.add(this._genericTextUnhover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
 
         for (let i = 0; i < this._myArraySize; i++) {
             ui.myValueIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, i, 1));
@@ -92,9 +92,9 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
             ui.myValueDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, i, 0));
 
             ui.myValueIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
-            ui.myValueIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
+            ui.myValueIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
             ui.myValueDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
-            ui.myValueDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnHover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
+            ui.myValueDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
 
             ui.myValueCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, i));
             ui.myValueCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, i, ui.myValueTexts[i], true));
@@ -146,7 +146,7 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
         text.pp_scaleObject(this._myConfig.myTextHoverScaleMultiplier);
     }
 
-    _genericTextUnHover(text, originalScale) {
+    _genericTextUnhover(text, originalScale) {
         text.pp_setScaleLocal(originalScale);
     }
 

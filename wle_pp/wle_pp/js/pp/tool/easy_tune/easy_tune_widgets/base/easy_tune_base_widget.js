@@ -142,7 +142,7 @@ export class EasyTuneBaseWidget {
         this._myResetExportLabelTimer.setDuration(this._myConfig.myImportExportResetLabelSeconds);
 
         this._myUI.build(parentObject, this._myConfig, easyTuneParams);
-        this._myUI.setImportExportButtonsVisible(easyTuneParams.myVariablesImportExportButtonsVisible);
+        this._myUI.setImportExportButtonsVisible(easyTuneParams.myShowVariablesImportExportButtons);
 
         this._startHook(parentObject, easyTuneParams);
 
@@ -234,7 +234,7 @@ export class EasyTuneBaseWidget {
         ui.myNextButtonCursorTargetComponent.onUpWithNoDown.add(this._setScrollVariableActive.bind(this, false, 0, true));
         ui.myNextButtonCursorTargetComponent.onUnhover.add(this._setScrollVariableActive.bind(this, false, 0, true));
         ui.myNextButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
-        ui.myNextButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myNextButtonBackgroundComponent.material));
+        ui.myNextButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myNextButtonBackgroundComponent.material));
 
         ui.myPreviousButtonCursorTargetComponent.onDown.add(this._setScrollVariableActive.bind(this, true, -1, false));
         ui.myPreviousButtonCursorTargetComponent.onDownOnHover.add(this._setScrollVariableActive.bind(this, true, -1, false));
@@ -242,15 +242,15 @@ export class EasyTuneBaseWidget {
         ui.myPreviousButtonCursorTargetComponent.onUpWithNoDown.add(this._setScrollVariableActive.bind(this, false, 0, true));
         ui.myPreviousButtonCursorTargetComponent.onUnhover.add(this._setScrollVariableActive.bind(this, false, 0, true));
         ui.myPreviousButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
-        ui.myPreviousButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
+        ui.myPreviousButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
         ui.myImportButtonCursorTargetComponent.onUpWithDown.add(this._importVariables.bind(this));
         ui.myImportButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myImportButtonBackgroundComponent.material));
-        ui.myImportButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myImportButtonBackgroundComponent.material));
+        ui.myImportButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myImportButtonBackgroundComponent.material));
 
         ui.myExportButtonCursorTargetComponent.onUpWithDown.add(this._exportVariables.bind(this));
         ui.myExportButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myExportButtonBackgroundComponent.material));
-        ui.myExportButtonCursorTargetComponent.onUnhover.add(this._genericUnHover.bind(this, ui.myExportButtonBackgroundComponent.material));
+        ui.myExportButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myExportButtonBackgroundComponent.material));
 
         this._addListenersHook();
     }
@@ -278,7 +278,7 @@ export class EasyTuneBaseWidget {
         material.color = this._myConfig.myButtonHoverColor;
     }
 
-    _genericUnHover(material) {
+    _genericUnhover(material) {
         material.color = this._myConfig.myBackgroundColor;
     }
 

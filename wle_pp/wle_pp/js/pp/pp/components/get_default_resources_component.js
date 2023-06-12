@@ -37,6 +37,13 @@ export class GetDefaultResourcesComponent extends Component {
             this._myDefaultResources.myMeshes.myInvertedCone = MeshUtils.invert(this._myCone);
             this._myDefaultResources.myMeshes.myInvertedCylinder = MeshUtils.invert(this._myCylinder);
 
+            this._myDefaultResources.myMeshes.myDoubleSidedPlane = MeshUtils.makeDoubleSided(this._myPlane);
+            this._myDefaultResources.myMeshes.myDoubleSidedCube = MeshUtils.makeDoubleSided(this._myCube);
+            this._myDefaultResources.myMeshes.myDoubleSidedSphere = MeshUtils.makeDoubleSided(this._mySphere);
+            this._myDefaultResources.myMeshes.myDoubleSidedCone = MeshUtils.makeDoubleSided(this._myCone);
+            this._myDefaultResources.myMeshes.myDoubleSidedCylinder = MeshUtils.makeDoubleSided(this._myCylinder);
+            this._myDefaultResources.myMeshes.myDoubleSidedCircle = MeshUtils.makeDoubleSided(this._myCircle);
+
             if (this._myFlatOpaque != null) {
                 this._myDefaultResources.myMaterials.myFlatOpaque = this._myFlatOpaque.clone();
             }

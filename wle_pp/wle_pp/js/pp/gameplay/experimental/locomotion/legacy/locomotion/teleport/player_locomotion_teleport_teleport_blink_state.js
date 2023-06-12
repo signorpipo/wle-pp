@@ -4,7 +4,7 @@ import { FSM } from "../../../../../../cauldron/fsm/fsm";
 import { TimerState } from "../../../../../../cauldron/fsm/states/timer_state";
 import { vec4_create } from "../../../../../../plugin/js/extensions/array_extension";
 import { Globals } from "../../../../../../pp/globals";
-import { NumberOverValue } from "../../../../../cauldron/cauldron/number_over_value";
+import { NumberOverFactor } from "../../../../../cauldron/cauldron/number_over_factor";
 import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state";
 
 export class PlayerLocomotionTeleportTeleportBlinkState extends PlayerLocomotionTeleportState {
@@ -12,7 +12,7 @@ export class PlayerLocomotionTeleportTeleportBlinkState extends PlayerLocomotion
     constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
         super(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
 
-        this._myBlinkSphere = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myPlayerCauldron.pp_addObject();
+        this._myBlinkSphere = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myCauldron.pp_addObject();
         this._myBlinkSphereMeshComponent = this._myBlinkSphere.pp_addComponent(MeshComponent);
         this._myBlinkSphereMeshComponent.mesh = Globals.getDefaultMeshes(this._myTeleportParams.myEngine).myInvertedSphere;
         this._myBlinkSphereMeshComponent.material = Globals.getDefaultMaterials(this._myTeleportParams.myEngine).myFlatTransparentNoDepth.clone();
@@ -55,8 +55,8 @@ export class PlayerLocomotionTeleportTeleportBlinkState extends PlayerLocomotion
 
         this._myFadeInTimer = new Timer(this._myTeleportParams.myTeleportParams.myBlinkFadeInSeconds);
         this._myFadeOutTimer = new Timer(this._myTeleportParams.myTeleportParams.myBlinkFadeOutSeconds);
-        this._myFadeOutAlphaOverTime = new NumberOverValue(0, 1, 0, 1);
-        this._myFadeInAlphaOverTime = new NumberOverValue(1, 0, 0, 1);
+        this._myFadeOutAlphaOverTime = new NumberOverFactor(0, 1, 0, 1);
+        this._myFadeInAlphaOverTime = new NumberOverFactor(1, 0, 0, 1);
     }
 
     start(fsm) {
@@ -67,7 +67,7 @@ export class PlayerLocomotionTeleportTeleportBlinkState extends PlayerLocomotion
 
     end() {
         this._myBlinkSphere.pp_setActive(false);
-        this._myBlinkSphere.pp_setParent(Globals.getPlayerObjects(this._myTeleportParams.myEngine).myPlayerCauldron, false);
+        this._myBlinkSphere.pp_setParent(Globals.getPlayerObjects(this._myTeleportParams.myEngine).myCauldron, false);
         this._myFSM.perform("stop");
     }
 
@@ -84,7 +84,7 @@ export class PlayerLocomotionTeleportTeleportBlinkState extends PlayerLocomotion
         this._myBlinkSphereMeshComponent.material.color = this._myBlinkSphereMaterialColor;
         this._myBlinkSphere.pp_setActive(true);
 
-        //this._myLocomotionRuntimeParams.myIsTeleporting = true;
+        this._myLocomotionRuntimeParams.myIsTeleporting = true;
     }
 
     _startFadeIn() {
@@ -130,7 +130,7 @@ export class PlayerLocomotionTeleportTeleportBlinkState extends PlayerLocomotion
     }
 
     _teleport() {
-        //this._myLocomotionRuntimeParams.myIsTeleporting = false;
+        this._myLocomotionRuntimeParams.myIsTeleporting = false;
         this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
         this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myTeleportRuntimeParams.myTeleportRotationOnUp, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
     }

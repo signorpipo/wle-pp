@@ -7,7 +7,6 @@ import { quat2_create, vec3_create } from "../../../../../plugin/js/extensions/a
 import { Globals } from "../../../../../pp/globals";
 import { Direction2DTo3DConverter, Direction2DTo3DConverterParams } from "../../../../cauldron/cauldron/direction_2D_to_3D_converter";
 import { PlayerLocomotionDirectionReferenceType } from "./player_locomotion";
-import { getCollisionCheck } from "./player_locomotion_component";
 import { PlayerLocomotionMovement } from "./player_locomotion_movement";
 
 export class PlayerLocomotionSmoothParams {
@@ -19,6 +18,7 @@ export class PlayerLocomotionSmoothParams {
         this.myCollisionCheckParams = null;
 
         this.myMaxSpeed = 0;
+        this.mySpeedSlowDownPercentageOnWallSlid = 1; // this is the target value for a 90 degrees slid, the more u move toward the wall the slower u go 
 
         this.myMovementMinStickIntensityThreshold = 0;
 
@@ -30,6 +30,7 @@ export class PlayerLocomotionSmoothParams {
         this.myMinAngleToFlyRight = 0;
 
         this.myGravityAcceleration = 0;
+        this.myMaxGravitySpeed = 0;
 
         this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
         this.myVRDirectionReferenceObject = null;
@@ -51,25 +52,30 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
 
         this._myParams = params;
 
+        this._myCurrentSpeed = 0;
+        this._myLastHorizontalMovement = vec3_create();
+
         this._myDirectionReference = Globals.getPlayerObjects(this._myParams.myEngine).myHead;
 
         this._myStickIdleTimer = new Timer(0.25, false);
 
-        let directionConverterNonVRParams = new Direction2DTo3DConverterParams();
+        let directionConverterNonVRParams = new Direction2DTo3DConverterParams(this._myParams.myEngine);
         directionConverterNonVRParams.myAutoUpdateFlyForward = this._myParams.myFlyEnabled;
         directionConverterNonVRParams.myAutoUpdateFlyRight = this._myParams.myFlyEnabled;
         directionConverterNonVRParams.myMinAngleToFlyForwardUp = this._myParams.myMinAngleToFlyUpNonVR;
         directionConverterNonVRParams.myMinAngleToFlyForwardDown = this._myParams.myMinAngleToFlyDownNonVR;
         directionConverterNonVRParams.myMinAngleToFlyRightUp = this._myParams.myMinAngleToFlyRight;
         directionConverterNonVRParams.myMinAngleToFlyRightDown = this._myParams.myMinAngleToFlyRight;
+        directionConverterNonVRParams.myInvertForwardWhenUpsideDown = this._myParams.myDirectionInvertForwardWhenUpsideDown;
 
-        let directionConverterVRParams = new Direction2DTo3DConverterParams();
+        let directionConverterVRParams = new Direction2DTo3DConverterParams(this._myParams.myEngine);
         directionConverterVRParams.myAutoUpdateFlyForward = this._myParams.myFlyEnabled;
         directionConverterVRParams.myAutoUpdateFlyRight = this._myParams.myFlyEnabled;
         directionConverterVRParams.myMinAngleToFlyForwardUp = this._myParams.myMinAngleToFlyUpVR;
         directionConverterVRParams.myMinAngleToFlyForwardDown = this._myParams.myMinAngleToFlyDownVR;
         directionConverterVRParams.myMinAngleToFlyRightUp = this._myParams.myMinAngleToFlyRight;
         directionConverterVRParams.myMinAngleToFlyRightDown = this._myParams.myMinAngleToFlyRight;
+        directionConverterVRParams.myInvertForwardWhenUpsideDown = this._myParams.myDirectionInvertForwardWhenUpsideDown;
 
         this._myDirectionConverterNonVR = new Direction2DTo3DConverter(directionConverterNonVRParams);
         this._myDirectionConverterVR = new Direction2DTo3DConverter(directionConverterVRParams);
@@ -78,6 +84,23 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
         this._myDestroyed = false;
 
         XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myParams.myEngine);
+    }
+
+    start() {
+        this._myCurrentSpeed = 0;
+        this._myLastHorizontalMovement.vec3_zero();
+    }
+
+    getParams() {
+        return this._myParams;
+    }
+
+    getCurrentSpeed() {
+        return this._myCurrentSpeed;
+    }
+
+    getLastHorizontalSpeed() {
+        return this._myLastHorizontalMovement;
     }
 
     update(dt) {
@@ -96,6 +119,7 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
 }
 
 
+
 // IMPLEMENTATION
 
 PlayerLocomotionSmooth.prototype.update = function () {
@@ -108,6 +132,9 @@ PlayerLocomotionSmooth.prototype.update = function () {
 
     let directionReferenceTransformQuat = quat2_create();
     return function update(dt) {
+        this._myCurrentSpeed = 0;
+        this._myLastHorizontalMovement.vec3_zero();
+
         playerUp = this._myParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
 
         headMovement.vec3_zero();
@@ -115,6 +142,15 @@ PlayerLocomotionSmooth.prototype.update = function () {
         let axes = Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getAxesInfo(GamepadAxesID.THUMBSTICK).getAxes();
         axes[0] = Math.abs(axes[0]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[0] : 0;
         axes[1] = Math.abs(axes[1]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[1] : 0;
+
+        let horizontalMovement = false;
+        let maxSpeed = this._myParams.myMaxSpeed;
+
+        if (this._myParams.myTripleSpeedShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
+            if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
+                maxSpeed *= 3;
+            }
+        }
 
         if (!axes.vec2_isZero()) {
             this._myStickIdleTimer.start();
@@ -128,19 +164,20 @@ PlayerLocomotionSmooth.prototype.update = function () {
                 }
 
                 let movementIntensity = axes.vec2_length();
-                if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SELECT).isPressed()) {
-                    movementIntensity = 0.1;
+                this._myCurrentSpeed = Math.pp_lerp(0, maxSpeed, movementIntensity);
+
+                if (this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsSliding && this._myParams.mySpeedSlowDownPercentageOnWallSlid != 1) {
+                    let slowPercentage = this._myParams.mySpeedSlowDownPercentageOnWallSlid;
+
+                    let slidStrength = Math.pp_mapToRange(Math.abs(this._myLocomotionRuntimeParams.myCollisionRuntimeParams.mySlidingMovementAngle), 0, 90, 0, 1);
+                    slowPercentage = Math.pp_lerp(1, slowPercentage, slidStrength);
+
+                    this._myCurrentSpeed = this._myCurrentSpeed * slowPercentage;
                 }
-                let speed = Math.pp_lerp(0, this._myParams.myMaxSpeed, movementIntensity);
 
-                if (this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsSliding) {
+                headMovement = direction.vec3_scale(this._myCurrentSpeed * dt, headMovement);
 
-                    //speed = Math.pp_lerp(speed * 0.05, speed, 1 - Math.abs(this._myLocomotionRuntimeParams.myCollisionRuntimeParams.mySlidingMovementAngle) / 90);
-                    //speed = speed * 0.1;
-                    speed = speed / 2;
-                }
-
-                headMovement = direction.vec3_scale(speed * dt, headMovement);
+                horizontalMovement = true;
             }
         } else {
             if (this._myStickIdleTimer.isRunning()) {
@@ -151,60 +188,62 @@ PlayerLocomotionSmooth.prototype.update = function () {
             }
         }
 
-        if (!Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
+        if (this._myParams.myFlyEnabled) {
             if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
-                verticalMovement = playerUp.vec3_scale(this._myParams.myMaxSpeed * dt, verticalMovement);
+                verticalMovement = playerUp.vec3_scale(maxSpeed * dt, verticalMovement);
                 headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 this._myLocomotionRuntimeParams.myIsFlying = true;
             } else if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
-                verticalMovement = playerUp.vec3_scale(-this._myParams.myMaxSpeed * dt, verticalMovement);
+                verticalMovement = playerUp.vec3_scale(-maxSpeed * dt, verticalMovement);
                 headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 this._myLocomotionRuntimeParams.myIsFlying = true;
             }
-        }
 
-        if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
-            this._myLocomotionRuntimeParams.myIsFlying = false;
-        }
-
-        if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
-            if (!Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
-                if (!this._myLocomotionRuntimeParams.myIsFlying && false) {
-                    let gravity = -2;
-                    verticalMovement = playerUp.vec3_scale(gravity * dt, verticalMovement);
-                    headMovement = headMovement.vec3_add(verticalMovement, headMovement);
-                }
-
-                if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
-                    headMovement.vec3_zero();
-                }
-
-                feetTransformQuat = this._myParams.myPlayerHeadManager.getTransformFeetQuat(feetTransformQuat);
-
-                getCollisionCheck(this._myParams.myEngine).move(headMovement, feetTransformQuat, this._myParams.myCollisionCheckParams, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
-                headMovement.vec3_copy(this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myFixedMovement);
+            if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
+                this._myLocomotionRuntimeParams.myIsFlying = false;
             }
+        }
 
-            if (!headMovement.vec3_isZero(0.000001)) {
-                this._myParams.myPlayerHeadManager.moveFeet(headMovement);
+        if (this._myParams.myMoveHeadShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine) &&
+            Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
+            this._myParams.myPlayerTransformManager.getPlayerHeadManager().moveFeet(headMovement);
+        } else if (this._myParams.myMoveThroughCollisionShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine) &&
+            Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
+            this._myParams.myPlayerTransformManager.move(headMovement, this._myLocomotionRuntimeParams.myCollisionRuntimeParams, true);
+            if (horizontalMovement) {
+                this._myParams.myPlayerTransformManager.resetReal(true, false, false);
+                this._myParams.myPlayerTransformManager.resetHeadToReal();
             }
         } else {
-            if (!Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
-                if (!this._myLocomotionRuntimeParams.myIsFlying) {
-                    let gravity = -2;
-                    verticalMovement = playerUp.vec3_scale(gravity * dt, verticalMovement);
-                    headMovement = headMovement.vec3_add(verticalMovement, headMovement);
+            if (!this._myLocomotionRuntimeParams.myIsFlying) {
+                this._myLocomotionRuntimeParams.myGravitySpeed += this._myParams.myGravityAcceleration * dt;
+
+                if (Math.abs(this._myLocomotionRuntimeParams.myGravitySpeed) > Math.abs(this._myParams.myMaxGravitySpeed)) {
+                    this._myLocomotionRuntimeParams.myGravitySpeed = Math.pp_sign(this._myParams.myGravityAcceleration) * Math.abs(this._myParams.myMaxGravitySpeed);
                 }
 
-                if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
-                    headMovement.vec3_zero();
-                }
-
-                feetTransformQuat = this._myParams.myPlayerTransformManager.getTransformQuat(feetTransformQuat);
-
-                this._myParams.myPlayerTransformManager.move(headMovement, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
+                verticalMovement = playerUp.vec3_scale(this._myLocomotionRuntimeParams.myGravitySpeed * dt, verticalMovement);
+                headMovement = headMovement.vec3_add(verticalMovement, headMovement);
             } else {
-                this._myParams.myPlayerTransformManager.move(headMovement, this._myLocomotionRuntimeParams.myCollisionRuntimeParams, true);
+                this._myLocomotionRuntimeParams.myGravitySpeed = 0;
+            }
+
+            feetTransformQuat = this._myParams.myPlayerTransformManager.getTransformQuat(feetTransformQuat);
+
+            this._myParams.myPlayerTransformManager.move(headMovement, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
+            if (horizontalMovement) {
+                this._myParams.myPlayerTransformManager.resetReal(true, false, false);
+                this._myParams.myPlayerTransformManager.resetHeadToReal();
+
+                this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myFixedMovement.vec3_removeComponentAlongAxis(
+                    this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myOriginalUp,
+                    this._myLastHorizontalMovement
+                );
+            }
+
+            if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnCeiling ||
+                this._myLocomotionRuntimeParams.myGravitySpeed < 0 && this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnGround) {
+                this._myLocomotionRuntimeParams.myGravitySpeed = 0;
             }
         }
 

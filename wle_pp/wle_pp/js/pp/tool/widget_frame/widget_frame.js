@@ -91,11 +91,11 @@ export class WidgetFrame {
 
         ui.myPinButtonCursorTargetComponent.onClick.add(this._togglePin.bind(this, true));
         ui.myPinButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPinButtonBackgroundComponent.material));
-        ui.myPinButtonCursorTargetComponent.onUnhover.add(this._pinUnHover.bind(this, ui.myPinButtonBackgroundComponent.material));
+        ui.myPinButtonCursorTargetComponent.onUnhover.add(this._pinUnhover.bind(this, ui.myPinButtonBackgroundComponent.material));
 
         ui.myVisibilityButtonCursorTargetComponent.onClick.add(this._toggleVisibility.bind(this, true, true));
         ui.myVisibilityButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
-        ui.myVisibilityButtonCursorTargetComponent.onUnhover.add(this._visibilityUnHover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
+        ui.myVisibilityButtonCursorTargetComponent.onUnhover.add(this._visibilityUnhover.bind(this, ui.myVisibilityButtonBackgroundComponent.material));
     }
 
     _toggleVisibility(isButton, notify) {
@@ -152,7 +152,7 @@ export class WidgetFrame {
         material.color = this._myConfig.myButtonHoverColor;
     }
 
-    _visibilityUnHover(material) {
+    _visibilityUnhover(material) {
         if (this._myWidgetVisible) {
             material.color = this._myConfig.myBackgroundColor;
         } else {
@@ -160,7 +160,7 @@ export class WidgetFrame {
         }
     }
 
-    _pinUnHover(material) {
+    _pinUnhover(material) {
         if (this._myPinned) {
             material.color = this._myConfig.myBackgroundColor;
         } else {

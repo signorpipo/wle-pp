@@ -42,7 +42,7 @@ export class VirtualGamepadVirtualThumbstick {
         }
 
         this._myThumbstickDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
-        this._myThumbstickDetectionElement.addEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+        this._myThumbstickDetectionElement.addEventListener("mouseleave", this._myMouseLeaveEventListener);
 
         this._myDestroyed = false;
     }

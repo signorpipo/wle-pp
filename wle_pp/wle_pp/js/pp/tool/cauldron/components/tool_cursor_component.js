@@ -12,7 +12,8 @@ export class ToolCursorComponent extends Component {
         _myHandedness: Property.enum(["Left", "Right"], "Left"),
         _myApplyDefaultCursorOffset: Property.bool(true),
         _myPulseOnHover: Property.bool(false),
-        _myShowFingerCursor: Property.bool(false)
+        _myShowFingerCursor: Property.bool(false),
+        _myUpdatePointerCursorStyle: Property.bool(true)
     }
 
     init() {
@@ -49,7 +50,8 @@ export class ToolCursorComponent extends Component {
             this._myCursorComponentXR = this._myCursorObjectXR.pp_addComponent(Cursor, {
                 "collisionGroup": this._myCursorTargetCollisionGroup,
                 "handedness": this._myHandedness + 1,
-                "cursorObject": this._myCursorMeshobject
+                "cursorObject": this._myCursorMeshobject,
+                "styleCursor": false
             });
 
             this._myCursorComponentXR.rayCastMode = 0; // Collision
@@ -63,7 +65,8 @@ export class ToolCursorComponent extends Component {
         {
             this._myCursorComponentNonXR = this._myCursorObjectNonXR.pp_addComponent(Cursor, {
                 "collisionGroup": this._myCursorTargetCollisionGroup,
-                "handedness": this._myHandedness + 1
+                "handedness": this._myHandedness + 1,
+                "styleCursor": this._myUpdatePointerCursorStyle
             });
 
             this._myCursorComponentNonXR.rayCastMode = 0; // Collision

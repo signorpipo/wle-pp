@@ -7,8 +7,8 @@ import { EasyObjectTuner } from "./easy_object_tuner";
 
 export class EasyMeshColor extends EasyObjectTuner {
 
-    constructor(colorModel, colorType, object, variableName, setAsDefault, useTuneTarget, engine) {
-        super(object, variableName, setAsDefault, useTuneTarget, engine);
+    constructor(colorModel, colorType, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
+        super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
         this._myColorModel = colorModel;
         this._myColorType = colorType;
         this._myColorVariableNames = ["color", "diffuseColor", "ambientColor", "specularColor", "emissiveColor", "fogColor", "ambientFactor",];
@@ -28,7 +28,7 @@ export class EasyMeshColor extends EasyObjectTuner {
 
     _createEasyTuneVariable(variableName) {
         if (this._myColorType == 6) {
-            return new EasyTuneNumberArray(variableName, this._getDefaultValue(), 0.1, 3, 0, 1);
+            return new EasyTuneNumberArray(variableName, this._getDefaultValue(), 3, 0.1, 0, 1);
         }
         return new EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
     }

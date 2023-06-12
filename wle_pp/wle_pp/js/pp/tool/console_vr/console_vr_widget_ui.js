@@ -18,7 +18,7 @@ export class ConsoleVRWidgetUI {
         this._myConfig = config;
         this._myParams = params;
 
-        this._myPlaneMesh = Globals.getDefaultMeshes(this._myEngine).myPlane;
+        this._myPlaneMesh = Globals.getDefaultMeshes(this._myEngine).myDoubleSidedPlane;
 
         this._createSkeleton();
         this._setTransforms();

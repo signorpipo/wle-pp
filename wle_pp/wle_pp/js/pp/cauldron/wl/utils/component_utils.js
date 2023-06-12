@@ -133,11 +133,11 @@ export function getTypeFromTypeOrClass(typeOrClass) {
     return type;
 }
 
-export function getClassFromType(type) {
+export function getClassFromType(type, engine = Globals.getMainEngine()) {
     let classToReturn = null;
 
     if (ComponentUtils.isWLNativeComponent(type)) {
-        if (ComponentUtils.isWLNativeComponentRegistered(type)) {
+        if (ComponentUtils.isWLNativeComponentRegistered(type, engine)) {
             switch (type) {
                 case AnimationComponent.TypeName:
                     classToReturn = AnimationComponent;
@@ -168,15 +168,15 @@ export function getClassFromType(type) {
             }
         }
     } else {
-        classToReturn = ComponentUtils.getJavascriptComponentClass(type);
+        classToReturn = ComponentUtils.getJavascriptComponentClass(type, engine);
     }
 
     return classToReturn;
 }
 
-export function isTypeRegistered(typeOrClass) {
+export function isRegistered(typeOrClass, engine = Globals.getMainEngine()) {
     let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-    return ComponentUtils.getClassFromType(type) != null;
+    return ComponentUtils.getClassFromType(type, engine) != null;
 }
 
 export function getJavascriptComponentInstances(engine = Globals.getMainEngine()) {
@@ -184,7 +184,7 @@ export function getJavascriptComponentInstances(engine = Globals.getMainEngine()
 }
 
 export function getJavascriptComponentClass(type, engine = Globals.getMainEngine()) {
-    return ComponentUtils.getJavascriptComponentClassesByIndex(engine)[ComponentUtils.getJavascriptComponentTypeIndex(type)];
+    return ComponentUtils.getJavascriptComponentClassesByIndex(engine)[ComponentUtils.getJavascriptComponentTypeIndex(type, engine)];
 }
 
 export function getJavascriptComponentClassesByIndex(engine = Globals.getMainEngine()) {
@@ -217,20 +217,20 @@ export function isWLNativeComponentRegistered(typeOrClass, engine = Globals.getM
     return wasm._wl_get_component_manager_index(wasm.tempUTF8(type)) >= 0;
 }
 
-export function isCloneable(typeOrClass, defaultCloneValid = false) {
+export function isCloneable(typeOrClass, defaultCloneValid = false, engine = Globals.getMainEngine()) {
     let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-    return defaultCloneValid || ComponentUtils.hasCloneCallback(type) || ComponentUtils.getClassFromType(type)?.prototype.pp_clone != null;
+    return defaultCloneValid || ComponentUtils.hasCloneCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clone != null;
 }
 
-export function hasClonePostProcess(typeOrClass) {
+export function hasClonePostProcess(typeOrClass, engine = Globals.getMainEngine()) {
     let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-    return ComponentUtils.hasClonePostProcessCallback(type) || ComponentUtils.getClassFromType(type)?.prototype.pp_clonePostProcess != null;
+    return ComponentUtils.hasClonePostProcessCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clonePostProcess != null;
 }
 
 export function clone(componentToClone, targetObject, deeCloneParams, customCloneParams, useDefaultCloneAsFallback = false, defaultCloneAutoStartIfNotActive = true) {
     let clonedComponent = null;
 
-    let cloneCallback = ComponentUtils.getCloneCallback(componentToClone.type);
+    let cloneCallback = ComponentUtils.getCloneCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
 
     if (cloneCallback != null) {
         clonedComponent = cloneCallback(componentToClone, targetObject, deeCloneParams, customCloneParams);
@@ -244,7 +244,7 @@ export function clone(componentToClone, targetObject, deeCloneParams, customClon
 }
 
 export function clonePostProcess(componentToClone, clonedComponent, deeCloneParams, customCloneParams) {
-    let clonePostProcessCallback = ComponentUtils.getClonePostProcessCallback(componentToClone.type);
+    let clonePostProcessCallback = ComponentUtils.getClonePostProcessCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
 
     if (clonePostProcessCallback != null) {
         clonePostProcessCallback(componentToClone, clonedComponent, deeCloneParams, customCloneParams);
@@ -348,7 +348,7 @@ export function hasClonePostProcessCallback(typeOrClass, engine = Globals.getMai
 }
 
 
-export function getDefaultWLComponentCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
+export function getDefaultWLComponentCloneCallback(typeOrClass) {
     let callback = null;
 
     let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
@@ -374,21 +374,21 @@ export function getDefaultWLComponentCloneCallback(typeOrClass, engine = Globals
 }
 
 
-export function hasDefaultWLComponentCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
-    return ComponentUtils.getDefaultWLComponentCloneCallback(typeOrClass, engine) != null;
+export function hasDefaultWLComponentCloneCallback(typeOrClass) {
+    return ComponentUtils.getDefaultWLComponentCloneCallback(typeOrClass) != null;
 }
 
 
 export function setDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngine()) {
     for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
-        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType, engine);
+        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
         if (cloneCallback != null) {
             ComponentUtils.setCloneCallback(nativeType, cloneCallback, engine)
         }
     }
 
     for (let javascriptType of ComponentUtils.getWLJavascriptComponentTypes()) {
-        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType, engine);
+        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
         if (cloneCallback != null) {
             ComponentUtils.setCloneCallback(javascriptType, cloneCallback, engine)
         }
@@ -397,7 +397,7 @@ export function setDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngi
 
 export function removeDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngine()) {
     for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
-        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType, engine);
+        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
         if (cloneCallback != null) {
             if (ComponentUtils.getCloneCallback(nativeType, engine) == cloneCallback) {
                 ComponentUtils.removeCloneCallback(nativeType, engine);
@@ -406,7 +406,7 @@ export function removeDefaultWLComponentCloneCallbacks(engine = Globals.getMainE
     }
 
     for (let javascriptType of ComponentUtils.getWLNativeComponentTypes()) {
-        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType, engine);
+        let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
         if (cloneCallback != null) {
             if (ComponentUtils.getCloneCallback(javascriptType, engine) == cloneCallback) {
                 ComponentUtils.removeCloneCallback(javascriptType, engine);
@@ -423,7 +423,7 @@ export let ComponentUtils = {
     getWLJavascriptComponentTypes,
     getTypeFromTypeOrClass,
     getClassFromType,
-    isTypeRegistered,
+    isRegistered,
 
     getJavascriptComponentInstances,
     getJavascriptComponentClass,

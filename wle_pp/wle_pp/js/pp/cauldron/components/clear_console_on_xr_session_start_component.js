@@ -9,7 +9,7 @@ export class ClearConsoleOnXRSessionStartComponent extends Component {
 
     start() {
         this._myFirstTime = true;
-        XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), this.engine);
+        XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, false, this.engine);
     }
 
     _onXRSessionStart() {

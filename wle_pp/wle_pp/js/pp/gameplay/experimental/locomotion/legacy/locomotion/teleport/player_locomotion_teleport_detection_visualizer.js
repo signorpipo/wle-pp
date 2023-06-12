@@ -7,10 +7,11 @@ import { Globals } from "../../../../../../pp/globals";
 export class PlayerLocomotionTeleportDetectionVisualizerParams {
 
     constructor() {
-        this.myTeleportParableValidMaterial = null;
-        this.myTeleportParableInvalidMaterial = null;
+        this.myTeleportValidMaterial = null;
+        this.myTeleportInvalidMaterial = null;
 
         this.myTeleportPositionObject = null;
+        this.myTeleportPositionObjectRotateWithHead = true;
 
         this.myTeleportParableLineEndOffset = 0.05;
         this.myTeleportParableMinVerticalDistanceToShowVerticalLine = 0.25;
@@ -118,10 +119,10 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
             {
                 let visualParams = new VisualLineParams(this._myTeleportParams.myEngine);
 
-                if (this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial != null) {
-                    visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial;
+                if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
+                    visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial;
                 } else {
-                    visualParams.myMaterial = this._myTeleportParableValidMaterial;
+                    visualParams.myMaterial = this._myTeleportValidMaterial;
                 }
 
                 this._myValidVisualLines.push(new VisualLine(visualParams));
@@ -130,10 +131,10 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
             {
                 let visualParams = new VisualLineParams(this._myTeleportParams.myEngine);
 
-                if (this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial != null) {
-                    visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableInvalidMaterial;
+                if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
+                    visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportInvalidMaterial;
                 } else {
-                    visualParams.myMaterial = this._myTeleportParableInvalidMaterial;
+                    visualParams.myMaterial = this._myTeleportInvalidMaterial;
                 }
 
                 this._myInvalidVisualLines.push(new VisualLine(visualParams));
@@ -172,10 +173,10 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
 PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function () {
     let innerTorusPosition = vec3_create();
     return function _setupVisuals() {
-        this._myTeleportParableValidMaterial = Globals.getDefaultMaterials(this._myTeleportParams.myEngine).myFlatOpaque.clone();
-        this._myTeleportParableValidMaterial.color = vec4_create(0, 0.5, 1, 1);
-        this._myTeleportParableInvalidMaterial = Globals.getDefaultMaterials(this._myTeleportParams.myEngine).myFlatOpaque.clone();
-        this._myTeleportParableInvalidMaterial.color = vec4_create(0.75, 0.05, 0, 1);
+        this._myTeleportValidMaterial = Globals.getDefaultMaterials(this._myTeleportParams.myEngine).myFlatOpaque.clone();
+        this._myTeleportValidMaterial.color = vec4_create(0, 0.5, 1, 1);
+        this._myTeleportInvalidMaterial = Globals.getDefaultMaterials(this._myTeleportParams.myEngine).myFlatOpaque.clone();
+        this._myTeleportInvalidMaterial.color = vec4_create(0.75, 0.05, 0, 1);
 
         this._myValidVisualLines = [];
         this._myInvalidVisualLines = [];
@@ -184,10 +185,10 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
         {
             let visualParams = new VisualPointParams(this._myTeleportParams.myEngine);
 
-            if (this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial != null) {
-                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial;
+            if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
+                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial;
             } else {
-                visualParams.myMaterial = this._myTeleportParableValidMaterial;
+                visualParams.myMaterial = this._myTeleportValidMaterial;
             }
 
             this._myValidVisualPoint = new VisualPoint(visualParams);
@@ -196,10 +197,10 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
         {
             let visualParams = new VisualPointParams(this._myTeleportParams.myEngine);
 
-            if (this._myTeleportParams.myVisualizerParams.myTeleportParableInvalidMaterial != null) {
-                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableInvalidMaterial;
+            if (this._myTeleportParams.myVisualizerParams.myTeleportInvalidMaterial != null) {
+                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportInvalidMaterial;
             } else {
-                visualParams.myMaterial = this._myTeleportParableInvalidMaterial;
+                visualParams.myMaterial = this._myTeleportInvalidMaterial;
             }
 
             this._myInvalidVisualPoint = new VisualPoint(visualParams);
@@ -208,16 +209,16 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
         {
             let visualParams = new VisualLineParams(this._myTeleportParams.myEngine);
 
-            if (this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial != null) {
-                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial;
+            if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
+                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial;
             } else {
-                visualParams.myMaterial = this._myTeleportParableValidMaterial;
+                visualParams.myMaterial = this._myTeleportValidMaterial;
             }
 
             this._myValidVisualVerticalLine = new VisualLine(visualParams);
         }
 
-        this._myVisualTeleportPositionObject = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myPlayerCauldron.pp_addObject();
+        this._myVisualTeleportPositionObject = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myCauldron.pp_addObject();
 
         //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Radius", 0.175, 0.1, 3, undefined, undefined, this._myTeleportParams.myEngine));
         //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneInt("Teleport Torus Segments", 24, 1, undefined, undefined, this._myTeleportParams.myEngine));
@@ -235,10 +236,10 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
             //visualParams.mySegmentsAmount = Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).get("Teleport Torus Segments");
             //visualParams.mySegmentThickness = Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).get("Teleport Torus Thickness");
 
-            if (this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial != null) {
-                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial;
+            if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
+                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial;
             } else {
-                visualParams.myMaterial = this._myTeleportParableValidMaterial;
+                visualParams.myMaterial = this._myTeleportValidMaterial;
             }
 
             visualParams.myParent = this._myVisualTeleportPositionObject;
@@ -257,10 +258,10 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
             //visualParams.mySegmentsAmount = Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).get("Teleport Torus Segments");
             //visualParams.mySegmentThickness = Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).get("Teleport Torus Thickness");
 
-            if (this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial != null) {
-                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportParableValidMaterial;
+            if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
+                visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial;
             } else {
-                visualParams.myMaterial = this._myTeleportParableValidMaterial;
+                visualParams.myMaterial = this._myTeleportValidMaterial;
             }
 
             visualParams.myParent = this._myVisualTeleportPositionObject;
@@ -367,6 +368,10 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParablePositi
     let feetTransformQuat = quat2_create();
     let feetRotationQuat = quat_create();
 
+    let parableFirstPosition = vec3_create();
+    let parableSecondPosition = vec3_create();
+    let parableDirection = vec3_create();
+
     let visualPosition = vec3_create();
     let visualForward = vec3_create();
     let visualRotationQuat = quat_create();
@@ -381,9 +386,19 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParablePositi
         feetTransformQuat = this._myTeleportParams.myPlayerHeadManager.getTransformFeetQuat(feetTransformQuat);
         feetRotationQuat = feetTransformQuat.quat2_getRotationQuat(feetRotationQuat);
         feetRotationQuat = feetRotationQuat.quat_rotateAxis(this._myTeleportRuntimeParams.myTeleportRotationOnUp, playerUp, feetRotationQuat);
-        visualForward = feetRotationQuat.quat_getForward(visualForward);
 
         visualPosition = this._myTeleportRuntimeParams.myTeleportPosition.vec3_add(playerUp.vec3_scale(this._myTeleportParams.myVisualizerParams.myTeleportParablePositionUpOffset, visualPosition), visualPosition);
+
+        visualForward = feetRotationQuat.quat_getForward(visualForward);
+
+        if (!this._myTeleportParams.myVisualizerParams.myTeleportPositionObjectRotateWithHead) {
+            parableFirstPosition = this._myDetectionRuntimeParams.myParable.getPosition(0, parableFirstPosition);
+            parableSecondPosition = this._myDetectionRuntimeParams.myParable.getPosition(1, parableSecondPosition);
+            parableDirection = parableSecondPosition.vec3_sub(parableFirstPosition, parableDirection).vec3_removeComponentAlongAxis(playerUp, parableDirection);
+            if (parableDirection.vec3_length() > Math.PP_EPSILON) {
+                visualForward = parableDirection.vec3_normalize(visualForward);
+            }
+        }
 
         if (this._myTeleportParams.myVisualizerParams.myTeleportParablePositionVisualAlignOnSurface) {
             visualRotationQuat.quat_setUp(this._myDetectionRuntimeParams.myTeleportSurfaceNormal, visualForward);
@@ -413,11 +428,11 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParablePositi
             } else {
                 this._myVisualTeleportTransformPositionLerping = true;
 
-                let interpolationValue = this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionLerpFactor * dt;
+                let interpolationFactor = this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionLerpFactor * dt;
                 if (positionDistance < this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMinDistanceToCloseLerpFactor) {
-                    interpolationValue = this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionCloseLerpFactor * dt;
+                    interpolationFactor = this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionCloseLerpFactor * dt;
                 }
-                currentVisualTeleportPosition.vec3_lerp(visualPosition, interpolationValue, currentVisualTeleportPosition);
+                currentVisualTeleportPosition.vec3_lerp(visualPosition, interpolationFactor, currentVisualTeleportPosition);
             }
 
             if ((!this._myVisualTeleportTransformRotationLerping || rotationAngleDistance < this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMinAngleDistanceToResetLerp) &&
@@ -426,10 +441,10 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParablePositi
                 this._myVisualTeleportTransformRotationLerping = false;
                 currentVisualTeleportRotationQuat.quat_copy(visualRotationQuat);
             } else {
-                let interpolationValue = this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionLerpFactor * dt;
+                let interpolationFactor = this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionLerpFactor * dt;
 
                 this._myVisualTeleportTransformRotationLerping = true;
-                currentVisualTeleportRotationQuat.quat_slerp(visualRotationQuat, interpolationValue, currentVisualTeleportRotationQuat);
+                currentVisualTeleportRotationQuat.quat_slerp(visualRotationQuat, interpolationFactor, currentVisualTeleportRotationQuat);
             }
 
             currentVisualTeleportTransformQuat.quat2_setPositionRotationQuat(currentVisualTeleportPosition, currentVisualTeleportRotationQuat);

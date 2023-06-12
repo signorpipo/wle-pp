@@ -8,43 +8,43 @@ export class ConsoleVR {
 
     log(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalLog().apply(console, args);
+            ConsoleOriginalFunctions.log(...args);
         }
     }
 
     error(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalError().apply(console, args);
+            ConsoleOriginalFunctions.error(...args);
         }
     }
 
     warn(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalWarn().apply(console, args);
+            ConsoleOriginalFunctions.warn(...args);
         }
     }
 
     info(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalInfo().apply(console, args);
+            ConsoleOriginalFunctions.info(...args);
         }
     }
 
     debug(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalDebug().apply(console, args);
+            ConsoleOriginalFunctions.debug(...args);
         }
     }
 
     assert(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalAssert().apply(console, args);
+            ConsoleOriginalFunctions.assert(...args);
         }
     }
 
-    clear() {
+    clear(...args) {
         if (this._myForwardToBrowserConsole) {
-            ConsoleOriginalFunctions.getConsoleOriginalClear().apply(console);
+            ConsoleOriginalFunctions.clear(...args);
         }
     }
 

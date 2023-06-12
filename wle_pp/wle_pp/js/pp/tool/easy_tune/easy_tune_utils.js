@@ -1,11 +1,11 @@
 import { Globals } from "../../pp/globals";
 
-let _mySetWidgetActiveVariableCallbacks = new WeakMap();    // Signature: callback(variableName)
-let _myRefreshWidgetCallbacks = new WeakMap();              // Signature: callback()
+let _mySetWidgetCurrentVariableCallbacks = new WeakMap();    // Signature: callback(variableName)
+let _myRefreshWidgetCallbacks = new WeakMap();               // Signature: callback()
 
-export function setWidgetActiveVariable(variableName, engine = Globals.getMainEngine()) {
-    if (_mySetWidgetActiveVariableCallbacks.has(engine)) {
-        for (let callback of _mySetWidgetActiveVariableCallbacks.get(engine).values()) {
+export function setWidgetCurrentVariable(variableName, engine = Globals.getMainEngine()) {
+    if (_mySetWidgetCurrentVariableCallbacks.has(engine)) {
+        for (let callback of _mySetWidgetCurrentVariableCallbacks.get(engine).values()) {
             callback(variableName);
         }
     }
@@ -189,17 +189,17 @@ export function exportVariables(fileURL = null, onSuccessCallback = null, onFail
     }
 }
 
-export function addSetWidgetActiveVariableCallback(id, callback, engine = Globals.getMainEngine()) {
-    if (!_mySetWidgetActiveVariableCallbacks.has(engine)) {
-        _mySetWidgetActiveVariableCallbacks.set(engine, new Map());
+export function addSetWidgetCurrentVariableCallback(id, callback, engine = Globals.getMainEngine()) {
+    if (!_mySetWidgetCurrentVariableCallbacks.has(engine)) {
+        _mySetWidgetCurrentVariableCallbacks.set(engine, new Map());
     }
 
-    _mySetWidgetActiveVariableCallbacks.get(engine).set(id, callback);
+    _mySetWidgetCurrentVariableCallbacks.get(engine).set(id, callback);
 }
 
-export function removeSetWidgetActiveVariableCallback(id, engine = Globals.getMainEngine()) {
-    if (_mySetWidgetActiveVariableCallbacks.has(engine)) {
-        _mySetWidgetActiveVariableCallbacks.get(engine).delete(id);
+export function removeSetWidgetCurrentVariableCallback(id, engine = Globals.getMainEngine()) {
+    if (_mySetWidgetCurrentVariableCallbacks.has(engine)) {
+        _mySetWidgetCurrentVariableCallbacks.get(engine).delete(id);
     }
 }
 
@@ -218,12 +218,12 @@ export function removeRefreshWidgetCallback(id, engine = Globals.getMainEngine()
 }
 
 export let EasyTuneUtils = {
-    setWidgetActiveVariable,
+    setWidgetCurrentVariable,
     refreshWidget,
     importVariables,
     exportVariables,
-    addSetWidgetActiveVariableCallback,
-    removeSetWidgetActiveVariableCallback,
+    addSetWidgetCurrentVariableCallback,
+    removeSetWidgetCurrentVariableCallback,
     addRefreshWidgetCallback,
     removeRefreshWidgetCallback
 };

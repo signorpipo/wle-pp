@@ -19,7 +19,7 @@ export class EasyTuneBaseWidgetUI {
 
         this._myImportExportButtonsVisible = true;
 
-        this._myPlaneMesh = Globals.getDefaultMeshes(this._myEngine).myPlane;
+        this._myPlaneMesh = Globals.getDefaultMeshes(this._myEngine).myDoubleSidedPlane;
 
         this._buildHook();
 

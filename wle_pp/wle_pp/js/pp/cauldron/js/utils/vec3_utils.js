@@ -173,24 +173,62 @@ export function lengthSigned(vector, positiveDirection) {
     return signedLength;
 }
 
-export function angleSigned(first, second, upAxis) {
-    return Vec3Utils.angleSignedDegrees(first, second, upAxis);
+export function angleSigned(first, second, referenceAxis) {
+    return Vec3Utils.angleSignedDegrees(first, second, referenceAxis);
 }
 
-export function angleSignedDegrees(first, second, upAxis) {
-    return MathUtils.toDegrees(Vec3Utils.angleSignedRadians(first, second, upAxis));
+export function angleSignedDegrees(first, second, referenceAxis) {
+    return MathUtils.toDegrees(Vec3Utils.angleSignedRadians(first, second, referenceAxis));
 }
 
 export let angleSignedRadians = function () {
     let crossAxis = create();
-    return function angleSignedRadians(first, second, upAxis) {
+    return function angleSignedRadians(first, second, referenceAxis) {
         Vec3Utils.cross(first, second, crossAxis);
         let angle = Vec3Utils.angleRadians(first, second);
-        if (!Vec3Utils.isConcordant(crossAxis, upAxis)) {
+        if (!Vec3Utils.isConcordant(crossAxis, referenceAxis)) {
             angle = -angle;
         }
 
         return angle;
+    };
+}();
+
+export function anglePivoted(first, second, referenceAxis) {
+    return Vec3Utils.anglePivotedDegrees(first, second, referenceAxis);
+}
+
+export function anglePivotedDegrees(first, second, referenceAxis) {
+    return MathUtils.toDegrees(Vec3Utils.anglePivotedRadians(first, second, referenceAxis));
+}
+
+export let anglePivotedRadians = function () {
+    let flatFirst = create();
+    let flatSecond = create();
+    return function anglePivotedRadians(first, second, referenceAxis) {
+        flatFirst = Vec3Utils.removeComponentAlongAxis(first, referenceAxis, flatFirst);
+        flatSecond = Vec3Utils.removeComponentAlongAxis(second, referenceAxis, flatSecond);
+
+        return Vec3Utils.angleRadians(flatFirst, flatSecond);
+    };
+}();
+
+export function anglePivotedSigned(first, second, referenceAxis) {
+    return Vec3Utils.anglePivotedSignedDegrees(first, second, referenceAxis);
+}
+
+export function anglePivotedSignedDegrees(first, second, referenceAxis) {
+    return MathUtils.toDegrees(Vec3Utils.anglePivotedSignedRadians(first, second, referenceAxis));
+}
+
+export let anglePivotedSignedRadians = function () {
+    let flatFirst = create();
+    let flatSecond = create();
+    return function anglePivotedSignedRadians(first, second, referenceAxis) {
+        flatFirst = Vec3Utils.removeComponentAlongAxis(first, referenceAxis, flatFirst);
+        flatSecond = Vec3Utils.removeComponentAlongAxis(second, referenceAxis, flatSecond);
+
+        return Vec3Utils.angleSignedRadians(flatFirst, flatSecond, referenceAxis);
     };
 }();
 
@@ -267,18 +305,18 @@ export function isFartherAlongAxis(first, second, axis) {
     return Vec3Utils.valueAlongAxis(first, axis) > Vec3Utils.valueAlongAxis(second, axis);
 }
 
-export function isToTheRight(first, second, upAxis) {
-    return Vec3Utils.signTo(first, second, upAxis) >= 0;
+export function isToTheRight(first, second, referenceAxis) {
+    return Vec3Utils.signTo(first, second, referenceAxis) >= 0;
 }
 
 export let signTo = function () {
     let componentAlongThis = create();
     let componentAlongVector = create();
-    return function signTo(first, second, upAxis, zeroSign = 1) {
-        Vec3Utils.removeComponentAlongAxis(first, upAxis, componentAlongThis);
-        Vec3Utils.removeComponentAlongAxis(second, upAxis, componentAlongVector);
+    return function signTo(first, second, referenceAxis, zeroSign = 1) {
+        Vec3Utils.removeComponentAlongAxis(first, referenceAxis, componentAlongThis);
+        Vec3Utils.removeComponentAlongAxis(second, referenceAxis, componentAlongVector);
 
-        let angleSignedResult = Vec3Utils.angleSigned(first, second, upAxis);
+        let angleSignedResult = Vec3Utils.angleSigned(first, second, referenceAxis);
         return angleSignedResult > 0 ? 1 : (angleSignedResult == 0 ? zeroSign : -1);
     };
 }();
@@ -317,7 +355,6 @@ export let projectOnAxisAlongAxis = function () {
                 let angleWithAlongAxis = Vec3Utils.angleRadians(fixedProjectAlongAxis, thisToAxis);
                 let lengthToRemove = Vec3Utils.length(thisToAxis) / Math.cos(angleWithAlongAxis);
 
-                Vec3Utils.normalize(fixedProjectAlongAxis, fixedProjectAlongAxis);
                 Vec3Utils.scale(fixedProjectAlongAxis, lengthToRemove, fixedProjectAlongAxis);
                 Vec3Utils.add(out, fixedProjectAlongAxis, out);
 
@@ -357,7 +394,6 @@ export let projectOnPlaneAlongAxis = function () {
             let angleWithAlongAxis = Vec3Utils.angleRadians(fixedProjectAlongAxis, thisToPlane);
             let lengthToRemove = Vec3Utils.length(thisToPlane) / Math.cos(angleWithAlongAxis);
 
-            Vec3Utils.normalize(fixedProjectAlongAxis, fixedProjectAlongAxis);
             Vec3Utils.scale(fixedProjectAlongAxis, lengthToRemove, fixedProjectAlongAxis);
             Vec3Utils.add(out, fixedProjectAlongAxis, out);
 
@@ -653,14 +689,14 @@ export let radiansToMatrix = function () {
     };
 }();
 
-export function rotationTo(vector, direction, out) {
-    return Vec3Utils.rotationToDegrees(vector, direction, out);
+export function rotationTo(from, to, out) {
+    return Vec3Utils.rotationToDegrees(from, to, out);
 }
 
 export let rotationToDegrees = function () {
     let rotationQuat = quat_utils_create();
-    return function rotationToDegrees(vector, direction, out = Vec3Utils.create()) {
-        Vec3Utils.rotationToQuat(vector, direction, rotationQuat);
+    return function rotationToDegrees(from, to, out = Vec3Utils.create()) {
+        Vec3Utils.rotationToQuat(from, to, rotationQuat);
         QuatUtils.toDegrees(rotationQuat, out);
         return out;
     };
@@ -668,8 +704,8 @@ export let rotationToDegrees = function () {
 
 export let rotationToRadians = function () {
     let rotationQuat = quat_utils_create();
-    return function rotationToRadians(vector, direction, out = Vec3Utils.create()) {
-        Vec3Utils.rotationToQuat(vector, direction, rotationQuat);
+    return function rotationToRadians(from, to, out = Vec3Utils.create()) {
+        Vec3Utils.rotationToQuat(from, to, rotationQuat);
         QuatUtils.toRadians(rotationQuat, out);
         return out;
     };
@@ -677,23 +713,23 @@ export let rotationToRadians = function () {
 
 export let rotationToQuat = function () {
     let rotationAxis = create();
-    return function rotationToQuat(vector, direction, out = QuatUtils.create()) {
-        Vec3Utils.cross(vector, direction, rotationAxis);
+    return function rotationToQuat(from, to, out = QuatUtils.create()) {
+        Vec3Utils.cross(from, to, rotationAxis);
         Vec3Utils.normalize(rotationAxis, rotationAxis);
-        let signedAngle = Vec3Utils.angleSigned(vector, direction, rotationAxis);
+        let signedAngle = Vec3Utils.angleSigned(from, to, rotationAxis);
         QuatUtils.fromAxisRadians(signedAngle, rotationAxis, out);
         return out;
     };
 }();
 
-export function rotationToPivoted(vector, direction, pivotAxis, out) {
-    return Vec3Utils.rotationToPivotedDegrees(vector, direction, pivotAxis, out);
+export function rotationToPivoted(from, to, pivotAxis, out) {
+    return Vec3Utils.rotationToPivotedDegrees(from, to, pivotAxis, out);
 }
 
 export let rotationToPivotedDegrees = function () {
     let rotationQuat = quat_utils_create();
-    return function rotationToPivotedDegrees(vector, direction, pivotAxis, out = Vec3Utils.create()) {
-        Vec3Utils.rotationToPivotedQuat(vector, direction, pivotAxis, rotationQuat);
+    return function rotationToPivotedDegrees(from, to, pivotAxis, out = Vec3Utils.create()) {
+        Vec3Utils.rotationToPivotedQuat(from, to, pivotAxis, rotationQuat);
         QuatUtils.toDegrees(rotationQuat, out);
         return out;
     };
@@ -701,45 +737,45 @@ export let rotationToPivotedDegrees = function () {
 
 export let rotationToPivotedRadians = function () {
     let rotationQuat = quat_utils_create();
-    return function rotationToPivotedRadians(vector, direction, pivotAxis, out = Vec3Utils.create()) {
-        Vec3Utils.rotationToPivotedQuat(vector, direction, pivotAxis, rotationQuat);
+    return function rotationToPivotedRadians(from, to, pivotAxis, out = Vec3Utils.create()) {
+        Vec3Utils.rotationToPivotedQuat(from, to, pivotAxis, rotationQuat);
         QuatUtils.toRadians(rotationQuat, out);
         return out;
     };
 }();
 
 export let rotationToPivotedQuat = function () {
-    let thisFlat = create();
-    let directionFlat = create();
+    let fromFlat = create();
+    let toFlat = create();
     let rotationAxis = create();
-    return function rotationToPivotedQuat(vector, direction, pivotAxis, out = QuatUtils.create()) {
-        Vec3Utils.removeComponentAlongAxis(vector, pivotAxis, thisFlat);
-        Vec3Utils.removeComponentAlongAxis(direction, pivotAxis, directionFlat);
+    return function rotationToPivotedQuat(from, to, pivotAxis, out = QuatUtils.create()) {
+        Vec3Utils.removeComponentAlongAxis(from, pivotAxis, fromFlat);
+        Vec3Utils.removeComponentAlongAxis(to, pivotAxis, toFlat);
 
-        Vec3Utils.cross(thisFlat, directionFlat, rotationAxis);
+        Vec3Utils.cross(fromFlat, toFlat, rotationAxis);
         Vec3Utils.normalize(rotationAxis, rotationAxis);
-        let signedAngle = Vec3Utils.angleSigned(thisFlat, directionFlat, rotationAxis);
+        let signedAngle = Vec3Utils.angleSignedRadians(fromFlat, toFlat, rotationAxis);
         QuatUtils.fromAxisRadians(signedAngle, rotationAxis, out);
         return out;
     };
 }();
 
-export function lerp(from, to, interpolationValue, out = Vec3Utils.create()) {
-    if (interpolationValue <= 0) {
+export function lerp(from, to, interpolationFactor, out = Vec3Utils.create()) {
+    if (interpolationFactor <= 0) {
         Vec3Utils.copy(from, out);
         return out;
-    } else if (interpolationValue >= 1) {
+    } else if (interpolationFactor >= 1) {
         Vec3Utils.copy(to, out);
         return out;
     }
 
-    gl_vec3.lerp(out, from, to, interpolationValue);
+    gl_vec3.lerp(out, from, to, interpolationFactor);
     return out;
 }
 
-export function interpolate(from, to, interpolationValue, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
-    let lerpValue = easingFunction(interpolationValue);
-    return Vec3Utils.lerp(from, to, lerpValue, out);
+export function interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
+    let lerpFactor = easingFunction(interpolationFactor);
+    return Vec3Utils.lerp(from, to, lerpFactor, out);
 }
 
 export let perpendicularRandom = function () {
@@ -812,6 +848,12 @@ export let Vec3Utils = {
     angleSigned,
     angleSignedDegrees,
     angleSignedRadians,
+    anglePivoted,
+    anglePivotedDegrees,
+    anglePivotedRadians,
+    anglePivotedSigned,
+    anglePivotedSignedDegrees,
+    anglePivotedSignedRadians,
     toRadians,
     toDegrees,
     toQuat,

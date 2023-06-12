@@ -3,10 +3,10 @@ import { EasyTuneUtils } from "../easy_tune_utils";
 
 export class EasyObjectTuner {
 
-    constructor(object, variableName, setAsDefault, useTuneTarget, engine = Globals.getMainEngine()) {
+    constructor(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine = Globals.getMainEngine()) {
         this._myObject = object;
         this._myUseTuneTarget = useTuneTarget;
-        this._mySetAsDefault = setAsDefault;
+        this._mySetAsWidgetCurrentVariable = setAsWidgetCurrentVariable;
 
         this._myEasyObject = this._myObject;
         if (this._myUseTuneTarget) {
@@ -17,7 +17,12 @@ export class EasyObjectTuner {
         let variableNamePrefix = this._getVariableNamePrefix();
 
         if (variableName == "") {
-            this._myEasyTuneVariableName = variableNamePrefix.concat(this._myObject.pp_getID());
+            let objectName = this._myObject.pp_getName();
+            if (objectName != "") {
+                this._myEasyTuneVariableName = variableNamePrefix.concat(objectName);
+            } else {
+                this._myEasyTuneVariableName = variableNamePrefix.concat(this._myObject.pp_getID());
+            }
         } else {
             this._myEasyTuneVariableName = variableNamePrefix.concat(variableName);
         }
@@ -29,13 +34,13 @@ export class EasyObjectTuner {
         let easyTuneVariable = this._createEasyTuneVariable(this._myEasyTuneVariableName);
 
         Globals.getEasyTuneVariables(this._myEngine).add(easyTuneVariable);
-        if (this._mySetAsDefault) {
-            EasyTuneUtils.setWidgetActiveVariable(this._myEasyTuneVariableName, this._myEngine);
+        if (this._mySetAsWidgetCurrentVariable) {
+            EasyTuneUtils.setWidgetCurrentVariable(this._myEasyTuneVariableName, this._myEngine);
         }
     }
 
     update(dt) {
-        if (Globals.getEasyTuneVariables(this._myEngine).isActive(this._myEasyTuneVariableName)) {
+        if (Globals.getEasyTuneVariables(this._myEngine).isWidgetCurrentVariable(this._myEasyTuneVariableName)) {
             if (this._myUseTuneTarget) {
                 this._myEasyObject = Globals.getEasyTuneTarget(engine);
             }
@@ -55,9 +60,5 @@ export class EasyObjectTuner {
                 this._updateObjectValue(this._myEasyObject, Globals.getEasyTuneVariables(this._myEngine).get(this._myEasyTuneVariableName));
             }
         }
-    }
-
-    updateVariableValue(value) {
-        Globals.getEasyTuneVariables(this._myEngine).set(this._myEasyTuneVariableName, value);
     }
 }

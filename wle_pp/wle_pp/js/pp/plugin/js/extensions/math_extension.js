@@ -108,11 +108,15 @@ export function initMathExtensionStatic() {
         return MathUtils.randomPick(...arguments);
     };
 
-    mathExtension.pp_lerp = function pp_lerp(from, to, interpolationValue) {
+    mathExtension.pp_randomUUID = function pp_randomUUID() {
+        return MathUtils.randomUUID(...arguments);
+    };
+
+    mathExtension.pp_lerp = function pp_lerp(from, to, interpolationFactor) {
         return MathUtils.lerp(...arguments);
     };
 
-    mathExtension.pp_interpolate = function pp_interpolate(from, to, interpolationValue, easingFunction = EasingFunction.linear) {
+    mathExtension.pp_interpolate = function pp_interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
         return MathUtils.interpolate(...arguments);
     };
 

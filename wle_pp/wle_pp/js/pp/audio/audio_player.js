@@ -20,7 +20,7 @@ export let AudioEvent = {
 
 export class AudioPlayer {
 
-    constructor(audioSetupOrAudioFilePath, createAudio = true) {
+    constructor(audioSetupOrAudioFilePath, audioInstance = null) {
         if (audioSetupOrAudioFilePath == null) {
             this._myAudioSetup = new AudioSetup();
         } else if (typeof audioSetupOrAudioFilePath === "string") {
@@ -31,20 +31,22 @@ export class AudioPlayer {
 
         this._myAudio = null;
 
-        if (createAudio) {
+        if (audioInstance == null) {
             this._myAudio = new Howl({
                 src: [this._myAudioSetup.myAudioFilePath],
                 loop: this._myAudioSetup.myLoop,
                 volume: this._myAudioSetup.myVolume,
-                autoplay: this._myAudioSetup.myAutoplay,
+                autoplay: false,
                 rate: this._myAudioSetup.myRate,
                 pool: this._myAudioSetup.myPool,
                 pos: (this._myAudioSetup.mySpatial) ? this._myAudioSetup.myPosition : null,
                 refDistance: this._myAudioSetup.myReferenceDistance,
-                preload: this._myAudioSetup.myPreload
+                preload: this._myAudioSetup.myPreLoad
             });
 
             this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
+        } else {
+            this._myAudio = audioInstance;
         }
 
         this._myLastAudioID = null;
@@ -54,8 +56,10 @@ export class AudioPlayer {
             this._myAudioEventEmitters.set(AudioEvent[eventKey], new Emitter());    // Signature: listener(audioID)
         }
 
-        if (createAudio) {
-            this._addListeners();
+        this._addListeners();
+
+        if (this._myAudioSetup.myAutoPlay) {
+            this.play();
         }
     }
 
@@ -109,8 +113,10 @@ export class AudioPlayer {
         return this._myAudio.state() == "loaded";
     }
 
-    fade(fromVolume, toVolume, duration, updateOnlyLast = false) {
-        this.setVolume(toVolume);
+    fade(fromVolume, toVolume, duration, updateOnlyLast = true, setValueOnPlayer = true) {
+        if (setValueOnPlayer) {
+            this.setVolume(toVolume);
+        }
 
         if (updateOnlyLast) {
             this._myAudio.fade(fromVolume, toVolume, duration * 1000, this._myLastAudioID);
@@ -119,8 +125,30 @@ export class AudioPlayer {
         }
     }
 
-    updatePosition(position, updateOnlyLast = false) {
-        this.setPosition(position);
+    isFading(checkOnlyLast = true) {
+        let fading = false;
+
+        if (checkOnlyLast) {
+            let lastSound = this._myAudio._soundById(this._myLastAudioID);
+            if (lastSound != null) {
+                fading = lastSound._fadeTo != null;
+            }
+        } else {
+            for (let sound of this._myAudio._sounds) {
+                if (sound._fadeTo != null) {
+                    fading = true;
+                    break;
+                }
+            }
+        }
+
+        return fading;
+    }
+
+    updatePosition(position, updateOnlyLast = true, setValueOnPlayer = true) {
+        if (setValueOnPlayer) {
+            this.setPosition(position);
+        }
 
         if (this._myAudioSetup.mySpatial && position) {
             if (updateOnlyLast) {
@@ -131,12 +159,14 @@ export class AudioPlayer {
         }
     }
 
-    updatePitch(pitch, updateOnlyLast = false) {
-        this.updateRate(pitch, updateOnlyLast);
+    updatePitch(pitch, updateOnlyLast = true, setValueOnPlayer = true) {
+        this.updateRate(pitch, updateOnlyLast, setValueOnPlayer);
     }
 
-    updateRate(rate, updateOnlyLast = false) {
-        this.setRate(rate);
+    updateRate(rate, updateOnlyLast = true, setValueOnPlayer = true) {
+        if (setValueOnPlayer) {
+            this.setRate(rate);
+        }
 
         if (rate != null) {
             if (updateOnlyLast) {
@@ -147,8 +177,10 @@ export class AudioPlayer {
         }
     }
 
-    updateVolume(volume, updateOnlyLast = false) {
-        this.setVolume(volume);
+    updateVolume(volume, updateOnlyLast = true, setValueOnPlayer = true) {
+        if (setValueOnPlayer) {
+            this.setVolume(volume);
+        }
 
         if (volume != null) {
             if (updateOnlyLast) {
@@ -195,8 +227,8 @@ export class AudioPlayer {
         return this._myAudioSetup.myRate;
     }
 
-    registerAudioEventListener(audioEvent, id, listener) {
-        this._myAudioEventEmitters.get(audioEvent).add(id, listener);
+    registerAudioEventListener(audioEvent, id, listener, notifyOnce = false) {
+        this._myAudioEventEmitters.get(audioEvent).add(listener, { id: id, once: notifyOnce });
     }
 
     unregisterAudioEventListener(audioEvent, id) {

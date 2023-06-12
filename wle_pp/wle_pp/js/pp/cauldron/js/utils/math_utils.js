@@ -100,19 +100,23 @@ export function randomPick(...args) {
     return random;
 }
 
-export function lerp(from, to, interpolationValue) {
-    if (interpolationValue <= 0) {
+export function randomUUID() {
+    return crypto.randomUUID();
+}
+
+export function lerp(from, to, interpolationFactor) {
+    if (interpolationFactor <= 0) {
         return from;
-    } else if (interpolationValue >= 1) {
+    } else if (interpolationFactor >= 1) {
         return to;
     }
 
-    return interpolationValue * (to - from) + from;
+    return interpolationFactor * (to - from) + from;
 }
 
-export function interpolate(from, to, interpolationValue, easingFunction = EasingFunction.linear) {
-    let lerpValue = easingFunction(interpolationValue);
-    return MathUtils.lerp(from, to, lerpValue);
+export function interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
+    let lerpFactor = easingFunction(interpolationFactor);
+    return MathUtils.lerp(from, to, lerpFactor);
 }
 
 export function angleDistance(from, to) {
@@ -228,6 +232,7 @@ export let MathUtils = {
     randomBool,
     randomSign,
     randomPick,
+    randomUUID,
     lerp,
     interpolate,
     angleDistance,

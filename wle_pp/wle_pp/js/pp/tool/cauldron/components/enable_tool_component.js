@@ -1,7 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
 import { Globals } from "../../../pp/globals";
 
-export class EnableToolsComponent extends Component {
+export class EnableToolComponent extends Component {
     static TypeName = "pp-enable-tools";
     static Properties = {
         _myEnable: Property.bool(true)

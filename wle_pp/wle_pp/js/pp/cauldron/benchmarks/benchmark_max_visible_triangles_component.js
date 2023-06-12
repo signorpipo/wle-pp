@@ -1,8 +1,8 @@
 import { Alignment, Component, Justification, MeshComponent, Property, TextComponent } from "@wonderlandengine/api";
 import { vec2_create, vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
 import { Globals } from "../../pp/globals";
-import { ObjectPool, ObjectPoolParams } from "../cauldron/object_pool";
 import { Timer } from "../cauldron/timer";
+import { ObjectPool, ObjectPoolParams } from "../object_pool/object_pool";
 import { MeshCreationParams, MeshCreationTriangleParams, MeshCreationVertexParams, MeshUtils } from "../utils/mesh_utils";
 import { XRUtils } from "../utils/xr_utils";
 import { CloneParams } from "../wl/utils/object_utils";
@@ -269,7 +269,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
 
         let parent = this.object;
         if (this._myDisplayInFrontOfPlayer) {
-            parent = Globals.getPlayerObjects().myHead.pp_addObject();
+            parent = Globals.getPlayerObjects(this.engine).myHead.pp_addObject();
             parent.pp_rotateAxis(180, vec3_create(0, 1, 0));
             parent.pp_translateLocal(vec3_create(0, 0, this._myDisplayInFrontOfPlayerDistance));
         }

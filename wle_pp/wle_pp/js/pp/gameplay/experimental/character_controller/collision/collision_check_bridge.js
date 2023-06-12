@@ -15,17 +15,17 @@ export function setCollisionCheck(collisionCheck, engine = Globals.getMainEngine
 }
 
 export function initBridge(engine = Globals.getMainEngine()) {
-    setCollisionCheck(new CollisionCheck(engine), engine);
+    CollisionCheckBridge.setCollisionCheck(new CollisionCheck(engine), engine);
 }
 
 export let checkMovement = function () {
     let collisionCheckParams = new CollisionCheckParams();
     let collisionRuntimeParams = new CollisionRuntimeParams();
     return function checkMovement(movement, currentTransformQuat, characterColliderSetup, prevCharacterCollisionResults, outCharacterCollisionResults = new CharacterCollisionResults(), engine = Globals.getMainEngine()) {
-        this.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
-        this.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
-        getCollisionCheck(engine).move(movement, currentTransformQuat, collisionCheckParams, collisionRuntimeParams);
-        this.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
+        CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
+        CollisionCheckBridge.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
+        CollisionCheckBridge.getCollisionCheck(engine).move(movement, currentTransformQuat, collisionCheckParams, collisionRuntimeParams);
+        CollisionCheckBridge.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
     }
 }();
 
@@ -34,11 +34,11 @@ export let checkTeleportToTransform = function () {
     let collisionCheckParams = new CollisionCheckParams();
     let collisionRuntimeParams = new CollisionRuntimeParams();
     return function checkTeleportToTransform(teleportTransformQuat, currentTransformQuat, characterColliderSetup, prevCharacterCollisionResults, outCharacterCollisionResults = new CharacterCollisionResults(), engine = Globals.getMainEngine()) {
-        this.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
-        this.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
+        CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
+        CollisionCheckBridge.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
         teleportPosition = teleportTransformQuat.quat2_getPosition(teleportPosition);
-        getCollisionCheck(engine).teleport(teleportPosition, teleportTransformQuat, collisionCheckParams, collisionRuntimeParams);
-        this.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
+        CollisionCheckBridge.getCollisionCheck(engine).teleport(teleportPosition, teleportTransformQuat, collisionCheckParams, collisionRuntimeParams);
+        CollisionCheckBridge.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
     }
 }();
 
@@ -46,10 +46,10 @@ export let checkTransform = function () {
     let collisionCheckParams = new CollisionCheckParams();
     let collisionRuntimeParams = new CollisionRuntimeParams();
     return function checkTransform(checkTransformQuat, characterColliderSetup, prevCharacterCollisionResults, outCharacterCollisionResults = new CharacterCollisionResults(), engine = Globals.getMainEngine()) {
-        this.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
-        this.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
-        getCollisionCheck(engine).positionCheck(true, checkTransformQuat, collisionCheckParams, collisionRuntimeParams);
-        this.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, checkTransformQuat, outCharacterCollisionResults);
+        CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
+        CollisionCheckBridge.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
+        CollisionCheckBridge.getCollisionCheck(engine).positionCheck(true, checkTransformQuat, collisionCheckParams, collisionRuntimeParams);
+        CollisionCheckBridge.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, checkTransformQuat, outCharacterCollisionResults);
     }
 }();
 
@@ -57,11 +57,11 @@ export let updateGroundInfo = function () {
     let collisionCheckParams = new CollisionCheckParams();
     let collisionRuntimeParams = new CollisionRuntimeParams();
     return function updateGroundInfo(currentTransformQuat, characterColliderSetup, prevCharacterCollisionResults, outCharacterCollisionResults = new CharacterCollisionResults(), engine = Globals.getMainEngine()) {
-        this.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
-        this.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
+        CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
+        CollisionCheckBridge.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
         collisionCheckParams.myComputeCeilingInfoEnabled = false;
-        getCollisionCheck(engine).updateSurfaceInfo(currentTransformQuat, collisionCheckParams, collisionRuntimeParams);
-        this.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
+        CollisionCheckBridge.getCollisionCheck(engine).updateSurfaceInfo(currentTransformQuat, collisionCheckParams, collisionRuntimeParams);
+        CollisionCheckBridge.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
     }
 }();
 
@@ -69,36 +69,36 @@ export let updateCeilingInfo = function () {
     let collisionCheckParams = new CollisionCheckParams();
     let collisionRuntimeParams = new CollisionRuntimeParams();
     return function updateCeilingInfo(currentTransformQuat, characterColliderSetup, prevCharacterCollisionResults, outCharacterCollisionResults = new CharacterCollisionResults(), engine = Globals.getMainEngine()) {
-        this.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
-        this.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
+        CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, collisionCheckParams);
+        CollisionCheckBridge.convertCharacterCollisionResultsToCollisionRuntimeParams(prevCharacterCollisionResults, collisionRuntimeParams);
         collisionCheckParams.myComputeGroundInfoEnabled = false;
-        getCollisionCheck(engine).updateSurfaceInfo(currentTransformQuat, collisionCheckParams, collisionRuntimeParams);
-        this.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
+        CollisionCheckBridge.getCollisionCheck(engine).updateSurfaceInfo(currentTransformQuat, collisionCheckParams, collisionRuntimeParams);
+        CollisionCheckBridge.convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults);
     }
 }();
 
 export function convertCharacterCollisionResultsToCollisionRuntimeParams(characterCollisionResults, outCollisionRuntimeParams) {
     outCollisionRuntimeParams.reset();
 
-    characterCollisionResults.myTransformResults.myStartTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myOriginalPosition);
-    characterCollisionResults.myTransformResults.myEndTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myNewPosition);
+    characterCollisionResults.myTransformResults.myInitialTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myOriginalPosition);
+    characterCollisionResults.myTransformResults.myFinalTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myNewPosition);
 
-    characterCollisionResults.myTransformResults.myStartTransformQuat.quat2_getForward(outCollisionRuntimeParams.myOriginalForward);
-    characterCollisionResults.myTransformResults.myStartTransformQuat.quat2_getUp(outCollisionRuntimeParams.myOriginalUp);
+    characterCollisionResults.myTransformResults.myInitialTransformQuat.quat2_getForward(outCollisionRuntimeParams.myOriginalForward);
+    characterCollisionResults.myTransformResults.myInitialTransformQuat.quat2_getUp(outCollisionRuntimeParams.myOriginalUp);
 
     // Ok: outCollisionRuntimeParams.myOriginalHeight = characterCollisionResults.myOriginalHeight;
 
-    outCollisionRuntimeParams.myOriginalMovement.vec3_copy(characterCollisionResults.myMovementResults.myStartMovement);
-    outCollisionRuntimeParams.myFixedMovement.vec3_copy(characterCollisionResults.myMovementResults.myEndMovement);
+    outCollisionRuntimeParams.myOriginalMovement.vec3_copy(characterCollisionResults.myMovementResults.myInitialMovement);
+    outCollisionRuntimeParams.myFixedMovement.vec3_copy(characterCollisionResults.myMovementResults.myFinalMovement);
 
-    outCollisionRuntimeParams.myLastValidOriginalHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantStartHorizontalMovement);
-    outCollisionRuntimeParams.myLastValidOriginalVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantStartVerticalMovement);
+    outCollisionRuntimeParams.myLastValidOriginalHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantInitialHorizontalMovement);
+    outCollisionRuntimeParams.myLastValidOriginalVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantInitialVerticalMovement);
 
-    outCollisionRuntimeParams.myLastValidEndHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantEndHorizontalMovement);
-    outCollisionRuntimeParams.myLastValidEndVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantEndVerticalMovement);
+    outCollisionRuntimeParams.myLastValidEndHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantFinalHorizontalMovement);
+    outCollisionRuntimeParams.myLastValidEndVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantFinalVerticalMovement);
 
-    outCollisionRuntimeParams.myLastValidSurfaceAdjustedHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantAdjustedStartHorizontalMovement);
-    outCollisionRuntimeParams.myLastValidSurfaceAdjustedVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantAdjustedStartVerticalMovement);
+    outCollisionRuntimeParams.myLastValidSurfaceAdjustedHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantAdjustedInitialHorizontalMovement);
+    outCollisionRuntimeParams.myLastValidSurfaceAdjustedVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantAdjustedInitialVerticalMovement);
 
     outCollisionRuntimeParams.myIsOnGround = characterCollisionResults.myGroundInfo.myOnSurface;
     outCollisionRuntimeParams.myGroundAngle = characterCollisionResults.myGroundInfo.mySurfaceAngle;
@@ -131,13 +131,13 @@ export function convertCharacterCollisionResultsToCollisionRuntimeParams(charact
     outCollisionRuntimeParams.myHasPoppedOutGround = characterCollisionResults.myGroundResults.myHasPoppedOutSurface;
     outCollisionRuntimeParams.myHasPoppedOutCeiling = characterCollisionResults.myCeilingResults.myHasPoppedOutSurface;
 
-    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill = characterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill;
-    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill = characterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill;
-    outCollisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill = characterCollisionResults.myGroundResults.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill;
+    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill = characterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill;
+    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill = characterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill;
+    outCollisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill = characterCollisionResults.myGroundResults.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill;
 
-    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill = characterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill;
-    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill = characterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill;
-    outCollisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill = characterCollisionResults.myCeilingResults.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill;
+    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill = characterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill;
+    outCollisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill = characterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill;
+    outCollisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill = characterCollisionResults.myCeilingResults.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill;
 
     // Ok: outCollisionRuntimeParams.myHasReducedVerticalMovement = characterCollisionResults.myVerticalMovementResults.myHasMovementBeenReduced;
 
@@ -152,15 +152,15 @@ export function convertCharacterCollisionResultsToCollisionRuntimeParams(charact
     outCollisionRuntimeParams.mySliding90DegreesSign = characterCollisionResults.myInternalResults.myWallSlide90DegreesDirectionSign;
     outCollisionRuntimeParams.mySlidingRecompute90DegreesSign = characterCollisionResults.myInternalResults.myWallSlide90DegreesRecomputeDirectionSign;
     outCollisionRuntimeParams.myLastValidIsSliding = characterCollisionResults.myInternalResults.myLastRelevantHasWallSlid;
-    outCollisionRuntimeParams.mySlidingPreviousHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantEndHorizontalMovement);
+    outCollisionRuntimeParams.mySlidingPreviousHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantFinalHorizontalMovement);
 
-    outCollisionRuntimeParams.myOriginalTeleportPosition.vec3_copy(characterCollisionResults.myTeleportResults.myStartTeleportTransformQuat);
-    outCollisionRuntimeParams.myFixedTeleportPosition.vec3_copy(characterCollisionResults.myTeleportResults.myEndTeleportTransformQuat);
+    outCollisionRuntimeParams.myOriginalTeleportPosition.vec3_copy(characterCollisionResults.myTeleportResults.myInitialTeleportTransformQuat);
+    outCollisionRuntimeParams.myFixedTeleportPosition.vec3_copy(characterCollisionResults.myTeleportResults.myFinalTeleportTransformQuat);
     outCollisionRuntimeParams.myTeleportCanceled = characterCollisionResults.myTeleportResults.myTeleportFailed;
 
     outCollisionRuntimeParams.myIsPositionOk = characterCollisionResults.myCheckTransformResults.myCheckTransformFailed;
-    characterCollisionResults.myCheckTransformResults.myStartCheckTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myOriginalPositionCheckPosition);
-    characterCollisionResults.myCheckTransformResults.myEndCheckTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myFixedPositionCheckPosition);
+    characterCollisionResults.myCheckTransformResults.myInitialCheckTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myOriginalPositionCheckPosition);
+    characterCollisionResults.myCheckTransformResults.myFinalCheckTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myFixedPositionCheckPosition);
 
     outCollisionRuntimeParams.myIsTeleport = characterCollisionResults.myCheckType == CharacterCollisionCheckType.CHECK_TELEPORT;
     outCollisionRuntimeParams.myIsMove = characterCollisionResults.myCheckType == CharacterCollisionCheckType.CHECK_MOVEMENT;
@@ -188,11 +188,11 @@ export let convertCollisionRuntimeParamsToCharacterCollisionResults = function (
         }
 
         rotationQuat.quat_setForward(collisionRuntimeParams.myOriginalForward, collisionRuntimeParams.myOriginalUp);
-        outCharacterCollisionResults.myTransformResults.myStartTransformQuat.quat2_setPositionRotationQuat(collisionRuntimeParams.myOriginalPosition, rotationQuat);
-        outCharacterCollisionResults.myTransformResults.myEndTransformQuat.quat2_setPositionRotationQuat(collisionRuntimeParams.myNewPosition, rotationQuat);
+        outCharacterCollisionResults.myTransformResults.myInitialTransformQuat.quat2_setPositionRotationQuat(collisionRuntimeParams.myOriginalPosition, rotationQuat);
+        outCharacterCollisionResults.myTransformResults.myFinalTransformQuat.quat2_setPositionRotationQuat(collisionRuntimeParams.myNewPosition, rotationQuat);
 
-        outCharacterCollisionResults.myMovementResults.myStartMovement.vec3_copy(collisionRuntimeParams.myOriginalMovement);
-        outCharacterCollisionResults.myMovementResults.myEndMovement.vec3_copy(collisionRuntimeParams.myFixedMovement);
+        outCharacterCollisionResults.myMovementResults.myInitialMovement.vec3_copy(collisionRuntimeParams.myOriginalMovement);
+        outCharacterCollisionResults.myMovementResults.myFinalMovement.vec3_copy(collisionRuntimeParams.myFixedMovement);
         outCharacterCollisionResults.myMovementResults.myMovementFailed = collisionRuntimeParams.myHorizontalMovementCanceled && collisionRuntimeParams.myVerticalMovementCanceled;
         outCharacterCollisionResults.myMovementResults.myMovementCollided = collisionRuntimeParams.myIsCollidingHorizontally || collisionRuntimeParams.myIsCollidingVertically;
         if (collisionRuntimeParams.myIsCollidingHorizontally) {
@@ -209,22 +209,22 @@ export let convertCollisionRuntimeParamsToCharacterCollisionResults = function (
         outCharacterCollisionResults.myVerticalMovementResults.myMovementCollided = collisionRuntimeParams.myIsCollidingVertically;
         outCharacterCollisionResults.myVerticalMovementResults.myReferenceCollisionHit.copy(collisionRuntimeParams.myVerticalCollisionHit);
 
-        outCharacterCollisionResults.myTeleportResults.myStartTeleportTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myStartTransformQuat);
-        outCharacterCollisionResults.myTeleportResults.myStartTeleportTransformQuat.quat2_setPosition(collisionRuntimeParams.myOriginalTeleportPosition);
-        outCharacterCollisionResults.myTeleportResults.myEndTeleportTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myEndTransformQuat);
-        outCharacterCollisionResults.myTeleportResults.myEndTeleportTransformQuat.quat2_setPosition(collisionRuntimeParams.myFixedTeleportPosition);
+        outCharacterCollisionResults.myTeleportResults.myInitialTeleportTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myInitialTransformQuat);
+        outCharacterCollisionResults.myTeleportResults.myInitialTeleportTransformQuat.quat2_setPosition(collisionRuntimeParams.myOriginalTeleportPosition);
+        outCharacterCollisionResults.myTeleportResults.myFinalTeleportTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myFinalTransformQuat);
+        outCharacterCollisionResults.myTeleportResults.myFinalTeleportTransformQuat.quat2_setPosition(collisionRuntimeParams.myFixedTeleportPosition);
         outCharacterCollisionResults.myTeleportResults.myTeleportFailed = collisionRuntimeParams.myTeleportCanceled;
 
-        outCharacterCollisionResults.myCheckTransformResults.myStartCheckTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myStartTransformQuat);
-        outCharacterCollisionResults.myCheckTransformResults.myStartCheckTransformQuat.quat2_setPosition(collisionRuntimeParams.myOriginalPositionCheckPosition);
-        outCharacterCollisionResults.myCheckTransformResults.myEndCheckTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myEndTransformQuat);
-        outCharacterCollisionResults.myCheckTransformResults.myEndCheckTransformQuat.quat2_setPosition(collisionRuntimeParams.myFixedPositionCheckPosition);
+        outCharacterCollisionResults.myCheckTransformResults.myInitialCheckTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myInitialTransformQuat);
+        outCharacterCollisionResults.myCheckTransformResults.myInitialCheckTransformQuat.quat2_setPosition(collisionRuntimeParams.myOriginalPositionCheckPosition);
+        outCharacterCollisionResults.myCheckTransformResults.myFinalCheckTransformQuat.quat2_copy(outCharacterCollisionResults.myTransformResults.myFinalTransformQuat);
+        outCharacterCollisionResults.myCheckTransformResults.myFinalCheckTransformQuat.quat2_setPosition(collisionRuntimeParams.myFixedPositionCheckPosition);
         outCharacterCollisionResults.myCheckTransformResults.myCheckTransformFailed = !collisionRuntimeParams.myIsPositionOk;
 
         outCharacterCollisionResults.myWallSlideResults.myHasSlid = collisionRuntimeParams.myIsSliding;
         outCharacterCollisionResults.myWallSlideResults.mySlideMovementAngle = collisionRuntimeParams.mySlidingMovementAngle;
         outCharacterCollisionResults.myWallSlideResults.mySlideMovementWallAngle = collisionRuntimeParams.mySlidingCollisionAngle;
-        outCharacterCollisionResults.myWallSlideResults.myWallNormal.vec3_copy(ollisionRuntimeParams.mySlidingWallNormal);
+        outCharacterCollisionResults.myWallSlideResults.myWallNormal.vec3_copy(collisionRuntimeParams.mySlidingWallNormal);
 
         outCharacterCollisionResults.myGroundInfo.myOnSurface = collisionRuntimeParams.myIsOnGround;
         outCharacterCollisionResults.myGroundInfo.mySurfaceAngle = collisionRuntimeParams.myGroundAngle;
@@ -249,26 +249,26 @@ export let convertCollisionRuntimeParamsToCharacterCollisionResults = function (
         outCharacterCollisionResults.myCeilingResults.myHasSnappedOnSurface = collisionRuntimeParams.myHasSnappedOnCeiling;
         outCharacterCollisionResults.myCeilingResults.myHasPoppedOutSurface = collisionRuntimeParams.myHasPoppedOutCeiling;
 
-        outCharacterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleDownhill;
-        outCharacterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnGroundPerceivedAngleUphill;
-        outCharacterCollisionResults.myGroundResults.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill = collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnGroundAngleDownhill;
+        outCharacterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleDownhill;
+        outCharacterCollisionResults.myGroundResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverGroundPerceivedAngleUphill;
+        outCharacterCollisionResults.myGroundResults.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill = collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverGroundAngleDownhill;
 
-        outCharacterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleDownhill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleDownhill;
-        outCharacterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementBasedOnSurfacePerceivedAngleUphill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementBasedOnCeilingPerceivedAngleUphill;
-        outCharacterCollisionResults.myCeilingResults.myHasVerticalMovementAdjustedHorizontalMovementBasedOnSurfaceAngleDownhill = collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementBasedOnCeilingAngleDownhill;
+        outCharacterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleDownhill;
+        outCharacterCollisionResults.myCeilingResults.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill = collisionRuntimeParams.myHorizontalMovementHasAdjustedVerticalMovementOverCeilingPerceivedAngleUphill;
+        outCharacterCollisionResults.myCeilingResults.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill = collisionRuntimeParams.myVerticalMovementHasAdjustedHorizontalMovementOverCeilingAngleDownhill;
 
         outCharacterCollisionResults.mySplitMovementResults.myStepsToPerform = collisionRuntimeParams.mySplitMovementSteps;
         outCharacterCollisionResults.mySplitMovementResults.myStepsPerformed = collisionRuntimeParams.mySplitMovementStepsPerformed;
         outCharacterCollisionResults.mySplitMovementResults.myMovementInterrupted = collisionRuntimeParams.mySplitMovementStop;
         outCharacterCollisionResults.mySplitMovementResults.myMovementChecked.vec3_copy(collisionRuntimeParams.mySplitMovementMovementChecked);
 
-        outCharacterCollisionResults.myInternalResults.myLastRelevantStartHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidOriginalHorizontalMovement);
-        outCharacterCollisionResults.myInternalResults.myLastRelevantEndHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidEndHorizontalMovement);
-        outCharacterCollisionResults.myInternalResults.myLastRelevantStartVerticalMovement.vec3_copy(collisionRuntimeParams.myLastValidOriginalVerticalMovement);
-        outCharacterCollisionResults.myInternalResults.myLastRelevantEndVerticalMovement.vec3_copy(collisionRuntimeParams.myLastValidEndVerticalMovement);
+        outCharacterCollisionResults.myInternalResults.myLastRelevantInitialHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidOriginalHorizontalMovement);
+        outCharacterCollisionResults.myInternalResults.myLastRelevantFinalHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidEndHorizontalMovement);
+        outCharacterCollisionResults.myInternalResults.myLastRelevantInitialVerticalMovement.vec3_copy(collisionRuntimeParams.myLastValidOriginalVerticalMovement);
+        outCharacterCollisionResults.myInternalResults.myLastRelevantFinalVerticalMovement.vec3_copy(collisionRuntimeParams.myLastValidEndVerticalMovement);
 
-        outCharacterCollisionResults.myInternalResults.myLastRelevantAdjustedStartHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidSurfaceAdjustedHorizontalMovement);
-        outCharacterCollisionResults.myInternalResults.myLastRelevantAdjustedStartVerticalMovement.vec3_copy(collisionRuntimeParams.myLastValidSurfaceAdjustedVerticalMovement);
+        outCharacterCollisionResults.myInternalResults.myLastRelevantAdjustedInitialHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidSurfaceAdjustedHorizontalMovement);
+        outCharacterCollisionResults.myInternalResults.myLastRelevantAdjustedInitialVerticalMovement.vec3_copy(collisionRuntimeParams.myLastValidSurfaceAdjustedVerticalMovement);
 
         outCharacterCollisionResults.myInternalResults.myLastRelevantHasWallSlid = collisionRuntimeParams.myLastValidIsSliding;
         outCharacterCollisionResults.myInternalResults.myHasWallSlidTowardOppositeDirection = collisionRuntimeParams.myIsSlidingIntoOppositeDirection;
@@ -277,7 +277,7 @@ export let convertCollisionRuntimeParamsToCharacterCollisionResults = function (
         outCharacterCollisionResults.myInternalResults.myWallSlide90DegreesDirectionSign = collisionRuntimeParams.mySliding90DegreesSign;
         outCharacterCollisionResults.myInternalResults.myWallSlide90DegreesRecomputeDirectionSign = collisionRuntimeParams.mySlidingRecompute90DegreesSign;
 
-        outCharacterCollisionResults.myTransformResults.myStartTransformQuat.quat2_copy(currentTransformQuat);
+        outCharacterCollisionResults.myTransformResults.myInitialTransformQuat.quat2_copy(currentTransformQuat);
 
         return outCharacterCollisionResults;
     }
@@ -353,23 +353,23 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.myVerticalPositionCheckEnabled = characterColliderSetup.myVerticalCheckParams.myVerticalPositionCheckEnabled;
         outCollisionCheckParams.myFeetRadius = characterColliderSetup.myVerticalCheckParams.myVerticalCheckCircumferenceRadius;
 
-        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhill = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhill;
-        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphill = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphill;
-        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfaceAngle;
-        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfaceAngle;
-        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxPerceivedAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle;
-        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxPerceivedAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle;
-        outCollisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhill = characterColliderSetup.myGroundParams.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhill;
-        outCollisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhillMinAngle = characterColliderSetup.myGroundParams.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhillMinSurfaceAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhill = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
+        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphill = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;
+        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfaceAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleDownhillMaxPerceivedAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithGroundAngleUphillMaxPerceivedAngle = characterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle;
+        outCollisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhill = characterColliderSetup.myGroundParams.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhill;
+        outCollisionCheckParams.myAdjustHorizontalMovementWithGroundAngleDownhillMinAngle = characterColliderSetup.myGroundParams.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhillMinSurfaceAngle;
 
-        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhill = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhill;
-        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphill = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphill;
-        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfaceAngle;
-        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfaceAngle;
-        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxPerceivedAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle;
-        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxPerceivedAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementBasedOnSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle;
-        outCollisionCheckParams.myAdjustHorizontalMovementWithCeilingAngleDownhill = characterColliderSetup.myCeilingParams.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhill;
-        outCollisionCheckParams.myAdjustHorizontalMovementWithCeilingAngleDownhillMinAngle = characterColliderSetup.myCeilingParams.myVerticalMovementAdjustHorizontalMovementBasedOnSurfaceAngleDownhillMinSurfaceAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhill = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
+        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphill = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;
+        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfaceAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleDownhillMaxPerceivedAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfacePerceivedAngle;
+        outCollisionCheckParams.myAdjustVerticalMovementWithCeilingAngleUphillMaxPerceivedAngle = characterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphillMaxSurfacePerceivedAngle;
+        outCollisionCheckParams.myAdjustHorizontalMovementWithCeilingAngleDownhill = characterColliderSetup.myCeilingParams.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhill;
+        outCollisionCheckParams.myAdjustHorizontalMovementWithCeilingAngleDownhillMinAngle = characterColliderSetup.myCeilingParams.myVerticalMovementAdjustHorizontalMovementOverSurfaceAngleDownhillMinSurfaceAngle;
 
         outCollisionCheckParams.myCheckVerticalFixedForwardEnabled = characterColliderSetup.myVerticalCheckParams.myVerticalCheckFixedForwardEnabled;
         outCollisionCheckParams.myCheckVerticalFixedForward.vec3_copy(characterColliderSetup.myVerticalCheckParams.myVerticalCheckFixedForward);
@@ -502,6 +502,8 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
 }()
 
 export let CollisionCheckBridge = {
+    getCollisionCheck,
+    setCollisionCheck,
     initBridge,
     checkMovement,
     checkTeleportToTransform,

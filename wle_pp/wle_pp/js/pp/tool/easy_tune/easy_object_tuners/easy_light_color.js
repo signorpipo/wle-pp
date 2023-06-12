@@ -8,8 +8,8 @@ import { EasyObjectTuner } from "./easy_object_tuner";
 
 export class EasyLightColor extends EasyObjectTuner {
 
-    constructor(colorModel, object, variableName, setAsDefault, useTuneTarget, engine) {
-        super(object, variableName, setAsDefault, useTuneTarget, engine);
+    constructor(colorModel, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
+        super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
         this._myColorModel = colorModel;
     }
 

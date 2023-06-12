@@ -50,7 +50,7 @@ export class TrackedHandDrawJointComponent extends Component {
 TrackedHandDrawJointComponent.prototype.update = function () {
     let transformQuat = quat2_create()
     return function update(dt) {
-        let jointPose = Globals.getTrackedHandPose(this._myHandednessType).getJointPose(this._myJointIDType);
+        let jointPose = Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(this._myJointIDType);
 
         this._myJointMeshObject.pp_setTransformLocalQuat(jointPose.getTransformQuat(transformQuat, null));
         this._myJointMeshObject.pp_setScaleLocal(jointPose.getJointRadius());

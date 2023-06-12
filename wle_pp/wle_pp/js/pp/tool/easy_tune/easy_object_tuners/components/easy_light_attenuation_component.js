@@ -6,7 +6,7 @@ export class EasyLightAttenuationComponent extends Component {
     static TypeName = "pp-easy-light-attenuation";
     static Properties = {
         _myVariableName: Property.string(""),
-        _mySetAsDefault: Property.bool(false),
+        _mySetAsWidgetCurrentVariable: Property.bool(false),
         _myUseTuneTarget: Property.bool(false)
     };
 
@@ -14,7 +14,7 @@ export class EasyLightAttenuationComponent extends Component {
         this._myEasyObjectTuner = null;
 
         if (Globals.isToolEnabled(this.engine)) {
-            this._myEasyObjectTuner = new EasyLightAttenuation(this.object, this._myVariableName, this._mySetAsDefault, this._myUseTuneTarget);
+            this._myEasyObjectTuner = new EasyLightAttenuation(this.object, this._myVariableName, this._mySetAsWidgetCurrentVariable, this._myUseTuneTarget);
         }
     }
 
