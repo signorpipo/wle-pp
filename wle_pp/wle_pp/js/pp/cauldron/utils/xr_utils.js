@@ -91,6 +91,10 @@ export function unregisterSessionStartEndEventListeners(id, engine = Globals.get
     XRUtils.unregisterSessionEndEventListener(id, engine);
 }
 
+export function isXRSupported(engine = Globals.getMainEngine()) {
+    return XRUtils.isVRSupported(engine) || XRUtils.isARSupported(engine);
+}
+
 export function isVRSupported(engine = Globals.getMainEngine()) {
     return engine.vrSupported;
 }
@@ -119,6 +123,7 @@ export let XRUtils = {
     registerSessionStartEndEventListeners,
     unregisterSessionStartEndEventListeners,
     isReferenceSpaceFloorBased,
+    isXRSupported,
     isVRSupported,
     isARSupported,
     isDeviceEmulated

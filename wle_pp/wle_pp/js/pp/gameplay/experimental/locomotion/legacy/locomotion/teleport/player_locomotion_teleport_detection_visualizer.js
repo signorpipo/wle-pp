@@ -1,3 +1,4 @@
+import { VisualArrow, VisualArrowParams } from "../../../../../../cauldron/visual/elements/visual_arrow";
 import { VisualLine, VisualLineParams } from "../../../../../../cauldron/visual/elements/visual_line";
 import { VisualPoint, VisualPointParams } from "../../../../../../cauldron/visual/elements/visual_point";
 import { VisualTorus, VisualTorusParams } from "../../../../../../cauldron/visual/elements/visual_torus";
@@ -14,7 +15,8 @@ export class PlayerLocomotionTeleportDetectionVisualizerParams {
         this.myTeleportPositionObjectRotateWithHead = true;
 
         this.myTeleportParableLineEndOffset = 0.05;
-        this.myTeleportParableMinVerticalDistanceToShowVerticalLine = 0.25;
+        this.myTeleportParableMinVerticalDistanceToShowVerticalLine = 0.80;
+        this.myTeleportParableShowVerticalLineMaxLength = 0.30;
 
         this.myTeleportParablePositionUpOffset = 0.05;
 
@@ -104,7 +106,7 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
         this._myValidVisualPoint.setVisible(false);
         this._myInvalidVisualPoint.setVisible(false);
 
-        this._myValidVisualVerticalLine.setVisible(false);
+        this._myValidVisualVerticalArrow.setVisible(false);
 
         this._myValidVisualTeleportPositionTorus.setVisible(false);
         this._myValidVisualTeleportPositionTorusInner.setVisible(false);
@@ -156,7 +158,7 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
         this._myValidVisualPoint.destroy();
         this._myInvalidVisualPoint.destroy();
 
-        this._myValidVisualVerticalLine.destroy();
+        this._myValidVisualVerticalArrow.destroy();
         this._myValidVisualTeleportPositionTorus.destroy();
         this._myValidVisualTeleportPositionTorusInner.destroy();
     }
@@ -207,7 +209,7 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
         }
 
         {
-            let visualParams = new VisualLineParams(this._myTeleportParams.myEngine);
+            let visualParams = new VisualArrowParams(this._myTeleportParams.myEngine);
 
             if (this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial != null) {
                 visualParams.myMaterial = this._myTeleportParams.myVisualizerParams.myTeleportValidMaterial;
@@ -215,7 +217,7 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
                 visualParams.myMaterial = this._myTeleportValidMaterial;
             }
 
-            this._myValidVisualVerticalLine = new VisualLine(visualParams);
+            this._myValidVisualVerticalArrow = new VisualArrow(visualParams);
         }
 
         this._myVisualTeleportPositionObject = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myCauldron.pp_addObject();
@@ -340,18 +342,20 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParable = fun
             upDifference = nextPosition.vec3_sub(this._myTeleportRuntimeParams.myTeleportPosition, upDifference).vec3_componentAlongAxis(playerUp, upDifference);
             let upDistance = upDifference.vec3_length();
             if (upDistance >= this._myTeleportParams.myVisualizerParams.myTeleportParableMinVerticalDistanceToShowVerticalLine) {
-                let lineLength = Math.min(upDistance - this._myTeleportParams.myVisualizerParams.myTeleportParableMinVerticalDistanceToShowVerticalLine, this._myTeleportParams.myVisualizerParams.myTeleportParableMinVerticalDistanceToShowVerticalLine);
+                let lineLength = Math.min(upDistance - this._myTeleportParams.myVisualizerParams.myTeleportParableMinVerticalDistanceToShowVerticalLine, this._myTeleportParams.myVisualizerParams.myTeleportParableShowVerticalLineMaxLength);
 
-                let visualLineParams = this._myValidVisualVerticalLine.getParams();
+                let visualArrowParams = this._myValidVisualVerticalArrow.getParams();
 
-                visualLineParams.myStart.vec3_copy(nextPosition);
-                visualLineParams.myDirection = playerUp.vec3_negate(visualLineParams.myDirection);
-                visualLineParams.myLength = lineLength;
-                visualLineParams.myThickness = 0.005;
+                visualArrowParams.myStart.vec3_copy(nextPosition);
+                visualArrowParams.myDirection = playerUp.vec3_negate(visualArrowParams.myDirection);
+                visualArrowParams.myLength = lineLength;
+                visualArrowParams.myThickness = 0.005;
 
-                this._myValidVisualVerticalLine.paramsUpdated();
-                this._myValidVisualVerticalLine.setVisible(true);
+                visualArrowParams.myArrowThickness = visualPointParams.myRadius;
+                visualArrowParams.myArrowLength = visualArrowParams.myArrowThickness * 3.5 / 1.5;
 
+                this._myValidVisualVerticalArrow.paramsUpdated();
+                this._myValidVisualVerticalArrow.setVisible(true);
             }
 
             this._showTeleportParablePosition(dt);

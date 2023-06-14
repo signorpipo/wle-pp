@@ -26,9 +26,17 @@ export let PlayerLocomotionDirectionReferenceType = {
     CUSTOM_OBJECT: 2,
 };
 
+export let PlayerLocomotionType = {
+    SMOOTH: 0,
+    TELEPORT: 1
+};
+
 export class PlayerLocomotionParams {
 
     constructor(engine = Globals.getMainEngine()) {
+        this.myDefaultLocomotionType = PlayerLocomotionType.SMOOTH;
+        this.mySwitchLocomotionTypeShortcutEnabled = true; // double press main hand (default left) thumbstick to switch
+
         this.myDefaultHeight = 0;
 
         this.myMaxSpeed = 0;
@@ -88,8 +96,9 @@ export class PlayerLocomotionParams {
         this.myDebugHorizontalEnabled = false;
         this.myDebugVerticalEnabled = false;
 
-        this.myMoveThroughCollisionShortcutEnabled = false;
-        this.myMoveHeadShortcutEnabled = false;
+        this.myMoveThroughCollisionShortcutEnabled = false; // main hand (default left) thumbstick pressed while moving
+        this.myMoveHeadShortcutEnabled = false;             // non main hand (default right) thumbstick pressed while moving
+        this.myTripleSpeedShortcutEnabled = false;          // main hand (default left) select pressed while moving
 
         this.myPhysicsBlockLayerFlags = new PhysicsLayerFlags();
 
@@ -391,7 +400,11 @@ export class PlayerLocomotion {
 
         this._myPlayerLocomotionRotate.start();
 
-        this._myLocomotionMovementFSM.perform("start");
+        if (this._myParams.myDefaultLocomotionType == PlayerLocomotionType.SMOOTH) {
+            this._myLocomotionMovementFSM.perform("startSmooth");
+        } else {
+            this._myLocomotionMovementFSM.perform("startTeleport");
+        }
 
         this._myStarted = true;
 
@@ -408,7 +421,7 @@ export class PlayerLocomotion {
                 if (this._myActive) {
                     this._myPlayerObscureManager.start();
                     if (!this._myIdle) {
-                        this._myLocomotionMovementFSM.perform("start");
+                        this._myLocomotionMovementFSM.perform("resume");
                     }
                 } else {
                     this._myLocomotionMovementFSM.perform("idle");
@@ -441,7 +454,8 @@ export class PlayerLocomotion {
         this._myPlayerHeadManager.update(dt);
         this._myPlayerTransformManager.update(dt);
 
-        if (Globals.getLeftGamepad(this._myParams.myEngine).getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2)) {
+        if (this._myParams.mySwitchLocomotionTypeShortcutEnabled &&
+            Globals.getLeftGamepad(this._myParams.myEngine).getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2)) {
             if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
                 this._myLocomotionMovementFSM.perform("next");
             } else if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
@@ -468,7 +482,7 @@ export class PlayerLocomotion {
         if (idle) {
             this._myLocomotionMovementFSM.perform("idle");
         } else {
-            this._myLocomotionMovementFSM.perform("start");
+            this._myLocomotionMovementFSM.perform("resume");
         }
     }
 
@@ -613,7 +627,11 @@ export class PlayerLocomotion {
         this._myLocomotionMovementFSM.addState("idleSmooth");
         this._myLocomotionMovementFSM.addState("idleTeleport");
 
-        this._myLocomotionMovementFSM.addTransition("init", "smooth", "start", function () {
+        this._myLocomotionMovementFSM.addTransition("init", "smooth", "startSmooth", function () {
+            this._myPlayerLocomotionSmooth.start();
+        }.bind(this));
+
+        this._myLocomotionMovementFSM.addTransition("init", "teleport", "startTeleport", function () {
             this._myPlayerLocomotionSmooth.start();
         }.bind(this));
 
@@ -635,11 +653,11 @@ export class PlayerLocomotion {
             this._myPlayerLocomotionTeleport.stop();
         }.bind(this));
 
-        this._myLocomotionMovementFSM.addTransition("idleSmooth", "smooth", "start", function () {
+        this._myLocomotionMovementFSM.addTransition("idleSmooth", "smooth", "resume", function () {
             this._myPlayerLocomotionSmooth.start();
         }.bind(this));
 
-        this._myLocomotionMovementFSM.addTransition("idleTeleport", "teleport", "start", function () {
+        this._myLocomotionMovementFSM.addTransition("idleTeleport", "teleport", "resume", function () {
             this._myPlayerLocomotionTeleport.start();
         }.bind(this));
 

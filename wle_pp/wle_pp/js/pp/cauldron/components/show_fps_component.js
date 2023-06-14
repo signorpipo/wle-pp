@@ -1,8 +1,7 @@
-import { Component, Property } from "@wonderlandengine/api";
+import { Alignment, Component, Justification, Property } from "@wonderlandengine/api";
 import { vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
 import { Globals } from "../../pp/globals";
 import { Timer } from "../cauldron/timer";
-import { EasyTuneNumber } from "../../tool/easy_tune/easy_tune_variable_types";
 
 export class ShowFPSComponent extends Component {
     static TypeName = "pp-show-fps";
@@ -45,7 +44,7 @@ export class ShowFPSComponent extends Component {
                 this._myFrames = 0;
             }
 
-            Globals.getDebugVisualManager(this.engine).drawUIText(0, this._myCurrentFPS.toFixed(0), this._myScreenPosition, this._myScale, this._myColor);
+            Globals.getDebugVisualManager(this.engine).drawUIText(0, this._myCurrentFPS.toFixed(0), this._myScreenPosition, this._myScale, this._myColor, Alignment.Right, Justification.Bottom);
         }
     }
 }

@@ -27,6 +27,11 @@ export class VisualArrowParams {
 
         this.myThickness = 0.005;
 
+        this.myArrowThickness = null;   // null means this.myThickness * 1.5 will be used
+        this.myArrowLength = null;      // null means this.myThickness * 3.5 will be used
+
+        this.myShareArrowLengthWithLineWhenArrowLongerThanLength = true;
+
         this.myLineMesh = null;     // The mesh is scaled along up axis, null means it will default on myDefaultResources.myMeshes.myCylinder
         this.myArrowMesh = null;    // The mesh is scaled along up axis, null means it will default on myDefaultResources.myMeshes.myCone
 
@@ -177,34 +182,45 @@ export class VisualArrow {
 // IMPLEMENTATION
 
 VisualArrow.prototype._refresh = function () {
-    let end = vec3_create();
-    let translateParent = vec3_create();
-    let scaleArrow = vec3_create();
-    let direction = vec3_create();
+    let arrowPosition = vec3_create();
+    let parentTranslate = vec3_create();
+    let arrowScale = vec3_create();
 
     let forward = vec3_create(0, 1, 0);
     return function _refresh() {
         this._myArrowParentObject.pp_setParent(this._myParams.myParent, false);
 
-        this._myParams.myDirection.vec3_scale(Math.max(0.001, this._myParams.myLength - this._myParams.myThickness * 4), end);
-        end.vec3_add(this._myParams.myStart, end);
+        let arrowThickness = (this._myParams.myArrowThickness != null) ? this._myParams.myArrowThickness : this._myParams.myThickness * 1.5;
+        let arrowLength = (this._myParams.myArrowLength != null) ? this._myParams.myArrowLength : this._myParams.myThickness * 3.5;
+
+        if (this._myParams.myShareArrowLengthWithLineWhenArrowLongerThanLength && arrowLength > this._myParams.myLength / 2) {
+            arrowLength = this._myParams.myLength / 2;
+        }
+
+        arrowLength = Math.min(arrowLength, this._myParams.myLength);
+
+        arrowScale.vec3_set(arrowThickness, arrowLength / 2, arrowThickness);
+
+        let lineLength = this._myParams.myLength - arrowLength;
+
+        this._myParams.myDirection.vec3_scale(lineLength, arrowPosition);
+        arrowPosition.vec3_add(this._myParams.myStart, arrowPosition);
 
         if (this._myParams.myLocal) {
-            this._myArrowParentObject.pp_setPositionLocal(end);
+            this._myArrowParentObject.pp_setPositionLocal(arrowPosition);
             this._myArrowParentObject.pp_setUpLocal(this._myParams.myDirection, forward);
         } else {
-            this._myArrowParentObject.pp_setPosition(end);
+            this._myArrowParentObject.pp_setPosition(arrowPosition);
             this._myArrowParentObject.pp_setUp(this._myParams.myDirection, forward);
         }
 
-        translateParent.vec3_set(0, this._myParams.myThickness * 2 - 0.00001, 0);
-        this._myArrowParentObject.pp_translateObject(translateParent);
+        parentTranslate.vec3_set(0, (arrowLength / 2) - 0.00001, 0);
+        this._myArrowParentObject.pp_translateObject(parentTranslate);
 
-        scaleArrow.vec3_set(this._myParams.myThickness * 1.25, this._myParams.myThickness * 2, this._myParams.myThickness * 1.25);
         if (this._myParams.myLocal) {
-            this._myArrowObject.pp_setScaleLocal(scaleArrow);
+            this._myArrowObject.pp_setScaleLocal(arrowScale);
         } else {
-            this._myArrowObject.pp_setScale(scaleArrow);
+            this._myArrowObject.pp_setScale(arrowScale);
         }
 
         if (this._myParams.myArrowMesh != null) {
@@ -227,11 +243,10 @@ VisualArrow.prototype._refresh = function () {
             this._myArrowMeshComponent.material = this._myParams.myMaterial;
         }
 
-        direction = end.vec3_sub(this._myParams.myStart, direction);
         let visualLineParams = this._myVisualLine.getParams();
         visualLineParams.myStart.vec3_copy(this._myParams.myStart);
-        visualLineParams.myDirection = direction.vec3_normalize(visualLineParams.myDirection);
-        visualLineParams.myLength = direction.vec3_length();
+        visualLineParams.myDirection.vec3_copy(this._myParams.myDirection);
+        visualLineParams.myLength = lineLength;
         visualLineParams.myThickness = this._myParams.myThickness;
         visualLineParams.myMesh = this._myParams.myLineMesh;
 
@@ -249,6 +264,11 @@ VisualArrowParams.prototype.copy = function copy(other) {
     this.myDirection.vec3_copy(other.myDirection);
     this.myLength = other.myLength;
     this.myThickness = other.myThickness;
+
+    this.myArrowThickness = other.myArrowThickness;
+    this.myArrowLength = other.myArrowLength;
+
+    this.myShareArrowLengthWithLineWhenArrowLongerThanLength = other.myShareArrowLengthWithLineWhenArrowLongerThanLength;
 
     this.myArrowMesh = other.myArrowMesh;
     this.myLineMesh = other.myLineMesh;

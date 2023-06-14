@@ -1,3 +1,4 @@
+import { MeshComponent } from "@wonderlandengine/api";
 import { EasyTuneNumber } from "../easy_tune_variable_types";
 import { EasyObjectTuner } from "./easy_object_tuner";
 
@@ -20,7 +21,7 @@ export class EasyMeshAmbientFactor extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneNumber(variableName, this._getDefaultValue(), 3, 0.1, 0, 1);
+        return new EasyTuneNumber(variableName, this._getDefaultValue(), null, true, 3, 0.1, 0, 1);
     }
 
     _getObjectValue(object) {

@@ -15,7 +15,7 @@ export class EasyScale extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneNumberArray(variableName, this._getDefaultValue(), 3, 1, 0.001, null, this._myScaleAsOne);
+        return new EasyTuneNumberArray(variableName, this._getDefaultValue(), null, true, 3, 1, 0.001, null, this._myScaleAsOne);
     }
 
     _getObjectValue(object) {

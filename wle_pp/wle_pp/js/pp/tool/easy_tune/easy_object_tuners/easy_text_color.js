@@ -1,3 +1,4 @@
+import { TextComponent } from "@wonderlandengine/api";
 import { ColorUtils } from "../../../cauldron/utils/color_utils";
 import { GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
 import { vec4_create } from "../../../plugin/js/extensions/array_extension";
@@ -27,7 +28,7 @@ export class EasyTextColor extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
+        return new EasyTuneIntArray(variableName, this._getDefaultValue(), null, true, 100, 0, 255);
     }
 
     _getObjectValue(object) {

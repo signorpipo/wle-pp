@@ -26,7 +26,7 @@ export class EasyLightColor extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneIntArray(variableName, this._getDefaultValue(), 100, 0, 255);
+        return new EasyTuneIntArray(variableName, this._getDefaultValue(), null, true, 100, 0, 255);
     }
 
     _getObjectValue(object) {

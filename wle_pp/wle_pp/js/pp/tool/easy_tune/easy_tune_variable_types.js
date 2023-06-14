@@ -1,13 +1,13 @@
 /*
 Easy Tune Variables Examples
 
-Number:         Globals.getEasyTuneVariables().add(new EasyTuneNumber("Float", 1.00, null, true, 3, 0.1));
-Number Array:   Globals.getEasyTuneVariables().add(new EasyTuneNumberArray("Float Array", [1.00, 2.00, 3.00], null, true, 3, 0.1));
-Int:            Globals.getEasyTuneVariables().add(new EasyTuneInt("Int", 1, null, true, 1));
-Int Array:      Globals.getEasyTuneVariables().add(new EasyTuneIntArray("Int Array", [1, 2, 3], null, true, 1));
-Bool:           Globals.getEasyTuneVariables().add(new EasyTuneBool("Bool", false));
-Bool Array:     Globals.getEasyTuneVariables().add(new EasyTuneBoolArray("Bool Array", [false, true, false], null, true));
-Transform:      Globals.getEasyTuneVariables().add(new EasyTuneTransform("Transform", mat4_create(), null, true, 3, true));
+Number:         Globals.getEasyTuneVariables().add(new EasyTuneNumber("Float", 1.00, (newValue) => this.myFloat = newValue, true, 2, 0.1));
+Number Array:   Globals.getEasyTuneVariables().add(new EasyTuneNumberArray("Float Array", [1.00, 2.00, 3.00], (newValue) => this.myFloatArray.pp_copy(newValue), true, 2, 0.1));
+Int:            Globals.getEasyTuneVariables().add(new EasyTuneInt("Int", this.myInt, (newValue) => this.myInt = newValue, true, 1));
+Int Array:      Globals.getEasyTuneVariables().add(new EasyTuneIntArray("Int Array", [1, 2, 3], (newValue) => this.myIntArray.pp_copy(newValue), true, 1));
+Bool:           Globals.getEasyTuneVariables().add(new EasyTuneBool("Bool", this.myBool, (newValue) => this.myBool = newValue, true));
+Bool Array:     Globals.getEasyTuneVariables().add(new EasyTuneBoolArray("Bool Array", [false, true, false], (newValue) => this.myBoolArray.pp_copy(newValue), true));
+Transform:      Globals.getEasyTuneVariables().add(new EasyTuneTransform("Transform", mat4_create(), (newValue) => this.myTransform.mat4_copy(newValue), true, true, 3));
 */
 
 import { Emitter } from "@wonderlandengine/api";
@@ -284,7 +284,7 @@ export class EasyTuneBool extends EasyTuneBoolArray {
 
 export class EasyTuneTransform extends EasyTuneVariable {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, decimalPlaces = 3, scaleAsOne = true, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1, engine) {
+    constructor(name, value, onValueChangedEventListener, showOnWidget, scaleAsOne = true, decimalPlaces = 3, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1, engine) {
         super(name, EasyTuneVariableType.TRANSFORM, onValueChangedEventListener, showOnWidget, engine);
 
         this._myDecimalPlaces = decimalPlaces;

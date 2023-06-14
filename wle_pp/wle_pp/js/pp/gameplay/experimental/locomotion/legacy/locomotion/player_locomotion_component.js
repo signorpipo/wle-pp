@@ -7,6 +7,8 @@ import { PlayerLocomotion, PlayerLocomotionParams } from "./player_locomotion";
 export class PlayerLocomotionComponent extends Component {
     static TypeName = "pp-player-locomotion";
     static Properties = {
+        _myDefaultLocomotionType: Property.enum(["Smooth", "Teleport"], "Smooth"),
+        _mySwitchLocomotionTypeShortcutEnabled: Property.bool(true), // double press main hand (default left) thumbstick to switch
         _myPhysicsBlockLayerFlags: Property.string("0, 0, 0, 0, 0, 0, 0, 0"),
         _myDefaultHeight: Property.float(1.75),
         _myCharacterRadius: Property.float(0.3),
@@ -34,7 +36,7 @@ export class PlayerLocomotionComponent extends Component {
 
         _myTeleportType: Property.enum(["Instant", "Blink", "Shift"], "Shift"),
         _myTeleportMaxDistance: Property.float(3),
-        _myTeleportMaxHeightDifference: Property.float(3),
+        _myTeleportMaxHeightDifference: Property.float(1.25),
         _myTeleportRotationOnUpEnabled: Property.bool(false),
         _myTeleportValidMaterial: Property.material(),
         _myTeleportInvalidMaterial: Property.material(),
@@ -57,15 +59,20 @@ export class PlayerLocomotionComponent extends Component {
 
         _myDebugHorizontalEnabled: Property.bool(false),
         _myDebugVerticalEnabled: Property.bool(false),
-        _myMoveThroughCollisionShortcutEnabled: Property.bool(false),
-        _myMoveHeadShortcutEnabled: Property.bool(false),
-        _myTripleSpeedShortcutEnabled: Property.bool(false)
+
+        _myMoveThroughCollisionShortcutEnabled: Property.bool(false),   // main hand (default left) thumbstick pressed while moving
+        _myMoveHeadShortcutEnabled: Property.bool(false),               // non main hand (default right) thumbstick pressed while moving
+        _myTripleSpeedShortcutEnabled: Property.bool(false)             // main hand (default left) select pressed while moving
     };
 
     start() {
         CollisionCheckBridge.initBridge(this.engine);
 
         let params = new PlayerLocomotionParams(this.engine);
+
+        params.myDefaultLocomotionType = this._myDefaultLocomotionType;
+        params.mySwitchLocomotionTypeShortcutEnabled = this._mySwitchLocomotionTypeShortcutEnabled;
+
         params.myDefaultHeight = this._myDefaultHeight;
 
         params.myMaxSpeed = this._myMaxSpeed;

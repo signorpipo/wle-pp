@@ -27,7 +27,7 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
                 max = 0;
             }
 
-            Globals.getEasyTuneVariables(this.engine).add(new EasyTuneInt(this._myEasyTuneVariableName, 0, 10, min, max));
+            Globals.getEasyTuneVariables(this.engine).add(new EasyTuneInt(this._myEasyTuneVariableName, 0, null, true, 10, min, max));
             if (this._mySetAsWidgetCurrentVariable) {
                 EasyTuneUtils.setWidgetCurrentVariable(this._myEasyTuneVariableName, this.engine);
             }

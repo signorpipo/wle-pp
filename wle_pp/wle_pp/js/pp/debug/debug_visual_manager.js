@@ -157,8 +157,8 @@ DebugVisualManager.prototype.drawUIText = function () {
     let up = vec3_create(0, 1, 0);
     let lookToForward = vec3_create();
 
-    let screenPositionNormalizedXR = vec3_create(-0.115 * 1, 0.115 * 1, 0.35);
-    let screenPositionNormalizedNonXR = vec3_create(-0.25 * 1.15, 0.130 * 1.05, 0.35);
+    let screenPositionNormalizedXR = vec3_create(-0.12 * 1, 0.12 * 1, 0.35);
+    let screenPositionNormalizedNonXR = vec3_create(-0.27 * 1.15, 0.13 * 1.05, 0.35);
 
     let textPosition = vec3_create();
     let textRotation = vec3_create();

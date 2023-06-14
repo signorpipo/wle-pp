@@ -147,7 +147,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
         let maxSpeed = this._myParams.myMaxSpeed;
 
         if (this._myParams.myTripleSpeedShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
-            if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SQUEEZE).isPressed()) {
+            if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.SELECT).isPressed()) {
                 maxSpeed *= 3;
             }
         }
