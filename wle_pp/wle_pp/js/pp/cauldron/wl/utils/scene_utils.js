@@ -48,28 +48,28 @@ export function getComponentsDepth(scene, typeOrClass) {
 
 // Get Object By Name
 
-export function getObjectByName(scene, name, index = 0) {
-    return SceneUtils.getObjectByNameBreadth(scene, name, index);
+export function getObjectByName(scene, name, regex = false, index = 0) {
+    return SceneUtils.getObjectByNameBreadth(scene, name, regex, index);
 }
 
-export function getObjectByNameBreadth(scene, name, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchyBreadth(SceneUtils.getRoot(scene), name, index);
+export function getObjectByNameBreadth(scene, name, regex = false, index = 0) {
+    return ObjectUtils.getObjectByNameHierarchyBreadth(SceneUtils.getRoot(scene), name, regex, index);
 }
 
-export function getObjectByNameDepth(scene, name, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchyDepth(SceneUtils.getRoot(scene), name, index);
+export function getObjectByNameDepth(scene, name, regex = false, index = 0) {
+    return ObjectUtils.getObjectByNameHierarchyDepth(SceneUtils.getRoot(scene), name, regex, index);
 }
 
-export function getObjectsByName(scene, name, index = 0) {
-    return SceneUtils.getObjectsByNameBreadth(scene, name, index);
+export function getObjectsByName(scene, name, regex = false) {
+    return SceneUtils.getObjectsByNameBreadth(scene, name, regex);
 }
 
-export function getObjectsByNameBreadth(scene, name, index = 0) {
-    return ObjectUtils.getObjectsByNameHierarchyBreadth(SceneUtils.getRoot(scene), name, index);
+export function getObjectsByNameBreadth(scene, name, regex = false) {
+    return ObjectUtils.getObjectsByNameHierarchyBreadth(SceneUtils.getRoot(scene), name, regex);
 }
 
-export function getObjectsByNameDepth(scene, name, index = 0) {
-    return ObjectUtils.getObjectsByNameHierarchyDepth(SceneUtils.getRoot(scene), name, index);
+export function getObjectsByNameDepth(scene, name, regex = false) {
+    return ObjectUtils.getObjectsByNameHierarchyDepth(SceneUtils.getRoot(scene), name, regex);
 }
 
 // Get Object By ID

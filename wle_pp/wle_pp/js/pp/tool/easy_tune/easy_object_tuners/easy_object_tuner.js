@@ -42,7 +42,7 @@ export class EasyObjectTuner {
     update(dt) {
         if (Globals.getEasyTuneVariables(this._myEngine).isWidgetCurrentVariable(this._myEasyTuneVariableName)) {
             if (this._myUseTuneTarget) {
-                this._myEasyObject = Globals.getEasyTuneTarget(engine);
+                this._myEasyObject = Globals.getEasyTuneTarget(this._myEngine);
             }
 
             if (this._myPrevEasyObject != this._myEasyObject) {

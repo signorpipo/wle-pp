@@ -362,7 +362,7 @@ CollisionCheck.prototype._horizontalMovementVerticalCheck = function () {
 
                 if (!isHorizontalCheckOk) {
                     collisionRuntimeParams.myIsCollidingHorizontally = true;
-                    collisionRuntimeParams.myHorizontalCollisionHit.copy(raycastResult.myHits[0]);
+                    collisionRuntimeParams.myHorizontalCollisionHit.copy(this._myRaycastResult.myHits[0]);
                     break;
                 }
             }

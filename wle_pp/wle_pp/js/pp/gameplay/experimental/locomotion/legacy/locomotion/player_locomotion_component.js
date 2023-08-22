@@ -15,7 +15,7 @@ export class PlayerLocomotionComponent extends Component {
         _myMaxSpeed: Property.float(2),
         _myMaxRotationSpeed: Property.float(100),
         _myGravityAcceleration: Property.float(-20),
-        _myMaxGravitySpeed: Property.float(-1),
+        _myMaxGravitySpeed: Property.float(-15),
         _mySpeedSlowDownPercentageOnWallSlid: Property.float(1),
         _myIsSnapTurn: Property.bool(true),
         _mySnapTurnOnlyVR: Property.bool(true),
@@ -140,6 +140,7 @@ export class PlayerLocomotionComponent extends Component {
         this._myPlayerLocomotion = new PlayerLocomotion(params);
 
         this._myStartCounter = 1;
+        this._myResetReal = true;
     }
 
     update(dt) {
@@ -147,13 +148,15 @@ export class PlayerLocomotionComponent extends Component {
             this._myStartCounter--;
             if (this._myStartCounter == 0) {
                 this._myPlayerLocomotion.start();
-
-                this._myPlayerLocomotion.getPlayerTransformManager().resetReal(true, false, false, true);
-                this._myPlayerLocomotion.getPlayerTransformManager().resetHeadToReal();
             }
 
             this._myPlayerLocomotion.getPlayerHeadManager().update(dt);
         } else {
+            if (this._myResetReal) {
+                this._myResetReal = false;
+                this._myPlayerLocomotion.getPlayerTransformManager().resetReal(true, true);
+            }
+
             CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycasts = 0; // #TODO Debug stuff, remove later
 
             this._myPlayerLocomotion.update(dt);

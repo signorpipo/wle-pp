@@ -38,25 +38,6 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         this._myTempScaleValue = vec3_create();
     }
 
-    _setEasyTuneVariableHook() {
-        if (this._myValueEditIndex >= 0) {
-            switch (this._myComponentIndex) {
-                case 0:
-                    this._myValueRealValue = this._myVariable._myPosition[this._myValueEditIndex];
-                    this._myComponentStepValue = this._myVariable._myPositionStepPerSecond;
-                    break;
-                case 1:
-                    this._myValueRealValue = this._myVariable._myRotation[this._myValueEditIndex];
-                    this._myComponentStepValue = this._myVariable._myRotationStepPerSecond;
-                    break;
-                case 2:
-                    this._myValueRealValue = this._myVariable._myScale[this._myValueEditIndex];
-                    this._myComponentStepValue = this._myVariable._myScaleStepPerSecond;
-                    break;
-            }
-        }
-    }
-
     _refreshUIHook() {
         for (let i = 0; i < 3; i++) {
             this._myUI.myPositionTextComponents[i].text = this._myVariable._myPosition[i].toFixed(this._myVariable._myDecimalPlaces);
@@ -113,75 +94,77 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
             }
         }
 
-        if (valueIntensity != 0) {
-            this._myTempPositionValue.pp_copy(this._myVariable._myPosition);
-            this._myTempRotationValue.pp_copy(this._myVariable._myRotation);
-            this._myTempScaleValue.pp_copy(this._myVariable._myScale);
+        if (this._myValueEditIndex >= 0 && this._myValueEditIndex < 3) {
+            if (valueIntensity != 0) {
+                this._myTempPositionValue.pp_copy(this._myVariable._myPosition);
+                this._myTempRotationValue.pp_copy(this._myVariable._myRotation);
+                this._myTempScaleValue.pp_copy(this._myVariable._myScale);
 
-            let amountToAdd = valueIntensity * this._myComponentStepValue * dt;
+                let amountToAdd = valueIntensity * this._myComponentStepValue * dt;
 
-            this._myValueRealValue += amountToAdd;
+                this._myValueRealValue += amountToAdd;
 
-            let decimalPlacesMultiplier = Math.pow(10, this._myVariable._myDecimalPlaces);
+                let decimalPlacesMultiplier = Math.pow(10, this._myVariable._myDecimalPlaces);
 
-            switch (this._myComponentIndex) {
-                case 0:
-                    this._myTempPositionValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                    this._myUI.myPositionTextComponents[this._myValueEditIndex].text = this._myTempPositionValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
-                    break;
-                case 1:
-                    if (this._myValueRealValue > 180) {
-                        while (this._myValueRealValue > 180) {
-                            this._myValueRealValue -= 180;
+                switch (this._myComponentIndex) {
+                    case 0:
+                        this._myTempPositionValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                        this._myUI.myPositionTextComponents[this._myValueEditIndex].text = this._myTempPositionValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
+                        break;
+                    case 1:
+                        if (this._myValueRealValue > 180) {
+                            while (this._myValueRealValue > 180) {
+                                this._myValueRealValue -= 180;
+                            }
+                            this._myValueRealValue = -180 + this._myValueRealValue;
                         }
-                        this._myValueRealValue = -180 + this._myValueRealValue;
-                    }
 
-                    if (this._myValueRealValue < -180) {
-                        while (this._myValueRealValue < - 180) {
-                            this._myValueRealValue += 180;
+                        if (this._myValueRealValue < -180) {
+                            while (this._myValueRealValue < - 180) {
+                                this._myValueRealValue += 180;
+                            }
+                            this._myValueRealValue = 180 - this._myValueRealValue;
                         }
-                        this._myValueRealValue = 180 - this._myValueRealValue;
-                    }
 
-                    this._myTempRotationValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                    this._myUI.myRotationTextComponents[this._myValueEditIndex].text = this._myTempRotationValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
-                    break;
-                case 2:
-                    if (this._myValueRealValue <= 0) {
-                        this._myValueRealValue = 1 / decimalPlacesMultiplier;
-                    }
-
-                    if (this._myVariable._myScaleAsOne) {
-                        let newValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                        let difference = newValue - this._myTempScaleValue[this._myValueEditIndex];
-
-                        for (let i = 0; i < 3; i++) {
-                            this._myTempScaleValue[i] = Math.round((this._myTempScaleValue[i] + difference) * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                            this._myTempScaleValue[i] = Math.max(this._myTempScaleValue[i], 1 / decimalPlacesMultiplier);
-                            this._myUI.myScaleTextComponents[i].text = this._myTempScaleValue[i].toFixed(this._myVariable._myDecimalPlaces);
+                        this._myTempRotationValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                        this._myUI.myRotationTextComponents[this._myValueEditIndex].text = this._myTempRotationValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
+                        break;
+                    case 2:
+                        if (this._myValueRealValue <= 0) {
+                            this._myValueRealValue = 1 / decimalPlacesMultiplier;
                         }
-                    } else {
-                        this._myTempScaleValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
-                        this._myTempScaleValue[this._myValueEditIndex] = Math.max(this._myTempScaleValue[this._myValueEditIndex], 1 / decimalPlacesMultiplier);
-                        this._myUI.myScaleTextComponents[this._myValueEditIndex].text = this._myTempScaleValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
-                    }
-                    break;
-            }
 
-            this._myTempTransformValue.mat4_setPositionRotationDegreesScale(this._myTempPositionValue, this._myTempRotationValue, this._myTempScaleValue);
-            this._myVariable.setValue(this._myTempTransformValue);
-        } else {
-            switch (this._myComponentIndex) {
-                case 0:
-                    this._myValueRealValue = this._myVariable._myPosition[this._myValueEditIndex];
-                    break;
-                case 1:
-                    this._myValueRealValue = this._myVariable._myRotation[this._myValueEditIndex];
-                    break;
-                case 2:
-                    this._myValueRealValue = this._myVariable._myScale[this._myValueEditIndex];
-                    break;
+                        if (this._myVariable._myScaleAsOne) {
+                            let newValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                            let difference = newValue - this._myTempScaleValue[this._myValueEditIndex];
+
+                            for (let i = 0; i < 3; i++) {
+                                this._myTempScaleValue[i] = Math.round((this._myTempScaleValue[i] + difference) * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                                this._myTempScaleValue[i] = Math.max(this._myTempScaleValue[i], 1 / decimalPlacesMultiplier);
+                                this._myUI.myScaleTextComponents[i].text = this._myTempScaleValue[i].toFixed(this._myVariable._myDecimalPlaces);
+                            }
+                        } else {
+                            this._myTempScaleValue[this._myValueEditIndex] = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
+                            this._myTempScaleValue[this._myValueEditIndex] = Math.max(this._myTempScaleValue[this._myValueEditIndex], 1 / decimalPlacesMultiplier);
+                            this._myUI.myScaleTextComponents[this._myValueEditIndex].text = this._myTempScaleValue[this._myValueEditIndex].toFixed(this._myVariable._myDecimalPlaces);
+                        }
+                        break;
+                }
+
+                this._myTempTransformValue.mat4_setPositionRotationDegreesScale(this._myTempPositionValue, this._myTempRotationValue, this._myTempScaleValue);
+                this._myVariable.setValue(this._myTempTransformValue);
+            } else {
+                switch (this._myComponentIndex) {
+                    case 0:
+                        this._myValueRealValue = this._myVariable._myPosition[this._myValueEditIndex];
+                        break;
+                    case 1:
+                        this._myValueRealValue = this._myVariable._myRotation[this._myValueEditIndex];
+                        break;
+                    case 2:
+                        this._myValueRealValue = this._myVariable._myScale[this._myValueEditIndex];
+                        break;
+                }
             }
         }
 

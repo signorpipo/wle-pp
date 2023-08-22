@@ -10,29 +10,35 @@ export class DebugTransformComponent extends Component {
     };
 
     start() {
-        this._myDebugVisualTransform = null;
+        this._myStarted = false;
 
-        this._myDebugTransformParams = new VisualTransformParams(this.engine);
-        this._myDebugTransformParams.myLength = this._myLength;
-        this._myDebugTransformParams.myThickness = this._myThickness;
+        if (Globals.isDebugEnabled(this.engine)) {
+            this._myDebugVisualTransform = null;
 
-        this._myDebugVisualTransform = new VisualTransform(this._myDebugTransformParams);
-        this._myDebugVisualTransform.setVisible(Globals.isDebugEnabled(this.engine));
+            this._myDebugTransformParams = new VisualTransformParams(this.engine);
+            this._myDebugTransformParams.myLength = this._myLength;
+            this._myDebugTransformParams.myThickness = this._myThickness;
+
+            this._myDebugVisualTransform = new VisualTransform(this._myDebugTransformParams);
+            this._myDebugVisualTransform.setVisible(Globals.isDebugEnabled(this.engine));
+
+            this._myStarted = true;
+        }
     }
 
     update(dt) {
-        if (this._myDebugVisualTransform != null) {
-            if (Globals.isDebugEnabled(this.engine)) {
+        if (Globals.isDebugEnabled(this.engine)) {
+            if (this._myStarted) {
                 this.object.pp_getTransform(this._myDebugTransformParams.myTransform);
                 this._myDebugVisualTransform.paramsUpdated();
                 this._myDebugVisualTransform.setVisible(true);
-            } else {
-                this._myDebugVisualTransform.setVisible(false);
             }
         }
     }
 
     onDestroy() {
-        this._myDebugVisualTransform.destroy();
+        if (this._myStarted) {
+            this._myDebugVisualTransform.destroy();
+        }
     }
 }

@@ -20,7 +20,7 @@ export function cloneCollision(componentToClone, targetObject, deepCloneParams =
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
 
     return clonedComponent;
-};
+}
 
 export function cloneText(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
@@ -30,13 +30,13 @@ export function cloneText(componentToClone, targetObject, deepCloneParams = new 
     }
 
     return clonedComponent;
-};
+}
 
 export function clonePhysX(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
 
     return clonedComponent;
-};
+}
 
 export let DefaultWLComponentCloneCallbacks = {
     cloneMesh,

@@ -94,8 +94,7 @@ export class PlayerLocomotionTeleportDetectionState extends PlayerLocomotionTele
         this._myDetectionRuntimeParams.myParable.setGravity(this._myTeleportParams.myDetectionParams.myTeleportParableGravity);
         this._myDetectionRuntimeParams.myParable.setStepLength(this._myTeleportParams.myDetectionParams.myTeleportParableStepLength);
 
-        this._myTeleportParams.myPlayerTransformManager.resetReal(true, false, false);
-        this._myTeleportParams.myPlayerTransformManager.resetHeadToReal();
+        this._myTeleportParams.myPlayerTransformManager.resetReal();
 
         this._myVisualizer.start();
     }
@@ -595,7 +594,9 @@ PlayerLocomotionTeleportDetectionState.prototype._isTeleportHitValid = function 
         if (hit.isValid() && !hit.myInsideCollision) {
             playerUp = this._myTeleportParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
 
-            if (true || hit.myNormal.vec3_isConcordant(playerUp)) {
+            // #WARN is hitValidEvenWhenNotConcordant needed or was it a debug that should be removed?
+            let hitValidEvenWhenNotConcordant = true;
+            if (hit.myNormal.vec3_isConcordant(playerUp) || hitValidEvenWhenNotConcordant) {
                 // #TODO When the flags on the physx will be available just check that the hit object physx has the floor flag
 
                 raycastParams.myIgnoreHitsInsideCollision = true;

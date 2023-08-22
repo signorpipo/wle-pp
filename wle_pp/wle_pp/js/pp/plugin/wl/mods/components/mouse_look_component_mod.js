@@ -37,7 +37,9 @@ export function initMouseLookComponentModPrototype() {
                     if (event.button == this.mouseButtonIndex) {
                         this.pointerId = event.pointerId;
                         this.mouseDown = true;
-                        Globals.getBody(this.engine).style.cursor = "grabbing";
+                        // Commenting cursor style change for now since it messes with Cursor Component cursor style, which is more important to have,
+                        // since it provides a more important feedback, while here is mostly just a visual thing
+                        //Globals.getBody(this.engine).style.cursor = "grabbing"; 
                         if (event.button == 1) {
                             event.preventDefault(); // Prevent scrolling
                             return false;
@@ -54,7 +56,7 @@ export function initMouseLookComponentModPrototype() {
                 if (this.mouseDown) {
                     if (event.button == this.mouseButtonIndex) {
                         this.mouseDown = false;
-                        Globals.getBody(this.engine).style.cursor = "default";
+                        //Globals.getBody(this.engine).style.cursor = "default";
                     }
                 }
             }
@@ -69,7 +71,7 @@ export function initMouseLookComponentModPrototype() {
 
                 if (this.mouseDown) {
                     this.mouseDown = false;
-                    Globals.getBody(this.engine).style.cursor = "default";
+                    //Globals.getBody(this.engine).style.cursor = "default";
                 }
             }
         }.bind(this);
@@ -96,7 +98,7 @@ export function initMouseLookComponentModPrototype() {
 
     mouseLookComponentMod.onDeactivate = function onDeactivate() {
         if (this.mouseDown) {
-            Globals.getBody(this.engine).style.cursor = "default";
+            //Globals.getBody(this.engine).style.cursor = "default";
         }
 
         this.isMoving = false;

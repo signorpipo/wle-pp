@@ -100,9 +100,23 @@ export function randomPick(...args) {
     return random;
 }
 
-export function randomUUID() {
-    return crypto.randomUUID();
-}
+export let randomUUID = function () {
+    let uuidRandomValues = new Uint8Array(1);
+    let uuidSkeleton = (1e7 + "-" + 1e3 + "-" + 4e3 + "-" + 8e3 + "-" + 1e11);
+    let replaceUUIDSkeletonRegex = new RegExp("[018]", "g");
+    let replaceUUIDSkeletonCallback = c => ((c ^ (crypto.getRandomValues(uuidRandomValues)[0] & 15)) >> (c / 4)).toString(16);
+    return function randomUUID() {
+        let uuid = "";
+
+        if (crypto.randomUUID != null) {
+            uuid = crypto.randomUUID();
+        } else {
+            uuid = uuidSkeleton.replace(replaceUUIDSkeletonRegex, replaceUUIDSkeletonCallback);
+        }
+
+        return uuid;
+    };
+}();
 
 export function lerp(from, to, interpolationFactor) {
     if (interpolationFactor <= 0) {

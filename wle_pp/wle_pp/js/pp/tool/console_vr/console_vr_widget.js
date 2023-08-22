@@ -16,6 +16,8 @@ export class ConsoleVRWidgetParams extends WidgetParams {
         this.myShowOnStart = false;
         this.myShowVisibilityButton = false;
         this.myPulseOnNewMessage = ConsoleVRWidgetPulseOnNewMessage.NEVER;
+
+        this.myResetBrowserConsoleOriginalFunctionsOnDestroy = true;
     }
 }
 
@@ -45,8 +47,14 @@ export class ConsoleVRWidgetMessage {
     }
 }
 
-// Doesn't support
+// Does Not Support:
 //  - Placeholder like %d and other similar kind of way to build strings
+//
+// Known Issues:
+//  - Since the actual call to the browser console is done by the widget, u will not be able to click
+//    on the browser console source code link (usually on the right of the logged message) to go to the line where 
+//    the console function has been called, since it will always go to the line where 
+//    the console VR widget forwards the call to the browser console
 export class ConsoleVRWidget {
 
     constructor(engine = Globals.getMainEngine()) {
@@ -314,7 +322,7 @@ export class ConsoleVRWidget {
                     let errorMessage = "An error occurred while trying to add a new message to the Console VR Widget";
                     let message = new ConsoleVRWidgetMessage(ConsoleVRWidgetMessageType.ERROR, [errorMessage]);
                     this._myMessages.push(message);
-                    ConsoleOriginalFunctions.error(errorMessage);
+                    ConsoleOriginalFunctions.error(this._myEngine, errorMessage);
                 } catch (anotherError) {
                     // ignored
                 }
@@ -698,7 +706,7 @@ export class ConsoleVRWidget {
                         break;
                 }
             } else if (this._myConfig.myClearBrowserConsoleWhenClearPressed) {
-                ConsoleOriginalFunctions.clear();
+                ConsoleOriginalFunctions.clear(this._myEngine);
             }
         }
     }
@@ -854,9 +862,6 @@ export class ConsoleVRWidget {
     }
 
     _isSpecialSimpleArray(item) {
-        let arrayPrototypesToExtend = [
-            Array.prototype, Uint8ClampedArray.prototype, Uint8Array.prototype, Uint16Array.prototype, Uint32Array.prototype, Int8Array.prototype,
-            Int16Array.prototype, Int32Array.prototype, Float32Array.prototype, Float64Array.prototype];
         return item && item.constructor &&
             (
                 item.constructor.name == "Uint8ClampedArray" ||
@@ -909,6 +914,24 @@ export class ConsoleVRWidget {
 
         this._myUI.destroy();
         this._myWidgetFrame.destroy();
+
+        if (this._myParams.myResetBrowserConsoleOriginalFunctionsOnDestroy) {
+            console.log = ConsoleOriginalFunctions.getLog(this._myEngine);
+            console.error = ConsoleOriginalFunctions.getError(this._myEngine);
+            console.warn = ConsoleOriginalFunctions.getWarn(this._myEngine);
+            console.info = ConsoleOriginalFunctions.getInfo(this._myEngine);
+            console.debug = ConsoleOriginalFunctions.getDebug(this._myEngine);
+            console.assert = ConsoleOriginalFunctions.getAssert(this._myEngine);
+            console.clear = ConsoleOriginalFunctions.getClear(this._myEngine);
+        } else {
+            console.log = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.LOG];
+            console.error = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ERROR];
+            console.warn = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.WARN];
+            console.info = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.INFO];
+            console.debug = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.DEBUG];
+            console.assert = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ASSERT];
+            console.clear = this._myOldBrowserConsoleClear;
+        }
     }
 
     isDestroyed() {

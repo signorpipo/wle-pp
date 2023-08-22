@@ -381,7 +381,6 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
 
                             let errorToThrow = null;
                             let returnValue = undefined;
-                            let bindFunction = null;
                             let startOriginalFunctionTime = 0;
                             let endOriginalFunctionTime = 0;
                             let originalFunctionOverheadExecutionTime = 0;

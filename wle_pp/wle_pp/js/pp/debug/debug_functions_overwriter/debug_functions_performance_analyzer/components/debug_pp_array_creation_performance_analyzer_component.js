@@ -1,7 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
 import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component";
 
-class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component {
+export class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component {
     static TypeName = "pp-debug-pp-array-creation-performance-analyzer";
     static Properties = {
         _myDelayStart: Property.float(0.0),

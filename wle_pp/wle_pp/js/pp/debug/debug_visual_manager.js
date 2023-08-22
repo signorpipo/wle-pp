@@ -7,7 +7,7 @@ import { VisualRaycastParams } from "../cauldron/visual/elements/visual_raycast"
 import { VisualTextParams } from "../cauldron/visual/elements/visual_text";
 import { VisualTransformParams } from "../cauldron/visual/elements/visual_transform";
 import { VisualManager } from "../cauldron/visual/visual_manager";
-import { mat4_create, quat_create, vec3_create, vec4_create } from "../plugin/js/extensions/array_extension";
+import { quat_create, vec3_create, vec4_create } from "../plugin/js/extensions/array_extension";
 import { Globals } from "../pp/globals";
 
 export class DebugVisualManager extends VisualManager {
@@ -133,7 +133,7 @@ DebugVisualManager.prototype.drawLineEnd = function () {
     return function drawLineEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
         if (this.isActive()) {
             direction = end.vec3_sub(start, direction);
-            length = direction.vec3_length();
+            let length = direction.vec3_length();
             direction.vec3_normalize(direction);
             this.drawLine(lifetimeSeconds, start, direction, length, color, thickness);
         }
@@ -145,7 +145,7 @@ DebugVisualManager.prototype.drawArrowEnd = function () {
     return function drawArrowEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
         if (this.isActive()) {
             direction = end.vec3_sub(start, direction);
-            length = direction.vec3_length();
+            let length = direction.vec3_length();
             direction.vec3_normalize(direction);
             this.drawArrow(lifetimeSeconds, start, direction, length, color, thickness);
         }

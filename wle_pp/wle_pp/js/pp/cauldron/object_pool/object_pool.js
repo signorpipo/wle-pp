@@ -178,9 +178,9 @@ export class ObjectPool {
         if (this._myObjectPoolParams.myDestroyCallback != null) {
             this._myObjectPoolParams.myDestroyCallback(object);
         } else if (object.pp_destroy != null) {
-            object.pp_destroy(active);
+            object.pp_destroy();
         } else if (object.destroy != null) {
-            object.destroy(active);
+            object.destroy();
         }
     }
 }

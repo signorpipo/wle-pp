@@ -335,7 +335,7 @@ export class GrabberHandComponent extends Component {
 
             let color = 1 / j;
 
-            Globals.getDebugVisualManager(this.engine).drawLine(5, this.object.pp_getPosition(), direction, 0.2, vec4_create(olor, color, color, 1));
+            Globals.getDebugVisualManager(this.engine).drawLine(5, this.object.pp_getPosition(), direction, 0.2, vec4_create(color, color, color, 1));
         }
     }
 

@@ -49,73 +49,13 @@ export function getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmo
     if (CAUtils.isSDKAvailable(engine)) {
         let casdk = CAUtils.getSDK(engine);
         if (!aroundPlayer) {
-            casdk.getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount).then(function (result) {
-                if (result.leaderboard) {
-                    if (onDoneCallback) {
-                        onDoneCallback(result.leaderboard);
-                    }
-                } else {
-                    if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
-                        (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
-                        CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
-                    } else if (onErrorCallback) {
-                        let error = {};
-                        error.reason = "Get leaderboard failed";
-                        error.type = CAError.GET_LEADERBOARD_FAILED;
-                        onErrorCallback(error, result);
-                    }
-                }
-            }).catch(function (result) {
-                if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
-                    (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
-                    CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
-                } else if (onErrorCallback) {
-                    let error = {};
-                    error.reason = "Get leaderboard failed";
-                    error.type = CAError.GET_LEADERBOARD_FAILED;
-                    onErrorCallback(error, result);
-                }
-            });
-        } else {
-            CAUtils.getUser(
-                function (user) {
-                    let userName = user.displayName;
-                    casdk.getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount).then(function (result) {
-                        if (result.leaderboard) {
-                            let userValid = false;
-                            for (let value of result.leaderboard) {
-                                if (value.displayName == userName && value.score != 0) {
-                                    userValid = true;
-                                    break;
-                                }
-                            }
-                            if (userValid) {
-                                if (onDoneCallback) {
-                                    onDoneCallback(result.leaderboard);
-                                }
-                            } else {
-                                if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
-                                    (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
-                                    CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
-                                } else if (onErrorCallback) {
-                                    let error = {};
-                                    error.reason = "Searching for around player but the user has not submitted a score yet";
-                                    error.type = CAError.USER_HAS_NO_SCORE;
-                                    onErrorCallback(error, result);
-                                }
-                            }
-                        } else {
-                            if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
-                                (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
-                                CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
-                            } else if (onErrorCallback) {
-                                let error = {};
-                                error.reason = "Get leaderboard failed";
-                                error.type = CAError.GET_LEADERBOARD_FAILED;
-                                onErrorCallback(error, result);
-                            }
+            try {
+                casdk.getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount).then(function (result) {
+                    if (result.leaderboard) {
+                        if (onDoneCallback) {
+                            onDoneCallback(result.leaderboard);
                         }
-                    }).catch(function (result) {
+                    } else {
                         if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
                             (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
                             CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
@@ -125,8 +65,91 @@ export function getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmo
                             error.type = CAError.GET_LEADERBOARD_FAILED;
                             onErrorCallback(error, result);
                         }
-                    });
-
+                    }
+                }).catch(function (result) {
+                    if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
+                        (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                        CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
+                    } else if (onErrorCallback) {
+                        let error = {};
+                        error.reason = "Get leaderboard failed";
+                        error.type = CAError.GET_LEADERBOARD_FAILED;
+                        onErrorCallback(error, result);
+                    }
+                });
+            } catch (error) {
+                if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
+                    (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                    CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
+                } else if (onErrorCallback) {
+                    let error = {};
+                    error.reason = "Get leaderboard failed";
+                    error.type = CAError.GET_LEADERBOARD_FAILED;
+                    onErrorCallback(error, null);
+                }
+            }
+        } else {
+            CAUtils.getUser(
+                function (user) {
+                    let userName = user.displayName;
+                    try {
+                        casdk.getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmount).then(function (result) {
+                            if (result.leaderboard) {
+                                let userValid = false;
+                                for (let value of result.leaderboard) {
+                                    if (value.displayName == userName && value.score != 0) {
+                                        userValid = true;
+                                        break;
+                                    }
+                                }
+                                if (userValid) {
+                                    if (onDoneCallback) {
+                                        onDoneCallback(result.leaderboard);
+                                    }
+                                } else {
+                                    if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
+                                        (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                                        CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
+                                    } else if (onErrorCallback) {
+                                        let error = {};
+                                        error.reason = "Searching for around player but the user has not submitted a score yet";
+                                        error.type = CAError.USER_HAS_NO_SCORE;
+                                        onErrorCallback(error, result);
+                                    }
+                                }
+                            } else {
+                                if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
+                                    (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                                    CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
+                                } else if (onErrorCallback) {
+                                    let error = {};
+                                    error.reason = "Get leaderboard failed";
+                                    error.type = CAError.GET_LEADERBOARD_FAILED;
+                                    onErrorCallback(error, result);
+                                }
+                            }
+                        }).catch(function (result) {
+                            if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
+                                (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                                CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
+                            } else if (onErrorCallback) {
+                                let error = {};
+                                error.reason = "Get leaderboard failed";
+                                error.type = CAError.GET_LEADERBOARD_FAILED;
+                                onErrorCallback(error, result);
+                            }
+                        });
+                    } catch (error) {
+                        if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
+                            (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                            CAUtils.getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scoresAmount, onDoneCallback, onErrorCallback);
+                        } else if (onErrorCallback) {
+                            let error = {};
+                            error.reason = "Get leaderboard failed";
+                            error.type = CAError.GET_LEADERBOARD_FAILED;
+                            onErrorCallback(error, null);
+                        }
+                    }
                 },
                 function () {
                     if (_myDummyServer != null && _myDummyServer.getLeaderboard != null &&
@@ -136,7 +159,7 @@ export function getLeaderboard(leaderboardID, ascending, aroundPlayer, scoresAmo
                         let error = {};
                         error.reason = "Searching for around player but the user can't be retrieved";
                         error.type = CAError.GET_USER_FAILED;
-                        onErrorCallback(error, result);
+                        onErrorCallback(error, null);
                     }
                 },
                 false,
@@ -163,7 +186,7 @@ export function getLeaderboardDummy(leaderboardID, ascending, aroundPlayer, scor
             let error = {};
             error.reason = "Dummy server not initialized";
             error.type = CAError.DUMMY_NOT_INITIALIZED;
-            onErrorCallback(error);
+            onErrorCallback(error, null);
         }
     }
 }
@@ -172,8 +195,22 @@ export function submitScore(leaderboardID, scoreToSubmit, onDoneCallback, onErro
     if (CAUtils.isSDKAvailable(engine)) {
         let casdk = CAUtils.getSDK(engine);
 
-        casdk.submitScore(leaderboardID, scoreToSubmit).then(function (result) {
-            if (result.error) {
+        try {
+            casdk.submitScore(leaderboardID, scoreToSubmit).then(function (result) {
+                if (result.error) {
+                    if (_myDummyServer != null && _myDummyServer.submitScore != null &&
+                        (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                        CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback);
+                    } else if (onErrorCallback) {
+                        let error = {};
+                        error.reason = "Submit score failed";
+                        error.type = CAError.SUBMIT_SCORE_FAILED;
+                        onErrorCallback(error, result);
+                    }
+                } else {
+                    onDoneCallback();
+                }
+            }).catch(function (result) {
                 if (_myDummyServer != null && _myDummyServer.submitScore != null &&
                     (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
                     CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback);
@@ -183,10 +220,8 @@ export function submitScore(leaderboardID, scoreToSubmit, onDoneCallback, onErro
                     error.type = CAError.SUBMIT_SCORE_FAILED;
                     onErrorCallback(error, result);
                 }
-            } else {
-                onDoneCallback();
-            }
-        }).catch(function (result) {
+            });
+        } catch (error) {
             if (_myDummyServer != null && _myDummyServer.submitScore != null &&
                 (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
                 CAUtils.submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, onErrorCallback);
@@ -194,9 +229,9 @@ export function submitScore(leaderboardID, scoreToSubmit, onDoneCallback, onErro
                 let error = {};
                 error.reason = "Submit score failed";
                 error.type = CAError.SUBMIT_SCORE_FAILED;
-                onErrorCallback(error, result);
+                onErrorCallback(error, null);
             }
-        });
+        }
     } else {
         if (_myDummyServer != null && _myDummyServer.submitScore != null &&
             (_myUseDummyServerOnSDKMissing && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
@@ -218,7 +253,7 @@ export function submitScoreDummy(leaderboardID, scoreToSubmit, onDoneCallback, o
             let error = {};
             error.reason = "Dummy server not initialized";
             error.type = CAError.DUMMY_NOT_INITIALIZED;
-            onErrorCallback(error);
+            onErrorCallback(error, null);
         }
     }
 }
@@ -227,12 +262,24 @@ export function getUser(onDoneCallback, onErrorCallback, useDummyServerOverride 
     if (CAUtils.isSDKAvailable(engine)) {
         let casdk = CAUtils.getSDK(engine);
 
-        casdk.getUser().then(function (result) {
-            if (result.user) {
-                if (onDoneCallback) {
-                    onDoneCallback(result.user);
+        try {
+            casdk.getUser().then(function (result) {
+                if (result.user) {
+                    if (onDoneCallback) {
+                        onDoneCallback(result.user);
+                    }
+                } else {
+                    if (_myDummyServer != null && _myDummyServer.getUser != null &&
+                        (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
+                        CAUtils.getUserDummy(onDoneCallback, onErrorCallback);
+                    } else if (onErrorCallback) {
+                        let error = {};
+                        error.reason = "Get user failed";
+                        error.type = CAError.GET_USER_FAILED;
+                        onErrorCallback(error, result);
+                    }
                 }
-            } else {
+            }).catch(function (result) {
                 if (_myDummyServer != null && _myDummyServer.getUser != null &&
                     (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
                     CAUtils.getUserDummy(onDoneCallback, onErrorCallback);
@@ -242,8 +289,8 @@ export function getUser(onDoneCallback, onErrorCallback, useDummyServerOverride 
                     error.type = CAError.GET_USER_FAILED;
                     onErrorCallback(error, result);
                 }
-            }
-        }).catch(function (result) {
+            });
+        } catch (error) {
             if (_myDummyServer != null && _myDummyServer.getUser != null &&
                 (_myUseDummyServerOnError && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
                 CAUtils.getUserDummy(onDoneCallback, onErrorCallback);
@@ -251,9 +298,9 @@ export function getUser(onDoneCallback, onErrorCallback, useDummyServerOverride 
                 let error = {};
                 error.reason = "Get user failed";
                 error.type = CAError.GET_USER_FAILED;
-                onErrorCallback(error, result);
+                onErrorCallback(error, null);
             }
-        });
+        }
     } else {
         if (_myDummyServer != null && _myDummyServer.getUser != null &&
             (_myUseDummyServerOnSDKMissing && useDummyServerOverride == null) || (useDummyServerOverride != null && useDummyServerOverride)) {
@@ -275,7 +322,7 @@ export function getUserDummy(onDoneCallback, onErrorCallback) {
             let error = {};
             error.reason = "Dummy server not initialized";
             error.type = CAError.DUMMY_NOT_INITIALIZED;
-            onErrorCallback(error);
+            onErrorCallback(error, null);
         }
     }
 }

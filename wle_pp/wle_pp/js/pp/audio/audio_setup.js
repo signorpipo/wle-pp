@@ -10,7 +10,7 @@ export class AudioSetup {
         this._myRate = 1.0; // From 0.5 to 4.0
 
         this.myPool = 5;
-        this.myPreLoad = true;
+        this.myPreload = true;
 
         this.myPreventPlayWhenAudioContextNotRunning = false;
 
@@ -34,7 +34,7 @@ export class AudioSetup {
         audioSetup.myRate = this.myRate;
 
         audioSetup.myPool = this.myPool;
-        audioSetup.myPreLoad = this.myPreLoad;
+        audioSetup.myPreload = this.myPreload;
 
         audioSetup.myPreventPlayWhenAudioContextNotRunning = this.myPreventPlayWhenAudioContextNotRunning;
 

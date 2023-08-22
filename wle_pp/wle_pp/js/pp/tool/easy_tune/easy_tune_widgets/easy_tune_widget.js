@@ -67,7 +67,7 @@ export class EasyTuneWidget {
             this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(variableName);
             this._selectCurrentWidget();
         } else {
-            console.log("Can't set easy tune active variable");
+            console.warn("Can't change easy tune current variable to inexistent variable:", variableName);
         }
     }
 
@@ -108,11 +108,11 @@ export class EasyTuneWidget {
             this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myVariableNames[0]);
         }
 
-        if (this._myStartVariable) {
+        if (this._myStartVariable != null) {
             if (this._myEasyTuneVariables.has(this._myStartVariable)) {
                 this._myCurrentVariable = this._myEasyTuneVariables.getEasyTuneVariable(this._myStartVariable);
             } else {
-                console.log("Can't set easy tune active variable");
+                console.warn("Can't change easy tune current variable to inexistent variable:", this._myStartVariable);
             }
         }
 

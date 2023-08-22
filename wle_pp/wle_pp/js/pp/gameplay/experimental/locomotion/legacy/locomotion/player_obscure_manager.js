@@ -261,6 +261,8 @@ export class PlayerObscureManager {
                 // #TODO Check if VALID head is colliding, in that case use max obscure level
                 // This prevent being able to see when resetting head to real even though real is colliding
                 // For example if u stand up and go with the head in the ceiling and reset by moving
+                // Add a setting for this though, since someone could prefer being able to see in this case,
+                // so to be able to know where to move (since it might be resetting to this invalid position)
                 if (this._myParams.myPlayerTransformManager.isHeadColliding()) {
                     let distance = this._myParams.myPlayerTransformManager.getDistanceToRealHead();
                     let relativeDistance = distance - this._myParams.myDistanceToStartObscureWhenHeadColliding;

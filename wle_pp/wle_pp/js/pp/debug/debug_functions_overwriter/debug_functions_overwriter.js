@@ -397,7 +397,7 @@ export class DebugFunctionsOverwriter {
     _filterName(name, includeList, excludeList) {
         let validName = includeList.length == 0;
         for (let includeName of includeList) {
-            if (name.match(new RegExp(includeName)) != null) {
+            if (name.match(includeName) != null) {
                 validName = true;
                 break;
             }
@@ -405,7 +405,7 @@ export class DebugFunctionsOverwriter {
 
         if (validName) {
             for (let excludeName of excludeList) {
-                if (name.match(new RegExp(excludeName)) != null) {
+                if (name.match(excludeName) != null) {
                     validName = false;
                     break;
                 }

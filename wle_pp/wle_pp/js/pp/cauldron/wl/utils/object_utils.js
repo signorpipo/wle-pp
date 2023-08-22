@@ -2544,7 +2544,7 @@ export function getObjectByNameObjects(objects, name, regex = false, index = 0) 
     let currentIndex = index;
     for (let currentObject of objects) {
         let objectName = ObjectUtils.getName(currentObject);
-        if ((!regex && objectName == name) || (regex && objectName.match(name))) {
+        if ((!regex && objectName == name) || (regex && objectName.match(name) != null)) {
             if (currentIndex == 0) {
                 objectFound = currentObject;
                 break;
@@ -2562,7 +2562,7 @@ export function getObjectsByNameObjects(objects, name, regex = false) {
 
     for (let currentObject of objects) {
         let objectName = ObjectUtils.getName(currentObject);
-        if ((!regex && objectName == name) || (regex && objectName.match(name))) {
+        if ((!regex && objectName == name) || (regex && objectName.match(name) != null)) {
             objectsFound.push(currentObject);
         }
     }

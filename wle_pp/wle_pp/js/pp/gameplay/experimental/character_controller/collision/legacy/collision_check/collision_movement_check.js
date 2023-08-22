@@ -133,6 +133,8 @@ CollisionCheck.prototype._move = function () {
         collisionRuntimeParams.myOriginalForward = transformQuat.quat2_getForward(collisionRuntimeParams.myOriginalForward);
         collisionRuntimeParams.myOriginalPosition = transformQuat.quat2_getPosition(collisionRuntimeParams.myOriginalPosition);
 
+        collisionRuntimeParams.myOffsetUp.vec3_copy(transformUp);
+
         //console.error(collisionRuntimeParams.myOriginalPosition.vec3_sub(feetPosition)[1].toFixed(3));
 
         collisionRuntimeParams.myOriginalHeight = collisionCheckParams.myHeight;

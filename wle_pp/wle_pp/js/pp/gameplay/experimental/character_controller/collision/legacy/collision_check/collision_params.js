@@ -479,6 +479,8 @@ export class CollisionRuntimeParams {
         this.myOriginalForward = vec3_create();
         this.myOriginalUp = vec3_create();
 
+        this.myOffsetUp = vec3_create();
+
         this.myOriginalMovement = vec3_create();
         this.myFixedMovement = vec3_create();
 
@@ -574,6 +576,8 @@ export class CollisionRuntimeParams {
 
         this.myOriginalForward.vec3_zero();
         this.myOriginalUp.vec3_zero();
+
+        this.myOffsetUp.vec3_zero();
 
         this.myOriginalMovement.vec3_zero();
         this.myFixedMovement.vec3_zero();
@@ -671,6 +675,8 @@ export class CollisionRuntimeParams {
 
         this.myOriginalForward.vec3_copy(other.myOriginalForward);
         this.myOriginalUp.vec3_copy(other.myOriginalUp);
+
+        this.myOffsetUp.vec3_copy(other.myOffsetUp);
 
         this.myOriginalMovement.vec3_copy(other.myOriginalMovement);
         this.myFixedMovement.vec3_copy(other.myFixedMovement);

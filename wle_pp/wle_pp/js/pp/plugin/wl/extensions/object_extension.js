@@ -1001,11 +1001,11 @@ export function initObjectExtensionProtoype() {
         return ObjectUtils.lookTo(this, ...arguments);
     };
 
-    objectExtension.pp_lookToWorld = function pp_lookToWorld(direction, up = this.pp_getUpWorld(internalUp)) {
+    objectExtension.pp_lookToWorld = function pp_lookToWorld(direction, up) {
         return ObjectUtils.lookToWorld(this, ...arguments);
     };
 
-    objectExtension.pp_lookToLocal = function pp_lookToLocal(direction, up = this.pp_getUpLocal(internalUp)) {
+    objectExtension.pp_lookToLocal = function pp_lookToLocal(direction, up) {
         return ObjectUtils.lookToLocal(this, ...arguments);
     };
 

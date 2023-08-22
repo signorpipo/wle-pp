@@ -9,6 +9,9 @@ CollisionCheck.prototype._verticalCheck = function () {
         collisionRuntimeParams.myIsCollidingVertically = false;
         collisionRuntimeParams.myVerticalCollisionHit.reset();
 
+        // #TODO the sign of 0 is by default downward, but it should probably be based on if u previously were on Ground or Ceiling
+        // If none, ok downward, if on Ground downward, if on Ceiling upward, so that even without @myCheckVerticalBothDirection
+        // if u were snapped to the ceiling u will keep snap on it even when 0 vertical movement
         let movementSign = Math.pp_sign(verticalMovement.vec3_lengthSigned(up), -1);
         let isMovementDownward = movementSign < 0;
 
@@ -27,6 +30,13 @@ CollisionCheck.prototype._verticalCheck = function () {
             }
         }
 
+        // #TODO Here, if there is no vertical movement and there is no horizontal movement (or it has been canceled)
+        // it would probably make more sense to skip this check, and if it is vertically colliding, but the movement is 0,0,0
+        // we can say that the movement is, after all, fine
+        // For now I will keep it as it is because i'm not sure if some feature (like the transform manager) could make assumption
+        // on the fact that even a 0,0,0 movement can fail thanks to this (like the head colliding check)
+        // Is not a big problem anyway, u can just check if the movement is 0 before checking the collision, and if it is 0
+        // u won't move anyway
         if (collisionCheckParams.myVerticalPositionCheckEnabled) {
             newFeetPosition = feetPosition.vec3_add(outFixedMovement, newFeetPosition);
             let canStay = this._verticalPositionCheck(newFeetPosition, isMovementDownward, height, up, forward, collisionCheckParams, collisionRuntimeParams);
@@ -200,7 +210,7 @@ CollisionCheck.prototype._verticalPositionCheck = function () {
         let isVerticalPositionOk = true;
         let atLeastOneIsOk = false;
 
-        let adjustmentEpsilon = 0.00001;
+        let adjustmentEpsilon = 0.0001; // Small offset to prevent hitting with the surface where u are on
         smallHeightFixOffset = up.vec3_scale(adjustmentEpsilon, smallHeightFixOffset);
         heightOffset = up.vec3_scale(height - adjustmentEpsilon, heightOffset);
         if (height - adjustmentEpsilon < adjustmentEpsilon * 10) {

@@ -1,9 +1,13 @@
 import { Howler } from "howler";
+import { Globals } from "../pp/globals";
 import { AudioPlayer } from "./audio_player";
 
 export class AudioManager {
 
-    constructor() {
+    constructor(preloadAudio = true, engine = Globals.getMainEngine()) {
+        this._myEngine = engine;
+
+        this._myPreloadAudio = preloadAudio;
         this._myAudioSetups = new Map();
     }
 
@@ -20,9 +24,9 @@ export class AudioManager {
         return this._myAudioSetups.get(id);
     }
 
-    addAudioSetup(id, audioSetup, preload = true) {
+    addAudioSetup(id, audioSetup, preloadAudioOverride = null) {
         this._myAudioSetups.set(id, audioSetup);
-        if (preload) {
+        if ((this._myPreloadAudio && preloadAudioOverride == null) || (preloadAudioOverride != null && preloadAudioOverride)) {
             this.createAudioPlayer(id);
         }
     }

@@ -1,6 +1,6 @@
 {
     "name": "wle-pp",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "author": "Pipo",
     "description": "A library for the Wonderland Engine",
     "homepage": "https://github.com/SignorPipo/wle-pp",
@@ -28,14 +28,14 @@
     "module": "./js/pp/index.js",
     "wonderlandengine": {},
     "peerDependencies": {
-        "@wonderlandengine/api": "^1.0.0",
-        "@wonderlandengine/components": "^1.0.3",
+        "@wonderlandengine/api": "^1.0.1",
+        "@wonderlandengine/components": "^1.0.5",
         "gl-matrix": "^3.4.3",
         "howler": "^2.2.3"
     },
     "devDependencies": {
         "esbuild": "^0.14.54",
-        "esbuild-node-externals": "^1.7.0"
+        "esbuild-node-externals": "^1.8.0"
     },
     "scripts": {
         "build": "node dev/build.js"

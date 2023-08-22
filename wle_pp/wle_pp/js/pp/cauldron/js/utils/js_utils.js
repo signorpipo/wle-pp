@@ -306,11 +306,14 @@ export function isFunction(property) {
     return typeof property == "function" && !JSUtils.isClass(property);
 }
 
-export function isClass(property) {
-    return typeof property == "function" &&
-        property.prototype != null && typeof property.prototype.constructor == "function" &&
-        property.toString != null && typeof property.toString == "function" && (/^class/).test(property.toString());
-}
+export let isClass = function () {
+    let checkClassRegex = new RegExp("^class");
+    return function isClass(property) {
+        return typeof property == "function" &&
+            property.prototype != null && typeof property.prototype.constructor == "function" &&
+            property.toString != null && typeof property.toString == "function" && property.toString()?.match(checkClassRegex) != null;
+    };
+}();
 
 export function isObject(property) {
     return typeof property == "object";

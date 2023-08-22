@@ -22,7 +22,7 @@ export function getReferenceSpaceType(engine = Globals.getMainEngine()) {
         let xr = Globals.getXR(engine);
         type = xr != null ? xr.currentReferenceSpaceType : null;
     } catch (error) {
-
+        // Do nothing
     }
 
     return type;

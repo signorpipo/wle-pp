@@ -84,7 +84,6 @@ export function getAngle(quat) {
     return QuatUtils.getAngleDegrees(quat);
 }
 
-
 export function getAngleDegrees(quat) {
     let angle = QuatUtils.getAngleRadians(quat);
     return MathUtils.toDegrees(angle);

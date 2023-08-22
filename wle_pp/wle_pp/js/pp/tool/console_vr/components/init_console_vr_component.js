@@ -14,7 +14,7 @@ export class InitConsoleVRComponent extends Component {
         if (this._myInit) {
             // Prevents double global from same engine
             if (!Globals.hasConsoleVR(this.engine)) {
-                this._myConsoleVR = new ConsoleVR();
+                this._myConsoleVR = new ConsoleVR(this.engine);
 
                 Globals.setConsoleVR(this._myConsoleVR, this.engine);
             }

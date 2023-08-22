@@ -15,7 +15,7 @@ export class HowlerAudioPlayer extends AudioPlayer {
             this._myAudioSetup.myRate = this._myAudio._rate;
 
             this._myAudioSetup.myPool = this._myAudio._pool;
-            this._myAudioSetup.myPreLoad = this._myAudio._preload;
+            this._myAudioSetup.myPreload = this._myAudio._preload;
 
             this._myAudioSetup.myPosition = (this._myAudio._pos != null) ? this._myAudio._pos.vec3_clone() : null;
             this._myAudioSetup.mySpatial = this._myAudio._pos != null;
@@ -30,7 +30,7 @@ export class HowlerAudioPlayer extends AudioPlayer {
             this._myAudio.rate(this._myAudioSetup.myRate);
 
             this._myAudio._pool = this._myAudioSetup.myPool;
-            this._myAudio._preload = this._myAudioSetup.myPreLoad;
+            this._myAudio._preload = this._myAudioSetup.myPreload;
 
             this.updatePosition(this._myAudioSetup.myPosition);
 

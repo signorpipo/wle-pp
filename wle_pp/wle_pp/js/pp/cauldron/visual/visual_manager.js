@@ -297,7 +297,9 @@ export class VisualManager {
     destroy() {
         this._myDestroyed = true;
 
-        Globals.getObjectPoolManager(this._myEngine).destroy();
+        for (let poolID of this._myTypePoolIDs.values()) {
+            Globals.getObjectPoolManager(this._myEngine)?.removePool(poolID);
+        }
     }
 
     isDestroyed() {

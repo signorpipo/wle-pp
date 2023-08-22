@@ -21,6 +21,8 @@ export class EasyTuneToolComponent extends Component {
 
     init() {
         // #TODO this should check for tool enabled but it might not have been initialized yet, not way to specify component order
+        // It can't be moved to start either, because other components might call setWidgetCurrentVariable or refreshWidget during start, 
+        // so it needs to be initialized before that
 
         this.object.pp_addComponent(InitEasyTuneVariablesComponent);
 
@@ -58,8 +60,7 @@ export class EasyTuneToolComponent extends Component {
 
             this._myWidget.start(this.object, params, Globals.getEasyTuneVariables(this.engine));
 
-            this._myWidgetVisibleBackup = this._myWidget.isVisible();
-            this._mySetVisibleNextUpdate = false;
+            this._myWidgetVisibleBackup = null;
 
             this._myStarted = true;
             this._myFirstUpdate = true;
@@ -76,30 +77,33 @@ export class EasyTuneToolComponent extends Component {
                     }
                 }
 
-                if (this._mySetVisibleNextUpdate) {
-                    this._mySetVisibleNextUpdate = false;
+                if (this._myWidgetVisibleBackup != null) {
                     this._myWidget.setVisible(false);
                     this._myWidget.setVisible(this._myWidgetVisibleBackup);
+
+                    this._myWidgetVisibleBackup = null;
                 }
 
                 this._myWidget.update(dt);
             }
-        }
-    }
+        } else if (this._myStarted) {
+            if (this._myWidgetVisibleBackup == null) {
+                this._myWidgetVisibleBackup = this._myWidget.isVisible();
+            }
 
-    onActivate() {
-        if (Globals.isToolEnabled(this.engine)) {
-            if (this._myStarted) {
-                this._mySetVisibleNextUpdate = true;
+            if (this._myWidget.isVisible()) {
+                this._myWidget.setVisible(false);
             }
         }
     }
 
     onDeactivate() {
-        if (Globals.isToolEnabled(this.engine)) {
-            if (this._myStarted) {
+        if (this._myStarted) {
+            if (this._myWidgetVisibleBackup == null) {
                 this._myWidgetVisibleBackup = this._myWidget.isVisible();
+            }
 
+            if (this._myWidget.isVisible()) {
                 this._myWidget.setVisible(false);
             }
         }

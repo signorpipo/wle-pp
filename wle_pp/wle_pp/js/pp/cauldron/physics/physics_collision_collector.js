@@ -26,9 +26,9 @@ export class PhysicsCollisionCollector {
 
         this._myTriggerDesyncFixDelay = new Timer(0.1);
 
-        this._myCollisionEmitter = new Emitter();          // Signature: listener(thisPhysX, otherPhysX, collisionType)
-        this._myCollisionStartEmitter = new Emitter();     // Signature: listener(thisPhysX, otherPhysX, collisionType)
-        this._myCollisionEndEmitter = new Emitter();       // Signature: listener(thisPhysX, otherPhysX, collisionType)
+        this._myCollisionEmitter = new Emitter();          // Signature: listener(currentPhysX, otherPhysX, collisionType)
+        this._myCollisionStartEmitter = new Emitter();     // Signature: listener(currentPhysX, otherPhysX, collisionType)
+        this._myCollisionEndEmitter = new Emitter();       // Signature: listener(currentPhysX, otherPhysX, collisionType)
 
         this._myDestroyed = false;
     }

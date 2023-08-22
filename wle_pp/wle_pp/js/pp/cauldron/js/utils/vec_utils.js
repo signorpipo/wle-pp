@@ -1,24 +1,24 @@
 import { ArrayUtils } from "./array_utils";
 import { MathUtils } from "./math_utils";
 
-export function toString(vector, decimalPlaces = null) {
-    let message = _buildConsoleMessage(vector, decimalPlaces);
-    return message;
+export function zero(vector, out = null) {
+    out = _prepareOut(vector, out);
+
+    for (let i = 0; i < out.length; i++) {
+        out[i] = 0;
+    }
+
+    return out;
 }
 
-export function log(vector, decimalPlaces = 4) {
-    let message = _buildConsoleMessage(vector, decimalPlaces);
-    console.log(message);
-}
+export function isZero(vector, epsilon = 0) {
+    let zero = true;
 
-export function error(vector, decimalPlaces = 4) {
-    let message = _buildConsoleMessage(vector, decimalPlaces);
-    console.error(message);
-}
+    for (let i = 0; i < vector.length && zero; i++) {
+        zero = zero && (Math.abs(vector[i]) <= epsilon);
+    }
 
-export function warn(vector, decimalPlaces = 4) {
-    let message = _buildConsoleMessage(vector, decimalPlaces);
-    console.warn(message);
+    return zero;
 }
 
 export function scale(vector, value, out = null) {
@@ -86,17 +86,39 @@ export function equals(vector, other, epsilon = 0) {
     return equals;
 }
 
+export function toString(vector, decimalPlaces = null) {
+    let message = _buildConsoleMessage(vector, decimalPlaces);
+    return message;
+}
+
+export function log(vector, decimalPlaces = 4) {
+    let message = _buildConsoleMessage(vector, decimalPlaces);
+    console.log(message);
+}
+
+export function error(vector, decimalPlaces = 4) {
+    let message = _buildConsoleMessage(vector, decimalPlaces);
+    console.error(message);
+}
+
+export function warn(vector, decimalPlaces = 4) {
+    let message = _buildConsoleMessage(vector, decimalPlaces);
+    console.warn(message);
+}
+
 export let VecUtils = {
-    toString,
-    log,
-    error,
-    warn,
+    zero,
+    isZero,
     scale,
     round,
     floor,
     ceil,
     clamp,
-    equals
+    equals,
+    toString,
+    log,
+    error,
+    warn
 };
 
 

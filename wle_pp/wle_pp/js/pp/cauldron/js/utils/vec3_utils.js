@@ -329,9 +329,7 @@ export function projectOnAxis(vector, axis, out = Vec3Utils.create()) {
 // The result can easily be not 100% exact due to precision errors
 export let projectOnAxisAlongAxis = function () {
     let up = create();
-
-    let thisToAxis = create();
-
+    let vectorProjectedToAxis = create();
     let fixedProjectAlongAxis = create();
     return function projectOnAxisAlongAxis(vector, axis, projectAlongAxis, out = Vec3Utils.create()) {
 
@@ -343,17 +341,17 @@ export let projectOnAxisAlongAxis = function () {
 
             Vec3Utils.removeComponentAlongAxis(vector, up, out);
             if (!Vec3Utils.isOnAxis(out, axis)) {
-                Vec3Utils.projectOnAxis(out, axis, thisToAxis);
-                Vec3Utils.sub(thisToAxis, out, thisToAxis);
+                Vec3Utils.projectOnAxis(out, axis, vectorProjectedToAxis);
+                Vec3Utils.sub(vectorProjectedToAxis, out, vectorProjectedToAxis);
 
-                if (Vec3Utils.isConcordant(thisToAxis, projectAlongAxis)) {
+                if (Vec3Utils.isConcordant(vectorProjectedToAxis, projectAlongAxis)) {
                     Vec3Utils.copy(projectAlongAxis, fixedProjectAlongAxis);
                 } else {
                     Vec3Utils.negate(projectAlongAxis, fixedProjectAlongAxis);
                 }
 
-                let angleWithAlongAxis = Vec3Utils.angleRadians(fixedProjectAlongAxis, thisToAxis);
-                let lengthToRemove = Vec3Utils.length(thisToAxis) / Math.cos(angleWithAlongAxis);
+                let angleWithAlongAxis = Vec3Utils.angleRadians(fixedProjectAlongAxis, vectorProjectedToAxis);
+                let lengthToRemove = Vec3Utils.length(vectorProjectedToAxis) / Math.cos(angleWithAlongAxis);
 
                 Vec3Utils.scale(fixedProjectAlongAxis, lengthToRemove, fixedProjectAlongAxis);
                 Vec3Utils.add(out, fixedProjectAlongAxis, out);
@@ -373,8 +371,7 @@ export function projectOnPlane(vector, planeNormal, out = Vec3Utils.create()) {
 
 // The result can easily be not 100% exact due to precision errors
 export let projectOnPlaneAlongAxis = function () {
-    let thisToPlane = create();
-
+    let vectorProjectedToPlane = create();
     let fixedProjectAlongAxis = create();
     return function projectOnPlaneAlongAxis(vector, planeNormal, projectAlongAxis, out = Vec3Utils.create()) {
         if (Vec3Utils.isOnPlane(vector, planeNormal) || Vec3Utils.isOnPlane(projectAlongAxis, planeNormal)) {
@@ -382,17 +379,17 @@ export let projectOnPlaneAlongAxis = function () {
         } else {
             Vec3Utils.copy(vector, out);
 
-            Vec3Utils.projectOnPlane(out, planeNormal, thisToPlane);
-            Vec3Utils.sub(thisToPlane, out, thisToPlane);
+            Vec3Utils.projectOnPlane(out, planeNormal, vectorProjectedToPlane);
+            Vec3Utils.sub(vectorProjectedToPlane, out, vectorProjectedToPlane);
 
-            if (Vec3Utils.isConcordant(thisToPlane, projectAlongAxis)) {
+            if (Vec3Utils.isConcordant(vectorProjectedToPlane, projectAlongAxis)) {
                 Vec3Utils.copy(projectAlongAxis, fixedProjectAlongAxis);
             } else {
                 Vec3Utils.negate(projectAlongAxis, fixedProjectAlongAxis);
             }
 
-            let angleWithAlongAxis = Vec3Utils.angleRadians(fixedProjectAlongAxis, thisToPlane);
-            let lengthToRemove = Vec3Utils.length(thisToPlane) / Math.cos(angleWithAlongAxis);
+            let angleWithAlongAxis = Vec3Utils.angleRadians(fixedProjectAlongAxis, vectorProjectedToPlane);
+            let lengthToRemove = Vec3Utils.length(vectorProjectedToPlane) / Math.cos(angleWithAlongAxis);
 
             Vec3Utils.scale(fixedProjectAlongAxis, lengthToRemove, fixedProjectAlongAxis);
             Vec3Utils.add(out, fixedProjectAlongAxis, out);

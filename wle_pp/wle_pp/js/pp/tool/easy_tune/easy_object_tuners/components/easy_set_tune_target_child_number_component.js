@@ -1,6 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
 import { Globals } from "../../../../pp/globals";
 import { EasyTuneUtils } from "../../easy_tune_utils";
+import { EasyTuneInt } from "../../easy_tune_variable_types";
 
 export class EasySetTuneTargetChildNumberComponent extends Component {
     static TypeName = "pp-easy-set-tune-target-child-number";

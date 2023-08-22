@@ -44,7 +44,7 @@ CollisionCheck.prototype._horizontalSlide = function () {
 CollisionCheck.prototype._horizontalSlideCheckOpposite = function () {
     let horizontalCollisionNormal = vec3_create();
     let oppositeSlideMovement = vec3_create();
-    let hitNormal = vec3_create();
+    //let hitNormal = vec3_create();
     return function _horizontalSlideCheckOpposite(movement, feetPosition, height, up, forward, previousHorizontalMovement, previousIsSliding, allowSurfaceSteepFix, collisionCheckParams, preSlideCollisionRuntimeParams, postSlideCollisionRuntimeParams, previousCollisionRuntimeParams, outSlideMovement) {
         horizontalCollisionNormal = preSlideCollisionRuntimeParams.myHorizontalCollisionHit.myNormal.vec3_removeComponentAlongAxis(up, horizontalCollisionNormal);
         horizontalCollisionNormal.vec3_normalize(horizontalCollisionNormal);
@@ -376,7 +376,7 @@ CollisionCheck.prototype._internalHorizontalSlide = function () {
             let backupDebugEnabled = collisionCheckParams.myDebugEnabled;
             collisionCheckParams.myDebugEnabled = collisionCheckParams.myDebugEnabled && collisionCheckParams.myDebugSlidingEnabled;
 
-            let originalCurrentAngle = currentAngle;
+            //let originalCurrentAngle = currentAngle;
             for (let i = 0; i < collisionCheckParams.mySlidingMaxAttempts; i++) {
                 this._myInternalSlidingCollisionRuntimeParams.copy(collisionRuntimeParams);
 

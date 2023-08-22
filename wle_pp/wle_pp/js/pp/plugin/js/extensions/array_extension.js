@@ -56,6 +56,8 @@
             ○ pp_clear      
 
         GENERIC VECTOR (array with only numbers):
+            - vec_zero
+            - vec_isZero
             - vec_scale
             - vec_round     / vec_floor         / vec_ceil      / vec_clamp
             - vec_log       / vec_error         / vec_warn   
@@ -174,30 +176,30 @@ export function initArrayExtension() {
 
 export function vec2_create(x, y) {
     return Vec2Utils.create(...arguments);
-};
+}
 
 export function vec3_create(x, y, z) {
     return Vec3Utils.create(...arguments);
-};
+}
 
 export function vec4_create(x, y, z, w) {
     return Vec4Utils.create(...arguments);
-};
+}
 
 export function quat_create(x, y, z, w) {
     return QuatUtils.create(...arguments);
-};
+}
 
 export function quat2_create(x1, y1, z1, w1, x2, y2, z2, w2) {
     return Quat2Utils.create(...arguments);
-};
+}
 
 export function mat3_create(
     m00, m01, m02,
     m10, m11, m12,
     m20, m21, m22) {
     return Mat3Utils.create(...arguments);
-};
+}
 
 export function mat4_create(
     m00, m01, m02, m03,
@@ -205,7 +207,7 @@ export function mat4_create(
     m20, m21, m22, m23,
     m30, m31, m32, m33) {
     return Mat4Utils.create(...arguments);
-};
+}
 
 export function initArrayExtensionProtoype() {
 
@@ -317,20 +319,12 @@ export function initArrayExtensionProtoype() {
 
     let vecExtension = {}
 
-    vecExtension.vec_toString = function vec_toString(decimalPlaces = null) {
-        return VecUtils.toString(this, ...arguments);
+    vecExtension.vec_zero = function vec_zero(out = null) {
+        return VecUtils.zero(this, ...arguments);
     };
 
-    vecExtension.vec_log = function vec_log(decimalPlaces = 4) {
-        return VecUtils.log(this, ...arguments);
-    };
-
-    vecExtension.vec_error = function vec_error(decimalPlaces = 4) {
-        return VecUtils.error(this, ...arguments);
-    };
-
-    vecExtension.vec_warn = function vec_warn(decimalPlaces = 4) {
-        return VecUtils.warn(this, ...arguments);
+    vecExtension.vec_isZero = function vec_isZero(epsilon = 0) {
+        return VecUtils.isZero(this, ...arguments);
     };
 
     vecExtension.vec_scale = function vec_scale(value, out = null) {
@@ -355,6 +349,22 @@ export function initArrayExtensionProtoype() {
 
     vecExtension.vec_equals = function vec_equals(vector, epsilon = 0) {
         return VecUtils.equals(this, ...arguments);
+    };
+
+    vecExtension.vec_toString = function vec_toString(decimalPlaces = null) {
+        return VecUtils.toString(this, ...arguments);
+    };
+
+    vecExtension.vec_log = function vec_log(decimalPlaces = 4) {
+        return VecUtils.log(this, ...arguments);
+    };
+
+    vecExtension.vec_error = function vec_error(decimalPlaces = 4) {
+        return VecUtils.error(this, ...arguments);
+    };
+
+    vecExtension.vec_warn = function vec_warn(decimalPlaces = 4) {
+        return VecUtils.warn(this, ...arguments);
     };
 
     // VECTOR 2

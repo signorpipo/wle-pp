@@ -9,7 +9,7 @@ export class EasyTransformComponent extends Component {
         _myVariableName: Property.string(""),
         _mySetAsWidgetCurrentVariable: Property.bool(false),
         _myUseTuneTarget: Property.bool(false),
-        _myLocal: Property.bool(false),
+        _myLocal: Property.bool(true),
         _myScaleAsOne: Property.bool(true) // Edit all scale values together
     };
 

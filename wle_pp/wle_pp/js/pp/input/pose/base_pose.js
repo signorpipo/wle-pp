@@ -41,7 +41,7 @@ export class BasePose {
         this._myLinearVelocityEmulated = true;
         this._myAngularVelocityEmulated = true;
 
-        this._myPoseUpdatedEmitter = new Emitter();   // Signature: listener(thisPose)
+        this._myPoseUpdatedEmitter = new Emitter();   // Signature: listener(pose)
 
         this._myViewResetEventListener = null;
 

@@ -321,4 +321,4 @@ function _findAllEqualOptimized(array, elementToFind, getIndexes) {
     }
 
     return elementsFound;
-};
+}

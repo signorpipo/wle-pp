@@ -1,5 +1,5 @@
 import { Emitter } from "@wonderlandengine/api";
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 import { AudioSetup } from "./audio_setup";
 
 export let AudioEvent = {
@@ -41,7 +41,7 @@ export class AudioPlayer {
                 pool: this._myAudioSetup.myPool,
                 pos: (this._myAudioSetup.mySpatial) ? this._myAudioSetup.myPosition : null,
                 refDistance: this._myAudioSetup.myReferenceDistance,
-                preload: this._myAudioSetup.myPreLoad
+                preload: this._myAudioSetup.myPreload
             });
 
             this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;

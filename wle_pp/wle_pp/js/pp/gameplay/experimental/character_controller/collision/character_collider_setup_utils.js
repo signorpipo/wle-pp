@@ -262,7 +262,7 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
         if (simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS > simplifiedCreationParams.myRadius) {
             outCharacterColliderSetup.mySplitMovementParams.mySplitMovementEnabled = true;
 
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps = Math.ceil((simplifiedCreationParams.myMaxSpeed / fps) / simplifiedCreationParams.myRadius);
+            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps = Math.ceil((simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS) / simplifiedCreationParams.myRadius);
             outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength = simplifiedCreationParams.myRadius * 0.75;
         }
     }

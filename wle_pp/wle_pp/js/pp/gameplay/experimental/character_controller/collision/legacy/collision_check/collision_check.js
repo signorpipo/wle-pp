@@ -115,7 +115,7 @@ export class CollisionCheck {
     _raycastAndDebug(origin, direction, distance, ignoreHitsInsideCollision, isHorizontal, collisionCheckParams, collisionRuntimeParams) {
         // Implemented outside class definition
     }
-};
+}
 
 CollisionCheck.prototype._raycastAndDebug = function () {
     let tempRaycastResult = new RaycastResults();
@@ -135,9 +135,9 @@ CollisionCheck.prototype._raycastAndDebug = function () {
         this._myRaycastParams.myIgnoreHitsInsideCollision = ignoreHitsInsideCollision;
 
         let raycastResult = null;
-        if (true) {
-            raycastResult = PhysicsUtils.raycast(this._myRaycastParams, this._myRaycastResult);
-        } else {
+
+        let raycastPerformanceDebugEnabled = false;
+        if (raycastPerformanceDebugEnabled && Globals.isDebugEnabled(this._myEngine)) {
             // Quick debug to remove raycasts and/or let all raycasts fail
 
             let raycastAlways = false;
@@ -150,6 +150,8 @@ CollisionCheck.prototype._raycastAndDebug = function () {
             }
 
             raycastResult = this._myRaycastResult;
+        } else {
+            raycastResult = PhysicsUtils.raycast(this._myRaycastParams, this._myRaycastResult);
         }
 
 

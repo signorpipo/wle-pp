@@ -13,18 +13,14 @@ export class ConsoleVRToolComponent extends Component {
         _myPulseOnNewMessage: Property.enum(["Never", "Always", "When Hidden"], "Never")
     };
 
-    init() {
-        // #TODO this should check for tool enabled but it might not have been initialized yet, not way to specify component order
-
-        this.object.pp_addComponent(InitConsoleVRComponent);
-
-        this._myWidget = new ConsoleVRWidget(this.engine);
-
-        this._myStarted = false;
-    }
-
     start() {
+        this._myStarted = false;
+
         if (Globals.isToolEnabled(this.engine)) {
+            this.object.pp_addComponent(InitConsoleVRComponent);
+
+            this._myWidget = new ConsoleVRWidget(this.engine);
+
             let params = new ConsoleVRWidgetParams(this.engine);
             params.myHandedness = [null, "left", "right"][this._myHandedness];
             params.myOverrideBrowserConsole = this._myOverrideBrowserConsole;
@@ -36,8 +32,7 @@ export class ConsoleVRToolComponent extends Component {
 
             this._myWidget.start(this.object, params);
 
-            this._myWidgetVisibleBackup = this._myWidget.isVisible();
-            this._mySetVisibleNextUpdate = false;
+            this._myWidgetVisibleBackup = null;
 
             this._myStarted = true;
         }
@@ -46,37 +41,41 @@ export class ConsoleVRToolComponent extends Component {
     update(dt) {
         if (Globals.isToolEnabled(this.engine)) {
             if (this._myStarted) {
-                if (this._mySetVisibleNextUpdate) {
-                    this._mySetVisibleNextUpdate = false;
+                if (this._myWidgetVisibleBackup != null) {
                     this._myWidget.setVisible(false);
                     this._myWidget.setVisible(this._myWidgetVisibleBackup);
-                }
 
+                    this._myWidgetVisibleBackup = null;
+                }
 
                 this._myWidget.update(dt);
             }
-        }
-    }
+        } else if (this._myStarted) {
+            if (this._myWidgetVisibleBackup == null) {
+                this._myWidgetVisibleBackup = this._myWidget.isVisible();
+            }
 
-    onActivate() {
-        if (Globals.isToolEnabled(this.engine)) {
-            if (this._myStarted) {
-                this._mySetVisibleNextUpdate = true;
+            if (this._myWidget.isVisible()) {
+                this._myWidget.setVisible(false);
             }
         }
     }
 
     onDeactivate() {
-        if (Globals.isToolEnabled(this.engine)) {
-            if (this._myStarted) {
+        if (this._myStarted) {
+            if (this._myWidgetVisibleBackup == null) {
                 this._myWidgetVisibleBackup = this._myWidget.isVisible();
+            }
 
+            if (this._myWidget.isVisible()) {
                 this._myWidget.setVisible(false);
             }
         }
     }
 
     onDestroy() {
-        this._myWidget.destroy();
+        if (this._myStarted) {
+            this._myWidget.destroy();
+        }
     }
 }

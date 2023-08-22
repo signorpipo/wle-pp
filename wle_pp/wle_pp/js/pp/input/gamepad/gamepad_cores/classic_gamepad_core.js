@@ -1,4 +1,3 @@
-import { Globals } from "../../../pp/globals";
 import { Handedness } from "../../cauldron/input_types";
 import { GamepadButtonID } from "../gamepad_buttons";
 import { GamepadCore } from "./gamepad_core";
@@ -10,10 +9,16 @@ export class ClassicGamepadCore extends GamepadCore {
 
         this._myGamepadIndex = gamepadIndex;    // null means any active gamepad
 
+        this._myCurrentGamepads = window.navigator.getGamepads();
+
         // Support Variables
         this._myButtonData = this._createButtonData();
         this._myAxesData = this._createAxesData();
         this._myHapticActuators = [];
+    }
+
+    _preUpdateHook(dt) {
+        this._myCurrentGamepads = window.navigator.getGamepads();
     }
 
     isGamepadCoreActive() {
@@ -101,6 +106,9 @@ export class ClassicGamepadCore extends GamepadCore {
                 this._myAxesData[0] = classicGamepad.axes[2];
                 this._myAxesData[1] = classicGamepad.axes[3];
             }
+
+            // Y axis is recorded negative when thumbstick is pressed forward for weird reasons
+            this._myAxesData[1] = -this._myAxesData[1];
         }
 
         return this._myAxesData;
@@ -126,13 +134,12 @@ export class ClassicGamepadCore extends GamepadCore {
     _getClassicGamepad() {
         let classicGamepad = null;
 
-        let gamepads = Globals.getNavigator(this.getEngine()).getGamepads();
         if (this._myGamepadIndex != null) {
-            if (this._myGamepadIndex < gamepads.length) {
-                classicGamepad = gamepads[this._myGamepadIndex];
+            if (this._myGamepadIndex < this._myCurrentGamepads.length) {
+                classicGamepad = this._myCurrentGamepads[this._myGamepadIndex];
             }
         } else {
-            for (let gamepad of gamepads) {
+            for (let gamepad of this._myCurrentGamepads) {
                 if (gamepad != null && (gamepad.connected == null || gamepad.connected)) {
                     classicGamepad = gamepad;
                     break;

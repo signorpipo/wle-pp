@@ -277,15 +277,18 @@ export class VirtualGamepad {
         for (let handedness in this._myVirtualGamepadVirtualButtons) {
             for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
                 let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
-
-                button.destroy();
+                if (button != null) {
+                    button.destroy();
+                }
             }
         }
 
         for (let handedness in this._myVirtualGamepadVirtualThumbsticks) {
             for (let gamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
                 let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
-                thumbstick.destroy();
+                if (thumbstick != null) {
+                    thumbstick.destroy();
+                }
             }
         }
 

@@ -115,8 +115,7 @@ export class PlayerLocomotionTeleportTeleportState extends PlayerLocomotionTelep
     }
 
     _teleportDone() {
-        this._myTeleportParams.myPlayerTransformManager.resetReal(true, false, false);
-        this._myTeleportParams.myPlayerTransformManager.resetHeadToReal();
+        this._myTeleportParams.myPlayerTransformManager.resetReal();
 
         this._myParentFSM.performDelayed("done");
     }

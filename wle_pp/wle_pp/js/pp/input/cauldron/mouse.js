@@ -457,7 +457,7 @@ export class Mouse {
             if (!callback(event)) {
                 valid = false;
                 break;
-            };
+            }
         }
 
         return valid;

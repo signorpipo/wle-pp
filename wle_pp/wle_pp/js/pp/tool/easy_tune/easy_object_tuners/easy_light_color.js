@@ -60,11 +60,10 @@ export class EasyLightColor extends EasyObjectTuner {
         }
 
         let light = object.pp_getComponent(LightComponent);
-        if (light) {
+        if (light != null) {
             light.color[0] = color[0];
             light.color[1] = color[1];
             light.color[2] = color[2];
-            light.color[3] = light.color[3];
         }
 
         if ((Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) ||

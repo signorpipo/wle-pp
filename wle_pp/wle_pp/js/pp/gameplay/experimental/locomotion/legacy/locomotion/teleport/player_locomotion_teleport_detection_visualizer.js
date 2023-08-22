@@ -35,7 +35,7 @@ export class PlayerLocomotionTeleportDetectionVisualizerParams {
         this.myVisualTeleportPositionMinAngleDistanceToLerp = 1;
         this.myVisualTeleportPositionMaxAngleDistanceToLerp = 180;
     }
-};
+}
 
 export class PlayerLocomotionTeleportDetectionVisualizer {
 

@@ -86,7 +86,7 @@ export class DebugWLComponentsFunctionsPerformanceAnalyzerComponent extends Comp
     }
 
     _addComponentTypeReferences(classesByReference) {
-        let nativeComponentTypes = [
+        let nativeComponentClasses = [
             AnimationComponent,
             CollisionComponent,
             InputComponent,
@@ -97,8 +97,8 @@ export class DebugWLComponentsFunctionsPerformanceAnalyzerComponent extends Comp
             ViewComponent
         ];
 
-        for (let nativeComponentType of nativeComponentTypes) {
-            classesByReference.push([nativeComponentType.prototype, "{\"" + nativeComponentType.TypeName + "\"}"]);
+        for (let nativeComponentClass of nativeComponentClasses) {
+            classesByReference.push([nativeComponentClass.prototype, "{\"" + nativeComponentClass.TypeName + "\"}"]);
         }
 
         for (let componentClass of ComponentUtils.getJavascriptComponentClassesByIndex(this.engine)) {

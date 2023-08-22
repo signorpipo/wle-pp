@@ -66,11 +66,13 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
             }
         }
 
-        if (Math.abs(valueIntensity) > this._myConfig.myThumbstickToggleThreshold) {
-            this._myTempValue.pp_copy(this._getVariableValue());
-            this._myTempValue[this._myValueEditIndex] = valueIntensity > 0;
-            this._setVariableValue(this._myTempValue);
-            this._refreshUI();
+        if (this._myValueEditIndex >= 0 && this._myValueEditIndex < this._getVariableValue().length) {
+            if (Math.abs(valueIntensity) > this._myConfig.myThumbstickToggleThreshold) {
+                this._myTempValue.pp_copy(this._getVariableValue());
+                this._myTempValue[this._myValueEditIndex] = valueIntensity > 0;
+                this._setVariableValue(this._myTempValue);
+                this._refreshUI();
+            }
         }
     }
 

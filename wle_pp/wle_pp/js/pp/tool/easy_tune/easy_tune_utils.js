@@ -230,28 +230,31 @@ export let EasyTuneUtils = {
 
 
 
-function _importExportVariablesReplaceFileURLParams(fileURL, engine = Globals.getMainEngine()) {
-    let params = fileURL.match(/\{.+?\}/g);
+let _importExportVariablesReplaceFileURLParams = function () {
+    let matchEasyTuneURLParamsRegex = new RegExp("\\{.+?\\}", "g");
+    return function _importExportVariablesReplaceFileURLParams(fileURL, engine = Globals.getMainEngine()) {
+        let params = fileURL.match(matchEasyTuneURLParamsRegex);
 
-    if (params == null || params.length == 0) {
-        return fileURL;
-    }
-
-    for (let i = 0; i < params.length; i++) {
-        params[i] = params[i].replace("{", "");
-        params[i] = params[i].replace("}", "");
-    }
-
-    let urlSearchParams = new URL(Globals.getDocument(engine).location).searchParams;
-
-    let replacedFileURL = fileURL;
-
-    for (let param of params) {
-        let searchParamValue = urlSearchParams.get(param);
-        if (searchParamValue != null) {
-            replacedFileURL = replacedFileURL.replace("{" + param + "}", searchParamValue);
+        if (params == null || params.length == 0) {
+            return fileURL;
         }
-    }
 
-    return replacedFileURL;
-}
+        for (let i = 0; i < params.length; i++) {
+            params[i] = params[i].replace("{", "");
+            params[i] = params[i].replace("}", "");
+        }
+
+        let urlSearchParams = new URL(Globals.getDocument(engine).location).searchParams;
+
+        let replacedFileURL = fileURL;
+
+        for (let param of params) {
+            let searchParamValue = urlSearchParams.get(param);
+            if (searchParamValue != null) {
+                replacedFileURL = replacedFileURL.replace("{" + param + "}", searchParamValue);
+            }
+        }
+
+        return replacedFileURL;
+    };
+}();

@@ -50,6 +50,9 @@ export function initCursorComponentModPrototype() {
         this._lastOriginalMouseEvent = null;
         this._lastOriginalGamepadEvent = null;
 
+        this._pointerLeaveToProcess = false;
+        this._pointerLeaveMouseEvent = null;
+
         this._transformQuat = quat2_create();
         this._origin = vec3_create();
         this._direction = vec3_create();
@@ -127,7 +130,8 @@ export function initCursorComponentModPrototype() {
         }
 
         // If in XR, set the cursor ray based on object transform
-        if (XRUtils.isSessionActive(this.engine)) {
+        // View Component not null is currently used as a way to specify this is cursor should only work for Non XR
+        if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null) {
             // Since Google Cardboard tap is registered as arTouchDown without a gamepad, we need to check for gamepad presence 
             if (this.arTouchDown && this._pp_isAR()) {
                 let axes = XRUtils.getSession(this.engine).inputSources[0].gamepad.axes;
@@ -141,7 +145,7 @@ export function initCursorComponentModPrototype() {
 
             let hitObjectData = this._pp_rayCast();
             this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalGamepadEvent);
-        } else if (this._viewComponent != null) {
+        } else if (!XRUtils.isSessionActive(this.engine) && this._viewComponent != null) {
             if (this._lastPointerID != null) {
                 this._pp_updateMousePos(this._lastClientX, this._lastClientY, this._lastWidth, this._lastHeight);
 
@@ -156,9 +160,13 @@ export function initCursorComponentModPrototype() {
             } else if (this.hoveringObject != null) {
                 this._pp_hoverBehaviour(null, null, null, this._lastOriginalMouseEvent, true); // Trigger Unhover
             }
+        } else if (this.hoveringObject != null) {
+            this._pp_hoverBehaviour(null, null, null, null, true); // Trigger Unhover
         }
 
-        if (this.hoveringObject && (this.cursorPos[0] != 0 || this.cursorPos[1] != 0 || this.cursorPos[2] != 0)) {
+        this._pp_processPointerLeave();
+
+        if (this.hoveringObject != null && (this.cursorPos[0] != 0 || this.cursorPos[1] != 0 || this.cursorPos[2] != 0)) {
             if (this.cursorObject) {
                 this._setCursorVisibility(true);
 
@@ -180,7 +188,7 @@ export function initCursorComponentModPrototype() {
         }
 
         if (this.cursorRayObject) {
-            if (XRUtils.isSessionActive(this.engine) || (this.handedness != Handedness.LEFT && this.handedness != Handedness.RIGHT)) {
+            if ((XRUtils.isSessionActive(this.engine) && this._viewComponent == null) || (!XRUtils.isSessionActive(this.engine) && this._viewComponent != null && this.handedness != Handedness.LEFT && this.handedness != Handedness.RIGHT)) {
                 this.cursorRayObject.pp_setActive(true);
             } else {
                 this.cursorRayObject.pp_setActive(false);
@@ -206,31 +214,30 @@ export function initCursorComponentModPrototype() {
     };
 
     cursorComponentMod.onDeactivate = function onDeactivate() {
-        if (this.hoveringObject) {
-            if (!this.hoveringReality) {
-                if (this.hoveringObjectTarget) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, null);
-                this.globalTarget.onUnhover.notify(this.hoveringObject, this, null);
-            }
+        if (this.hoveringObject != null) {
+            this._pp_hoverBehaviour(null, null, null, null, true); // Trigger Unhover
         }
 
         this.hoveringObject = null;
         this.hoveringObjectTarget = null;
-        if (this.styleCursor) {
-            Globals.getBody(this.engine).style.cursor = "default";
-        }
 
-        this._isDown = false;
-        this._lastIsDown = false;
-
-        this._isDownForUpWithDown = false;
-        this._isUpWithNoDown = false;
+        this._pp_updateCursorStyle();
 
         this._setCursorVisibility(false);
         if (this.cursorRayObject) {
             this.cursorRayObject.pp_setActive(false);
         }
 
+        this._isDown = false;
+        this._lastIsDown = false;
+        this._isRealDown = false;
+
+        this._isDownForUpWithDown = false;
+        this._isUpWithNoDown = false;
+
         this._pointerID = null;
+
+        this._lastPointerID = null;
 
         this._lastClientX = null;
         this._lastClientY = null;
@@ -239,6 +246,9 @@ export function initCursorComponentModPrototype() {
 
         this._lastOriginalMouseEvent = null;
         this._lastOriginalGamepadEvent = null;
+
+        this._pointerLeaveToProcess = false;
+        this._pointerLeaveMouseEvent = null;
     };
 
     cursorComponentMod.onDestroy = function onDestroy() {
@@ -291,7 +301,6 @@ export function initCursorComponentModPrototype() {
 
     cursorComponentMod.onSelectStart = function onSelectStart(e) {
         if (this.active) {
-
             if (this._pp_isAR()) {
                 this.arTouchDown = true;
                 this._lastOriginalGamepadEvent = e;
@@ -305,10 +314,6 @@ export function initCursorComponentModPrototype() {
 
                 this._lastOriginalGamepadEvent = e;
             }
-        }
-
-        if (e.inputSource.handedness == this.handedness) {
-            this._isRealDown = true;
         }
     };
 
@@ -330,14 +335,10 @@ export function initCursorComponentModPrototype() {
                 this._lastOriginalGamepadEvent = e;
             }
         }
-
-        if (e.inputSource.handedness == this.handedness) {
-            this._isRealDown = false;
-        }
     };
 
     cursorComponentMod.onPointerMove = function onPointerMove(e) {
-        if (this.active) {
+        if (this.active && !this._pointerLeaveToProcess) {
             // Don't care about secondary pointers 
             if (this._pointerID != null && this._pointerID != e.pointerId) return;
 
@@ -350,10 +351,10 @@ export function initCursorComponentModPrototype() {
     };
 
     cursorComponentMod.onPointerDown = function onPointerDown(e) {
-        // Don't care about secondary pointers or non-left clicks 
-        if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button !== 0) return;
+        if (this.active && !this._pointerLeaveToProcess) {
+            // Don't care about secondary pointers or non-left clicks 
+            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button !== 0) return;
 
-        if (this.active) {
             let bounds = Globals.getBody(this.engine).getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
 
@@ -363,16 +364,14 @@ export function initCursorComponentModPrototype() {
             if (!this._lastIsDown) {
                 this._isDownForUpWithDown = true;
             }
-        } else {
-            this._isRealDown = true;
         }
     };
 
     cursorComponentMod.onPointerUp = function onPointerUp(e) {
-        // Don't care about secondary pointers or non-left clicks 
-        if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button !== 0) return;
+        if (this.active && !this._pointerLeaveToProcess) {
+            // Don't care about secondary pointers or non-left clicks 
+            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button !== 0) return;
 
-        if (this.active) {
             let bounds = Globals.getBody(this.engine).getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
 
@@ -386,8 +385,6 @@ export function initCursorComponentModPrototype() {
             this._isDownForUpWithDown = false;
 
             this._updatePointerStyle = true;
-        } else {
-            this._isRealDown = false;
         }
     };
 
@@ -425,9 +422,9 @@ export function initCursorComponentModPrototype() {
     cursorComponentMod._pp_hoverBehaviour = function _pp_hoverBehaviour(hitObject, hitLocation, hitTestResults, originalEvent = null, forceUnhover = false) {
         if (!forceUnhover && hitObject != null) {
             let hoveringObjectChanged = false;
-            if (!this.hoveringObject || !this.hoveringObject.pp_equals(hitObject)) {
+            if (this.hoveringObject == null || !this.hoveringObject.pp_equals(hitObject)) {
                 // Unhover previous, if exists 
-                if (this.hoveringObject) {
+                if (this.hoveringObject != null) {
                     if (!this.hoveringReality) {
                         if (this.hoveringObjectTarget) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
                         this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
@@ -449,11 +446,7 @@ export function initCursorComponentModPrototype() {
                     this.hitTestTarget.onHover.notify(hitTestResults, this, originalEvent);
                 }
 
-                if (this.styleCursor && !this._isRealDown && this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isSurface) {
-                    Globals.getBody(this.engine).style.cursor = "pointer";
-                } else if (Globals.getBody(this.engine).style.cursor == "pointer") {
-                    Globals.getBody(this.engine).style.cursor = "default";
-                }
+                this._pp_updateCursorStyle();
 
                 if (!this._pp_isDownToProcess() && this._isRealDown) {
                     this._isDown = true;
@@ -472,11 +465,7 @@ export function initCursorComponentModPrototype() {
             }
 
             if (this._updatePointerStyle) {
-                if (this.styleCursor && !this._isRealDown && this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isSurface) {
-                    Globals.getBody(this.engine).style.cursor = "pointer";
-                } else if (Globals.getBody(this.engine).style.cursor == "pointer") {
-                    Globals.getBody(this.engine).style.cursor = "default";
-                }
+                this._pp_updateCursorStyle();
             }
 
             if (!hoveringObjectChanged && this._pp_isMoving(hitLocation)) {
@@ -568,7 +557,7 @@ export function initCursorComponentModPrototype() {
             }
 
             this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
-        } else if (this.hoveringObject && (forceUnhover || hitObject == null)) {
+        } else if (this.hoveringObject != null && (forceUnhover || hitObject == null)) {
             if (!this.hoveringReality) {
                 if (this.hoveringObjectTarget) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
                 this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
@@ -578,12 +567,11 @@ export function initCursorComponentModPrototype() {
 
             this.hoveringObject = null;
             this.hoveringObjectTarget = null;
-            if (this.styleCursor && !this._isRealDown) {
-                Globals.getBody(this.engine).style.cursor = "default";
-            }
+
+            this._pp_updateCursorStyle();
         }
 
-        if (this.hoveringObject) {
+        if (this.hoveringObject != null) {
             this._lastIsDown = this._isDown;
         } else {
             this._isDown = false;
@@ -610,6 +598,11 @@ export function initCursorComponentModPrototype() {
                     this.maxDistance
                 );
 
+        let rayHitCollisionDistanceValid = true;
+        if (this.rayCastMode == 0 && rayHit.hitCount > 0 && rayHit.distances[0] > this.maxDistance) {
+            rayHitCollisionDistanceValid = false;
+        }
+
         this._hitObjectData[0] = null;
         this._hitObjectData[1] = null;
         this._hitObjectData[2] = null;
@@ -626,7 +619,7 @@ export function initCursorComponentModPrototype() {
 
         this.hoveringReality = false;
 
-        if (rayHit.hitCount > 0) {
+        if (rayHit.hitCount > 0 && rayHitCollisionDistanceValid) {
             let rayHitDistance = rayHit.distances[0];
             if (rayHitDistance <= hitTestResultDistance) {
                 // Overwrite cursorPos set by hit test location
@@ -714,6 +707,15 @@ export function initCursorComponentModPrototype() {
 
     cursorComponentMod._pp_onPointerLeave = function _pp_onPointerLeave(e) {
         if (this._pointerID == null || this._pointerID == e.pointerId) {
+            this._pointerLeaveToProcess = true;
+            this._pointerLeaveMouseEvent = e;
+        }
+    };
+
+    cursorComponentMod._pp_processPointerLeave = function _pp_processPointerLeave() {
+        if (this._pointerLeaveToProcess) {
+            this._pointerID = null;
+
             this._lastPointerID = null;
 
             this._lastClientX = null;
@@ -721,7 +723,21 @@ export function initCursorComponentModPrototype() {
             this._lastWidth = null;
             this._lastHeight = null;
 
-            this._lastOriginalMouseEvent = e;
+            this._lastOriginalMouseEvent = this._pointerLeaveMouseEvent;
+
+            this._pointerLeaveToProcess = false;
+            this._pointerLeaveMouseEvent = null;
+
+            if (this.hoveringObject != null) {
+                this._pp_hoverBehaviour(null, null, null, this._lastOriginalMouseEvent, true); // Trigger Unhover
+            }
+
+            this._isDown = false;
+            this._lastIsDown = false;
+            this._isRealDown = false;
+
+            this._isDownForUpWithDown = false;
+            this._isUpWithNoDown = false;
         }
     };
 
@@ -748,9 +764,19 @@ export function initCursorComponentModPrototype() {
         };
     }();
 
-    cursorComponentMod._pp_isAR = function _pp_isAR(e) {
+    cursorComponentMod._pp_isAR = function _pp_isAR() {
         let firstInputSource = XRUtils.getSession(this.engine).inputSources[0];
         return this.input != null && firstInputSource.handedness === "none" && firstInputSource.gamepad != null;
+    }
+
+    cursorComponentMod._pp_updateCursorStyle = function _pp_updateCursorStyle() {
+        if (this.styleCursor) {
+            if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isSurface) {
+                Globals.getBody(this.engine).style.cursor = "pointer";
+            } else if (Globals.getBody(this.engine).style.cursor == "pointer") {
+                Globals.getBody(this.engine).style.cursor = "default";
+            }
+        }
     }
 
 
