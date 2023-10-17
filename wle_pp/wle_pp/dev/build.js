@@ -6,7 +6,7 @@ esbuild.build({
     platform: "node",
     bundle: true,
     sourcemap: true,
-    minify: true,
+    minify: false,
     format: "esm",
     outfile: "build/wle_pp_bundle.js",
     plugins: [nodeExternalsPlugin()]
