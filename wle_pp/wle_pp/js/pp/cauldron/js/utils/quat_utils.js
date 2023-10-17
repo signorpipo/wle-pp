@@ -190,39 +190,123 @@ export function setAxes(quat, left, up, forward) {
     }
 }
 
-export function setForward(quat, forward, up = null, left = null) {
-    return _setAxes(quat, [left, up, forward], [2, 1, 0]);
-}
+export let setForward = function () {
+    let axes = [null, null, null];
+    let priority = [2, 1, 0];
+    return function setForward(quat, forward, up = null, left = null) {
+        axes[0] = left;
+        axes[1] = up;
+        axes[2] = forward;
+
+        let result = _setAxes(quat, axes, priority);
+
+        axes[0] = null;
+        axes[1] = null;
+        axes[2] = null;
+
+        return result;
+    };
+}();
 
 export let setBackward = function () {
     let forward = vec3_utils_create();
+
+    let axes = [null, null, null];
+    let priority = [2, 1, 0];
     return function setBackward(quat, backward, up = null, left = null) {
         Vec3Utils.negate(backward, forward);
-        return _setAxes(quat, [left, up, forward], [2, 1, 0]);
+
+        axes[0] = left;
+        axes[1] = up;
+        axes[2] = forward;
+
+        let result = _setAxes(quat, axes, priority);
+
+        axes[0] = null;
+        axes[1] = null;
+        axes[2] = null;
+
+        return result;
     };
 }();
 
-export function setUp(quat, up, forward = null, left = null) {
-    return _setAxes(quat, [left, up, forward], [1, 2, 0]);
-}
+export let setUp = function () {
+    let axes = [null, null, null];
+    let priority = [1, 2, 0];
+    return function setUp(quat, up, forward = null, left = null) {
+        axes[0] = left;
+        axes[1] = up;
+        axes[2] = forward;
+
+        let result = _setAxes(quat, axes, priority);
+
+        axes[0] = null;
+        axes[1] = null;
+        axes[2] = null;
+
+        return result;
+    };
+}();
 
 export let setDown = function () {
     let up = vec3_utils_create();
+
+    let axes = [null, null, null];
+    let priority = [1, 2, 0];
     return function setDown(quat, down, forward = null, left = null) {
         Vec3Utils.negate(down, up);
-        return _setAxes(quat, [left, up, forward], [1, 2, 0]);
+
+        axes[0] = left;
+        axes[1] = up;
+        axes[2] = forward;
+
+        let result = _setAxes(quat, axes, priority);
+
+        axes[0] = null;
+        axes[1] = null;
+        axes[2] = null;
+
+        return result;
     };
 }();
 
-export function setLeft(quat, left, up = null, forward = null) {
-    return _setAxes(quat, [left, up, forward], [0, 1, 2]);
-}
+export let setLeft = function () {
+    let axes = [null, null, null];
+    let priority = [0, 1, 2];
+    return function setLeft(quat, left, up = null, forward = null) {
+        axes[0] = left;
+        axes[1] = up;
+        axes[2] = forward;
+
+        let result = _setAxes(quat, axes, priority);
+
+        axes[0] = null;
+        axes[1] = null;
+        axes[2] = null;
+
+        return result;
+    };
+}();
 
 export let setRight = function () {
     let left = vec3_utils_create();
+
+    let axes = [null, null, null];
+    let priority = [0, 1, 2];
     return function setRight(quat, right, up = null, forward = null) {
         Vec3Utils.negate(right, left);
-        return _setAxes(quat, [left, up, forward], [0, 1, 2]);
+
+        axes[0] = left;
+        axes[1] = up;
+        axes[2] = forward;
+
+        let result = _setAxes(quat, axes, priority);
+
+        axes[0] = null;
+        axes[1] = null;
+        axes[2] = null;
+
+        return result;
     };
 }();
 

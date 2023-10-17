@@ -274,7 +274,7 @@ export function isFunctionByName(functionParent, functionName) {
 
     let functionProperty = JSUtils.getObjectProperty(functionParent, functionName);
     if (functionProperty != null) {
-        isFunctionResult = JSUtils.isFunction(functionProperty) && !JSUtils.isClassByName(functionParent, functionName);
+        isFunctionResult = JSUtils.isFunction(functionProperty);
     }
 
     return isFunctionResult;
@@ -285,7 +285,7 @@ export function isClassByName(classParent, className) {
 
     let classProperty = JSUtils.getObjectProperty(classParent, className);
     if (classProperty != null) {
-        isClassResult = JSUtils.isClass(classProperty) && className != "constructor";
+        isClassResult = JSUtils.isClass(classProperty);
     }
 
     return isClassResult;

@@ -115,8 +115,10 @@ export class XRGamepadCore extends GamepadCore {
         this._myHapticActuators.pp_clear();
 
         if (this.isGamepadCoreActive()) {
-            if (this._myGamepad.hapticActuators != null && this._myGamepad.hapticActuators.length > 0) {
-                this._myHapticActuators.push(...this._myGamepad.hapticActuators);
+            if (this._myGamepad.hapticActuators != null) {
+                for (let i = 0; i < this._myGamepad.hapticActuators.length; i++) {
+                    this._myHapticActuators.push(this._myGamepad.hapticActuators[i]);
+                }
             }
 
             if (this._myGamepad.vibrationActuator != null) {

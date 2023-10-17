@@ -37,7 +37,7 @@ export class TrackedHandDrawSkinComponent extends Component {
 // IMPLEMENTATION
 
 TrackedHandDrawSkinComponent.prototype.update = function () {
-    let transformQuat = quat2_create()
+    let transformQuat = quat2_create();
     return function update(dt) {
         for (let i = 0; i < this._myJoints.length; i++) {
             let jointObject = this._myJoints[i];

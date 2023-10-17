@@ -46,4 +46,8 @@ export class AudioManager {
     stop() {
         Howler.stop();
     }
+
+    unloadAllAudioSources() {
+        Howler.unload();
+    }
 }

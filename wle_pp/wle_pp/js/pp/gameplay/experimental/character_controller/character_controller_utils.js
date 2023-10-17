@@ -44,7 +44,7 @@ export let computeSurfacePerceivedAngle = function () {
 
         return surfacePerceivedAngle;
     };
-}()
+}();
 
 export let CharacterControllerUtils = {
     computeGroundPerceivedAngle,

@@ -65,17 +65,11 @@ export class HandPose extends BasePose {
     }
 
     _onXRSessionStartHook(manualCall, session) {
-        this._myInputSourcesChangeEventListener = function (event) {
-            if (event.removed) {
-                for (let item of event.removed) {
-                    if (item == this._myInputSource) {
-                        this._myInputSource = null;
-                    }
-                }
-            }
+        this._myInputSourcesChangeEventListener = function () {
+            this._myInputSource = null;
 
-            if (event.added) {
-                for (let item of event.added) {
+            if (session.inputSources != null && session.inputSources.length > 0) {
+                for (let item of session.inputSources) {
                     if (item.handedness == this._myHandedness) {
                         this._myInputSource = item;
                         this._myTrackedHand = InputUtils.getInputSourceType(this._myInputSource) == InputSourceType.TRACKED_HAND;
@@ -84,16 +78,9 @@ export class HandPose extends BasePose {
             }
         }.bind(this);
 
-        session.addEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
+        this._myInputSourcesChangeEventListener();
 
-        if (manualCall && this._myInputSource == null && session.inputSources) {
-            for (let item of session.inputSources) {
-                if (item.handedness == this._myHandedness) {
-                    this._myInputSource = item;
-                    this._myTrackedHand = InputUtils.getInputSourceType(this._myInputSource) == InputSourceType.TRACKED_HAND;
-                }
-            }
-        }
+        session.addEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
     }
 
     _onXRSessionEndHook() {

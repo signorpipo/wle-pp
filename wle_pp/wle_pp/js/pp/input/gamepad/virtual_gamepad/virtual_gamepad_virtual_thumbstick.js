@@ -14,7 +14,7 @@ export class VirtualGamepadVirtualThumbstick {
         this._myActive = true;
 
         this._myPointerID = null;
-        this._myPointerButton = null
+        this._myPointerButton = null;
 
         this._myThumbstickDragStartPosition = vec2_create();
 

@@ -325,7 +325,7 @@ CollisionCheck.prototype._adjustVerticalMovementWithSurface = function () {
         }
 
         return outAdjustedVerticalMovement;
-    }
+    };
 }();
 
 CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
@@ -420,7 +420,7 @@ CollisionCheck.prototype._adjustHorizontalMovementWithSurface = function () {
         }
 
         return outAdjustedHorizontalMovement;
-    }
+    };
 }();
 
 // Useless now

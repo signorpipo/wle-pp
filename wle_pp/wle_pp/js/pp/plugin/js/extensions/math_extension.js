@@ -65,107 +65,107 @@ export function initMathExtensionStatic() {
     });
 
     mathExtension.pp_clamp = function pp_clamp(value, start, end) {
-        return MathUtils.clamp(...arguments);
+        return MathUtils.clamp(value, start, end);
     };
 
     mathExtension.pp_sign = function pp_sign(value, zeroSign = 1) {
-        return MathUtils.sign(...arguments);
+        return MathUtils.sign(value, zeroSign);
     };
 
     mathExtension.pp_toDegrees = function pp_toDegrees(angle) {
-        return MathUtils.toDegrees(...arguments);
+        return MathUtils.toDegrees(angle);
     };
 
     mathExtension.pp_toRadians = function pp_toRadians(angle) {
-        return MathUtils.toRadians(...arguments);
+        return MathUtils.toRadians(angle);
     };
 
     mathExtension.pp_roundDecimal = function pp_roundDecimal(number, decimalPlaces) {
-        return MathUtils.roundDecimal(...arguments);
+        return MathUtils.roundDecimal(number, decimalPlaces);
     };
 
     mathExtension.pp_mapToRange = function pp_mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd) {
-        return MathUtils.mapToRange(...arguments);
+        return MathUtils.mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd);
     };
 
     mathExtension.pp_random = function pp_random(start = 0, end = 1) {
-        return MathUtils.random(...arguments);
+        return MathUtils.random(start, end);
     };
 
     mathExtension.pp_randomInt = function pp_randomInt(start, end) {
-        return MathUtils.randomInt(...arguments);
+        return MathUtils.randomInt(start, end);
     };
 
     mathExtension.pp_randomBool = function pp_randomBool() {
-        return MathUtils.randomBool(...arguments);
+        return MathUtils.randomBool();
     };
 
     mathExtension.pp_randomSign = function pp_randomSign() {
-        return MathUtils.randomSign(...arguments);
+        return MathUtils.randomSign();
     };
 
     mathExtension.pp_randomPick = function pp_randomPick(...args) {
-        return MathUtils.randomPick(...arguments);
+        return MathUtils.randomPick(...args);
     };
 
     mathExtension.pp_randomUUID = function pp_randomUUID() {
-        return MathUtils.randomUUID(...arguments);
+        return MathUtils.randomUUID();
     };
 
     mathExtension.pp_lerp = function pp_lerp(from, to, interpolationFactor) {
-        return MathUtils.lerp(...arguments);
+        return MathUtils.lerp(from, to, interpolationFactor);
     };
 
     mathExtension.pp_interpolate = function pp_interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
-        return MathUtils.interpolate(...arguments);
+        return MathUtils.interpolate(from, to, interpolationFactor, easingFunction);
     };
 
     mathExtension.pp_angleDistance = function pp_angleDistance(from, to) {
-        return MathUtils.angleDistance(...arguments);
+        return MathUtils.angleDistance(from, to);
     };
 
     mathExtension.pp_angleDistanceDegrees = function pp_angleDistanceDegrees(from, to) {
-        return MathUtils.angleDistanceDegrees(...arguments);
+        return MathUtils.angleDistanceDegrees(from, to);
     };
 
     mathExtension.pp_angleDistanceRadians = function pp_angleDistanceRadians(from, to) {
-        return MathUtils.angleDistanceRadians(...arguments);
+        return MathUtils.angleDistanceRadians(from, to);
     };
 
     mathExtension.pp_angleDistanceSigned = function pp_angleDistanceSigned(from, to) {
-        return MathUtils.angleDistanceSigned(...arguments);
+        return MathUtils.angleDistanceSigned(from, to);
     };
 
     mathExtension.pp_angleDistanceSignedDegrees = function pp_angleDistanceSignedDegrees(from, to) {
-        return MathUtils.angleDistanceSignedDegrees(...arguments);
+        return MathUtils.angleDistanceSignedDegrees(from, to);
     };
 
     mathExtension.pp_angleDistanceSignedRadians = function pp_angleDistanceSignedRadians(from, to) {
-        return MathUtils.angleDistanceSignedRadians(...arguments);
+        return MathUtils.angleDistanceSignedRadians(from, to);
     };
 
     mathExtension.pp_angleClamp = function pp_angleClamp(angle, usePositiveRange = false) {
-        return MathUtils.angleClamp(...arguments);
+        return MathUtils.angleClamp(angle, usePositiveRange);
     };
 
     mathExtension.pp_angleClampDegrees = function pp_angleClampDegrees(angle, usePositiveRange = false) {
-        return MathUtils.angleClampDegrees(...arguments);
+        return MathUtils.angleClampDegrees(angle, usePositiveRange);
     };
 
     mathExtension.pp_angleClampRadians = function pp_angleClampRadians(angle, usePositiveRange = false) {
-        return MathUtils.angleClampRadians(...arguments);
+        return MathUtils.angleClampRadians(angle, usePositiveRange);
     };
 
     mathExtension.pp_isInsideAngleRange = function pp_isInsideAngleRange(angle, start, end, useShortestAngle = false) {
-        return MathUtils.isInsideAngleRange(...arguments);
+        return MathUtils.isInsideAngleRange(angle, start, end, useShortestAngle);
     };
 
     mathExtension.pp_isInsideAngleRangeDegrees = function pp_isInsideAngleRangeDegrees(angle, start, end, useShortestAngle = false) {
-        return MathUtils.isInsideAngleRangeDegrees(...arguments);
+        return MathUtils.isInsideAngleRangeDegrees(angle, start, end, useShortestAngle);
     };
 
     mathExtension.pp_isInsideAngleRangeRadians = function pp_isInsideAngleRangeRadians(angle, start, end, useShortestAngle = false) {
-        return MathUtils.isInsideAngleRangeRadians(...arguments);
+        return MathUtils.isInsideAngleRangeRadians(angle, start, end, useShortestAngle);
     };
 
 

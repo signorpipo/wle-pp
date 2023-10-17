@@ -14,7 +14,7 @@ export class ToolCursorComponent extends Component {
         _myPulseOnHover: Property.bool(false),
         _myShowFingerCursor: Property.bool(false),
         _myUpdatePointerCursorStyle: Property.bool(true)
-    }
+    };
 
     init() {
         this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
@@ -117,7 +117,7 @@ export class ToolCursorComponent extends Component {
     _isUsingHand() {
         let usingHand = false;
 
-        if (XRUtils.getSession(this.engine) && XRUtils.getSession(this.engine).inputSources) {
+        if (XRUtils.getSession(this.engine) && XRUtils.getSession(this.engine).inputSources != null) {
             for (let i = 0; i < XRUtils.getSession(this.engine).inputSources.length; i++) {
                 let input = XRUtils.getSession(this.engine).inputSources[i];
                 if (input.hand && input.handedness == this._myHandednessType) {

@@ -767,7 +767,7 @@ export function initCursorComponentModPrototype() {
     cursorComponentMod._pp_isAR = function _pp_isAR() {
         let firstInputSource = XRUtils.getSession(this.engine).inputSources[0];
         return this.input != null && firstInputSource.handedness === "none" && firstInputSource.gamepad != null;
-    }
+    };
 
     cursorComponentMod._pp_updateCursorStyle = function _pp_updateCursorStyle() {
         if (this.styleCursor) {
@@ -777,7 +777,7 @@ export function initCursorComponentModPrototype() {
                 Globals.getBody(this.engine).style.cursor = "default";
             }
         }
-    }
+    };
 
 
 

@@ -147,7 +147,7 @@ export class PlayerHeadManager {
             if (this._myParams.myHeightOffsetVRWithFloor == null) {
                 this._myParams.myHeightOffsetVRWithFloor = 0;
             }
-            let isFloor = XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine) || XRUtils.isDeviceEmulated(this._myParams.myEngine);
+            let isFloor = XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine) || XRUtils.isDeviceEmulated();
             if (this._mySessionActive && isFloor) {
                 this._myParams.myHeightOffsetVRWithFloor = this._myParams.myHeightOffsetVRWithFloor + (height - this.getHeightHead());
             } else if (!this._mySessionActive) {
@@ -759,7 +759,7 @@ PlayerHeadManager.prototype._sessionChangeResync = function () {
                 resyncMovement = flatResyncHeadPosition.vec3_sub(flatCurrentHeadPosition, resyncMovement);
                 this.moveFeet(resyncMovement);
 
-                let isFloor = XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine) || XRUtils.isDeviceEmulated(this._myParams.myEngine);
+                let isFloor = XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine) || XRUtils.isDeviceEmulated();
                 if (this._myParams.myEnterSessionResyncHeight || this._myParams.myNextEnterSessionResyncHeight) {
                     this._myParams.myNextEnterSessionResyncHeight = false;
                     let resyncHeadHeight = this._getPositionHeight(resyncHeadPosition);
@@ -886,7 +886,7 @@ PlayerHeadManager.prototype._resyncHeadRotationForward = function () {
 
         this.setRotationFeetQuat(fixedResyncHeadRotation);
         return;
-    }
+    };
 }();
 
 PlayerHeadManager.prototype._updateHeightOffset = function () {
@@ -894,7 +894,7 @@ PlayerHeadManager.prototype._updateHeightOffset = function () {
         if (this._mySessionActive) {
             // #TODO As of now reference type is not properly updated for device emulated and is available the frame after the session started
             // if this is fixed, then the emulator will behave like a normal headset for height and we can remove all these ifs
-            if (XRUtils.isDeviceEmulated(this._myParams.myEngine)) {
+            if (XRUtils.isDeviceEmulated()) {
                 this._setReferenceSpaceHeightOffset(0, 0);
             } else if (XRUtils.isReferenceSpaceFloorBased(this._myParams.myEngine)) {
                 this._setReferenceSpaceHeightOffset(this._myParams.myHeightOffsetVRWithFloor, 0);
@@ -904,7 +904,7 @@ PlayerHeadManager.prototype._updateHeightOffset = function () {
         } else {
             this._setReferenceSpaceHeightOffset(this._myParams.myHeightOffsetNonVR, this._myParams.myForeheadExtraHeight);
         }
-    }
+    };
 }();
 
 PlayerHeadManager.prototype._setReferenceSpaceHeightOffset = function () {
@@ -914,13 +914,13 @@ PlayerHeadManager.prototype._setReferenceSpaceHeightOffset = function () {
             referenceSpacePosition = Globals.getPlayerObjects(this._myParams.myEngine).myReferenceSpace.pp_getPositionLocal(referenceSpacePosition);
             Globals.getPlayerObjects(this._myParams.myEngine).myReferenceSpace.pp_setPositionLocal([referenceSpacePosition[0], offset - amountToRemove, referenceSpacePosition[2]]);
         }
-    }
+    };
 }();
 
 PlayerHeadManager.prototype._getHeadTransformFromLocal = function () {
     return function _getHeadTransformFromLocal(transformLocal) {
         return this._myCurrentHead.pp_convertTransformLocalToWorldQuat(transformLocal);
-    }
+    };
 }();
 
 

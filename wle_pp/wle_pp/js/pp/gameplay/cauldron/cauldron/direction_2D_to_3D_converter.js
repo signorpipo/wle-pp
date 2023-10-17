@@ -164,7 +164,7 @@ Direction2DTo3DConverter.prototype.convertForward = function () {
         rotationQuat.quat_identity();
         rotationQuat.quat_setForward(conversionForward, direction3DUp);
         return this.convertRotationQuat(direction2D, rotationQuat, direction3DUp, outDirection3D);
-    }
+    };
 }();
 
 Direction2DTo3DConverter.prototype.convertTransformMatrix = function () {
@@ -172,7 +172,7 @@ Direction2DTo3DConverter.prototype.convertTransformMatrix = function () {
     return function convertTransformMatrix(direction2D, conversionTransformMatrix, direction3DUp = null, outDirection3D = vec3_create()) {
         rotationQuat = conversionTransformMatrix.mat4_getRotationQuat(rotationQuat);
         return this.convertRotationQuat(direction2D, rotationQuat, direction3DUp, outDirection3D);
-    }
+    };
 }();
 
 Direction2DTo3DConverter.prototype.convertTransformQuat = function () {
@@ -180,7 +180,7 @@ Direction2DTo3DConverter.prototype.convertTransformQuat = function () {
     return function convertTransformQuat(direction2D, conversionTransformQuat, direction3DUp = null, outDirection3D = vec3_create()) {
         rotationQuat = conversionTransformQuat.quat2_getRotationQuat(rotationQuat);
         return this.convertRotationQuat(direction2D, rotationQuat, direction3DUp, outDirection3D);
-    }
+    };
 }();
 
 Direction2DTo3DConverter.prototype.convertRotationQuat = function () {

@@ -175,30 +175,34 @@ export function initArrayExtension() {
 }
 
 export function vec2_create(x, y) {
-    return Vec2Utils.create(...arguments);
+    return Vec2Utils.create(x, y);
 }
 
 export function vec3_create(x, y, z) {
-    return Vec3Utils.create(...arguments);
+    return Vec3Utils.create(x, y, z);
 }
 
 export function vec4_create(x, y, z, w) {
-    return Vec4Utils.create(...arguments);
+    return Vec4Utils.create(x, y, z, w);
 }
 
 export function quat_create(x, y, z, w) {
-    return QuatUtils.create(...arguments);
+    return QuatUtils.create(x, y, z, w);
 }
 
 export function quat2_create(x1, y1, z1, w1, x2, y2, z2, w2) {
-    return Quat2Utils.create(...arguments);
+    return Quat2Utils.create(x1, y1, z1, w1, x2, y2, z2, w2);
 }
 
 export function mat3_create(
     m00, m01, m02,
     m10, m11, m12,
     m20, m21, m22) {
-    return Mat3Utils.create(...arguments);
+    return Mat3Utils.create(
+        m00, m01, m02,
+        m10, m11, m12,
+        m20, m21, m22
+    );
 }
 
 export function mat4_create(
@@ -206,7 +210,12 @@ export function mat4_create(
     m10, m11, m12, m13,
     m20, m21, m22, m23,
     m30, m31, m32, m33) {
-    return Mat4Utils.create(...arguments);
+    return Mat4Utils.create(
+        m00, m01, m02, m03,
+        m10, m11, m12, m13,
+        m20, m21, m22, m23,
+        m30, m31, m32, m33
+    );
 }
 
 export function initArrayExtensionProtoype() {
@@ -218,83 +227,83 @@ export function initArrayExtensionProtoype() {
     let arrayExtension = {};
 
     arrayExtension.pp_first = function pp_first() {
-        return ArrayUtils.first(this, ...arguments);
+        return ArrayUtils.first(this);
     };
 
     arrayExtension.pp_last = function pp_last() {
-        return ArrayUtils.last(this, ...arguments);
+        return ArrayUtils.last(this);
     };
 
     arrayExtension.pp_has = function pp_has(callback) {
-        return ArrayUtils.has(this, ...arguments);
+        return ArrayUtils.has(this, callback);
     };
 
     arrayExtension.pp_hasEqual = function pp_hasEqual(elementToFind, elementsEqualCallback = null) {
-        return ArrayUtils.hasEqual(this, ...arguments);
+        return ArrayUtils.hasEqual(this, elementToFind, elementsEqualCallback);
     };
 
     arrayExtension.pp_find = function pp_find(callback) {
-        return ArrayUtils.find(this, ...arguments);
+        return ArrayUtils.find(this, callback);
     };
 
     arrayExtension.pp_findIndex = function pp_findIndex(callback) {
-        return ArrayUtils.findIndex(this, ...arguments);
+        return ArrayUtils.findIndex(this, callback);
     };
 
     arrayExtension.pp_findAll = function pp_findAll(callback) {
-        return ArrayUtils.findAll(this, ...arguments);
+        return ArrayUtils.findAll(this, callback);
     };
 
     arrayExtension.pp_findAllIndexes = function pp_findAllIndexes(callback) {
-        return ArrayUtils.findAllIndexes(this, ...arguments);
+        return ArrayUtils.findAllIndexes(this, callback);
     };
 
     arrayExtension.pp_findEqual = function pp_findEqual(elementToFind, elementsEqualCallback = null) {
-        return ArrayUtils.findEqual(this, ...arguments);
+        return ArrayUtils.findEqual(this, elementToFind, elementsEqualCallback);
     };
 
     arrayExtension.pp_findAllEqual = function pp_findAllEqual(elementToFind, elementsEqualCallback = null) {
-        return ArrayUtils.findAllEqual(this, ...arguments);
+        return ArrayUtils.findAllEqual(this, elementToFind, elementsEqualCallback);
     };
 
     arrayExtension.pp_findIndexEqual = function pp_findIndexEqual(elementToFind, elementsEqualCallback = null) {
-        return ArrayUtils.findIndexEqual(this, ...arguments);
+        return ArrayUtils.findIndexEqual(this, elementToFind, elementsEqualCallback);
     };
 
     arrayExtension.pp_findAllIndexesEqual = function pp_findAllIndexesEqual(elementToFind, elementsEqualCallback = null) {
-        return ArrayUtils.findAllIndexesEqual(this, ...arguments);
+        return ArrayUtils.findAllIndexesEqual(this, elementToFind, elementsEqualCallback);
     };
 
     arrayExtension.pp_removeIndex = function pp_removeIndex(index) {
-        return ArrayUtils.removeIndex(this, ...arguments);
+        return ArrayUtils.removeIndex(this, index);
     };
 
     arrayExtension.pp_removeAllIndexes = function pp_removeAllIndexes(indexes) {
-        return ArrayUtils.removeAllIndexes(this, ...arguments);
+        return ArrayUtils.removeAllIndexes(this, indexes);
     };
 
     arrayExtension.pp_remove = function pp_remove(callback) {
-        return ArrayUtils.remove(this, ...arguments);
+        return ArrayUtils.remove(this, callback);
     };
 
     arrayExtension.pp_removeAll = function pp_removeAll(callback) {
-        return ArrayUtils.removeAll(this, ...arguments);
+        return ArrayUtils.removeAll(this, callback);
     };
 
     arrayExtension.pp_removeEqual = function pp_removeEqual(elementToRemove, elementsEqualCallback = null) {
-        return ArrayUtils.removeEqual(this, ...arguments);
+        return ArrayUtils.removeEqual(this, elementToRemove, elementsEqualCallback);
     };
 
     arrayExtension.pp_removeAllEqual = function pp_removeAllEqual(elementToRemove, elementsEqualCallback = null) {
-        return ArrayUtils.removeAllEqual(this, ...arguments);
+        return ArrayUtils.removeAllEqual(this, elementToRemove, elementsEqualCallback);
     };
 
     arrayExtension.pp_pushUnique = function pp_pushUnique(element, elementsEqualCallback = null) {
-        return ArrayUtils.pushUnique(this, ...arguments);
+        return ArrayUtils.pushUnique(this, element, elementsEqualCallback);
     };
 
     arrayExtension.pp_unshiftUnique = function pp_unshiftUnique(element, elementsEqualCallback = null) {
-        return ArrayUtils.unshiftUnique(this, ...arguments);
+        return ArrayUtils.unshiftUnique(this, element, elementsEqualCallback);
     };
 
     arrayExtension.pp_copy = function pp_copy(array, copyCallback = null) {
@@ -302,69 +311,69 @@ export function initArrayExtensionProtoype() {
     };
 
     arrayExtension.pp_clone = function pp_clone(cloneCallback = null) {
-        return ArrayUtils.clone(this, ...arguments);
+        return ArrayUtils.clone(this, cloneCallback);
     };
 
     arrayExtension.pp_equals = function pp_equals(array, elementsEqualCallback = null) {
-        return ArrayUtils.equals(this, ...arguments);
+        return ArrayUtils.equals(this, array, elementsEqualCallback);
     };
 
     arrayExtension.pp_clear = function pp_clear() {
-        return ArrayUtils.clear(this, ...arguments);
+        return ArrayUtils.clear(this);
     };
 
     // VECTOR
 
     // New Functions
 
-    let vecExtension = {}
+    let vecExtension = {};
 
     vecExtension.vec_zero = function vec_zero(out = null) {
-        return VecUtils.zero(this, ...arguments);
+        return VecUtils.zero(this, out);
     };
 
     vecExtension.vec_isZero = function vec_isZero(epsilon = 0) {
-        return VecUtils.isZero(this, ...arguments);
+        return VecUtils.isZero(this, epsilon);
     };
 
     vecExtension.vec_scale = function vec_scale(value, out = null) {
-        return VecUtils.scale(this, ...arguments);
+        return VecUtils.scale(this, value, out);
     };
 
     vecExtension.vec_round = function vec_round(out = null) {
-        return VecUtils.round(this, ...arguments);
+        return VecUtils.round(this, out);
     };
 
     vecExtension.vec_floor = function vec_floor(out = null) {
-        return VecUtils.floor(this, ...arguments);
+        return VecUtils.floor(this, out);
     };
 
     vecExtension.vec_ceil = function vec_ceil(out = null) {
-        return VecUtils.ceil(this, ...arguments);
+        return VecUtils.ceil(this, out);
     };
 
     vecExtension.vec_clamp = function vec_clamp(start, end, out = null) {
-        return VecUtils.clamp(this, ...arguments);
+        return VecUtils.clamp(this, start, end, out);
     };
 
     vecExtension.vec_equals = function vec_equals(vector, epsilon = 0) {
-        return VecUtils.equals(this, ...arguments);
+        return VecUtils.equals(this, vector, epsilon);
     };
 
     vecExtension.vec_toString = function vec_toString(decimalPlaces = null) {
-        return VecUtils.toString(this, ...arguments);
+        return VecUtils.toString(this, decimalPlaces);
     };
 
     vecExtension.vec_log = function vec_log(decimalPlaces = 4) {
-        return VecUtils.log(this, ...arguments);
+        return VecUtils.log(this, decimalPlaces);
     };
 
     vecExtension.vec_error = function vec_error(decimalPlaces = 4) {
-        return VecUtils.error(this, ...arguments);
+        return VecUtils.error(this, decimalPlaces);
     };
 
     vecExtension.vec_warn = function vec_warn(decimalPlaces = 4) {
-        return VecUtils.warn(this, ...arguments);
+        return VecUtils.warn(this, decimalPlaces);
     };
 
     // VECTOR 2
@@ -372,17 +381,17 @@ export function initArrayExtensionProtoype() {
     let vec2Extension = {};
 
     vec2Extension.vec2_set = function vec2_set(x, y) {
-        return Vec2Utils.set(this, ...arguments);
+        return Vec2Utils.set(this, x, y);
     };
 
     // glMatrix Bridge
 
     vec2Extension.vec2_length = function vec2_length() {
-        return Vec2Utils.length(this, ...arguments);
+        return Vec2Utils.length(this);
     };
 
     vec2Extension.vec2_normalize = function vec2_normalize(out = Vec2Utils.create()) {
-        return Vec2Utils.normalize(this, ...arguments);
+        return Vec2Utils.normalize(this, out);
     };
 
     vec2Extension.vec2_copy = function vec2_copy(vector) {
@@ -390,17 +399,17 @@ export function initArrayExtensionProtoype() {
     };
 
     vec2Extension.vec2_clone = function vec2_clone(out = Vec2Utils.create()) {
-        return Vec2Utils.clone(this, ...arguments);
+        return Vec2Utils.clone(this, out);
     };
 
     vec2Extension.vec2_zero = function vec2_zero() {
-        return Vec2Utils.zero(this, ...arguments);
+        return Vec2Utils.zero(this);
     };
 
     // New Functions
 
     vec2Extension.vec2_isZero = function vec2_isZero(epsilon = 0) {
-        return Vec2Utils.isZero(this, ...arguments);
+        return Vec2Utils.isZero(this, epsilon);
     };
 
     // VECTOR 3
@@ -410,180 +419,180 @@ export function initArrayExtensionProtoype() {
     // glMatrix Bridge
 
     vec3Extension.vec3_set = function vec3_set(x, y, z) {
-        return Vec3Utils.set(this, ...arguments);
+        return Vec3Utils.set(this, x, y, z);
     };
 
     vec3Extension.vec3_normalize = function vec3_normalize(out = Vec3Utils.create()) {
-        return Vec3Utils.normalize(this, ...arguments);
+        return Vec3Utils.normalize(this, out);
     };
     vec3Extension.vec3_copy = function vec3_copy(vector) {
         return Vec3Utils.copy(vector, this);
     };
 
     vec3Extension.vec3_clone = function vec3_clone(out = Vec3Utils.create()) {
-        return Vec3Utils.clone(this, ...arguments);
+        return Vec3Utils.clone(this, out);
     };
 
     vec3Extension.vec3_zero = function vec3_zero() {
-        return Vec3Utils.zero(this, ...arguments);
+        return Vec3Utils.zero(this);
     };
 
     vec3Extension.vec3_angle = function vec3_angle(vector) {
-        return Vec3Utils.angle(this, ...arguments);
+        return Vec3Utils.angle(this, vector);
     };
 
     vec3Extension.vec3_angleDegrees = function vec3_angleDegrees(vector) {
-        return Vec3Utils.angleDegrees(this, ...arguments);
+        return Vec3Utils.angleDegrees(this, vector);
     };
 
     vec3Extension.vec3_angleRadians = function vec3_angleRadians(vector) {
-        return Vec3Utils.angleRadians(this, ...arguments);
+        return Vec3Utils.angleRadians(this, vector);
     };
 
     vec3Extension.vec3_equals = function vec3_equals(vector, epsilon = 0) {
-        return Vec3Utils.equals(this, ...arguments);
+        return Vec3Utils.equals(this, vector, epsilon);
     };
 
     vec3Extension.vec3_length = function vec3_length() {
-        return Vec3Utils.length(this, ...arguments);
+        return Vec3Utils.length(this);
     };
 
     vec3Extension.vec3_lengthSquared = function vec3_lengthSquared() {
-        return Vec3Utils.lengthSquared(this, ...arguments);
+        return Vec3Utils.lengthSquared(this);
     };
 
     vec3Extension.vec3_distance = function vec3_distance(vector) {
-        return Vec3Utils.distance(this, ...arguments);
+        return Vec3Utils.distance(this, vector);
     };
 
     vec3Extension.vec3_distanceSquared = function vec3_distanceSquared(vector) {
-        return Vec3Utils.distanceSquared(this, ...arguments);
+        return Vec3Utils.distanceSquared(this, vector);
     };
 
     vec3Extension.vec3_add = function vec3_add(vector, out = Vec3Utils.create()) {
-        return Vec3Utils.add(this, ...arguments);
+        return Vec3Utils.add(this, vector, out);
     };
 
     vec3Extension.vec3_sub = function vec3_sub(vector, out = Vec3Utils.create()) {
-        return Vec3Utils.sub(this, ...arguments);
+        return Vec3Utils.sub(this, vector, out);
     };
 
     vec3Extension.vec3_mul = function vec3_mul(vector, out = Vec3Utils.create()) {
-        return Vec3Utils.mul(this, ...arguments);
+        return Vec3Utils.mul(this, vector, out);
     };
 
     vec3Extension.vec3_div = function vec3_div(vector, out = Vec3Utils.create()) {
-        return Vec3Utils.div(this, ...arguments);
+        return Vec3Utils.div(this, vector, out);
     };
 
     vec3Extension.vec3_scale = function vec3_scale(value, out = Vec3Utils.create()) {
-        return Vec3Utils.scale(this, ...arguments);
+        return Vec3Utils.scale(this, value, out);
     };
 
     vec3Extension.vec3_dot = function vec3_dot(vector) {
-        return Vec3Utils.dot(this, ...arguments);
+        return Vec3Utils.dot(this, vector);
     };
 
     vec3Extension.vec3_negate = function vec3_negate(out = Vec3Utils.create()) {
-        return Vec3Utils.negate(this, ...arguments);
+        return Vec3Utils.negate(this, out);
     };
 
     vec3Extension.vec3_cross = function vec3_cross(vector, out = Vec3Utils.create()) {
-        return Vec3Utils.cross(this, ...arguments);
+        return Vec3Utils.cross(this, vector, out);
     };
 
     vec3Extension.vec3_transformQuat = function vec3_transformQuat(quat, out = Vec3Utils.create()) {
-        return Vec3Utils.transformQuat(this, ...arguments);
+        return Vec3Utils.transformQuat(this, quat, out);
     };
 
     vec3Extension.vec3_transformMat3 = function vec3_transformMat3(matrix, out = Vec3Utils.create()) {
-        return Vec3Utils.transformMat3(this, ...arguments);
+        return Vec3Utils.transformMat3(this, matrix, out);
     };
 
     vec3Extension.vec3_transformMat4 = function vec3_transformMat4(matrix, out = Vec3Utils.create()) {
-        return Vec3Utils.transformMat4(this, ...arguments);
+        return Vec3Utils.transformMat4(this, matrix, out);
     };
 
     // New Functions
 
     vec3Extension.vec3_lengthSigned = function vec3_lengthSigned(positiveDirection) {
-        return Vec3Utils.lengthSigned(this, ...arguments);
+        return Vec3Utils.lengthSigned(this, positiveDirection);
     };
 
     vec3Extension.vec3_angleSigned = function vec3_angleSigned(vector, referenceAxis) {
-        return Vec3Utils.angleSigned(this, ...arguments);
+        return Vec3Utils.angleSigned(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_angleSignedDegrees = function vec3_angleSignedDegrees(vector, referenceAxis) {
-        return Vec3Utils.angleSignedDegrees(this, ...arguments);
+        return Vec3Utils.angleSignedDegrees(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_angleSignedRadians = function vec3_angleSignedRadians(vector, referenceAxis) {
-        return Vec3Utils.angleSignedRadians(this, ...arguments);
+        return Vec3Utils.angleSignedRadians(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_anglePivoted = function vec3_anglePivoted(vector, referenceAxis) {
-        return Vec3Utils.anglePivoted(this, ...arguments);
+        return Vec3Utils.anglePivoted(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_anglePivotedDegrees = function vec3_anglePivotedDegrees(vector, referenceAxis) {
-        return Vec3Utils.anglePivotedDegrees(this, ...arguments);
+        return Vec3Utils.anglePivotedDegrees(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_anglePivotedRadians = function vec3_anglePivotedRadians(vector, referenceAxis) {
-        return Vec3Utils.anglePivotedRadians(this, ...arguments);
+        return Vec3Utils.anglePivotedRadians(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_anglePivotedSigned = function vec3_anglePivotedSigned(vector, referenceAxis) {
-        return Vec3Utils.anglePivotedSigned(this, ...arguments);
+        return Vec3Utils.anglePivotedSigned(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_anglePivotedSignedDegrees = function vec3_anglePivotedSignedDegrees(vector, referenceAxis) {
-        return Vec3Utils.anglePivotedSignedDegrees(this, ...arguments);
+        return Vec3Utils.anglePivotedSignedDegrees(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_anglePivotedSignedRadians = function vec3_anglePivotedSignedRadians(vector, referenceAxis) {
-        return Vec3Utils.anglePivotedSignedRadians(this, ...arguments);
+        return Vec3Utils.anglePivotedSignedRadians(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_toRadians = function vec3_toRadians(out = Vec3Utils.create()) {
-        return Vec3Utils.toRadians(this, ...arguments);
+        return Vec3Utils.toRadians(this, out);
     };
 
     vec3Extension.vec3_toDegrees = function vec3_toDegrees(out = Vec3Utils.create()) {
-        return Vec3Utils.toDegrees(this, ...arguments);
+        return Vec3Utils.toDegrees(this, out);
     };
 
     vec3Extension.vec3_toQuat = function vec3_toQuat(out) {
-        return Vec3Utils.toQuat(this, ...arguments);
+        return Vec3Utils.toQuat(this, out);
     };
 
     vec3Extension.vec3_radiansToQuat = function vec3_radiansToQuat(out = QuatUtils.create()) {
-        return Vec3Utils.radiansToQuat(this, ...arguments);
+        return Vec3Utils.radiansToQuat(this, out);
     };
 
     vec3Extension.vec3_degreesToQuat = function vec3_degreesToQuat(out = QuatUtils.create()) {
-        return Vec3Utils.degreesToQuat(this, ...arguments);
+        return Vec3Utils.degreesToQuat(this, out);
     };
 
     vec3Extension.vec3_isNormalized = function vec3_isNormalized(epsilon = MathUtils.EPSILON) {
-        return Vec3Utils.isNormalized(this, ...arguments);
+        return Vec3Utils.isNormalized(this, epsilon);
     };
 
     vec3Extension.vec3_isZero = function vec3_isZero(epsilon = 0) {
-        return Vec3Utils.isZero(this, ...arguments);
+        return Vec3Utils.isZero(this, epsilon);
     };
 
     vec3Extension.vec3_componentAlongAxis = function vec3_componentAlongAxis(axis, out = Vec3Utils.create()) {
-        return Vec3Utils.componentAlongAxis(this, ...arguments);
+        return Vec3Utils.componentAlongAxis(this, axis, out);
     };
 
     vec3Extension.vec3_valueAlongAxis = function vec3_valueAlongAxis(axis) {
-        return Vec3Utils.valueAlongAxis(this, ...arguments);
+        return Vec3Utils.valueAlongAxis(this, axis);
     };
 
     vec3Extension.vec3_removeComponentAlongAxis = function vec3_removeComponentAlongAxis(axis, out = Vec3Utils.create()) {
-        return Vec3Utils.removeComponentAlongAxis(this, ...arguments);
+        return Vec3Utils.removeComponentAlongAxis(this, axis, out);
     };
 
     vec3Extension.vec3_copyComponentAlongAxis = function vec3_copyComponentAlongAxis(vector, axis, out = Vec3Utils.create()) {
@@ -591,251 +600,251 @@ export function initArrayExtensionProtoype() {
     };
 
     vec3Extension.vec3_isConcordant = function vec3_isConcordant(vector) {
-        return Vec3Utils.isConcordant(this, ...arguments);
+        return Vec3Utils.isConcordant(this, vector);
     };
 
     vec3Extension.vec3_isFartherAlongAxis = function vec3_isFartherAlongAxis(vector, axis) {
-        return Vec3Utils.isFartherAlongAxis(this, ...arguments);
+        return Vec3Utils.isFartherAlongAxis(this, vector, axis);
     };
 
     vec3Extension.vec3_isToTheRight = function vec3_isToTheRight(vector, referenceAxis) {
-        return Vec3Utils.isToTheRight(this, ...arguments);
+        return Vec3Utils.isToTheRight(this, vector, referenceAxis);
     };
 
     vec3Extension.vec3_signTo = function vec3_signTo(vector, referenceAxis, zeroSign = 1) {
-        return Vec3Utils.signTo(this, ...arguments);
+        return Vec3Utils.signTo(this, vector, referenceAxis, zeroSign);
     };
 
     vec3Extension.vec3_projectOnAxis = function vec3_projectOnAxis(axis, out = Vec3Utils.create()) {
-        return Vec3Utils.projectOnAxis(this, ...arguments);
+        return Vec3Utils.projectOnAxis(this, axis, out);
     };
 
     vec3Extension.vec3_projectOnAxisAlongAxis = function vec3_projectOnAxisAlongAxis(axis, projectAlongAxis, out = Vec3Utils.create()) {
-        return Vec3Utils.projectOnAxisAlongAxis(this, ...arguments);
+        return Vec3Utils.projectOnAxisAlongAxis(this, axis, projectAlongAxis, out);
     };
 
     vec3Extension.vec3_projectOnPlane = function vec3_projectOnPlane(planeNormal, out = Vec3Utils.create()) {
-        return Vec3Utils.projectOnPlane(this, ...arguments);
+        return Vec3Utils.projectOnPlane(this, planeNormal, out);
     };
 
     vec3Extension.vec3_projectOnPlaneAlongAxis = function vec3_projectOnPlaneAlongAxis(planeNormal, projectAlongAxis, out = Vec3Utils.create()) {
-        return Vec3Utils.projectOnPlaneAlongAxis(this, ...arguments);
+        return Vec3Utils.projectOnPlaneAlongAxis(this, planeNormal, projectAlongAxis, out);
     };
 
     vec3Extension.vec3_isOnAxis = function vec3_isOnAxis(axis) {
-        return Vec3Utils.isOnAxis(this, ...arguments);
+        return Vec3Utils.isOnAxis(this, axis);
     };
 
     vec3Extension.vec3_isOnPlane = function vec3_isOnPlane(planeNormal) {
-        return Vec3Utils.isOnPlane(this, ...arguments);
+        return Vec3Utils.isOnPlane(this, planeNormal);
     };
 
     vec3Extension.vec3_rotate = function vec3_rotate(rotation, out) {
-        return Vec3Utils.rotate(this, ...arguments);
+        return Vec3Utils.rotate(this, rotation, out);
     };
 
     vec3Extension.vec3_rotateDegrees = function vec3_rotateDegrees(rotation, out) {
-        return Vec3Utils.rotateDegrees(this, ...arguments);
+        return Vec3Utils.rotateDegrees(this, rotation, out);
     };
 
     vec3Extension.vec3_rotateRadians = function vec3_rotateRadians(rotation, out) {
-        return Vec3Utils.rotateRadians(this, ...arguments);
+        return Vec3Utils.rotateRadians(this, rotation, out);
     };
 
     vec3Extension.vec3_rotateQuat = function vec3_rotateQuat(rotation, out) {
-        return Vec3Utils.rotateQuat(this, ...arguments);
+        return Vec3Utils.rotateQuat(this, rotation, out);
     };
 
     vec3Extension.vec3_rotateAxis = function vec3_rotateAxis(angle, axis, out) {
-        return Vec3Utils.rotateAxis(this, ...arguments);
+        return Vec3Utils.rotateAxis(this, angle, axis, out);
     };
 
     vec3Extension.vec3_rotateAxisDegrees = function vec3_rotateAxisDegrees(angle, axis, out) {
-        return Vec3Utils.rotateAxisDegrees(this, ...arguments);
+        return Vec3Utils.rotateAxisDegrees(this, angle, axis, out);
     };
 
     vec3Extension.vec3_rotateAxisRadians = function vec3_rotateAxisRadians(angle, axis, out) {
-        return Vec3Utils.rotateAxisRadians(this, ...arguments);
+        return Vec3Utils.rotateAxisRadians(this, angle, axis, out);
     };
 
     vec3Extension.vec3_rotateAround = function vec3_rotateAround(rotation, origin, out) {
-        return Vec3Utils.rotateAround(this, ...arguments);
+        return Vec3Utils.rotateAround(this, rotation, origin, out);
     };
 
     vec3Extension.vec3_rotateAroundDegrees = function vec3_rotateAroundDegrees(rotation, origin, out = Vec3Utils.create()) {
-        return Vec3Utils.rotateAroundDegrees(this, ...arguments);
+        return Vec3Utils.rotateAroundDegrees(this, rotation, origin, out);
     };
 
     vec3Extension.vec3_rotateAroundRadians = function vec3_rotateAroundRadians(rotation, origin, out = Vec3Utils.create()) {
-        return Vec3Utils.rotateAroundRadians(this, ...arguments);
+        return Vec3Utils.rotateAroundRadians(this, rotation, origin, out);
     };
 
     vec3Extension.vec3_rotateAroundQuat = function vec3_rotateAroundQuat(rotation, origin, out = Vec3Utils.create()) {
-        return Vec3Utils.rotateAroundQuat(this, ...arguments);
+        return Vec3Utils.rotateAroundQuat(this, rotation, origin, out);
     };
 
     vec3Extension.vec3_rotateAroundAxis = function vec3_rotateAroundAxis(angle, axis, origin, out) {
-        return Vec3Utils.rotateAroundAxis(this, ...arguments);
+        return Vec3Utils.rotateAroundAxis(this, angle, axis, origin, out);
     };
 
     vec3Extension.vec3_rotateAroundAxisDegrees = function vec3_rotateAroundAxisDegrees(angle, axis, origin, out) {
-        return Vec3Utils.rotateAroundAxisDegrees(this, ...arguments);
+        return Vec3Utils.rotateAroundAxisDegrees(this, angle, axis, origin, out);
     };
 
     vec3Extension.vec3_rotateAroundAxisRadians = function vec3_rotateAroundAxisRadians(angle, axis, origin, out = Vec3Utils.create()) {
-        return Vec3Utils.rotateAroundAxisRadians(this, ...arguments);
+        return Vec3Utils.rotateAroundAxisRadians(this, angle, axis, origin, out);
     };
 
     vec3Extension.vec3_convertPositionToWorld = function vec3_convertPositionToWorld(parentTransform, out) {
-        return Vec3Utils.convertPositionToWorld(this, ...arguments);
+        return Vec3Utils.convertPositionToWorld(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertPositionToLocal = function vec3_convertPositionToLocal(parentTransform, out) {
-        return Vec3Utils.convertPositionToLocal(this, ...arguments);
+        return Vec3Utils.convertPositionToLocal(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertPositionToWorldMatrix = function vec3_convertPositionToWorldMatrix(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertPositionToWorldMatrix(this, ...arguments);
+        return Vec3Utils.convertPositionToWorldMatrix(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertPositionToLocalMatrix = function vec3_convertPositionToLocalMatrix(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertPositionToLocalMatrix(this, ...arguments);
+        return Vec3Utils.convertPositionToLocalMatrix(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertPositionToWorldQuat = function vec3_convertPositionToWorldQuat(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertPositionToWorldQuat(this, ...arguments);
+        return Vec3Utils.convertPositionToWorldQuat(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertPositionToLocalQuat = function vec3_convertPositionToLocalQuat(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertPositionToLocalQuat(this, ...arguments);
+        return Vec3Utils.convertPositionToLocalQuat(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertDirectionToWorld = function vec3_convertDirectionToWorld(parentTransform, out) {
-        return Vec3Utils.convertDirectionToWorld(this, ...arguments);
+        return Vec3Utils.convertDirectionToWorld(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertDirectionToLocal = function vec3_convertDirectionToLocal(parentTransform, out) {
-        return Vec3Utils.convertDirectionToLocal(this, ...arguments);
+        return Vec3Utils.convertDirectionToLocal(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertDirectionToWorldMatrix = function vec3_convertDirectionToWorldMatrix(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertDirectionToWorldMatrix(this, ...arguments);
+        return Vec3Utils.convertDirectionToWorldMatrix(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertDirectionToLocalMatrix = function vec3_convertDirectionToLocalMatrix(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertDirectionToLocalMatrix(this, ...arguments);
+        return Vec3Utils.convertDirectionToLocalMatrix(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertDirectionToWorldQuat = function vec3_convertDirectionToWorldQuat(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertDirectionToWorldQuat(this, ...arguments);
+        return Vec3Utils.convertDirectionToWorldQuat(this, parentTransform, out);
     };
 
     vec3Extension.vec3_convertDirectionToLocalQuat = function vec3_convertDirectionToLocalQuat(parentTransform, out = Vec3Utils.create()) {
-        return Vec3Utils.convertDirectionToLocalQuat(this, ...arguments);
+        return Vec3Utils.convertDirectionToLocalQuat(this, parentTransform, out);
     };
 
     vec3Extension.vec3_addRotation = function vec3_addRotation(rotation, out) {
-        return Vec3Utils.addRotation(this, ...arguments);
+        return Vec3Utils.addRotation(this, rotation, out);
     };
 
     vec3Extension.vec3_addRotationDegrees = function vec3_addRotationDegrees(rotation, out) {
-        return Vec3Utils.addRotationDegrees(this, ...arguments);
+        return Vec3Utils.addRotationDegrees(this, rotation, out);
     };
 
     vec3Extension.vec3_addRotationRadians = function vec3_addRotationRadians(rotation, out) {
-        return Vec3Utils.addRotationRadians(this, ...arguments);
+        return Vec3Utils.addRotationRadians(this, rotation, out);
     };
 
     vec3Extension.vec3_addRotationQuat = function vec3_addRotationQuat(rotation, out) {
-        return Vec3Utils.addRotationQuat(this, ...arguments);
+        return Vec3Utils.addRotationQuat(this, rotation, out);
     };
 
     vec3Extension.vec3_degreesAddRotation = function vec3_degreesAddRotation(rotation, out) {
-        return Vec3Utils.degreesAddRotation(this, ...arguments);
+        return Vec3Utils.degreesAddRotation(this, rotation, out);
     };
 
     vec3Extension.vec3_degreesAddRotationDegrees = function vec3_degreesAddRotationDegrees(rotation, out = Vec3Utils.create()) {
-        return Vec3Utils.degreesAddRotationDegrees(this, ...arguments);
+        return Vec3Utils.degreesAddRotationDegrees(this, rotation, out);
     };
 
     vec3Extension.vec3_degreesAddRotationRadians = function vec3_degreesAddRotationRadians(rotation, out = Vec3Utils.create()) {
-        return Vec3Utils.degreesAddRotationRadians(this, ...arguments);
+        return Vec3Utils.degreesAddRotationRadians(this, rotation, out);
     };
 
     vec3Extension.vec3_degreesAddRotationQuat = function vec3_degreesAddRotationQuat(rotation, out = Vec3Utils.create()) {
-        return Vec3Utils.degreesAddRotationQuat(this, ...arguments);
+        return Vec3Utils.degreesAddRotationQuat(this, rotation, out);
     };
 
     vec3Extension.vec3_radiansAddRotation = function vec3_radiansAddRotation(rotation, out) {
-        return Vec3Utils.radiansAddRotation(this, ...arguments);
+        return Vec3Utils.radiansAddRotation(this, rotation, out);
     };
 
     vec3Extension.vec3_radiansAddRotationDegrees = function vec3_radiansAddRotationDegrees(rotation, out = Vec3Utils.create()) {
-        return Vec3Utils.radiansAddRotationDegrees(this, ...arguments);
+        return Vec3Utils.radiansAddRotationDegrees(this, rotation, out);
     };
 
     vec3Extension.vec3_radiansAddRotationRadians = function vec3_radiansAddRotationRadians(rotation, out = Vec3Utils.create()) {
-        return Vec3Utils.radiansAddRotationRadians(this, ...arguments);
+        return Vec3Utils.radiansAddRotationRadians(this, rotation, out);
     };
 
     vec3Extension.vec3_radiansAddRotationQuat = function vec3_radiansAddRotationQuat(rotation, out = Vec3Utils.create()) {
-        return Vec3Utils.radiansAddRotationQuat(this, ...arguments);
+        return Vec3Utils.radiansAddRotationQuat(this, rotation, out);
     };
 
     vec3Extension.vec3_toMatrix = function vec3_toMatrix(out = Mat3Utils.create()) {
-        return Vec3Utils.toMatrix(this, ...arguments);
+        return Vec3Utils.toMatrix(this, out);
     };
 
     vec3Extension.vec3_degreesToMatrix = function vec3_degreesToMatrix(out = Mat3Utils.create()) {
-        return Vec3Utils.degreesToMatrix(this, ...arguments);
+        return Vec3Utils.degreesToMatrix(this, out);
     };
 
     vec3Extension.vec3_radiansToMatrix = function vec3_radiansToMatrix(out = Mat3Utils.create()) {
-        return Vec3Utils.radiansToMatrix(this, ...arguments);
+        return Vec3Utils.radiansToMatrix(this, out);
     };
 
     vec3Extension.vec3_rotationTo = function vec3_rotationTo(to, out) {
-        return Vec3Utils.rotationTo(this, ...arguments);
+        return Vec3Utils.rotationTo(this, to, out);
     };
 
     vec3Extension.vec3_rotationToDegrees = function vec3_rotationToDegrees(to, out = Vec3Utils.create()) {
-        return Vec3Utils.rotationToDegrees(this, ...arguments);
+        return Vec3Utils.rotationToDegrees(this, to, out);
     };
 
     vec3Extension.vec3_rotationToRadians = function vec3_rotationToRadians(to, out = Vec3Utils.create()) {
-        return Vec3Utils.rotationToRadians(this, ...arguments);
+        return Vec3Utils.rotationToRadians(this, to, out);
     };
 
     vec3Extension.vec3_rotationToQuat = function vec3_rotationToQuat(to, out = QuatUtils.create()) {
-        return Vec3Utils.rotationToQuat(this, ...arguments);
+        return Vec3Utils.rotationToQuat(this, to, out);
     };
 
     vec3Extension.vec3_rotationToPivoted = function vec3_rotationToPivoted(to, pivotAxis, out) {
-        return Vec3Utils.rotationToPivoted(this, ...arguments);
+        return Vec3Utils.rotationToPivoted(this, to, pivotAxis, out);
     };
 
     vec3Extension.vec3_rotationToPivotedDegrees = function vec3_rotationToPivotedDegrees(to, pivotAxis, out = Vec3Utils.create()) {
-        return Vec3Utils.rotationToPivotedDegrees(this, ...arguments);
+        return Vec3Utils.rotationToPivotedDegrees(this, to, pivotAxis, out);
     };
 
     vec3Extension.vec3_rotationToPivotedRadians = function vec3_rotationToPivotedRadians(to, pivotAxis, out = Vec3Utils.create()) {
-        return Vec3Utils.rotationToPivotedRadians(this, ...arguments);
+        return Vec3Utils.rotationToPivotedRadians(this, to, pivotAxis, out);
     };
 
     vec3Extension.vec3_rotationToPivotedQuat = function vec3_rotationToPivotedQuat(to, pivotAxis, out = QuatUtils.create()) {
-        return Vec3Utils.rotationToPivotedQuat(this, ...arguments);
+        return Vec3Utils.rotationToPivotedQuat(this, to, pivotAxis, out);
     };
 
     vec3Extension.vec3_lerp = function vec3_lerp(to, interpolationFactor, out = Vec3Utils.create()) {
-        return Vec3Utils.lerp(this, ...arguments);
+        return Vec3Utils.lerp(this, to, interpolationFactor, out);
     };
 
     vec3Extension.vec3_interpolate = function vec3_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
-        return Vec3Utils.interpolate(this, ...arguments);
+        return Vec3Utils.interpolate(this, to, interpolationFactor, easingFunction, out);
     };
 
     vec3Extension.vec3_perpendicularRandom = function vec3_perpendicularRandom(out = Vec3Utils.create()) {
-        return Vec3Utils.perpendicularRandom(this, ...arguments);
+        return Vec3Utils.perpendicularRandom(this, out);
     };
 
     // VECTOR 4
@@ -845,7 +854,7 @@ export function initArrayExtensionProtoype() {
     // glMatrix Bridge
 
     vec4Extension.vec4_set = function vec4_set(x, y, z, w) {
-        return Vec4Utils.set(this, ...arguments);
+        return Vec4Utils.set(this, x, y, z, w);
     };
 
     vec4Extension.vec4_copy = function vec4_copy(vector) {
@@ -853,7 +862,7 @@ export function initArrayExtensionProtoype() {
     };
 
     vec4Extension.vec4_clone = function vec4_clone(out = Vec4Utils.create()) {
-        return Vec4Utils.clone(this, ...arguments);
+        return Vec4Utils.clone(this, out);
     };
 
     // QUAT
@@ -863,11 +872,11 @@ export function initArrayExtensionProtoype() {
     // glMatrix Bridge
 
     quatExtension.quat_set = function quat_set(x, y, z, w) {
-        return QuatUtils.set(this, ...arguments);
+        return QuatUtils.set(this, x, y, z, w);
     };
 
     quatExtension.quat_normalize = function quat_normalize(out = QuatUtils.create()) {
-        return QuatUtils.normalize(this, ...arguments);
+        return QuatUtils.normalize(this, out);
     };
 
     quatExtension.quat_copy = function quat_copy(quat) {
@@ -875,123 +884,123 @@ export function initArrayExtensionProtoype() {
     };
 
     quatExtension.quat_clone = function quat_clone(out = QuatUtils.create()) {
-        return QuatUtils.clone(this, ...arguments);
+        return QuatUtils.clone(this, out);
     };
 
     quatExtension.quat_identity = function quat_identity() {
-        return QuatUtils.identity(this, ...arguments);
+        return QuatUtils.identity(this);
     };
 
     quatExtension.quat_length = function quat_length() {
-        return QuatUtils.length(this, ...arguments);
+        return QuatUtils.length(this);
     };
 
     quatExtension.quat_lengthSquared = function quat_lengthSquared() {
-        return QuatUtils.lengthSquared(this, ...arguments);
+        return QuatUtils.lengthSquared(this);
     };
 
     quatExtension.quat_invert = function quat_invert(out = QuatUtils.create()) {
-        return QuatUtils.invert(this, ...arguments);
+        return QuatUtils.invert(this, out);
     };
 
     quatExtension.quat_conjugate = function quat_conjugate(out = QuatUtils.create()) {
-        return QuatUtils.conjugate(this, ...arguments);
+        return QuatUtils.conjugate(this, out);
     };
 
     quatExtension.quat_mul = function quat_mul(rotation, out = QuatUtils.create()) {
-        return QuatUtils.mul(this, ...arguments);
+        return QuatUtils.mul(this, rotation, out);
     };
 
     quatExtension.quat_getAxis = function quat_getAxis(out = Vec3Utils.create()) {
-        return QuatUtils.getAxis(this, ...arguments);
+        return QuatUtils.getAxis(this, out);
     };
 
     quatExtension.quat_getAngle = function quat_getAngle() {
-        return QuatUtils.getAngle(this, ...arguments);
+        return QuatUtils.getAngle(this);
     };
 
     quatExtension.quat_getAngleDegrees = function quat_getAngleDegrees() {
-        return QuatUtils.getAngleDegrees(this, ...arguments);
+        return QuatUtils.getAngleDegrees(this);
     };
 
     quatExtension.quat_getAngleRadians = function quat_getAngleRadians() {
-        return QuatUtils.getAngleRadians(this, ...arguments);
+        return QuatUtils.getAngleRadians(this);
     };
 
     quatExtension.quat_getAxisScaled = function quat_getAxisScaled(out = Vec3Utils.create()) {
-        return QuatUtils.getAxisScaled(this, ...arguments);
+        return QuatUtils.getAxisScaled(this, out);
     };
 
     quatExtension.quat_getAxisScaledDegrees = function quat_getAxisScaledDegrees(out = Vec3Utils.create()) {
-        return QuatUtils.getAxisScaledDegrees(this, ...arguments);
+        return QuatUtils.getAxisScaledDegrees(this, out);
     };
 
     quatExtension.quat_getAxisScaledRadians = function quat_getAxisScaledRadians(out = Vec3Utils.create()) {
-        return QuatUtils.getAxisScaledRadians(this, ...arguments);
+        return QuatUtils.getAxisScaledRadians(this, out);
     };
 
     quatExtension.quat_getAxes = function quat_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-        return QuatUtils.getAxes(this, ...arguments);
+        return QuatUtils.getAxes(this, out);
     };
 
     quatExtension.quat_getForward = function quat_getForward(out = Vec3Utils.create()) {
-        return QuatUtils.getForward(this, ...arguments);
+        return QuatUtils.getForward(this, out);
     };
 
     quatExtension.quat_getBackward = function quat_getBackward(out) {
-        return QuatUtils.getBackward(this, ...arguments);
+        return QuatUtils.getBackward(this, out);
     };
 
     quatExtension.quat_getLeft = function quat_getLeft(out = Vec3Utils.create()) {
-        return QuatUtils.getLeft(this, ...arguments);
+        return QuatUtils.getLeft(this, out);
     };
 
     quatExtension.quat_getRight = function quat_getRight(out) {
-        return QuatUtils.getRight(this, ...arguments);
+        return QuatUtils.getRight(this, out);
     };
 
     quatExtension.quat_getUp = function quat_getUp(out = Vec3Utils.create()) {
-        return QuatUtils.getUp(this, ...arguments);
+        return QuatUtils.getUp(this, out);
     };
 
     quatExtension.quat_getDown = function quat_getDown(out) {
-        return QuatUtils.getDown(this, ...arguments);
+        return QuatUtils.getDown(this, out);
     };
 
     quatExtension.quat_setAxes = function quat_setAxes(left, up, forward) {
-        return QuatUtils.setAxes(this, ...arguments);
+        return QuatUtils.setAxes(this, left, up, forward);
     };
 
     quatExtension.quat_setForward = function quat_setForward(forward, up = null, left = null) {
-        return QuatUtils.setForward(this, ...arguments);
+        return QuatUtils.setForward(this, forward, up, left);
     };
 
     quatExtension.quat_setBackward = function quat_setBackward(backward, up = null, left = null) {
-        return QuatUtils.setBackward(this, ...arguments);
+        return QuatUtils.setBackward(this, backward, up, left);
     };
 
     quatExtension.quat_setUp = function quat_setUp(up, forward = null, left = null) {
-        return QuatUtils.setUp(this, ...arguments);
+        return QuatUtils.setUp(this, up, forward, left);
     };
 
     quatExtension.quat_setDown = function quat_setDown(down, forward = null, left = null) {
-        return QuatUtils.setDown(this, ...arguments);
+        return QuatUtils.setDown(this, down, forward, left);
     };
 
     quatExtension.quat_setLeft = function quat_setLeft(left, up = null, forward = null) {
-        return QuatUtils.setLeft(this, ...arguments);
+        return QuatUtils.setLeft(this, left, up, forward);
     };
 
     quatExtension.quat_setRight = function quat_setRight(right, up = null, forward = null) {
-        return QuatUtils.setRight(this, ...arguments);
+        return QuatUtils.setRight(this, right, up, forward);
     };
 
     quatExtension.quat_toWorld = function quat_toWorld(parentQuat, out = QuatUtils.create()) {
-        return QuatUtils.toWorld(this, ...arguments);
+        return QuatUtils.toWorld(this, parentQuat, out);
     };
 
     quatExtension.quat_toLocal = function quat_toLocal(parentQuat, out = QuatUtils.create()) {
-        return QuatUtils.toLocal(this, ...arguments);
+        return QuatUtils.toLocal(this, parentQuat, out);
     };
 
     quatExtension.quat_fromAxis = function quat_fromAxis(angle, axis) {
@@ -1021,95 +1030,95 @@ export function initArrayExtensionProtoype() {
     };
 
     quatExtension.quat_toRadians = function quat_toRadians(out = Vec3Utils.create()) {
-        return QuatUtils.toRadians(this, ...arguments);
+        return QuatUtils.toRadians(this, out);
     };
 
     quatExtension.quat_toDegrees = function quat_toDegrees(out = Vec3Utils.create()) {
-        return QuatUtils.toDegrees(this, ...arguments);
+        return QuatUtils.toDegrees(this, out);
     };
 
     quatExtension.quat_isNormalized = function quat_isNormalized(epsilon = MathUtils.EPSILON) {
-        return QuatUtils.isNormalized(this, ...arguments);
+        return QuatUtils.isNormalized(this, epsilon);
     };
 
     quatExtension.quat_addRotation = function quat_addRotation(rotation, out) {
-        return QuatUtils.addRotation(this, ...arguments);
+        return QuatUtils.addRotation(this, rotation, out);
     };
 
     quatExtension.quat_addRotationDegrees = function quat_addRotationDegrees(rotation, out) {
-        return QuatUtils.addRotationDegrees(this, ...arguments);
+        return QuatUtils.addRotationDegrees(this, rotation, out);
     };
 
     quatExtension.quat_addRotationRadians = function quat_addRotationRadians(rotation, out) {
-        return QuatUtils.addRotationRadians(this, ...arguments);
+        return QuatUtils.addRotationRadians(this, rotation, out);
     };
 
     quatExtension.quat_addRotationQuat = function quat_addRotationQuat(rotation, out = QuatUtils.create()) {
-        return QuatUtils.addRotationQuat(this, ...arguments);
+        return QuatUtils.addRotationQuat(this, rotation, out);
     };
 
     quatExtension.quat_subRotation = function quat_subRotation(rotation, out) {
-        return QuatUtils.subRotation(this, ...arguments);
+        return QuatUtils.subRotation(this, rotation, out);
     };
 
     quatExtension.quat_subRotationDegrees = function quat_subRotationDegrees(rotation, out) {
-        return QuatUtils.subRotationDegrees(this, ...arguments);
+        return QuatUtils.subRotationDegrees(this, rotation, out);
     };
 
     quatExtension.quat_subRotationRadians = function quat_subRotationRadians(rotation, out) {
-        return QuatUtils.subRotationRadians(this, ...arguments);
+        return QuatUtils.subRotationRadians(this, rotation, out);
     };
 
     quatExtension.quat_subRotationQuat = function quat_subRotationQuat(rotation, out = QuatUtils.create()) {
-        return QuatUtils.subRotationQuat(this, ...arguments);
+        return QuatUtils.subRotationQuat(this, rotation, out);
     };
 
     quatExtension.quat_rotationTo = function quat_rotationTo(to, out) {
-        return QuatUtils.rotationTo(this, ...arguments);
+        return QuatUtils.rotationTo(this, to, out);
     };
 
     quatExtension.quat_rotationToDegrees = function quat_rotationToDegrees(to, out) {
-        return QuatUtils.rotationToDegrees(this, ...arguments);
+        return QuatUtils.rotationToDegrees(this, to, out);
     };
 
     quatExtension.quat_rotationToRadians = function quat_rotationToRadians(to, out) {
-        return QuatUtils.rotationToRadians(this, ...arguments);
+        return QuatUtils.rotationToRadians(this, to, out);
     };
 
     quatExtension.quat_rotationToQuat = function quat_rotationToQuat(to, out) {
-        return QuatUtils.rotationToQuat(this, ...arguments);
+        return QuatUtils.rotationToQuat(this, to, out);
     };
 
     quatExtension.quat_rotationAroundAxis = function quat_rotationAroundAxis(axis, out) {
-        return QuatUtils.rotationAroundAxis(this, ...arguments);
+        return QuatUtils.rotationAroundAxis(this, axis, out);
     };
 
     quatExtension.quat_rotationAroundAxisDegrees = function quat_rotationAroundAxisDegrees(axis, out = Vec3Utils.create()) {
-        return QuatUtils.rotationAroundAxisDegrees(this, ...arguments);
+        return QuatUtils.rotationAroundAxisDegrees(this, axis, out);
     };
 
     quatExtension.quat_rotationAroundAxisRadians = function quat_rotationAroundAxisRadians(axis, out = Vec3Utils.create()) {
-        return QuatUtils.rotationAroundAxisRadians(this, ...arguments);
+        return QuatUtils.rotationAroundAxisRadians(this, axis, out);
     };
 
     quatExtension.quat_rotationAroundAxisQuat = function quat_rotationAroundAxisQuat(axis, out = QuatUtils.create()) {
-        return QuatUtils.rotationAroundAxisQuat(this, ...arguments);
+        return QuatUtils.rotationAroundAxisQuat(this, axis, out);
     };
 
     quatExtension.quat_getTwist = function quat_getTwist(axis, out = QuatUtils.create()) {
-        return QuatUtils.getTwist(this, ...arguments);
+        return QuatUtils.getTwist(this, axis, out);
     };
 
     quatExtension.quat_getSwing = function quat_getSwing(axis, out = QuatUtils.create()) {
-        return QuatUtils.getSwing(this, ...arguments);
+        return QuatUtils.getSwing(this, axis, out);
     };
 
     quatExtension.quat_getSwingFromTwist = function quat_getSwingFromTwist(twist, out = QuatUtils.create()) {
-        return QuatUtils.getSwingFromTwist(this, ...arguments);
+        return QuatUtils.getSwingFromTwist(this, twist, out);
     };
 
     quatExtension.quat_getTwistFromSwing = function quat_getTwistFromSwing(swing, out = QuatUtils.create()) {
-        return QuatUtils.getTwistFromSwing(this, ...arguments);
+        return QuatUtils.getTwistFromSwing(this, swing, out);
     };
 
     quatExtension.quat_fromTwistSwing = function quat_fromTwistSwing(twist, swing) {
@@ -1117,51 +1126,51 @@ export function initArrayExtensionProtoype() {
     };
 
     quatExtension.quat_toMatrix = function quat_toMatrix(out = Mat3Utils.create()) {
-        return QuatUtils.toMatrix(this, ...arguments);
+        return QuatUtils.toMatrix(this, out);
     };
 
     quatExtension.quat_rotate = function quat_rotate(rotation, out) {
-        return QuatUtils.rotate(this, ...arguments);
+        return QuatUtils.rotate(this, rotation, out);
     };
 
     quatExtension.quat_rotateDegrees = function quat_rotateDegrees(rotation, out) {
-        return QuatUtils.rotateDegrees(this, ...arguments);
+        return QuatUtils.rotateDegrees(this, rotation, out);
     };
 
     quatExtension.quat_rotateRadians = function quat_rotateRadians(rotation, out) {
-        return QuatUtils.rotateRadians(this, ...arguments);
+        return QuatUtils.rotateRadians(this, rotation, out);
     };
 
     quatExtension.quat_rotateQuat = function quat_rotateQuat(rotation, out) {
-        return QuatUtils.rotateQuat(this, ...arguments);
+        return QuatUtils.rotateQuat(this, rotation, out);
     };
 
     quatExtension.quat_rotateAxis = function quat_rotateAxis(angle, axis, out) {
-        return QuatUtils.rotateAxis(this, ...arguments);
+        return QuatUtils.rotateAxis(this, angle, axis, out);
     };
 
     quatExtension.quat_rotateAxisDegrees = function quat_rotateAxisDegrees(angle, axis, out) {
-        return QuatUtils.rotateAxisDegrees(this, ...arguments);
+        return QuatUtils.rotateAxisDegrees(this, angle, axis, out);
     };
 
     quatExtension.quat_rotateAxisRadians = function quat_rotateAxisRadians(angle, axis, out) {
-        return QuatUtils.rotateAxisRadians(this, ...arguments);
+        return QuatUtils.rotateAxisRadians(this, angle, axis, out);
     };
 
     quatExtension.quat_lerp = function quat_lerp(to, interpolationFactor, out = QuatUtils.create()) {
-        return QuatUtils.lerp(this, ...arguments);
+        return QuatUtils.lerp(this, to, interpolationFactor, out);
     };
 
     quatExtension.quat_interpolate = function quat_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
-        return QuatUtils.interpolate(this, ...arguments);
+        return QuatUtils.interpolate(this, to, interpolationFactor, easingFunction, out);
     };
 
     quatExtension.quat_slerp = function quat_slerp(to, interpolationFactor, out = QuatUtils.create()) {
-        return QuatUtils.slerp(this, ...arguments);
+        return QuatUtils.slerp(this, to, interpolationFactor, out);
     };
 
     quatExtension.quat_sinterpolate = function quat_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
-        return QuatUtils.sinterpolate(this, ...arguments);
+        return QuatUtils.sinterpolate(this, to, interpolationFactor, easingFunction, out);
     };
 
     // QUAT 2
@@ -1171,19 +1180,19 @@ export function initArrayExtensionProtoype() {
     // glMatrix Bridge
 
     quat2Extension.quat2_set = function quat2_set(x1, y1, z1, w1, x2, y2, z2, w2) {
-        return Quat2Utils.set(this, ...arguments);
+        return Quat2Utils.set(this, x1, y1, z1, w1, x2, y2, z2, w2);
     };
 
     quat2Extension.quat2_normalize = function quat2_normalize(out = Quat2Utils.create()) {
-        return Quat2Utils.normalize(this, ...arguments);
+        return Quat2Utils.normalize(this, out);
     };
 
     quat2Extension.quat2_invert = function quat2_invert(out = Quat2Utils.create()) {
-        return Quat2Utils.invert(this, ...arguments);
+        return Quat2Utils.invert(this, out);
     };
 
     quat2Extension.quat2_conjugate = function quat2_conjugate(out = Quat2Utils.create()) {
-        return Quat2Utils.conjugate(this, ...arguments);
+        return Quat2Utils.conjugate(this, out);
     };
 
     quat2Extension.quat2_copy = function quat2_copy(quat) {
@@ -1191,133 +1200,133 @@ export function initArrayExtensionProtoype() {
     };
 
     quat2Extension.quat2_identity = function quat2_identity() {
-        return Quat2Utils.identity(this, ...arguments);
+        return Quat2Utils.identity(this);
     };
 
     quat2Extension.quat2_getPosition = function quat2_getPosition(out = Vec3Utils.create()) {
-        return Quat2Utils.getPosition(this, ...arguments);
+        return Quat2Utils.getPosition(this, out);
     };
 
     quat2Extension.quat2_getRotation = function quat2_getRotation(out) {
-        return Quat2Utils.getRotation(this, ...arguments);
+        return Quat2Utils.getRotation(this, out);
     };
 
     quat2Extension.quat2_getRotationDegrees = function quat2_getRotationDegrees(out = Vec3Utils.create()) {
-        return Quat2Utils.getRotationDegrees(this, ...arguments);
+        return Quat2Utils.getRotationDegrees(this, out);
     };
 
     quat2Extension.quat2_getRotationRadians = function quat2_getRotationRadians(out = Vec3Utils.create()) {
-        return Quat2Utils.getRotationRadians(this, ...arguments);
+        return Quat2Utils.getRotationRadians(this, out);
     };
 
     quat2Extension.quat2_getRotationQuat = function quat2_getRotationQuat(out = QuatUtils.create()) {
-        return Quat2Utils.getRotationQuat(this, ...arguments);
+        return Quat2Utils.getRotationQuat(this, out);
     };
 
     quat2Extension.quat2_setPosition = function quat2_setPosition(position) {
-        return Quat2Utils.setPosition(this, ...arguments);
+        return Quat2Utils.setPosition(this, position);
     };
 
     quat2Extension.quat2_setRotation = function quat2_setRotation(rotation) {
-        return Quat2Utils.setRotation(this, ...arguments);
+        return Quat2Utils.setRotation(this, rotation);
     };
 
     quat2Extension.quat2_setRotationDegrees = function quat2_setRotationDegrees(rotation) {
-        return Quat2Utils.setRotationDegrees(this, ...arguments);
+        return Quat2Utils.setRotationDegrees(this, rotation);
     };
 
     quat2Extension.quat2_setRotationRadians = function quat2_setRotationRadians(rotation) {
-        return Quat2Utils.setRotationRadians(this, ...arguments);
+        return Quat2Utils.setRotationRadians(this, rotation);
     };
 
     quat2Extension.quat2_setRotationQuat = function quat2_setRotationQuat(rotation) {
-        return Quat2Utils.setRotationQuat(this, ...arguments);
+        return Quat2Utils.setRotationQuat(this, rotation);
     };
 
     quat2Extension.quat2_setPositionRotation = function quat2_setPositionRotation(position, rotation) {
-        return Quat2Utils.setPositionRotation(this, ...arguments);
+        return Quat2Utils.setPositionRotation(this, position, rotation);
     };
 
     quat2Extension.quat2_setPositionRotationDegrees = function quat2_setPositionRotationDegrees(position, rotation) {
-        return Quat2Utils.setPositionRotationDegrees(this, ...arguments);
+        return Quat2Utils.setPositionRotationDegrees(this, position, rotation);
     };
 
     quat2Extension.quat2_setPositionRotationRadians = function quat2_setPositionRotationRadians(position, rotation) {
-        return Quat2Utils.setPositionRotationRadians(this, ...arguments);
+        return Quat2Utils.setPositionRotationRadians(this, position, rotation);
     };
 
     quat2Extension.quat2_setPositionRotationQuat = function quat2_setPositionRotationQuat(position, rotation) {
-        return Quat2Utils.setPositionRotationQuat(this, ...arguments);
+        return Quat2Utils.setPositionRotationQuat(this, position, rotation);
     };
 
     // New Functions
 
     quat2Extension.quat2_isNormalized = function quat2_isNormalized(epsilon = MathUtils.EPSILON) {
-        return Quat2Utils.isNormalized(this, ...arguments);
+        return Quat2Utils.isNormalized(this, epsilon);
     };
 
     quat2Extension.quat2_length = function quat2_length() {
-        return Quat2Utils.length(this, ...arguments);
+        return Quat2Utils.length(this);
     };
 
     quat2Extension.quat2_lengthSquared = function quat2_lengthSquared() {
-        return Quat2Utils.lengthSquared(this, ...arguments);
+        return Quat2Utils.lengthSquared(this);
     };
 
     quat2Extension.quat2_mul = function quat2_mul(quat, out = Quat2Utils.create()) {
-        return Quat2Utils.mul(this, ...arguments);
+        return Quat2Utils.mul(this, quat, out);
     };
 
     quat2Extension.quat2_getAxes = function quat2_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-        return Quat2Utils.getAxes(this, ...arguments);
+        return Quat2Utils.getAxes(this, out);
     };
 
     quat2Extension.quat2_getForward = function quat2_getForward(out = Vec3Utils.create()) {
-        return Quat2Utils.getForward(this, ...arguments);
+        return Quat2Utils.getForward(this, out);
     };
 
     quat2Extension.quat2_getBackward = function quat2_getBackward(out) {
-        return Quat2Utils.getBackward(this, ...arguments);
+        return Quat2Utils.getBackward(this, out);
     };
 
     quat2Extension.quat2_getLeft = function quat2_getLeft(out = Vec3Utils.create()) {
-        return Quat2Utils.getLeft(this, ...arguments);
+        return Quat2Utils.getLeft(this, out);
     };
 
     quat2Extension.quat2_getRight = function quat2_getRight(out) {
-        return Quat2Utils.getRight(this, ...arguments);
+        return Quat2Utils.getRight(this, out);
     };
 
     quat2Extension.quat2_getUp = function quat2_getUp(out = Vec3Utils.create()) {
-        return Quat2Utils.getUp(this, ...arguments);
+        return Quat2Utils.getUp(this, out);
     };
 
     quat2Extension.quat2_getDown = function quat2_getDown(out) {
-        return Quat2Utils.getDown(this, ...arguments);
+        return Quat2Utils.getDown(this, out);
     };
 
     quat2Extension.quat2_toWorld = function quat2_toWorld(parentTransformQuat, out = Quat2Utils.create()) {
-        return Quat2Utils.toWorld(this, ...arguments);
+        return Quat2Utils.toWorld(this, parentTransformQuat, out);
     };
 
     quat2Extension.quat2_toLocal = function quat2_toLocal(parentTransformQuat, out = Quat2Utils.create()) {
-        return Quat2Utils.toLocal(this, ...arguments);
+        return Quat2Utils.toLocal(this, parentTransformQuat, out);
     };
 
     quat2Extension.quat2_rotateAxis = function quat2_rotateAxis(angle, axis, out) {
-        return Quat2Utils.rotateAxis(this, ...arguments);
+        return Quat2Utils.rotateAxis(this, angle, axis, out);
     };
 
     quat2Extension.quat2_rotateAxisDegrees = function quat2_rotateAxisDegrees(angle, axis, out) {
-        return Quat2Utils.rotateAxisDegrees(this, ...arguments);
+        return Quat2Utils.rotateAxisDegrees(this, angle, axis, out);
     };
 
     quat2Extension.quat2_rotateAxisRadians = function quat2_rotateAxisRadians(angle, axis, out = Quat2Utils.create()) {
-        return Quat2Utils.rotateAxisRadians(this, ...arguments);
+        return Quat2Utils.rotateAxisRadians(this, angle, axis, out);
     };
 
     quat2Extension.quat2_toMatrix = function quat2_toMatrix(out = Mat4Utils.create()) {
-        return Quat2Utils.toMatrix(this, ...arguments);
+        return Quat2Utils.toMatrix(this, out);
     };
 
     quat2Extension.quat2_fromMatrix = function quat2_fromMatrix(matrix) {
@@ -1325,19 +1334,19 @@ export function initArrayExtensionProtoype() {
     };
 
     quat2Extension.quat2_lerp = function quat2_lerp(to, interpolationFactor, out = Quat2Utils.create()) {
-        return Quat2Utils.lerp(this, ...arguments);
+        return Quat2Utils.lerp(this, to, interpolationFactor, out);
     };
 
     quat2Extension.quat2_interpolate = function quat2_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
-        return Quat2Utils.interpolate(this, ...arguments);
+        return Quat2Utils.interpolate(this, to, interpolationFactor, easingFunction, out);
     };
 
     quat2Extension.quat2_slerp = function quat2_slerp(to, interpolationFactor, out = Quat2Utils.create()) {
-        return Quat2Utils.slerp(this, ...arguments);
+        return Quat2Utils.slerp(this, to, interpolationFactor, out);
     };
 
     quat2Extension.quat2_sinterpolate = function quat2_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
-        return Quat2Utils.sinterpolate(this, ...arguments);
+        return Quat2Utils.sinterpolate(this, to, interpolationFactor, easingFunction, out);
     };
 
     // MATRIX 3
@@ -1350,21 +1359,25 @@ export function initArrayExtensionProtoype() {
         m00, m01, m02,
         m10, m11, m12,
         m20, m21, m22) {
-        return Mat3Utils.set(this, ...arguments);
+        return Mat3Utils.set(this,
+            m00, m01, m02,
+            m10, m11, m12,
+            m20, m21, m22
+        );
     };
 
     // New Functions
 
     mat3Extension.mat3_toDegrees = function mat3_toDegrees(out = Vec3Utils.create()) {
-        return Mat3Utils.toDegrees(this, ...arguments);
+        return Mat3Utils.toDegrees(this, out);
     };
 
     mat3Extension.mat3_toRadians = function mat3_toRadians(out = Vec3Utils.create()) {
-        return Mat3Utils.toRadians(this, ...arguments);
+        return Mat3Utils.toRadians(this, out);
     };
 
     mat3Extension.mat3_toQuat = function mat3_toQuat(out = QuatUtils.create()) {
-        return Mat3Utils.toQuat(this, ...arguments);
+        return Mat3Utils.toQuat(this, out);
     };
     mat3Extension.mat3_fromAxes = function mat3_fromAxes(leftAxis, upAxis, forwardAxis) {
         return Mat3Utils.fromAxes(leftAxis, upAxis, forwardAxis, this);
@@ -1381,7 +1394,12 @@ export function initArrayExtensionProtoype() {
         m10, m11, m12, m13,
         m20, m21, m22, m23,
         m30, m31, m32, m33) {
-        return Mat4Utils.set(this, ...arguments);
+        return Mat4Utils.set(this,
+            m00, m01, m02, m03,
+            m10, m11, m12, m13,
+            m20, m21, m22, m23,
+            m30, m31, m32, m33
+        );
     };
 
     mat4Extension.mat4_copy = function mat4_copy(matrix) {
@@ -1389,149 +1407,149 @@ export function initArrayExtensionProtoype() {
     };
 
     mat4Extension.mat4_identity = function mat4_identity() {
-        return Mat4Utils.identity(this, ...arguments);
+        return Mat4Utils.identity(this);
     };
 
     mat4Extension.mat4_invert = function mat4_invert(out = Mat4Utils.create()) {
-        return Mat4Utils.invert(this, ...arguments);
+        return Mat4Utils.invert(this, out);
     };
 
     mat4Extension.mat4_mul = function mat4_mul(matrix, out = Mat4Utils.create()) {
-        return Mat4Utils.mul(this, ...arguments);
+        return Mat4Utils.mul(this, matrix, out);
     };
 
     mat4Extension.mat4_scale = function mat4_scale(vector, out = Mat4Utils.create()) {
-        return Mat4Utils.scale(this, ...arguments);
+        return Mat4Utils.scale(this, vector, out);
     };
 
     mat4Extension.mat4_clone = function mat4_clone(out = Mat4Utils.create()) {
-        return Mat4Utils.clone(this, ...arguments);
+        return Mat4Utils.clone(this, out);
     };
 
     mat4Extension.mat4_getPosition = function mat4_getPosition(out = Vec3Utils.create()) {
-        return Mat4Utils.getPosition(this, ...arguments);
+        return Mat4Utils.getPosition(this, out);
     };
 
     mat4Extension.mat4_getRotation = function mat4_getRotation(out = Vec3Utils.create()) {
-        return Mat4Utils.getRotation(this, ...arguments);
+        return Mat4Utils.getRotation(this, out);
     };
 
     mat4Extension.mat4_getRotationDegrees = function mat4_getRotationDegrees(out = Vec3Utils.create()) {
-        return Mat4Utils.getRotationDegrees(this, ...arguments);
+        return Mat4Utils.getRotationDegrees(this, out);
     };
 
     mat4Extension.mat4_getRotationRadians = function mat4_getRotationRadians(out = Vec3Utils.create()) {
-        return Mat4Utils.getRotationRadians(this, ...arguments);
+        return Mat4Utils.getRotationRadians(this, out);
     };
 
     mat4Extension.mat4_getRotationQuat = function mat4_getRotationQuat(out = QuatUtils.create()) {
-        return Mat4Utils.getRotationQuat(this, ...arguments);
+        return Mat4Utils.getRotationQuat(this, out);
     };
 
     mat4Extension.mat4_getScale = function mat4_getScale(out = Vec3Utils.create()) {
-        return Mat4Utils.getScale(this, ...arguments);
+        return Mat4Utils.getScale(this, out);
     };
 
     // New Functions
 
     mat4Extension.mat4_setPosition = function mat4_setPosition(position) {
-        return Mat4Utils.setPosition(this, ...arguments);
+        return Mat4Utils.setPosition(this, position);
     };
 
     mat4Extension.mat4_setRotation = function mat4_setRotation(rotation) {
-        return Mat4Utils.setRotation(this, ...arguments);
+        return Mat4Utils.setRotation(this, rotation);
     };
 
     mat4Extension.mat4_setRotationDegrees = function mat4_setRotationDegrees(rotation) {
-        return Mat4Utils.setRotationDegrees(this, ...arguments);
+        return Mat4Utils.setRotationDegrees(this, rotation);
     };
 
     mat4Extension.mat4_setRotationRadians = function mat4_setRotationRadians(rotation) {
-        return Mat4Utils.setRotationRadians(this, ...arguments);
+        return Mat4Utils.setRotationRadians(this, rotation);
     };
 
     mat4Extension.mat4_setRotationQuat = function mat4_setRotationQuat(rotation) {
-        return Mat4Utils.setRotationQuat(this, ...arguments);
+        return Mat4Utils.setRotationQuat(this, rotation);
     };
 
     mat4Extension.mat4_setScale = function mat4_setScale(scale) {
-        return Mat4Utils.setScale(this, ...arguments);
+        return Mat4Utils.setScale(this, scale);
     };
 
     mat4Extension.mat4_setPositionRotationScale = function mat4_setPositionRotationScale(position, rotation, scale) {
-        return Mat4Utils.setPositionRotationScale(this, ...arguments);
+        return Mat4Utils.setPositionRotationScale(this, position, rotation, scale);
     };
 
     mat4Extension.mat4_setPositionRotationDegreesScale = function mat4_setPositionRotationDegreesScale(position, rotation, scale) {
-        return Mat4Utils.setPositionRotationDegreesScale(this, ...arguments);
+        return Mat4Utils.setPositionRotationDegreesScale(this, position, rotation, scale);
     };
 
     mat4Extension.mat4_setPositionRotationRadiansScale = function mat4_setPositionRotationRadiansScale(position, rotation, scale) {
-        return Mat4Utils.setPositionRotationRadiansScale(this, ...arguments);
+        return Mat4Utils.setPositionRotationRadiansScale(this, position, rotation, scale);
     };
 
     mat4Extension.mat4_setPositionRotationQuatScale = function mat4_setPositionRotationQuatScale(position, rotation, scale) {
-        return Mat4Utils.setPositionRotationQuatScale(this, ...arguments);
+        return Mat4Utils.setPositionRotationQuatScale(this, position, rotation, scale);
     };
 
     mat4Extension.mat4_setPositionRotation = function mat4_setPositionRotation(position, rotation) {
-        return Mat4Utils.setPositionRotation(this, ...arguments);
+        return Mat4Utils.setPositionRotation(this, position, rotation);
     };
 
     mat4Extension.mat4_setPositionRotationDegrees = function mat4_setPositionRotationDegrees(position, rotation) {
-        return Mat4Utils.setPositionRotationDegrees(this, ...arguments);
+        return Mat4Utils.setPositionRotationDegrees(this, position, rotation);
     };
 
     mat4Extension.mat4_setPositionRotationRadians = function mat4_setPositionRotationRadians(position, rotation) {
-        return Mat4Utils.setPositionRotationRadians(this, ...arguments);
+        return Mat4Utils.setPositionRotationRadians(this, position, rotation);
     };
 
     mat4Extension.mat4_setPositionRotationQuat = function mat4_setPositionRotationQuat(position, rotation) {
-        return Mat4Utils.setPositionRotationQuat(this, ...arguments);
+        return Mat4Utils.setPositionRotationQuat(this, position, rotation);
     };
 
     mat4Extension.mat4_getAxes = function mat4_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-        return Mat4Utils.getAxes(this, ...arguments);
+        return Mat4Utils.getAxes(this, out);
     };
 
     mat4Extension.mat4_getForward = function mat4_getForward(out = Vec3Utils.create()) {
-        return Mat4Utils.getForward(this, ...arguments);
+        return Mat4Utils.getForward(this, out);
     };
 
     mat4Extension.mat4_getBackward = function mat4_getBackward(out) {
-        return Mat4Utils.getBackward(this, ...arguments);
+        return Mat4Utils.getBackward(this, out);
     };
 
     mat4Extension.mat4_getLeft = function mat4_getLeft(out = Vec3Utils.create()) {
-        return Mat4Utils.getLeft(this, ...arguments);
+        return Mat4Utils.getLeft(this, out);
     };
 
     mat4Extension.mat4_getRight = function mat4_getRight(out) {
-        return Mat4Utils.getRight(this, ...arguments);
+        return Mat4Utils.getRight(this, out);
     };
 
     mat4Extension.mat4_getUp = function mat4_getUp(out = Vec3Utils.create()) {
-        return Mat4Utils.getUp(this, ...arguments);
+        return Mat4Utils.getUp(this, out);
     };
 
     mat4Extension.mat4_getDown = function mat4_getDown(out) {
-        return Mat4Utils.getDown(this, ...arguments);
+        return Mat4Utils.getDown(this, out);
     };
 
     mat4Extension.mat4_toWorld = function mat4_toWorld(parentTransformMatrix, out = Mat4Utils.create()) {
-        return Mat4Utils.toWorld(this, ...arguments);
+        return Mat4Utils.toWorld(this, parentTransformMatrix, out);
     };
 
     mat4Extension.mat4_toLocal = function mat4_toLocal(parentTransformMatrix, out = Mat4Utils.create()) {
-        return Mat4Utils.toLocal(this, ...arguments);
+        return Mat4Utils.toLocal(this, parentTransformMatrix, out);
     };
 
     mat4Extension.mat4_hasUniformScale = function mat4_hasUniformScale() {
-        return Mat4Utils.hasUniformScale(this, ...arguments);
+        return Mat4Utils.hasUniformScale(this);
     };
 
     mat4Extension.mat4_toQuat = function mat4_toQuat(out = Quat2Utils.create()) {
-        return Mat4Utils.toQuat(this, ...arguments);
+        return Mat4Utils.toQuat(this, out);
     };
 
     mat4Extension.mat4_fromQuat = function mat4_fromQuat(quat) {

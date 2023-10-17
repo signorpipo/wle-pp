@@ -259,7 +259,7 @@ export let rotateAxisRadians = function () {
 }();
 
 export function toMatrix(quat, out = Mat4Utils.create()) {
-    gl_mat4.fromQuat2(out, quat);
+    _customGLMatrixFromQuat2(out, quat);
     return out;
 }
 
@@ -366,3 +366,35 @@ export let Quat2Utils = {
     slerp,
     sinterpolate
 };
+
+
+
+
+// #WARN This is used in place of the glMatrix one to avoid the array allocation
+let _customGLMatrixFromQuat2 = function () {
+    let translation = vec3_utils_create();
+    return function _customGLMatrixFromQuat2(out, a) {
+        let bx = -a[0],
+            by = -a[1],
+            bz = -a[2],
+            bw = a[3],
+            ax = a[4],
+            ay = a[5],
+            az = a[6],
+            aw = a[7];
+
+        let magnitude = bx * bx + by * by + bz * bz + bw * bw;
+        //Only scale if it makes sense
+        if (magnitude > 0) {
+            translation[0] = ((ax * bw + aw * bx + ay * bz - az * by) * 2) / magnitude;
+            translation[1] = ((ay * bw + aw * by + az * bx - ax * bz) * 2) / magnitude;
+            translation[2] = ((az * bw + aw * bz + ax * by - ay * bx) * 2) / magnitude;
+        } else {
+            translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2;
+            translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
+            translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
+        }
+        gl_mat4.fromRotationTranslation(out, a, translation);
+        return out;
+    };
+}();

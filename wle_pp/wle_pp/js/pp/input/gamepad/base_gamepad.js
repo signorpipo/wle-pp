@@ -7,14 +7,18 @@ export class BaseGamepad {
     constructor(handedness) {
         this._myHandedness = handedness;
 
-        this._myButtonInfos = [];
+        this._myButtonInfos = {};
+        this._myButtonInfosIDs = [];
         for (let key in GamepadButtonID) {
             this._myButtonInfos[GamepadButtonID[key]] = new GamepadButtonInfo(GamepadButtonID[key], this._myHandedness);
+            this._myButtonInfosIDs.push(GamepadButtonID[key]);
         }
 
-        this._myAxesInfos = [];
+        this._myAxesInfos = {};
+        this._myAxesInfosIDs = [];
         for (let key in GamepadAxesID) {
             this._myAxesInfos[GamepadAxesID[key]] = new GamepadAxesInfo(GamepadAxesID[key], this._myHandedness);
+            this._myAxesInfosIDs.push(GamepadAxesID[key]);
         }
 
         this._myButtonEmitters = [];    // Signature: listener(ButtonInfo, Gamepad)
@@ -165,7 +169,9 @@ export class BaseGamepad {
     }
 
     _preUpdateButtonInfos() {
-        for (let info of this._myButtonInfos) {
+        for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+            let id = this._myButtonInfosIDs[i];
+            let info = this._myButtonInfos[id];
             info.myPrevIsPressed = info.myPressed;
             info.myPrevIsTouched = info.myTouched;
             info.myPrevValue = info.myValue;
@@ -192,7 +198,9 @@ export class BaseGamepad {
     }
 
     _postUpdateButtonInfos(dt) {
-        for (let info of this._myButtonInfos) {
+        for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+            let id = this._myButtonInfosIDs[i];
+            let info = this._myButtonInfos[id];
             if (info.myPressed) {
                 info.myTimePressed += dt;
                 if (!info.myPrevIsPressed) {
@@ -270,9 +278,10 @@ export class BaseGamepad {
             }
         }
 
-        for (let key in GamepadButtonID) {
-            let buttonInfo = this._myButtonInfos[GamepadButtonID[key]];
-            let buttonEventEmitters = this._myButtonEmitters[GamepadButtonID[key]];
+        for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+            let id = this._myButtonInfosIDs[i];
+            let buttonInfo = this._myButtonInfos[id];
+            let buttonEventEmitters = this._myButtonEmitters[id];
 
             // PRESSED
             if (buttonInfo.myPressed && !buttonInfo.myPrevIsPressed) {
@@ -330,7 +339,9 @@ export class BaseGamepad {
     }
 
     _preUpdateAxesInfos() {
-        for (let info of this._myAxesInfos) {
+        for (let i = 0; i < this._myAxesInfosIDs.length; i++) {
+            let id = this._myAxesInfosIDs[i];
+            let info = this._myAxesInfos[id];
             info.myPrevAxes[0] = info.myAxes[0];
             info.myPrevAxes[1] = info.myAxes[1];
         }
@@ -383,13 +394,21 @@ export class BaseGamepad {
             let hapticActuators = this._getHapticActuators();
             if (hapticActuators.length > 0) {
                 if (this._myPulseInfo.myIntensity > 0) {
-                    for (let hapticActuator of hapticActuators) {
-                        hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(500, this._myPulseInfo.myDuration * 1000)); // Duration is managed by this class
+                    for (let i = 0; i < hapticActuators.length; i++) {
+                        let hapticActuator = hapticActuators[i];
+                        hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); // Duration is managed by this class
                     }
                     this._myPulseInfo.myDevicePulsing = true;
                 } else if (this._myPulseInfo.myDevicePulsing) {
-                    for (let hapticActuator of hapticActuators) {
-                        hapticActuator.reset();
+                    for (let i = 0; i < hapticActuators.length; i++) {
+                        let hapticActuator = hapticActuators[i];
+                        hapticActuator.pulse(0, 1);
+
+                        try {
+                            hapticActuator.reset();
+                        } catch (error) {
+                            // Do nothing
+                        }
                     }
                     this._myPulseInfo.myDevicePulsing = false;
                 }

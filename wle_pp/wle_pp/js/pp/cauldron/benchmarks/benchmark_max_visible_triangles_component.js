@@ -509,6 +509,6 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     }
 
     onDestroy() {
-        Globals.getObjectPoolManager(this.engine)?.removePool(this._myPoolID);
+        Globals.getObjectPoolManager(this.engine)?.destroyPool(this._myPoolID);
     }
 }

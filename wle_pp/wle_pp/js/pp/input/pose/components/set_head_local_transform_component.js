@@ -54,5 +54,5 @@ SetHeadLocalTransformComponent.prototype.onPoseUpdated = function () {
                 this.object.pp_setTransformLocalQuat(pose.getTransformQuat(headPoseTransform, null));
             }
         }
-    }
+    };
 }();

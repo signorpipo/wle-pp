@@ -88,6 +88,7 @@ export * from "./cauldron/utils/save_utils";
 export * from "./cauldron/utils/text_utils";
 export * from "./cauldron/utils/xr_utils";
 export * from "./cauldron/utils/browser_utils";
+export * from "./cauldron/utils/analytics_utils";
 
 export * from "./cauldron/physics/physics_utils";
 export * from "./cauldron/physics/physics_raycast_params";

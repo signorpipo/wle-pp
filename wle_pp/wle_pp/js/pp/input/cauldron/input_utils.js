@@ -21,7 +21,7 @@ export function getInputSource(handedness, inputSourceType = null, engine = Glob
     let inputSource = null;
 
     let xrSession = XRUtils.getSession(engine);
-    if (xrSession != null && xrSession.inputSources) {
+    if (xrSession != null && xrSession.inputSources != null) {
         for (let i = 0; i < xrSession.inputSources.length; i++) {
             let input = xrSession.inputSources[i];
 

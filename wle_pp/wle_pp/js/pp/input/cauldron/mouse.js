@@ -18,9 +18,11 @@ export class Mouse {
     constructor(engine = Globals.getMainEngine()) {
         this._myEngine = engine;
 
-        this._myButtonInfos = new Map();
+        this._myButtonInfos = {};
+        this._myButtonInfosIDs = [];
         for (let key in MouseButtonID) {
-            this._myButtonInfos.set(MouseButtonID[key], this._createButtonInfo());
+            this._myButtonInfos[MouseButtonID[key]] = this._createButtonInfo();
+            this._myButtonInfosIDs.push(MouseButtonID[key]);
         }
 
         this._myPreventContextMenuEventListener = this._preventContextMenu.bind(this);
@@ -45,7 +47,8 @@ export class Mouse {
         this._myPointerID = null;
         this._myLastValidPointerEvent = null;
 
-        this._myPointerEventValidCallbacks = new Map();      // Signature: callback(event)
+        this._myPointerEventValidCallbacks = {};      // Signature: callback(event)
+        this._myPointerEventValidCallbacksIDs = [];
 
         this._myPointerMoveEventListener = null;
         this._myPointerDownEventListener = null;
@@ -92,7 +95,9 @@ export class Mouse {
             }
         }
 
-        for (let buttonInfo of this._myButtonInfos.values()) {
+        for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+            let id = this._myButtonInfosIDs[i];
+            let buttonInfo = this._myButtonInfos[id];
             buttonInfo.myPressStart = buttonInfo.myPressStartToProcess;
             buttonInfo.myPressEnd = buttonInfo.myPressEndToProcess;
             buttonInfo.myPressStartToProcess = false;
@@ -124,8 +129,8 @@ export class Mouse {
     isButtonPressed(buttonID) {
         let pressed = false;
 
-        if (this._myButtonInfos.has(buttonID)) {
-            pressed = this._myButtonInfos.get(buttonID).myPressed;
+        if (this._myButtonInfosIDs[buttonID] != null) {
+            pressed = this._myButtonInfos[buttonID].myPressed;
         }
 
         return pressed;
@@ -134,7 +139,9 @@ export class Mouse {
     isAnyButtonPressed() {
         let pressed = false;
 
-        for (let buttonInfo of this._myButtonInfos.values()) {
+        for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+            let id = this._myButtonInfosIDs[i];
+            let buttonInfo = this._myButtonInfos[id];
             if (buttonInfo.myPressed) {
                 pressed = true;
                 break;
@@ -147,8 +154,8 @@ export class Mouse {
     isButtonPressStart(buttonID) {
         let pressStart = false;
 
-        if (this._myButtonInfos.has(buttonID)) {
-            pressStart = this._myButtonInfos.get(buttonID).myPressStart;
+        if (this._myButtonInfosIDs[buttonID] != null) {
+            pressStart = this._myButtonInfos[buttonID].myPressStart;
         }
 
         return pressStart;
@@ -157,8 +164,8 @@ export class Mouse {
     isButtonPressEnd(buttonID = null) {
         let pressEnd = false;
 
-        if (this._myButtonInfos.has(buttonID)) {
-            pressEnd = this._myButtonInfos.get(buttonID).myPressEnd;
+        if (this._myButtonInfosIDs[buttonID] != null) {
+            pressEnd = this._myButtonInfos[buttonID].myPressEnd;
         }
 
         return pressEnd;
@@ -277,11 +284,13 @@ export class Mouse {
 
     // Can be used to specify that only some pointerType are valid (eg: mouse, touch, pen) or just some target (eg: Globals.getCanvas(this._myEngine))
     addPointerEventValidCallback(id, callback) {
-        this._myPointerEventValidCallbacks.set(id, callback);
+        this._myPointerEventValidCallbacks[id] = callback;
+        this._myPointerEventValidCallbacksIDs.push(id);
     }
 
     removePointerEventValidCallback(id) {
-        this._myPointerEventValidCallbacks.delete(id);
+        delete this._myPointerEventValidCallbacks[id];
+        this._myPointerEventValidCallbacksIDs.pp_removeEqual(id);
     }
 
     isPointerUpOnPointerLeave() {
@@ -365,7 +374,7 @@ export class Mouse {
     }
 
     _onPointerDown(event) {
-        let buttonInfo = this._myButtonInfos.get(event.button);
+        let buttonInfo = this._myButtonInfos[event.button];
         if (!buttonInfo.myPressed) {
             buttonInfo.myPressed = true;
             buttonInfo.myPressStartToProcess = true;
@@ -373,7 +382,7 @@ export class Mouse {
     }
 
     _onPointerUp(event) {
-        let buttonInfo = this._myButtonInfos.get(event.button);
+        let buttonInfo = this._myButtonInfos[event.button];
         if (buttonInfo.myPressed) {
             buttonInfo.myPressed = false;
             buttonInfo.myPressEndToProcess = true;
@@ -388,7 +397,9 @@ export class Mouse {
         this._myMoving = false;
 
         if (this._myPointerUpOnPointerLeave) {
-            for (let buttonInfo of this._myButtonInfos.values()) {
+            for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+                let id = this._myButtonInfosIDs[i];
+                let buttonInfo = this._myButtonInfos[id];
                 if (buttonInfo.myPressed) {
                     buttonInfo.myPressed = false;
                     buttonInfo.myPressEndToProcess = true;
@@ -453,7 +464,9 @@ export class Mouse {
 
         let valid = true;
 
-        for (let callback of this._myPointerEventValidCallbacks.values()) {
+        for (let i = 0; i < this._myPointerEventValidCallbacksIDs.length; i++) {
+            let id = this._myPointerEventValidCallbacksIDs[i];
+            let callback = this._myPointerEventValidCallbacks[id];
             if (!callback(event)) {
                 valid = false;
                 break;

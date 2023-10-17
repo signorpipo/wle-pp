@@ -196,7 +196,7 @@ export class PlayerTransformManager {
     start() {
         this.resetToReal(true);
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myParams.myEngine);
+        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myParams.myEngine);
     }
 
     getParams() {
@@ -480,7 +480,7 @@ export class PlayerTransformManager {
         params.myHorizontalPositionCheckVerticalDirectionType = 0;
 
         params.myHeight = params.myRadius; // On purpose the height "radius" is half, to avoid hitting before with head than body collision (through height)
-        params.myPositionOffsetLocal.vec3_set(0, -params.myRadius / 2, 0)
+        params.myPositionOffsetLocal.vec3_set(0, -params.myRadius / 2, 0);
 
         params.myCheckHeight = true;
         params.myCheckHeightVerticalMovement = true;
@@ -585,7 +585,7 @@ export class PlayerTransformManager {
         params.myDebugMovementEnabled = false;
     }
 
-    _onXRSessionStart(manualCall, session) {
+    _onXRSessionStart(session) {
         if (this._myActive) {
             if (this._myParams.myResetToValidOnEnterSession) {
                 this._myResetRealOnSynced = true;
@@ -625,18 +625,20 @@ export class PlayerTransformManager {
 // IMPLEMENTATION
 
 PlayerTransformManager.prototype.getDistanceToReal = function () {
+    let position = vec3_create();
     let realPosition = vec3_create();
     return function getDistanceToReal() {
         realPosition = this.getPositionReal(realPosition);
-        return realPosition.vec3_distance(this.getPosition());
+        return realPosition.vec3_distance(this.getPosition(position));
     };
 }();
 
 PlayerTransformManager.prototype.getDistanceToRealHead = function () {
+    let position = vec3_create();
     let realPosition = vec3_create();
     return function getDistanceToRealHead() {
         realPosition = this.getPositionHeadReal(realPosition);
-        return realPosition.vec3_distance(this.getPositionHead());
+        return realPosition.vec3_distance(this.getPositionHead(position));
     };
 }();
 
@@ -725,7 +727,7 @@ PlayerTransformManager.prototype.update = function () {
         if (this._myParams.myDebugEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
             this._debugUpdate(dt);
         }
-    }
+    };
 }();
 
 PlayerTransformManager.prototype._updateReal = function () {
@@ -982,7 +984,7 @@ PlayerTransformManager.prototype._updateReal = function () {
                 this._myParams.myMovementCollisionCheckParams.myDebugEnabled = debugBackup;
             }
         }
-    }
+    };
 }();
 
 PlayerTransformManager.prototype.move = function () {

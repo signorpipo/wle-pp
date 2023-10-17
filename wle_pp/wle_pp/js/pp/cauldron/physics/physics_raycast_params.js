@@ -71,7 +71,8 @@ export class RaycastResults {
     getFirstHitInsideCollision() {
         let firstHit = null;
 
-        for (let hit of this.myHits) {
+        for (let i = 0; i < this.myHits.length; i++) {
+            let hit = this.myHits[i];
             if (hit.myInsideCollision) {
                 firstHit = hit;
                 break;
@@ -84,7 +85,8 @@ export class RaycastResults {
     getFirstHitOutsideCollision() {
         let firstHit = null;
 
-        for (let hit of this.myHits) {
+        for (let i = 0; i < this.myHits.length; i++) {
+            let hit = this.myHits[i];
             if (!hit.myInsideCollision) {
                 firstHit = hit;
                 break;
@@ -97,7 +99,8 @@ export class RaycastResults {
     getHitsInsideCollision() {
         let hits = [];
 
-        for (let hit of this.myHits) {
+        for (let i = 0; i < this.myHits.length; i++) {
+            let hit = this.myHits[i];
             if (hit.myInsideCollision) {
                 hits.push(hit);
             }
@@ -109,7 +112,8 @@ export class RaycastResults {
     getHitsOutsideCollision() {
         let hits = [];
 
-        for (let hit of this.myHits) {
+        for (let i = 0; i < this.myHits.length; i++) {
+            let hit = this.myHits[i];
             if (!hit.myInsideCollision) {
                 hits.push(hit);
             }
@@ -137,7 +141,9 @@ export class RaycastResults {
             this._myUnusedHits = [];
         }
 
-        this._myUnusedHits.push(...this.myHits);
+        for (let i = 0; i < this.myHits.length; i++) {
+            this._myUnusedHits.push(this.myHits[i]);
+        }
 
         this.myHits.pp_clear();
     }

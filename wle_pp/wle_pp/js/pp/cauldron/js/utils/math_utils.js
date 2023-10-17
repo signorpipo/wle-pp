@@ -1,8 +1,25 @@
+
+// #CREDITS https://easings.net
 export let EasingFunction = {
     linear: t => t,
-    easeIn: t => t * t * t,
-    easeOut: t => (t - 1) * (t - 1) * (t - 1) + 1,
-    easeInOut: t => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+
+    easeInVeryWeak: t => 1 - Math.cos((t * Math.PI) / 2),
+    easeInWeak: t => Math.pow(t, 2),
+    easeIn: t => Math.pow(t, 3),
+    easeInStrong: t => Math.pow(t, 4),
+    easeInVeryStrong: t => Math.pow(t, 5),
+
+    easeOutVeryWeak: t => Math.sin((t * Math.PI) / 2),
+    easeOutWeak: t => 1 - Math.pow(1 - t, 2),
+    easeOut: t => 1 - Math.pow(1 - t, 3),
+    easeOutStrong: t => 1 - Math.pow(1 - t, 4),
+    easeOutVeryStrong: t => 1 - Math.pow(1 - t, 5),
+
+    easeInOutVeryWeak: t => -(Math.cos(t * Math.PI) - 1) / 2,
+    easeInOutWeak: t => t < 0.5 ? 2 * Math.pow(t, 2) : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    easeInOut: t => t < 0.5 ? 4 * Math.pow(t, 3) : 1 - Math.pow(-2 * t + 2, 3) / 2,
+    easeInOutStrong: t => t < 0.5 ? 8 * Math.pow(t, 4) : 1 - Math.pow(-2 * t + 2, 4) / 2,
+    easeInOutVeryStrong: t => t < 0.5 ? 16 * Math.pow(t, 5) : 1 - Math.pow(-2 * t + 2, 5) / 2
 };
 
 export let EPSILON = 0.000001;

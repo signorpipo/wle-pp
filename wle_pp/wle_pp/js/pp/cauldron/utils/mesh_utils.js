@@ -252,7 +252,7 @@ export let invert = function () {
             }
 
             if (normalAttribute != null && invertedNormalAttribute != null) {
-                normalAttribute.get(i, normal)
+                normalAttribute.get(i, normal);
                 normal.vec3_negate(normal);
                 invertedNormalAttribute.set(i, normal);
             }
@@ -348,7 +348,7 @@ export let makeDoubleSided = function () {
             }
 
             if (normalAttribute != null && doubleSidedNormalAttribute != null) {
-                normalAttribute.get(i, normal)
+                normalAttribute.get(i, normal);
                 doubleSidedNormalAttribute.set(i * 2, normal);
 
                 let invertedNormal = normal.vec3_negate();

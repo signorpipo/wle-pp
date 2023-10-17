@@ -1,4 +1,5 @@
 import { GamepadAxesID, GamepadButtonID } from "../../input/gamepad/gamepad_buttons";
+import { vec2_create } from "../../plugin/js/extensions/array_extension";
 import { Globals } from "../../pp/globals";
 import { ToolHandedness } from "../cauldron/tool_types";
 import { WidgetFrame, WidgetParams } from "../widget_frame/widget_frame";
@@ -803,7 +804,7 @@ export class ConsoleVRWidget {
 
     _updateScrollWithThumbstick(dt) {
         if (this._myWidgetFrame.isVisible() && this._myGamepadScrollEnabled) {
-            let axes = [0, 0];
+            let axes = vec2_create(0, 0);
             if (this._myConfig.myScrollThumbstickHandedness == ToolHandedness.LEFT) {
                 axes = this._myLeftGamepad.getAxesInfo(GamepadAxesID.THUMBSTICK).myAxes;
             } else if (this._myConfig.myScrollThumbstickHandedness == ToolHandedness.RIGHT) {

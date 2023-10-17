@@ -61,6 +61,8 @@ export class AudioPlayer {
         if (this._myAudioSetup.myAutoPlay) {
             this.play();
         }
+
+        this._myDestroyed = false;
     }
 
     isValid() {
@@ -245,5 +247,15 @@ export class AudioPlayer {
                 }.bind(this));
             }
         }
+    }
+
+    destroy() {
+        this._myDestroyed = true;
+
+        this._myAudio.unload();
+    }
+
+    isDestroyed() {
+        return this._myDestroyed;
     }
 }

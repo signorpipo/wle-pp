@@ -408,7 +408,7 @@ export class PlayerLocomotion {
 
         this._myStarted = true;
 
-        let currentActive = this._myActive
+        let currentActive = this._myActive;
         this._myActive = !this._myActive;
         this.setActive(currentActive);
     }

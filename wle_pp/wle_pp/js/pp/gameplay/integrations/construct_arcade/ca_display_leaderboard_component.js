@@ -6,6 +6,8 @@ import { CAUtils } from "./ca_utils";
 export class CADisplayLeaderboardComponent extends Component {
     static TypeName = "pp-ca-display-leaderboard";
     static Properties = {
+        _myUsernamesTextObject: Property.object(),
+        _myScoresTextObject: Property.object(),
         _myLeaderboardID: Property.string(""),
         _myLocal: Property.bool(false),
         _myAscending: Property.bool(false),
@@ -17,7 +19,7 @@ export class CADisplayLeaderboardComponent extends Component {
     };
 
     init() {
-        this._myNamesTextComponent = null;
+        this._myUsernamesTextComponent = null;
         this._myScoresTextComponent = null;
 
         this._myStarted = false;
@@ -36,12 +38,12 @@ export class CADisplayLeaderboardComponent extends Component {
         if (!this._myStarted) {
             this._myStarted = true;
 
-            let namesObject = this.object.pp_getObjectByName("Names");
-            let scoresObject = this.object.pp_getObjectByName("Scores");
+            if (this._myUsernamesTextObject != null) {
+                this._myUsernamesTextComponent = this._myUsernamesTextObject.pp_getComponent(TextComponent);
+            }
 
-            if (namesObject != null && scoresObject != null) {
-                this._myNamesTextComponent = namesObject.pp_getComponent(TextComponent);
-                this._myScoresTextComponent = scoresObject.pp_getComponent(TextComponent);
+            if (this._myScoresTextObject != null) {
+                this._myScoresTextComponent = this._myScoresTextObject.pp_getComponent(TextComponent);
             }
 
             this.updateLeaderboard();
@@ -49,7 +51,7 @@ export class CADisplayLeaderboardComponent extends Component {
     }
 
     updateLeaderboard() {
-        CAUtils.getLeaderboard(this._myLeaderboardID, this._myAscending, this._myLocal, this._myScoresAmount, this._onLeaderboardRetrieved.bind(this), undefined, undefined, this.engine);
+        CAUtils.getLeaderboard(this._myLeaderboardID, this._myAscending, this._myLocal, this._myScoresAmount, this._onLeaderboardRetrieved.bind(this));
     }
 
     _onLeaderboardRetrieved(leaderboard) {
@@ -84,8 +86,11 @@ export class CADisplayLeaderboardComponent extends Component {
             scoresText = scoresText.concat(convertedScore, newlines);
         }
 
-        if (this._myNamesTextComponent != null && this._myScoresTextComponent != null) {
-            this._myNamesTextComponent.text = namesText;
+        if (this._myUsernamesTextComponent != null) {
+            this._myUsernamesTextComponent.text = namesText;
+        }
+
+        if (this._myScoresTextComponent != null) {
             this._myScoresTextComponent.text = scoresText;
         }
     }

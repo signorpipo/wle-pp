@@ -79,4 +79,4 @@ export let ConsoleOriginalFunctions = {
     getDebug,
     getAssert,
     getClear
-}
+};

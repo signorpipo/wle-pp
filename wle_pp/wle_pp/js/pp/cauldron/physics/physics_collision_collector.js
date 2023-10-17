@@ -57,13 +57,13 @@ export class PhysicsCollisionCollector {
         if (this._myActive != active) {
             this._myActive = active;
 
-            this._myCollisions = [];
+            this._myCollisions.pp_clear();
 
-            this._myCollisionsStart = [];
-            this._myCollisionsEnd = [];
+            this._myCollisionsStart.pp_clear();
+            this._myCollisionsEnd.pp_clear();
             this._myUpdateActive = false;
-            this._myCollisionsStartToProcess = [];
-            this._myCollisionsEndToProcess = [];
+            this._myCollisionsStartToProcess.pp_clear();
+            this._myCollisionsEndToProcess.pp_clear();
 
             if (this._myActive) {
                 this._myCollisionCallbackID = this._myPhysX.onCollision(this._onCollision.bind(this));
@@ -87,11 +87,15 @@ export class PhysicsCollisionCollector {
 
         this._myUpdateActive = true;
 
-        this._myCollisionsStart = this._myCollisionsStartToProcess;
-        this._myCollisionsStartToProcess = [];
+        let prevCollisionsStartToProcess = this._myCollisionsStartToProcess;
+        this._myCollisionsStartToProcess = this._myCollisionsStart;
+        this._myCollisionsStartToProcess.pp_clear();
+        this._myCollisionsStart = prevCollisionsStartToProcess;
 
-        this._myCollisionsEnd = this._myCollisionsEndToProcess;
-        this._myCollisionsEndToProcess = [];
+        let prevCollisionsEndToProcess = this._myCollisionsEndToProcess;
+        this._myCollisionsEndToProcess = this._myCollisionsEnd;
+        this._myCollisionsEndToProcess.pp_clear();
+        this._myCollisionsEnd = prevCollisionsEndToProcess;
 
         if (this._myTrigger) {
             this._triggerDesyncFix(dt);
@@ -206,28 +210,7 @@ export class PhysicsCollisionCollector {
     }
 
     _triggerDesyncFix(dt) {
-        this._myTriggerDesyncFixDelay.update(dt);
-        if (this._myTriggerDesyncFixDelay.isDone()) {
-            this._myTriggerDesyncFixDelay.start();
-
-            let collisionsToEnd = this._myCollisions.pp_findAll(function (element) {
-                let physX = element.pp_getComponentSelf(PhysXComponent);
-                return physX == null || !physX.active;
-            });
-
-            if (collisionsToEnd.length > 0) {
-                //console.error("DESYNC RESOLVED");
-
-                for (let collision of collisionsToEnd) {
-                    let physX = collision.pp_getComponentSelf(PhysXComponent);
-                    if (physX) {
-                        this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physX);
-                    } else {
-                        console.error("NO PHYSX, HOW?");
-                    }
-                }
-            }
-        }
+        // Implemented outside class definition
     }
 
     destroy() {
@@ -243,3 +226,38 @@ export class PhysicsCollisionCollector {
         return this._myDestroyed;
     }
 }
+
+
+
+
+// IMPLEMENTATION
+
+PhysicsCollisionCollector.prototype._triggerDesyncFix = function () {
+    let findAllCallback = function (element) {
+        let physX = element.pp_getComponentSelf(PhysXComponent);
+        return physX == null || !physX.active;
+    };
+    return function _triggerDesyncFix(dt) {
+        this._myTriggerDesyncFixDelay.update(dt);
+        if (this._myTriggerDesyncFixDelay.isDone()) {
+            this._myTriggerDesyncFixDelay.start();
+
+            let collisionsToEnd = this._myCollisions.pp_findAll(findAllCallback);
+
+            if (collisionsToEnd.length > 0) {
+                //console.error("DESYNC RESOLVED");
+
+                for (let i = 0; i < collisionsToEnd.length; i++) {
+                    let collision = collisionsToEnd[i];
+
+                    let physX = collision.pp_getComponentSelf(PhysXComponent);
+                    if (physX) {
+                        this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physX);
+                    } else {
+                        console.error("NO PHYSX, HOW?");
+                    }
+                }
+            }
+        }
+    };
+}();

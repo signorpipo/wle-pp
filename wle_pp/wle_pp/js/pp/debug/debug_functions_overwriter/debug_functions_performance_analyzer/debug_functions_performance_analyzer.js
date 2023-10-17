@@ -94,8 +94,8 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
 
         let originalPush = Array.prototype["push"];
         let originalPop = Array.prototype["pop"];
-        this._myExecutionTimes.myOriginalFunctionOverheadExecutionTimes.push = function () { return originalPush.bind(this)(...arguments); }
-        this._myExecutionTimes.myOriginalFunctionOverheadExecutionTimes.pop = function () { return originalPop.bind(this)(...arguments); }
+        this._myExecutionTimes.myOriginalFunctionOverheadExecutionTimes.push = function () { return originalPush.bind(this)(...arguments); };
+        this._myExecutionTimes.myOriginalFunctionOverheadExecutionTimes.pop = function () { return originalPop.bind(this)(...arguments); };
     }
 
     overwriteFunctions() {
@@ -265,7 +265,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
             } else {
                 let maxResults = new DebugFunctionPerformanceAnalysisResults();
                 maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property));
-                this._myFunctionPerformanceAnalysisMaxResults.set(property, maxResults)
+                this._myFunctionPerformanceAnalysisMaxResults.set(property, maxResults);
             }
         }
 
@@ -307,7 +307,7 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
 
                             let errorToThrow = null;
                             let returnValue = undefined;
-                            let bindFunction = null;
+                            let boundOriginalFunction = null;
                             let startOriginalFunctionTime = 0;
                             let endOriginalFunctionTime = 0;
                             let originalFunctionOverheadExecutionTime = 0;
@@ -323,9 +323,9 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
                                 endOriginalFunctionTime = window.performance.now();
 
                                 try {
-                                    bindFunction = originalFunction.bind(this);
+                                    boundOriginalFunction = originalFunction.bind(this);
                                     startOriginalFunctionTime = window.performance.now();
-                                    returnValue = bindFunction(...arguments);
+                                    returnValue = boundOriginalFunction(...arguments);
                                     endOriginalFunctionTime = window.performance.now();
                                 } catch (error) {
                                     endOriginalFunctionTime = window.performance.now();
@@ -333,8 +333,8 @@ export class DebugFunctionsPerformanceAnalyzer extends DebugFunctionsOverwriter 
                                 }
                             } else {
                                 try {
-                                    bindFunction = originalFunction.bind(this);
-                                    returnValue = bindFunction(...arguments);
+                                    boundOriginalFunction = originalFunction.bind(this);
+                                    returnValue = boundOriginalFunction(...arguments);
                                 } catch (error) {
                                     errorToThrow = error;
                                 }

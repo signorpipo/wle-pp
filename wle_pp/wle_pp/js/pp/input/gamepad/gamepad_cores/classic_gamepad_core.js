@@ -119,8 +119,10 @@ export class ClassicGamepadCore extends GamepadCore {
 
         let classicGamepad = this._getClassicGamepad();
         if (classicGamepad != null && this.isGamepadCoreActive()) {
-            if (classicGamepad.hapticActuators != null && classicGamepad.hapticActuators.length > 0) {
-                this._myHapticActuators.push(...classicGamepad.hapticActuators);
+            if (classicGamepad.hapticActuators != null) {
+                for (let i = 0; i < classicGamepad.hapticActuators.length; i++) {
+                    this._myHapticActuators.push(classicGamepad.hapticActuators[i]);
+                }
             }
 
             if (classicGamepad.vibrationActuator != null) {
@@ -139,7 +141,8 @@ export class ClassicGamepadCore extends GamepadCore {
                 classicGamepad = this._myCurrentGamepads[this._myGamepadIndex];
             }
         } else {
-            for (let gamepad of this._myCurrentGamepads) {
+            for (let i = 0; i < this._myCurrentGamepads.length; i++) {
+                let gamepad = this._myCurrentGamepads[i];
                 if (gamepad != null && (gamepad.connected == null || gamepad.connected)) {
                     classicGamepad = gamepad;
                     break;

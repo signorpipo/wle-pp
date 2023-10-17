@@ -23,7 +23,7 @@ export class EasyTuneBaseWidgetConfig {
     }
 
     _getBackPanelMaxX() {
-        return this._mySideButtonPanelHalfWidth
+        return this._mySideButtonPanelHalfWidth;
     }
 
     _getBackPanelMinX() {

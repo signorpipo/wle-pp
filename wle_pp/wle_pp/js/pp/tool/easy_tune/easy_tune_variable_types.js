@@ -332,7 +332,7 @@ export class EasyTuneTransform extends EasyTuneVariable {
 
         this._myTransform.mat4_setPositionRotationDegreesScale(this._myPosition, this._myRotation, this._myScale);
 
-        let valueChanged = !this._myTempTransform.pp_equals(this._myTransform)
+        let valueChanged = !this._myTempTransform.pp_equals(this._myTransform);
 
         if (resetDefaultValue) {
             EasyTuneTransform.prototype.setDefaultValue.call(this, value);

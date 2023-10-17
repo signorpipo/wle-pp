@@ -215,6 +215,7 @@ VisualText.prototype._refresh = function () {
             this._myTextComponent.material = this._myParams.myMaterial;
         }
 
+        this._myTextComponent.text = " "; // #TODO remove this when wle fix the text component bug which does not make the fps visualizer refresh correctly
         this._myTextComponent.text = this._myParams.myText;
         this._myTextComponent.alignment = this._myParams.myAlignment;
         this._myTextComponent.justification = this._myParams.myJustification;

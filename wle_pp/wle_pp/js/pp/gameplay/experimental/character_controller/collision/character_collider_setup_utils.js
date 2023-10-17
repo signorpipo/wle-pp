@@ -313,4 +313,4 @@ export function createTeleportColliderSetupFromMovementColliderSetup(movementCol
 export let CharacterColliderSetupUtils = {
     createSimplified,
     createTeleportColliderSetupFromMovementColliderSetup
-}
+};

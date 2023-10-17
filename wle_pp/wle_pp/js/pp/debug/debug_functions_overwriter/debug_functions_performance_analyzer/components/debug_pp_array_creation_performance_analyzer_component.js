@@ -1,4 +1,11 @@
 import { Component, Property } from "@wonderlandengine/api";
+import { Mat3Utils } from "../../../../cauldron/js/utils/mat3_utils";
+import { Mat4Utils } from "../../../../cauldron/js/utils/mat4_utils";
+import { Quat2Utils } from "../../../../cauldron/js/utils/quat2_utils";
+import { QuatUtils } from "../../../../cauldron/js/utils/quat_utils";
+import { Vec2Utils } from "../../../../cauldron/js/utils/vec2_utils";
+import { Vec3Utils } from "../../../../cauldron/js/utils/vec3_utils";
+import { Vec4Utils } from "../../../../cauldron/js/utils/vec4_utils";
 import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component";
 
 export class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component {
@@ -22,7 +29,15 @@ export class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component 
 
     init() {
         this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
-            _myObjectsByPath: "PP",
+            _myObjectsByReference: [
+                [Vec2Utils, "Vec2Utils"],
+                [Vec3Utils, "Vec3Utils"],
+                [Vec4Utils, "Vec4Utils"],
+                [QuatUtils, "QuatUtils"],
+                [Quat2Utils, "Quat2Utils"],
+                [Mat3Utils, "Mat3Utils"],
+                [Mat4Utils, "Mat4Utils"]
+            ],
             _myDelayStart: this._myDelayStart,
             _myLogTitle: "PP Array Creation Performance Analysis Results",
             _myLogFunction: this._myLogFunction,
@@ -36,7 +51,7 @@ export class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component 
             _myLogTotalExecutionTimeResults: this._myLogTotalExecutionTimeResults,
             _myLogTotalExecutionTimePercentageResults: this._myLogTotalExecutionTimePercentageResults,
             _myLogAverageExecutionTimeResults: this._myLogAverageExecutionTimeResults,
-            _myFunctionPathsToInclude: "vec2_create, vec3_create, vec4_create, quat_create, quat2_create, mat3_create, mat4_create",
+            _myFunctionPathsToInclude: "create",
             _myExcludeConstructors: true,
             _myExcludeJSObjectFunctions: true,
             _myAddPathPrefixToFunctionID: true,

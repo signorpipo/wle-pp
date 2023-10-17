@@ -23,10 +23,10 @@ export class PPGatewayComponent extends Component {
         _myEnableTool: Property.bool(true),
         _myAddPPToWindow: Property.bool(true),
         _myAddWLToWindow: Property.bool(true),
-        ...ObjectPoolManagerComponent.Properties,
         ...InputManagerComponent.Properties,
         ...AudioManagerComponent.Properties,
         ...VisualManagerComponent.Properties,
+        ...ObjectPoolManagerComponent.Properties,
         ...DebugManagerComponent.Properties,
         ...GetSceneObjectsComponent.Properties,
         ...GetDefaultResourcesComponent.Properties
@@ -40,8 +40,8 @@ export class PPGatewayComponent extends Component {
     }
 
     init() {
-        this._myGetDefaultResourcesComponent = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties));
-        this._myGetSceneObjectsComponent = this.object.pp_addComponent(GetSceneObjectsComponent, this._getProperties(GetSceneObjectsComponent.Properties));
+        this._myGetDefaultResourcesComponent = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties), false);
+        this._myGetSceneObjectsComponent = this.object.pp_addComponent(GetSceneObjectsComponent, this._getProperties(GetSceneObjectsComponent.Properties), false);
 
         this._myEnableDebugComponent = null;
         if (this._myEnableDebug) {
@@ -66,11 +66,11 @@ export class PPGatewayComponent extends Component {
         this._myInitConsoleVRComponent = this.object.pp_addComponent(InitConsoleVRComponent, false);
         this._myInitEasyTuneVariablesComponent = this.object.pp_addComponent(InitEasyTuneVariablesComponent, false);
 
-        this._myObjectPoolManagerComponent = this.object.pp_addComponent(ObjectPoolManagerComponent, false);
-        this._myInputManagerComponent = this.object.pp_addComponent(InputManagerComponent, this._getProperties(InputManagerComponent.Properties));
-        this._myAudioManagerComponent = this.object.pp_addComponent(AudioManagerComponent, false);
-        this._myVisualManagerComponent = this.object.pp_addComponent(VisualManagerComponent, false);
-        this._myDebugManagerComponent = this.object.pp_addComponent(DebugManagerComponent, false);
+        this._myObjectPoolManagerComponent = this.object.pp_addComponent(ObjectPoolManagerComponent, this._getProperties(ObjectPoolManagerComponent.Properties), false);
+        this._myInputManagerComponent = this.object.pp_addComponent(InputManagerComponent, this._getProperties(InputManagerComponent.Properties), false);
+        this._myAudioManagerComponent = this.object.pp_addComponent(AudioManagerComponent, this._getProperties(AudioManagerComponent.Properties), false);
+        this._myVisualManagerComponent = this.object.pp_addComponent(VisualManagerComponent, this._getProperties(VisualManagerComponent.Properties), false);
+        this._myDebugManagerComponent = this.object.pp_addComponent(DebugManagerComponent, this._getProperties(DebugManagerComponent.Properties), false);
     }
 
     start() {
@@ -103,9 +103,8 @@ export class PPGatewayComponent extends Component {
         this._myDebugManagerComponent.active = true;
     }
 
-    _getProperties(propertiesToGet, active = false) {
+    _getProperties(propertiesToGet) {
         let properties = {};
-        properties["active"] = active;
         let propertyNames = Object.getOwnPropertyNames(propertiesToGet);
 
         for (let propertyName of propertyNames) {

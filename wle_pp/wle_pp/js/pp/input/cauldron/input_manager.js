@@ -38,6 +38,11 @@ export class InputManager {
 
         this._myGamepadsManager = new GamepadsManager(this._myEngine);
 
+        this._myStarted = false;
+
+        this._myTrackedHandPosesEnabled = true;
+        this._myTrackedHandPosesStarted = false;
+
         this._myDestroyed = false;
     }
 
@@ -55,13 +60,13 @@ export class InputManager {
             this._myHandPoses[key].start();
         }
 
-        for (let key in this._myTrackedHandPoses) {
-            this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
-            this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-            this._myTrackedHandPoses[key].start();
+        if (this._myTrackedHandPosesEnabled) {
+            this._startTrackedHandPoses();
         }
 
         this._myGamepadsManager.start();
+
+        this._myStarted = true;
     }
 
     update(dt) {
@@ -78,11 +83,7 @@ export class InputManager {
             this._myHandPoses[key].update(dt);
         }
 
-        for (let key in this._myTrackedHandPoses) {
-            this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
-            this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-            this._myTrackedHandPoses[key].update(dt);
-        }
+        this._updateTrackedHandPoses();
 
         this._myGamepadsManager.update(dt);
     }
@@ -133,6 +134,40 @@ export class InputManager {
 
     getTrackedHandPoses() {
         return this._myTrackedHandPoses;
+    }
+
+    areTrackedHandPosesEnabled() {
+        return this._myTrackedHandPosesEnabled;
+    }
+
+    setTrackedHandPosesEnabled(enabled) {
+        this._myTrackedHandPosesEnabled = enabled;
+
+        if (this._myStarted && this._myTrackedHandPosesEnabled) {
+            this._startTrackedHandPoses();
+        }
+    }
+
+    _startTrackedHandPoses() {
+        if (!this._myTrackedHandPosesStarted) {
+            for (let key in this._myTrackedHandPoses) {
+                this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+                this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+                this._myTrackedHandPoses[key].start();
+            }
+
+            this._myTrackedHandPosesStarted = true;
+        }
+    }
+
+    _updateTrackedHandPoses(dt) {
+        if (this._myTrackedHandPosesEnabled && this._myTrackedHandPosesStarted) {
+            for (let key in this._myTrackedHandPoses) {
+                this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+                this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+                this._myTrackedHandPoses[key].update(dt);
+            }
+        }
     }
 
     destroy() {

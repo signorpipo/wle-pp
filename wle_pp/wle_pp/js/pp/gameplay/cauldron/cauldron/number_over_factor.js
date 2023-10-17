@@ -97,7 +97,7 @@ export class IntOverFactor extends NumberOverFactor {
     }
 }
 
-// You can just put fromRange if u want a range that doesn't actually change -> new NumberOverFactor([1,25])
+// You can just put fromRange if u want a range that doesn't actually change -> new NumberOverFactor([1, 25])
 export class NumberRangeOverFactor {
 
     constructor(fromRange, toRange = null, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {

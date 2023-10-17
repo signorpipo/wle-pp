@@ -52,7 +52,7 @@ export function findEqual(array, elementToFind, elementsEqualCallback = null) {
         return index < 0 ? undefined : array[index];
     }
 
-    let elementFound = undefined
+    let elementFound = undefined;
     for (let i = 0; i < array.length; i++) {
         let currentElement = array[i];
         if (elementsEqualCallback(currentElement, elementToFind)) {

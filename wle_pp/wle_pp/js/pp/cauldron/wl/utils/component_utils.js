@@ -258,7 +258,7 @@ export function clonePostProcess(componentToClone, clonedComponent, deeClonePara
 export function cloneDefault(componentToClone, targetObject, autoStartIfNotActive = true) {
     let clonedComponent = ObjectUtils.addComponent(targetObject, componentToClone.type, componentToClone);
 
-    // Trigger start, which otherwise would be called later
+    // Trigger start, which otherwise would be called later, on first activation
     if (autoStartIfNotActive && !clonedComponent.active) {
         clonedComponent.active = true;
         clonedComponent.active = false;
@@ -383,14 +383,14 @@ export function setDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngi
     for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
         let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
         if (cloneCallback != null) {
-            ComponentUtils.setCloneCallback(nativeType, cloneCallback, engine)
+            ComponentUtils.setCloneCallback(nativeType, cloneCallback, engine);
         }
     }
 
     for (let javascriptType of ComponentUtils.getWLJavascriptComponentTypes()) {
         let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
         if (cloneCallback != null) {
-            ComponentUtils.setCloneCallback(javascriptType, cloneCallback, engine)
+            ComponentUtils.setCloneCallback(javascriptType, cloneCallback, engine);
         }
     }
 }

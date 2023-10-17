@@ -2,16 +2,40 @@ import { Globals } from "../../pp/globals";
 import { XRUtils } from "./xr_utils";
 
 export let isMobile = function () {
-    let checkMobileRegex = new RegExp("mobi", "i");
-    return function isMobile(engine = Globals.getMainEngine()) {
-        let userAgent = Globals.getNavigator(engine).userAgent;
+    let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
+    return function isMobile() {
+        let userAgent = window.navigator.userAgent;
         return userAgent != null && userAgent.match(checkMobileRegex) != null;
     };
 }();
 
-export function isDesktop(engine = Globals.getMainEngine()) {
-    return !BrowserUtils.isMobile(engine);
+export function isDesktop() {
+    return !BrowserUtils.isMobile();
 }
+
+export let isLocalhost = function () {
+    let localhostRegex = new RegExp("(localhost|127\\.0\\.0\\.1)(:(\\d{4}))?");
+    return function isLocalhost(port = null, isRegex = false) {
+        let isLocalhost = false;
+
+        let localhostMatch = window.location.origin.match(localhostRegex);
+
+        if (localhostMatch != null) {
+            if (port == null) {
+                isLocalhost = true;
+            } else if (localhostMatch.length >= 4 && localhostMatch[3] != null) {
+                let portMatch = localhostMatch[3];
+                if (isRegex) {
+                    isLocalhost = portMatch.match(port) != null;
+                } else {
+                    isLocalhost = portMatch == port;
+                }
+            }
+        }
+
+        return isLocalhost;
+    };
+}();
 
 export function openLink(url, newTab = true, exitXRSessionBeforeOpen = true, exitXRSessionOnSuccess = true, tryOpenLinkOnClickOnFailure = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
     let element = document.createElement("a");
@@ -88,6 +112,7 @@ export function openLinkOnClick(url, newTab = true, exitXRSessionOnSuccess = tru
 export let BrowserUtils = {
     isMobile,
     isDesktop,
+    isLocalhost,
     openLink,
     openLinkOnClick
 };

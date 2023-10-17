@@ -37,7 +37,7 @@ export function injectProperties(fromReference, toReference, enumerable = true, 
                 let originalFunction = fromReference[ownPropertyName];
                 adjustedProperyValue = function () {
                     return originalFunction(this, ...arguments);
-                }
+                };
 
                 Object.defineProperty(adjustedProperyValue, "name", {
                     value: adjustedPropertyName

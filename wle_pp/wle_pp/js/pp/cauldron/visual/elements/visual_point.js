@@ -185,7 +185,7 @@ VisualPoint.prototype._refresh = function () {
         } else {
             this._myPointMeshComponent.material = this._myParams.myMaterial;
         }
-    }
+    };
 }();
 
 VisualPointParams.prototype.copy = function copy(other) {

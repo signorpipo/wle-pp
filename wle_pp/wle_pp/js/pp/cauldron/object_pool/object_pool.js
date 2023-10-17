@@ -1,6 +1,10 @@
 export class ObjectPoolParams {
 
     constructor() {
+        // If set to false, it will directly use the specified object prototype,
+        // otherwise it will clone it, and use the clone as the actual pool prototype
+        this.myCloneObjectPrototype = true;
+
         this.myInitialPoolSize = 0;
         this.myAmountToAddWhenEmpty = 0;        // If all the objects are busy, this amount will be added to the pool
         this.myPercentageToAddWhenEmpty = 0;    // If all the objects are busy, this percentage of the current pool size will be added to the pool        
@@ -10,11 +14,11 @@ export class ObjectPoolParams {
         this.myOptimizeObjectsAllocation = true;    // If true it will pre-allocate the memory before adding new objects to the pool
 
         // These extra functions can be used if u want to use the pool with objects that are not from WL (WL Object)
-        this.myCloneCallback = undefined;                       // Signature: callback(object, cloneParams) -> clonedObject
-        this.mySetActiveCallback = undefined;                   // Signature: callback(object, active)
-        this.myEqualCallback = undefined;                       // Signature: callback(firstObject, secondObject) -> bool
-        this.myDestroyCallback = undefined;                     // Signature: callback(object)
-        this.myOptimizeObjectsAllocationCallback = undefined;   // Signature: callback(object, numberOfObjectsToAllocate)
+        this.myCloneCallback = null;                       // Signature: callback(object, cloneParams) -> clonedObject
+        this.mySetActiveCallback = null;                   // Signature: callback(object, active)
+        this.myEqualCallback = null;                       // Signature: callback(firstObject, secondObject) -> bool
+        this.myDestroyCallback = null;                     // Signature: callback(object)
+        this.myOptimizeObjectsAllocationCallback = null;   // Signature: callback(object, numberOfObjectsToAllocate)
 
         this.myLogEnabled = false;
     }
@@ -22,9 +26,13 @@ export class ObjectPoolParams {
 
 export class ObjectPool {
 
-    constructor(poolObject, objectPoolParams) {
+    constructor(objectPrototype, objectPoolParams) {
         this._myObjectPoolParams = objectPoolParams;
-        this._myPrototype = this._clone(poolObject);
+
+        this._myObjectPrototype = objectPrototype;
+        if (objectPoolParams.myCloneObjectPrototype) {
+            this._myObjectPrototype = this._clone(objectPrototype);
+        }
 
         this._myAvailableObjects = [];
         this._myBusyObjects = [];
@@ -50,6 +58,24 @@ export class ObjectPool {
         }
 
         return object;
+    }
+
+    has(object) {
+        let hasObject = false;
+
+        if (this.isBusy(object) || this.isAvailable(object)) {
+            hasObject = true;
+        }
+
+        return hasObject;
+    }
+
+    isBusy(object) {
+        return this._myBusyObjects.pp_has(this._equals.bind(this, object));
+    }
+
+    isAvailable(object) {
+        return this._myAvailableObjects.pp_has(this._equals.bind(this, object));
     }
 
     release(object) {
@@ -95,14 +121,14 @@ export class ObjectPool {
 
         if (this._myObjectPoolParams.myOptimizeObjectsAllocation) {
             if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback != null) {
-                this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myPrototype, size);
-            } else if (this._myPrototype.pp_reserveObjects != null) {
-                this._myPrototype.pp_reserveObjects(size);
+                this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myObjectPrototype, size);
+            } else if (this._myObjectPrototype.pp_reserveObjects != null) {
+                this._myObjectPrototype.pp_reserveObjects(size);
             }
         }
 
         for (let i = 0; i < size; i++) {
-            this._myAvailableObjects.push(this._clone(this._myPrototype));
+            this._myAvailableObjects.push(this._clone(this._myObjectPrototype));
         }
 
         if (logEnabled) {
@@ -167,7 +193,7 @@ export class ObjectPool {
             this._destroyObject(object);
         }
 
-        this._destroyObject(this._myPrototype);
+        this._destroyObject(this._myObjectPrototype);
     }
 
     isDestroyed() {

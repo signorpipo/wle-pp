@@ -11,21 +11,26 @@ import { SceneUtils } from "./scene_utils";
 export class CloneParams {
 
     constructor() {
-        this.myIgnoreNonCloneable = false;  // Ignores components that are not clonable
-        this.myIgnoreComponents = false;    // All components are ignored, cloning only the object hierarchy
-        this.myIgnoreChildren = false;      // Clones only the given object without the children
+        this.myCloneParent = undefined;  // Defaults to the object to clone parent, null can be used to specify u want the scene root as the parent
 
-        this.myComponentsToIgnore = [];     // Ignores all component types in this list (example: "mesh"), has lower priority over myComponentsToInclude
-        this.myComponentsToInclude = [];    // Clones only the component types in this list (example: "mesh"), has higher priority over myComponentsToIgnore, if empty it's ignored
-        this.myIgnoreComponentCallback = null; // Signature: callback(component) returns true if the component must be ignored, it is called after the previous filters
+        this.myIgnoreNonCloneable = false;      // Ignores components that are not clonable
+        this.myIgnoreComponents = false;        // All components are ignored, cloning only the object hierarchy
+        this.myIgnoreDescendants = false;       // Clones only the given object without the descendants
 
-        this.myChildrenToIgnore = [];       // Ignores all the objects in this list (example: "mesh"), has lower priority over myChildrenToInclude
-        this.myChildrenToInclude = [];      // Clones only the objects in this list (example: "mesh"), has higher priority over myChildrenToIgnore, if empty it's ignored
-        this.myIgnoreChildCallback = null;  // Signature: callback(object) returns true if the object must be ignored, it is called after the previous filters
+        this.myComponentsToIgnore = [];         // Ignores all component types in this list (example: "mesh"), has lower priority over myComponentsToInclude
+        this.myComponentsToInclude = [];        // Clones only the component types in this list (example: "mesh"), has higher priority over myComponentsToIgnore, if empty it's ignored
+        this.myIgnoreComponentCallback = null;  // Signature: callback(component) returns true if the component must be ignored, it is called after the previous filters
+
+        this.myDescendantsToIgnore = [];        // Ignores all the objects in this list (example: "mesh"), has lower priority over myDescendantsToInclude
+        this.myDescendantsToInclude = [];       // Clones only the objects in this list (example: "mesh"), has higher priority over myDescendantsToIgnore, if empty it's ignored
+        this.myIgnoreDescendantCallback = null; // Signature: callback(object) returns true if the object must be ignored, it is called after the previous filters
 
         this.myUseDefaultComponentClone = false;               // Use the default component clone function
-        this.myUseDefaultComponentCloneAsFallback = false;     // Use the default component clone function only as fallback
+        this.myUseDefaultComponentCloneAsFallback = false;     // Use the default component clone function only as fallback, that is if there is no custom component clone
         this.myDefaultComponentCloneAutoStartIfNotActive = true;
+
+        this.myUseDefaultObjectClone = false;   // Use the default object clone function, ignoring all the other clone settings but myCloneParent and myDefaultComponentCloneAutoStartIfNotActive
+        this.myUseDefaultObjectCloneAsFallback = false;     // Use the default object clone function only as fallback, that is if the object is not pp cloneable
 
         this.myComponentDeepCloneParams = new DeepCloneParams(); // Used to specify if the object components must be deep cloned or not, you can also override the behavior for specific components and variables
 
@@ -1896,9 +1901,25 @@ export let clone = function () {
     return function clone(object, cloneParams = new CloneParams()) {
         let clonedObject = null;
 
-        if (ObjectUtils.isCloneable(object, cloneParams)) {
+        let cloneParent = cloneParams.myCloneParent === undefined ? ObjectUtils.getParent(object) : cloneParams.myCloneParent;
+
+        if (cloneParams.myUseDefaultObjectClone) {
+            clonedObject = object.clone(cloneParent);
+
+            if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive) {
+                let clonedComponents = clonedObject.pp_getComponents();
+                for (let clonedComponent of clonedComponents) {
+
+                    // Trigger start, which otherwise would be called later, on first activation
+                    if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive && !clonedComponent.active) {
+                        clonedComponent.active = true;
+                        clonedComponent.active = false;
+                    }
+                }
+            }
+        } else if (ObjectUtils.isCloneable(object, cloneParams)) {
             let objectsToCloneData = [];
-            objectsToCloneData.push([ObjectUtils.getParent(object), object]);
+            objectsToCloneData.push([cloneParent, object]);
 
             // Create the object hierarchy
             let objectsToCloneComponentsData = [];
@@ -1917,20 +1938,20 @@ export let clone = function () {
                     objectsToCloneComponentsData.push([objectToClone, currentClonedObject]);
                 }
 
-                if (!cloneParams.myIgnoreChildren) {
+                if (!cloneParams.myIgnoreDescendants) {
                     for (let child of ObjectUtils.getChildren(objectToClone)) {
-                        let cloneChild = false;
-                        if (cloneParams.myChildrenToInclude.length > 0) {
-                            cloneChild = cloneParams.myChildrenToInclude.find(childToInclude => ObjectUtils.equals(childToInclude, child)) != null;
+                        let cloneDescendant = false;
+                        if (cloneParams.myDescendantsToInclude.length > 0) {
+                            cloneDescendant = cloneParams.myDescendantsToInclude.find(descendantToInclude => ObjectUtils.equals(descendantToInclude, child)) != null;
                         } else {
-                            cloneChild = cloneParams.myChildrenToIgnore.find(childToIgnore => ObjectUtils.equals(childToIgnore, child)) == null;
+                            cloneDescendant = cloneParams.myDescendantsToIgnore.find(descendantToIgnore => ObjectUtils.equals(descendantToIgnore, child)) == null;
                         }
 
-                        if (cloneChild && cloneParams.myIgnoreChildCallback != null) {
-                            cloneChild = !cloneParams.myIgnoreChildCallback(child);
+                        if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
+                            cloneDescendant = !cloneParams.myIgnoreDescendantCallback(child);
                         }
 
-                        if (cloneChild) {
+                        if (cloneDescendant) {
                             objectsToCloneData.push([currentClonedObject, child]);
                         }
                     }
@@ -1998,7 +2019,21 @@ export let clone = function () {
                 let componentToClone = cloneData[0];
                 let currentClonedComponent = cloneData[1];
 
-                ComponentUtils.clonePostProcess(componentToClone, currentClonedComponent, cloneParams.myComponentDeepCloneParams, cloneParams.myComponentCustomCloneParams)
+                ComponentUtils.clonePostProcess(componentToClone, currentClonedComponent, cloneParams.myComponentDeepCloneParams, cloneParams.myComponentCustomCloneParams);
+            }
+        } else if (cloneParams.myUseDefaultObjectCloneAsFallback) {
+            clonedObject = object.clone(cloneParent);
+
+            if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive) {
+                let clonedComponents = clonedObject.pp_getComponents();
+                for (let clonedComponent of clonedComponents) {
+
+                    // Trigger start, which otherwise would be called later, on first activation
+                    if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive && !clonedComponent.active) {
+                        clonedComponent.active = true;
+                        clonedComponent.active = false;
+                    }
+                }
             }
         }
 
@@ -2038,20 +2073,20 @@ export function isCloneable(object, cloneParams = new CloneParams()) {
             }
         }
 
-        if (cloneable && !cloneParams.myIgnoreChildren) {
+        if (cloneable && !cloneParams.myIgnoreDescendants) {
             for (let child of ObjectUtils.getChildren(objectToClone)) {
-                let cloneChild = false;
-                if (cloneParams.myChildrenToInclude.length > 0) {
-                    cloneChild = cloneParams.myChildrenToInclude.find(childToInclude => ObjectUtils.equals(childToInclude, child)) != null;
+                let cloneDescendant = false;
+                if (cloneParams.myDescendantsToInclude.length > 0) {
+                    cloneDescendant = cloneParams.myDescendantsToInclude.find(descendantToInclude => ObjectUtils.equals(descendantToInclude, child)) != null;
                 } else {
-                    cloneChild = cloneParams.myChildrenToIgnore.find(childToInclude => ObjectUtils.equals(childToInclude, child)) == null;
+                    cloneDescendant = cloneParams.myDescendantsToIgnore.find(descendantToInclude => ObjectUtils.equals(descendantToInclude, child)) == null;
                 }
 
-                if (cloneChild && cloneParams.myIgnoreChildCallback != null) {
-                    cloneChild = !cloneParams.myIgnoreChildCallback(child);
+                if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
+                    cloneDescendant = !cloneParams.myIgnoreDescendantCallback(child);
                 }
 
-                if (cloneChild) {
+                if (cloneDescendant) {
                     objectsToClone.push(child);
                 }
             }
@@ -2209,78 +2244,78 @@ export let toStringCompact = function () {
 
 // Get Object By Name
 
-export function getObjectByName(object, name, regex = false, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchy(object, name, regex, index);
+export function getObjectByName(object, name, isRegex = false, index = 0) {
+    return ObjectUtils.getObjectByNameHierarchy(object, name, isRegex, index);
 }
 
-export function getObjectByNameHierarchy(object, name, regex = false, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchyBreadth(object, name, regex, index);
+export function getObjectByNameHierarchy(object, name, isRegex = false, index = 0) {
+    return ObjectUtils.getObjectByNameHierarchyBreadth(object, name, isRegex, index);
 }
 
-export function getObjectByNameHierarchyBreadth(object, name, regex = false, index = 0) {
+export function getObjectByNameHierarchyBreadth(object, name, isRegex = false, index = 0) {
     let objects = ObjectUtils.getHierarchyBreadth(object);
-    return ObjectUtils.getObjectByNameObjects(objects, name, regex, index);
+    return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
 }
 
-export function getObjectByNameHierarchyDepth(object, name, regex = false, index = 0) {
+export function getObjectByNameHierarchyDepth(object, name, isRegex = false, index = 0) {
     let objects = ObjectUtils.getHierarchyDepth(object);
-    return ObjectUtils.getObjectByNameObjects(objects, name, regex, index);
+    return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
 }
 
-export function getObjectByNameDescendants(object, name, regex = false, index = 0) {
-    return ObjectUtils.getObjectByNameDescendantsBreadth(object, name, regex, index);
+export function getObjectByNameDescendants(object, name, isRegex = false, index = 0) {
+    return ObjectUtils.getObjectByNameDescendantsBreadth(object, name, isRegex, index);
 }
 
-export function getObjectByNameDescendantsBreadth(object, name, regex = false, index = 0) {
+export function getObjectByNameDescendantsBreadth(object, name, isRegex = false, index = 0) {
     let objects = ObjectUtils.getDescendantsBreadth(object);
-    return ObjectUtils.getObjectByNameObjects(objects, name, regex, index);
+    return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
 }
 
-export function getObjectByNameDescendantsDepth(object, name, regex = false, index = 0) {
+export function getObjectByNameDescendantsDepth(object, name, isRegex = false, index = 0) {
     let objects = ObjectUtils.getDescendantsDepth(object);
-    return ObjectUtils.getObjectByNameObjects(objects, name, regex, index);
+    return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
 }
 
-export function getObjectByNameChildren(object, name, regex = false, index = 0) {
+export function getObjectByNameChildren(object, name, isRegex = false, index = 0) {
     let objects = ObjectUtils.getChildren(object);
-    return ObjectUtils.getObjectByNameObjects(objects, name, regex, index);
+    return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
 }
 
-export function getObjectsByName(object, name, regex = false) {
-    return ObjectUtils.getObjectsByNameHierarchy(object, name, regex);
+export function getObjectsByName(object, name, isRegex = false) {
+    return ObjectUtils.getObjectsByNameHierarchy(object, name, isRegex);
 }
 
-export function getObjectsByNameHierarchy(object, name, regex = false) {
-    return ObjectUtils.getObjectsByNameHierarchyBreadth(object, name, regex);
+export function getObjectsByNameHierarchy(object, name, isRegex = false) {
+    return ObjectUtils.getObjectsByNameHierarchyBreadth(object, name, isRegex);
 }
 
-export function getObjectsByNameHierarchyBreadth(object, name, regex = false) {
+export function getObjectsByNameHierarchyBreadth(object, name, isRegex = false) {
     let objects = ObjectUtils.getHierarchyBreadth(object);
-    return ObjectUtils.getObjectsByNameObjects(objects, name, regex);
+    return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
 }
 
-export function getObjectsByNameHierarchyDepth(object, name, regex = false) {
+export function getObjectsByNameHierarchyDepth(object, name, isRegex = false) {
     let objects = ObjectUtils.getHierarchyDepth(object);
-    return ObjectUtils.getObjectsByNameObjects(objects, name, regex);
+    return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
 }
 
-export function getObjectsByNameDescendants(object, name, regex = false) {
-    return ObjectUtils.getObjectsByNameDescendantsBreadth(object, name, regex);
+export function getObjectsByNameDescendants(object, name, isRegex = false) {
+    return ObjectUtils.getObjectsByNameDescendantsBreadth(object, name, isRegex);
 }
 
-export function getObjectsByNameDescendantsBreadth(object, name, regex = false) {
+export function getObjectsByNameDescendantsBreadth(object, name, isRegex = false) {
     let objects = ObjectUtils.getDescendantsBreadth(object);
-    return ObjectUtils.getObjectsByNameObjects(objects, name, regex);
+    return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
 }
 
-export function getObjectsByNameDescendantsDepth(object, name, regex = false) {
+export function getObjectsByNameDescendantsDepth(object, name, isRegex = false) {
     let objects = ObjectUtils.getDescendantsDepth(object);
-    return ObjectUtils.getObjectsByNameObjects(objects, name, regex);
+    return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
 }
 
-export function getObjectsByNameChildren(object, name, regex = false) {
+export function getObjectsByNameChildren(object, name, isRegex = false) {
     let objects = ObjectUtils.getChildren(object);
-    return ObjectUtils.getObjectsByNameObjects(objects, name, regex);
+    return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
 }
 
 // Get Object By ID
@@ -2373,8 +2408,8 @@ export function getDescendantsDepth(object) {
         descendants.push(child);
 
         let childDescendants = ObjectUtils.getDescendantsDepth(child);
-        if (childDescendants.length > 0) {
-            descendants.push(...childDescendants);
+        for (let i = 0; i < childDescendants.length; i++) {
+            descendants.push(childDescendants[i]);
         }
     }
 
@@ -2424,7 +2459,15 @@ export function equals(object, otherObject) {
 }
 
 export function destroy(object) {
-    return object.destroy();
+    let destroyReturnValue = undefined;
+
+    try {
+        destroyReturnValue = object.destroy();
+    } catch (error) {
+        // Do nothing
+    }
+
+    return destroyReturnValue;
 }
 
 export function reserveObjects(object, count) {
@@ -2526,7 +2569,10 @@ export function getComponentsObjects(objects, typeOrClass) {
     let components = [];
 
     for (let currentObject of objects) {
-        components.push(...currentObject.getComponents(typeOrClass));
+        let currentObjectComponents = currentObject.getComponents(typeOrClass);
+        for (let i = 0; i < currentObjectComponents.length; i++) {
+            components.push(currentObjectComponents[i]);
+        }
     }
 
     return components;
@@ -2538,13 +2584,13 @@ export function setActiveObjects(objects, active) {
     }
 }
 
-export function getObjectByNameObjects(objects, name, regex = false, index = 0) {
+export function getObjectByNameObjects(objects, name, isRegex = false, index = 0) {
     let objectFound = null;
 
     let currentIndex = index;
     for (let currentObject of objects) {
         let objectName = ObjectUtils.getName(currentObject);
-        if ((!regex && objectName == name) || (regex && objectName.match(name) != null)) {
+        if ((!isRegex && objectName == name) || (isRegex && objectName.match(name) != null)) {
             if (currentIndex == 0) {
                 objectFound = currentObject;
                 break;
@@ -2557,12 +2603,12 @@ export function getObjectByNameObjects(objects, name, regex = false, index = 0) 
     return objectFound;
 }
 
-export function getObjectsByNameObjects(objects, name, regex = false) {
+export function getObjectsByNameObjects(objects, name, isRegex = false) {
     let objectsFound = [];
 
     for (let currentObject of objects) {
         let objectName = ObjectUtils.getName(currentObject);
-        if ((!regex && objectName == name) || (regex && objectName.match(name) != null)) {
+        if ((!isRegex && objectName == name) || (isRegex && objectName.match(name) != null)) {
             objectsFound.push(currentObject);
         }
     }
@@ -2925,7 +2971,7 @@ export let ObjectUtils = {
     getObjectByIDObjects,
     getObjectsByIDObjects,
     wrapObject
-}
+};
 
 
 

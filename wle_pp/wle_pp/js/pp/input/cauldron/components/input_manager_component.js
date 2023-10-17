@@ -9,8 +9,9 @@ export class InputManagerComponent extends Component {
     static TypeName = "pp-input-manager";
     static Properties = {
         _myPoseForwardFixed: Property.bool(true),
-        _myMousePreventContextMenu: Property.bool(true),
-        _myMousePreventMiddleButtonScroll: Property.bool(true)
+        _myPreventMouseContextMenu: Property.bool(true),
+        _myPreventMouseMiddleButtonScroll: Property.bool(true),
+        _myEnableTrackedHandPoses: Property.bool(true)
     };
 
     init() {
@@ -20,6 +21,7 @@ export class InputManagerComponent extends Component {
         // Prevents double global from same engine
         if (!Globals.hasInputManager(this.engine)) {
             this._myInputManager = new InputManager(this.engine);
+            this._myInputManager.setTrackedHandPosesEnabled(this._myEnableTrackedHandPoses);
 
             Globals.setInputManager(this._myInputManager, this.engine);
         }
@@ -49,11 +51,11 @@ export class InputManagerComponent extends Component {
     }
 
     _setupMousePrevent() {
-        if (this._myMousePreventContextMenu) {
+        if (this._myPreventMouseContextMenu) {
             this._myInputManager.getMouse().setContextMenuActive(false);
         }
 
-        if (this._myMousePreventMiddleButtonScroll) {
+        if (this._myPreventMouseMiddleButtonScroll) {
             this._myInputManager.getMouse().setMiddleButtonScrollActive(false);
         }
     }

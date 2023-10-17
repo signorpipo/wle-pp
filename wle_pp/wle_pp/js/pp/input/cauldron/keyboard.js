@@ -89,8 +89,8 @@ export class Keyboard {
     constructor(engine = Globals.getMainEngine()) {
         this._myEngine = engine;
 
-        this._myKeyInfos = new Map();
-
+        this._myKeyInfos = {};
+        this._myKeyInfosIDs = [];
         for (let key in KeyID) {
             this.addKey(KeyID[key]);
         }
@@ -104,8 +104,8 @@ export class Keyboard {
     isKeyPressed(keyID) {
         let pressed = false;
 
-        if (this._myKeyInfos.has(keyID)) {
-            pressed = this._myKeyInfos.get(keyID).myPressed;
+        if (this._myKeyInfos[keyID] != null) {
+            pressed = this._myKeyInfos[keyID].myPressed;
         }
 
         return pressed;
@@ -114,8 +114,8 @@ export class Keyboard {
     isKeyPressStart(keyID) {
         let pressStart = false;
 
-        if (this._myKeyInfos.has(keyID)) {
-            pressStart = this._myKeyInfos.get(keyID).myPressStart;
+        if (this._myKeyInfos[keyID] != null) {
+            pressStart = this._myKeyInfos[keyID].myPressStart;
         }
 
         return pressStart;
@@ -124,15 +124,16 @@ export class Keyboard {
     isKeyPressEnd(keyID) {
         let pressEnd = false;
 
-        if (this._myKeyInfos.has(keyID)) {
-            pressEnd = this._myKeyInfos.get(keyID).myPressEnd;
+        if (this._myKeyInfos[keyID] != null) {
+            pressEnd = this._myKeyInfos[keyID].myPressEnd;
         }
 
         return pressEnd;
     }
 
     addKey(keyID) {
-        this._myKeyInfos.set(keyID, this._createKeyInfo());
+        this._myKeyInfos[keyID] = this._createKeyInfo();
+        this._myKeyInfosIDs.push(keyID);
     }
 
     start() {
@@ -144,7 +145,10 @@ export class Keyboard {
 
     update(dt) {
         if (!Globals.getDocument(this._myEngine).hasFocus()) {
-            for (let keyInfo of this._myKeyInfos.values()) {
+
+            for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
+                let id = this._myKeyInfosIDs[i];
+                let keyInfo = this._myKeyInfos[id];
                 if (keyInfo.myPressed) {
                     keyInfo.myPressed = false;
                     keyInfo.myPressEndToProcess = true;
@@ -152,7 +156,9 @@ export class Keyboard {
             }
         }
 
-        for (let keyInfo of this._myKeyInfos.values()) {
+        for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
+            let id = this._myKeyInfosIDs[i];
+            let keyInfo = this._myKeyInfos[id];
             keyInfo.myPressStart = keyInfo.myPressStartToProcess;
             keyInfo.myPressEnd = keyInfo.myPressEndToProcess;
             keyInfo.myPressStartToProcess = false;
@@ -175,8 +181,8 @@ export class Keyboard {
     }
 
     _keyPressedChanged(keyID, pressed) {
-        if (this._myKeyInfos.has(keyID)) {
-            let keyInfo = this._myKeyInfos.get(keyID);
+        if (this._myKeyInfos[keyID] != null) {
+            let keyInfo = this._myKeyInfos[keyID];
 
             if (pressed) {
                 keyInfo.myPressed = true;
