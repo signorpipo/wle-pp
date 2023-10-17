@@ -1,6 +1,6 @@
 {
     "name": "wle-pp",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "author": "Pipo",
     "description": "A library for the Wonderland Engine",
     "homepage": "https://github.com/SignorPipo/wle-pp",
@@ -34,7 +34,7 @@
         "howler": "^2.2.4"
     },
     "devDependencies": {
-        "esbuild": "^0.14.54",
+        "esbuild": "^0.19.5",
         "esbuild-node-externals": "^1.9.0"
     },
     "scripts": {
