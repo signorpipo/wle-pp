@@ -1,12 +1,12 @@
 {
     "name": "wle-pp",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "author": "Pipo",
     "description": "A library for the Wonderland Engine",
     "homepage": "https://github.com/SignorPipo/wle-pp",
     "repository": {
         "type": "git",
-        "url": "https://github.com/SignorPipo/wle-pp"
+        "url": "git+https://github.com/SignorPipo/wle-pp.git"
     },
     "license": "ISC",
     "files": [
