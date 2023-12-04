@@ -154,7 +154,9 @@ When using the PP library there are certain things to take into consideration, s
 
 # License
 
-You are free to use this in your projects, just remember to credit it somewhere, if possible!
+Copyright (c) 2021-2024 [Elia "Pipo" Ducceschi](https://signor-pipo.itch.io/).
+
+Released under the [ISC License](https://github.com/SignorPipo/wle-pp/blob/main/LICENSE.md).
 
 # Credits
 
