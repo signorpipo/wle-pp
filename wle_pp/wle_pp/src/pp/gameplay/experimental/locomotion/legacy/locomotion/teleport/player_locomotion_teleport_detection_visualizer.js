@@ -1,9 +1,9 @@
-import { VisualArrow, VisualArrowParams } from "../../../../../../cauldron/visual/elements/visual_arrow";
-import { VisualLine, VisualLineParams } from "../../../../../../cauldron/visual/elements/visual_line";
-import { VisualPoint, VisualPointParams } from "../../../../../../cauldron/visual/elements/visual_point";
-import { VisualTorus, VisualTorusParams } from "../../../../../../cauldron/visual/elements/visual_torus";
-import { quat2_create, quat_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../../../pp/globals";
+import { VisualArrow, VisualArrowParams } from "../../../../../../cauldron/visual/elements/visual_arrow.js";
+import { VisualLine, VisualLineParams } from "../../../../../../cauldron/visual/elements/visual_line.js";
+import { VisualPoint, VisualPointParams } from "../../../../../../cauldron/visual/elements/visual_point.js";
+import { VisualTorus, VisualTorusParams } from "../../../../../../cauldron/visual/elements/visual_torus.js";
+import { quat2_create, quat_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../../../pp/globals.js";
 
 export class PlayerLocomotionTeleportDetectionVisualizerParams {
 
@@ -50,10 +50,10 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
         this._myVisualTeleportTransformPositionLerping = false;
         this._myVisualTeleportTransformRotationLerping = false;
 
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Min Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMinDistanceToLerp, 1, 3, 0, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Max Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMaxDistanceToLerp, 1, 3, 0, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Min Angle Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMinAngleDistanceToLerp, 10, 3, 0, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Max Angle Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMaxAngleDistanceToLerp, 10, 3, 0, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Min Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMinDistanceToLerp, 1, 3, 0, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Max Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMaxDistanceToLerp, 1, 3, 0, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Min Angle Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMinAngleDistanceToLerp, 10, 3, 0, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Max Angle Distance Lerp", this._myTeleportParams.myVisualizerParams.myVisualTeleportPositionMaxAngleDistanceToLerp, 10, 3, 0, undefined, undefined, this._myTeleportParams.myEngine));
 
         this._setupVisuals();
 
@@ -144,6 +144,18 @@ export class PlayerLocomotionTeleportDetectionVisualizer {
         }
     }
 
+    _showTeleportParablePosition(dt) {
+        // Implemented outside class definition
+    }
+
+    _showTeleportParable(dt) {
+        // Implemented outside class definition
+    }
+
+    _setupVisuals() {
+        // Implemented outside class definition
+    }
+
     destroy() {
         this._myDestroyed = true;
 
@@ -222,11 +234,11 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._setupVisuals = function (
 
         this._myVisualTeleportPositionObject = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myCauldron.pp_addObject();
 
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Radius", 0.175, 0.1, 3, undefined, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneInt("Teleport Torus Segments", 24, 1, undefined, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Thickness", 0.02, 0.1, 3, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Radius", 0.175, 0.1, 3, undefined, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneInt("Teleport Torus Segments", 24, 1, undefined, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Thickness", 0.02, 0.1, 3, undefined, undefined, undefined, this._myTeleportParams.myEngine));
 
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Inner Radius", 0.04, 0.1, 3, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Teleport Torus Inner Radius", 0.04, 0.1, 3, undefined, undefined, undefined, this._myTeleportParams.myEngine));
 
         {
             let visualParams = new VisualTorusParams(this._myTeleportParams.myEngine);

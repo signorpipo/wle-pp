@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { ConsoleVR } from "../console_vr";
+import { Globals } from "../../../pp/globals.js";
+import { ConsoleVR } from "../console_vr.js";
 
 export class InitConsoleVRComponent extends Component {
     static TypeName = "pp-init-console-vr";

@@ -1,12 +1,12 @@
-import { MathUtils } from "../../../cauldron/js/utils/math_utils";
-import { Globals } from "../../../pp/globals";
-import { Mat3Utils } from "../../js/utils/mat3_utils";
-import { Mat4Utils } from "../../js/utils/mat4_utils";
-import { Quat2Utils } from "../../js/utils/quat2_utils";
-import { QuatUtils } from "../../js/utils/quat_utils";
-import { Vec3Utils } from "../../js/utils/vec3_utils";
-import { ComponentUtils, CustomCloneParams, DeepCloneParams } from "./component_utils";
-import { SceneUtils } from "./scene_utils";
+import { MathUtils } from "../../../cauldron/js/utils/math_utils.js";
+import { Globals } from "../../../pp/globals.js";
+import { Mat3Utils } from "../../js/utils/mat3_utils.js";
+import { Mat4Utils } from "../../js/utils/mat4_utils.js";
+import { Quat2Utils } from "../../js/utils/quat2_utils.js";
+import { QuatUtils } from "../../js/utils/quat_utils.js";
+import { Vec3Utils } from "../../js/utils/vec3_utils.js";
+import { ComponentUtils, CustomCloneParams, DeepCloneParams } from "./component_utils.js";
+import { SceneUtils } from "./scene_utils.js";
 
 export class CloneParams {
 

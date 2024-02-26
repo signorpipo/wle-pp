@@ -1,7 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils";
-import { Globals } from "../../../../pp/globals";
-import { EasyMeshAmbientFactor } from "../easy_mesh_ambient_factor";
+import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils.js";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyMeshAmbientFactor } from "../easy_mesh_ambient_factor.js";
 
 export class EasyMeshAmbientFactorComponent extends Component {
     static TypeName = "pp-easy-mesh-ambient-factor";

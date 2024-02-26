@@ -1,11 +1,11 @@
 import { InputComponent, ViewComponent } from "@wonderlandengine/api";
 import { Cursor, CursorTarget, HitTestLocation } from "@wonderlandengine/components";
-import { XRUtils } from "../../../../cauldron/utils/xr_utils";
-import { Handedness } from "../../../../input/cauldron/input_types";
-import { InputUtils } from "../../../../input/cauldron/input_utils";
-import { Globals } from "../../../../pp/globals";
-import { mat4_create, quat2_create, vec3_create } from "../../../js/extensions/array_extension";
-import { PluginUtils } from "../../../utils/plugin_utils";
+import { XRUtils } from "../../../../cauldron/utils/xr_utils.js";
+import { Handedness } from "../../../../input/cauldron/input_types.js";
+import { InputUtils } from "../../../../input/cauldron/input_utils.js";
+import { Globals } from "../../../../pp/globals.js";
+import { mat4_create, quat2_create, vec3_create } from "../../../js/extensions/array_extension.js";
+import { PluginUtils } from "../../../utils/plugin_utils.js";
 
 export function initCursorComponentMod() {
     initCursorComponentModPrototype();

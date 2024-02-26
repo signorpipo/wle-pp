@@ -1,16 +1,19 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { PhysicsLayerFlags } from "../../../../../cauldron/physics/physics_layer_flags";
-import { InputUtils } from "../../../../../input/cauldron/input_utils";
-import { CollisionCheckBridge } from "../../../character_controller/collision/collision_check_bridge";
-import { PlayerLocomotion, PlayerLocomotionParams } from "./player_locomotion";
+import { Timer } from "../../../../../cauldron/cauldron/timer.js";
+import { PhysicsLayerFlags } from "../../../../../cauldron/physics/physics_layer_flags.js";
+import { PhysicsUtils } from "../../../../../cauldron/physics/physics_utils.js";
+import { InputUtils } from "../../../../../input/cauldron/input_utils.js";
+import { Globals } from "../../../../../pp/globals.js";
+import { PlayerLocomotion, PlayerLocomotionParams } from "./player_locomotion.js";
 
 export class PlayerLocomotionComponent extends Component {
     static TypeName = "pp-player-locomotion";
     static Properties = {
         _myDefaultLocomotionType: Property.enum(["Smooth", "Teleport"], "Smooth"),
-        _mySwitchLocomotionTypeShortcutEnabled: Property.bool(true), // double press main hand (default left) thumbstick to switch
+        _myAlwaysSmoothForNonVR: Property.bool(true),
+        _mySwitchLocomotionTypeShortcutEnabled: Property.bool(true), // Double press main hand (default left) thumbstick to switch
         _myPhysicsBlockLayerFlags: Property.string("0, 0, 0, 0, 0, 0, 0, 0"),
-        _myDefaultHeight: Property.float(1.75),
+        _myDefaultHeight: Property.float(1.70),
         _myCharacterRadius: Property.float(0.3),
         _myMaxSpeed: Property.float(2),
         _myMaxRotationSpeed: Property.float(100),
@@ -21,8 +24,11 @@ export class PlayerLocomotionComponent extends Component {
         _mySnapTurnOnlyVR: Property.bool(true),
         _mySnapTurnAngle: Property.float(30),
         _mySnapTurnSpeedDegrees: Property.float(0),
+
         _myFlyEnabled: Property.bool(false),
         _myStartFlying: Property.bool(false),
+        _myFlyWithButtonsEnabled: Property.bool(true),
+        _myFlyWithViewAngleEnabled: Property.bool(true),
         _myMinAngleToFlyUpNonVR: Property.float(30),
         _myMinAngleToFlyDownNonVR: Property.float(50),
         _myMinAngleToFlyUpVR: Property.float(60),
@@ -44,9 +50,33 @@ export class PlayerLocomotionComponent extends Component {
         _myTeleportPositionObjectRotateWithHead: Property.bool(true),
         _myTeleportParableStartReferenceObject: Property.object(),
 
+        _myResetRealOnStart: Property.bool(true),
+
+        // #WARN With @myResetRealOnStartFramesAmount at 1 it can happen that you enter the session like 1 frame before the game load
+        // and the head pose might have not been properly initialized yet in the WebXR API, so the reset real will not happen has expected
+        // Since this is a sort of edge case (either u enter after the load, or you were already in for more than 2-3 frames), and that
+        // setting this to more than 1 can cause a visible (even if very short) stutter after the load (due to resetting the head multiple times),
+        // it's better to keep this value at 1
+        // A possible effect of the edge case is the view being obscured on start because it thinks you are colliding
+        //
+        // A value of 3 will make u sure that the head pose will be initialized and the reset real will happen as expected in any case
+        // For example, if u have a total fade at start and nothing can be seen aside the clear color for at least, let's say, 10 frames, 
+        // you can set this to 3 safely, since there will be no visible stutter to be seen (beside the clear color)
+        _myResetRealOnStartFramesAmount: Property.int(1),
+
+        // Can fix some head through floor issues, when you can move your head completely to the other side of the floor
+        // If the floors are thick enough that this can't happen, you can leave this to false
+        _myResetHeadToFeetInsteadOfReal: Property.bool(true),
+        _myResetHeadToRealMinDistance: Property.float(0.25),
+
         // these 2 flags works 100% properly only if both true or false
         _mySyncWithRealWorldPositionOnlyIfValid: Property.bool(true),   // valid means the real player has not moved inside walls
         _myViewOcclusionInsideWallsEnabled: Property.bool(true),
+
+        _mySyncNonVRHeightWithVROnExitSession: Property.bool(false),
+        _mySyncNonVRVerticalAngleWithVROnExitSession: Property.bool(false),
+
+        _mySyncHeadWithRealAfterLocomotionUpdateIfNeeded: Property.bool(true),
 
         _myColliderAccuracy: Property.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High"),
         _myColliderCheckOnlyFeet: Property.bool(false),
@@ -57,27 +87,33 @@ export class PlayerLocomotionComponent extends Component {
         _myColliderMaxWalkableGroundStepHeight: Property.float(0.1),
         _myColliderPreventFallingFromEdges: Property.bool(false),
 
+        _myDebugFlyShortcutEnabled: Property.bool(false),               // main hand (default left) select + thumbstick press, auto switch to smooth
+        _myDebugFlyMaxSpeedMultiplier: Property.float(5),
+        _myMoveThroughCollisionShortcutEnabled: Property.bool(false),   // main hand (default left) thumbstick pressed while moving
+        _myMoveHeadShortcutEnabled: Property.bool(false),               // non main hand (default right) thumbstick pressed while moving
+        _myTripleSpeedShortcutEnabled: Property.bool(false),            // main hand (default left) select pressed while moving
+
         _myDebugHorizontalEnabled: Property.bool(false),
         _myDebugVerticalEnabled: Property.bool(false),
 
-        _myMoveThroughCollisionShortcutEnabled: Property.bool(false),   // main hand (default left) thumbstick pressed while moving
-        _myMoveHeadShortcutEnabled: Property.bool(false),               // non main hand (default right) thumbstick pressed while moving
-        _myTripleSpeedShortcutEnabled: Property.bool(false)             // main hand (default left) select pressed while moving
+        _myCollisionCheckDisabled: Property.bool(false),
+
+        _myRaycastCountLogEnabled: Property.bool(false),
+        _myRaycastVisualDebugEnabled: Property.bool(false),
+        _myPerformanceLogEnabled: Property.bool(false)
     };
 
     start() {
-        CollisionCheckBridge.initBridge(this.engine);
-
         let params = new PlayerLocomotionParams(this.engine);
 
         params.myDefaultLocomotionType = this._myDefaultLocomotionType;
+        params.myAlwaysSmoothForNonVR = this._myAlwaysSmoothForNonVR;
         params.mySwitchLocomotionTypeShortcutEnabled = this._mySwitchLocomotionTypeShortcutEnabled;
 
         params.myDefaultHeight = this._myDefaultHeight;
 
         params.myMaxSpeed = this._myMaxSpeed;
         params.myMaxRotationSpeed = this._myMaxRotationSpeed;
-
         params.myGravityAcceleration = this._myGravityAcceleration;
         params.myMaxGravitySpeed = this._myMaxGravitySpeed;
 
@@ -92,6 +128,8 @@ export class PlayerLocomotionComponent extends Component {
 
         params.myFlyEnabled = this._myFlyEnabled;
         params.myStartFlying = this._myStartFlying;
+        params.myFlyWithButtonsEnabled = this._myFlyWithButtonsEnabled;
+        params.myFlyWithViewAngleEnabled = this._myFlyWithViewAngleEnabled;
         params.myMinAngleToFlyUpNonVR = this._myMinAngleToFlyUpNonVR;
         params.myMinAngleToFlyDownNonVR = this._myMinAngleToFlyDownNonVR;
         params.myMinAngleToFlyUpVR = this._myMinAngleToFlyUpVR;
@@ -116,8 +154,18 @@ export class PlayerLocomotionComponent extends Component {
         params.myTeleportPositionObjectRotateWithHead = this._myTeleportPositionObjectRotateWithHead;
         params.myTeleportParableStartReferenceObject = this._myTeleportParableStartReferenceObject;
 
+        params.myResetRealOnStart = this._myResetRealOnStart;
+        params.myResetRealOnStartFramesAmount = this._myResetRealOnStartFramesAmount;
+        params.myResetHeadToFeetInsteadOfReal = this._myResetHeadToFeetInsteadOfReal;
+        params.myResetHeadToRealMinDistance = this._myResetHeadToRealMinDistance;
+
         params.mySyncWithRealWorldPositionOnlyIfValid = this._mySyncWithRealWorldPositionOnlyIfValid;
         params.myViewOcclusionInsideWallsEnabled = this._myViewOcclusionInsideWallsEnabled;
+
+        params.mySyncNonVRHeightWithVROnExitSession = this._mySyncNonVRHeightWithVROnExitSession;
+        params.mySyncNonVRVerticalAngleWithVROnExitSession = this._mySyncNonVRVerticalAngleWithVROnExitSession;
+
+        params.mySyncHeadWithRealAfterLocomotionUpdateIfNeeded = this._mySyncHeadWithRealAfterLocomotionUpdateIfNeeded;
 
         params.myColliderAccuracy = this._myColliderAccuracy;
         params.myColliderCheckOnlyFeet = this._myColliderCheckOnlyFeet;
@@ -128,6 +176,8 @@ export class PlayerLocomotionComponent extends Component {
         params.myColliderMaxWalkableGroundStepHeight = this._myColliderMaxWalkableGroundStepHeight;
         params.myColliderPreventFallingFromEdges = this._myColliderPreventFallingFromEdges;
 
+        params.myDebugFlyShortcutEnabled = this._myDebugFlyShortcutEnabled;
+        params.myDebugFlyMaxSpeedMultiplier = this._myDebugFlyMaxSpeedMultiplier;
         params.myMoveThroughCollisionShortcutEnabled = this._myMoveThroughCollisionShortcutEnabled;
         params.myMoveHeadShortcutEnabled = this._myMoveHeadShortcutEnabled;
         params.myTripleSpeedShortcutEnabled = this._myTripleSpeedShortcutEnabled;
@@ -135,36 +185,73 @@ export class PlayerLocomotionComponent extends Component {
         params.myDebugHorizontalEnabled = this._myDebugHorizontalEnabled;
         params.myDebugVerticalEnabled = this._myDebugVerticalEnabled;
 
+        params.myCollisionCheckDisabled = this._myCollisionCheckDisabled;
+
         params.myPhysicsBlockLayerFlags.copy(this._getPhysicsBlockLayersFlags());
 
         this._myPlayerLocomotion = new PlayerLocomotion(params);
 
-        this._myStartCounter = 1;
+        this._myLocomotionStarted = false;
         this._myResetReal = true;
+
+        this._myDebugPerformanceLogTimer = new Timer(0.5);
+        this._myDebugPerformanceLogTotalTime = 0;
+        this._myDebugPerformanceLogFrameCount = 0;
+
+        Globals.getHeadPose(this.engine).registerPostPoseUpdatedEventEventListener(this, this.onPostPoseUpdatedEvent.bind(this));
     }
 
-    update(dt) {
-        if (this._myStartCounter > 0) {
-            this._myStartCounter--;
-            if (this._myStartCounter == 0) {
-                this._myPlayerLocomotion.start();
-            }
+    onPostPoseUpdatedEvent(dt, pose, manualUpdate) {
+        if (manualUpdate) return;
 
-            this._myPlayerLocomotion.getPlayerHeadManager().update(dt);
-        } else {
-            if (this._myResetReal) {
-                this._myResetReal = false;
-                this._myPlayerLocomotion.getPlayerTransformManager().resetReal(true, true);
-            }
-
-            CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycasts = 0; // #TODO Debug stuff, remove later
-
-            this._myPlayerLocomotion.update(dt);
+        let startTime = 0;
+        if (this._myPerformanceLogEnabled && Globals.isDebugEnabled(this.engine)) {
+            startTime = window.performance.now();
         }
 
-        //CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycastsMax = Math.max(CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycasts, CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycastsMax);
-        //console.error(CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycastsMax);
-        //console.error(CollisionCheckBridge.getCollisionCheck(this.engine)._myTotalRaycasts);
+        let raycastVisualDebugEnabledBackup = false;
+        if (this._myRaycastVisualDebugEnabled && Globals.isDebugEnabled(this.engine)) {
+            raycastVisualDebugEnabledBackup = PhysicsUtils.isRaycastVisualDebugEnabled(this.engine.physics);
+            PhysicsUtils.setRaycastVisualDebugEnabled(true, this.engine.physics);
+        }
+
+        if (this._myRaycastCountLogEnabled && Globals.isDebugEnabled(this.engine)) {
+            PhysicsUtils.resetRaycastCount(this.engine.physics);
+        }
+
+        if (!this._myLocomotionStarted) {
+            this._myLocomotionStarted = true;
+            this._myPlayerLocomotion.start();
+        }
+
+        this._myPlayerLocomotion.update(dt);
+
+        if (this._myPerformanceLogEnabled && Globals.isDebugEnabled(this.engine)) {
+            let endTime = window.performance.now();
+            this._myDebugPerformanceLogTotalTime += endTime - startTime;
+            this._myDebugPerformanceLogFrameCount++;
+
+            this._myDebugPerformanceLogTimer.update(dt);
+            if (this._myDebugPerformanceLogTimer.isDone()) {
+                this._myDebugPerformanceLogTimer.start();
+
+                let averageTime = this._myDebugPerformanceLogTotalTime / this._myDebugPerformanceLogFrameCount;
+
+                console.log("Locomotion ms: " + averageTime.toFixed(3));
+
+                this._myDebugPerformanceLogTotalTime = 0;
+                this._myDebugPerformanceLogFrameCount = 0;
+            }
+        }
+
+        if (this._myRaycastVisualDebugEnabled && Globals.isDebugEnabled(this.engine)) {
+            PhysicsUtils.setRaycastVisualDebugEnabled(raycastVisualDebugEnabledBackup, this.engine.physics);
+        }
+
+        if (this._myRaycastCountLogEnabled && Globals.isDebugEnabled(this.engine)) {
+            console.log("Raycast count: " + PhysicsUtils.getRaycastCount(this.engine.physics));
+            PhysicsUtils.resetRaycastCount(this.engine.physics);
+        }
     }
 
     getPlayerLocomotion() {
@@ -172,18 +259,14 @@ export class PlayerLocomotionComponent extends Component {
     }
 
     onActivate() {
-        if (this._myStartCounter == 0) {
-            if (this._myPlayerLocomotion != null) {
-                this._myPlayerLocomotion.setActive(true);
-            }
+        if (this._myPlayerLocomotion != null) {
+            this._myPlayerLocomotion.setActive(true);
         }
     }
 
     onDeactivate() {
-        if (this._myStartCounter == 0) {
-            if (this._myPlayerLocomotion != null) {
-                this._myPlayerLocomotion.setActive(false);
-            }
+        if (this._myPlayerLocomotion != null) {
+            this._myPlayerLocomotion.setActive(false);
         }
     }
 

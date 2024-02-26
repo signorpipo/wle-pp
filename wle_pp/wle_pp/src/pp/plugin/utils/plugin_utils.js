@@ -1,4 +1,4 @@
-import { JSUtils } from "../../cauldron/js/utils/js_utils";
+import { JSUtils } from "../../cauldron/js/utils/js_utils.js";
 
 export function injectProperties(fromReference, toReference, enumerable = true, writable = true, configurable = true, keepOriginalDescriptorAttributes = true, bindThisAsFirstParam = false, prefix = null, functionNamesToExclude = []) {
     let ownPropertyNames = Object.getOwnPropertyNames(fromReference);

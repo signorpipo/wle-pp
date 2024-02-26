@@ -1,4 +1,4 @@
-import { Globals } from "../../pp/globals";
+import { Globals } from "../../pp/globals.js";
 
 // #TODO These are actually pretty useless, and I can stop using them honestly, maybe slowly removing them from the library too
 // It's too hard to actually avoid using the main window directly, like when u do Math, u should do getWindow().Math if u wanted to support

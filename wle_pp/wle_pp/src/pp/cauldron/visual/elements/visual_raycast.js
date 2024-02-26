@@ -8,10 +8,10 @@ or
 let visualRaycast = new VisualRaycast(visualParams);
 */
 
-import { Globals } from "../../../pp/globals";
-import { RaycastResults } from "../../physics/physics_raycast_params";
-import { VisualArrow, VisualArrowParams } from "./visual_arrow";
-import { VisualElementType } from "./visual_element_types";
+import { Globals } from "../../../pp/globals.js";
+import { RaycastResults } from "../../physics/physics_raycast_params.js";
+import { VisualArrow, VisualArrowParams } from "./visual_arrow.js";
+import { VisualElementType } from "./visual_element_types.js";
 
 export class VisualRaycastParams {
 

@@ -1,9 +1,37 @@
-import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../../../pp/globals";
-import { CollisionCheck } from "./collision_check";
-import { CollisionRuntimeParams } from "./collision_params";
+import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../../../pp/globals.js";
+import { CollisionCheckVertical } from "./collision_check_vertical.js";
+import { CollisionRuntimeParams } from "./collision_params.js";
 
-CollisionCheck.prototype._move = function () {
+export class CollisionCheckMove extends CollisionCheckVertical {
+
+    move(movement, transformQuat, collisionCheckParams, collisionRuntimeParams) {
+        if (this.isCollisionCheckDisabled() && Globals.isDebugEnabled(this._myEngine)) {
+            this._setRuntimeParamsForMoveCollisionCheckDisabled(movement, transformQuat, collisionCheckParams, collisionRuntimeParams);
+            return;
+        }
+
+        this._move(movement, transformQuat, collisionCheckParams, collisionRuntimeParams);
+    }
+
+    _move(movement, transformQuat, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _moveStep(movement, feetPosition, transformUp, transformForward, height, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, outFixedMovement) {
+        // Implemented outside class definition
+    }
+
+    _syncCollisionRuntimeParamsWithPrevious(surfaceAdjustedHorizontalMovement, verticalMovement, up, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+}
+
+
+
+// IMPLEMENTATION
+
+CollisionCheckMove.prototype._move = function () {
     let transformUp = vec3_create();
     let transformForward = vec3_create();
     let feetPosition = vec3_create();
@@ -43,10 +71,18 @@ CollisionCheck.prototype._move = function () {
         if (height < 0.00001) {
             height = 0;
         }
-        //height = 1.75;
+        //height = 1.70;
 
         horizontalMovement = movement.vec3_removeComponentAlongAxis(transformUp, horizontalMovement);
+        if (horizontalMovement.vec3_isZero(0.000001)) {
+            horizontalMovement.vec3_zero();
+        }
+
         verticalMovement = movement.vec3_componentAlongAxis(transformUp, verticalMovement);
+        if (verticalMovement.vec3_isZero(0.000001)) {
+            verticalMovement.vec3_zero();
+        }
+
         //feetPosition = feetPosition.vec3_add(horizontalMovement.vec3_normalize().vec3_scale(0.5));
         //height = height / 2;
         //horizontalMovement.vec3_normalize(horizontalMovement).vec3_scale(0.3, horizontalMovement); movement = horizontalMovement.vec3_add(verticalMovement);
@@ -55,25 +91,30 @@ CollisionCheck.prototype._move = function () {
         movementStep.vec3_copy(movement);
 
         if (!movement.vec3_isZero(0.00001) && collisionCheckParams.mySplitMovementEnabled) {
-            let equalStepLength = movement.vec3_length() / collisionCheckParams.mySplitMovementMaxSteps;
-            if (!collisionCheckParams.mySplitMovementStepEqualLength || equalStepLength < collisionCheckParams.mySplitMovementStepEqualLengthMinLength) {
-                let maxLength = collisionCheckParams.mySplitMovementStepEqualLength ? collisionCheckParams.mySplitMovementStepEqualLengthMinLength : collisionCheckParams.mySplitMovementMaxLength;
-                movementStepAmount = Math.ceil(movement.vec3_length() / maxLength);
-                if (movementStepAmount > 1) {
-                    movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(maxLength, movementStep);
-                    movementStepAmount = (collisionCheckParams.mySplitMovementMaxStepsEnabled) ? Math.min(movementStepAmount, collisionCheckParams.mySplitMovementMaxSteps) : movementStepAmount;
-                }
+            let minLength = collisionCheckParams.mySplitMovementMinLengthEnabled ? collisionCheckParams.mySplitMovementMinLength : null;
+            let maxLength = collisionCheckParams.mySplitMovementMaxLengthEnabled && collisionCheckParams.mySplitMovementMaxLength > 0 ? collisionCheckParams.mySplitMovementMaxLength : null;
+            let maxSteps = collisionCheckParams.mySplitMovementMaxStepsEnabled && collisionCheckParams.mySplitMovementMaxSteps > 0 ? collisionCheckParams.mySplitMovementMaxSteps : 1;
 
-                movementStepAmount = Math.max(1, movementStepAmount);
+            let movementLength = movement.vec3_length();
+            let equalStepLength = movementLength / maxSteps;
 
-                if (movementStepAmount == 1) {
-                    movementStep.vec3_copy(movement);
+            let stepLength = Math.pp_clamp(equalStepLength, minLength, maxLength);
+            if (stepLength != equalStepLength) {
+                movementStepAmount = Math.ceil(movementLength / stepLength);
+                movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(stepLength, movementStep);
+
+                if (collisionCheckParams.mySplitMovementMaxStepsEnabled) {
+                    movementStepAmount = Math.min(movementStepAmount, maxSteps);
                 }
             } else {
-                movementStepAmount = collisionCheckParams.mySplitMovementMaxSteps;
-                if (movementStepAmount > 1) {
-                    movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(equalStepLength, movementStep);
-                }
+                movementStepAmount = maxSteps;
+                movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(equalStepLength, movementStep);
+            }
+
+            movementStepAmount = Math.max(1, movementStepAmount);
+
+            if (movementStepAmount == 1) {
+                movementStep.vec3_copy(movement);
             }
         }
 
@@ -103,8 +144,10 @@ CollisionCheck.prototype._move = function () {
             stepsPerformed = i + 1;
 
             if ((collisionRuntimeParams.myHorizontalMovementCanceled && collisionRuntimeParams.myVerticalMovementCanceled) ||
-                (collisionRuntimeParams.myHorizontalMovementCanceled && collisionCheckParams.mySplitMovementStopWhenHorizontalMovementCanceled) ||
-                (collisionRuntimeParams.myVerticalMovementCanceled && collisionCheckParams.mySplitMovementStopWhenVerticalMovementCanceled) ||
+                (collisionRuntimeParams.myHorizontalMovementCanceled &&
+                    (collisionCheckParams.mySplitMovementStopWhenHorizontalMovementCanceled || (verticalMovement.vec3_isZero() && fixedMovementStep.vec3_isZero()))) ||
+                (collisionRuntimeParams.myVerticalMovementCanceled &&
+                    (collisionCheckParams.mySplitMovementStopWhenVerticalMovementCanceled || (horizontalMovement.vec3_isZero() && fixedMovementStep.vec3_isZero()))) ||
                 (collisionCheckParams.mySplitMovementStopCallback != null && collisionCheckParams.mySplitMovementStopCallback(collisionRuntimeParams))) {
                 if (collisionCheckParams.mySplitMovementStopReturnPrevious) {
                     collisionRuntimeParams.copy(previousCollisionRuntimeParams);
@@ -145,16 +188,10 @@ CollisionCheck.prototype._move = function () {
         collisionRuntimeParams.myNewPosition = collisionRuntimeParams.myOriginalPosition.vec3_add(collisionRuntimeParams.myFixedMovement, collisionRuntimeParams.myNewPosition);
 
         collisionRuntimeParams.myIsMove = true;
-
-
-        //console.error(this._myTotalRaycasts );
-
-        //this._myTotalRaycastsMax = Math.max(this._myTotalRaycasts, this._myTotalRaycastsMax);
-        //console.error(this._myTotalRaycastsMax);
     };
 }();
 
-CollisionCheck.prototype._moveStep = function () {
+CollisionCheckMove.prototype._moveStep = function () {
     let horizontalMovement = vec3_create();
     let verticalMovement = vec3_create();
     let fixedHorizontalMovement = vec3_create();
@@ -192,7 +229,6 @@ CollisionCheck.prototype._moveStep = function () {
             //return vec3_create();
         }
 
-        //this._myTotalRaycasts = 0;
         //collisionCheckParams.myDebugEnabled = true;
 
         this._myPrevCollisionRuntimeParams.copy(collisionRuntimeParams);
@@ -236,7 +272,6 @@ CollisionCheck.prototype._moveStep = function () {
 
             if (!surfaceAdjustedHorizontalMovement.vec3_isZero()) {
                 fixedHorizontalMovement = this._horizontalCheck(surfaceAdjustedHorizontalMovement, feetPosition, height, transformUp, forwardForHorizontal, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, this._myPrevCollisionRuntimeParams, false, fixedHorizontalMovement);
-                //console.error(this._myTotalRaycasts );
                 //collisionRuntimeParams.myIsCollidingHorizontally = true;
                 //collisionRuntimeParams.myHorizontalCollisionHit.myNormal = vec3_create(0, 0, 1);
                 if (collisionCheckParams.mySlidingEnabled && collisionRuntimeParams.myIsCollidingHorizontally && this._isSlidingNormalValid(surfaceAdjustedHorizontalMovement, transformUp, collisionRuntimeParams)) {
@@ -286,7 +321,6 @@ CollisionCheck.prototype._moveStep = function () {
                 }
             }
 
-            //console.error(this._myTotalRaycasts );
             //collisionCheckParams.myDebugEnabled = false;
 
             surfaceAdjustedVerticalMovement = this._adjustVerticalMovementWithSurface(fixedHorizontalMovement, verticalMovement, transformUp, collisionCheckParams, collisionRuntimeParams, this._myPrevCollisionRuntimeParams, surfaceAdjustedVerticalMovement);
@@ -302,7 +336,6 @@ CollisionCheck.prototype._moveStep = function () {
             }
         }
 
-        //console.error(this._myTotalRaycasts );
         outFixedMovement.vec3_zero();
         if (!collisionRuntimeParams.myIsCollidingVertically) {
             outFixedMovement = fixedHorizontalMovement.vec3_add(fixedVerticalMovement, outFixedMovement);
@@ -365,19 +398,29 @@ CollisionCheck.prototype._moveStep = function () {
                 if (collisionCheckParams.myComputeGroundInfoEnabled && collisionCheckParams.myRegatherGroundInfoOnSurfaceCheckFail) {
                     this._gatherSurfaceInfo(newFeetPosition, height, transformUp, forwardForPerceivedAngle, forwardForVertical, true, collisionCheckParams, collisionRuntimeParams);
                 } else {
+                    collisionRuntimeParams.myRealIsOnGround = this._myPrevCollisionRuntimeParams.myRealIsOnGround;
                     collisionRuntimeParams.myIsOnGround = this._myPrevCollisionRuntimeParams.myIsOnGround;
                     collisionRuntimeParams.myGroundAngle = this._myPrevCollisionRuntimeParams.myGroundAngle;
                     collisionRuntimeParams.myGroundPerceivedAngle = this._myPrevCollisionRuntimeParams.myGroundPerceivedAngle;
                     collisionRuntimeParams.myGroundNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myGroundNormal);
+                    collisionRuntimeParams.myGroundHitMaxAngle = this._myPrevCollisionRuntimeParams.myGroundHitMaxAngle;
+                    collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myGroundHitMaxNormal);
+                    collisionRuntimeParams.myGroundDistance = this._myPrevCollisionRuntimeParams.myGroundDistance;
+                    collisionRuntimeParams.myGroundIsBaseInsideCollision = this._myPrevCollisionRuntimeParams.myGroundIsBaseInsideCollision;
                 }
 
                 if (collisionCheckParams.myComputeCeilingInfoEnabled && collisionCheckParams.myRegatherCeilingInfoOnSurfaceCheckFail) {
                     this._gatherSurfaceInfo(newFeetPosition, height, transformUp, forwardForPerceivedAngle, forwardForVertical, false, collisionCheckParams, collisionRuntimeParams);
                 } else {
+                    collisionRuntimeParams.myRealIsOnCeiling = this._myPrevCollisionRuntimeParams.myRealIsOnCeiling;
                     collisionRuntimeParams.myIsOnCeiling = this._myPrevCollisionRuntimeParams.myIsOnCeiling;
                     collisionRuntimeParams.myCeilingAngle = this._myPrevCollisionRuntimeParams.myCeilingAngle;
                     collisionRuntimeParams.myCeilingPerceivedAngle = this._myPrevCollisionRuntimeParams.myCeilingPerceivedAngle;
                     collisionRuntimeParams.myCeilingNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myCeilingNormal);
+                    collisionRuntimeParams.myCeilingHitMaxAngle = this._myPrevCollisionRuntimeParams.myCeilingHitMaxAngle;
+                    collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myCeilingHitMaxNormal);
+                    collisionRuntimeParams.myCeilingDistance = this._myPrevCollisionRuntimeParams.myCeilingDistance;
+                    collisionRuntimeParams.myCeilingIsBaseInsideCollision = this._myPrevCollisionRuntimeParams.myCeilingIsBaseInsideCollision;
                 }
             }
         }
@@ -481,7 +524,7 @@ CollisionCheck.prototype._moveStep = function () {
     };
 }();
 
-CollisionCheck.prototype._syncCollisionRuntimeParamsWithPrevious = function () {
+CollisionCheckMove.prototype._syncCollisionRuntimeParamsWithPrevious = function () {
     let previousFixedHorizontalMovement = vec3_create();
     return function _syncCollisionRuntimeParamsWithPrevious(surfaceAdjustedHorizontalMovement, verticalMovement, up, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams) {
         collisionRuntimeParams.myIsSlidingFlickerPrevented = previousCollisionRuntimeParams.myIsSlidingFlickerPrevented;
@@ -521,9 +564,3 @@ CollisionCheck.prototype._syncCollisionRuntimeParamsWithPrevious = function () {
         }
     };
 }();
-
-
-
-Object.defineProperty(CollisionCheck.prototype, "_move", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_moveStep", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_syncCollisionRuntimeParamsWithPrevious", { enumerable: false });

@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
+import { Globals } from "../../../pp/globals.js";
 
 export class EnableToolComponent extends Component {
     static TypeName = "pp-enable-tools";

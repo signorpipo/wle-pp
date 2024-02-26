@@ -1,7 +1,7 @@
-import { Globals } from "../../../../pp/globals";
-import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget";
-import { EasyTuneNoneWidgetConfig } from "./easy_tune_none_widget_config";
-import { EasyTuneNoneWidgetUI } from "./easy_tune_none_widget_ui";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget.js";
+import { EasyTuneNoneWidgetConfig } from "./easy_tune_none_widget_config.js";
+import { EasyTuneNoneWidgetUI } from "./easy_tune_none_widget_ui.js";
 
 export class EasyTuneNoneWidget extends EasyTuneBaseWidget {
 

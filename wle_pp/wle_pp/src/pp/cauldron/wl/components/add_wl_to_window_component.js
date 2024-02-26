@@ -1,7 +1,7 @@
 import * as WLAPI from "@wonderlandengine/api";
 import { Component, Property } from "@wonderlandengine/api";
 import * as WLComponents from "@wonderlandengine/components";
-import { Globals } from "../../../pp/globals";
+import { Globals } from "../../../pp/globals.js";
 
 export class AddWLToWindowComponent extends Component {
     static TypeName = "pp-add-wl-to-window";

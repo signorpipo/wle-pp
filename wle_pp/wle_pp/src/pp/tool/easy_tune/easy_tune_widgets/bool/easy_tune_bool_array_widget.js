@@ -1,8 +1,8 @@
-import { GamepadAxesID } from "../../../../input/gamepad/gamepad_buttons";
-import { Globals } from "../../../../pp/globals";
-import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget";
-import { EasyTuneBoolArrayWidgetConfig } from "./easy_tune_bool_array_widget_config";
-import { EasyTuneBoolArrayWidgetUI } from "./easy_tune_bool_array_widget_ui";
+import { GamepadAxesID } from "../../../../input/gamepad/gamepad_buttons.js";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget.js";
+import { EasyTuneBoolArrayWidgetConfig } from "./easy_tune_bool_array_widget_config.js";
+import { EasyTuneBoolArrayWidgetUI } from "./easy_tune_bool_array_widget_ui.js";
 
 export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
 

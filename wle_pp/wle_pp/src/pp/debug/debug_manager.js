@@ -1,5 +1,5 @@
-import { Globals } from "../pp/globals";
-import { DebugVisualManager } from "./debug_visual_manager";
+import { Globals } from "../pp/globals.js";
+import { DebugVisualManager } from "./debug_visual_manager.js";
 
 export class DebugManager {
 

@@ -1,4 +1,4 @@
-import { vec2_create } from "../../../plugin/js/extensions/array_extension";
+import { vec2_create } from "../../../plugin/js/extensions/array_extension.js";
 
 export class GamepadCore {
 

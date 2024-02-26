@@ -1,5 +1,5 @@
-import { Globals } from "../../pp/globals";
-import { ConsoleOriginalFunctions } from "./console_original_functions";
+import { Globals } from "../../pp/globals.js";
+import { ConsoleOriginalFunctions } from "./console_original_functions.js";
 
 export class ConsoleVR {
 

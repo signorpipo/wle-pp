@@ -1,5 +1,5 @@
 import { Emitter } from "@wonderlandengine/api";
-import { Timer } from "../../../../cauldron/cauldron/timer";
+import { Timer } from "../../../../cauldron/cauldron/timer.js";
 
 export class EasyTuneBaseWidgetParams {
 

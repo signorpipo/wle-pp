@@ -1,16 +1,17 @@
-import { PhysicsLayerFlags } from "../../../../../../cauldron/physics/physics_layer_flags";
-import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params";
-import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { PhysicsLayerFlags } from "../../../../../../cauldron/physics/physics_layer_flags.js";
+import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params.js";
+import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
 
 export class CollisionCheckParams {
 
     constructor() {
         this.mySplitMovementEnabled = false;
         this.mySplitMovementMaxLength = 0;
-        this.mySplitMovementMaxStepsEnabled = false;
+        this.mySplitMovementMaxLengthEnabled = false;
         this.mySplitMovementMaxSteps = 0;
-        this.mySplitMovementStepEqualLength = false;
-        this.mySplitMovementStepEqualLengthMinLength = 0;
+        this.mySplitMovementMaxStepsEnabled = false;
+        this.mySplitMovementMinLength = 0;
+        this.mySplitMovementMinLengthEnabled = false;
         this.mySplitMovementStopWhenHorizontalMovementCanceled = false;
         this.mySplitMovementStopWhenVerticalMovementCanceled = false;
         this.mySplitMovementStopCallback = null;                        // Signature: callback(collisionRuntimeParams)
@@ -260,10 +261,11 @@ export class CollisionCheckParams {
     copy(other) {
         this.mySplitMovementEnabled = other.mySplitMovementEnabled;
         this.mySplitMovementMaxLength = other.mySplitMovementMaxLength;
-        this.mySplitMovementMaxStepsEnabled = other.mySplitMovementMaxStepsEnabled;
+        this.mySplitMovementMaxLengthEnabled = other.mySplitMovementMaxLengthEnabled;
         this.mySplitMovementMaxSteps = other.mySplitMovementMaxSteps;
-        this.mySplitMovementStepEqualLength = other.mySplitMovementStepEqualLength;
-        this.mySplitMovementStepEqualLengthMinLength = other.mySplitMovementStepEqualLengthMinLength;
+        this.mySplitMovementMaxStepsEnabled = other.mySplitMovementMaxStepsEnabled;
+        this.mySplitMovementMinLength = other.mySplitMovementMinLength;
+        this.mySplitMovementMinLengthEnabled = other.mySplitMovementMinLengthEnabled;
         this.mySplitMovementStopWhenHorizontalMovementCanceled = other.mySplitMovementStopWhenHorizontalMovementCanceled;
         this.mySplitMovementStopWhenVerticalMovementCanceled = other.mySplitMovementStopWhenVerticalMovementCanceled;
         this.mySplitMovementStopCallback = other.mySplitMovementStopCallback;

@@ -1,5 +1,5 @@
 import { Component } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
+import { Globals } from "../../../pp/globals.js";
 
 export class CopyReferenceSpaceTransformComponent extends Component {
     static TypeName = "pp-copy-reference-space-transform";

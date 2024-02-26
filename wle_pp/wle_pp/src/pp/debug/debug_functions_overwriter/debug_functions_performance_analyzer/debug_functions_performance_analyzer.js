@@ -1,6 +1,6 @@
-import { JSUtils } from "../../../cauldron/js/utils/js_utils";
-import { Globals } from "../../../pp/globals";
-import { DebugFunctionsOverwriter, DebugFunctionsOverwriterParams } from "../debug_functions_overwriter";
+import { JSUtils } from "../../../cauldron/js/utils/js_utils.js";
+import { Globals } from "../../../pp/globals.js";
+import { DebugFunctionsOverwriter, DebugFunctionsOverwriterParams } from "../debug_functions_overwriter.js";
 
 export class DebugFunctionsPerformanceAnalyzerParams extends DebugFunctionsOverwriterParams {
 

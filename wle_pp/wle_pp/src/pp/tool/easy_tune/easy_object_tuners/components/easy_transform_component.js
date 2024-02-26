@@ -1,7 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils";
-import { Globals } from "../../../../pp/globals";
-import { EasyTransform } from "../easy_transform";
+import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils.js";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyTransform } from "../easy_transform.js";
 
 export class EasyTransformComponent extends Component {
     static TypeName = "pp-easy-transform";

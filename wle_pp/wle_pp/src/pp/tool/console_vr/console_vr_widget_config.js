@@ -1,7 +1,7 @@
 import { Alignment, Collider, Justification } from "@wonderlandengine/api";
-import { vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension";
-import { ToolHandedness } from "../cauldron/tool_types";
-import { ConsoleVRWidgetMessageType } from "./console_vr_types";
+import { vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension.js";
+import { ToolHandedness } from "../cauldron/tool_types.js";
+import { ConsoleVRWidgetMessageType } from "./console_vr_types.js";
 
 export class ConsoleVRWidgetConfig {
 
@@ -179,7 +179,7 @@ export class ConsoleVRWidgetConfig {
         this.myPulseIntensity = 0.3;
         this.myPulseDuration = 0.085;
 
-        this.myClearBrowserConsoleWhenClearPressed = true;
+        this.myClearBrowserConsoleWhenClearPressed = false;
 
         this.myGamepadScrollOnlyOnHover = true;
     }

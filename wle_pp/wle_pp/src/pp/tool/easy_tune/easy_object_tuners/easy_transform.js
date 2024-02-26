@@ -1,6 +1,6 @@
-import { mat4_create } from "../../../plugin/js/extensions/array_extension";
-import { EasyTuneTransform } from "../easy_tune_variable_types";
-import { EasyObjectTuner } from "./easy_object_tuner";
+import { mat4_create } from "../../../plugin/js/extensions/array_extension.js";
+import { EasyTuneTransform } from "../easy_tune_variable_types.js";
+import { EasyObjectTuner } from "./easy_object_tuner.js";
 
 export class EasyTransform extends EasyObjectTuner {
 
@@ -15,7 +15,7 @@ export class EasyTransform extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneTransform(variableName, this._getDefaultValue(), null, true, this._myScaleAsOne, 3);
+        return new EasyTuneTransform(variableName, this._getDefaultValue(), null, true, this._myScaleAsOne, 3, undefined, this._myEngine);
     }
 
     _getObjectValue(object) {

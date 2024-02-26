@@ -1,4 +1,4 @@
-import { SceneUtils } from "./utils/scene_utils";
+import { SceneUtils } from "./utils/scene_utils.js";
 
 let _myMainEngine = null;
 let _myEngines = [];

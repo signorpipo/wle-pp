@@ -1,7 +1,26 @@
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { CollisionCheck } from "./collision_check";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { CollisionCheckHorizontalPosition } from "./collision_check_horizontal_position.js";
 
-CollisionCheck.prototype._horizontalMovementCheck = function () {
+export class CollisionCheckHorizontalMovement extends CollisionCheckHorizontalPosition {
+
+    _horizontalMovementCheck(movement, originalFeetPosition, originalHeight, feetPosition, height, up, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _horizontalMovementVerticalCheck(movement, feetPosition, checkPositions, heightOffset, heightStep, up, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _horizontalMovementHorizontalCheck(movement, feetPosition, checkPositions, heightOffset, up, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+}
+
+
+
+// IMPLEMENTATION
+
+CollisionCheckHorizontalMovement.prototype._horizontalMovementCheck = function () {
     let checkPositions = [];
     let cachedCheckPositions = [];
     let currentCachedCheckPositionIndex = 0;
@@ -180,7 +199,7 @@ CollisionCheck.prototype._horizontalMovementCheck = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalMovementVerticalCheck = function () {
+CollisionCheckHorizontalMovement.prototype._horizontalMovementVerticalCheck = function () {
     let movementStep = vec3_create();
     let movementDirection = vec3_create();
     let firstPosition = vec3_create();
@@ -372,7 +391,7 @@ CollisionCheck.prototype._horizontalMovementVerticalCheck = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalMovementHorizontalCheck = function () {
+CollisionCheckHorizontalMovement.prototype._horizontalMovementHorizontalCheck = function () {
     let movementStep = vec3_create();
     let movementDirection = vec3_create();
     let firstPosition = vec3_create();
@@ -470,9 +489,3 @@ CollisionCheck.prototype._horizontalMovementHorizontalCheck = function () {
         return isHorizontalCheckOk;
     };
 }();
-
-
-
-Object.defineProperty(CollisionCheck.prototype, "_horizontalMovementCheck", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalMovementVerticalCheck", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalMovementHorizontalCheck", { enumerable: false });

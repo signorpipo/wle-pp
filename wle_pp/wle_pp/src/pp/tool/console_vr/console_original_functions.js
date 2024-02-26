@@ -1,4 +1,4 @@
-import { Globals } from "../../pp/globals";
+import { Globals } from "../../pp/globals.js";
 
 let _myConsoleOriginalLog = console.log;
 let _myConsoleOriginalError = console.error;

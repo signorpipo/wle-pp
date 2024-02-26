@@ -1,8 +1,8 @@
-import { Globals } from "../../pp/globals";
-import { TrackedHandJointID } from "../cauldron/input_types";
-import { InputUtils } from "../cauldron/input_utils";
-import { BasePoseParams } from "./base_pose";
-import { TrackedHandJointPose } from "./tracked_hand_joint_pose";
+import { Globals } from "../../pp/globals.js";
+import { TrackedHandJointID } from "../cauldron/input_types.js";
+import { InputUtils } from "../cauldron/input_utils.js";
+import { BasePoseParams } from "./base_pose.js";
+import { TrackedHandJointPose } from "./tracked_hand_joint_pose.js";
 
 export class TrackedHandPoseParams extends BasePoseParams {
 

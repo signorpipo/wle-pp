@@ -1,14 +1,14 @@
-import { GamepadAxesID, GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
-import { Globals } from "../../../pp/globals";
-import { ToolHandedness } from "../../cauldron/tool_types";
-import { WidgetFrame, WidgetParams } from "../../widget_frame/widget_frame";
-import { EasyTuneVariableType } from "../easy_tune_variable_types";
-import { EasyTuneBaseWidgetParams } from "./base/easy_tune_base_widget";
-import { EasyTuneBoolArrayWidgetSelector } from "./bool/easy_tune_bool_array_widget_selector";
-import { EasyTuneWidgetConfig } from "./easy_tune_widget_config";
-import { EasyTuneNoneWidget } from "./none/easy_tune_none_widget";
-import { EasyTuneNumberArrayWidgetSelector } from "./number/easy_tune_number_widget_selector";
-import { EasyTuneTransformWidget } from "./transform/easy_tune_transform_widget";
+import { GamepadAxesID, GamepadButtonID } from "../../../input/gamepad/gamepad_buttons.js";
+import { Globals } from "../../../pp/globals.js";
+import { ToolHandedness } from "../../cauldron/tool_types.js";
+import { WidgetFrame, WidgetParams } from "../../widget_frame/widget_frame.js";
+import { EasyTuneVariableType } from "../easy_tune_variable_types.js";
+import { EasyTuneBaseWidgetParams } from "./base/easy_tune_base_widget.js";
+import { EasyTuneBoolArrayWidgetSelector } from "./bool/easy_tune_bool_array_widget_selector.js";
+import { EasyTuneWidgetConfig } from "./easy_tune_widget_config.js";
+import { EasyTuneNoneWidget } from "./none/easy_tune_none_widget.js";
+import { EasyTuneNumberArrayWidgetSelector } from "./number/easy_tune_number_widget_selector.js";
+import { EasyTuneTransformWidget } from "./transform/easy_tune_transform_widget.js";
 
 export class EasyTuneWidgetParams extends WidgetParams {
 
@@ -378,7 +378,7 @@ export class EasyTuneWidget {
         let validNames = [];
         for (let name of names) {
             let variable = this._myEasyTuneVariables.getEasyTuneVariable(name);
-            if (variable.shouldShowOnWidget()) {
+            if (variable.isShownOnWidget()) {
                 validNames.push(name);
             }
         }

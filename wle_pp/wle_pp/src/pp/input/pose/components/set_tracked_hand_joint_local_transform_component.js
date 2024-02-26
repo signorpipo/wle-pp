@@ -1,8 +1,8 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { XRUtils } from "../../../cauldron/utils/xr_utils";
-import { quat2_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { InputUtils } from "../../cauldron/input_utils";
+import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
+import { quat2_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { InputUtils } from "../../cauldron/input_utils.js";
 
 export class SetTrackedHandJointLocalTransformComponent extends Component {
     static TypeName = "pp-set-tracked-hand-joint-local-transform";
@@ -28,7 +28,7 @@ export class SetTrackedHandJointLocalTransformComponent extends Component {
         Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(this._myJointIDType).registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
     }
 
-    onPoseUpdated() {
+    onPoseUpdated(dt, pose) {
         // Implemented outside class definition
     }
 
@@ -43,13 +43,15 @@ export class SetTrackedHandJointLocalTransformComponent extends Component {
 
 SetTrackedHandJointLocalTransformComponent.prototype.onPoseUpdated = function () {
     let jointPoseTransform = quat2_create();
-    return function onPoseUpdated(pose) {
-        if (this.active && XRUtils.isSessionActive(this.engine)) {
-            if (pose.isValid()) {
-                this.object.pp_setTransformLocalQuat(pose.getTransformQuat(jointPoseTransform, null));
+    return function onPoseUpdated(dt, pose) {
+        if (this.active) {
+            if (XRUtils.isSessionActive(this.engine)) {
+                if (pose.isValid()) {
+                    this.object.pp_setTransformLocalQuat(pose.getTransformQuat(jointPoseTransform, null));
 
-                if (this._mySetLocalScaleAsJointRadius) {
-                    this.object.pp_setScaleLocal(pose.getJointRadius());
+                    if (this._mySetLocalScaleAsJointRadius) {
+                        this.object.pp_setScaleLocal(pose.getJointRadius());
+                    }
                 }
             }
         }

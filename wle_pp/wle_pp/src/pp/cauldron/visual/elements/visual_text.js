@@ -12,9 +12,9 @@ let visualText = new VisualText(visualParams);
 */
 
 import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
-import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { VisualElementType } from "./visual_element_types";
+import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { VisualElementType } from "./visual_element_types.js";
 
 export class VisualTextParams {
 
@@ -215,7 +215,6 @@ VisualText.prototype._refresh = function () {
             this._myTextComponent.material = this._myParams.myMaterial;
         }
 
-        this._myTextComponent.text = " "; // #TODO remove this when wle fix the text component bug which does not make the fps visualizer refresh correctly
         this._myTextComponent.text = this._myParams.myText;
         this._myTextComponent.alignment = this._myParams.myAlignment;
         this._myTextComponent.justification = this._myParams.myJustification;

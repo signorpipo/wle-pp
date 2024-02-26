@@ -1,4 +1,4 @@
-import { PluginUtils } from "../../utils/plugin_utils";
+import { PluginUtils } from "../../utils/plugin_utils.js";
 
 export function initNumberExtension(engine) {
     initNumberExtensionPrototype();

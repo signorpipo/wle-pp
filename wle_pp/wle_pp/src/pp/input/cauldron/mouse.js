@@ -1,10 +1,10 @@
 import { ViewComponent } from "@wonderlandengine/api";
-import { Timer } from "../../cauldron/cauldron/timer";
-import { RaycastResults } from "../../cauldron/physics/physics_raycast_params";
-import { PhysicsUtils } from "../../cauldron/physics/physics_utils";
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { mat4_create, quat_create, vec2_create, vec3_create } from "../../plugin/js/extensions/array_extension";
-import { Globals } from "../../pp/globals";
+import { Timer } from "../../cauldron/cauldron/timer.js";
+import { RaycastResults } from "../../cauldron/physics/physics_raycast_params.js";
+import { PhysicsUtils } from "../../cauldron/physics/physics_utils.js";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { mat4_create, quat_create, vec2_create, vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../pp/globals.js";
 
 export let MouseButtonID = {
     LEFT: 0,

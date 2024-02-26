@@ -1,5 +1,5 @@
 import { MeshComponent } from "@wonderlandengine/api";
-import { vec4_create } from "../../plugin/js/extensions/array_extension";
+import { vec4_create } from "../../plugin/js/extensions/array_extension.js";
 
 export let setAlpha = function () {
     let color = vec4_create();
@@ -50,7 +50,9 @@ export function setObjectClonedMaterials(object) {
     let meshComponents = object.pp_getComponents(MeshComponent);
 
     for (let meshComponent of meshComponents) {
-        meshComponent.material = meshComponent.material.clone();
+        if (meshComponent.material != null) {
+            meshComponent.material = meshComponent.material.clone();
+        }
     }
 }
 

@@ -1,9 +1,9 @@
 import { mat4 as gl_mat4, quat2 as gl_quat2 } from "gl-matrix";
-import { create as mat3_utils_create } from "./mat3_utils";
-import { Mat4Utils } from "./mat4_utils";
-import { EasingFunction, MathUtils } from "./math_utils";
-import { QuatUtils, create as quat_utils_create } from "./quat_utils";
-import { Vec3Utils, create as vec3_utils_create } from "./vec3_utils";
+import { create as mat3_utils_create } from "./mat3_utils.js";
+import { Mat4Utils } from "./mat4_utils.js";
+import { EasingFunction, MathUtils } from "./math_utils.js";
+import { QuatUtils, create as quat_utils_create } from "./quat_utils.js";
+import { Vec3Utils, create as vec3_utils_create } from "./vec3_utils.js";
 
 // glMatrix Bridge
 

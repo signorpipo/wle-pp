@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component";
+import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component.js";
 
 export class DebugPPFunctionsPerformanceAnalyzerComponent extends Component {
     static TypeName = "pp-debug-pp-functions-performance-analyzer";

@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { XRUtils } from "../utils/xr_utils";
+import { XRUtils } from "../utils/xr_utils.js";
 
 export class SetActiveComponent extends Component {
     static TypeName = "pp-set-active";

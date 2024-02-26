@@ -11,9 +11,9 @@ Transform:      Globals.getEasyTuneVariables().add(new EasyTuneTransform("Transf
 */
 
 import { Emitter } from "@wonderlandengine/api";
-import { mat4_create } from "../../plugin/js/extensions/array_extension";
-import { Globals } from "../../pp/globals";
-import { EasyTuneUtils } from "./easy_tune_utils";
+import { mat4_create } from "../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../pp/globals.js";
+import { EasyTuneUtils } from "./easy_tune_utils.js";
 
 export let EasyTuneVariableType = {
     NONE: 0,
@@ -22,9 +22,17 @@ export let EasyTuneVariableType = {
     TRANSFORM: 3
 };
 
+export class EasyTuneVariableExtraParams {
+    constructor(autoimportEnabled = null, manualImportEnabled = null, exportEnabled = null) {
+        this.myAutoImportEnabled = autoimportEnabled;
+        this.myManualImportEnabled = manualImportEnabled;
+        this.myExportEnabled = exportEnabled;
+    }
+}
+
 export class EasyTuneVariable {
 
-    constructor(name, type, onValueChangedEventListener = null, showOnWidget = true, engine = Globals.getMainEngine()) {
+    constructor(name, type, onValueChangedEventListener = null, showOnWidget = true, extraParams = new EasyTuneVariableExtraParams(), engine = Globals.getMainEngine()) {
         this._myName = name;
         this._myType = type;
 
@@ -32,6 +40,9 @@ export class EasyTuneVariable {
         this._myDefaultValue = null;
 
         this._myShowOnWidget = showOnWidget;
+        this._myAutoImportEnabled = extraParams.myAutoImportEnabled != null ? extraParams.myAutoImportEnabled : EasyTuneUtils.getAutoImportEnabledDefaultValue(engine);
+        this._myManualImportEnabled = extraParams.myManualImportEnabled != null ? extraParams.myManualImportEnabled : EasyTuneUtils.getManualImportEnabledDefaultValue(engine);
+        this._myExportEnabled = extraParams.myExportEnabled != null ? extraParams.myExportEnabled : EasyTuneUtils.getExportEnabledDefaultValue(engine);
 
         this._myWidgetCurrentVariable = false;
 
@@ -58,6 +69,7 @@ export class EasyTuneVariable {
 
     setWidgetCurrentVariable(widgetCurrentVariable) {
         this._myWidgetCurrentVariable = widgetCurrentVariable;
+        return this;
     }
 
     getValue() {
@@ -78,6 +90,8 @@ export class EasyTuneVariable {
         if (valueChanged) {
             this._myValueChangedEmitter.notify(this.getValue(), this);
         }
+
+        return this;
     }
 
     getDefaultValue() {
@@ -86,14 +100,43 @@ export class EasyTuneVariable {
 
     setDefaultValue(value) {
         this._myDefaultValue = value;
+        return this;
     }
 
-    shouldShowOnWidget() {
+    isShownOnWidget() {
         return this._myShowOnWidget;
     }
 
     setShowOnWidget(showOnWidget) {
         this._myShowOnWidget = showOnWidget;
+        return this;
+    }
+
+    isManualImportEnabled() {
+        return this._myManualImportEnabled;
+    }
+
+    isAutoImportEnabled() {
+        return this._myAutoImportEnabled;
+    }
+
+    isExportEnabled() {
+        return this._myExportEnabled;
+    }
+
+    setManualImportEnabled(enabled) {
+        this._myManualImportEnabled = enabled;
+        return this;
+    }
+
+    setAutoImportEnabled(enabled) {
+        this._myAutoImportEnabled = enabled;
+        return this;
+    }
+
+    setExportEnabled(enabled) {
+        this._myExportEnabled = enabled;
+        return this;
     }
 
     fromJSON(valueJSON, resetDefaultValue = false) {
@@ -115,8 +158,8 @@ export class EasyTuneVariable {
 
 export class EasyTuneVariableArray extends EasyTuneVariable {
 
-    constructor(name, type, value, onValueChangedEventListener, showOnWidget, engine) {
-        super(name, type, onValueChangedEventListener, showOnWidget, engine);
+    constructor(name, type, value, onValueChangedEventListener, showOnWidget, extraParams, engine) {
+        super(name, type, onValueChangedEventListener, showOnWidget, extraParams, engine);
 
         EasyTuneVariableArray.prototype.setValue.call(this, value, true);
     }
@@ -139,6 +182,8 @@ export class EasyTuneVariableArray extends EasyTuneVariable {
         if (valueChanged) {
             this._myValueChangedEmitter.notify(this.getValue(), this);
         }
+
+        return this;
     }
 
     setDefaultValue(value) {
@@ -147,6 +192,8 @@ export class EasyTuneVariableArray extends EasyTuneVariable {
         } else {
             this._myDefaultValue.pp_copy(value);
         }
+
+        return this;
     }
 }
 
@@ -154,8 +201,8 @@ export class EasyTuneVariableArray extends EasyTuneVariable {
 
 export class EasyTuneNumberArray extends EasyTuneVariableArray {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, decimalPlaces = 3, stepPerSecond = 1, min = null, max = null, editAllValuesTogether = false, engine) {
-        super(name, EasyTuneVariableType.NUMBER, value, onValueChangedEventListener, showOnWidget, engine);
+    constructor(name, value, onValueChangedEventListener, showOnWidget, decimalPlaces = 3, stepPerSecond = 1, min = null, max = null, editAllValuesTogether = false, extraParams, engine) {
+        super(name, EasyTuneVariableType.NUMBER, value, onValueChangedEventListener, showOnWidget, extraParams, engine);
 
         this._myDecimalPlaces = decimalPlaces;
         this._myStepPerSecond = stepPerSecond;
@@ -197,8 +244,8 @@ export class EasyTuneNumberArray extends EasyTuneVariableArray {
 
 export class EasyTuneNumber extends EasyTuneNumberArray {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, decimalPlaces, stepPerSecond, min, max, engine) {
-        super(name, [value], onValueChangedEventListener, showOnWidget, decimalPlaces, stepPerSecond, min, max, engine);
+    constructor(name, value, onValueChangedEventListener, showOnWidget, decimalPlaces, stepPerSecond, min, max, extraParams, engine) {
+        super(name, [value], onValueChangedEventListener, showOnWidget, decimalPlaces, stepPerSecond, min, max, undefined, extraParams, engine);
 
         this._myTempValue = [0];
         this._myTempDefaultValue = [0];
@@ -210,7 +257,7 @@ export class EasyTuneNumber extends EasyTuneNumberArray {
 
     setValue(value, resetDefaultValue = false) {
         this._myTempValue[0] = value;
-        super.setValue(this._myTempValue, resetDefaultValue);
+        return super.setValue(this._myTempValue, resetDefaultValue);
     }
 
     getDefaultValue() {
@@ -219,27 +266,27 @@ export class EasyTuneNumber extends EasyTuneNumberArray {
 
     setDefaultValue(value) {
         this._myTempDefaultValue[0] = value;
-        super.setDefaultValue(this._myTempValue);
+        return super.setDefaultValue(this._myTempValue);
     }
 }
 
 export class EasyTuneInt extends EasyTuneNumber {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, stepPerSecond, min, max, engine) {
-        super(name, value, onValueChangedEventListener, showOnWidget, 0, stepPerSecond, min, max, engine);
+    constructor(name, value, onValueChangedEventListener, showOnWidget, stepPerSecond, min, max, extraParams, engine) {
+        super(name, value, onValueChangedEventListener, showOnWidget, 0, stepPerSecond, min, max, extraParams, engine);
     }
 }
 
 export class EasyTuneIntArray extends EasyTuneNumberArray {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, stepPerSecond, min, max, editAllValuesTogether, engine) {
+    constructor(name, value, onValueChangedEventListener, showOnWidget, stepPerSecond, min, max, editAllValuesTogether, extraParams, engine) {
         let roundedValue = value.pp_clone();
 
         for (let i = 0; i < value.length; i++) {
             roundedValue[i] = Math.round(roundedValue[i]);
         }
 
-        super(name, roundedValue, onValueChangedEventListener, showOnWidget, 0, stepPerSecond, min != null ? Math.round(min) : null, max != null ? Math.round(max) : max, editAllValuesTogether, engine);
+        super(name, roundedValue, onValueChangedEventListener, showOnWidget, 0, stepPerSecond, min != null ? Math.round(min) : null, max != null ? Math.round(max) : max, editAllValuesTogether, extraParams, engine);
     }
 }
 
@@ -247,15 +294,15 @@ export class EasyTuneIntArray extends EasyTuneNumberArray {
 
 export class EasyTuneBoolArray extends EasyTuneVariableArray {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, engine) {
-        super(name, EasyTuneVariableType.BOOL, value, onValueChangedEventListener, showOnWidget, engine);
+    constructor(name, value, onValueChangedEventListener, showOnWidget, extraParams, engine) {
+        super(name, EasyTuneVariableType.BOOL, value, onValueChangedEventListener, showOnWidget, extraParams, engine);
     }
 }
 
 export class EasyTuneBool extends EasyTuneBoolArray {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, engine) {
-        super(name, [value], onValueChangedEventListener, showOnWidget, engine);
+    constructor(name, value, onValueChangedEventListener, showOnWidget, extraParams, engine) {
+        super(name, [value], onValueChangedEventListener, showOnWidget, extraParams, engine);
 
         this._myTempValue = [0];
         this._myTempDefaultValue = [0];
@@ -267,7 +314,7 @@ export class EasyTuneBool extends EasyTuneBoolArray {
 
     setValue(value, resetDefaultValue = false) {
         this._myTempValue[0] = value;
-        super.setValue(this._myTempValue, resetDefaultValue);
+        return super.setValue(this._myTempValue, resetDefaultValue);
     }
 
     getDefaultValue() {
@@ -276,7 +323,7 @@ export class EasyTuneBool extends EasyTuneBoolArray {
 
     setDefaultValue(value) {
         this._myTempDefaultValue[0] = value;
-        super.setDefaultValue(this._myTempValue);
+        return super.setDefaultValue(this._myTempValue);
     }
 }
 
@@ -284,8 +331,8 @@ export class EasyTuneBool extends EasyTuneBoolArray {
 
 export class EasyTuneTransform extends EasyTuneVariable {
 
-    constructor(name, value, onValueChangedEventListener, showOnWidget, scaleAsOne = true, decimalPlaces = 3, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1, engine) {
-        super(name, EasyTuneVariableType.TRANSFORM, onValueChangedEventListener, showOnWidget, engine);
+    constructor(name, value, onValueChangedEventListener, showOnWidget, scaleAsOne = true, decimalPlaces = 3, positionStepPerSecond = 1, rotationStepPerSecond = 50, scaleStepPerSecond = 1, extraParams, engine) {
+        super(name, EasyTuneVariableType.TRANSFORM, onValueChangedEventListener, showOnWidget, extraParams, engine);
 
         this._myDecimalPlaces = decimalPlaces;
 
@@ -343,12 +390,16 @@ export class EasyTuneTransform extends EasyTuneVariable {
         if (valueChanged) {
             this._myValueChangedEmitter.notify(this.getValue(), this);
         }
+
+        return this;
     }
 
     setDefaultValue(value) {
         this._myDefaultPosition = value.mat4_getPosition();
         this._myDefaultRotation = value.mat4_getRotationDegrees();
         this._myDefaultScale = value.mat4_getScale();
+
+        return this;
     }
 
     fromJSON(valueJSON, resetDefaultValue = false) {

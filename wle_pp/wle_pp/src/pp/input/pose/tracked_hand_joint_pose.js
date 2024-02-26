@@ -1,7 +1,7 @@
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { InputSourceType } from "../cauldron/input_types";
-import { InputUtils } from "../cauldron/input_utils";
-import { BasePose, BasePoseParams } from "./base_pose";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { InputSourceType } from "../cauldron/input_types.js";
+import { InputUtils } from "../cauldron/input_utils.js";
+import { BasePose, BasePoseParams } from "./base_pose.js";
 
 export class TrackedHandJointPose extends BasePose {
 
@@ -49,19 +49,21 @@ export class TrackedHandJointPose extends BasePose {
     }
 
     _onXRSessionStartHook(manualCall, session) {
-        this._myInputSourcesChangeEventListener = function () {
+        this._myInputSourcesChangeEventListener = () => {
             this._myInputSource = null;
 
             if (session.inputSources != null && session.inputSources.length > 0) {
-                for (let item of session.inputSources) {
-                    if (item.handedness == this._myHandedness) {
-                        if (InputUtils.getInputSourceType(item) == InputSourceType.TRACKED_HAND) {
-                            this._myInputSource = item;
+
+                for (let i = 0; i < session.inputSources.length; i++) {
+                    let inputSource = session.inputSources[i];
+                    if (inputSource.handedness == this._myHandedness) {
+                        if (InputUtils.getInputSourceType(inputSource) == InputSourceType.TRACKED_HAND) {
+                            this._myInputSource = inputSource;
                         }
                     }
                 }
             }
-        }.bind(this);
+        };
 
         this._myInputSourcesChangeEventListener();
 

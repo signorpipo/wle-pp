@@ -1,6 +1,6 @@
 import { Emitter } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
-import { PluginUtils } from "../../../utils/plugin_utils";
+import { PluginUtils } from "../../../utils/plugin_utils.js";
 
 export function initCursorTargetComponentMod() {
     initCursorTargetComponentModPrototype();

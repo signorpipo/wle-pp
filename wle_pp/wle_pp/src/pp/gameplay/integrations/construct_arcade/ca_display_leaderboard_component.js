@@ -1,7 +1,7 @@
 import { Component, Property, TextComponent } from "@wonderlandengine/api";
-import { ComponentUtils } from "../../../cauldron/wl/utils/component_utils";
-import { CADummyServer } from "./ca_dummy_server";
-import { CAUtils } from "./ca_utils";
+import { ComponentUtils } from "../../../cauldron/wl/utils/component_utils.js";
+import { CADummyServer } from "./ca_dummy_server.js";
+import { CAUtils } from "./ca_utils.js";
 
 export class CADisplayLeaderboardComponent extends Component {
     static TypeName = "pp-ca-display-leaderboard";

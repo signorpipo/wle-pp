@@ -1,8 +1,39 @@
-import { vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../../../pp/globals";
-import { CollisionCheck } from "./collision_check";
+import { vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../../../pp/globals.js";
+import { CollisionCheckHorizontalMovement } from "./collision_check_horizontal_movement.js";
 
-CollisionCheck.prototype._horizontalSlide = function () {
+export class CollisionCheckHorizontalSliding extends CollisionCheckHorizontalMovement {
+
+    _horizontalSlide(movement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, outSlideMovement) {
+        // Implemented outside class definition
+    }
+
+    _horizontalSlideCheckOpposite(movement, feetPosition, height, up, forward, previousHorizontalMovement, previousIsSliding, allowSurfaceSteepFix, collisionCheckParams, preSlideCollisionRuntimeParams, postSlideCollisionRuntimeParams, previousCollisionRuntimeParams, outSlideMovement) {
+        // Implemented outside class definition
+    }
+
+    _horizontalSlideFlickerCheck(movement, slideMovement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _internalHorizontalSlide(movement, feetPosition, height, up, forward, previousHorizontalMovement, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, checkOppositeDirection, outSlideMovement) {
+        // Implemented outside class definition
+    }
+
+    _horizontalCheckBetterSlideNormal(movement, originalFeetPosition, originalHeight, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _isSlidingNormalValid(movement, up, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+}
+
+
+
+// IMPLEMENTATION
+
+CollisionCheckHorizontalSliding.prototype._horizontalSlide = function () {
     let previousHorizontalMovement = vec3_create();
     return function _horizontalSlide(movement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, outSlideMovement) {
         if (movement.vec3_isZero(0.00001)) {
@@ -41,7 +72,7 @@ CollisionCheck.prototype._horizontalSlide = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalSlideCheckOpposite = function () {
+CollisionCheckHorizontalSliding.prototype._horizontalSlideCheckOpposite = function () {
     let horizontalCollisionNormal = vec3_create();
     let oppositeSlideMovement = vec3_create();
     //let hitNormal = vec3_create();
@@ -143,7 +174,7 @@ CollisionCheck.prototype._horizontalSlideCheckOpposite = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalSlideFlickerCheck = function () {
+CollisionCheckHorizontalSliding.prototype._horizontalSlideFlickerCheck = function () {
     let previousHorizontalMovement = vec3_create();
     let newFeetPosition = vec3_create();
     let fixedMovement = vec3_create();
@@ -278,7 +309,7 @@ CollisionCheck.prototype._horizontalSlideFlickerCheck = function () {
     };
 }();
 
-CollisionCheck.prototype._internalHorizontalSlide = function () {
+CollisionCheckHorizontalSliding.prototype._internalHorizontalSlide = function () {
     let invertedNormal = vec3_create();
     let slidingMovement = vec3_create();
     let movement90 = vec3_create();
@@ -432,7 +463,7 @@ CollisionCheck.prototype._internalHorizontalSlide = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalCheckBetterSlideNormal = function () {
+CollisionCheckHorizontalSliding.prototype._horizontalCheckBetterSlideNormal = function () {
     let movementDirection = vec3_create();
     let hitDirection = vec3_create();
     let projectAlongAxis = vec3_create();
@@ -493,7 +524,7 @@ CollisionCheck.prototype._horizontalCheckBetterSlideNormal = function () {
     };
 }();
 
-CollisionCheck.prototype._isSlidingNormalValid = function () {
+CollisionCheckHorizontalSliding.prototype._isSlidingNormalValid = function () {
     let flatNormal = vec3_create();
     return function _isSlidingNormalValid(movement, up, collisionRuntimeParams) {
         let isValid = false;
@@ -512,12 +543,3 @@ CollisionCheck.prototype._isSlidingNormalValid = function () {
         return isValid;
     };
 }();
-
-
-
-Object.defineProperty(CollisionCheck.prototype, "_horizontalSlide", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalSlideCheckOpposite", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalSlideFlickerCheck", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_internalHorizontalSlide", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalCheckBetterSlideNormal", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_isSlidingNormalValid", { enumerable: false });

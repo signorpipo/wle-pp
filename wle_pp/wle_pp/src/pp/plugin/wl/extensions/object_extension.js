@@ -105,13 +105,13 @@
 */
 
 import { Object3D } from "@wonderlandengine/api";
-import { Mat3Utils } from "../../../cauldron/js/utils/mat3_utils";
-import { Mat4Utils } from "../../../cauldron/js/utils/mat4_utils";
-import { Quat2Utils } from "../../../cauldron/js/utils/quat2_utils";
-import { QuatUtils } from "../../../cauldron/js/utils/quat_utils";
-import { Vec3Utils } from "../../../cauldron/js/utils/vec3_utils";
-import { CloneParams, ObjectUtils } from "../../../cauldron/wl/utils/object_utils";
-import { PluginUtils } from "../../utils/plugin_utils";
+import { Mat3Utils } from "../../../cauldron/js/utils/mat3_utils.js";
+import { Mat4Utils } from "../../../cauldron/js/utils/mat4_utils.js";
+import { Quat2Utils } from "../../../cauldron/js/utils/quat2_utils.js";
+import { QuatUtils } from "../../../cauldron/js/utils/quat_utils.js";
+import { Vec3Utils } from "../../../cauldron/js/utils/vec3_utils.js";
+import { CloneParams, ObjectUtils } from "../../../cauldron/wl/utils/object_utils.js";
+import { PluginUtils } from "../../utils/plugin_utils.js";
 
 export function initObjectExtension() {
     initObjectExtensionProtoype();

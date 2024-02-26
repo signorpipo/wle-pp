@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../../pp/globals";
-import { EasyLightAttenuation } from "../easy_light_attenuation";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyLightAttenuation } from "../easy_light_attenuation.js";
 
 export class EasyLightAttenuationComponent extends Component {
     static TypeName = "pp-easy-light-attenuation";

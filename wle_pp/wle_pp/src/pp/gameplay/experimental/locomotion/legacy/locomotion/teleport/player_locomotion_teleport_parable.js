@@ -1,4 +1,4 @@
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
 
 export class PlayerLocomotionTeleportParable {
 

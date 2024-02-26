@@ -1,4 +1,4 @@
-import { EasingFunction } from "../../../cauldron/js/utils/math_utils";
+import { EasingFunction } from "../../../cauldron/js/utils/math_utils.js";
 
 // You can just put fromNumberOverFactor if u want a number that doesn't actually change -> new NumberOverFactor(0)
 export class NumberOverFactor {

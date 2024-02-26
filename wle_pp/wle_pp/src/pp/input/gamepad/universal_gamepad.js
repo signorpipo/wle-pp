@@ -1,4 +1,4 @@
-import { BaseGamepad } from "./base_gamepad";
+import { BaseGamepad } from "./base_gamepad.js";
 
 export class UniversalGamepad extends BaseGamepad {
 

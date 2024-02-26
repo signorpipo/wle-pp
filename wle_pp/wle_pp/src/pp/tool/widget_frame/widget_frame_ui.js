@@ -1,10 +1,10 @@
 import { CollisionComponent, MeshComponent, TextComponent } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { InputUtils } from "../../input/cauldron/input_utils";
-import { vec3_create } from "../../plugin/js/extensions/array_extension";
-import { Globals } from "../../pp/globals";
-import { ToolHandedness, ToolInputSourceType } from "../cauldron/tool_types";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { InputUtils } from "../../input/cauldron/input_utils.js";
+import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../pp/globals.js";
+import { ToolHandedness, ToolInputSourceType } from "../cauldron/tool_types.js";
 
 export class WidgetFrameUI {
 

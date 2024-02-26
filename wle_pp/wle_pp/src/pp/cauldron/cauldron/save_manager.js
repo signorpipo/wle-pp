@@ -1,24 +1,29 @@
 import { Emitter } from "@wonderlandengine/api";
-import { Globals } from "../../pp/globals";
-import { SaveUtils } from "../utils/save_utils";
-import { XRUtils } from "../utils/xr_utils";
-import { Timer } from "./timer";
+import { Globals } from "../../pp/globals.js";
+import { SaveUtils } from "../utils/save_utils.js";
+import { XRUtils } from "../utils/xr_utils.js";
+import { Timer } from "./timer.js";
 
 export class SaveManager {
 
-    constructor(engine = Globals.getMainEngine()) {
+    constructor(saveID, autoLoadSaves = true, engine = Globals.getMainEngine()) {
         this._myEngine = engine;
 
-        this._mySaveCache = new Map();
-        this._myCacheEnabled = true;
+        this._mySaveID = saveID;
 
         this._myCommitSavesDelayTimer = new Timer(0, false);
         this._myDelaySavesCommit = true;
-        this._myIDsToCommit = [];
+        this._myCommitSavesDirty = false;
+        this._myCommitSavesDirtyClearOnFail = true;
+        this._myCommitSavesOnInterrupt = true;
+        this._myCommitSavesWhenLoadSavesFailed = false;
+        this._myResetSaveObjectOnLoadSavesFail = false;
 
-        this._myCacheDefaultValueOnFail = true;
+        this._mySaveObject = {};
+        this._myLoadSavesSucceded = false;
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
+        this._mySaveObjectLoadedOnce = false;
+        this._myAtLeastOneValueSavedOnce = false;
 
         this._myClearEmitter = new Emitter();                   // Signature: listener()
         this._myDeleteEmitter = new Emitter();                  // Signature: listener(id)
@@ -27,14 +32,24 @@ export class SaveManager {
         this._mySaveValueChangedEmitter = new Emitter();        // Signature: listener(id, value)
         this._mySaveIDEmitters = new Map();                     // Signature: listener(id, value)
         this._mySaveValueChangedIDEmitters = new Map();         // Signature: listener(id, value)
-        this._myCommitSaveEmitter = new Emitter();              // Signature: listener(id, value, commitSaveDelayed, failed)
-        this._myCommitSaveIDEmitters = new Map();               // Signature: listener(id, value, commitSaveDelayed, failed)
-        this._myCommitSavesEmitter = new Emitter();             // Signature: listener(commitSavesDelayed, failed)
+        this._myCommitSavesEmitter = new Emitter();             // Signature: listener(succeeded)
+        this._myLoadEmitter = new Emitter();                    // Signature: listener(id, value)
+        this._myLoadIDEmitters = new Map();                     // Signature: listener(id, value)
+        this._myLoadSavesEmitter = new Emitter();               // Signature: listener(loadSavesSucceded, saveObjectReset)
 
-        this._myLoadEmitter = new Emitter();                    // Signature: listener(id, value, loadFromCache, failed)
-        this._myLoadIDEmitters = new Map();                     // Signature: listener(id, value, loadFromCache, failed)
+        if (autoLoadSaves) {
+            this.loadSaves();
+        }
 
-        this._myVisibilityChangeEventListener = null;
+        this._myXRVisibilityChangeEventListener = null;
+        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
+
+        this._myWindowVisibilityChangeEventListener = function () {
+            if (document.visibilityState != "visible") {
+                this._onInterrupt();
+            }
+        }.bind(this);
+        window.addEventListener('visibilitychange', this._myWindowVisibilityChangeEventListener);
 
         this._myDestroyed = false;
     }
@@ -47,43 +62,104 @@ export class SaveManager {
         this._myDelaySavesCommit = delayed;
     }
 
-    setCacheDefaultValueOnFail(cache) {
-        this._myCacheDefaultValueOnFail = cache;
+    setCommitSavesDirty(dirty, startDelayTimer = true) {
+        this._myCommitSavesDirty = dirty;
+        if (dirty && startDelayTimer) {
+            if (!this.startDelayTimer.isRunning()) {
+                this._myCommitSavesDelayTimer.start();
+            }
+        } else {
+            this._myCommitSavesDelayTimer.reset();
+        }
     }
 
-    setCacheEnabled(enabled) {
-        this._myCacheEnabled = enabled;
+    setCommitSavesDirtyClearOnFail(clearOnFail) {
+        this._myCommitSavesDirtyClearOnFail = clearOnFail;
+    }
+
+    setCommitSavesOnInterrupt(commitSavesOnInterrupt) {
+        this._myCommitSavesOnInterrupt = commitSavesOnInterrupt;
+    }
+
+    setCommitSavesWhenLoadSavesFailed(commitSavesWhenLoadSavesFailed) {
+        this._myCommitSavesWhenLoadSavesFailed = commitSavesWhenLoadSavesFailed;
+    }
+
+    setResetSaveObjectOnLoadSavesFail(resetSaveObjectOnLoadSavesFail) {
+        this._myResetSaveObjectOnLoadSavesFail = resetSaveObjectOnLoadSavesFail;
+    }
+
+    getCommitSavesDelay() {
+        return this._myCommitSavesDelayTimer.getDuration();
+    }
+
+    isDelaySavesCommit() {
+        return this._myDelaySavesCommit;
+    }
+
+    isCommitSavesDirty() {
+        return this._myCommitSavesDirty;
+    }
+
+    isCommitSavesDirtyClearOnFail() {
+        return this._myCommitSavesDirtyClearOnFail;
+    }
+
+    isCommitSavesOnInterrupt() {
+        return this._myCommitSavesOnInterrupt;
+    }
+
+    isCommitSavesWhenLoadSavesFailed() {
+        return this._myCommitSavesWhenLoadSavesFailed;
+    }
+
+    isResetSaveObjectOnLoadSavesFail() {
+        return this._myResetSaveObjectOnLoadSavesFail;
+    }
+
+    hasLoadSavesSucceded() {
+        return this._myLoadSavesSucceded;
     }
 
     update(dt) {
         if (this._myCommitSavesDelayTimer.isRunning()) {
             this._myCommitSavesDelayTimer.update(dt);
             if (this._myCommitSavesDelayTimer.isDone()) {
-                this.commitSaves();
+                if (this._myCommitSavesDirty) {
+                    this._commitSaves();
+                }
+            }
+        } else {
+            if (this._myCommitSavesDirty) {
+                this._commitSaves();
             }
         }
     }
 
-    save(id, value, delaySavesCommitOverride = null, cacheEnabledOverride = null) {
+    has(id) {
+        return id in this._mySaveObject;
+    }
+
+    save(id, value, overrideDelaySavesCommit = null) {
         let sameValue = false;
-        if (this._mySaveCache.has(id) && this._isCacheEnabled(cacheEnabledOverride)) {
-            sameValue = this._mySaveCache.get(id) === value;
+        if (this.has(id)) {
+            sameValue = this._mySaveObject[id] === value;
         }
 
         if (!sameValue) {
-            this._mySaveCache.set(id, value);
-            if ((this._myDelaySavesCommit && delaySavesCommitOverride == null) || (delaySavesCommitOverride != null && delaySavesCommitOverride)) {
-                this._myIDsToCommit.pp_pushUnique(id);
+            this._mySaveObject[id] = value;
+
+            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+                this._myCommitSavesDirty = true;
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
                     this._myCommitSavesDelayTimer.start();
                 }
             } else {
-                let failed = this._commitSave(id, false);
-
-                let commitSaveDelayed = false;
-                this._myCommitSavesEmitter.notify(commitSaveDelayed, failed);
+                this._commitSaves();
             }
         }
+
+        this._myAtLeastOneValueSavedOnce = true;
 
         this._mySaveEmitter.notify(id, value);
 
@@ -106,31 +182,21 @@ export class SaveManager {
         }
     }
 
-    commitSaves() {
-        if (this._myIDsToCommit.length > 0) {
-            let failed = false;
+    delete(id, overrideDelaySavesCommit = null) {
+        if (this.has(id)) {
+            delete this._mySaveObject[id];
 
-            for (let id of this._myIDsToCommit) {
-                if (this._mySaveCache.has(id)) {
-                    let result = this._commitSave(id, true);
-                    failed = failed || result;
+            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+                this._myCommitSavesDirty = true;
+                if (!this._myCommitSavesDelayTimer.isRunning()) {
+                    this._myCommitSavesDelayTimer.start();
                 }
+            } else {
+                this._commitSaves();
             }
-
-            this._myIDsToCommit = [];
-
-            let commitSavesDelayed = true;
-            this._myCommitSavesEmitter.notify(commitSavesDelayed, failed);
         }
-    }
 
-    has(id, cacheEnabledOverride = null) {
-        return (this._mySaveCache.has(id) && this._isCacheEnabled(cacheEnabledOverride)) || SaveUtils.has(id);
-    }
-
-    remove(id) {
-        this._mySaveCache.delete(id);
-        SaveUtils.remove(id);
+        this._myAtLeastOneValueSavedOnce = true;
 
         this._myDeleteEmitter.notify(id);
 
@@ -142,136 +208,124 @@ export class SaveManager {
         }
     }
 
-    clear() {
-        this._mySaveCache.clear();
-        SaveUtils.clear();
+    clear(overrideDelaySavesCommit = null) {
+        if (Object.keys(this._mySaveObject).length > 0) {
+            this._mySaveObject = {};
+
+            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+                this._myCommitSavesDirty = true;
+                if (!this._myCommitSavesDelayTimer.isRunning()) {
+                    this._myCommitSavesDelayTimer.start();
+                }
+            } else {
+                this._commitSaves();
+            }
+        }
+
+        this._myAtLeastOneValueSavedOnce = true;
 
         this._myClearEmitter.notify();
     }
 
-    load(id, defaultValue = null, cacheEnabledOverride = null) {
-        return this._load(id, defaultValue, "load", cacheEnabledOverride);
-    }
+    load(id, defaultValue) {
+        let value = this._mySaveObject[id];
 
-    loadString(id, defaultValue = null, cacheEnabledOverride = null) {
-        return this._load(id, defaultValue, "loadString", cacheEnabledOverride);
-    }
-
-    loadNumber(id, defaultValue = null, cacheEnabledOverride = null) {
-        return this._load(id, defaultValue, "loadNumber", cacheEnabledOverride);
-    }
-
-    loadBool(id, defaultValue = null, cacheEnabledOverride = null) {
-        return this._load(id, defaultValue, "loadBool", cacheEnabledOverride);
-    }
-
-    getCommitSavesDelay() {
-        return this._myCommitSavesDelayTimer.getDuration();
-    }
-
-    isDelaySavesCommit() {
-        return this._myDelaySavesCommit;
-    }
-
-    isCacheDefaultValueOnFail() {
-        return this._myCacheDefaultValueOnFail;
-    }
-
-    isCacheEnabled() {
-        return this._myCacheEnabled;
-    }
-
-    _commitSave(id, commitSaveDelayed) {
-        let value = this._mySaveCache.get(id);
-        let failed = false;
-
-        try {
-            SaveUtils.save(id, value);
-        } catch (error) {
-            failed = true;
+        if (value == null && defaultValue != null) {
+            value = defaultValue;
         }
 
-        this._myCommitSaveEmitter.notify(id, value, commitSaveDelayed, failed);
-
-        if (this._myCommitSaveIDEmitters.size > 0) {
-            let emitter = this._myCommitSaveIDEmitters.get(id);
-            if (emitter != null) {
-                emitter.notify(id, value, commitSaveDelayed, failed);
-            }
-        }
-
-        return failed;
-    }
-
-    _load(id, defaultValue, functionName, cacheEnabledOverride = null) {
-        let value = null;
-        let failed = false;
-        let loadFromCache = false;
-
-        if (this._mySaveCache.has(id) && this._isCacheEnabled(cacheEnabledOverride)) {
-            value = this._mySaveCache.get(id);
-
-            if (value == null && defaultValue != null) {
-                value = defaultValue;
-                if (this._myCacheDefaultValueOnFail) {
-                    this._mySaveCache.set(id, value);
-                }
-            }
-
-            loadFromCache = true;
-        } else {
-            let saveResult = null;
-            try {
-                saveResult = SaveUtils[functionName](id, null);
-            } catch (error) {
-                // Error is managed as if it worked but there was no value
-                saveResult = null;
-                failed = true;
-            }
-
-            if (saveResult == null) {
-                value = defaultValue;
-            } else {
-                value = saveResult;
-            }
-
-            if (saveResult != null || this._myCacheDefaultValueOnFail) {
-                this._mySaveCache.set(id, value);
-            } else {
-                this._mySaveCache.set(id, null);
-            }
-        }
-
-        this._myLoadEmitter.notify(id, value, loadFromCache, failed);
+        this._myLoadEmitter.notify(id, value);
 
         if (this._myLoadIDEmitters.size > 0) {
             let emitter = this._myLoadIDEmitters.get(id);
             if (emitter != null) {
-                emitter.notify(id, value, loadFromCache, failed);
+                emitter.notify(id, value);
             }
         }
 
         return value;
     }
 
+    commitSaves(commitSavesOnlyIfDirty = true) {
+        if (this._myCommitSavesDirty || !commitSavesOnlyIfDirty) {
+            this._commitSaves();
+        }
+    }
+
+    _commitSaves() {
+        let succeded = true;
+
+        if (this._myLoadSavesSucceded || this._myCommitSavesWhenLoadSavesFailed) {
+            try {
+                let saveObjectStringified = JSON.stringify(this._mySaveObject);
+                SaveUtils.save(this._mySaveID, saveObjectStringified);
+            } catch (error) {
+                succeded = false;
+            }
+        }
+
+        if (succeded || this._myCommitSavesDirtyClearOnFail) {
+            this._myCommitSavesDirty = false;
+            this._myCommitSavesDelayTimer.reset();
+        }
+
+        this._myCommitSavesEmitter.notify(succeded);
+
+        return succeded;
+    }
+
+    loadSaves() {
+        let saveObject = {};
+        let loadSavesSucceded = false;
+        let saveObjectReset = false;
+
+        let maxLoadObjectAttempts = 3;
+        do {
+            try {
+                saveObject = SaveUtils.loadObject(this._mySaveID, {});
+                loadSavesSucceded = true;
+            } catch (error) {
+                maxLoadObjectAttempts--;
+            }
+        } while (maxLoadObjectAttempts > 0 && !loadSavesSucceded);
+
+        if (loadSavesSucceded) {
+            this._mySaveObject = saveObject;
+            this._myLoadSavesSucceded = true;
+        } else if (this._myResetSaveObjectOnLoadSavesFail) {
+            this._mySaveObject = {};
+            this._myLoadSavesSucceded = false;
+
+            saveObjectReset = true;
+        }
+
+        this._mySaveObjectLoadedOnce = true;
+
+        this._myLoadSavesEmitter.notify(loadSavesSucceded, saveObjectReset);
+
+        return loadSavesSucceded;
+    }
+
     _onXRSessionStart(session) {
-        this._myVisibilityChangeEventListener = function (event) {
+        this._myXRVisibilityChangeEventListener = function (event) {
             if (event.session.visibilityState != "visible") {
-                this._onXRSessionInterrupt();
+                this._onInterrupt();
             }
         }.bind(this);
 
-        session.addEventListener("visibilitychange", this._myVisibilityChangeEventListener);
+        session.addEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
     }
 
     _onXRSessionEnd() {
-        this._myVisibilityChangeEventListener = null;
+        this._myXRVisibilityChangeEventListener = null;
 
-        this._onXRSessionInterrupt();
+        this._onInterrupt();
     }
 
-    _onXRSessionInterrupt() {
-        this.commitSaves();
+    _onInterrupt() {
+        if (this._myCommitSavesOnInterrupt && this._myCommitSavesDirty && (this._mySaveObjectLoadedOnce || this._myAtLeastOneValueSavedOnce)) {
+            this.commitSaves();
+        }
     }
 
     registerClearEventListener(listenerID, listener) {
@@ -377,35 +431,6 @@ export class SaveManager {
         this._myCommitSavesEmitter.remove(listenerID);
     }
 
-    registerCommitSaveEventListener(listenerID, listener) {
-        this._myCommitSaveEmitter.add(listener, { id: listenerID });
-    }
-
-    unregisterCommitSaveEventListener(listenerID) {
-        this._myCommitSaveEmitter.remove(listenerID);
-    }
-
-    registerCommitSaveIDEventListener(valueID, listenerID, listener) {
-        let valueIDEmitter = this._myCommitSaveIDEmitters.get(valueID);
-        if (valueIDEmitter == null) {
-            this._myCommitSaveIDEmitters.set(valueID, new Map());
-            valueIDEmitter = this._myCommitSaveIDEmitters.get(valueID);
-        }
-
-        valueIDEmitter.add(listener, { id: listenerID });
-    }
-
-    unregisterCommitSaveIDEventListener(valueID, listenerID) {
-        let valueIDEmitter = this._myCommitSaveIDEmitters.get(valueID);
-        if (valueIDEmitter != null) {
-            valueIDEmitter.remove(listenerID);
-
-            if (valueIDEmitter.size <= 0) {
-                this._myCommitSaveIDEmitters.delete(valueID);
-            }
-        }
-    }
-
     registerLoadEventListener(listenerID, listener) {
         this._myLoadEmitter.add(listener, { id: listenerID });
     }
@@ -435,15 +460,21 @@ export class SaveManager {
         }
     }
 
-    _isCacheEnabled(cacheEnabledOverride = null) {
-        return (this._myCacheEnabled && cacheEnabledOverride == null) || (cacheEnabledOverride != null && cacheEnabledOverride);
+    registerLoadSavesEventListener(listenerID, listener) {
+        this._myLoadSavesEmitter.add(listener, { id: listenerID });
+    }
+
+    unregisterLoadSavesEventListener(listenerID) {
+        this._myLoadSavesEmitter.remove(listenerID);
     }
 
     destroy() {
         this._myDestroyed = true;
 
-        XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
+        XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
         XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+
+        window.removeEventListener('visibilitychange', this._myWindowVisibilityChangeEventListener);
     }
 
     isDestroyed() {

@@ -1,15 +1,15 @@
-import { Globals } from "../../pp/globals";
-import { Timer } from "../cauldron/timer";
-import { ObjectPool, ObjectPoolParams } from "../object_pool/object_pool";
-import { VisualArrow, VisualArrowParams } from "./elements/visual_arrow";
-import { VisualElementType } from "./elements/visual_element_types";
-import { VisualLine, VisualLineParams } from "./elements/visual_line";
-import { VisualMesh, VisualMeshParams } from "./elements/visual_mesh";
-import { VisualPoint, VisualPointParams } from "./elements/visual_point";
-import { VisualRaycast, VisualRaycastParams } from "./elements/visual_raycast";
-import { VisualText, VisualTextParams } from "./elements/visual_text";
-import { VisualTorus, VisualTorusParams } from "./elements/visual_torus";
-import { VisualTransform, VisualTransformParams } from "./elements/visual_transform";
+import { Globals } from "../../pp/globals.js";
+import { Timer } from "../cauldron/timer.js";
+import { ObjectPool, ObjectPoolParams } from "../object_pool/object_pool.js";
+import { VisualArrow, VisualArrowParams } from "./elements/visual_arrow.js";
+import { VisualElementType } from "./elements/visual_element_types.js";
+import { VisualLine, VisualLineParams } from "./elements/visual_line.js";
+import { VisualMesh, VisualMeshParams } from "./elements/visual_mesh.js";
+import { VisualPoint, VisualPointParams } from "./elements/visual_point.js";
+import { VisualRaycast, VisualRaycastParams } from "./elements/visual_raycast.js";
+import { VisualText, VisualTextParams } from "./elements/visual_text.js";
+import { VisualTorus, VisualTorusParams } from "./elements/visual_torus.js";
+import { VisualTransform, VisualTransformParams } from "./elements/visual_transform.js";
 
 export class VisualManager {
 
@@ -35,10 +35,6 @@ export class VisualManager {
     setActive(active) {
         if (this._myActive != active) {
             this._myActive = active;
-
-            if (!this._myActive) {
-                this.clearVisualElement();
-            }
         }
     }
 
@@ -59,7 +55,7 @@ export class VisualManager {
     // lifetimeSeconds can be null, in that case the element will be drawn until cleared
     draw(visualElementParams, lifetimeSeconds = 0, idToReuse = null) {
         if (!this._myActive) {
-            return 0;
+            return null;
         }
 
         let visualElement = null;

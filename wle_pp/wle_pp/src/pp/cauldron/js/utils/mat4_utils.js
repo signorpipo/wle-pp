@@ -1,9 +1,9 @@
 
 import { mat4 as gl_mat4 } from "gl-matrix";
-import { MathUtils } from "./math_utils";
-import { Quat2Utils } from "./quat2_utils";
-import { QuatUtils, create as quat_utils_create } from "./quat_utils";
-import { Vec3Utils, create as vec3_utils_create, set as vec3_utils_set } from "./vec3_utils";
+import { MathUtils } from "./math_utils.js";
+import { Quat2Utils } from "./quat2_utils.js";
+import { QuatUtils, create as quat_utils_create } from "./quat_utils.js";
+import { Vec3Utils, create as vec3_utils_create, set as vec3_utils_set } from "./vec3_utils.js";
 
 // glMatrix Bridge
 
@@ -422,32 +422,31 @@ let _customGLMatrixGetRotation = function () {
         let sm33 = mat[10] * is3;
 
         let trace = sm11 + sm22 + sm33;
-        let S = 0;
 
         if (trace > 0) {
-            S = Math.sqrt(trace + 1.0) * 2;
-            out[3] = 0.25 * S;
-            out[0] = (sm23 - sm32) / S;
-            out[1] = (sm31 - sm13) / S;
-            out[2] = (sm12 - sm21) / S;
+            let s = Math.sqrt(trace + 1.0) * 2;
+            out[3] = 0.25 * s;
+            out[0] = (sm23 - sm32) / s;
+            out[1] = (sm31 - sm13) / s;
+            out[2] = (sm12 - sm21) / s;
         } else if (sm11 > sm22 && sm11 > sm33) {
-            S = Math.sqrt(1.0 + sm11 - sm22 - sm33) * 2;
-            out[3] = (sm23 - sm32) / S;
-            out[0] = 0.25 * S;
-            out[1] = (sm12 + sm21) / S;
-            out[2] = (sm31 + sm13) / S;
+            let s = Math.sqrt(1.0 + sm11 - sm22 - sm33) * 2;
+            out[3] = (sm23 - sm32) / s;
+            out[0] = 0.25 * s;
+            out[1] = (sm12 + sm21) / s;
+            out[2] = (sm31 + sm13) / s;
         } else if (sm22 > sm33) {
-            S = Math.sqrt(1.0 + sm22 - sm11 - sm33) * 2;
-            out[3] = (sm31 - sm13) / S;
-            out[0] = (sm12 + sm21) / S;
-            out[1] = 0.25 * S;
-            out[2] = (sm23 + sm32) / S;
+            let s = Math.sqrt(1.0 + sm22 - sm11 - sm33) * 2;
+            out[3] = (sm31 - sm13) / s;
+            out[0] = (sm12 + sm21) / s;
+            out[1] = 0.25 * s;
+            out[2] = (sm23 + sm32) / s;
         } else {
-            S = Math.sqrt(1.0 + sm33 - sm11 - sm22) * 2;
-            out[3] = (sm12 - sm21) / S;
-            out[0] = (sm31 + sm13) / S;
-            out[1] = (sm23 + sm32) / S;
-            out[2] = 0.25 * S;
+            let s = Math.sqrt(1.0 + sm33 - sm11 - sm22) * 2;
+            out[3] = (sm12 - sm21) / s;
+            out[0] = (sm31 + sm13) / s;
+            out[1] = (sm23 + sm32) / s;
+            out[2] = 0.25 * s;
         }
 
         return out;

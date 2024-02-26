@@ -1,8 +1,8 @@
 import { Emitter } from "@wonderlandengine/api";
-import { Globals } from "../../pp/globals";
-import { ToolHandedness } from "../cauldron/tool_types";
-import { WidgetFrameConfig } from "./widget_frame_config";
-import { WidgetFrameUI } from "./widget_frame_ui";
+import { Globals } from "../../pp/globals.js";
+import { ToolHandedness } from "../cauldron/tool_types.js";
+import { WidgetFrameConfig } from "./widget_frame_config.js";
+import { WidgetFrameUI } from "./widget_frame_ui.js";
 
 export class WidgetParams {
 

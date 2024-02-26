@@ -1,5 +1,5 @@
-import { RaycastHit } from "../../../../cauldron/physics/physics_raycast_params";
-import { quat2_create, vec3_create } from "../../../../plugin/js/extensions/array_extension";
+import { RaycastHit } from "../../../../cauldron/physics/physics_raycast_params.js";
+import { quat2_create, vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
 
 export class CharacterCollisionResults {
 

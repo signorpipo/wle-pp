@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../../pp/globals";
-import { EasyTextColor } from "../easy_text_color";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyTextColor } from "../easy_text_color.js";
 
 export class EasyTextColorComponent extends Component {
     static TypeName = "pp-easy-text-color";

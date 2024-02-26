@@ -1,5 +1,5 @@
-import { Globals } from "../../pp/globals";
-import { XRUtils } from "./xr_utils";
+import { Globals } from "../../pp/globals.js";
+import { XRUtils } from "./xr_utils.js";
 
 export let isMobile = function () {
     let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");

@@ -1,8 +1,8 @@
 import { mat3 as gl_mat3, quat as gl_quat } from "gl-matrix";
-import { ArrayUtils } from "./array_utils";
-import { Mat3Utils, create as mat3_utils_create } from "./mat3_utils";
-import { EasingFunction, MathUtils } from "./math_utils";
-import { Vec3Utils, create as vec3_utils_create } from "./vec3_utils";
+import { ArrayUtils } from "./array_utils.js";
+import { Mat3Utils, create as mat3_utils_create } from "./mat3_utils.js";
+import { EasingFunction, MathUtils } from "./math_utils.js";
+import { Vec3Utils, create as vec3_utils_create } from "./vec3_utils.js";
 
 // glMatrix Bridge
 
@@ -801,6 +801,7 @@ let _setAxes = function () {
 
                 if (Vec3Utils.isZero(rotationAxis)) {
                     Vec3Utils.perpendicularRandom(currentAxis, rotationAxis);
+                    Vec3Utils.normalize(rotationAxis, rotationAxis);
                 }
 
                 QuatUtils.fromAxisRadians(angleBetween, rotationAxis, rotationQuat);

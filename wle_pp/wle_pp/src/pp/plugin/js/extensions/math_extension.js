@@ -26,8 +26,8 @@
         - pp_isInsideAngleRange
 */
 
-import { EasingFunction, MathUtils } from "../../../cauldron/js/utils/math_utils";
-import { PluginUtils } from "../../utils/plugin_utils";
+import { EasingFunction, MathUtils } from "../../../cauldron/js/utils/math_utils.js";
+import { PluginUtils } from "../../utils/plugin_utils.js";
 
 export function initMathExtension() {
     initMathExtensionStatic();
@@ -118,6 +118,10 @@ export function initMathExtensionStatic() {
 
     mathExtension.pp_interpolate = function pp_interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
         return MathUtils.interpolate(from, to, interpolationFactor, easingFunction);
+    };
+
+    mathExtension.pp_interpolatePeriodic = function pp_interpolatePeriodic(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
+        return MathUtils.interpolatePeriodic(from, to, interpolationFactor, easingFunction);
     };
 
     mathExtension.pp_angleDistance = function pp_angleDistance(from, to) {

@@ -1,8 +1,8 @@
 import { Alignment, Component, Justification, MeshComponent, Property, TextComponent } from "@wonderlandengine/api";
-import { vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { Handedness } from "../../cauldron/input_types";
-import { InputUtils } from "../../cauldron/input_utils";
+import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { Handedness } from "../../cauldron/input_types.js";
+import { InputUtils } from "../../cauldron/input_utils.js";
 
 export class GamepadControlSchemeComponent extends Component {
     static TypeName = "pp-gamepad-control-scheme";
@@ -62,8 +62,10 @@ export class GamepadControlSchemeComponent extends Component {
     }
 
     onDeactivate() {
-        this._myVisibleBackup = this._myVisible;
-        this.setVisible(false);
+        if (this._myVisible != null) {
+            this._myVisibleBackup = this._myVisible;
+            this.setVisible(false);
+        }
     }
 
     isVisible() {

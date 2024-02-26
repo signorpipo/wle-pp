@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { VisualTransform, VisualTransformParams } from "../../cauldron/visual/elements/visual_transform";
-import { Globals } from "../../pp/globals";
+import { VisualTransform, VisualTransformParams } from "../../cauldron/visual/elements/visual_transform.js";
+import { Globals } from "../../pp/globals.js";
 
 export class DebugTransformComponent extends Component {
     static TypeName = "pp-debug-transform";

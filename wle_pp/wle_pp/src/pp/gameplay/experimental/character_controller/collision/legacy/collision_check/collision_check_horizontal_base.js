@@ -1,54 +1,25 @@
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { CollisionCheck } from "./collision_check";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { CollisionCheckSurface } from "./collision_check_surface.js";
 
-CollisionCheck.prototype._horizontalCheck = function () {
-    let fixedFeetPosition = vec3_create();
-    let newFixedFeetPosition = vec3_create();
-    let newFeetPosition = vec3_create();
-    let horizontalDirection = vec3_create();
-    return function _horizontalCheck(movement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, avoidSlidingExtraCheck, outFixedMovement) {
-        collisionRuntimeParams.myIsCollidingHorizontally = false;
-        collisionRuntimeParams.myHorizontalCollisionHit.reset();
-        outFixedMovement.vec3_zero();
+export class CollisionCheckHorizontalBase extends CollisionCheckSurface {
 
-        horizontalDirection = movement.vec3_normalize(horizontalDirection);
-        let surfaceTooSteepResults = this._surfaceTooSteep(up, horizontalDirection, collisionCheckParams, previousCollisionRuntimeParams);
-        if (movement.vec3_isZero(0.000001) ||
-            ((!surfaceTooSteepResults[0] || (allowSurfaceSteepFix && collisionCheckParams.myAllowGroundSteepFix)) &&
-                (!surfaceTooSteepResults[1] || (allowSurfaceSteepFix && collisionCheckParams.myAllowCeilingSteepFix)))) {
-            fixedFeetPosition = feetPosition.vec3_add(up.vec3_scale(collisionCheckParams.myDistanceFromFeetToIgnore + 0.0001, fixedFeetPosition), fixedFeetPosition);
-            let fixedHeight = Math.max(0, height - collisionCheckParams.myDistanceFromFeetToIgnore - collisionCheckParams.myDistanceFromHeadToIgnore - 0.0001 * 2);
+    _horizontalCheckRaycast(startPosition, endPosition, movementDirection, up,
+        ignoreHitsInsideCollision, ignoreGroundAngleCallback, ignoreCeilingAngleCallback,
+        feetPosition, fixHitOnCollision,
+        collisionCheckParams, collisionRuntimeParams, checkAllHits = false, ignoreHitsInsideCollisionIfObjectToIgnore = false) {
+        // Implemented outside class definition
+    }
 
-            let canMove = true;
-            if (collisionCheckParams.myHorizontalMovementCheckEnabled && !movement.vec3_isZero(0.000001)) {
-                canMove = this._horizontalMovementCheck(movement, feetPosition, height, fixedFeetPosition, fixedHeight, up, collisionCheckParams, collisionRuntimeParams);
-            }
+    _ignoreSurfaceAngle(feetPosition, height, movementOrForward, objectsToIgnore, outIgnoredObjects, isGround, isMovementCheck, up, collisionCheckParams, hit, ignoreHitsInsideCollisionIfObjectToIgnore) {
+        // Implemented outside class definition
+    }
+}
 
-            if (canMove) {
-                if (collisionCheckParams.myHorizontalPositionCheckEnabled) {
-                    newFixedFeetPosition = fixedFeetPosition.vec3_add(movement, newFixedFeetPosition);
-                    newFeetPosition = feetPosition.vec3_add(movement, newFeetPosition);
-                    let canStay = this._horizontalPositionCheck(newFeetPosition, height, newFixedFeetPosition, fixedHeight, up, forward, collisionCheckParams, collisionRuntimeParams);
-                    if (canStay) {
-                        outFixedMovement.vec3_copy(movement);
-                    }
 
-                    if (outFixedMovement.vec3_isZero(0.000001)) {
-                        outFixedMovement.vec3_zero();
-                    }
-                } else {
-                    outFixedMovement.vec3_copy(movement);
-                }
-            } else if (!avoidSlidingExtraCheck && collisionCheckParams.mySlidingEnabled && collisionCheckParams.mySlidingHorizontalMovementCheckBetterNormal) {
-                this._horizontalCheckBetterSlideNormal(movement, feetPosition, height, fixedFeetPosition, fixedHeight, up, forward, collisionCheckParams, collisionRuntimeParams);
-            }
-        }
 
-        return outFixedMovement;
-    };
-}();
+// IMPLEMENTATION
 
-CollisionCheck.prototype._horizontalCheckRaycast = function () {
+CollisionCheckHorizontalBase.prototype._horizontalCheckRaycast = function () {
     let direction = vec3_create();
     let fixedFeetPosition = vec3_create();
     let fixedHitPosition = vec3_create();
@@ -136,7 +107,7 @@ CollisionCheck.prototype._horizontalCheckRaycast = function () {
     };
 }();
 
-CollisionCheck.prototype._ignoreSurfaceAngle = function () {
+CollisionCheckHorizontalBase.prototype._ignoreSurfaceAngle = function () {
     let objectsEqualCallback = (first, second) => first.pp_equals(second);
 
     let movementDirection = vec3_create();
@@ -261,9 +232,3 @@ CollisionCheck.prototype._ignoreSurfaceAngle = function () {
         return isIgnorable;
     };
 }();
-
-
-
-Object.defineProperty(CollisionCheck.prototype, "_horizontalCheck", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalCheckRaycast", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_ignoreSurfaceAngle", { enumerable: false });

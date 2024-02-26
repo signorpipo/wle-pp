@@ -1,6 +1,6 @@
 import { Component } from "@wonderlandengine/api";
-import { Globals } from "../../pp/globals";
-import { DebugManager } from "../debug_manager";
+import { Globals } from "../../pp/globals.js";
+import { DebugManager } from "../debug_manager.js";
 
 export class DebugManagerComponent extends Component {
     static TypeName = "pp-debug-manager";

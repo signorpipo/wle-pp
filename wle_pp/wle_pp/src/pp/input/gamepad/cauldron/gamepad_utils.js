@@ -1,4 +1,4 @@
-import { GamepadButtonID } from "../gamepad_buttons";
+import { GamepadButtonID } from "../gamepad_buttons.js";
 
 let _mySimultaneousPressMaxDelay = 0.15;
 let _mySimultaneousTouchMaxDelay = 0.15;
@@ -349,6 +349,7 @@ export let GamepadUtils = {
     getSimultaneousTouchMaxDelay,
     isAnyButtonPressStart,
     areButtonsPressStart,
+    isAnyButtonPressEnd,
     areButtonsPressEnd,
     isAnyButtonTouchStart,
     areButtonsTouchStart,

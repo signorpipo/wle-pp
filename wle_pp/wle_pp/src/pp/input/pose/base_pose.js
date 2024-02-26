@@ -1,14 +1,14 @@
 import { Emitter } from "@wonderlandengine/api";
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { mat4_create, quat2_create, quat_create, vec3_create } from "../../plugin/js/extensions/array_extension";
-import { Globals } from "../../pp/globals";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { mat4_create, quat2_create, quat_create, vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../pp/globals.js";
 
 export class BasePoseParams {
 
     constructor(engine = Globals.getMainEngine()) {
         this.myReferenceObject = null;
         this.myForwardFixed = true;
-        this.myUpdateOnViewReset = true;
+        this.myUpdateOnViewReset = false;
         this.myForceEmulatedVelocities = false;
 
         this.myEngine = engine;
@@ -41,7 +41,9 @@ export class BasePose {
         this._myLinearVelocityEmulated = true;
         this._myAngularVelocityEmulated = true;
 
-        this._myPoseUpdatedEmitter = new Emitter();   // Signature: listener(pose)
+        this._myPrePoseUpdatedEventEmitter = new Emitter();         // Signature: listener(dt, pose, manualUpdate)
+        this._myPoseUpdatedEmitter = new Emitter();                 // Signature: listener(dt, pose, manualUpdate)
+        this._myPostPoseUpdatedEventEmitter = new Emitter();        // Signature: listener(dt, pose, manualUpdate)
 
         this._myViewResetEventListener = null;
 
@@ -150,6 +152,14 @@ export class BasePose {
         return this._myAngularVelocityEmulated;
     }
 
+    registerPrePoseUpdatedEventEventListener(id, listener) {
+        this._myPrePoseUpdatedEventEmitter.add(listener, { id: id });
+    }
+
+    unregisterPrePoseUpdatedEventEventListener(id) {
+        this._myPrePoseUpdatedEventEmitter.remove(id);
+    }
+
     registerPoseUpdatedEventListener(id, listener) {
         this._myPoseUpdatedEmitter.add(listener, { id: id });
     }
@@ -158,12 +168,20 @@ export class BasePose {
         this._myPoseUpdatedEmitter.remove(id);
     }
 
+    registerPostPoseUpdatedEventEventListener(id, listener) {
+        this._myPostPoseUpdatedEventEmitter.add(listener, { id: id });
+    }
+
+    unregisterPostPoseUpdatedEventEventListener(id) {
+        this._myPostPoseUpdatedEventEmitter.remove(id);
+    }
+
     start() {
         XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myEngine);
     }
 
     update(dt) {
-        this._update(dt, true);
+        this._update(dt, true, false);
     }
 
     // Hooks
@@ -198,7 +216,7 @@ export class BasePose {
 
     // Hooks End
 
-    _update(dt, updateVelocity) {
+    _update(dt, updateVelocity, manualUpdate) {
         this._myPrevPosition.vec3_copy(this._myPosition);
         this._myPrevRotationQuat.quat_copy(this._myRotationQuat);
 
@@ -288,7 +306,9 @@ export class BasePose {
             this._updateHook(dt, updateVelocity, null);
         }
 
-        this._myPoseUpdatedEmitter.notify(this);
+        this._myPrePoseUpdatedEventEmitter.notify(dt, this, manualUpdate);
+        this._myPoseUpdatedEmitter.notify(dt, this, manualUpdate);
+        this._myPostPoseUpdatedEventEmitter.notify(dt, this, manualUpdate);
     }
 
     _computeEmulatedLinearVelocity(dt) {
@@ -321,7 +341,7 @@ export class BasePose {
 
     _onViewReset() {
         if (this._myUpdateOnViewReset) {
-            this._update(0, false);
+            this._update(0, false, true);
         }
 
         this._onViewResetHook();

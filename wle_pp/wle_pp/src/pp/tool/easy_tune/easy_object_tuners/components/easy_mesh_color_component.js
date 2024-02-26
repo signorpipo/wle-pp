@@ -1,7 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils";
-import { Globals } from "../../../../pp/globals";
-import { EasyMeshColor } from "../easy_mesh_color";
+import { ComponentUtils } from "../../../../cauldron/wl/utils/component_utils.js";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyMeshColor } from "../easy_mesh_color.js";
 
 export class EasyMeshColorComponent extends Component {
     static TypeName = "pp-easy-mesh-color";

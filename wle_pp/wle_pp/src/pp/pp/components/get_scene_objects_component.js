@@ -1,7 +1,7 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Handedness } from "../../input/cauldron/input_types";
-import { Globals } from "../globals";
-import { SceneObjects } from "../scene_objects";
+import { Handedness } from "../../input/cauldron/input_types.js";
+import { Globals } from "../globals.js";
+import { SceneObjects } from "../scene_objects.js";
 
 export class GetSceneObjectsComponent extends Component {
     static TypeName = "pp-get-scene-objects";

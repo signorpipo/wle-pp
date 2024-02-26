@@ -1,15 +1,15 @@
-import { FSM } from "../../../../../../cauldron/fsm/fsm";
-import { XRUtils } from "../../../../../../cauldron/utils/xr_utils";
-import { Handedness } from "../../../../../../input/cauldron/input_types";
-import { MouseButtonID } from "../../../../../../input/cauldron/mouse";
-import { GamepadAxesID } from "../../../../../../input/gamepad/gamepad_buttons";
-import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../../../pp/globals";
-import { CollisionCheckBridge } from "../../../../character_controller/collision/collision_check_bridge";
-import { PlayerLocomotionMovement } from "../player_locomotion_movement";
-import { PlayerLocomotionTeleportDetectionParams, PlayerLocomotionTeleportDetectionState } from "./player_locomotion_teleport_detection_state";
-import { PlayerLocomotionTeleportDetectionVisualizerParams } from "./player_locomotion_teleport_detection_visualizer";
-import { PlayerLocomotionTeleportTeleportParams, PlayerLocomotionTeleportTeleportState } from "./player_locomotion_teleport_teleport_state";
+import { FSM } from "../../../../../../cauldron/fsm/fsm.js";
+import { XRUtils } from "../../../../../../cauldron/utils/xr_utils.js";
+import { Handedness } from "../../../../../../input/cauldron/input_types.js";
+import { MouseButtonID } from "../../../../../../input/cauldron/mouse.js";
+import { GamepadAxesID } from "../../../../../../input/gamepad/gamepad_buttons.js";
+import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../../../pp/globals.js";
+import { CollisionCheckBridge } from "../../../../character_controller/collision/collision_check_bridge.js";
+import { PlayerLocomotionMovement } from "../player_locomotion_movement.js";
+import { PlayerLocomotionTeleportDetectionParams, PlayerLocomotionTeleportDetectionState } from "./player_locomotion_teleport_detection_state.js";
+import { PlayerLocomotionTeleportDetectionVisualizerParams } from "./player_locomotion_teleport_detection_visualizer.js";
+import { PlayerLocomotionTeleportTeleportParams, PlayerLocomotionTeleportTeleportState } from "./player_locomotion_teleport_teleport_state.js";
 
 export class PlayerLocomotionTeleportParams {
 
@@ -105,6 +105,10 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
 
     canStop() {
         return this._myFSM.isInState("idle");
+    }
+
+    isTeleporting() {
+        return this._myFSM.isInState("teleport");
     }
 
     getParams() {

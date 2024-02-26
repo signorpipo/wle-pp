@@ -1,5 +1,5 @@
-import { Timer } from "../../cauldron/timer";
-import { State } from "../state";
+import { Timer } from "../../cauldron/timer.js";
+import { State } from "../state.js";
 
 export class TimerState extends State {
 

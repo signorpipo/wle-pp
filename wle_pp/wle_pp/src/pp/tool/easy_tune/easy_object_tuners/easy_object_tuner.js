@@ -1,5 +1,5 @@
-import { Globals } from "../../../pp/globals";
-import { EasyTuneUtils } from "../easy_tune_utils";
+import { Globals } from "../../../pp/globals.js";
+import { EasyTuneUtils } from "../easy_tune_utils.js";
 
 export class EasyObjectTuner {
 

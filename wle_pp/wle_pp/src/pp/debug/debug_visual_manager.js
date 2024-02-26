@@ -1,14 +1,14 @@
 import { Alignment, Justification } from "@wonderlandengine/api";
-import { XRUtils } from "../cauldron/utils/xr_utils";
-import { VisualArrowParams } from "../cauldron/visual/elements/visual_arrow";
-import { VisualLineParams } from "../cauldron/visual/elements/visual_line";
-import { VisualPointParams } from "../cauldron/visual/elements/visual_point";
-import { VisualRaycastParams } from "../cauldron/visual/elements/visual_raycast";
-import { VisualTextParams } from "../cauldron/visual/elements/visual_text";
-import { VisualTransformParams } from "../cauldron/visual/elements/visual_transform";
-import { VisualManager } from "../cauldron/visual/visual_manager";
-import { quat_create, vec3_create, vec4_create } from "../plugin/js/extensions/array_extension";
-import { Globals } from "../pp/globals";
+import { XRUtils } from "../cauldron/utils/xr_utils.js";
+import { VisualArrowParams } from "../cauldron/visual/elements/visual_arrow.js";
+import { VisualLineParams } from "../cauldron/visual/elements/visual_line.js";
+import { VisualPointParams } from "../cauldron/visual/elements/visual_point.js";
+import { VisualRaycastParams } from "../cauldron/visual/elements/visual_raycast.js";
+import { VisualTextParams } from "../cauldron/visual/elements/visual_text.js";
+import { VisualTransformParams } from "../cauldron/visual/elements/visual_transform.js";
+import { VisualManager } from "../cauldron/visual/visual_manager.js";
+import { quat_create, vec3_create, vec4_create } from "../plugin/js/extensions/array_extension.js";
+import { Globals } from "../pp/globals.js";
 
 export class DebugVisualManager extends VisualManager {
 
@@ -32,6 +32,8 @@ export class DebugVisualManager extends VisualManager {
     }
 
     drawLine(lifetimeSeconds, start, direction, length, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualLineParams(this._myEngine);
             visualParams.myStart.vec3_copy(start);
@@ -40,8 +42,10 @@ export class DebugVisualManager extends VisualManager {
             visualParams.myThickness = thickness;
             visualParams.myColor = vec4_create();
             visualParams.myColor.vec4_copy(color);
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     }
 
     drawLineEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
@@ -49,6 +53,8 @@ export class DebugVisualManager extends VisualManager {
     }
 
     drawArrow(lifetimeSeconds, start, direction, length, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualArrowParams(this._myEngine);
             visualParams.myStart.vec3_copy(start);
@@ -57,8 +63,10 @@ export class DebugVisualManager extends VisualManager {
             visualParams.myThickness = thickness;
             visualParams.myColor = vec4_create();
             visualParams.myColor.vec4_copy(color);
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     }
 
     drawArrowEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
@@ -66,17 +74,23 @@ export class DebugVisualManager extends VisualManager {
     }
 
     drawPoint(lifetimeSeconds, position, color = this._myDefaultColor, radius = this._myDefaultPointRadius) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualPointParams(this._myEngine);
             visualParams.myPosition.vec3_copy(position);
             visualParams.myRadius = radius;
             visualParams.myColor = vec4_create();
             visualParams.myColor.vec4_copy(color);
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     }
 
     drawText(lifetimeSeconds, text, transform, color = this._myDefaultColor, lookAtPlayer = this._myDefaultTextLookAtPlayer, alignment = this._myDefaultTextAlignment, justification = this._myDefaultTextJustification) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualTextParams(this._myEngine);
             visualParams.myText = text;
@@ -90,29 +104,39 @@ export class DebugVisualManager extends VisualManager {
                 visualParams.myLookAtObject = Globals.getPlayerObjects(this._myEngine).myHead;
             }
 
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     }
 
     drawRaycast(lifetimeSeconds, raycastResult, showOnlyFirstHit = true, hitNormalLength = this._myDefaultAxisLength, thickness = this._myDefaultLineThickness) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualRaycastParams(this._myEngine);
             visualParams.myRaycastResults = raycastResult;
             visualParams.myShowOnlyFirstHit = showOnlyFirstHit;
             visualParams.myHitNormalLength = hitNormalLength;
             visualParams.myThickness = thickness;
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     }
 
     drawTransform(lifetimeSeconds, transform, length = this._myDefaultAxisLength, thickness = this._myDefaultLineThickness) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualTransformParams(this._myEngine);
             visualParams.myTransform.mat4_copy(transform);
             visualParams.myLength = length;
             visualParams.myThickness = thickness;
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     }
 
     drawUIText(lifetimeSeconds, text, screenPosition, scale = this._myDefaultUITextScale, color = this._myDefaultColor, alignment = this._myDefaultUITextAlignment, justification = this._myDefaultUITextJustification) {
@@ -131,24 +155,32 @@ export class DebugVisualManager extends VisualManager {
 DebugVisualManager.prototype.drawLineEnd = function () {
     let direction = vec3_create();
     return function drawLineEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
+        let elementID = null;
+
         if (this.isActive()) {
             direction = end.vec3_sub(start, direction);
             let length = direction.vec3_length();
             direction.vec3_normalize(direction);
-            this.drawLine(lifetimeSeconds, start, direction, length, color, thickness);
+            elementID = this.drawLine(lifetimeSeconds, start, direction, length, color, thickness);
         }
+
+        return elementID;
     };
 }();
 
 DebugVisualManager.prototype.drawArrowEnd = function () {
     let direction = vec3_create();
     return function drawArrowEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
+        let elementID = null;
+
         if (this.isActive()) {
             direction = end.vec3_sub(start, direction);
             let length = direction.vec3_length();
             direction.vec3_normalize(direction);
-            this.drawArrow(lifetimeSeconds, start, direction, length, color, thickness);
+            elementID = this.drawArrow(lifetimeSeconds, start, direction, length, color, thickness);
         }
+
+        return elementID;
     };
 }();
 
@@ -164,6 +196,8 @@ DebugVisualManager.prototype.drawUIText = function () {
     let textRotation = vec3_create();
     let textScale = vec3_create();
     return function drawUIText(lifetimeSeconds, text, screenPosition = this._myDefaultUITextScreenPosition, scale = this._myDefaultUITextScale, color = this._myDefaultColor, alignment = this._myDefaultUITextAlignment, justification = this._myDefaultUITextJustification) {
+        let elementID = null;
+
         if (this.isActive()) {
             let visualParams = new VisualTextParams(this._myEngine);
             visualParams.myText = text;
@@ -194,7 +228,9 @@ DebugVisualManager.prototype.drawUIText = function () {
             visualParams.myParent = Globals.getPlayerObjects(this._myEngine).myHeadDebugs;
             visualParams.myLocal = true;
 
-            this.draw(visualParams, lifetimeSeconds);
+            elementID = this.draw(visualParams, lifetimeSeconds);
         }
+
+        return elementID;
     };
 }();

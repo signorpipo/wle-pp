@@ -1,12 +1,12 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Mat3Utils } from "../../../../cauldron/js/utils/mat3_utils";
-import { Mat4Utils } from "../../../../cauldron/js/utils/mat4_utils";
-import { Quat2Utils } from "../../../../cauldron/js/utils/quat2_utils";
-import { QuatUtils } from "../../../../cauldron/js/utils/quat_utils";
-import { Vec2Utils } from "../../../../cauldron/js/utils/vec2_utils";
-import { Vec3Utils } from "../../../../cauldron/js/utils/vec3_utils";
-import { Vec4Utils } from "../../../../cauldron/js/utils/vec4_utils";
-import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component";
+import { Mat3Utils } from "../../../../cauldron/js/utils/mat3_utils.js";
+import { Mat4Utils } from "../../../../cauldron/js/utils/mat4_utils.js";
+import { Quat2Utils } from "../../../../cauldron/js/utils/quat2_utils.js";
+import { QuatUtils } from "../../../../cauldron/js/utils/quat_utils.js";
+import { Vec2Utils } from "../../../../cauldron/js/utils/vec2_utils.js";
+import { Vec3Utils } from "../../../../cauldron/js/utils/vec3_utils.js";
+import { Vec4Utils } from "../../../../cauldron/js/utils/vec4_utils.js";
+import { DebugFunctionsPerformanceAnalyzerComponent } from "./debug_functions_performance_analyzer_component.js";
 
 export class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component {
     static TypeName = "pp-debug-pp-array-creation-performance-analyzer";

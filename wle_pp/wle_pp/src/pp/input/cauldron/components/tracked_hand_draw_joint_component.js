@@ -1,7 +1,7 @@
 import { Component, MeshComponent, Property } from "@wonderlandengine/api";
-import { quat2_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { InputUtils } from "../input_utils";
+import { quat2_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { InputUtils } from "../input_utils.js";
 
 export class TrackedHandDrawJointComponent extends Component {
     static TypeName = "pp-tracked-hand-draw-joint";

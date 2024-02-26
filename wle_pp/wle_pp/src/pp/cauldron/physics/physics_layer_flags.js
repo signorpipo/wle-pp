@@ -1,4 +1,4 @@
-import { PhysicsUtils } from "./physics_utils";
+import { PhysicsUtils } from "./physics_utils.js";
 
 export class PhysicsLayerFlags {
 

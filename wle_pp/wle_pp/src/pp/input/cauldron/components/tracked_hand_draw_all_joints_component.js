@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { TrackedHandJointID, TrackedHandJointIDIndex } from "../input_types";
-import { TrackedHandDrawJointComponent } from "./tracked_hand_draw_joint_component";
+import { TrackedHandJointID, TrackedHandJointIDIndex } from "../input_types.js";
+import { TrackedHandDrawJointComponent } from "./tracked_hand_draw_joint_component.js";
 
 export class TrackedHandDrawAllJointsComponent extends Component {
     static TypeName = "pp-tracked-hand-draw-all-joints";

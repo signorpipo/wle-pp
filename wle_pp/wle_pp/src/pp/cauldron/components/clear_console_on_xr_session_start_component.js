@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { XRUtils } from "../utils/xr_utils";
+import { XRUtils } from "../utils/xr_utils.js";
 
 export class ClearConsoleOnXRSessionStartComponent extends Component {
     static TypeName = "pp-clear-console-on-xr-session-start";

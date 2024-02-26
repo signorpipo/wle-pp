@@ -1,4 +1,4 @@
-import { Globals } from "../../pp/globals";
+import { Globals } from "../../pp/globals.js";
 
 let _myVisualResourcesContainer = new WeakMap();
 let _myVisualManagers = new WeakMap();

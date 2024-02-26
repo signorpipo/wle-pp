@@ -1,8 +1,8 @@
 // xr-standard mapping is assumed
 
-import { XRUtils } from "../../../cauldron/utils/xr_utils";
-import { GamepadButtonID } from "../gamepad_buttons";
-import { GamepadCore } from "./gamepad_core";
+import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
+import { GamepadButtonID } from "../gamepad_buttons.js";
+import { GamepadCore } from "./gamepad_core.js";
 
 export class XRGamepadCore extends GamepadCore {
 
@@ -38,7 +38,14 @@ export class XRGamepadCore extends GamepadCore {
     }
 
     _preUpdateHook(dt) {
+        let prevInputSource = this._myInputSource;
         this._myInputSource = this.getHandPose().getInputSource();
+
+        if (prevInputSource != this._myInputSource) {
+            this._mySelectPressed = false;
+            this._mySqueezePressed = false;
+        }
+
         if (this._myInputSource != null) {
             this._myGamepad = this._myInputSource.gamepad;
         } else {
@@ -164,6 +171,9 @@ export class XRGamepadCore extends GamepadCore {
         this._mySelectEndEventListener = null;
         this._mySqueezeStartEventListener = null;
         this._mySqueezeEndEventListener = null;
+
+        this._mySelectPressed = false;
+        this._mySqueezePressed = false;
 
         this._myXRSessionActive = false;
     }

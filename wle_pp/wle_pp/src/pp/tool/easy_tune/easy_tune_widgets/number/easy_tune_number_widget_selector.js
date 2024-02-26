@@ -1,5 +1,5 @@
-import { EasyTuneBaseArrayWidgetSelector } from "../base/easy_tune_base_array_widget_selector";
-import { EasyTuneNumberArrayWidget } from "./easy_tune_number_array_widget";
+import { EasyTuneBaseArrayWidgetSelector } from "../base/easy_tune_base_array_widget_selector.js";
+import { EasyTuneNumberArrayWidget } from "./easy_tune_number_array_widget.js";
 
 export class EasyTuneNumberArrayWidgetSelector extends EasyTuneBaseArrayWidgetSelector {
 

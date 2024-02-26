@@ -1,9 +1,9 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { ClassicGamepadCore } from "../../gamepad/gamepad_cores/classic_gamepad_core";
-import { KeyboardGamepadCore } from "../../gamepad/gamepad_cores/keyboard_gamepad_core";
-import { XRGamepadCore } from "../../gamepad/gamepad_cores/xr_gamepad_core";
-import { InputManager } from "../input_manager";
+import { Globals } from "../../../pp/globals.js";
+import { ClassicGamepadCore } from "../../gamepad/gamepad_cores/classic_gamepad_core.js";
+import { KeyboardGamepadCore } from "../../gamepad/gamepad_cores/keyboard_gamepad_core.js";
+import { XRGamepadCore } from "../../gamepad/gamepad_cores/xr_gamepad_core.js";
+import { InputManager } from "../input_manager.js";
 
 export class InputManagerComponent extends Component {
     static TypeName = "pp-input-manager";

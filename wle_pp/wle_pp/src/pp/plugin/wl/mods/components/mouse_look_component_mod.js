@@ -1,8 +1,8 @@
 import { MouseLookComponent } from "@wonderlandengine/components";
-import { Timer } from "../../../../cauldron/cauldron/timer";
-import { Globals } from "../../../../pp/globals";
-import { vec3_create } from "../../../js/extensions/array_extension";
-import { PluginUtils } from "../../../utils/plugin_utils";
+import { Timer } from "../../../../cauldron/cauldron/timer.js";
+import { Globals } from "../../../../pp/globals.js";
+import { vec3_create } from "../../../js/extensions/array_extension.js";
+import { PluginUtils } from "../../../utils/plugin_utils.js";
 
 export function initMouseLookComponentMod() {
     initMouseLookComponentModPrototype();
@@ -20,6 +20,7 @@ export function initMouseLookComponentModPrototype() {
         this.resetMovingDelay = 0.15;
         this.resetMovingTimer = new Timer(this.resetMovingDelay, false);
         this.isMoving = false;
+        this.mouseDown = false;
 
         this.pointerMoveListener = this._onMove.bind(this);
 
@@ -187,7 +188,7 @@ export function initMouseLookComponentModPrototype() {
 
                     this.object.pp_rotateAxis(this.rotationY, referenceRight);
 
-                    let maxVerticalAngle = 90 - 0.001;
+                    let maxVerticalAngle = 89 - 0.001;
                     newUp = this.object.pp_getUp(newUp);
                     let angleWithUp = Math.pp_angleClamp(newUp.vec3_angleSigned(referenceUp, referenceRight));
                     if (Math.abs(angleWithUp) > maxVerticalAngle) {

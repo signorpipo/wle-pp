@@ -1,10 +1,10 @@
 import { MeshComponent } from "@wonderlandengine/api";
-import { ColorUtils } from "../../../cauldron/utils/color_utils";
-import { GamepadButtonID } from "../../../input/gamepad/gamepad_buttons";
-import { vec4_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { EasyTuneIntArray, EasyTuneNumberArray } from "../easy_tune_variable_types";
-import { EasyObjectTuner } from "./easy_object_tuner";
+import { ColorUtils } from "../../../cauldron/utils/color_utils.js";
+import { GamepadButtonID } from "../../../input/gamepad/gamepad_buttons.js";
+import { vec4_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { EasyTuneIntArray, EasyTuneNumberArray } from "../easy_tune_variable_types.js";
+import { EasyObjectTuner } from "./easy_object_tuner.js";
 
 export class EasyMeshColor extends EasyObjectTuner {
 
@@ -29,9 +29,9 @@ export class EasyMeshColor extends EasyObjectTuner {
 
     _createEasyTuneVariable(variableName) {
         if (this._myColorType == 6) {
-            return new EasyTuneNumberArray(variableName, this._getDefaultValue(), null, true, 3, 0.1, 0, 1);
+            return new EasyTuneNumberArray(variableName, this._getDefaultValue(), null, true, 3, 0.1, 0, 1, false, undefined, this._myEngine);
         }
-        return new EasyTuneIntArray(variableName, this._getDefaultValue(), null, true, 100, 0, 255);
+        return new EasyTuneIntArray(variableName, this._getDefaultValue(), null, true, 100, 0, 255, false, undefined, this._myEngine);
     }
 
     _getObjectValue(object) {

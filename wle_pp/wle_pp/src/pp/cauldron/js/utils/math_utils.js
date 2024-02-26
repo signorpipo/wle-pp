@@ -1,25 +1,30 @@
 
 // #CREDITS https://easings.net
 export let EasingFunction = {
-    linear: t => t,
+    linear: valueToEase => valueToEase,
 
-    easeInVeryWeak: t => 1 - Math.cos((t * Math.PI) / 2),
-    easeInWeak: t => Math.pow(t, 2),
-    easeIn: t => Math.pow(t, 3),
-    easeInStrong: t => Math.pow(t, 4),
-    easeInVeryStrong: t => Math.pow(t, 5),
+    easeInVeryWeak: valueToEase => 1 - Math.cos((valueToEase * Math.PI) / 2),
+    easeInWeak: valueToEase => Math.pow(valueToEase, 2),
+    easeIn: valueToEase => Math.pow(valueToEase, 3),
+    easeInStrong: valueToEase => Math.pow(valueToEase, 4),
+    easeInVeryStrong: valueToEase => Math.pow(valueToEase, 5),
 
-    easeOutVeryWeak: t => Math.sin((t * Math.PI) / 2),
-    easeOutWeak: t => 1 - Math.pow(1 - t, 2),
-    easeOut: t => 1 - Math.pow(1 - t, 3),
-    easeOutStrong: t => 1 - Math.pow(1 - t, 4),
-    easeOutVeryStrong: t => 1 - Math.pow(1 - t, 5),
+    easeOutVeryWeak: valueToEase => Math.sin((valueToEase * Math.PI) / 2),
+    easeOutWeak: valueToEase => 1 - Math.pow(1 - valueToEase, 2),
+    easeOut: valueToEase => 1 - Math.pow(1 - valueToEase, 3),
+    easeOutStrong: valueToEase => 1 - Math.pow(1 - valueToEase, 4),
+    easeOutVeryStrong: valueToEase => 1 - Math.pow(1 - valueToEase, 5),
 
-    easeInOutVeryWeak: t => -(Math.cos(t * Math.PI) - 1) / 2,
-    easeInOutWeak: t => t < 0.5 ? 2 * Math.pow(t, 2) : 1 - Math.pow(-2 * t + 2, 2) / 2,
-    easeInOut: t => t < 0.5 ? 4 * Math.pow(t, 3) : 1 - Math.pow(-2 * t + 2, 3) / 2,
-    easeInOutStrong: t => t < 0.5 ? 8 * Math.pow(t, 4) : 1 - Math.pow(-2 * t + 2, 4) / 2,
-    easeInOutVeryStrong: t => t < 0.5 ? 16 * Math.pow(t, 5) : 1 - Math.pow(-2 * t + 2, 5) / 2
+    easeInOutVeryWeak: valueToEase => -(Math.cos(valueToEase * Math.PI) - 1) / 2,
+    easeInOutWeak: valueToEase => valueToEase < 0.5 ? 2 * Math.pow(valueToEase, 2) : 1 - Math.pow(-2 * valueToEase + 2, 2) / 2,
+    easeInOut: valueToEase => valueToEase < 0.5 ? 4 * Math.pow(valueToEase, 3) : 1 - Math.pow(-2 * valueToEase + 2, 3) / 2,
+    easeInOutStrong: valueToEase => valueToEase < 0.5 ? 8 * Math.pow(valueToEase, 4) : 1 - Math.pow(-2 * valueToEase + 2, 4) / 2,
+    easeInOutVeryStrong: valueToEase => valueToEase < 0.5 ? 16 * Math.pow(valueToEase, 5) : 1 - Math.pow(-2 * valueToEase + 2, 5) / 2
+};
+
+export let EasingSupportFunction = {
+    triangleWave: inputValue => (2 / Math.PI) * Math.asin(Math.sin((Math.PI / 2) * inputValue)),
+    positiveTriangleWave: inputValue => 1 - Math.abs((Math.abs(inputValue) % 2) - 1)
 };
 
 export let EPSILON = 0.000001;
@@ -135,6 +140,7 @@ export let randomUUID = function () {
     };
 }();
 
+// [@from, @to] range is mapped to an @interpolationFactor in the range [0, 1]
 export function lerp(from, to, interpolationFactor) {
     if (interpolationFactor <= 0) {
         return from;
@@ -145,9 +151,17 @@ export function lerp(from, to, interpolationFactor) {
     return interpolationFactor * (to - from) + from;
 }
 
+// [@from, @to] range is mapped to an @interpolationFactor in the range [0, 1]
 export function interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
     let lerpFactor = easingFunction(interpolationFactor);
     return MathUtils.lerp(from, to, lerpFactor);
+}
+
+// [@from, @to] range is mapped to an @interpolationFactor in the range [0, 1]
+// @interpolationFactor can go outside the [0, 1] range, periodically repeating the interpolation in the given range
+export function interpolatePeriodic(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
+    let adjustedInterpolationFactor = EasingSupportFunction.positiveTriangleWave(interpolationFactor);
+    return MathUtils.interpolate(from, to, adjustedInterpolationFactor, easingFunction);
 }
 
 export function angleDistance(from, to) {
@@ -266,6 +280,7 @@ export let MathUtils = {
     randomUUID,
     lerp,
     interpolate,
+    interpolatePeriodic,
     angleDistance,
     angleDistanceDegrees,
     angleDistanceRadians,

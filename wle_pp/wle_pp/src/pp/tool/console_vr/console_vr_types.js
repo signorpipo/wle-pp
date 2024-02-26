@@ -25,3 +25,9 @@ export let ConsoleVRWidgetMessageType = {
     ERROR: 2,
     LOG: 3
 };
+
+export let OverrideBrowserConsoleFunctions = {
+    NONE: 0,
+    ALL: 1,
+    ERRORS_AND_WARNS: 2
+};

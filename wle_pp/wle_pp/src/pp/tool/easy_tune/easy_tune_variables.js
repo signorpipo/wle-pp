@@ -59,13 +59,15 @@ export class EasyTuneVariables {
         return Array.from(this._myVariables.keys());
     }
 
-    fromJSON(json, resetDefaultValue = false) {
+    fromJSON(json, resetDefaultValue = false, manualImport = false) {
         let objectJSON = JSON.parse(json);
 
         for (let variable of this._myVariables.values()) {
-            let variableValueJSON = objectJSON[variable.getName()];
-            if (variableValueJSON !== undefined) {
-                variable.fromJSON(variableValueJSON, resetDefaultValue);
+            if ((variable.isManualImportEnabled() && manualImport) || (variable.isAutoImportEnabled() && !manualImport)) {
+                let variableValueJSON = objectJSON[variable.getName()];
+                if (variableValueJSON !== undefined) {
+                    variable.fromJSON(variableValueJSON, resetDefaultValue);
+                }
             }
         }
     }
@@ -74,7 +76,9 @@ export class EasyTuneVariables {
         let objectJSON = {};
 
         for (let variable of this._myVariables.values()) {
-            objectJSON[variable.getName()] = variable.toJSON();
+            if (variable.isExportEnabled()) {
+                objectJSON[variable.getName()] = variable.toJSON();
+            }
         }
 
         return JSON.stringify(objectJSON);

@@ -1,4 +1,4 @@
-import { GamepadCore } from "./gamepad_core";
+import { GamepadCore } from "./gamepad_core.js";
 
 export class VirtualGamepadGamepadCore extends GamepadCore {
 

@@ -1,5 +1,5 @@
-import { ArrayUtils } from "./array_utils";
-import { MathUtils } from "./math_utils";
+import { ArrayUtils } from "./array_utils.js";
+import { MathUtils } from "./math_utils.js";
 
 export function zero(vector, out = null) {
     out = _prepareOut(vector, out);

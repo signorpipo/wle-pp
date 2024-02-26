@@ -1,4 +1,4 @@
-import { initComponentMods } from "./components/init_component_mods";
+import { initComponentMods } from "./components/init_component_mods.js";
 
 export function initWLMods() {
     initComponentMods();

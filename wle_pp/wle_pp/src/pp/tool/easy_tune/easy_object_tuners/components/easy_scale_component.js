@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../../pp/globals";
-import { EasyScale } from "../easy_scale";
+import { Globals } from "../../../../pp/globals.js";
+import { EasyScale } from "../easy_scale.js";
 
 export class EasyScaleComponent extends Component {
     static TypeName = "pp-easy-scale";

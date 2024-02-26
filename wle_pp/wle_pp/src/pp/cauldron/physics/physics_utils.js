@@ -1,7 +1,11 @@
-import { vec3_create } from "../../plugin/js/extensions/array_extension";
-import { RaycastHit, RaycastParams, RaycastResults } from "./physics_raycast_params";
+import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../pp/globals.js";
+import { RaycastHit, RaycastParams, RaycastResults } from "./physics_raycast_params.js";
 
 let _myLayerFlagsNames = ["0", "1", "2", "3", "4", "5", "6", "7"];
+
+let _myRaycastCount = new WeakMap();
+let _myRaycastVisualDebugEnabled = new WeakMap();
 
 export function setLayerFlagsNames(layerFlagsNames) {
     _myLayerFlagsNames = layerFlagsNames;
@@ -11,7 +15,32 @@ export function getLayerFlagsNames() {
     return _myLayerFlagsNames;
 }
 
+export function getRaycastCount(physics = Globals.getPhysics()) {
+    let raycastCount = _myRaycastCount.get(physics);
+    return raycastCount != null ? raycastCount : 0;
+}
+
+export function resetRaycastCount(physics = Globals.getPhysics()) {
+    _myRaycastCount.set(physics, 0);
+}
+
+export function isRaycastVisualDebugEnabled(physics = Globals.getPhysics()) {
+    return _myRaycastVisualDebugEnabled.get(physics);
+}
+
+export function setRaycastVisualDebugEnabled(visualDebugEnabled, physics = Globals.getPhysics()) {
+    _myRaycastVisualDebugEnabled.set(physics, visualDebugEnabled);
+}
+
 export let raycast = function () {
+    // #WARN These initializations assume that there can't be more than @maxHitCount hits within a single rayCast call
+    // if the hitCount is greater, these arrays will be allocated again
+    let maxHitCount = 20;
+    let objects = new Array(maxHitCount);
+    let distances = new Float32Array(maxHitCount);
+    let locations = Array.from({ length: maxHitCount }, () => new Float32Array(3));
+    let normals = Array.from({ length: maxHitCount }, () => new Float32Array(3));
+
     let insideCheckSubVector = vec3_create();
     let invertedRaycastDirection = vec3_create();
     let objectsEqualCallback = (first, second) => first.pp_equals(second);
@@ -29,17 +58,28 @@ export let raycast = function () {
 
         let hitCount = internalRaycastResults.hitCount;
         if (hitCount != 0) {
-            let objects = null;
-            let distances = null;
-            let locations = null;
-            let normals = null;
+            if (hitCount > maxHitCount) {
+                console.warn("Raycast hitcount is more than the expected one: " + hitCount + " - Allocation of needed resources performed");
+
+                maxHitCount = Math.ceil(hitCount + hitCount * 0.5);
+                objects = new Array(maxHitCount);
+                distances = new Float32Array(maxHitCount);
+                locations = Array.from({ length: maxHitCount }, () => new Float32Array(3));
+                normals = Array.from({ length: maxHitCount }, () => new Float32Array(3));
+            }
+
+            let objectsAlreadyGet = false;
+            let distancesAlreadyGet = false;
+            let locationsAlreadyGet = false;
+            let normalsAlreadyGet = false;
 
             invertedRaycastDirection = raycastParams.myDirection.vec3_negate(invertedRaycastDirection);
 
             for (let i = 0; i < hitCount; i++) {
                 if (raycastParams.myObjectsToIgnore.length != 0) {
-                    if (objects == null) {
-                        objects = internalRaycastResults.objects;
+                    if (!objectsAlreadyGet) {
+                        objectsAlreadyGet = true;
+                        internalRaycastResults.pp_getObjects(objects);
                     }
 
                     if (raycastParams.myObjectsToIgnore.pp_hasEqual(objects[i], objectsEqualCallback)) {
@@ -47,21 +87,24 @@ export let raycast = function () {
                     }
                 }
 
-                if (distances == null) {
-                    distances = internalRaycastResults.distances;
+                if (!distancesAlreadyGet) {
+                    distancesAlreadyGet = true;
+                    internalRaycastResults.pp_getDistances(distances);
                 }
 
                 let hitInsideCollision = distances[i] == 0;
                 if (hitInsideCollision) {
-                    if (locations == null) {
-                        locations = internalRaycastResults.locations;
+                    if (!locationsAlreadyGet) {
+                        locationsAlreadyGet = true;
+                        internalRaycastResults.pp_getLocations(locations);
                     }
 
                     hitInsideCollision &&= raycastParams.myOrigin.vec3_sub(locations[i], insideCheckSubVector).vec3_isZero(Math.PP_EPSILON);
 
                     if (hitInsideCollision) {
-                        if (!normals) {
-                            normals = internalRaycastResults.normals;
+                        if (!normalsAlreadyGet) {
+                            normalsAlreadyGet = true;
+                            internalRaycastResults.pp_getNormals(normals);
                         }
 
                         hitInsideCollision &&= invertedRaycastDirection.vec3_equals(normals[i], Math.PP_EPSILON_DEGREES);
@@ -81,16 +124,19 @@ export let raycast = function () {
                         raycastResults.myHits.push(hit);
                     }
 
-                    if (objects == null) {
-                        objects = internalRaycastResults.objects;
+                    if (!objectsAlreadyGet) {
+                        objectsAlreadyGet = true;
+                        internalRaycastResults.pp_getObjects(objects);
                     }
 
-                    if (locations == null) {
-                        locations = internalRaycastResults.locations;
+                    if (!locationsAlreadyGet) {
+                        locationsAlreadyGet = true;
+                        internalRaycastResults.pp_getLocations(locations);
                     }
 
-                    if (normals == null) {
-                        normals = internalRaycastResults.normals;
+                    if (!normalsAlreadyGet) {
+                        normalsAlreadyGet = true;
+                        internalRaycastResults.pp_getNormals(normals);
                     }
 
                     hit.myPosition.vec3_copy(locations[i]);
@@ -116,6 +162,14 @@ export let raycast = function () {
             }
         }
 
+        if (Globals.isDebugEnabled(raycastParams.myPhysics.pp_getEngine())) {
+            if (PhysicsUtils.isRaycastVisualDebugEnabled(raycastParams.myPhysics)) {
+                Globals.getDebugVisualManager(raycastParams.myPhysics.pp_getEngine()).drawRaycast(0, raycastResults);
+            }
+
+            _increaseRaycastCount(raycastParams.myPhysics);
+        }
+
         return raycastResults;
     };
 }();
@@ -123,5 +177,21 @@ export let raycast = function () {
 export let PhysicsUtils = {
     setLayerFlagsNames,
     getLayerFlagsNames,
+    getRaycastCount,
+    resetRaycastCount,
+    isRaycastVisualDebugEnabled,
+    setRaycastVisualDebugEnabled,
     raycast
 };
+
+
+
+function _increaseRaycastCount(physics = Globals.getPhysics()) {
+    let raycastCount = _myRaycastCount.get(physics);
+
+    if (raycastCount == null) {
+        _myRaycastCount.set(physics, 1);
+    } else {
+        _myRaycastCount.set(physics, raycastCount + 1);
+    }
+}

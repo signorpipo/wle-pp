@@ -1,8 +1,27 @@
-import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params";
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { CollisionCheck } from "./collision_check";
+import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params.js";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { CollisionCheckHorizontalBase } from "./collision_check_horizontal_base.js";
 
-CollisionCheck.prototype._horizontalPositionCheck = function () {
+export class CollisionCheckHorizontalPosition extends CollisionCheckHorizontalBase {
+
+    _horizontalPositionCheck(originalFeetPosition, originalHeight, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _horizontalPositionHorizontalCheck(feetPosition, checkPositions, heightOffset, up, forward, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+
+    _horizontalPositionVerticalCheck(feetPosition, checkPositions, heightOffset, heightStep, verticalDirection, up, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, collisionCheckParams, collisionRuntimeParams) {
+        // Implemented outside class definition
+    }
+}
+
+
+
+// IMPLEMENTATION
+
+CollisionCheckHorizontalPosition.prototype._horizontalPositionCheck = function () {
     let checkPositions = [];
     let cachedCheckPositions = [];
     let currentCachedCheckPositionIndex = 0;
@@ -214,7 +233,7 @@ CollisionCheck.prototype._horizontalPositionCheck = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalPositionHorizontalCheck = function () {
+CollisionCheckHorizontalPosition.prototype._horizontalPositionHorizontalCheck = function () {
     let basePosition = vec3_create();
     let forwardNegate = vec3_create();
     let currentRadialPosition = vec3_create();
@@ -294,7 +313,7 @@ CollisionCheck.prototype._horizontalPositionHorizontalCheck = function () {
     };
 }();
 
-CollisionCheck.prototype._horizontalPositionVerticalCheck = function () {
+CollisionCheckHorizontalPosition.prototype._horizontalPositionVerticalCheck = function () {
     let basePosition = vec3_create();
     let previousBasePosition = vec3_create();
     let currentRadialPosition = vec3_create();
@@ -440,9 +459,3 @@ CollisionCheck.prototype._horizontalPositionVerticalCheck = function () {
         return !collisionRuntimeParams.myIsCollidingHorizontally;
     };
 }();
-
-
-
-Object.defineProperty(CollisionCheck.prototype, "_horizontalPositionCheck", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalPositionHorizontalCheck", { enumerable: false });
-Object.defineProperty(CollisionCheck.prototype, "_horizontalPositionVerticalCheck", { enumerable: false });

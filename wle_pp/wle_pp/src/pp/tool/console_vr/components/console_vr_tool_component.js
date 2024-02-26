@@ -1,13 +1,13 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { ConsoleVRWidget, ConsoleVRWidgetParams } from "../console_vr_widget";
-import { InitConsoleVRComponent } from "./init_console_vr_component";
+import { Globals } from "../../../pp/globals.js";
+import { ConsoleVRWidget, ConsoleVRWidgetParams } from "../console_vr_widget.js";
+import { InitConsoleVRComponent } from "./init_console_vr_component.js";
 
 export class ConsoleVRToolComponent extends Component {
     static TypeName = "pp-console-vr-tool";
     static Properties = {
         _myHandedness: Property.enum(["None", "Left", "Right"], "None"),
-        _myOverrideBrowserConsole: Property.bool(true),
+        _myOverrideBrowserConsoleFunctions: Property.enum(["None", "All", "Errors & Warns"], "All"),
         _myShowOnStart: Property.bool(false),
         _myShowVisibilityButton: Property.bool(false),
         _myPulseOnNewMessage: Property.enum(["Never", "Always", "When Hidden"], "Never")
@@ -23,7 +23,7 @@ export class ConsoleVRToolComponent extends Component {
 
             let params = new ConsoleVRWidgetParams(this.engine);
             params.myHandedness = [null, "left", "right"][this._myHandedness];
-            params.myOverrideBrowserConsole = this._myOverrideBrowserConsole;
+            params.myOverrideBrowserConsoleFunctions = this._myOverrideBrowserConsoleFunctions;
             params.myShowOnStart = this._myShowOnStart;
             params.myShowVisibilityButton = this._myShowVisibilityButton;
             params.myPulseOnNewMessage = this._myPulseOnNewMessage;

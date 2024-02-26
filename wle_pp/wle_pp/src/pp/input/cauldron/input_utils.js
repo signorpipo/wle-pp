@@ -1,6 +1,6 @@
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { Globals } from "../../pp/globals";
-import { Handedness, HandednessIndex, InputSourceType, TrackedHandJointID, TrackedHandJointIDIndex } from "./input_types";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { Globals } from "../../pp/globals.js";
+import { Handedness, HandednessIndex, InputSourceType, TrackedHandJointID, TrackedHandJointIDIndex } from "./input_types.js";
 
 export function getHandednessByIndex(index) {
     let handedness = null;

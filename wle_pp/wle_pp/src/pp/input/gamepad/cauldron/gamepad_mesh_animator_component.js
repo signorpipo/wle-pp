@@ -1,8 +1,8 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { HandednessIndex } from "../../cauldron/input_types";
-import { GamepadAxesEvent, GamepadAxesID, GamepadButtonEvent, GamepadButtonID } from "../gamepad_buttons";
+import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { HandednessIndex } from "../../cauldron/input_types.js";
+import { GamepadAxesEvent, GamepadAxesID, GamepadButtonEvent, GamepadButtonID } from "../gamepad_buttons.js";
 
 export class GamepadMeshAnimatorComponent extends Component {
     static TypeName = "pp-gamepad-mesh-animator";

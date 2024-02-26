@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { EasyTuneVariables } from "../easy_tune_variables";
+import { Globals } from "../../../pp/globals.js";
+import { EasyTuneVariables } from "../easy_tune_variables.js";
 
 export class InitEasyTuneVariablesComponent extends Component {
     static TypeName = "pp-init-easy-tune-variables";

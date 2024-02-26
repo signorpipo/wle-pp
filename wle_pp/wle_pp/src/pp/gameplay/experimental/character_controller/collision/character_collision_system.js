@@ -1,7 +1,7 @@
-import { quat2_create } from "../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../pp/globals";
-import { CharacterCollisionResults } from "./character_collision_results";
-import { CollisionCheckBridge } from "./collision_check_bridge";
+import { quat2_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../pp/globals.js";
+import { CharacterCollisionResults } from "./character_collision_results.js";
+import { CollisionCheckBridge } from "./collision_check_bridge.js";
 
 export class CharacterCollisionSystem {
 

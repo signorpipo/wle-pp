@@ -1,6 +1,6 @@
-import { Globals } from "../../../pp/globals";
-import { Handedness } from "../../cauldron/input_types";
-import { VirtualGamepadIcon } from "./virtual_gamepad_icon";
+import { Globals } from "../../../pp/globals.js";
+import { Handedness } from "../../cauldron/input_types.js";
+import { VirtualGamepadIcon } from "./virtual_gamepad_icon.js";
 
 export class VirtualGamepadVirtualButton {
 

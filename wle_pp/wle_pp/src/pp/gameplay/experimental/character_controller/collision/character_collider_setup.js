@@ -1,5 +1,5 @@
-import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags";
-import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array_extension";
+import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags.js";
+import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
 
 export class CharacterColliderSetup {
 

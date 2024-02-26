@@ -4,7 +4,9 @@ export function setClonedMaterials(object) {
     let textComponents = object.pp_getComponents(TextComponent);
 
     for (let textComponent of textComponents) {
-        textComponent.material = textComponent.material.clone();
+        if (textComponent.material != null) {
+            textComponent.material = textComponent.material.clone();
+        }
     }
 }
 

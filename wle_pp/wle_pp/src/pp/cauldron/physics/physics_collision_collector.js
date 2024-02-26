@@ -1,5 +1,5 @@
 import { CollisionEventType, Emitter, PhysXComponent } from "@wonderlandengine/api";
-import { Timer } from "../cauldron/timer";
+import { Timer } from "../cauldron/timer.js";
 
 export class PhysicsCollisionCollector {
 

@@ -24,10 +24,10 @@
 */
 
 import { Scene } from "@wonderlandengine/api";
-import { SceneUtils } from "../../../cauldron/wl/utils/scene_utils";
-import { PluginUtils } from "../../utils/plugin_utils";
+import { SceneUtils } from "../../../cauldron/wl/utils/scene_utils.js";
+import { PluginUtils } from "../../utils/plugin_utils.js";
 
-export function initSceneExtension(engine) {
+export function initSceneExtension() {
     initSceneExtensionPrototype();
 }
 

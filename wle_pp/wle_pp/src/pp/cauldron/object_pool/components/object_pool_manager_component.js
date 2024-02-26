@@ -1,6 +1,6 @@
 import { Component } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { ObjectPoolManager } from "../object_pool_manager";
+import { Globals } from "../../../pp/globals.js";
+import { ObjectPoolManager } from "../object_pool_manager.js";
 
 export class ObjectPoolManagerComponent extends Component {
     static TypeName = "pp-object-pools-manager";

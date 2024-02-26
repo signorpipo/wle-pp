@@ -1,8 +1,8 @@
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { quat_create, vec3_create } from "../../plugin/js/extensions/array_extension";
-import { Handedness, InputSourceType } from "../cauldron/input_types";
-import { InputUtils } from "../cauldron/input_utils";
-import { BasePose, BasePoseParams } from "./base_pose";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { quat_create, vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { Handedness, InputSourceType } from "../cauldron/input_types.js";
+import { InputUtils } from "../cauldron/input_utils.js";
+import { BasePose, BasePoseParams } from "./base_pose.js";
 
 export class HandPoseParams extends BasePoseParams {
 
@@ -52,7 +52,7 @@ export class HandPose extends BasePose {
         this.myFixTrackedHandRotation = fixTrackedHandRotation;
     }
 
-    getRotationQuat(referenceObjectOverride = undefined) {
+    getRotationQuat(out = quat_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }
 
@@ -65,18 +65,19 @@ export class HandPose extends BasePose {
     }
 
     _onXRSessionStartHook(manualCall, session) {
-        this._myInputSourcesChangeEventListener = function () {
+        this._myInputSourcesChangeEventListener = () => {
             this._myInputSource = null;
 
             if (session.inputSources != null && session.inputSources.length > 0) {
-                for (let item of session.inputSources) {
-                    if (item.handedness == this._myHandedness) {
-                        this._myInputSource = item;
+                for (let i = 0; i < session.inputSources.length; i++) {
+                    let inputSource = session.inputSources[i];
+                    if (inputSource.handedness == this._myHandedness) {
+                        this._myInputSource = inputSource;
                         this._myTrackedHand = InputUtils.getInputSourceType(this._myInputSource) == InputSourceType.TRACKED_HAND;
                     }
                 }
             }
-        }.bind(this);
+        };
 
         this._myInputSourcesChangeEventListener();
 

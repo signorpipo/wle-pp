@@ -1,10 +1,10 @@
 import { Collider, CollisionComponent, Component, Property } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
-import { XRUtils } from "../../../cauldron/utils/xr_utils";
-import { vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { InputSourceType, TrackedHandJointID } from "../input_types";
-import { InputUtils } from "../input_utils";
+import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
+import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { InputSourceType, TrackedHandJointID } from "../input_types.js";
+import { InputUtils } from "../input_utils.js";
 
 export class FingerCursorComponent extends Component {
     static TypeName = "pp-finger-cursor";
@@ -58,12 +58,15 @@ export class FingerCursorComponent extends Component {
             let overlaps = this._myCollisionComponent.queryOverlaps();
             let overlapTarget = null;
             for (let i = 0; i < overlaps.length; ++i) {
-                let object = overlaps[i].object;
-                let target = object.pp_getComponent(CursorTarget);
-                if (target && (overlapTarget == null || !target.isSurface)) {
-                    overlapTarget = target;
-                    if (!target.isSurface) {
-                        break;
+                let collision = overlaps[i];
+                if (collision.group & this._myCollisionComponent.group) {
+                    let object = collision.object;
+                    let target = object.pp_getComponent(CursorTarget);
+                    if (target && (overlapTarget == null || !target.isSurface)) {
+                        overlapTarget = target;
+                        if (!target.isSurface) {
+                            break;
+                        }
                     }
                 }
             }
@@ -89,6 +92,8 @@ export class FingerCursorComponent extends Component {
 
     _targetTouchEnd() {
         if (this._myLastTarget) {
+            this._myLastTarget.onClick.notify(this._myLastTarget.object, this);
+
             if (this._myMultipleClicksEnabled && this._myTripleClickTimer > 0 && this._myMultipleClickObject && this._myMultipleClickObject.pp_equals(this._myLastTarget.object)) {
                 this._myLastTarget.onTripleClick.notify(this._myLastTarget.object, this);
 
@@ -99,7 +104,7 @@ export class FingerCursorComponent extends Component {
                 this._myTripleClickTimer = this._myMultipleClickDelay;
                 this._myDoubleClickTimer = 0;
             } else {
-                this._myLastTarget.onClick.notify(this._myLastTarget.object, this);
+                this._myLastTarget.onSingleClick.notify(this._myLastTarget.object, this);
 
                 this._myTripleClickTimer = 0;
                 this._myDoubleClickTimer = this._myMultipleClickDelay;
@@ -107,6 +112,8 @@ export class FingerCursorComponent extends Component {
             }
 
             this._myLastTarget.onUp.notify(this._myLastTarget.object, this);
+            this._myLastTarget.onUpWithDown.notify(this._myLastTarget.object, this);
+
             this._myLastTarget.onUnhover.notify(this._myLastTarget.object, this);
 
             this._myLastTarget = null;
@@ -118,14 +125,22 @@ export class FingerCursorComponent extends Component {
     }
 
     onDeactivate() {
-        this._myCursorParentObject.pp_setActive(false);
+        if (this._myCursorParentObject != null) {
+            this._myCursorParentObject.pp_setActive(false);
+        }
     }
 
     _updateHand() {
         this._myHandInputSource = InputUtils.getInputSource(this._myHandednessType, InputSourceType.TRACKED_HAND, this.engine);
 
         if (this._myHandInputSource) {
-            let tip = XRUtils.getFrame(this.engine).getJointPose(this._myHandInputSource.hand.get(TrackedHandJointID.INDEX_FINGER_TIP), XRUtils.getReferenceSpace(this.engine));
+            let tip = null;
+
+            try {
+                tip = XRUtils.getFrame(this.engine).getJointPose(this._myHandInputSource.hand.get(TrackedHandJointID.INDEX_FINGER_TIP), XRUtils.getReferenceSpace(this.engine));
+            } catch (error) {
+                // Do nothing
+            }
 
             if (tip) {
                 this._myCursorObject.pp_setRotationLocalQuat([

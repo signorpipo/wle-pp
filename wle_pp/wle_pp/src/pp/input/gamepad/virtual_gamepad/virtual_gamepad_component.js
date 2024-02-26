@@ -1,10 +1,10 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { Handedness } from "../../cauldron/input_types";
-import { GamepadButtonID } from "../gamepad_buttons";
-import { VirtualGamepadGamepadCore } from "../gamepad_cores/virtual_gamepad_gamepad_core";
-import { VirtualGamepad } from "./virtual_gamepad";
-import { VirtualGamepadParams } from "./virtual_gamepad_params";
+import { Globals } from "../../../pp/globals.js";
+import { Handedness } from "../../cauldron/input_types.js";
+import { GamepadButtonID } from "../gamepad_buttons.js";
+import { VirtualGamepadGamepadCore } from "../gamepad_cores/virtual_gamepad_gamepad_core.js";
+import { VirtualGamepad } from "./virtual_gamepad.js";
+import { VirtualGamepadParams } from "./virtual_gamepad_params.js";
 
 export class VirtualGamepadComponent extends Component {
     static TypeName = "pp-virtual-gamepad";
@@ -153,8 +153,8 @@ export class VirtualGamepadComponent extends Component {
         {
             let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT];
             buttonParams.myIconParams.myIconType = this._myLeftSelectButtonIconType;
-            buttonParams.myIconParams.myLabel = this._myLeftSelectIconLabelOrImageUrl;
-            buttonParams.myIconParams.myImageURL = this._myLeftSelectIconLabelOrImageUrl;
+            buttonParams.myIconParams.myLabel = this._myLeftSelectButtonIconLabelOrImageUrl;
+            buttonParams.myIconParams.myImageURL = this._myLeftSelectButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
             buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
             buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
@@ -168,8 +168,8 @@ export class VirtualGamepadComponent extends Component {
         {
             let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE];
             buttonParams.myIconParams.myIconType = this._myLeftSqueezeButtonIconType;
-            buttonParams.myIconParams.myLabel = this._myLeftSqueezeIconLabelOrImageUrl;
-            buttonParams.myIconParams.myImageURL = this._myLeftSqueezeIconLabelOrImageUrl;
+            buttonParams.myIconParams.myLabel = this._myLeftSqueezeButtonIconLabelOrImageUrl;
+            buttonParams.myIconParams.myImageURL = this._myLeftSqueezeButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
             buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
             buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
@@ -228,8 +228,8 @@ export class VirtualGamepadComponent extends Component {
         {
             let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT];
             buttonParams.myIconParams.myIconType = this._myRightSelectButtonIconType;
-            buttonParams.myIconParams.myLabel = this._myRightSelectIconLabelOrImageUrl;
-            buttonParams.myIconParams.myImageURL = this._myRightSelectIconLabelOrImageUrl;
+            buttonParams.myIconParams.myLabel = this._myRightSelectButtonIconLabelOrImageUrl;
+            buttonParams.myIconParams.myImageURL = this._myRightSelectButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
             buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
             buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
@@ -243,8 +243,8 @@ export class VirtualGamepadComponent extends Component {
         {
             let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE];
             buttonParams.myIconParams.myIconType = this._myRightSqueezeButtonIconType;
-            buttonParams.myIconParams.myLabel = this._myRightSqueezeIconLabelOrImageUrl;
-            buttonParams.myIconParams.myImageURL = this._myRightSqueezeIconLabelOrImageUrl;
+            buttonParams.myIconParams.myLabel = this._myRightSqueezeButtonIconLabelOrImageUrl;
+            buttonParams.myIconParams.myImageURL = this._myRightSqueezeButtonIconLabelOrImageUrl;
             buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
             buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
             buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;

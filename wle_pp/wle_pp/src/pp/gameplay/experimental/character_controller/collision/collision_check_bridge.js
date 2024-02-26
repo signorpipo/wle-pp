@@ -1,8 +1,8 @@
-import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../pp/globals";
-import { CharacterCollisionCheckType, CharacterCollisionResults } from "./character_collision_results";
-import { CollisionCheck } from "./legacy/collision_check/collision_check";
-import { CollisionCheckParams, CollisionRuntimeParams } from "./legacy/collision_check/collision_params";
+import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../pp/globals.js";
+import { CharacterCollisionCheckType, CharacterCollisionResults } from "./character_collision_results.js";
+import { CollisionCheck } from "./legacy/collision_check/collision_check.js";
+import { CollisionCheckParams, CollisionRuntimeParams } from "./legacy/collision_check/collision_params.js";
 
 let _myCollisionChecks = new WeakMap();
 
@@ -12,6 +12,24 @@ export function getCollisionCheck(engine = Globals.getMainEngine()) {
 
 export function setCollisionCheck(collisionCheck, engine = Globals.getMainEngine()) {
     _myCollisionChecks.set(engine, collisionCheck);
+}
+
+export function isCollisionCheckDisabled(engine = Globals.getMainEngine()) {
+    let collisionCheck = CollisionCheckBridge.getCollisionCheck(engine);
+
+    if (collisionCheck != null) {
+        return collisionCheck.isCollisionCheckDisabled();
+    }
+
+    return false;
+}
+
+export function setCollisionCheckDisabled(collisionCheckDisabled, engine = Globals.getMainEngine()) {
+    let collisionCheck = CollisionCheckBridge.getCollisionCheck(engine);
+
+    if (collisionCheck != null) {
+        collisionCheck.setCollisionCheckDisabled(collisionCheckDisabled);
+    }
 }
 
 export function initBridge(engine = Globals.getMainEngine()) {
@@ -300,7 +318,7 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.myHorizontalMovementCheckEnabled = characterColliderSetup.myHorizontalCheckParams.myHorizontalMovementCheckEnabled;
 
         outCollisionCheckParams.myHorizontalMovementStepEnabled = characterColliderSetup.myHorizontalCheckParams.myHorizontalMovementCheckSplitMovementEnabled;
-        outCollisionCheckParams.myHorizontalMovementStepMaxLength = characterColliderSetup.myHorizontalCheckParams.myHorizontalMovementCheckSplitMovementMaxStepLength;
+        outCollisionCheckParams.myHorizontalMovementStepMaxLength = characterColliderSetup.myHorizontalCheckParams.myHorizontalMovementCheckSplitMovementMaxStepLength == null ? 0 : characterColliderSetup.myHorizontalCheckParams.myHorizontalMovementCheckSplitMovementMaxStepLength;
 
         outCollisionCheckParams.myHorizontalMovementRadialStepAmount = characterColliderSetup.myHorizontalCheckParams.myHorizontalMovementCheckRadialSteps;
 
@@ -477,14 +495,15 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.mySlidingAdjustSign90Degrees = characterColliderSetup.myWallSlideParams.my90DegreesWallSlideAdjustDirectionSign;
 
         outCollisionCheckParams.mySplitMovementEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementEnabled;
-        outCollisionCheckParams.mySplitMovementMaxLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength;
+        outCollisionCheckParams.mySplitMovementMaxLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength == null ? 0 : characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength;
+        outCollisionCheckParams.mySplitMovementMaxLengthEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength != null;
+        outCollisionCheckParams.mySplitMovementMaxSteps = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps == null ? 0 : characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps;
         outCollisionCheckParams.mySplitMovementMaxStepsEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps != null;
-        outCollisionCheckParams.mySplitMovementMaxSteps = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps;
-        outCollisionCheckParams.mySplitMovementStepEqualLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength == null;
-        outCollisionCheckParams.mySplitMovementStepEqualLengthMinLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength;
+        outCollisionCheckParams.mySplitMovementMinLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength == null ? 0 : characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength;
+        outCollisionCheckParams.mySplitMovementMinLengthEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength != null;
         outCollisionCheckParams.mySplitMovementStopWhenHorizontalMovementCanceled = characterColliderSetup.mySplitMovementParams.mySplitMovementStopOnHorizontalMovementFailed;
         outCollisionCheckParams.mySplitMovementStopWhenVerticalMovementCanceled = characterColliderSetup.mySplitMovementParams.mySplitMovementStopOnVerticalMovementFailed;
-        outCollisionCheckParams.mySplitMovementStopCallback = characterColliderSetup.mySplitMovementParams.mySplitMovementStopOnCallback;
+        outCollisionCheckParams.mySplitMovementStopCallback = null;
         outCollisionCheckParams.mySplitMovementStopReturnPrevious = characterColliderSetup.mySplitMovementParams.mySplitMovementStopReturnPreviousResults;
 
         outCollisionCheckParams.myPositionOffsetLocal.vec3_copy(characterColliderSetup.myAdditionalParams.myPositionOffsetLocal);
@@ -510,6 +529,8 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
 export let CollisionCheckBridge = {
     getCollisionCheck,
     setCollisionCheck,
+    isCollisionCheckDisabled,
+    setCollisionCheckDisabled,
     initBridge,
     checkMovement,
     checkTeleportToTransform,

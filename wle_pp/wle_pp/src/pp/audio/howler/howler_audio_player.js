@@ -1,4 +1,4 @@
-import { AudioPlayer } from "../audio_player";
+import { AudioPlayer } from "../audio_player.js";
 
 export class HowlerAudioPlayer extends AudioPlayer {
 

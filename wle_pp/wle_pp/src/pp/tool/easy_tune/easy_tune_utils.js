@@ -1,7 +1,11 @@
-import { Globals } from "../../pp/globals";
+import { Globals } from "../../pp/globals.js";
 
 let _mySetWidgetCurrentVariableCallbacks = new WeakMap();    // Signature: callback(variableName)
 let _myRefreshWidgetCallbacks = new WeakMap();               // Signature: callback()
+
+let _myAutoImportEnabledDefaultValues = new WeakMap();
+let _myManualImportEnabledDefaultValues = new WeakMap();
+let _myExportEnabledDefaultValues = new WeakMap();
 
 export function setWidgetCurrentVariable(variableName, engine = Globals.getMainEngine()) {
     if (_mySetWidgetCurrentVariableCallbacks.has(engine)) {
@@ -21,12 +25,12 @@ export function refreshWidget(engine = Globals.getMainEngine()) {
 
 // fileURL can contain parameters inside brackets, like {param}
 // Those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
-export function importVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
+export function importVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, manualImport = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
     if (fileURL == null || fileURL.length == 0) {
         if (Globals.getNavigator(engine).clipboard) {
             Globals.getNavigator(engine).clipboard.readText().then(
                 function (clipboard) {
-                    Globals.getEasyTuneVariables(engine).fromJSON(clipboard, resetVariablesDefaultValueOnImport);
+                    Globals.getEasyTuneVariables(engine).fromJSON(clipboard, resetVariablesDefaultValueOnImport, manualImport);
 
                     EasyTuneUtils.refreshWidget(engine);
 
@@ -60,7 +64,7 @@ export function importVariables(fileURL = null, resetVariablesDefaultValueOnImpo
                 if (response.ok) {
                     response.text().then(
                         function (text) {
-                            Globals.getEasyTuneVariables(engine).fromJSON(text, resetVariablesDefaultValueOnImport);
+                            Globals.getEasyTuneVariables(engine).fromJSON(text, resetVariablesDefaultValueOnImport, manualImport);
 
                             EasyTuneUtils.refreshWidget(engine);
 
@@ -189,6 +193,48 @@ export function exportVariables(fileURL = null, onSuccessCallback = null, onFail
     }
 }
 
+export function setAutoImportEnabledDefaultValue(defaultValue, engine = Globals.getMainEngine()) {
+    _myAutoImportEnabledDefaultValues.set(engine, defaultValue);
+}
+
+export function setManualImportEnabledDefaultValue(defaultValue, engine = Globals.getMainEngine()) {
+    _myManualImportEnabledDefaultValues.set(engine, defaultValue);
+}
+
+export function setExportEnabledDefaultValue(defaultValue, engine = Globals.getMainEngine()) {
+    _myExportEnabledDefaultValues.set(engine, defaultValue);
+}
+
+export function getAutoImportEnabledDefaultValue(engine = Globals.getMainEngine()) {
+    let defaultValue = true;
+
+    if (_myAutoImportEnabledDefaultValues.has(engine)) {
+        defaultValue = _myAutoImportEnabledDefaultValues.get(engine);
+    }
+
+    return defaultValue;
+}
+
+export function getManualImportEnabledDefaultValue(engine = Globals.getMainEngine()) {
+    let defaultValue = true;
+
+    if (_myManualImportEnabledDefaultValues.has(engine)) {
+        defaultValue = _myManualImportEnabledDefaultValues.get(engine);
+    }
+
+    return defaultValue;
+}
+
+export function getExportEnabledDefaultValue(engine = Globals.getMainEngine()) {
+    let defaultValue = true;
+
+    if (_myExportEnabledDefaultValues.has(engine)) {
+        defaultValue = _myExportEnabledDefaultValues.get(engine);
+    }
+
+    return defaultValue;
+}
+
 export function addSetWidgetCurrentVariableCallback(id, callback, engine = Globals.getMainEngine()) {
     if (!_mySetWidgetCurrentVariableCallbacks.has(engine)) {
         _mySetWidgetCurrentVariableCallbacks.set(engine, new Map());
@@ -222,6 +268,12 @@ export let EasyTuneUtils = {
     refreshWidget,
     importVariables,
     exportVariables,
+    setAutoImportEnabledDefaultValue,
+    setManualImportEnabledDefaultValue,
+    setExportEnabledDefaultValue,
+    getAutoImportEnabledDefaultValue,
+    getManualImportEnabledDefaultValue,
+    getExportEnabledDefaultValue,
     addSetWidgetCurrentVariableCallback,
     removeSetWidgetCurrentVariableCallback,
     addRefreshWidgetCallback,

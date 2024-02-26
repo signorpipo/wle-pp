@@ -1,5 +1,5 @@
 import { TextComponent } from "@wonderlandengine/api";
-import { EasyTuneBaseWidgetUI } from "../base/easy_tune_base_widget_ui";
+import { EasyTuneBaseWidgetUI } from "../base/easy_tune_base_widget_ui.js";
 
 export class EasyTuneNoneWidgetUI extends EasyTuneBaseWidgetUI {
 

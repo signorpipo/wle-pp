@@ -1,18 +1,21 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { AudioManagerComponent } from "../../audio/components/audio_manager_component";
-import { ObjectPoolManagerComponent } from "../../cauldron/object_pool/components/object_pool_manager_component";
-import { VisualManagerComponent } from "../../cauldron/visual/components/visual_manager_component";
-import { AddWLToWindowComponent } from "../../cauldron/wl/components/add_wl_to_window_component";
-import { DebugManagerComponent } from "../../debug/components/debug_manager_component";
-import { EnableDebugComponent } from "../../debug/components/enable_debug_component";
-import { InputManagerComponent } from "../../input/cauldron/components/input_manager_component";
-import { EnableToolComponent } from "../../tool/cauldron/components/enable_tool_component";
-import { InitConsoleVRComponent } from "../../tool/console_vr/components/init_console_vr_component";
-import { InitEasyTuneVariablesComponent } from "../../tool/easy_tune/components/init_easy_tune_variables_component";
-import { initPP } from "../init_pp";
-import { AddPPToWindowComponent } from "./add_pp_to_window_component";
-import { GetDefaultResourcesComponent } from "./get_default_resources_component";
-import { GetSceneObjectsComponent } from "./get_scene_objects_component";
+import { AudioManagerComponent } from "../../audio/components/audio_manager_component.js";
+import { AnalyticsManagerComponent } from "../../cauldron/cauldron/components/analytics_manager_component.js";
+import { SaveManagerComponent } from "../../cauldron/cauldron/components/save_manager_component.js";
+import { ObjectPoolManagerComponent } from "../../cauldron/object_pool/components/object_pool_manager_component.js";
+import { VisualManagerComponent } from "../../cauldron/visual/components/visual_manager_component.js";
+import { AddWLToWindowComponent } from "../../cauldron/wl/components/add_wl_to_window_component.js";
+import { DebugManagerComponent } from "../../debug/components/debug_manager_component.js";
+import { EnableDebugComponent } from "../../debug/components/enable_debug_component.js";
+import { CharacterCollisionSystemComponent } from "../../gameplay/experimental/character_controller/collision/components/character_collision_system_component.js";
+import { InputManagerComponent } from "../../input/cauldron/components/input_manager_component.js";
+import { EnableToolComponent } from "../../tool/cauldron/components/enable_tool_component.js";
+import { InitConsoleVRComponent } from "../../tool/console_vr/components/init_console_vr_component.js";
+import { InitEasyTuneVariablesComponent } from "../../tool/easy_tune/components/init_easy_tune_variables_component.js";
+import { initPP } from "../init_pp.js";
+import { AddPPToWindowComponent } from "./add_pp_to_window_component.js";
+import { GetDefaultResourcesComponent } from "./get_default_resources_component.js";
+import { GetSceneObjectsComponent } from "./get_scene_objects_component.js";
 
 let _myRegisteredEngines = new WeakMap();
 
@@ -26,7 +29,10 @@ export class PPGatewayComponent extends Component {
         ...InputManagerComponent.Properties,
         ...AudioManagerComponent.Properties,
         ...VisualManagerComponent.Properties,
+        ...CharacterCollisionSystemComponent.Properties,
         ...ObjectPoolManagerComponent.Properties,
+        ...SaveManagerComponent.Properties,
+        ...AnalyticsManagerComponent.Properties,
         ...DebugManagerComponent.Properties,
         ...GetSceneObjectsComponent.Properties,
         ...GetDefaultResourcesComponent.Properties
@@ -70,6 +76,10 @@ export class PPGatewayComponent extends Component {
         this._myInputManagerComponent = this.object.pp_addComponent(InputManagerComponent, this._getProperties(InputManagerComponent.Properties), false);
         this._myAudioManagerComponent = this.object.pp_addComponent(AudioManagerComponent, this._getProperties(AudioManagerComponent.Properties), false);
         this._myVisualManagerComponent = this.object.pp_addComponent(VisualManagerComponent, this._getProperties(VisualManagerComponent.Properties), false);
+        this._myCharacterCollisionSystemComponent = this.object.pp_addComponent(CharacterCollisionSystemComponent, this._getProperties(CharacterCollisionSystemComponent.Properties), false);
+        this._mySaveManagerComponent = this.object.pp_addComponent(SaveManagerComponent, this._getProperties(SaveManagerComponent.Properties), false);
+        this._myAnalyticsManagerComponent = this.object.pp_addComponent(AnalyticsManagerComponent, this._getProperties(AnalyticsManagerComponent.Properties), false);
+
         this._myDebugManagerComponent = this.object.pp_addComponent(DebugManagerComponent, this._getProperties(DebugManagerComponent.Properties), false);
     }
 
@@ -100,6 +110,10 @@ export class PPGatewayComponent extends Component {
         this._myInputManagerComponent.active = true;
         this._myAudioManagerComponent.active = true;
         this._myVisualManagerComponent.active = true;
+        this._myCharacterCollisionSystemComponent.active = true;
+        this._mySaveManagerComponent.active = true;
+        this._myAnalyticsManagerComponent.active = true;
+
         this._myDebugManagerComponent.active = true;
     }
 

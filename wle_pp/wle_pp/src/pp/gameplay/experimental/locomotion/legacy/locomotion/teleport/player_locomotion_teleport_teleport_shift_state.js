@@ -1,7 +1,7 @@
-import { Timer } from "../../../../../../cauldron/cauldron/timer";
-import { FSM } from "../../../../../../cauldron/fsm/fsm";
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state";
+import { Timer } from "../../../../../../cauldron/cauldron/timer.js";
+import { FSM } from "../../../../../../cauldron/fsm/fsm.js";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state.js";
 
 export class PlayerLocomotionTeleportTeleportShiftState extends PlayerLocomotionTeleportState {
 
@@ -35,9 +35,9 @@ export class PlayerLocomotionTeleportTeleportShiftState extends PlayerLocomotion
         this._myCurrentRotationOnUp = 0;
         this._myStartRotationOnUp = 0;
 
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Movement Seconds", this._myTeleportParams.myTeleportParams.myShiftMovementSeconds, 0.5, 3, 0, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Rotate Seconds", this._myTeleportParams.myTeleportParams.myShiftRotateSeconds, 0.5, 3, 0, undefined, this._myTeleportParams.myEngine));
-        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Rotate Start Percentage", this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage, 0.5, 3, 0, 1, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Movement Seconds", this._myTeleportParams.myTeleportParams.myShiftMovementSeconds, 0.5, 3, 0, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Rotate Seconds", this._myTeleportParams.myTeleportParams.myShiftRotateSeconds, 0.5, 3, 0, undefined, undefined, this._myTeleportParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myTeleportParams.myEngine).add(new EasyTuneNumber("Shift Rotate Start Percentage", this._myTeleportParams.myTeleportParams.myShiftRotateStartAfterMovementPercentage, 0.5, 3, 0, 1, undefined, this._myTeleportParams.myEngine));
     }
 
     start(fsm) {
@@ -97,6 +97,10 @@ export class PlayerLocomotionTeleportTeleportShiftState extends PlayerLocomotion
         this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
         this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myStartRotationOnUp - this._myCurrentRotationOnUp, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
     }
+
+    _shiftingUpdate(dt, fsm) {
+        // Implemented outside class definition
+    }
 }
 
 
@@ -143,7 +147,3 @@ PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = function 
         }
     };
 }();
-
-
-
-Object.defineProperty(PlayerLocomotionTeleportTeleportShiftState.prototype, "_shiftingUpdate", { enumerable: false });

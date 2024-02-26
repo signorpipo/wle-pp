@@ -1,13 +1,16 @@
-import { XRUtils } from "../../../../../cauldron/utils/xr_utils";
-import { Handedness } from "../../../../../input/cauldron/input_types";
-import { GamepadAxesID } from "../../../../../input/gamepad/gamepad_buttons";
-import { quat_create, vec3_create } from "../../../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../../../pp/globals";
+import { XRUtils } from "../../../../../cauldron/utils/xr_utils.js";
+import { Handedness } from "../../../../../input/cauldron/input_types.js";
+import { GamepadAxesID } from "../../../../../input/gamepad/gamepad_buttons.js";
+import { quat_create, vec3_create } from "../../../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../../../pp/globals.js";
 
 export class PlayerLocomotionRotateParams {
 
     constructor(engine = Globals.getMainEngine()) {
         this.myPlayerHeadManager = null;
+
+        this.myHorizontalRotationEnabled = true;
+        this.myVerticalRotationEnabled = true;
 
         this.myMaxRotationSpeed = 0;
         this.myIsSnapTurn = false;
@@ -21,7 +24,7 @@ export class PlayerLocomotionRotateParams {
         this.mySnapTurnResetThreshold = 0;
 
         this.myClampVerticalAngle = true;
-        this.myMaxVerticalAngle = 0;
+        this.myMaxVerticalAngle = 89;
 
         this.myHandedness = Handedness.RIGHT;
 
@@ -42,7 +45,7 @@ export class PlayerLocomotionRotate {
         this._mySmoothSnapVerticalRunning = false;
         this._mySmoothSnapVerticalAngleToPerform = 0;
 
-        //Globals.getEasyTuneVariables(this._myParams.myEngine).add(new EasyTuneNumber("Teleport Smooth Speed", this._myParams.mySmoothSnapSpeedDegrees, 10, 3, 0, undefined, this._myParams.myEngine));
+        //Globals.getEasyTuneVariables(this._myParams.myEngine).add(new EasyTuneNumber("Teleport Smooth Speed", this._myParams.mySmoothSnapSpeedDegrees, 10, 3, 0, undefined, undefined, this._myParams.myEngine));
     }
 
     start() {
@@ -64,11 +67,21 @@ export class PlayerLocomotionRotate {
     update(dt) {
         //this._myParams.mySmoothSnapSpeedDegrees = Globals.getEasyTuneVariables(this._myParams.myEngine).get("Teleport Smooth Speed");
 
-        this._rotateHeadHorizontally(dt);
+        if (this._myParams.myHorizontalRotationEnabled) {
+            this._rotateHeadHorizontally(dt);
+        }
 
-        if (this._myParams.myPlayerHeadManager.canRotateHead()) {
+        if (this._myParams.myVerticalRotationEnabled && this._myParams.myPlayerHeadManager.canRotateHead()) {
             this._rotateHeadVertically(dt);
         }
+    }
+
+    _rotateHeadHorizontally(dt) {
+        // Implemented outside class definition
+    }
+
+    _rotateHeadVertically(dt) {
+        // Implemented outside class definition
     }
 }
 
@@ -228,7 +241,7 @@ PlayerLocomotionRotate.prototype._rotateHeadVertically = function () {
             this._myParams.myPlayerHeadManager.rotateHeadQuat(headRotation);
 
             if (this._myParams.myClampVerticalAngle) {
-                let maxVerticalAngle = this._myParams.myMaxVerticalAngle - 0.0001;
+                let maxVerticalAngle = Math.max(0, this._myParams.myMaxVerticalAngle - 0.0001);
                 newUp = head.pp_getUp(newUp);
                 let angleWithUp = Math.pp_angleClamp(newUp.vec3_angleSigned(referenceUp, referenceRight));
                 if (Math.abs(angleWithUp) > maxVerticalAngle) {
@@ -240,8 +253,3 @@ PlayerLocomotionRotate.prototype._rotateHeadVertically = function () {
         }
     };
 }();
-
-
-
-Object.defineProperty(PlayerLocomotionRotate.prototype, "_rotateHeadHorizontally", { enumerable: false });
-Object.defineProperty(PlayerLocomotionRotate.prototype, "_rotateHeadVertically", { enumerable: false });

@@ -1,6 +1,6 @@
 import { Howler } from "howler";
-import { Globals } from "../pp/globals";
-import { AudioPlayer } from "./audio_player";
+import { Globals } from "../pp/globals.js";
+import { AudioPlayer } from "./audio_player.js";
 
 export class AudioManager {
 
@@ -9,6 +9,8 @@ export class AudioManager {
 
         this._myPreloadAudio = preloadAudio;
         this._myAudioSetups = new Map();
+
+        this._myAudioPlayersCreatedForPreload = [];
     }
 
     createAudioPlayer(audioSetupID) {
@@ -27,7 +29,7 @@ export class AudioManager {
     addAudioSetup(id, audioSetup, preloadAudioOverride = null) {
         this._myAudioSetups.set(id, audioSetup);
         if ((this._myPreloadAudio && preloadAudioOverride == null) || (preloadAudioOverride != null && preloadAudioOverride)) {
-            this.createAudioPlayer(id);
+            this._myAudioPlayersCreatedForPreload.push(this.createAudioPlayer(id));
         }
     }
 

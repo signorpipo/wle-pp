@@ -1,5 +1,5 @@
-import { Timer } from "../../../cauldron/cauldron/timer";
-import { DebugFunctionsPerformanceAnalyzerSortOrder } from "./debug_functions_performance_analyzer";
+import { Timer } from "../../../cauldron/cauldron/timer.js";
+import { DebugFunctionsPerformanceAnalyzerSortOrder } from "./debug_functions_performance_analyzer.js";
 
 export class DebugFunctionsPerformanceAnalysisResultsLoggerParams {
 

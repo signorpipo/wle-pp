@@ -3,8 +3,8 @@
 // #TODO How to overwrite class and objects from modules?
 // #TODO Some functions, like glMatrix.vec3.copy, are defined as getter, how to overwrite them?
 
-import { JSUtils } from "../../cauldron/js/utils/js_utils";
-import { Globals } from "../../pp/globals";
+import { JSUtils } from "../../cauldron/js/utils/js_utils.js";
+import { Globals } from "../../pp/globals.js";
 
 export class DebugFunctionsOverwriterParams {
 

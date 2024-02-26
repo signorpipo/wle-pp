@@ -1,9 +1,9 @@
-import { FSM } from "../../../../../../cauldron/fsm/fsm";
-import { EasingFunction } from "../../../../../../cauldron/js/utils/math_utils";
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension";
-import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state";
-import { PlayerLocomotionTeleportTeleportBlinkState } from "./player_locomotion_teleport_teleport_blink_state";
-import { PlayerLocomotionTeleportTeleportShiftState } from "./player_locomotion_teleport_teleport_shift_state";
+import { FSM } from "../../../../../../cauldron/fsm/fsm.js";
+import { EasingFunction } from "../../../../../../cauldron/js/utils/math_utils.js";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state.js";
+import { PlayerLocomotionTeleportTeleportBlinkState } from "./player_locomotion_teleport_teleport_blink_state.js";
+import { PlayerLocomotionTeleportTeleportShiftState } from "./player_locomotion_teleport_teleport_shift_state.js";
 
 export let PlayerLocomotionTeleportTeleportType = {
     INSTANT: 0,

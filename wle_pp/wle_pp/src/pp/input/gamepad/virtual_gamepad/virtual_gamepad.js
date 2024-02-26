@@ -1,12 +1,12 @@
-import { BrowserUtils } from "../../../cauldron/utils/browser_utils";
-import { XRUtils } from "../../../cauldron/utils/xr_utils";
-import { vec2_create } from "../../../plugin/js/extensions/array_extension";
-import { Globals } from "../../../pp/globals";
-import { Handedness } from "../../cauldron/input_types";
-import { GamepadAxesID, GamepadButtonID } from "../gamepad_buttons";
-import { VirtualGamepadParams } from "./virtual_gamepad_params";
-import { VirtualGamepadVirtualButton } from "./virtual_gamepad_virtual_button";
-import { VirtualGamepadVirtualThumbstick } from "./virtual_gamepad_virtual_thumbstick";
+import { BrowserUtils } from "../../../cauldron/utils/browser_utils.js";
+import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
+import { vec2_create } from "../../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../../pp/globals.js";
+import { Handedness } from "../../cauldron/input_types.js";
+import { GamepadAxesID, GamepadButtonID } from "../gamepad_buttons.js";
+import { VirtualGamepadParams } from "./virtual_gamepad_params.js";
+import { VirtualGamepadVirtualButton } from "./virtual_gamepad_virtual_button.js";
+import { VirtualGamepadVirtualThumbstick } from "./virtual_gamepad_virtual_thumbstick.js";
 
 export class VirtualGamepad {
 

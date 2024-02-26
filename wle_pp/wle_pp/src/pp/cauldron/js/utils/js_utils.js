@@ -1,5 +1,5 @@
-import { Globals } from "../../../pp/globals";
-import { ArrayUtils } from "./array_utils";
+import { Globals } from "../../../pp/globals.js";
+import { ArrayUtils } from "./array_utils.js";
 
 export function getObjectPrototypes(object) {
     let prototypes = [];
@@ -19,7 +19,12 @@ export function getObjectPrototypes(object) {
             ArrayUtils.pushUnique(prototypes, prototypeToCheck);
 
             ArrayUtils.pushUnique(prototypesToCheck, Object.getPrototypeOf(prototypeToCheck));
-            ArrayUtils.pushUnique(prototypesToCheck, prototypeToCheck.prototype);
+
+            try {
+                ArrayUtils.pushUnique(prototypesToCheck, prototypeToCheck.prototype);
+            } catch (error) {
+                // Ignored
+            }
         }
     }
 

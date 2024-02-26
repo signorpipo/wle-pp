@@ -1,10 +1,10 @@
 import { Component, PhysXComponent, Property, Shape } from "@wonderlandengine/api";
-import { vec3_create } from "../../plugin/js/extensions/array_extension";
-import { Globals } from "../../pp/globals";
-import { Timer } from "../cauldron/timer";
-import { PhysicsCollisionCollector } from "../physics/physics_collision_collector";
-import { RaycastParams, RaycastResults } from "../physics/physics_raycast_params";
-import { PhysicsUtils } from "../physics/physics_utils";
+import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { Globals } from "../../pp/globals.js";
+import { Timer } from "../cauldron/timer.js";
+import { PhysicsCollisionCollector } from "../physics/physics_collision_collector.js";
+import { RaycastParams, RaycastResults } from "../physics/physics_raycast_params.js";
+import { PhysicsUtils } from "../physics/physics_utils.js";
 
 // Adjust the gravity to a low value like -0.05 to have better results, since the dynamic objects will move slowly instead of quickly falling far away
 export class BenchmarkMaxPhysXComponent extends Component {

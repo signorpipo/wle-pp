@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../../pp/globals";
-import { InputUtils } from "../../cauldron/input_utils";
+import { Globals } from "../../../pp/globals.js";
+import { InputUtils } from "../../cauldron/input_utils.js";
 
 export class CopyHandTransformComponent extends Component {
     static TypeName = "pp-copy-hand-transform";

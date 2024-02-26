@@ -1,4 +1,4 @@
-import { ObjectUtils } from "./object_utils";
+import { ObjectUtils } from "./object_utils.js";
 
 export function getRoot(scene) {
     return ObjectUtils.wrapObject(0, scene.engine);

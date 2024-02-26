@@ -1,6 +1,6 @@
-import { Handedness } from "../../cauldron/input_types";
-import { GamepadButtonID } from "../gamepad_buttons";
-import { GamepadCore } from "./gamepad_core";
+import { Handedness } from "../../cauldron/input_types.js";
+import { GamepadButtonID } from "../gamepad_buttons.js";
+import { GamepadCore } from "./gamepad_core.js";
 
 export class ClassicGamepadCore extends GamepadCore {
 

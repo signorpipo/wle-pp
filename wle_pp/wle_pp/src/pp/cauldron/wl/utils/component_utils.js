@@ -1,8 +1,8 @@
 import { AnimationComponent, CollisionComponent, InputComponent, LightComponent, MeshComponent, PhysXComponent, TextComponent, ViewComponent } from "@wonderlandengine/api";
 import { ARCamera8thwall, Anchor, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlaneDetection, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent } from "@wonderlandengine/components";
-import { Globals } from "../../../pp/globals";
-import { DefaultWLComponentCloneCallbacks } from "./default_wl_component_clone_callbacks";
-import { ObjectUtils } from "./object_utils";
+import { Globals } from "../../../pp/globals.js";
+import { DefaultWLComponentCloneCallbacks } from "./default_wl_component_clone_callbacks.js";
+import { ObjectUtils } from "./object_utils.js";
 
 let _myCloneCallbacks = new WeakMap();                 // Signature: callback(componentToClone, targetObject, useDefaultCloneAsFallback, deeCloneParams, customCloneParams)
 let _myClonePostProcessCallbacks = new WeakMap();      // Signature: callback(componentToClone, clonedComponent, deeCloneParams, customCloneParams)

@@ -1,12 +1,12 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Globals } from "../../pp/globals";
-import { AudioManager } from "../audio_manager";
+import { Globals } from "../../pp/globals.js";
+import { AudioManager } from "../audio_manager.js";
 
 export class AudioManagerComponent extends Component {
     static TypeName = "pp-audio-manager";
     static Properties = {
-        _myPreloadAudio: Property.bool(true),
-        _myCleanUpAudioSourcesOnInit: Property.bool(true)
+        _myPreloadAudio: Property.bool(false),
+        _myCleanUpAudioSourcesOnInit: Property.bool(false)
     };
 
     init() {

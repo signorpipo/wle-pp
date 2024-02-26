@@ -1,5 +1,5 @@
 import { Emitter } from "@wonderlandengine/api";
-import { Globals } from "../../../../pp/globals";
+import { Globals } from "../../../../pp/globals.js";
 
 export class EasyTuneBaseArrayWidgetSelector {
 
@@ -171,6 +171,11 @@ export class EasyTuneBaseArrayWidgetSelector {
         }
     }
 
+    /**
+     * TS type inference helper
+     * 
+     * @returns {any}
+     */
     _getEasyTuneArrayWidget(arraySize) {
         return null;
     }

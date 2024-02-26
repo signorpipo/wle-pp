@@ -1,4 +1,4 @@
-import { Globals } from "../../pp/globals";
+import { Globals } from "../../pp/globals.js";
 
 export let KeyID = {
     _0: "0",
@@ -11,6 +11,33 @@ export let KeyID = {
     _7: "7",
     _8: "8",
     _9: "9",
+
+    KeyA: "KeyA",
+    KeyB: "KeyB",
+    KeyC: "KeyC",
+    KeyD: "KeyD",
+    KeyE: "KeyE",
+    KeyF: "KeyF",
+    KeyG: "KeyG",
+    KeyH: "KeyH",
+    KeyI: "KeyI",
+    KeyJ: "KeyJ",
+    KeyK: "KeyK",
+    KeyL: "KeyL",
+    KeyM: "KeyM",
+    KeyN: "KeyN",
+    KeyO: "KeyO",
+    KeyP: "KeyP",
+    KeyQ: "KeyQ",
+    KeyR: "KeyR",
+    KeyS: "KeyS",
+    KeyT: "KeyT",
+    KeyU: "KeyU",
+    KeyV: "KeyV",
+    KeyW: "KeyW",
+    KeyX: "KeyX",
+    KeyY: "KeyY",
+    KeyZ: "KeyZ",
 
     A: "A",
     B: "B",

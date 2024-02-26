@@ -1,5 +1,5 @@
-import { Globals } from "../../pp/globals";
-import { BrowserUtils } from "./browser_utils";
+import { Globals } from "../../pp/globals.js";
+import { BrowserUtils } from "./browser_utils.js";
 
 export function getSession(engine = Globals.getMainEngine()) {
     let xr = Globals.getXR(engine);
@@ -50,7 +50,7 @@ export function exitSession(engine = Globals.getMainEngine()) {
     }
 }
 
-export function registerSessionStartEventListener(id, listener, manuallyCallSessionStartIfSessionAlreadyActive = false, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
+export function registerSessionStartEventListener(id, listener, manuallyCallSessionStartIfSessionAlreadyActive = true, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
     if (listener != null) {
         if (addManualCallFlagToStartListener) {
             engine.onXRSessionStart.add(listener.bind(undefined, false), { id: id, immediate: false });
@@ -82,7 +82,7 @@ export function unregisterSessionEndEventListener(id, engine = Globals.getMainEn
     return engine.onXRSessionEnd.remove(id);
 }
 
-export function registerSessionStartEndEventListeners(id, startListener, endListener, manuallyCallSessionStartIfSessionAlreadyActive = false, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
+export function registerSessionStartEndEventListeners(id, startListener, endListener, manuallyCallSessionStartIfSessionAlreadyActive = true, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
     XRUtils.registerSessionEndEventListener(id, endListener, engine);
     XRUtils.registerSessionStartEventListener(id, startListener, manuallyCallSessionStartIfSessionAlreadyActive, addManualCallFlagToStartListener, engine);
 }

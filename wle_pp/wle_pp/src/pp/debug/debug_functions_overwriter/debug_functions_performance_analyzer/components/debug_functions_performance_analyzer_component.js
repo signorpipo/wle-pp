@@ -1,9 +1,9 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { Timer } from "../../../../cauldron/cauldron/timer";
-import { GamepadButtonID } from "../../../../input/gamepad/gamepad_buttons";
-import { Globals } from "../../../../pp/globals";
-import { DebugFunctionsPerformanceAnalysisResultsLogger, DebugFunctionsPerformanceAnalysisResultsLoggerParams } from "../debug_functions_performance_analysis_results_logger";
-import { DebugFunctionsPerformanceAnalyzer, DebugFunctionsPerformanceAnalyzerParams } from "../debug_functions_performance_analyzer";
+import { Timer } from "../../../../cauldron/cauldron/timer.js";
+import { GamepadButtonID } from "../../../../input/gamepad/gamepad_buttons.js";
+import { Globals } from "../../../../pp/globals.js";
+import { DebugFunctionsPerformanceAnalysisResultsLogger, DebugFunctionsPerformanceAnalysisResultsLoggerParams } from "../debug_functions_performance_analysis_results_logger.js";
+import { DebugFunctionsPerformanceAnalyzer, DebugFunctionsPerformanceAnalyzerParams } from "../debug_functions_performance_analyzer.js";
 
 export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
     static TypeName = "pp-debug-functions-performance-analyzer";

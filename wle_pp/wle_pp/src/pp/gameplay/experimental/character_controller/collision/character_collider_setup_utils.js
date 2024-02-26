@@ -1,5 +1,5 @@
-import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags";
-import { CharacterColliderSetup, CharacterColliderSlideFlickerPreventionMode } from "./character_collider_setup";
+import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags.js";
+import { CharacterColliderSetup, CharacterColliderSlideFlickerPreventionMode } from "./character_collider_setup.js";
 
 export let CharacterColliderSetupSimplifiedCreationAccuracyLevel = {
     VERY_LOW: 0,
@@ -259,11 +259,13 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
 
 
 
-        if (simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS > simplifiedCreationParams.myRadius) {
+        let safeRadius = simplifiedCreationParams.myRadius * 0.75;
+        if (simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS > safeRadius) {
             outCharacterColliderSetup.mySplitMovementParams.mySplitMovementEnabled = true;
 
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps = Math.ceil((simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS) / simplifiedCreationParams.myRadius);
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength = simplifiedCreationParams.myRadius * 0.75;
+            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps = Math.ceil((simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS) / safeRadius);
+            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength = safeRadius;
+            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength = safeRadius;
         }
     }
 

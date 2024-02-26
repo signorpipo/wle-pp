@@ -1,5 +1,5 @@
-import { Handedness } from "../../cauldron/input_types";
-import { UniversalGamepad } from "../universal_gamepad";
+import { Handedness } from "../../cauldron/input_types.js";
+import { UniversalGamepad } from "../universal_gamepad.js";
 
 export class GamepadsManager {
 

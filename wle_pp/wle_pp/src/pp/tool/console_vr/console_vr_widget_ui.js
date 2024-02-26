@@ -1,9 +1,9 @@
 import { CollisionComponent, MeshComponent, TextComponent } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
-import { XRUtils } from "../../cauldron/utils/xr_utils";
-import { Globals } from "../../pp/globals";
-import { ToolHandedness } from "../cauldron/tool_types";
-import { ConsoleVRWidgetMessageType } from "./console_vr_types";
+import { XRUtils } from "../../cauldron/utils/xr_utils.js";
+import { Globals } from "../../pp/globals.js";
+import { ToolHandedness } from "../cauldron/tool_types.js";
+import { ConsoleVRWidgetMessageType } from "./console_vr_types.js";
 
 export class ConsoleVRWidgetUI {
 

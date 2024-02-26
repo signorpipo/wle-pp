@@ -1,6 +1,6 @@
 import { CollisionComponent, MeshComponent, TextComponent } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
-import { EasyTuneBaseWidgetUI } from "../base/easy_tune_base_widget_ui";
+import { EasyTuneBaseWidgetUI } from "../base/easy_tune_base_widget_ui.js";
 
 export class EasyTuneNumberArrayWidgetUI extends EasyTuneBaseWidgetUI {
 

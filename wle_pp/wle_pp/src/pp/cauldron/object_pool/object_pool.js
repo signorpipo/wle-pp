@@ -1,10 +1,6 @@
 export class ObjectPoolParams {
 
     constructor() {
-        // If set to false, it will directly use the specified object prototype,
-        // otherwise it will clone it, and use the clone as the actual pool prototype
-        this.myCloneObjectPrototype = true;
-
         this.myInitialPoolSize = 0;
         this.myAmountToAddWhenEmpty = 0;        // If all the objects are busy, this amount will be added to the pool
         this.myPercentageToAddWhenEmpty = 0;    // If all the objects are busy, this percentage of the current pool size will be added to the pool        
@@ -30,9 +26,6 @@ export class ObjectPool {
         this._myObjectPoolParams = objectPoolParams;
 
         this._myObjectPrototype = objectPrototype;
-        if (objectPoolParams.myCloneObjectPrototype) {
-            this._myObjectPrototype = this._clone(objectPrototype);
-        }
 
         this._myAvailableObjects = [];
         this._myBusyObjects = [];
@@ -102,16 +95,32 @@ export class ObjectPool {
         this._addToPool(amount, false);
     }
 
+    getObjects() {
+        let objects = [];
+        objects.push(...this._myAvailableObjects);
+        objects.push(...this._myBusyObjects);
+
+        return objects;
+    }
+
     getSize() {
         return this._myBusyObjects.length + this._myAvailableObjects.length;
+    }
+
+    getAvailableObjects() {
+        return this._myAvailableObjects;
     }
 
     getAvailableSize() {
         return this._myAvailableObjects.length;
     }
 
+    getBusyObjects() {
+        return this._myBusyObjects;
+    }
+
     getBusySize() {
-        return this._myAvailableObjects.length;
+        return this._myBusyObjects.length;
     }
 
     _addToPool(size, logEnabled) {

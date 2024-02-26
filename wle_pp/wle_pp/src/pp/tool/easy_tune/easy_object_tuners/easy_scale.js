@@ -1,6 +1,6 @@
-import { vec3_create } from "../../../plugin/js/extensions/array_extension";
-import { EasyTuneNumberArray } from "../easy_tune_variable_types";
-import { EasyObjectTuner } from "./easy_object_tuner";
+import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { EasyTuneNumberArray } from "../easy_tune_variable_types.js";
+import { EasyObjectTuner } from "./easy_object_tuner.js";
 
 export class EasyScale extends EasyObjectTuner {
 
@@ -15,7 +15,7 @@ export class EasyScale extends EasyObjectTuner {
     }
 
     _createEasyTuneVariable(variableName) {
-        return new EasyTuneNumberArray(variableName, this._getDefaultValue(), null, true, 3, 1, 0.001, null, this._myScaleAsOne);
+        return new EasyTuneNumberArray(variableName, this._getDefaultValue(), null, true, 3, 1, 0.001, null, this._myScaleAsOne, undefined, this._myEngine);
     }
 
     _getObjectValue(object) {
