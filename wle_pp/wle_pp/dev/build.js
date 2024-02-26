@@ -2,7 +2,7 @@ import esbuild from "esbuild";
 import { nodeExternalsPlugin } from "esbuild-node-externals";
 
 esbuild.build({
-    entryPoints: ["js/pp/index.js"],
+    entryPoints: ["dist/index.js"],
     platform: "node",
     bundle: true,
     sourcemap: true,
