@@ -24,17 +24,18 @@ A collection of assets that can be useful while working with the Wonderland Engi
 
 You can get the library through `npm`: 
   - [`npm install wle-pp`](https://www.npmjs.com/package/wle-pp)
-    - unbundled version of the library
-    - install the library as a list of files
+    - install the library as a list of `js` files and their corresponding TypeScript type definitions
   - [`npm install wle-pp-bundle`](https://www.npmjs.com/package/wle-pp-bundle)
-    - bundled version of the library
-    - install the library as a single bundle file
+    - install the library as a single `js` bundle file
 
-You can download the unbundled version of the library through the following link:
+You can download the `js` version of the library through the following link:
   - [`wle-pp`](https://github.com/signorpipo/wle-pp/releases/latest/download/wle_pp.zip)
 
 You can download the bundle file through the following link:
   - [`wle-pp-bundle`](https://github.com/signorpipo/wle-pp/releases/latest/download/wle_pp_bundle.zip)
+
+You can also download the library in TypeScript through the following link:
+  - [`wle-pp-ts`](https://github.com/signorpipo/wle-pp/releases/latest/download/wle_pp_ts.zip)
   
 # Quick Features Summary
 
@@ -68,7 +69,7 @@ Some of the features that you can get with this library are:
 
 # How To Import
 
-You can find a collection of Wonderland Engine default projects that already includes the PP bundle [here](https://github.com/signorpipo/wle-ppefault).
+You can find a collection of Wonderland Engine default projects that already includes the PP library [here](https://github.com/signorpipo/wle-ppefault).
 
 ## Import through npm
 
@@ -81,7 +82,12 @@ If you want to import this library into your own project through `npm` you have 
 You can also import this library by importing the entire code folder, which could be useful if you want to customize it while developing your project.  
 
 In this case, you have to:
-  - get the unbundled version of the library from [here](https://github.com/signorpipo/wle-pp/releases/latest/download/wle_pp.zip)
+  - get the `ts` version of the library from [here](https://github.com/signorpipo/wle-pp/releases/latest/download/wle_pp_ts.zip)
+  - put the `pp` folder inside your project `src` folder
+  - add the `pp/index.ts` script to the source paths inside the `Project Settings`
+  
+If TypeScript is not an option, you can also do the same thing but with the generated `js` library:
+  - get the `js` version of the library from [here](https://github.com/signorpipo/wle-pp/releases/latest/download/wle_pp.zip)
   - put the `pp` folder inside your project `js` folder
   - add the `pp/index.js` script to the source paths inside the `Project Settings`
   
@@ -136,7 +142,7 @@ When using the PP library there are certain things to take into consideration, s
     - you can switch it to false, by might not be able to use properly some of the features which assume it to be true
     - having the pose forward fixed means that objects like the hands or the head have the forward in the direction they are looking at
     - this is true by default in the Wonderland Engine only if you are ok with having the forward as negative Z
-  - ○ all components from the Wonderland Engine and from PP are always registered and therefore added to your final bundle project
+  - ○ all components from the Wonderland Engine and from PP are always registered and therefore added to your final bundled project
     - this is just to make it simplier, instead of having to specify the dependencies on components if u want to add them at runtime
     - customizable with an advanced setup of the library
   - ○ extensions, which are a way to add more features to a type, are injected on some types like the Wonderland Engine `Object` or the Javascript `Array`
@@ -180,7 +186,7 @@ I will explain more or less everything but without going too much into details.
 Each folder under the `pp` folder will be a main section of this documentation.  
 `Cauldron` is a tag name for a folder that contains a bunch of features that don't belong anywhere else.
 
-As you will notice, everything in this bundle (classes, functions, variables) can be found under the `PP` object, that works as a sort of namespace.  
+As you will notice, everything in this library (classes, functions, variables) can be found under the `PP` object, that works as a sort of namespace.  
 The components names always start with a `pp-` prefix.  
 For the extensions (features added to already existing objects), the names usually start with a `pp_` prefix, or, for array extensions, with something like `vec_`, `vec3_`, `quat2_` based on how you want to intepret the array value.
 
