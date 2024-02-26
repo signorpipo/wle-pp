@@ -26,14 +26,14 @@
     "main": "./dist/index.js",
     "wonderlandengine": {},
     "peerDependencies": {
-        "@wonderlandengine/api": "^1.1.3",
-        "@wonderlandengine/components": "^1.0.6",
+        "@wonderlandengine/api": "^1.1.5",
+        "@wonderlandengine/components": "^1.1.2",
         "gl-matrix": "^3.4.3",
         "howler": "^2.2.4"
     },
     "devDependencies": {
-        "esbuild": "^0.19.5",
-        "esbuild-node-externals": "^1.9.0",
+        "esbuild": "^0.20.1",
+        "esbuild-node-externals": "^1.13.0",
         "typescript": "^5.3.3"
     },
     "scripts": {
