@@ -1,5 +1,7 @@
 dist/
 
+wle_pp/wle_pp/build/
+
 cache/
 
 deploy/
@@ -7,7 +9,5 @@ deploy/
 node_modules/
 
 .editor/
-
-build/
 
 imgui.ini

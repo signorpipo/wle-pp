@@ -8,6 +8,6 @@ esbuild.build({
     sourcemap: true,
     minify: false,
     format: "esm",
-    outfile: "build/wle_pp_bundle.js",
+    outfile: "build/bundle.js",
     plugins: [nodeExternalsPlugin()]
 });

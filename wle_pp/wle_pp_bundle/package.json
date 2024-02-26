@@ -10,7 +10,7 @@
     },
     "license": "ISC",
     "files": [
-        "js"
+        "build"
     ],
     "keywords": [
         "pp",
@@ -23,9 +23,7 @@
         "webxr"
     ],
     "type": "module",
-    "main": "./js/wle_pp_bundle.js",
-    "exports": "./js/wle_pp_bundle.js",
-    "module": "./js/wle_pp_bundle.js",
+    "main": "./build/bundle.js",
     "wonderlandengine": {},
     "peerDependencies": {
         "@wonderlandengine/api": "^1.1.3",
