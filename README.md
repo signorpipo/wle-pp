@@ -9,6 +9,8 @@ A collection of playground template projects that already include the PP library
 
 A collection of assets that can be useful while working with the Wonderland Engine (like gamepads 3D models) can be found [here](https://github.com/signorpipo/wle-assets).
 
+The development of this library is actually being done on the [wle-pp-dev](https://github.com/signorpipo/wle-pp-dev) repository, where you can find the most up to date version of the library, even though it might not be stable.
+
 ## Table Of Contents  
 
 - [Downloads](#downloads)
