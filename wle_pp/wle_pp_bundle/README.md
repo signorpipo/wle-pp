@@ -99,22 +99,27 @@ The setup for the PP library is very simple but requires a few steps:
   - add the `pp-gateway` component to your scene
     - this components have some flags and options to customize the PP library behavior at runtime
     - some of these flags are meant for development and should be disabled when u want to release your app!
-  - you have to fill in some fields in this component by either specifying an object in your scene or a resource like a material or a mesh
-  - for the meshes this should be quite trivial, since they are the default ones in the engine
-  - for the materials you might have to create some
-    - for example the `Flat Transparent No Depth` is a material that does not perform depth checks
-  - for the scene objects, you can mostly pick the ones u should already find in a default Wonderland Engine project, but some needs to be created
-    - u need to create a `Reference Space`, which is just an empty object that must be a children of the `Player` and has every other player objects (like the `Eyes` or the `Hands`) as children
-      - this will be used to adjust, for example, the player height
-      - u should not change this transform directly since it is already managed by the library
-      - if u need to add your own offsets to the reference space of the player, the approach would be:
-        - add an object to the `Reference Space` parent
-        - set the `Reference Space` object as a child of this newly created object
-        - use the new object to offset the reference space
-        - this way, u will be sure that every objects under `Reference Space` will always have all the offsets applied to them
-    - u will have to create a `Head` object, on which u have to add the `pp-set-head-local-transform`
-    - it would be best to change the component on the `Hands` from the default `input` to `pp-set-hand-local-transform`
-      - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
+    - you have to fill in some fields in this component by either specifying an object in your scene or a resource like a material or a mesh
+      - for the meshes this should be quite trivial, since they are the default ones in the engine
+      - for the materials you might have to create some
+        - for example the `Flat Transparent No Depth` is a material that does not perform depth checks
+      - for the scene objects, you can mostly pick the ones u should already find in a default Wonderland Engine project, but some needs to be created
+        - u need to create a `Reference Space`, which is just an empty object that must be a children of the `Player` and has every other player objects (like the `Eyes` or the `Hands`) as children
+          - this will be used to adjust, for example, the player height
+          - u should not change this transform directly since it is already managed by the library
+          - if u need to add your own offsets to the reference space of the player, the approach would be:
+            - add an object to the `Reference Space` parent
+            - set the `Reference Space` object as a child of this newly created object
+            - use the new object to offset the reference space
+            - this way, u will be sure that every objects under `Reference Space` will always have all the offsets applied to them
+        - u will have to create a `Head` object, on which u have to add the `pp-set-head-local-transform`
+        - it would be best to change the component on the `Hands` from the default `input` to `pp-set-hand-local-transform`
+          - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
+  - make type extensions available to typescript, so that using them do not cause type errors
+    - u have to add this import somewhere in your code where your `tsconfig.json` can see it (usually inside your `js` or `src` folder)
+      - `import "wle-pp/add_type_extensions_to_typescript";`
+    - if the `tsconfig.json` can see the file where this has been imported, it should be available everywhere without the need to import it in every file where u use a type extension
+    - u don't actually need to do this if u don't plan to use the type extensions
 
 My advice is, if possible, to start by using a `PP` template project like the default one, which can be found [here](https://github.com/signorpipo/wle-ppefault).  
 You can also just give a look at it to better understand how to setup your own project properly.
@@ -128,7 +133,7 @@ The advanced setup basically consists in checking out the `pp-gateway` component
 For example, if you don't need to register all the `WL` and `PP` components, something that the `pp-gateway` component does on register, you can avoid using that component and create a custom gateway component which only calls the functions that u need from `initPP`.  
 
 You can also avoid having a gateway component directly and call the functions u need directly in your `index.js`, right before the scene is loaded.
-For example, if u just wanted to setup the array extension, you could just call the `initArrayExtension` function before the scene is loaded.
+For example, if u just wanted to setup the array extension, you could just call the `initArrayExtension` function before the scene is loaded. Besides, if u import the extension initialization function (or the `initPP` function) directly, u will also automatically import that type extension for typescript too, so there should be no need to also add the `wle-pp/add_type_extensions_to_typescript` import.
 
 A lot of features relies on the proper setup of the library, so it might not be easy to customize it as you would like to, and you will probably need to do some trial and error to figure out what you can actually remove or change to get it working.
 Good luck!
@@ -155,6 +160,7 @@ When using the PP library there are certain things to take into consideration, s
     - customizable with an advanced setup of the library
   - some of the features of the library uses extensions and mods
     - if they are not setup, those features will not be able to work properly
+    - you have to add the type extensions to typescript as explained in the [How To Setup](#how-to-setup) section to avoid type errors when using them
   - some of the features of the library uses globals variable that are usually setup by the `pp-gateway` component, like `Globals.getSceneObjects` or `Globals.getDefaultResources`
     - if these variables are not setup, those features will not be able to work properly
   - when you are going to release your app, you most likely want to disable the following development flags on the `pp-gateway` component:

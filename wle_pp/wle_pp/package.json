@@ -24,6 +24,10 @@
     ],
     "type": "module",
     "main": "./dist/index.js",
+    "exports": {
+        ".": "./dist/pp/index.js",
+        "./add_type_extensions_to_typescript": "./dist/pp/plugin/add_type_extensions_to_typescript.js"
+    },
     "wonderlandengine": {},
     "peerDependencies": {
         "@wonderlandengine/api": "^1.1.5",
