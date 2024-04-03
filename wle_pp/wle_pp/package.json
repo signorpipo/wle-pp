@@ -26,6 +26,7 @@
     "main": "./dist/index.js",
     "exports": {
         ".": "./dist/pp/index.js",
+        "./*": "./dist/pp/*",
         "./add_type_extensions_to_typescript": "./dist/pp/plugin/add_type_extensions_to_typescript.js"
     },
     "wonderlandengine": {},
