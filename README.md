@@ -142,7 +142,7 @@ Good luck!
 
 # Things To Know
 
-When using the PP library there are certain things to take into consideration, some of which are customizable (○):
+When using the PP library, there are certain things to take into consideration, some of which are customizable (○):
   - forward is positive Z axis, which is not the default
     - Wonderland Engine default forward method returns negative Z, which is the default for some engines
     - since I find it pretty hard to work with, I prefer to switch to positive
