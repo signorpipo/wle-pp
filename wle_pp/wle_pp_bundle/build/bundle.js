@@ -4,9 +4,9 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// dist/index.js
-var dist_exports = {};
-__export(dist_exports, {
+// dist/pp/index.js
+var pp_exports = {};
+__export(pp_exports, {
   AddPPToWindowComponent: () => AddPPToWindowComponent,
   AddWLToWindowComponent: () => AddWLToWindowComponent,
   AdjustHierarchyPhysXScaleComponent: () => AdjustHierarchyPhysXScaleComponent,
@@ -358,12 +358,12 @@ __export(dist_exports, {
   vec4_create: () => vec4_create
 });
 
-// dist/pp/register_pp_components.js
+// dist/pp/pp/register_pp_components.js
 function registerPPComponents(engine) {
   engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleOnXRSessionStartComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshAmbientFactorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, SetActiveComponent, SetHandLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, ShowXRButtonsComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
 }
 
-// dist/audio/audio_globals.js
+// dist/pp/audio/audio_globals.js
 var audio_globals_exports = {};
 __export(audio_globals_exports, {
   getAudioManager: () => getAudioManager,
@@ -385,7 +385,7 @@ function hasAudioManager(engine = Globals.getMainEngine()) {
   return _myAudioManagers.has(engine);
 }
 
-// dist/cauldron/cauldron/analytics_globals.js
+// dist/pp/cauldron/cauldron/analytics_globals.js
 var analytics_globals_exports = {};
 __export(analytics_globals_exports, {
   getAnalyticsManager: () => getAnalyticsManager,
@@ -407,7 +407,7 @@ function hasAnalyticsManager(engine = Globals.getMainEngine()) {
   return _myAnalyticsManagers.has(engine);
 }
 
-// dist/cauldron/cauldron/save_globals.js
+// dist/pp/cauldron/cauldron/save_globals.js
 var save_globals_exports = {};
 __export(save_globals_exports, {
   getSaveManager: () => getSaveManager,
@@ -429,7 +429,7 @@ function hasSaveManager(engine = Globals.getMainEngine()) {
   return _mySaveManagers.has(engine);
 }
 
-// dist/cauldron/object_pool/object_pool_globals.js
+// dist/pp/cauldron/object_pool/object_pool_globals.js
 var object_pool_globals_exports = {};
 __export(object_pool_globals_exports, {
   getObjectPoolManager: () => getObjectPoolManager,
@@ -451,7 +451,7 @@ function hasObjectPoolManager(engine = Globals.getMainEngine()) {
   return _myObjectPoolManagers.has(engine);
 }
 
-// dist/cauldron/visual/visual_globals.js
+// dist/pp/cauldron/visual/visual_globals.js
 var visual_globals_exports = {};
 __export(visual_globals_exports, {
   getVisualManager: () => getVisualManager,
@@ -490,7 +490,7 @@ function hasVisualManager(engine = Globals.getMainEngine()) {
   return _myVisualManagers.has(engine);
 }
 
-// dist/cauldron/wl/engine_globals.js
+// dist/pp/cauldron/wl/engine_globals.js
 var engine_globals_exports = {};
 __export(engine_globals_exports, {
   addEngine: () => addEngine,
@@ -575,7 +575,7 @@ function getXR(engine = Globals.getMainEngine()) {
   return xr;
 }
 
-// dist/cauldron/wl/getters/default_resources_globals.js
+// dist/pp/cauldron/wl/getters/default_resources_globals.js
 var default_resources_globals_exports = {};
 __export(default_resources_globals_exports, {
   getDefaultMaterials: () => getDefaultMaterials,
@@ -620,7 +620,7 @@ function getDefaultMaterials(engine = Globals.getMainEngine()) {
   return null;
 }
 
-// dist/cauldron/wl/getters/scene_objects_globals.js
+// dist/pp/cauldron/wl/getters/scene_objects_globals.js
 var scene_objects_globals_exports = {};
 __export(scene_objects_globals_exports, {
   getHeadObject: () => getHeadObject,
@@ -689,7 +689,7 @@ function getHeadObject(engine = Globals.getMainEngine()) {
   return null;
 }
 
-// dist/debug/debug_globals.js
+// dist/pp/debug/debug_globals.js
 var debug_globals_exports = {};
 __export(debug_globals_exports, {
   getDebugManager: () => getDebugManager,
@@ -747,7 +747,7 @@ function hasDebugEnabled(engine = Globals.getMainEngine()) {
   return engine != null ? _myDebugEnableds.has(engine) : false;
 }
 
-// dist/gameplay/experimental/character_controller/collision/character_collision_system_globals.js
+// dist/pp/gameplay/experimental/character_controller/collision/character_collision_system_globals.js
 var character_collision_system_globals_exports = {};
 __export(character_collision_system_globals_exports, {
   getCharacterCollisionSystem: () => getCharacterCollisionSystem,
@@ -769,7 +769,7 @@ function hasCharacterCollisionSystem(engine = Globals.getMainEngine()) {
   return _myCharacterCollisionSystems.has(engine);
 }
 
-// dist/input/cauldron/input_globals.js
+// dist/pp/input/cauldron/input_globals.js
 var input_globals_exports = {};
 __export(input_globals_exports, {
   getGamepad: () => getGamepad,
@@ -947,7 +947,7 @@ function hasPoseForwardFixed(engine = Globals.getMainEngine()) {
   return engine != null ? _myPoseForwardFixeds.has(engine) : false;
 }
 
-// dist/tool/cauldron/tool_globals.js
+// dist/pp/tool/cauldron/tool_globals.js
 var tool_globals_exports = {};
 __export(tool_globals_exports, {
   hasToolEnabled: () => hasToolEnabled,
@@ -969,7 +969,7 @@ function hasToolEnabled(engine = Globals.getMainEngine()) {
   return _myToolEnableds.has(engine);
 }
 
-// dist/tool/console_vr/console_vr_globals.js
+// dist/pp/tool/console_vr/console_vr_globals.js
 var console_vr_globals_exports = {};
 __export(console_vr_globals_exports, {
   getConsoleVR: () => getConsoleVR,
@@ -991,7 +991,7 @@ function hasConsoleVR(engine = Globals.getMainEngine()) {
   return _myConsoleVRs.has(engine);
 }
 
-// dist/tool/easy_tune/easy_tune_globals.js
+// dist/pp/tool/easy_tune/easy_tune_globals.js
 var easy_tune_globals_exports = {};
 __export(easy_tune_globals_exports, {
   getEasyTuneTarget: () => getEasyTuneTarget,
@@ -1044,7 +1044,7 @@ function hasEasyTuneTarget(engine = Globals.getMainEngine()) {
   return engine != null ? _myEasyTuneTargets.has(engine) : false;
 }
 
-// dist/pp/globals.js
+// dist/pp/pp/globals.js
 var Globals = {
   ...engine_globals_exports,
   ...scene_objects_globals_exports,
@@ -1062,20 +1062,20 @@ var Globals = {
   ...easy_tune_globals_exports
 };
 
-// dist/pp/components/pp_gateway_component.js
+// dist/pp/pp/components/pp_gateway_component.js
 import { Component as Component17, Property as Property13 } from "@wonderlandengine/api";
 
-// dist/audio/components/audio_manager_component.js
+// dist/pp/audio/components/audio_manager_component.js
 import { Component, Property } from "@wonderlandengine/api";
 
-// dist/audio/audio_manager.js
+// dist/pp/audio/audio_manager.js
 import { Howler as Howler2 } from "howler";
 
-// dist/audio/audio_player.js
+// dist/pp/audio/audio_player.js
 import { RetainEmitter } from "@wonderlandengine/api";
 import { Howl, Howler } from "howler";
 
-// dist/audio/audio_setup.js
+// dist/pp/audio/audio_setup.js
 var AudioSetup = class _AudioSetup {
   constructor(audioFilePath = null) {
     this.myAudioFilePath = audioFilePath;
@@ -1124,7 +1124,7 @@ var AudioSetup = class _AudioSetup {
   }
 };
 
-// dist/audio/audio_player.js
+// dist/pp/audio/audio_player.js
 var AudioEvent = {
   END: "end",
   STOP: "stop",
@@ -1338,7 +1338,7 @@ var AudioPlayer = class {
   }
 };
 
-// dist/audio/audio_manager.js
+// dist/pp/audio/audio_manager.js
 var AudioManager = class {
   constructor(preloadAudio = true, engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -1379,7 +1379,7 @@ var AudioManager = class {
   }
 };
 
-// dist/audio/components/audio_manager_component.js
+// dist/pp/audio/components/audio_manager_component.js
 var AudioManagerComponent = class extends Component {
   static TypeName = "pp-audio-manager";
   static Properties = {
@@ -1403,10 +1403,10 @@ var AudioManagerComponent = class extends Component {
   }
 };
 
-// dist/cauldron/cauldron/components/analytics_manager_component.js
+// dist/pp/cauldron/cauldron/components/analytics_manager_component.js
 import { Component as Component2, Property as Property2 } from "@wonderlandengine/api";
 
-// dist/cauldron/utils/xr_utils.js
+// dist/pp/cauldron/utils/xr_utils.js
 function getSession(engine = Globals.getMainEngine()) {
   let xr = Globals.getXR(engine);
   return xr != null ? xr.session : null;
@@ -1513,7 +1513,7 @@ var XRUtils = {
   isDeviceEmulated
 };
 
-// dist/cauldron/utils/browser_utils.js
+// dist/pp/cauldron/utils/browser_utils.js
 var isMobile = function() {
   let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
   return function isMobile2() {
@@ -1610,7 +1610,7 @@ var BrowserUtils = {
   openLinkOnClick
 };
 
-// dist/cauldron/cauldron/analytics_manager.js
+// dist/pp/cauldron/cauldron/analytics_manager.js
 var AnalyticsManager = class {
   constructor() {
     this._myAnalyticsEnabled = true;
@@ -1773,7 +1773,7 @@ var AnalyticsManager = class {
   }
 };
 
-// dist/cauldron/cauldron/components/analytics_manager_component.js
+// dist/pp/cauldron/cauldron/components/analytics_manager_component.js
 var AnalyticsManagerComponent = class extends Component2 {
   static TypeName = "pp-analytics-manager";
   static Properties = {
@@ -1801,13 +1801,13 @@ var AnalyticsManagerComponent = class extends Component2 {
   }
 };
 
-// dist/cauldron/cauldron/components/save_manager_component.js
+// dist/pp/cauldron/cauldron/components/save_manager_component.js
 import { Component as Component3, Property as Property3 } from "@wonderlandengine/api";
 
-// dist/cauldron/cauldron/save_manager.js
+// dist/pp/cauldron/cauldron/save_manager.js
 import { Emitter as Emitter2 } from "@wonderlandengine/api";
 
-// dist/cauldron/utils/save_utils.js
+// dist/pp/cauldron/utils/save_utils.js
 function save(id, value) {
   if (value != null) {
     localStorage.setItem(id, value);
@@ -1887,7 +1887,7 @@ var SaveUtils = {
   loadArray
 };
 
-// dist/cauldron/cauldron/timer.js
+// dist/pp/cauldron/cauldron/timer.js
 import { Emitter } from "@wonderlandengine/api";
 var Timer = class {
   constructor(duration, autoStart = true) {
@@ -1998,7 +1998,7 @@ var Timer = class {
   }
 };
 
-// dist/cauldron/cauldron/save_manager.js
+// dist/pp/cauldron/cauldron/save_manager.js
 var SaveManager = class {
   constructor(saveID, autoLoadSaves = true, engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -2376,7 +2376,7 @@ var SaveManager = class {
   }
 };
 
-// dist/cauldron/cauldron/components/save_manager_component.js
+// dist/pp/cauldron/cauldron/components/save_manager_component.js
 var SaveManagerComponent = class extends Component3 {
   static TypeName = "pp-save-manager";
   static Properties = {
@@ -2402,10 +2402,10 @@ var SaveManagerComponent = class extends Component3 {
   }
 };
 
-// dist/cauldron/object_pool/components/object_pool_manager_component.js
+// dist/pp/cauldron/object_pool/components/object_pool_manager_component.js
 import { Component as Component4 } from "@wonderlandengine/api";
 
-// dist/cauldron/object_pool/object_pool_manager.js
+// dist/pp/cauldron/object_pool/object_pool_manager.js
 var ObjectPoolManager = class {
   constructor() {
     this._myPools = /* @__PURE__ */ new Map();
@@ -2538,7 +2538,7 @@ var ObjectPoolManager = class {
   }
 };
 
-// dist/cauldron/object_pool/components/object_pool_manager_component.js
+// dist/pp/cauldron/object_pool/components/object_pool_manager_component.js
 var ObjectPoolManagerComponent = class extends Component4 {
   static TypeName = "pp-object-pools-manager";
   init() {
@@ -2555,16 +2555,16 @@ var ObjectPoolManagerComponent = class extends Component4 {
   }
 };
 
-// dist/cauldron/visual/components/visual_manager_component.js
+// dist/pp/cauldron/visual/components/visual_manager_component.js
 import { Component as Component5 } from "@wonderlandengine/api";
 
-// dist/cauldron/utils/array/mat3_utils.js
+// dist/pp/cauldron/utils/array/mat3_utils.js
 import { mat3 as gl_mat32, quat as gl_quat3 } from "gl-matrix";
 
-// dist/cauldron/utils/array/quat_utils.js
+// dist/pp/cauldron/utils/array/quat_utils.js
 import { mat3 as gl_mat3, quat as gl_quat } from "gl-matrix";
 
-// dist/cauldron/utils/math_utils.js
+// dist/pp/cauldron/utils/math_utils.js
 var EasingFunction = {
   linear: (valueToEase) => valueToEase,
   easeInVeryWeak: (valueToEase) => 1 - Math.cos(valueToEase * Math.PI / 2),
@@ -2795,7 +2795,7 @@ var MathUtils = {
   isInsideAngleRangeRadians
 };
 
-// dist/cauldron/utils/array/array_utils.js
+// dist/pp/cauldron/utils/array/array_utils.js
 function copy(from, to, copyCallback) {
   const _to = to;
   if (_to.pop != null) {
@@ -3041,13 +3041,13 @@ function _findAllIndexesEqualOptimized(array, elementToFind) {
   return elementsFound;
 }
 
-// dist/cauldron/utils/array/vec3_utils.js
+// dist/pp/cauldron/utils/array/vec3_utils.js
 import { vec3 as gl_vec3 } from "gl-matrix";
 
-// dist/cauldron/utils/array/mat4_utils.js
+// dist/pp/cauldron/utils/array/mat4_utils.js
 import { mat4 as gl_mat42 } from "gl-matrix";
 
-// dist/cauldron/utils/array/quat2_utils.js
+// dist/pp/cauldron/utils/array/quat2_utils.js
 import { mat4 as gl_mat4, quat2 as gl_quat2 } from "gl-matrix";
 function create4(x1, y1, z1, w1, x2, y2, z2, w2) {
   let out = gl_quat2.create();
@@ -3369,7 +3369,7 @@ var _customGLMatrixFromQuat2 = function() {
   };
 }();
 
-// dist/cauldron/utils/array/mat4_utils.js
+// dist/pp/cauldron/utils/array/mat4_utils.js
 function create5(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
   let out = gl_mat42.create();
   if (m00 != null) {
@@ -3736,7 +3736,7 @@ var _customGLMatrixGetRotation = function() {
   };
 }();
 
-// dist/cauldron/utils/array/vec3_utils.js
+// dist/pp/cauldron/utils/array/vec3_utils.js
 function create3(x, y, z) {
   let out = gl_vec3.create();
   if (x != null) {
@@ -4525,7 +4525,7 @@ var Vec3Utils = {
   perpendicularRandom
 };
 
-// dist/cauldron/utils/array/quat_utils.js
+// dist/pp/cauldron/utils/array/quat_utils.js
 function create2(x, y, z, w) {
   let out = gl_quat.create();
   if (x != null) {
@@ -5187,7 +5187,7 @@ var _setAxes = function() {
   };
 }();
 
-// dist/cauldron/utils/array/mat3_utils.js
+// dist/pp/cauldron/utils/array/mat3_utils.js
 function create(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
   const out = gl_mat32.create();
   if (m00 != null) {
@@ -5247,7 +5247,7 @@ var Mat3Utils = {
   fromAxes: fromAxes2
 };
 
-// dist/cauldron/utils/array/vec2_utils.js
+// dist/pp/cauldron/utils/array/vec2_utils.js
 import { vec2 as gl_vec2 } from "gl-matrix";
 function create6(x, y) {
   const out = gl_vec2.create();
@@ -5296,7 +5296,7 @@ var Vec2Utils = {
   isZero: isZero2
 };
 
-// dist/cauldron/utils/array/vec4_utils.js
+// dist/pp/cauldron/utils/array/vec4_utils.js
 import { vec4 as gl_vec4 } from "gl-matrix";
 function create7(x, y, z, w) {
   let out = gl_vec4.create();
@@ -5328,7 +5328,7 @@ var Vec4Utils = {
   clone: clone7
 };
 
-// dist/plugin/js/extensions/array/vec_create_extension.js
+// dist/pp/plugin/js/extensions/array/vec_create_extension.js
 function vec2_create(x, y) {
   return Vec2Utils.create(x, y);
 }
@@ -5351,7 +5351,7 @@ function mat4_create(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23,
   return Mat4Utils.create(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
 }
 
-// dist/cauldron/object_pool/object_pool.js
+// dist/pp/cauldron/object_pool/object_pool.js
 var ObjectPoolParams = class {
   constructor() {
     this.myInitialPoolSize = 0;
@@ -5523,10 +5523,10 @@ var ObjectPool = class {
   }
 };
 
-// dist/cauldron/visual/elements/visual_arrow.js
+// dist/pp/cauldron/visual/elements/visual_arrow.js
 import { MeshComponent as MeshComponent2 } from "@wonderlandengine/api";
 
-// dist/cauldron/visual/elements/visual_element_types.js
+// dist/pp/cauldron/visual/elements/visual_element_types.js
 var VisualElementType = {
   MESH: 0,
   LINE: 1,
@@ -5538,7 +5538,7 @@ var VisualElementType = {
   TORUS: 7
 };
 
-// dist/cauldron/visual/elements/visual_line.js
+// dist/pp/cauldron/visual/elements/visual_line.js
 import { MeshComponent } from "@wonderlandengine/api";
 var VisualLineParams = class {
   constructor(engine = Globals.getMainEngine()) {
@@ -5713,7 +5713,7 @@ VisualLineParams.prototype.copy = function copy9(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/visual/elements/visual_arrow.js
+// dist/pp/cauldron/visual/elements/visual_arrow.js
 var VisualArrowParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myStart = vec3_create();
@@ -5917,7 +5917,7 @@ VisualArrowParams.prototype.copy = function copy10(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/visual/elements/visual_mesh.js
+// dist/pp/cauldron/visual/elements/visual_mesh.js
 import { MeshComponent as MeshComponent3 } from "@wonderlandengine/api";
 var VisualMeshParams = class {
   constructor(engine = Globals.getMainEngine()) {
@@ -6041,7 +6041,7 @@ VisualMeshParams.prototype.copy = function copy11(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/visual/elements/visual_point.js
+// dist/pp/cauldron/visual/elements/visual_point.js
 import { MeshComponent as MeshComponent4 } from "@wonderlandengine/api";
 var VisualPointParams = class {
   constructor(engine = Globals.getMainEngine()) {
@@ -6191,7 +6191,7 @@ VisualPointParams.prototype.copy = function copy12(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/physics/physics_utils.js
+// dist/pp/cauldron/physics/physics_utils.js
 var _myLayerFlagsNames = ["0", "1", "2", "3", "4", "5", "6", "7"];
 var _myRaycastCount = /* @__PURE__ */ new WeakMap();
 var _myRaycastVisualDebugEnabled = /* @__PURE__ */ new WeakMap();
@@ -6344,7 +6344,7 @@ function _increaseRaycastCount(physics = Globals.getPhysics()) {
   }
 }
 
-// dist/cauldron/physics/physics_layer_flags.js
+// dist/pp/cauldron/physics/physics_layer_flags.js
 var PhysicsLayerFlags = class {
   constructor() {
     this._myLayerMask = 0;
@@ -6402,7 +6402,7 @@ var PhysicsLayerFlags = class {
   }
 };
 
-// dist/cauldron/physics/physics_raycast_params.js
+// dist/pp/cauldron/physics/physics_raycast_params.js
 var RaycastParams = class {
   constructor(physics = Globals.getPhysics()) {
     this.myOrigin = vec3_create();
@@ -6572,7 +6572,7 @@ RaycastResults.prototype.copy = function() {
   };
 }();
 
-// dist/cauldron/visual/elements/visual_raycast.js
+// dist/pp/cauldron/visual/elements/visual_raycast.js
 var VisualRaycastParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myRaycastResults = new RaycastResults();
@@ -6789,7 +6789,7 @@ VisualRaycastParams.prototype.copy = function copy13(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/visual/elements/visual_text.js
+// dist/pp/cauldron/visual/elements/visual_text.js
 import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
 var VisualTextParams = class {
   constructor(engine = Globals.getMainEngine()) {
@@ -6942,7 +6942,7 @@ VisualText.prototype._refresh = function() {
   };
 }();
 
-// dist/cauldron/visual/elements/visual_torus.js
+// dist/pp/cauldron/visual/elements/visual_torus.js
 var VisualTorusParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myTransform = mat4_create();
@@ -7143,7 +7143,7 @@ VisualTorusParams.prototype.copy = function copy15(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/visual/elements/visual_transform.js
+// dist/pp/cauldron/visual/elements/visual_transform.js
 var VisualTransformParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myTransform = mat4_create();
@@ -7337,7 +7337,7 @@ VisualTransformParams.prototype.copy = function copy16(other) {
   this.myType = other.myType;
 };
 
-// dist/cauldron/visual/visual_manager.js
+// dist/pp/cauldron/visual/visual_manager.js
 var VisualManager = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -7572,7 +7572,7 @@ var VisualManager = class {
   }
 };
 
-// dist/cauldron/visual/visual_resources.js
+// dist/pp/cauldron/visual/visual_resources.js
 var VisualResources = class {
   constructor() {
     this.myDefaultMaterials = new VisualResourcesMaterials();
@@ -7590,7 +7590,7 @@ var VisualResourcesMaterials = class {
   }
 };
 
-// dist/cauldron/visual/components/visual_manager_component.js
+// dist/pp/cauldron/visual/components/visual_manager_component.js
 var VisualManagerComponent = class extends Component5 {
   static TypeName = "pp-visual-manager";
   init() {
@@ -7639,7 +7639,7 @@ var VisualManagerComponent = class extends Component5 {
   }
 };
 
-// dist/cauldron/wl/components/add_wl_to_window_component.js
+// dist/pp/cauldron/wl/components/add_wl_to_window_component.js
 import * as WLAPI from "@wonderlandengine/api";
 import { Component as Component6, Property as Property4 } from "@wonderlandengine/api";
 import * as WLComponents from "@wonderlandengine/components";
@@ -7668,10 +7668,10 @@ var AddWLToWindowComponent = class extends Component6 {
   }
 };
 
-// dist/cauldron/wl/getters/components/get_default_resources_component.js
+// dist/pp/cauldron/wl/getters/components/get_default_resources_component.js
 import { Component as Component7, Property as Property5 } from "@wonderlandengine/api";
 
-// dist/cauldron/wl/utils/mesh_utils.js
+// dist/pp/cauldron/wl/utils/mesh_utils.js
 import { Mesh, MeshAttribute, MeshIndexType } from "@wonderlandengine/api";
 var MeshCreationVertexParams = class {
   constructor() {
@@ -8013,7 +8013,7 @@ var MeshUtils = {
   createPlane
 };
 
-// dist/cauldron/wl/getters/default_resources.js
+// dist/pp/cauldron/wl/getters/default_resources.js
 var DefaultResources = class {
   myMeshes = new DefaultResourcesMeshes();
   myMaterials = new DefaultResourcesMaterials();
@@ -8044,7 +8044,7 @@ var DefaultResourcesMaterials = class {
   myText = null;
 };
 
-// dist/cauldron/wl/getters/components/get_default_resources_component.js
+// dist/pp/cauldron/wl/getters/components/get_default_resources_component.js
 var GetDefaultResourcesComponent = class extends Component7 {
   static TypeName = "pp-get-default-resources";
   static Properties = {
@@ -8101,10 +8101,10 @@ var GetDefaultResourcesComponent = class extends Component7 {
   }
 };
 
-// dist/cauldron/wl/getters/components/get_scene_objects_component.js
+// dist/pp/cauldron/wl/getters/components/get_scene_objects_component.js
 import { Component as Component8, Property as Property6 } from "@wonderlandengine/api";
 
-// dist/input/cauldron/input_types.js
+// dist/pp/input/cauldron/input_types.js
 var Handedness;
 (function(Handedness2) {
   Handedness2["LEFT"] = "left";
@@ -8177,7 +8177,7 @@ var TrackedHandJointIDIndex;
   TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["PINKY_FINGER_TIP"] = 24] = "PINKY_FINGER_TIP";
 })(TrackedHandJointIDIndex || (TrackedHandJointIDIndex = {}));
 
-// dist/cauldron/wl/getters/scene_objects.js
+// dist/pp/cauldron/wl/getters/scene_objects.js
 var SceneObjects = class {
   myRoot = null;
   myScene = null;
@@ -8203,7 +8203,7 @@ var PlayerObjects = class {
   myHeadDebugs = null;
 };
 
-// dist/cauldron/wl/getters/components/get_scene_objects_component.js
+// dist/pp/cauldron/wl/getters/components/get_scene_objects_component.js
 var GetSceneObjectsComponent = class extends Component8 {
   static TypeName = "pp-get-scene-objects";
   static Properties = {
@@ -8264,10 +8264,10 @@ var GetSceneObjectsComponent = class extends Component8 {
   }
 };
 
-// dist/debug/components/debug_manager_component.js
+// dist/pp/debug/components/debug_manager_component.js
 import { Component as Component9 } from "@wonderlandengine/api";
 
-// dist/debug/debug_visual_manager.js
+// dist/pp/debug/debug_visual_manager.js
 import { Alignment as Alignment2, Justification as Justification2 } from "@wonderlandengine/api";
 var DebugVisualManager = class extends VisualManager {
   constructor(engine) {
@@ -8436,7 +8436,7 @@ DebugVisualManager.prototype.drawUIText = function() {
   };
 }();
 
-// dist/debug/debug_manager.js
+// dist/pp/debug/debug_manager.js
 var DebugManager = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -8462,7 +8462,7 @@ var DebugManager = class {
   }
 };
 
-// dist/debug/components/debug_manager_component.js
+// dist/pp/debug/components/debug_manager_component.js
 var DebugManagerComponent = class extends Component9 {
   static TypeName = "pp-debug-manager";
   init() {
@@ -8490,7 +8490,7 @@ var DebugManagerComponent = class extends Component9 {
   }
 };
 
-// dist/debug/components/enable_debug_component.js
+// dist/pp/debug/components/enable_debug_component.js
 import { Component as Component10, Property as Property7 } from "@wonderlandengine/api";
 var EnableDebugComponent = class extends Component10 {
   static TypeName = "pp-enable-debug";
@@ -8511,10 +8511,10 @@ var EnableDebugComponent = class extends Component10 {
   }
 };
 
-// dist/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
+// dist/pp/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
 import { Component as Component11 } from "@wonderlandengine/api";
 
-// dist/gameplay/experimental/character_controller/collision/character_collision_results.js
+// dist/pp/gameplay/experimental/character_controller/collision/character_collision_results.js
 var CharacterCollisionResults = class {
   constructor() {
     this.myCheckType = null;
@@ -8834,7 +8834,7 @@ CharacterCollisionInternalResults.prototype.copy = function copy27(other) {
   this.myWallSlide90DegreesRecomputeDirectionSign = other.myWallSlide90DegreesRecomputeDirectionSign;
 };
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_params.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_params.js
 var CollisionCheckParams = class {
   constructor() {
     this.mySplitMovementEnabled = false;
@@ -9449,7 +9449,7 @@ var CollisionRuntimeParams = class {
   }
 };
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_base.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_base.js
 var CollisionCheckBase = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -9683,7 +9683,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_surface.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_surface.js
 var CollisionCheckSurface = class extends CollisionCheckBase {
   updateSurfaceInfo(transformQuat2, collisionCheckParams, collisionRuntimeParams) {
     if (this.isCollisionCheckDisabled() && Globals.isDebugEnabled(this._myEngine)) {
@@ -10279,7 +10279,7 @@ CollisionCheckSurface.prototype.computeSurfacePerceivedAngle = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_base.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_base.js
 var CollisionCheckHorizontalBase = class extends CollisionCheckSurface {
   _horizontalCheckRaycast(startPosition, endPosition, movementDirection, up, ignoreHitsInsideCollision, ignoreGroundAngleCallback, ignoreCeilingAngleCallback, feetPosition, fixHitOnCollision, collisionCheckParams, collisionRuntimeParams, checkAllHits = false, ignoreHitsInsideCollisionIfObjectToIgnore = false) {
   }
@@ -10444,7 +10444,7 @@ CollisionCheckHorizontalBase.prototype._ignoreSurfaceAngle = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_position.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_position.js
 var CollisionCheckHorizontalPosition = class extends CollisionCheckHorizontalBase {
   _horizontalPositionCheck(originalFeetPosition, originalHeight, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams) {
   }
@@ -10777,7 +10777,7 @@ CollisionCheckHorizontalPosition.prototype._horizontalPositionVerticalCheck = fu
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_movement.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_movement.js
 var CollisionCheckHorizontalMovement = class extends CollisionCheckHorizontalPosition {
   _horizontalMovementCheck(movement, originalFeetPosition, originalHeight, feetPosition, height, up, collisionCheckParams, collisionRuntimeParams) {
   }
@@ -11103,7 +11103,7 @@ CollisionCheckHorizontalMovement.prototype._horizontalMovementHorizontalCheck = 
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_sliding.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal_sliding.js
 var CollisionCheckHorizontalSliding = class extends CollisionCheckHorizontalMovement {
   _horizontalSlide(movement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, outSlideMovement) {
   }
@@ -11431,7 +11431,7 @@ CollisionCheckHorizontalSliding.prototype._isSlidingNormalValid = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_horizontal.js
 var CollisionCheckHorizontal = class extends CollisionCheckHorizontalSliding {
   _horizontalCheck(movement, feetPosition, height, up, forward, allowSurfaceSteepFix, collisionCheckParams, collisionRuntimeParams, previousCollisionRuntimeParams, avoidSlidingExtraCheck, outFixedMovement) {
   }
@@ -11476,7 +11476,7 @@ CollisionCheckHorizontal.prototype._horizontalCheck = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_vertical.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_vertical.js
 var CollisionCheckVertical = class extends CollisionCheckHorizontal {
   _verticalCheck(verticalMovement, originalMovementSign, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, outFixedMovement) {
   }
@@ -11740,7 +11740,7 @@ CollisionCheckVertical.prototype._getVerticalCheckPositions = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_move.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_move.js
 var CollisionCheckMove = class extends CollisionCheckVertical {
   move(movement, transformQuat2, collisionCheckParams, collisionRuntimeParams) {
     if (this.isCollisionCheckDisabled() && Globals.isDebugEnabled(this._myEngine)) {
@@ -12153,7 +12153,7 @@ CollisionCheckMove.prototype._syncCollisionRuntimeParamsWithPrevious = function(
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_teleport.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_teleport.js
 var CollisionCheckTeleport = class extends CollisionCheckMove {
   // #TODO Add teleport position/transform and return originalteleportransform
   // instead of position old transform / new transform
@@ -12381,7 +12381,7 @@ CollisionCheckTeleport.prototype._teleport = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_position.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_position.js
 var CollisionCheckPosition = class extends CollisionCheckTeleport {
   positionCheck(allowFix, transformQuat2, collisionCheckParams, collisionRuntimeParams) {
     if (this.isCollisionCheckDisabled() && Globals.isDebugEnabled(this._myEngine)) {
@@ -12413,11 +12413,11 @@ CollisionCheckPosition.prototype._positionCheck = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check.js
 var CollisionCheck = class extends CollisionCheckPosition {
 };
 
-// dist/gameplay/experimental/character_controller/collision/collision_check_bridge.js
+// dist/pp/gameplay/experimental/character_controller/collision/collision_check_bridge.js
 var _myCollisionChecks = /* @__PURE__ */ new WeakMap();
 function getCollisionCheck(engine = Globals.getMainEngine()) {
   return _myCollisionChecks.get(engine);
@@ -12867,7 +12867,7 @@ var CollisionCheckBridge = {
   convertCharacterColliderSetupToCollisionCheckParams
 };
 
-// dist/gameplay/experimental/character_controller/collision/character_collision_system.js
+// dist/pp/gameplay/experimental/character_controller/collision/character_collision_system.js
 var CharacterCollisionSystem = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myLastCheckRaycastsPerformed = 0;
@@ -12937,7 +12937,7 @@ CharacterCollisionSystem.prototype.checkTeleportToPosition = function() {
   };
 }();
 
-// dist/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
+// dist/pp/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
 var CharacterCollisionSystemComponent = class extends Component11 {
   static TypeName = "pp-character-collision-system";
   init() {
@@ -12959,10 +12959,10 @@ var CharacterCollisionSystemComponent = class extends Component11 {
   }
 };
 
-// dist/input/cauldron/components/input_manager_component.js
+// dist/pp/input/cauldron/components/input_manager_component.js
 import { Component as Component12, Property as Property8 } from "@wonderlandengine/api";
 
-// dist/input/gamepad/gamepad_buttons.js
+// dist/pp/input/gamepad/gamepad_buttons.js
 var GamepadButtonID = {
   SELECT: 0,
   // Trigger
@@ -13121,7 +13121,7 @@ var GamepadPulseInfo = class _GamepadPulseInfo {
   }
 };
 
-// dist/input/gamepad/gamepad_cores/gamepad_core.js
+// dist/pp/input/gamepad/gamepad_cores/gamepad_core.js
 var GamepadCore = class {
   constructor(handPose) {
     this._myHandPose = handPose;
@@ -13201,7 +13201,7 @@ var GamepadCore = class {
   }
 };
 
-// dist/input/gamepad/gamepad_cores/classic_gamepad_core.js
+// dist/pp/input/gamepad/gamepad_cores/classic_gamepad_core.js
 var ClassicGamepadCore = class extends GamepadCore {
   constructor(gamepadIndex, handPose) {
     super(handPose);
@@ -13331,7 +13331,7 @@ var ClassicGamepadCore = class extends GamepadCore {
   }
 };
 
-// dist/input/cauldron/keyboard.js
+// dist/pp/input/cauldron/keyboard.js
 var KeyID = {
   _0: "0",
   _1: "1",
@@ -13536,7 +13536,7 @@ var Keyboard = class {
   }
 };
 
-// dist/input/gamepad/gamepad_cores/keyboard_gamepad_core.js
+// dist/pp/input/gamepad/gamepad_cores/keyboard_gamepad_core.js
 var KeyboardGamepadCore = class extends GamepadCore {
   constructor(handPose) {
     super(handPose);
@@ -13640,7 +13640,7 @@ var KeyboardGamepadCore = class extends GamepadCore {
   }
 };
 
-// dist/input/gamepad/gamepad_cores/xr_gamepad_core.js
+// dist/pp/input/gamepad/gamepad_cores/xr_gamepad_core.js
 var XRGamepadCore = class extends GamepadCore {
   constructor(handPose) {
     super(handPose);
@@ -13798,10 +13798,10 @@ var XRGamepadCore = class extends GamepadCore {
   }
 };
 
-// dist/input/cauldron/input_manager.js
+// dist/pp/input/cauldron/input_manager.js
 import { Emitter as Emitter5 } from "@wonderlandengine/api";
 
-// dist/input/gamepad/base_gamepad.js
+// dist/pp/input/gamepad/base_gamepad.js
 import { Emitter as Emitter3 } from "@wonderlandengine/api";
 var BaseGamepad = class {
   constructor(handedness) {
@@ -14152,7 +14152,7 @@ var BaseGamepad = class {
   }
 };
 
-// dist/input/gamepad/universal_gamepad.js
+// dist/pp/input/gamepad/universal_gamepad.js
 var UniversalGamepad = class extends BaseGamepad {
   constructor(handedness) {
     super(handedness);
@@ -14283,7 +14283,7 @@ var UniversalGamepad = class extends BaseGamepad {
   }
 };
 
-// dist/input/gamepad/cauldron/gamepads_manager.js
+// dist/pp/input/gamepad/cauldron/gamepads_manager.js
 var GamepadsManager = class {
   constructor() {
     this._myGamepads = [];
@@ -14324,7 +14324,7 @@ var GamepadsManager = class {
   }
 };
 
-// dist/input/pose/base_pose.js
+// dist/pp/input/pose/base_pose.js
 import { Emitter as Emitter4 } from "@wonderlandengine/api";
 var BasePoseParams = class {
   constructor(engine = Globals.getMainEngine()) {
@@ -14687,7 +14687,7 @@ BasePose.prototype._computeEmulatedAngularVelocity = function() {
   };
 }();
 
-// dist/input/cauldron/input_utils.js
+// dist/pp/input/cauldron/input_utils.js
 function getHandednessByIndex(index) {
   let handedness = null;
   switch (index) {
@@ -14765,7 +14765,7 @@ var InputUtils = {
   getJointIDByIndex
 };
 
-// dist/input/pose/hand_pose.js
+// dist/pp/input/pose/hand_pose.js
 var HandPoseParams = class extends BasePoseParams {
   constructor(engine) {
     super(engine);
@@ -14855,14 +14855,14 @@ HandPose.prototype.getRotationQuat = function() {
   };
 }();
 
-// dist/input/pose/head_pose.js
+// dist/pp/input/pose/head_pose.js
 var HeadPose = class extends BasePose {
   _getPose(xrFrame) {
     return xrFrame.getViewerPose(this.getReferenceSpace());
   }
 };
 
-// dist/input/pose/tracked_hand_joint_pose.js
+// dist/pp/input/pose/tracked_hand_joint_pose.js
 var TrackedHandJointPose = class extends BasePose {
   constructor(handedness, trackedHandJointID, basePoseParams = new BasePoseParams()) {
     super(basePoseParams);
@@ -14921,7 +14921,7 @@ var TrackedHandJointPose = class extends BasePose {
   }
 };
 
-// dist/input/pose/tracked_hand_pose.js
+// dist/pp/input/pose/tracked_hand_pose.js
 var TrackedHandPoseParams = class extends BasePoseParams {
   constructor(addAllJointIDs = true, engine = Globals.getMainEngine()) {
     super(engine);
@@ -15030,7 +15030,7 @@ var TrackedHandPose = class {
   }
 };
 
-// dist/input/cauldron/mouse.js
+// dist/pp/input/cauldron/mouse.js
 import { ViewComponent } from "@wonderlandengine/api";
 var MouseButtonID = {
   LEFT: 0,
@@ -15434,7 +15434,7 @@ var Mouse = class {
   }
 };
 
-// dist/input/cauldron/input_manager.js
+// dist/pp/input/cauldron/input_manager.js
 var InputManager = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -15592,7 +15592,7 @@ var InputManager = class {
   }
 };
 
-// dist/input/cauldron/components/input_manager_component.js
+// dist/pp/input/cauldron/components/input_manager_component.js
 var InputManagerComponent = class extends Component12 {
   static TypeName = "pp-input-manager";
   static Properties = {
@@ -15661,7 +15661,7 @@ var InputManagerComponent = class extends Component12 {
   }
 };
 
-// dist/tool/cauldron/components/enable_tool_component.js
+// dist/pp/tool/cauldron/components/enable_tool_component.js
 import { Component as Component13, Property as Property9 } from "@wonderlandengine/api";
 var EnableToolComponent = class extends Component13 {
   static TypeName = "pp-enable-tools";
@@ -15682,10 +15682,10 @@ var EnableToolComponent = class extends Component13 {
   }
 };
 
-// dist/tool/console_vr/components/init_console_vr_component.js
+// dist/pp/tool/console_vr/components/init_console_vr_component.js
 import { Component as Component14, Property as Property10 } from "@wonderlandengine/api";
 
-// dist/tool/console_vr/console_original_functions.js
+// dist/pp/tool/console_vr/console_original_functions.js
 var _myConsoleOriginalLog = console.log;
 var _myConsoleOriginalError = console.error;
 var _myConsoleOriginalWarn = console.warn;
@@ -15752,7 +15752,7 @@ var ConsoleOriginalFunctions = {
   getClear
 };
 
-// dist/tool/console_vr/console_vr.js
+// dist/pp/tool/console_vr/console_vr.js
 var ConsoleVR = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -15801,7 +15801,7 @@ var ConsoleVR = class {
   }
 };
 
-// dist/tool/console_vr/components/init_console_vr_component.js
+// dist/pp/tool/console_vr/components/init_console_vr_component.js
 var InitConsoleVRComponent = class extends Component14 {
   static TypeName = "pp-init-console-vr";
   static Properties = {
@@ -15823,10 +15823,10 @@ var InitConsoleVRComponent = class extends Component14 {
   }
 };
 
-// dist/tool/easy_tune/components/init_easy_tune_variables_component.js
+// dist/pp/tool/easy_tune/components/init_easy_tune_variables_component.js
 import { Component as Component15, Property as Property11 } from "@wonderlandengine/api";
 
-// dist/tool/easy_tune/easy_tune_variables.js
+// dist/pp/tool/easy_tune/easy_tune_variables.js
 var EasyTuneVariables = class {
   constructor() {
     this._myVariables = /* @__PURE__ */ new Map();
@@ -15903,7 +15903,7 @@ var EasyTuneVariables = class {
   }
 };
 
-// dist/tool/easy_tune/components/init_easy_tune_variables_component.js
+// dist/pp/tool/easy_tune/components/init_easy_tune_variables_component.js
 var InitEasyTuneVariablesComponent = class extends Component15 {
   static TypeName = "pp-init-easy-tune-variables";
   static Properties = {
@@ -15925,17 +15925,17 @@ var InitEasyTuneVariablesComponent = class extends Component15 {
   }
 };
 
-// dist/cauldron/wl/register_wl_components.js
+// dist/pp/cauldron/wl/register_wl_components.js
 import { ARCamera8thwall, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent } from "@wonderlandengine/components";
 function registerWLComponents(engine) {
   engine.registerComponent(ARCamera8thwall, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent);
 }
 
-// dist/cauldron/wl/utils/component_utils.js
+// dist/pp/cauldron/wl/utils/component_utils.js
 import { AnimationComponent, CollisionComponent, InputComponent, LightComponent, MeshComponent as MeshComponent6, PhysXComponent, TextComponent as TextComponent3, ViewComponent as ViewComponent2 } from "@wonderlandengine/api";
 import { ARCamera8thwall as ARCamera8thwall2, Anchor, Cursor as Cursor2, CursorTarget as CursorTarget2, DebugObject as DebugObject2, DeviceOrientationLook as DeviceOrientationLook2, FingerCursor as FingerCursor2, FixedFoveation as FixedFoveation2, HandTracking as HandTracking2, HitTestLocation as HitTestLocation2, HowlerAudioListener as HowlerAudioListener2, HowlerAudioSource as HowlerAudioSource2, ImageTexture as ImageTexture2, MouseLookComponent as MouseLookComponent2, PlaneDetection, PlayerHeight as PlayerHeight2, TargetFramerate as TargetFramerate2, TeleportComponent as TeleportComponent2, Trail as Trail2, TwoJointIkSolver as TwoJointIkSolver2, VideoTexture as VideoTexture2, VrModeActiveSwitch as VrModeActiveSwitch2, Vrm as Vrm2, WasdControlsComponent as WasdControlsComponent2 } from "@wonderlandengine/components";
 
-// dist/cauldron/wl/utils/default_wl_component_clone_callbacks.js
+// dist/pp/cauldron/wl/utils/default_wl_component_clone_callbacks.js
 import { MeshComponent as MeshComponent5, TextComponent as TextComponent2 } from "@wonderlandengine/api";
 function cloneMesh(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
   let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, true);
@@ -15973,7 +15973,7 @@ var DefaultWLComponentCloneCallbacks = {
   clonePhysX
 };
 
-// dist/cauldron/wl/utils/object_utils.js
+// dist/pp/cauldron/wl/utils/object_utils.js
 var CloneParams = class {
   /** Defaults to the object to clone parent, null can be used to specify u want the scene root as the parent */
   myCloneParent = void 0;
@@ -18397,7 +18397,7 @@ function _reserveObjects(count, componentsAmountMap, scene) {
   }
 }
 
-// dist/cauldron/wl/utils/component_utils.js
+// dist/pp/cauldron/wl/utils/component_utils.js
 var _myCloneCallbacks = /* @__PURE__ */ new WeakMap();
 var _myClonePostProcessCallbacks = /* @__PURE__ */ new WeakMap();
 var DeepCloneParams = class {
@@ -18787,7 +18787,7 @@ var _myWLJavascriptComponentTypes = [
   WasdControlsComponent2.TypeName
 ];
 
-// dist/cauldron/utils/js_utils.js
+// dist/pp/cauldron/utils/js_utils.js
 function getObjectPrototypes(object) {
   let prototypes = [];
   prototypes.push(object);
@@ -19075,7 +19075,7 @@ function _jsObjectFunctionsSpecialCopy(fromObject, toObject) {
   }
 }
 
-// dist/plugin/utils/plugin_utils.js
+// dist/pp/plugin/utils/plugin_utils.js
 function injectProperties(fromReference, toReference, enumerable = true, writable = true, configurable = true, keepOriginalDescriptorAttributes = true, bindThisAsFirstParam = false, prefix, functionNamesToExclude = []) {
   const ownPropertyNames = Object.getOwnPropertyNames(fromReference);
   for (const ownPropertyName of ownPropertyNames) {
@@ -19133,7 +19133,7 @@ var PluginUtils = {
   injectProperties
 };
 
-// dist/plugin/js/extensions/array/array_extension_utils.js
+// dist/pp/plugin/js/extensions/array/array_extension_utils.js
 var ARRAY_LIKE_CLASSES = [
   Array,
   Uint8ClampedArray,
@@ -19150,7 +19150,7 @@ var ArrayExtensionUtils = {
   ARRAY_LIKE_CLASSES
 };
 
-// dist/plugin/js/extensions/array/array_extension.js
+// dist/pp/plugin/js/extensions/array/array_extension.js
 function initArrayExtension() {
   _initArrayLikeExtensionProtoypes();
   _initArrayExtensionProtoype();
@@ -19238,7 +19238,7 @@ function _initArrayExtensionProtoype() {
   PluginUtils.injectProperties(arrayExtension, Array.prototype, false, true, true);
 }
 
-// dist/plugin/js/extensions/array/array_extension_legacy.js
+// dist/pp/plugin/js/extensions/array/array_extension_legacy.js
 function initArrayExtensionLegacy() {
   _initArrayExtensionLegacyProtoype();
 }
@@ -20070,7 +20070,7 @@ function _initArrayExtensionLegacyProtoype() {
   }
 }
 
-// dist/plugin/js/extensions/array/mat3_extension.js
+// dist/pp/plugin/js/extensions/array/mat3_extension.js
 function initMat3Extension() {
   _initMat3ExtensionProtoype();
 }
@@ -20102,7 +20102,7 @@ function _initMat3ExtensionProtoype() {
   }
 }
 
-// dist/plugin/js/extensions/array/vec2_extension.js
+// dist/pp/plugin/js/extensions/array/vec2_extension.js
 function initVec2Extension() {
   _initVec2ExtensionProtoype();
 }
@@ -20134,7 +20134,7 @@ function _initVec2ExtensionProtoype() {
   }
 }
 
-// dist/cauldron/utils/array/vec_utils.js
+// dist/pp/cauldron/utils/array/vec_utils.js
 function clone11(vector) {
   return vector.slice(0);
 }
@@ -20242,7 +20242,7 @@ function _buildConsoleMessage(vector, decimalPlaces) {
   return message;
 }
 
-// dist/plugin/js/extensions/array/vec_extension.js
+// dist/pp/plugin/js/extensions/array/vec_extension.js
 function initVecExtension() {
   _initVecExtensionProtoype();
 }
@@ -20292,7 +20292,7 @@ function _initVecExtensionProtoype() {
   }
 }
 
-// dist/plugin/js/extensions/math_extension.js
+// dist/pp/plugin/js/extensions/math_extension.js
 function initMathExtension() {
   _initMathExtensionInstance();
 }
@@ -20397,7 +20397,7 @@ function _initMathExtensionInstance() {
   PluginUtils.injectProperties(mathExtension, Math, false, true, true);
 }
 
-// dist/plugin/js/extensions/number_extension.js
+// dist/pp/plugin/js/extensions/number_extension.js
 function initNumberExtension() {
   _initNumberExtensionPrototype();
 }
@@ -20409,7 +20409,7 @@ function _initNumberExtensionPrototype() {
   PluginUtils.injectProperties(numberExtension, Number.prototype, false, true, true);
 }
 
-// dist/plugin/js/extensions/init_js_extentions.js
+// dist/pp/plugin/js/extensions/init_js_extentions.js
 function initJSExtensions() {
   initMathExtension();
   initArrayExtension();
@@ -20420,12 +20420,12 @@ function initJSExtensions() {
   initNumberExtension();
 }
 
-// dist/plugin/js/init_js_plugins.js
+// dist/pp/plugin/js/init_js_plugins.js
 function initJSPlugins() {
   initJSExtensions();
 }
 
-// dist/plugin/wl/extensions/cauldron_extensions.js
+// dist/pp/plugin/wl/extensions/cauldron_extensions.js
 import { Physics, RayHit } from "@wonderlandengine/api";
 function initCauldronExtensions() {
   _initPhysicsExtensionPrototype();
@@ -20487,7 +20487,7 @@ function _initRayHitExtensionPrototype() {
   PluginUtils.injectProperties(extension, RayHit.prototype, false, true, true);
 }
 
-// dist/plugin/wl/extensions/object_extension.js
+// dist/pp/plugin/wl/extensions/object_extension.js
 import { Object3D } from "@wonderlandengine/api";
 function initObjectExtension() {
   _initObjectExtensionProtoype();
@@ -21430,13 +21430,13 @@ function _initObjectExtensionProtoype() {
   PluginUtils.injectProperties(objectExtension, Object3D.prototype, false, true, true);
 }
 
-// dist/plugin/wl/extensions/init_wl_extentions.js
+// dist/pp/plugin/wl/extensions/init_wl_extentions.js
 function initWLExtensions() {
   initObjectExtension();
   initCauldronExtensions();
 }
 
-// dist/plugin/wl/mods/components/cauldron_mods.js
+// dist/pp/plugin/wl/mods/components/cauldron_mods.js
 import { Emitter as Emitter6 } from "@wonderlandengine/api";
 function initCauldronMods() {
   _initEmitterModPrototype();
@@ -21459,7 +21459,7 @@ function _initEmitterModPrototype() {
   PluginUtils.injectProperties(emitterMod, Emitter6.prototype, false, true, true);
 }
 
-// dist/plugin/wl/mods/components/cursor_component_mod.js
+// dist/pp/plugin/wl/mods/components/cursor_component_mod.js
 import { InputComponent as InputComponent2, ViewComponent as ViewComponent3 } from "@wonderlandengine/api";
 import { Cursor as Cursor3, CursorTarget as CursorTarget3, HitTestLocation as HitTestLocation3 } from "@wonderlandengine/components";
 function initCursorComponentMod() {
@@ -22057,7 +22057,7 @@ function _initCursorComponentModPrototype() {
   PluginUtils.injectProperties(cursorComponentMod, Cursor3.prototype, false, true, true);
 }
 
-// dist/plugin/wl/mods/components/cursor_target_component_mod.js
+// dist/pp/plugin/wl/mods/components/cursor_target_component_mod.js
 import { Emitter as Emitter7 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget4 } from "@wonderlandengine/components";
 function initCursorTargetComponentMod() {
@@ -22087,7 +22087,7 @@ function _initCursorTargetComponentModPrototype() {
   PluginUtils.injectProperties(cursorTargetComponentMod, CursorTarget4.prototype, false, true, true);
 }
 
-// dist/plugin/wl/mods/components/mouse_look_component_mod.js
+// dist/pp/plugin/wl/mods/components/mouse_look_component_mod.js
 import { MouseLookComponent as MouseLookComponent3 } from "@wonderlandengine/components";
 function initMouseLookComponentMod() {
   _initMouseLookComponentModPrototype();
@@ -22250,7 +22250,7 @@ function _initMouseLookComponentModPrototype() {
   PluginUtils.injectProperties(mouseLookComponentMod, MouseLookComponent3.prototype, false, true, true);
 }
 
-// dist/plugin/wl/mods/components/init_component_mods.js
+// dist/pp/plugin/wl/mods/components/init_component_mods.js
 function initComponentMods() {
   initCursorComponentMod();
   initCursorTargetComponentMod();
@@ -22258,24 +22258,24 @@ function initComponentMods() {
   initCauldronMods();
 }
 
-// dist/plugin/wl/mods/init_wl_mods.js
+// dist/pp/plugin/wl/mods/init_wl_mods.js
 function initWLMods() {
   initComponentMods();
 }
 
-// dist/plugin/wl/init_wl_plugins.js
+// dist/pp/plugin/wl/init_wl_plugins.js
 function initWLPlugins() {
   initWLExtensions();
   initWLMods();
 }
 
-// dist/plugin/init_plugins.js
+// dist/pp/plugin/init_plugins.js
 function initPlugins() {
   initJSPlugins();
   initWLPlugins();
 }
 
-// dist/pp/init_pp.js
+// dist/pp/pp/init_pp.js
 function initPP(engine) {
   Globals.setMainEngine(engine);
   ComponentUtils.setDefaultWLComponentCloneCallbacks(engine);
@@ -22284,7 +22284,7 @@ function initPP(engine) {
   initPlugins();
 }
 
-// dist/pp/components/add_pp_to_window_component.js
+// dist/pp/pp/components/add_pp_to_window_component.js
 import { Component as Component16, Property as Property12 } from "@wonderlandengine/api";
 var AddPPToWindowComponent = class extends Component16 {
   static TypeName = "pp-add-pp-to-window";
@@ -22294,7 +22294,7 @@ var AddPPToWindowComponent = class extends Component16 {
   init() {
     if (this._myAdd) {
       window.PP = {};
-      this._addProperties(dist_exports);
+      this._addProperties(pp_exports);
     }
   }
   _addProperties(object) {
@@ -22310,7 +22310,7 @@ var AddPPToWindowComponent = class extends Component16 {
   }
 };
 
-// dist/pp/components/pp_gateway_component.js
+// dist/pp/pp/components/pp_gateway_component.js
 var _myRegisteredEngines = /* @__PURE__ */ new WeakMap();
 var PPGatewayComponent = class extends Component17 {
   static TypeName = "pp-gateway";
@@ -22423,7 +22423,7 @@ var PPGatewayComponent = class extends Component17 {
   }
 };
 
-// dist/audio/audio_utils.js
+// dist/pp/audio/audio_utils.js
 import { Howler as Howler3 } from "howler";
 function isPlaybackBlocked() {
   let blocked = false;
@@ -22436,7 +22436,7 @@ var AudioUtils = {
   isPlaybackBlocked
 };
 
-// dist/audio/howler/howler_audio_player.js
+// dist/pp/audio/howler/howler_audio_player.js
 var HowlerAudioPlayer = class extends AudioPlayer {
   constructor(howl, audioSetup = null) {
     super(audioSetup, howl);
@@ -22469,7 +22469,7 @@ var HowlerAudioPlayer = class extends AudioPlayer {
   }
 };
 
-// dist/audio/components/mute_everything_component.js
+// dist/pp/audio/components/mute_everything_component.js
 import { Component as Component18 } from "@wonderlandengine/api";
 import { Howler as Howler4 } from "howler";
 var MuteEverythingComponent = class extends Component18 {
@@ -22480,7 +22480,7 @@ var MuteEverythingComponent = class extends Component18 {
   }
 };
 
-// dist/audio/components/spatial_audio_listener_component.js
+// dist/pp/audio/components/spatial_audio_listener_component.js
 import { Component as Component19 } from "@wonderlandengine/api";
 import { Howler as Howler5 } from "howler";
 var SpatialAudioListenerComponent = class extends Component19 {
@@ -22506,10 +22506,10 @@ var SpatialAudioListenerComponent = class extends Component19 {
   }
 };
 
-// dist/cauldron/benchmarks/benchmark_max_physx_component.js
+// dist/pp/cauldron/benchmarks/benchmark_max_physx_component.js
 import { Component as Component20, PhysXComponent as PhysXComponent3, Property as Property14, Shape } from "@wonderlandengine/api";
 
-// dist/cauldron/physics/physics_collision_collector.js
+// dist/pp/cauldron/physics/physics_collision_collector.js
 import { CollisionEventType, Emitter as Emitter8, PhysXComponent as PhysXComponent2 } from "@wonderlandengine/api";
 var PhysicsCollisionCollector = class {
   constructor(physXComponent, trigger = false) {
@@ -22707,7 +22707,7 @@ PhysicsCollisionCollector.prototype._triggerDesyncFix = function() {
   };
 }();
 
-// dist/cauldron/benchmarks/benchmark_max_physx_component.js
+// dist/pp/cauldron/benchmarks/benchmark_max_physx_component.js
 var BenchmarkMaxPhysXComponent = class extends Component20 {
   static TypeName = "pp-benchmark-max-physx";
   static Properties = {
@@ -22971,7 +22971,7 @@ var BenchmarkMaxPhysXComponent = class extends Component20 {
   }
 };
 
-// dist/cauldron/benchmarks/benchmark_max_visible_triangles_component.js
+// dist/pp/cauldron/benchmarks/benchmark_max_visible_triangles_component.js
 import { Alignment as Alignment3, Component as Component21, Justification as Justification3, MeshComponent as MeshComponent7, Property as Property15, TextComponent as TextComponent4 } from "@wonderlandengine/api";
 var BenchmarkMaxVisibleTrianglesComponent = class extends Component21 {
   static TypeName = "pp-benchmark-max-visible-triangles";
@@ -23357,7 +23357,7 @@ var BenchmarkMaxVisibleTrianglesComponent = class extends Component21 {
   }
 };
 
-// dist/cauldron/cauldron/components/adjust_hierarchy_physx_scale_component.js
+// dist/pp/cauldron/cauldron/components/adjust_hierarchy_physx_scale_component.js
 import { Component as Component22, PhysXComponent as PhysXComponent4, Property as Property16 } from "@wonderlandengine/api";
 var AdjustHierarchyPhysXScaleComponent = class extends Component22 {
   static TypeName = "pp-adjust-hierarchy-physx-scale";
@@ -23396,7 +23396,7 @@ var AdjustHierarchyPhysXScaleComponent = class extends Component22 {
   }
 };
 
-// dist/cauldron/cauldron/components/clear_console_on_xr_session_start_component.js
+// dist/pp/cauldron/cauldron/components/clear_console_on_xr_session_start_component.js
 import { Component as Component23, Property as Property17 } from "@wonderlandengine/api";
 var ClearConsoleOnXRSessionStartComponent = class extends Component23 {
   static TypeName = "pp-clear-console-on-xr-session-start";
@@ -23418,7 +23418,7 @@ var ClearConsoleOnXRSessionStartComponent = class extends Component23 {
   }
 };
 
-// dist/cauldron/cauldron/components/set_active_component.js
+// dist/pp/cauldron/cauldron/components/set_active_component.js
 import { Component as Component24, Property as Property18 } from "@wonderlandengine/api";
 var SetActiveComponent = class extends Component24 {
   static TypeName = "pp-set-active";
@@ -23480,7 +23480,7 @@ var SetActiveComponent = class extends Component24 {
   }
 };
 
-// dist/cauldron/cauldron/components/show_fps_component.js
+// dist/pp/cauldron/cauldron/components/show_fps_component.js
 import { Alignment as Alignment4, Component as Component25, Justification as Justification4, Property as Property19 } from "@wonderlandengine/api";
 var ShowFPSComponent = class extends Component25 {
   static TypeName = "pp-show-fps";
@@ -23519,7 +23519,7 @@ var ShowFPSComponent = class extends Component25 {
   }
 };
 
-// dist/cauldron/cauldron/components/show_xr_buttons_component.js
+// dist/pp/cauldron/cauldron/components/show_xr_buttons_component.js
 import { Component as Component26 } from "@wonderlandengine/api";
 import { property } from "@wonderlandengine/api/decorators.js";
 var __decorate = function(decorators, target, key, desc) {
@@ -23682,7 +23682,7 @@ __decorate([
   property.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
 ], ShowXRButtonsComponent.prototype, "_myARButtonBehaviorWhenNotAvailable", void 0);
 
-// dist/cauldron/fsm/fsm.js
+// dist/pp/cauldron/fsm/fsm.js
 import { Emitter as Emitter9 } from "@wonderlandengine/api";
 var StateData = class {
   constructor(stateID, stateObject) {
@@ -24195,7 +24195,7 @@ var _PendingPerform = class {
   }
 };
 
-// dist/cauldron/fsm/state.js
+// dist/pp/cauldron/fsm/state.js
 var State = class {
   // Called every frame if this is the current state
   // You can retrieve this state data by calling fsm.getCurrentState()
@@ -24215,7 +24215,7 @@ var State = class {
   }
 };
 
-// dist/cauldron/fsm/transition.js
+// dist/pp/cauldron/fsm/transition.js
 var Transition = class {
   // Called if this is used as an init transition for the fsm
   performInit(fsm, initState, ...args) {
@@ -24226,7 +24226,7 @@ var Transition = class {
   }
 };
 
-// dist/cauldron/fsm/states/timer_state.js
+// dist/pp/cauldron/fsm/states/timer_state.js
 var TimerState = class extends State {
   constructor(duration = 0, transitionToPerformOnEnd = null, ...transitionArgs) {
     super();
@@ -24271,7 +24271,7 @@ var TimerState = class extends State {
   }
 };
 
-// dist/cauldron/utils/color_utils.js
+// dist/pp/cauldron/utils/color_utils.js
 function rgbToHSV(rgb) {
   let hsv = rgb.pp_clone();
   let r = rgb[0];
@@ -24375,7 +24375,7 @@ var ColorUtils = {
   color1To255
 };
 
-// dist/cauldron/utils/analytics_utils.js
+// dist/pp/cauldron/utils/analytics_utils.js
 var _myAnalyticsEnabled = false;
 var _mySendDataCallback = null;
 var _myEventsSentOnce = [];
@@ -24496,7 +24496,7 @@ var AnalyticsUtils = {
   isErrorsLogEnabled
 };
 
-// dist/cauldron/wl/utils/material_utils.js
+// dist/pp/cauldron/wl/utils/material_utils.js
 import { MeshComponent as MeshComponent8 } from "@wonderlandengine/api";
 var setAlpha = function() {
   let color = vec4_create();
@@ -24569,7 +24569,7 @@ var MaterialUtils = {
   setObjectFogColor
 };
 
-// dist/cauldron/wl/utils/text_utils.js
+// dist/pp/cauldron/wl/utils/text_utils.js
 import { TextComponent as TextComponent5 } from "@wonderlandengine/api";
 function setClonedMaterials(object) {
   let textComponents = object.pp_getComponents(TextComponent5);
@@ -24583,7 +24583,7 @@ var TextUtils = {
   setClonedMaterials
 };
 
-// dist/debug/components/debug_transform_component.js
+// dist/pp/debug/components/debug_transform_component.js
 import { Component as Component27, Property as Property20 } from "@wonderlandengine/api";
 var DebugTransformComponent = class extends Component27 {
   static TypeName = "pp-debug-transform";
@@ -24619,7 +24619,7 @@ var DebugTransformComponent = class extends Component27 {
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_overwriter.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_overwriter.js
 var DebugFunctionsOverwriterParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myObjectsByReference = [];
@@ -24966,7 +24966,7 @@ DebugFunctionsOverwriter.prototype._isJSObjectFunction = function() {
   };
 }();
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analyzer.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analyzer.js
 var DebugFunctionsPerformanceAnalyzerParams = class extends DebugFunctionsOverwriterParams {
   constructor() {
     super();
@@ -25351,7 +25351,7 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analysis_results_logger.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analysis_results_logger.js
 var DebugFunctionsPerformanceAnalysisResultsLoggerParams = class {
   constructor() {
     this.myPerformanceAnalyzer = null;
@@ -25575,7 +25575,7 @@ var DebugFunctionsPerformanceAnalysisResultsLogger = class {
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js
 import { Component as Component28, Property as Property21 } from "@wonderlandengine/api";
 var DebugFunctionsPerformanceAnalyzerComponent = class extends Component28 {
   static TypeName = "pp-debug-functions-performance-analyzer";
@@ -25711,7 +25711,7 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component28 {
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component.js
 import { Component as Component29, Property as Property22 } from "@wonderlandengine/api";
 var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component29 {
   static TypeName = "pp-debug-pp-functions-performance-analyzer";
@@ -25763,7 +25763,7 @@ var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component29 {
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component.js
 import { Component as Component30, Property as Property23 } from "@wonderlandengine/api";
 var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component30 {
   static TypeName = "pp-debug-array-functions-performance-analyzer";
@@ -25819,7 +25819,7 @@ var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component30 
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component.js
 import { Component as Component31, Property as Property24 } from "@wonderlandengine/api";
 var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component31 {
   static TypeName = "pp-debug-pp-array-creation-performance-analyzer";
@@ -25873,7 +25873,7 @@ var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component31
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component.js
 import { Component as Component32, Property as Property25 } from "@wonderlandengine/api";
 var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component32 {
   static TypeName = "pp-debug-wl-functions-performance-analyzer";
@@ -25925,7 +25925,7 @@ var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component32 {
   }
 };
 
-// dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js
+// dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js
 import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component33, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent5, Property as Property26, TextComponent as TextComponent6, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
 var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component33 {
   static TypeName = "pp-debug-wl-components-functions-performance-analyzer";
@@ -26044,7 +26044,7 @@ var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Compo
   }
 };
 
-// dist/gameplay/cauldron/cauldron/direction_2D_to_3D_converter.js
+// dist/pp/gameplay/cauldron/cauldron/direction_2D_to_3D_converter.js
 var Direction2DTo3DConverterParams = class {
   constructor() {
     this.myStartFlyingForward = false;
@@ -26286,7 +26286,7 @@ Direction2DTo3DConverter.prototype.convertRotationQuat = function() {
   };
 }();
 
-// dist/gameplay/cauldron/cauldron/number_over_factor.js
+// dist/pp/gameplay/cauldron/cauldron/number_over_factor.js
 var NumberOverFactor = class {
   _myFromNumber;
   _myToNumber;
@@ -26445,7 +26445,7 @@ var IntRangeOverFactor = class extends NumberRangeOverFactor {
   }
 };
 
-// dist/gameplay/grab_throw/grabbable_component.js
+// dist/pp/gameplay/grab_throw/grabbable_component.js
 import { Component as Component34, Emitter as Emitter10, PhysXComponent as PhysXComponent6, Property as Property27 } from "@wonderlandengine/api";
 var GrabbableComponent = class extends Component34 {
   static TypeName = "pp-grabbable";
@@ -26567,7 +26567,7 @@ var GrabbableComponent = class extends Component34 {
   }
 };
 
-// dist/gameplay/grab_throw/grabber_hand_component.js
+// dist/pp/gameplay/grab_throw/grabber_hand_component.js
 import { Component as Component35, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property28 } from "@wonderlandengine/api";
 var GrabberHandComponent = class extends Component35 {
   static TypeName = "pp-grabber-hand";
@@ -26869,7 +26869,7 @@ var _GrabberHandComponentGrabbableData = class {
   }
 };
 
-// dist/gameplay/integrations/construct_arcade/ca_utils.js
+// dist/pp/gameplay/integrations/construct_arcade/ca_utils.js
 var _myDummyServer = null;
 var _myUseDummyServerOnSDKMissing = false;
 var _myUseDummyServerOnError = false;
@@ -27211,7 +27211,7 @@ function _getUser() {
   });
 }
 
-// dist/gameplay/integrations/construct_arcade/ca_dummy_server.js
+// dist/pp/gameplay/integrations/construct_arcade/ca_dummy_server.js
 var CADummyServer = class {
   constructor() {
   }
@@ -27295,7 +27295,7 @@ var CADummyServer = class {
   }
 };
 
-// dist/gameplay/integrations/construct_arcade/ca_display_leaderboard_component.js
+// dist/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard_component.js
 import { Component as Component36, Property as Property29, TextComponent as TextComponent7 } from "@wonderlandengine/api";
 var CADisplayLeaderboardComponent = class extends Component36 {
   static TypeName = "pp-ca-display-leaderboard";
@@ -27424,7 +27424,7 @@ var CADisplayLeaderboardComponent = class extends Component36 {
   }
 };
 
-// dist/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_utils.js
+// dist/pp/gameplay/experimental/character_controller/collision/legacy/collision_check/collision_check_utils.js
 function generate360TeleportParamsFromMovementParams(movementParams, outTeleportParams = new CollisionCheckParams()) {
   outTeleportParams.copy(movementParams);
   outTeleportParams.myHalfConeAngle = 180;
@@ -27437,7 +27437,7 @@ var CollisionCheckUtils = {
   generate360TeleportParamsFromMovementParams
 };
 
-// dist/gameplay/experimental/character_controller/collision/character_collider_setup.js
+// dist/pp/gameplay/experimental/character_controller/collision/character_collider_setup.js
 var CharacterColliderSetup = class {
   constructor() {
     this.myHeight = 0;
@@ -27820,7 +27820,7 @@ CharacterColliderDebugParams.prototype.copy = function copy35(other) {
   this.myVisualDebugResultsEnabled = other.myVisualDebugResultsEnabled;
 };
 
-// dist/gameplay/experimental/character_controller/character_controller_utils.js
+// dist/pp/gameplay/experimental/character_controller/character_controller_utils.js
 function computeGroundPerceivedAngle(surfaceNormal, direction, up) {
   return this.computeSurfacePerceivedAngle(surfaceNormal, direction, up, true);
 }
@@ -27864,7 +27864,7 @@ var CharacterControllerUtils = {
   computeSurfacePerceivedAngle
 };
 
-// dist/gameplay/experimental/character_controller/collision/character_collider_setup_utils.js
+// dist/pp/gameplay/experimental/character_controller/collision/character_collider_setup_utils.js
 var CharacterColliderSetupSimplifiedCreationAccuracyLevel = {
   VERY_LOW: 0,
   LOW: 1,
@@ -28082,7 +28082,7 @@ var CharacterColliderSetupUtils = {
   createTeleportColliderSetupFromMovementColliderSetup
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_head_manager.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_head_manager.js
 var NonVRReferenceSpaceMode = {
   NO_FLOOR: 0,
   FLOOR: 1,
@@ -28980,7 +28980,7 @@ PlayerHeadManager.prototype._getHeadTransformFromLocal = function() {
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_transform_manager.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_transform_manager.js
 var PlayerTransformManagerSyncFlag = {
   BODY_COLLIDING: 0,
   HEAD_COLLIDING: 1,
@@ -30022,7 +30022,7 @@ PlayerTransformManager.prototype.resetHeadToFeet = function() {
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_rotate.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_rotate.js
 var PlayerLocomotionRotateParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerHeadManager = null;
@@ -30211,7 +30211,7 @@ PlayerLocomotionRotate.prototype._rotateHeadVertically = function() {
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_movement.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_movement.js
 var PlayerLocomotionMovementRuntimeParams = class {
   constructor() {
     this.myIsFlying = false;
@@ -30238,10 +30238,10 @@ var PlayerLocomotionMovement = class {
   }
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion.js
 import { Emitter as Emitter12, PhysXComponent as PhysXComponent8 } from "@wonderlandengine/api";
 
-// dist/input/gamepad/cauldron/gamepad_utils.js
+// dist/pp/input/gamepad/cauldron/gamepad_utils.js
 var _mySimultaneousPressMaxDelay = 0.15;
 var _mySimultaneousTouchMaxDelay = 0.15;
 function setSimultaneousPressMaxDelay(simultaneousPressMaxDelay) {
@@ -30535,7 +30535,7 @@ var GamepadUtils = {
   areButtonsTouchEnd
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_obscure_manager.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_obscure_manager.js
 var PlayerObscureManagerParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerTransformManager = null;
@@ -30849,7 +30849,7 @@ var PlayerObscureManager = class {
   }
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_detection_visualizer.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_detection_visualizer.js
 var PlayerLocomotionTeleportDetectionVisualizerParams = class {
   constructor() {
     this.myTeleportValidMaterial = null;
@@ -31223,7 +31223,7 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParablePositi
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_parable.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_parable.js
 var PlayerLocomotionTeleportParable = class {
   constructor() {
     this._myStartPosition = vec3_create();
@@ -31387,7 +31387,7 @@ PlayerLocomotionTeleportParable.prototype.getFlatDistanceOverDistance = function
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_state.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_state.js
 var PlayerLocomotionTeleportState = class extends State {
   constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
     super();
@@ -31503,7 +31503,7 @@ PlayerLocomotionTeleportState.prototype._teleportToPosition = function() {
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_detection_state.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_detection_state.js
 var PlayerLocomotionTeleportDetectionParams = class {
   constructor() {
     this.myMaxDistance = 0;
@@ -32117,7 +32117,7 @@ PlayerLocomotionTeleportDetectionState.prototype._getVisibilityCheckPositions = 
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_blink_state.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_blink_state.js
 import { MeshComponent as MeshComponent10 } from "@wonderlandengine/api";
 var PlayerLocomotionTeleportTeleportBlinkState = class extends PlayerLocomotionTeleportState {
   constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
@@ -32212,7 +32212,7 @@ var PlayerLocomotionTeleportTeleportBlinkState = class extends PlayerLocomotionT
   }
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_shift_state.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_shift_state.js
 var PlayerLocomotionTeleportTeleportShiftState = class extends PlayerLocomotionTeleportState {
   constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
     super(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
@@ -32309,7 +32309,7 @@ PlayerLocomotionTeleportTeleportShiftState.prototype._shiftingUpdate = function(
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_state.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_state.js
 var PlayerLocomotionTeleportTeleportType = {
   INSTANT: 0,
   BLINK: 1,
@@ -32399,7 +32399,7 @@ var PlayerLocomotionTeleportTeleportState = class extends PlayerLocomotionTelepo
   }
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport.js
 var PlayerLocomotionTeleportParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerHeadManager = null;
@@ -32541,7 +32541,7 @@ PlayerLocomotionTeleport.prototype._applyGravity = function() {
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion.js
 var PlayerLocomotionDirectionReferenceType = {
   HEAD: 0,
   HAND: 1,
@@ -33093,7 +33093,7 @@ var PlayerLocomotion = class {
   }
 };
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_smooth.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_smooth.js
 var PlayerLocomotionSmoothParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerHeadManager = null;
@@ -33324,7 +33324,7 @@ PlayerLocomotionSmooth.prototype._onXRSessionEnd = function() {
   };
 }();
 
-// dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_component.js
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_component.js
 import { Component as Component37, Property as Property30 } from "@wonderlandengine/api";
 var PlayerLocomotionComponent = class extends Component37 {
   static TypeName = "pp-player-locomotion";
@@ -33554,7 +33554,7 @@ var PlayerLocomotionComponent = class extends Component37 {
   }
 };
 
-// dist/input/cauldron/components/finger_cursor_component.js
+// dist/pp/input/cauldron/components/finger_cursor_component.js
 import { Collider, CollisionComponent as CollisionComponent3, Component as Component38, Property as Property31 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
 var FingerCursorComponent = class extends Component38 {
@@ -33682,7 +33682,7 @@ var FingerCursorComponent = class extends Component38 {
   }
 };
 
-// dist/input/cauldron/components/switch_hand_object_component.js
+// dist/pp/input/cauldron/components/switch_hand_object_component.js
 import { Component as Component39, Property as Property32 } from "@wonderlandengine/api";
 var SwitchHandObjectComponent = class extends Component39 {
   static TypeName = "pp-switch-hand-object";
@@ -33744,7 +33744,7 @@ var SwitchHandObjectComponent = class extends Component39 {
   }
 };
 
-// dist/input/cauldron/components/tracked_hand_draw_joint_component.js
+// dist/pp/input/cauldron/components/tracked_hand_draw_joint_component.js
 import { Component as Component40, MeshComponent as MeshComponent11, Property as Property33 } from "@wonderlandengine/api";
 var TrackedHandDrawJointComponent = class extends Component40 {
   static TypeName = "pp-tracked-hand-draw-joint";
@@ -33804,7 +33804,7 @@ TrackedHandDrawJointComponent.prototype.update = function() {
   };
 }();
 
-// dist/input/cauldron/components/tracked_hand_draw_all_joints_component.js
+// dist/pp/input/cauldron/components/tracked_hand_draw_all_joints_component.js
 import { Component as Component41, Property as Property34 } from "@wonderlandengine/api";
 var TrackedHandDrawAllJointsComponent = class extends Component41 {
   static TypeName = "pp-tracked-hand-draw-all-joints";
@@ -33836,7 +33836,7 @@ var TrackedHandDrawAllJointsComponent = class extends Component41 {
   }
 };
 
-// dist/input/cauldron/components/tracked_hand_draw_skin_component.js
+// dist/pp/input/cauldron/components/tracked_hand_draw_skin_component.js
 import { Component as Component42, Property as Property35 } from "@wonderlandengine/api";
 var TrackedHandDrawSkinComponent = class extends Component42 {
   static TypeName = "pp-tracked-hand-draw-skin";
@@ -33870,7 +33870,7 @@ TrackedHandDrawSkinComponent.prototype.update = function() {
   };
 }();
 
-// dist/input/gamepad/cauldron/gamepad_mesh_animator_component.js
+// dist/pp/input/gamepad/cauldron/gamepad_mesh_animator_component.js
 import { Component as Component43, Property as Property36 } from "@wonderlandengine/api";
 var GamepadMeshAnimatorComponent = class extends Component43 {
   static TypeName = "pp-gamepad-mesh-animator";
@@ -34006,7 +34006,7 @@ GamepadMeshAnimatorComponent.prototype._thumbstickPressedStart = function() {
   };
 }();
 
-// dist/input/gamepad/cauldron/gamepad_control_scheme_component.js
+// dist/pp/input/gamepad/cauldron/gamepad_control_scheme_component.js
 import { Alignment as Alignment5, Component as Component44, Justification as Justification5, MeshComponent as MeshComponent12, Property as Property37, TextComponent as TextComponent8 } from "@wonderlandengine/api";
 var GamepadControlSchemeComponent = class extends Component44 {
   static TypeName = "pp-gamepad-control-scheme";
@@ -34190,7 +34190,7 @@ var GamepadControlSchemeComponent = class extends Component44 {
   }
 };
 
-// dist/input/gamepad/gamepad_cores/virtual_gamepad_gamepad_core.js
+// dist/pp/input/gamepad/gamepad_cores/virtual_gamepad_gamepad_core.js
 var VirtualGamepadGamepadCore = class extends GamepadCore {
   constructor(virtualGamepad, handPose) {
     super(handPose);
@@ -34227,7 +34227,7 @@ var VirtualGamepadGamepadCore = class extends GamepadCore {
   }
 };
 
-// dist/input/gamepad/virtual_gamepad/virtual_gamepad_icon.js
+// dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_icon.js
 var VirtualGamepadIconType = {
   NONE: 0,
   LABEL: 1,
@@ -34434,7 +34434,7 @@ var VirtualGamepadIcon = class {
   }
 };
 
-// dist/input/gamepad/virtual_gamepad/virtual_gamepad_params.js
+// dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_params.js
 var VirtualGamepadButtonParams = class {
   constructor() {
     this.myIconParams = new VirtualGamepadIconParams();
@@ -34566,7 +34566,7 @@ var VirtualGamepadParams = class {
   }
 };
 
-// dist/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_button.js
+// dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_button.js
 var VirtualGamepadVirtualButton = class {
   constructor(buttonElementParent, virtualGamepadParams, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
     this._myButtonElement = null;
@@ -34736,7 +34736,7 @@ var VirtualGamepadVirtualButton = class {
   }
 };
 
-// dist/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_thumbstick.js
+// dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_thumbstick.js
 var VirtualGamepadVirtualThumbstick = class {
   constructor(thumbstickElementParent, virtualGamepadParams, virtualThumbstickHandedness, gamepadThumbstickHandedness, gamepadAxesID) {
     this._myThumbstickElement = null;
@@ -34951,7 +34951,7 @@ var VirtualGamepadVirtualThumbstick = class {
   }
 };
 
-// dist/input/gamepad/virtual_gamepad/virtual_gamepad.js
+// dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad.js
 var VirtualGamepad = class {
   constructor(params = new VirtualGamepadParams()) {
     this._myParams = params;
@@ -35195,7 +35195,7 @@ var VirtualGamepad = class {
   }
 };
 
-// dist/input/gamepad/virtual_gamepad/virtual_gamepad_component.js
+// dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_component.js
 import { Component as Component45, Property as Property38 } from "@wonderlandengine/api";
 var VirtualGamepadComponent = class extends Component45 {
   static TypeName = "pp-virtual-gamepad";
@@ -35453,7 +35453,7 @@ var VirtualGamepadComponent = class extends Component45 {
   }
 };
 
-// dist/input/pose/components/set_player_height_component.js
+// dist/pp/input/pose/components/set_player_height_component.js
 import { Component as Component46, Property as Property39 } from "@wonderlandengine/api";
 var SetPlayerHeightComponent = class extends Component46 {
   static TypeName = "pp-set-player-height";
@@ -35486,7 +35486,7 @@ var SetPlayerHeightComponent = class extends Component46 {
   }
 };
 
-// dist/input/pose/components/set_hand_local_transform_component.js
+// dist/pp/input/pose/components/set_hand_local_transform_component.js
 import { Component as Component47, Property as Property40 } from "@wonderlandengine/api";
 var SetHandLocalTransformComponent = class extends Component47 {
   static TypeName = "pp-set-hand-local-transform";
@@ -35516,7 +35516,7 @@ SetHandLocalTransformComponent.prototype.onPoseUpdated = function() {
   };
 }();
 
-// dist/input/pose/components/set_head_local_transform_component.js
+// dist/pp/input/pose/components/set_head_local_transform_component.js
 import { Component as Component48 } from "@wonderlandengine/api";
 var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component48 {
   static TypeName = "pp-set-head-local-transform";
@@ -35555,7 +35555,7 @@ var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent exten
   }
 };
 
-// dist/input/pose/components/set_tracked_hand_joint_local_transform_component.js
+// dist/pp/input/pose/components/set_tracked_hand_joint_local_transform_component.js
 import { Component as Component49, Property as Property41 } from "@wonderlandengine/api";
 var SetTrackedHandJointLocalTransformComponent = class extends Component49 {
   static TypeName = "pp-set-tracked-hand-joint-local-transform";
@@ -35617,7 +35617,7 @@ SetTrackedHandJointLocalTransformComponent.prototype.onPoseUpdated = function() 
   };
 }();
 
-// dist/input/pose/components/copy_hand_transform_component.js
+// dist/pp/input/pose/components/copy_hand_transform_component.js
 import { Component as Component50, Property as Property42 } from "@wonderlandengine/api";
 var CopyHandTransformComponent = class extends Component50 {
   static TypeName = "pp-copy-hand-transform";
@@ -35634,7 +35634,7 @@ var CopyHandTransformComponent = class extends Component50 {
   }
 };
 
-// dist/input/pose/components/copy_head_transform_component.js
+// dist/pp/input/pose/components/copy_head_transform_component.js
 import { Component as Component51 } from "@wonderlandengine/api";
 var CopyHeadTransformComponent = class extends Component51 {
   static TypeName = "pp-copy-head-transform";
@@ -35646,7 +35646,7 @@ var CopyHeadTransformComponent = class extends Component51 {
   }
 };
 
-// dist/input/pose/components/copy_player_transform_component.js
+// dist/pp/input/pose/components/copy_player_transform_component.js
 import { Component as Component52 } from "@wonderlandengine/api";
 var CopyPlayerTransformComponent = class extends Component52 {
   static TypeName = "pp-copy-player-transform";
@@ -35658,7 +35658,7 @@ var CopyPlayerTransformComponent = class extends Component52 {
   }
 };
 
-// dist/input/pose/components/copy_reference_space_transform_component.js
+// dist/pp/input/pose/components/copy_reference_space_transform_component.js
 import { Component as Component53 } from "@wonderlandengine/api";
 var CopyReferenceSpaceTransformComponent = class extends Component53 {
   static TypeName = "pp-copy-reference-space-transform";
@@ -35670,7 +35670,7 @@ var CopyReferenceSpaceTransformComponent = class extends Component53 {
   }
 };
 
-// dist/tool/cauldron/tool_types.js
+// dist/pp/tool/cauldron/tool_types.js
 var ToolHandedness = {
   NONE: null,
   LEFT: "left",
@@ -35682,7 +35682,7 @@ var ToolInputSourceType = {
   TRACKED_HAND: 1
 };
 
-// dist/tool/cauldron/components/tool_cursor_component.js
+// dist/pp/tool/cauldron/components/tool_cursor_component.js
 import { Component as Component54, MeshComponent as MeshComponent13, Property as Property43, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
 import { Cursor as Cursor4, CursorTarget as CursorTarget6 } from "@wonderlandengine/components";
 var ToolCursorComponent = class extends Component54 {
@@ -35827,10 +35827,10 @@ ToolCursorComponent.prototype.update = function() {
   };
 }();
 
-// dist/tool/console_vr/console_vr_widget_config.js
+// dist/pp/tool/console_vr/console_vr_widget_config.js
 import { Alignment as Alignment6, Collider as Collider2, Justification as Justification6 } from "@wonderlandengine/api";
 
-// dist/tool/console_vr/console_vr_types.js
+// dist/pp/tool/console_vr/console_vr_types.js
 var ConsoleVRWidgetConsoleFunction = {
   DEBUG: 0,
   WARN: 1,
@@ -35861,7 +35861,7 @@ var OverrideBrowserConsoleFunctions = {
   ERRORS_AND_WARNS: 2
 };
 
-// dist/tool/console_vr/console_vr_widget_config.js
+// dist/pp/tool/console_vr/console_vr_widget_config.js
 var ConsoleVRWidgetConfig = class {
   constructor() {
     this._setupBuildConfig();
@@ -35995,7 +35995,7 @@ var ConsoleVRWidgetConfig = class {
   }
 };
 
-// dist/tool/console_vr/console_vr_widget_ui.js
+// dist/pp/tool/console_vr/console_vr_widget_ui.js
 import { CollisionComponent as CollisionComponent4, MeshComponent as MeshComponent14, TextComponent as TextComponent9 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget7 } from "@wonderlandengine/components";
 var ConsoleVRWidgetUI = class {
@@ -36265,10 +36265,10 @@ var ConsoleVRWidgetUI = class {
   }
 };
 
-// dist/tool/widget_frame/widget_frame.js
+// dist/pp/tool/widget_frame/widget_frame.js
 import { Emitter as Emitter13 } from "@wonderlandengine/api";
 
-// dist/tool/widget_frame/widget_frame_config.js
+// dist/pp/tool/widget_frame/widget_frame_config.js
 import { Alignment as Alignment7, Collider as Collider3, Justification as Justification7 } from "@wonderlandengine/api";
 var WidgetFrameConfig = class {
   constructor(widgetLetterID, buttonsColumnIndex) {
@@ -36363,7 +36363,7 @@ var WidgetFrameConfig = class {
   }
 };
 
-// dist/tool/widget_frame/widget_frame_ui.js
+// dist/pp/tool/widget_frame/widget_frame_ui.js
 import { CollisionComponent as CollisionComponent5, MeshComponent as MeshComponent15, TextComponent as TextComponent10 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
 var WidgetFrameUI = class {
@@ -36543,7 +36543,7 @@ var WidgetFrameUI = class {
   }
 };
 
-// dist/tool/widget_frame/widget_frame.js
+// dist/pp/tool/widget_frame/widget_frame.js
 var WidgetParams = class {
   constructor() {
     this.myHandedness = ToolHandedness.NONE;
@@ -36682,7 +36682,7 @@ var WidgetFrame = class {
   }
 };
 
-// dist/tool/console_vr/console_vr_widget.js
+// dist/pp/tool/console_vr/console_vr_widget.js
 var ConsoleVRWidgetParams = class extends WidgetParams {
   constructor() {
     super();
@@ -37395,7 +37395,7 @@ var ConsoleVRWidget = class {
   }
 };
 
-// dist/tool/console_vr/components/console_vr_tool_component.js
+// dist/pp/tool/console_vr/components/console_vr_tool_component.js
 import { Component as Component55, Property as Property44 } from "@wonderlandengine/api";
 var ConsoleVRToolComponent = class extends Component55 {
   static TypeName = "pp-console-vr-tool";
@@ -37460,10 +37460,10 @@ var ConsoleVRToolComponent = class extends Component55 {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_variable_types.js
+// dist/pp/tool/easy_tune/easy_tune_variable_types.js
 import { Emitter as Emitter14 } from "@wonderlandengine/api";
 
-// dist/tool/easy_tune/easy_tune_utils.js
+// dist/pp/tool/easy_tune/easy_tune_utils.js
 var _mySetWidgetCurrentVariableCallbacks = /* @__PURE__ */ new WeakMap();
 var _myRefreshWidgetCallbacks = /* @__PURE__ */ new WeakMap();
 var _myAutoImportEnabledDefaultValues = /* @__PURE__ */ new WeakMap();
@@ -37701,7 +37701,7 @@ var _importExportVariablesReplaceFileURLParams = function() {
   };
 }();
 
-// dist/tool/easy_tune/easy_tune_variable_types.js
+// dist/pp/tool/easy_tune/easy_tune_variable_types.js
 var EasyTuneVariableType = {
   NONE: 0,
   NUMBER: 1,
@@ -37989,10 +37989,10 @@ var EasyTuneTransform = class _EasyTuneTransform extends EasyTuneVariable {
   }
 };
 
-// dist/tool/easy_tune/components/easy_tune_tool_component.js
+// dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
 import { Component as Component56, Property as Property45 } from "@wonderlandengine/api";
 
-// dist/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget.js
 import { Emitter as Emitter15 } from "@wonderlandengine/api";
 var EasyTuneBaseWidgetParams = class {
   constructor() {
@@ -38232,7 +38232,7 @@ var EasyTuneBaseWidget = class {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_array_widget_selector.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_array_widget_selector.js
 import { Emitter as Emitter16 } from "@wonderlandengine/api";
 var EasyTuneBaseArrayWidgetSelector = class {
   constructor(params, gamepad, engine = Globals.getMainEngine()) {
@@ -38381,7 +38381,7 @@ var EasyTuneBaseArrayWidgetSelector = class {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_config.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_config.js
 import { Alignment as Alignment8, Collider as Collider4, Justification as Justification8 } from "@wonderlandengine/api";
 var EasyTuneBaseWidgetConfig = class {
   constructor() {
@@ -38494,7 +38494,7 @@ var EasyTuneBaseWidgetConfig = class {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_config.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_config.js
 var EasyTuneBoolArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   constructor(arraySize) {
     super();
@@ -38532,11 +38532,11 @@ var EasyTuneBoolArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui.js
 import { CollisionComponent as CollisionComponent7, MeshComponent as MeshComponent17, TextComponent as TextComponent12 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget10 } from "@wonderlandengine/components";
 
-// dist/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_ui.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_ui.js
 import { CollisionComponent as CollisionComponent6, MeshComponent as MeshComponent16, TextComponent as TextComponent11 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget9 } from "@wonderlandengine/components";
 var EasyTuneBaseWidgetUI = class {
@@ -38738,7 +38738,7 @@ var EasyTuneBaseWidgetUI = class {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui.js
 var EasyTuneBoolArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
     super(engine);
@@ -38852,7 +38852,7 @@ var EasyTuneBoolArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget.js
 var EasyTuneBoolArrayWidget = class extends EasyTuneBaseWidget {
   constructor(params, arraySize, gamepad, engine = Globals.getMainEngine()) {
     super(params);
@@ -38994,14 +38994,14 @@ var EasyTuneBoolArrayWidget = class extends EasyTuneBaseWidget {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_selector.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_selector.js
 var EasyTuneBoolArrayWidgetSelector = class extends EasyTuneBaseArrayWidgetSelector {
   _getEasyTuneArrayWidget(arraySize) {
     return new EasyTuneBoolArrayWidget(this._myParams, arraySize, this._myGamepad, this._myEngine);
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/easy_tune_widget_config.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/easy_tune_widget_config.js
 var EasyTuneWidgetConfig = class {
   constructor() {
     this._setupRuntimeConfig();
@@ -39016,7 +39016,7 @@ var EasyTuneWidgetConfig = class {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_config.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_config.js
 var EasyTuneNoneWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   _getBackPanelMinY() {
     return super._getBackPanelMinY() + this.myTypeNotSupportedPanelPosition[1];
@@ -39031,7 +39031,7 @@ var EasyTuneNoneWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_ui.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_ui.js
 import { TextComponent as TextComponent13 } from "@wonderlandengine/api";
 var EasyTuneNoneWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
@@ -39053,7 +39053,7 @@ var EasyTuneNoneWidgetUI = class extends EasyTuneBaseWidgetUI {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget.js
 var EasyTuneNoneWidget = class extends EasyTuneBaseWidget {
   constructor(params, engine = Globals.getMainEngine()) {
     super(params);
@@ -39062,7 +39062,7 @@ var EasyTuneNoneWidget = class extends EasyTuneBaseWidget {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_config.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_config.js
 var EasyTuneNumberArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   constructor(arraySize) {
     super();
@@ -39108,7 +39108,7 @@ var EasyTuneNumberArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_ui.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_ui.js
 import { CollisionComponent as CollisionComponent8, MeshComponent as MeshComponent18, TextComponent as TextComponent14 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget11 } from "@wonderlandengine/components";
 var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
@@ -39282,7 +39282,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget.js
 var EasyTuneNumberArrayWidget = class extends EasyTuneBaseWidget {
   constructor(params, arraySize, gamepad, engine = Globals.getMainEngine()) {
     super(params);
@@ -39547,14 +39547,14 @@ var EasyTuneNumberArrayWidget = class extends EasyTuneBaseWidget {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_widget_selector.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_widget_selector.js
 var EasyTuneNumberArrayWidgetSelector = class extends EasyTuneBaseArrayWidgetSelector {
   _getEasyTuneArrayWidget(arraySize) {
     return new EasyTuneNumberArrayWidget(this._myParams, arraySize, this._myGamepad, this._myEngine);
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_config.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_config.js
 var EasyTuneTransformWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   _getBackPanelMinY() {
     return super._getBackPanelMinY() + this.myPositionPanelPosition[1] + this.myStepPanelPosition[1];
@@ -39616,7 +39616,7 @@ var EasyTuneTransformWidgetConfig = class extends EasyTuneBaseWidgetConfig {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_ui.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_ui.js
 import { CollisionComponent as CollisionComponent9, MeshComponent as MeshComponent19, TextComponent as TextComponent15 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget12 } from "@wonderlandengine/components";
 var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
@@ -40215,7 +40215,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget.js
 var EasyTuneTransformWidget = class extends EasyTuneBaseWidget {
   constructor(params, gamepad, engine = Globals.getMainEngine()) {
     super(params);
@@ -40655,7 +40655,7 @@ var EasyTuneTransformWidget = class extends EasyTuneBaseWidget {
   }
 };
 
-// dist/tool/easy_tune/easy_tune_widgets/easy_tune_widget.js
+// dist/pp/tool/easy_tune/easy_tune_widgets/easy_tune_widget.js
 var EasyTuneWidgetParams = class extends WidgetParams {
   constructor() {
     super();
@@ -40953,7 +40953,7 @@ var EasyTuneWidget = class {
   }
 };
 
-// dist/tool/easy_tune/components/easy_tune_tool_component.js
+// dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
 var EasyTuneToolComponent = class extends Component56 {
   static TypeName = "pp-easy-tune-tool";
   static Properties = {
@@ -41045,7 +41045,7 @@ var EasyTuneToolComponent = class extends Component56 {
   }
 };
 
-// dist/tool/easy_tune/components/easy_tune_import_variables_component.js
+// dist/pp/tool/easy_tune/components/easy_tune_import_variables_component.js
 import { Component as Component57, Property as Property46 } from "@wonderlandengine/api";
 var EasyTuneImportVariablesComponent = class extends Component57 {
   static TypeName = "pp-easy-tune-import-variables";
@@ -41064,7 +41064,7 @@ var EasyTuneImportVariablesComponent = class extends Component57 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_object_tuner.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_object_tuner.js
 var EasyObjectTuner = class {
   constructor(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine = Globals.getMainEngine()) {
     this._myObject = object;
@@ -41117,7 +41117,7 @@ var EasyObjectTuner = class {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_light_attenuation.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_light_attenuation.js
 import { LightComponent as LightComponent3 } from "@wonderlandengine/api";
 var EasyLightAttenuation = class extends EasyObjectTuner {
   constructor(object, variableName, setAsWidgetCurrentVariable, useTuneTarget) {
@@ -41154,7 +41154,7 @@ var EasyLightAttenuation = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_light_color.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_light_color.js
 import { LightComponent as LightComponent4 } from "@wonderlandengine/api";
 var EasyLightColor = class extends EasyObjectTuner {
   constructor(colorModel, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
@@ -41219,7 +41219,7 @@ var EasyLightColor = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_mesh_color.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_mesh_color.js
 import { MeshComponent as MeshComponent20 } from "@wonderlandengine/api";
 var EasyMeshColor = class extends EasyObjectTuner {
   constructor(colorModel, colorType, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
@@ -41299,7 +41299,7 @@ var EasyMeshColor = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_scale.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_scale.js
 var EasyScale = class extends EasyObjectTuner {
   constructor(local, scaleAsOne, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
     super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
@@ -41327,7 +41327,7 @@ var EasyScale = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_transform.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_transform.js
 var EasyTransform = class extends EasyObjectTuner {
   constructor(local, scaleAsOne, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
     super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
@@ -41355,7 +41355,7 @@ var EasyTransform = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_mesh_ambient_factor.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_mesh_ambient_factor.js
 import { MeshComponent as MeshComponent21 } from "@wonderlandengine/api";
 var EasyMeshAmbientFactor = class extends EasyObjectTuner {
   constructor(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
@@ -41403,7 +41403,7 @@ var EasyMeshAmbientFactor = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/easy_text_color.js
+// dist/pp/tool/easy_tune/easy_object_tuners/easy_text_color.js
 import { TextComponent as TextComponent16 } from "@wonderlandengine/api";
 var EasyTextColor = class extends EasyObjectTuner {
   constructor(colorModel, colorType, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
@@ -41469,7 +41469,7 @@ var EasyTextColor = class extends EasyObjectTuner {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js
 import { Component as Component58, Property as Property47 } from "@wonderlandengine/api";
 var EasyLightAttenuationComponent = class extends Component58 {
   static TypeName = "pp-easy-light-attenuation";
@@ -41500,7 +41500,7 @@ var EasyLightAttenuationComponent = class extends Component58 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js
 import { Component as Component59, Property as Property48 } from "@wonderlandengine/api";
 var EasyLightColorComponent = class extends Component59 {
   static TypeName = "pp-easy-light-color";
@@ -41532,7 +41532,7 @@ var EasyLightColorComponent = class extends Component59 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_mesh_ambient_factor_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_mesh_ambient_factor_component.js
 import { Component as Component60, Property as Property49 } from "@wonderlandengine/api";
 var EasyMeshAmbientFactorComponent = class extends Component60 {
   static TypeName = "pp-easy-mesh-ambient-factor";
@@ -41567,7 +41567,7 @@ var EasyMeshAmbientFactorComponent = class extends Component60 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js
 import { Component as Component61, Property as Property50 } from "@wonderlandengine/api";
 var EasyMeshColorComponent = class extends Component61 {
   static TypeName = "pp-easy-mesh-color";
@@ -41604,7 +41604,7 @@ var EasyMeshColorComponent = class extends Component61 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_scale_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_scale_component.js
 import { Component as Component62, Property as Property51 } from "@wonderlandengine/api";
 var EasyScaleComponent = class extends Component62 {
   static TypeName = "pp-easy-scale";
@@ -41638,7 +41638,7 @@ var EasyScaleComponent = class extends Component62 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js
 import { Component as Component63, Property as Property52 } from "@wonderlandengine/api";
 var EasySetTuneTargetChildNumberComponent = class extends Component63 {
   static TypeName = "pp-easy-set-tune-target-child-number";
@@ -41704,7 +41704,7 @@ var EasySetTuneTargetChildNumberComponent = class extends Component63 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_grab_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_grab_component.js
 import { Component as Component64 } from "@wonderlandengine/api";
 var EasySetTuneTargeetGrabComponent = class extends Component64 {
   static TypeName = "pp-easy-set-tune-target-grab";
@@ -41742,7 +41742,7 @@ var EasySetTuneTargeetGrabComponent = class extends Component64 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_text_color_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_text_color_component.js
 import { Component as Component65, Property as Property53 } from "@wonderlandengine/api";
 var EasyTextColorComponent = class extends Component65 {
   static TypeName = "pp-easy-text-color";
@@ -41775,7 +41775,7 @@ var EasyTextColorComponent = class extends Component65 {
   }
 };
 
-// dist/tool/easy_tune/easy_object_tuners/components/easy_transform_component.js
+// dist/pp/tool/easy_tune/easy_object_tuners/components/easy_transform_component.js
 import { Component as Component66, Property as Property54 } from "@wonderlandengine/api";
 var EasyTransformComponent = class extends Component66 {
   static TypeName = "pp-easy-transform";
