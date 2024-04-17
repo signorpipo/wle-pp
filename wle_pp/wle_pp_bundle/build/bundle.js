@@ -13,6 +13,7 @@ __export(dist_exports, {
   AnalyticsManager: () => AnalyticsManager,
   AnalyticsManagerComponent: () => AnalyticsManagerComponent,
   AnalyticsUtils: () => AnalyticsUtils,
+  ArrayExtensionUtils: () => ArrayExtensionUtils,
   ArrayUtils: () => ArrayUtils,
   AudioEvent: () => AudioEvent,
   AudioManager: () => AudioManager,
@@ -275,13 +276,13 @@ __export(dist_exports, {
   SaveManagerComponent: () => SaveManagerComponent,
   SaveUtils: () => SaveUtils,
   SceneObjects: () => SceneObjects,
-  SceneUtils: () => SceneUtils,
   SetActiveComponent: () => SetActiveComponent,
   SetHandLocalTransformComponent: () => SetHandLocalTransformComponent,
   SetHeadLocalTransformComponent: () => SetHeadLocalTransformComponent,
   SetPlayerHeightComponent: () => SetPlayerHeightComponent,
   SetTrackedHandJointLocalTransformComponent: () => SetTrackedHandJointLocalTransformComponent,
   ShowFPSComponent: () => ShowFPSComponent,
+  ShowXRButtonsComponent: () => ShowXRButtonsComponent,
   SkipStateFunction: () => SkipStateFunction,
   SpatialAudioListenerComponent: () => SpatialAudioListenerComponent,
   State: () => State,
@@ -346,30 +347,6 @@ __export(dist_exports, {
   WidgetParams: () => WidgetParams,
   XRGamepadCore: () => XRGamepadCore,
   XRUtils: () => XRUtils,
-  initArrayExtension: () => initArrayExtension,
-  initArrayExtensionProtoype: () => initArrayExtensionProtoype,
-  initComponentMods: () => initComponentMods,
-  initCursorComponentMod: () => initCursorComponentMod,
-  initCursorComponentModPrototype: () => initCursorComponentModPrototype,
-  initCursorTargetComponentMod: () => initCursorTargetComponentMod,
-  initCursorTargetComponentModPrototype: () => initCursorTargetComponentModPrototype,
-  initJSExtensions: () => initJSExtensions,
-  initJSPlugins: () => initJSPlugins,
-  initMathExtension: () => initMathExtension,
-  initMathExtensionStatic: () => initMathExtensionStatic,
-  initMouseLookComponentMod: () => initMouseLookComponentMod,
-  initMouseLookComponentModPrototype: () => initMouseLookComponentModPrototype,
-  initNumberExtension: () => initNumberExtension,
-  initNumberExtensionPrototype: () => initNumberExtensionPrototype,
-  initObjectExtension: () => initObjectExtension,
-  initObjectExtensionProtoype: () => initObjectExtensionProtoype,
-  initPP: () => initPP,
-  initPlugins: () => initPlugins,
-  initSceneExtension: () => initSceneExtension,
-  initSceneExtensionPrototype: () => initSceneExtensionPrototype,
-  initWLExtensions: () => initWLExtensions,
-  initWLMods: () => initWLMods,
-  initWLPlugins: () => initWLPlugins,
   mat3_create: () => mat3_create,
   mat4_create: () => mat4_create,
   quat2_create: () => quat2_create,
@@ -381,15 +358,10 @@ __export(dist_exports, {
   vec4_create: () => vec4_create
 });
 
-// dist/cauldron/wl/register_wl_components.js
-import { ARCamera8thwall, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent } from "@wonderlandengine/components";
-function registerWLComponents(engine) {
-  engine.registerComponent(ARCamera8thwall, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent);
+// dist/pp/register_pp_components.js
+function registerPPComponents(engine) {
+  engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleOnXRSessionStartComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshAmbientFactorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, SetActiveComponent, SetHandLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, ShowXRButtonsComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
 }
-
-// dist/cauldron/wl/utils/component_utils.js
-import { AnimationComponent, CollisionComponent, InputComponent, LightComponent, MeshComponent as MeshComponent2, PhysXComponent, TextComponent as TextComponent2, ViewComponent } from "@wonderlandengine/api";
-import { ARCamera8thwall as ARCamera8thwall2, Anchor, Cursor as Cursor2, CursorTarget as CursorTarget2, DebugObject as DebugObject2, DeviceOrientationLook as DeviceOrientationLook2, FingerCursor as FingerCursor2, FixedFoveation as FixedFoveation2, HandTracking as HandTracking2, HitTestLocation as HitTestLocation2, HowlerAudioListener as HowlerAudioListener2, HowlerAudioSource as HowlerAudioSource2, ImageTexture as ImageTexture2, MouseLookComponent as MouseLookComponent2, PlaneDetection, PlayerHeight as PlayerHeight2, TargetFramerate as TargetFramerate2, TeleportComponent as TeleportComponent2, Trail as Trail2, TwoJointIkSolver as TwoJointIkSolver2, VideoTexture as VideoTexture2, VrModeActiveSwitch as VrModeActiveSwitch2, Vrm as Vrm2, WasdControlsComponent as WasdControlsComponent2 } from "@wonderlandengine/components";
 
 // dist/audio/audio_globals.js
 var audio_globals_exports = {};
@@ -455,27 +427,6 @@ function removeSaveManager(engine = Globals.getMainEngine()) {
 }
 function hasSaveManager(engine = Globals.getMainEngine()) {
   return _mySaveManagers.has(engine);
-}
-
-// dist/cauldron/cauldron/window_globals.js
-var window_globals_exports = {};
-__export(window_globals_exports, {
-  getBody: () => getBody,
-  getDocument: () => getDocument,
-  getNavigator: () => getNavigator,
-  getWindow: () => getWindow
-});
-function getWindow(engine = Globals.getMainEngine()) {
-  return window;
-}
-function getNavigator(engine = Globals.getMainEngine()) {
-  return getWindow(engine).navigator;
-}
-function getDocument(engine = Globals.getMainEngine()) {
-  return getWindow(engine).document;
-}
-function getBody(engine = Globals.getMainEngine()) {
-  return getDocument(engine).body;
 }
 
 // dist/cauldron/object_pool/object_pool_globals.js
@@ -547,18 +498,2073 @@ __export(engine_globals_exports, {
   getEngines: () => getEngines,
   getMainEngine: () => getMainEngine,
   getPhysics: () => getPhysics,
-  getRoot: () => getRoot2,
   getScene: () => getScene,
   getWASM: () => getWASM,
   getXR: () => getXR,
   hasEngine: () => hasEngine,
-  initEngine: () => initEngine,
   removeEngine: () => removeEngine,
   removeMainEngine: () => removeMainEngine,
   setMainEngine: () => setMainEngine
 });
+var _myMainEngine = null;
+var _myEngines = [];
+function getMainEngine() {
+  return _myMainEngine;
+}
+function setMainEngine(engine) {
+  if (!hasEngine(engine)) {
+    addEngine(engine);
+  }
+  _myMainEngine = engine;
+}
+function removeMainEngine() {
+  _myMainEngine = null;
+}
+function getEngines() {
+  return _myEngines;
+}
+function addEngine(engine) {
+  removeEngine(engine);
+  _myEngines.push(engine);
+}
+function removeEngine(engine) {
+  const index = _myEngines.indexOf(engine);
+  if (index >= 0) {
+    _myEngines.splice(index, 1);
+    if (getMainEngine() == engine) {
+      removeMainEngine();
+    }
+  }
+}
+function hasEngine(engine) {
+  return _myEngines.indexOf(engine) >= 0;
+}
+function getScene(engine = Globals.getMainEngine()) {
+  let scene = null;
+  if (engine != null) {
+    scene = engine.scene;
+  }
+  return scene;
+}
+function getPhysics(engine = Globals.getMainEngine()) {
+  let physics = null;
+  if (engine != null) {
+    physics = engine.physics;
+  }
+  return physics;
+}
+function getCanvas(engine = Globals.getMainEngine()) {
+  let canvas = null;
+  if (engine != null) {
+    canvas = engine.canvas;
+  }
+  return canvas;
+}
+function getWASM(engine = Globals.getMainEngine()) {
+  let wasm = null;
+  if (engine != null) {
+    wasm = engine.wasm;
+  }
+  return wasm;
+}
+function getXR(engine = Globals.getMainEngine()) {
+  let xr = null;
+  if (engine != null) {
+    xr = engine.xr;
+  }
+  return xr;
+}
 
-// dist/cauldron/js/utils/math_utils.js
+// dist/cauldron/wl/getters/default_resources_globals.js
+var default_resources_globals_exports = {};
+__export(default_resources_globals_exports, {
+  getDefaultMaterials: () => getDefaultMaterials,
+  getDefaultMeshes: () => getDefaultMeshes,
+  getDefaultResources: () => getDefaultResources,
+  hasDefaultResources: () => hasDefaultResources,
+  removeDefaultResources: () => removeDefaultResources,
+  setDefaultResources: () => setDefaultResources
+});
+var _myDefaultResourcesContainer = /* @__PURE__ */ new WeakMap();
+function getDefaultResources(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const defaultResources = _myDefaultResourcesContainer.get(engine);
+  return defaultResources != null ? defaultResources : null;
+}
+function setDefaultResources(defaultResources, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myDefaultResourcesContainer.set(engine, defaultResources);
+  }
+}
+function removeDefaultResources(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myDefaultResourcesContainer.delete(engine);
+  }
+}
+function hasDefaultResources(engine = Globals.getMainEngine()) {
+  return engine != null ? _myDefaultResourcesContainer.has(engine) : false;
+}
+function getDefaultMeshes(engine = Globals.getMainEngine()) {
+  const defaultResources = getDefaultResources(engine);
+  if (defaultResources != null) {
+    return defaultResources.myMeshes;
+  }
+  return null;
+}
+function getDefaultMaterials(engine = Globals.getMainEngine()) {
+  const defaultResources = getDefaultResources(engine);
+  if (defaultResources != null) {
+    return defaultResources.myMaterials;
+  }
+  return null;
+}
+
+// dist/cauldron/wl/getters/scene_objects_globals.js
+var scene_objects_globals_exports = {};
+__export(scene_objects_globals_exports, {
+  getHeadObject: () => getHeadObject,
+  getPlayerObject: () => getPlayerObject,
+  getPlayerObjects: () => getPlayerObjects,
+  getRootObject: () => getRootObject,
+  getSceneObject: () => getSceneObject,
+  getSceneObjects: () => getSceneObjects,
+  hasSceneObjects: () => hasSceneObjects,
+  removeSceneObjects: () => removeSceneObjects,
+  setSceneObjects: () => setSceneObjects
+});
+var _mySceneObjectsContainer = /* @__PURE__ */ new WeakMap();
+function getSceneObjects(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const sceneObjects = _mySceneObjectsContainer.get(engine);
+  return sceneObjects != null ? sceneObjects : null;
+}
+function setSceneObjects(sceneObjects, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _mySceneObjectsContainer.set(engine, sceneObjects);
+  }
+}
+function removeSceneObjects(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _mySceneObjectsContainer.delete(engine);
+  }
+}
+function hasSceneObjects(engine = Globals.getMainEngine()) {
+  return engine != null ? _mySceneObjectsContainer.has(engine) : false;
+}
+function getRootObject(engine = Globals.getMainEngine()) {
+  const sceneObjects = getSceneObjects(engine);
+  if (sceneObjects != null) {
+    return sceneObjects.myRoot;
+  }
+  return null;
+}
+function getSceneObject(engine = Globals.getMainEngine()) {
+  const sceneObjects = getSceneObjects(engine);
+  if (sceneObjects != null) {
+    return sceneObjects.myScene;
+  }
+  return null;
+}
+function getPlayerObjects(engine = Globals.getMainEngine()) {
+  const sceneObjects = getSceneObjects(engine);
+  if (sceneObjects != null) {
+    return sceneObjects.myPlayerObjects;
+  }
+  return null;
+}
+function getPlayerObject(engine = Globals.getMainEngine()) {
+  const sceneObjects = getSceneObjects(engine);
+  if (sceneObjects != null) {
+    return sceneObjects.myPlayerObjects.myPlayer;
+  }
+  return null;
+}
+function getHeadObject(engine = Globals.getMainEngine()) {
+  const sceneObjects = getSceneObjects(engine);
+  if (sceneObjects != null) {
+    return sceneObjects.myPlayerObjects.myHead;
+  }
+  return null;
+}
+
+// dist/debug/debug_globals.js
+var debug_globals_exports = {};
+__export(debug_globals_exports, {
+  getDebugManager: () => getDebugManager,
+  getDebugVisualManager: () => getDebugVisualManager,
+  hasDebugEnabled: () => hasDebugEnabled,
+  hasDebugManager: () => hasDebugManager,
+  isDebugEnabled: () => isDebugEnabled,
+  removeDebugEnabled: () => removeDebugEnabled,
+  removeDebugManager: () => removeDebugManager,
+  setDebugEnabled: () => setDebugEnabled,
+  setDebugManager: () => setDebugManager
+});
+var _myDebugManagers = /* @__PURE__ */ new WeakMap();
+var _myDebugEnableds = /* @__PURE__ */ new WeakMap();
+function getDebugManager(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const debugManager = _myDebugManagers.get(engine);
+  return debugManager != null ? debugManager : null;
+}
+function setDebugManager(debugManager, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myDebugManagers.set(engine, debugManager);
+  }
+}
+function removeDebugManager(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myDebugManagers.delete(engine);
+  }
+}
+function hasDebugManager(engine = Globals.getMainEngine()) {
+  return engine != null ? _myDebugManagers.has(engine) : false;
+}
+function getDebugVisualManager(engine = Globals.getMainEngine()) {
+  const debugManager = getDebugManager(engine);
+  if (debugManager != null) {
+    return debugManager.getDebugVisualManager();
+  }
+  return null;
+}
+function isDebugEnabled(engine = Globals.getMainEngine()) {
+  return engine != null ? !!_myDebugEnableds.get(engine) : false;
+}
+function setDebugEnabled(debugEnabled, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myDebugEnableds.set(engine, debugEnabled);
+  }
+}
+function removeDebugEnabled(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myDebugEnableds.delete(engine);
+  }
+}
+function hasDebugEnabled(engine = Globals.getMainEngine()) {
+  return engine != null ? _myDebugEnableds.has(engine) : false;
+}
+
+// dist/gameplay/experimental/character_controller/collision/character_collision_system_globals.js
+var character_collision_system_globals_exports = {};
+__export(character_collision_system_globals_exports, {
+  getCharacterCollisionSystem: () => getCharacterCollisionSystem,
+  hasCharacterCollisionSystem: () => hasCharacterCollisionSystem,
+  removeCharacterCollisionSystem: () => removeCharacterCollisionSystem,
+  setCharacterCollisionSystem: () => setCharacterCollisionSystem
+});
+var _myCharacterCollisionSystems = /* @__PURE__ */ new WeakMap();
+function getCharacterCollisionSystem(engine = Globals.getMainEngine()) {
+  return _myCharacterCollisionSystems.get(engine);
+}
+function setCharacterCollisionSystem(characterCollisionSystem, engine = Globals.getMainEngine()) {
+  _myCharacterCollisionSystems.set(engine, characterCollisionSystem);
+}
+function removeCharacterCollisionSystem(engine = Globals.getMainEngine()) {
+  _myCharacterCollisionSystems.delete(engine);
+}
+function hasCharacterCollisionSystem(engine = Globals.getMainEngine()) {
+  return _myCharacterCollisionSystems.has(engine);
+}
+
+// dist/input/cauldron/input_globals.js
+var input_globals_exports = {};
+__export(input_globals_exports, {
+  getGamepad: () => getGamepad,
+  getGamepads: () => getGamepads,
+  getGamepadsManager: () => getGamepadsManager,
+  getHandPose: () => getHandPose,
+  getHandPoses: () => getHandPoses,
+  getHeadPose: () => getHeadPose,
+  getInputManager: () => getInputManager,
+  getKeyboard: () => getKeyboard,
+  getLeftGamepad: () => getLeftGamepad,
+  getLeftHandPose: () => getLeftHandPose,
+  getLeftTrackedHandPose: () => getLeftTrackedHandPose,
+  getMouse: () => getMouse,
+  getRightGamepad: () => getRightGamepad,
+  getRightHandPose: () => getRightHandPose,
+  getRightTrackedHandPose: () => getRightTrackedHandPose,
+  getTrackedHandPose: () => getTrackedHandPose,
+  getTrackedHandPoses: () => getTrackedHandPoses,
+  hasInputManager: () => hasInputManager,
+  hasPoseForwardFixed: () => hasPoseForwardFixed,
+  isPoseForwardFixed: () => isPoseForwardFixed,
+  removeInputManager: () => removeInputManager,
+  removePoseForwardFixed: () => removePoseForwardFixed,
+  setInputManager: () => setInputManager,
+  setPoseForwardFixed: () => setPoseForwardFixed
+});
+var _myInputManagers = /* @__PURE__ */ new WeakMap();
+var _myPoseForwardFixeds = /* @__PURE__ */ new WeakMap();
+function getInputManager(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const inputManager = _myInputManagers.get(engine);
+  return inputManager != null ? inputManager : null;
+}
+function setInputManager(inputManager, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myInputManagers.set(engine, inputManager);
+  }
+}
+function removeInputManager(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myInputManagers.delete(engine);
+  }
+}
+function hasInputManager(engine = Globals.getMainEngine()) {
+  return engine != null ? _myInputManagers.has(engine) : false;
+}
+function getMouse(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getMouse();
+  }
+  return null;
+}
+function getKeyboard(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getKeyboard();
+  }
+  return null;
+}
+function getGamepadsManager(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager();
+  }
+  return null;
+}
+function getGamepad(handedness, engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getGamepad(handedness);
+  }
+  return null;
+}
+function getGamepads(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getGamepads();
+  }
+  return null;
+}
+function getLeftGamepad(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getLeftGamepad();
+  }
+  return null;
+}
+function getRightGamepad(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getRightGamepad();
+  }
+  return null;
+}
+function getHeadPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getHeadPose();
+  }
+  return null;
+}
+function getHandPose(handedness, engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getHandPose(handedness);
+  }
+  return null;
+}
+function getHandPoses(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getHandPoses();
+  }
+  return null;
+}
+function getLeftHandPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getLeftHandPose();
+  }
+  return null;
+}
+function getRightHandPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getRightHandPose();
+  }
+  return null;
+}
+function getTrackedHandPose(handedness, engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getTrackedHandPose(handedness);
+  }
+  return null;
+}
+function getTrackedHandPoses(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getTrackedHandPoses();
+  }
+  return null;
+}
+function getLeftTrackedHandPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getLeftTrackedHandPose();
+  }
+  return null;
+}
+function getRightTrackedHandPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getRightTrackedHandPose();
+  }
+  return null;
+}
+function isPoseForwardFixed(engine = Globals.getMainEngine()) {
+  return engine != null ? !!_myPoseForwardFixeds.get(engine) : false;
+}
+function setPoseForwardFixed(toolEnabled, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myPoseForwardFixeds.set(engine, toolEnabled);
+  }
+}
+function removePoseForwardFixed(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myPoseForwardFixeds.delete(engine);
+  }
+}
+function hasPoseForwardFixed(engine = Globals.getMainEngine()) {
+  return engine != null ? _myPoseForwardFixeds.has(engine) : false;
+}
+
+// dist/tool/cauldron/tool_globals.js
+var tool_globals_exports = {};
+__export(tool_globals_exports, {
+  hasToolEnabled: () => hasToolEnabled,
+  isToolEnabled: () => isToolEnabled,
+  removeToolEnabled: () => removeToolEnabled,
+  setToolEnabled: () => setToolEnabled
+});
+var _myToolEnableds = /* @__PURE__ */ new WeakMap();
+function isToolEnabled(engine = Globals.getMainEngine()) {
+  return _myToolEnableds.get(engine);
+}
+function setToolEnabled(toolEnabled, engine = Globals.getMainEngine()) {
+  _myToolEnableds.set(engine, toolEnabled);
+}
+function removeToolEnabled(engine = Globals.getMainEngine()) {
+  _myToolEnableds.delete(engine);
+}
+function hasToolEnabled(engine = Globals.getMainEngine()) {
+  return _myToolEnableds.has(engine);
+}
+
+// dist/tool/console_vr/console_vr_globals.js
+var console_vr_globals_exports = {};
+__export(console_vr_globals_exports, {
+  getConsoleVR: () => getConsoleVR,
+  hasConsoleVR: () => hasConsoleVR,
+  removeConsoleVR: () => removeConsoleVR,
+  setConsoleVR: () => setConsoleVR
+});
+var _myConsoleVRs = /* @__PURE__ */ new WeakMap();
+function getConsoleVR(engine = Globals.getMainEngine()) {
+  return _myConsoleVRs.get(engine);
+}
+function setConsoleVR(consoleVR, engine = Globals.getMainEngine()) {
+  _myConsoleVRs.set(engine, consoleVR);
+}
+function removeConsoleVR(engine = Globals.getMainEngine()) {
+  _myConsoleVRs.delete(engine);
+}
+function hasConsoleVR(engine = Globals.getMainEngine()) {
+  return _myConsoleVRs.has(engine);
+}
+
+// dist/tool/easy_tune/easy_tune_globals.js
+var easy_tune_globals_exports = {};
+__export(easy_tune_globals_exports, {
+  getEasyTuneTarget: () => getEasyTuneTarget,
+  getEasyTuneVariables: () => getEasyTuneVariables,
+  hasEasyTuneTarget: () => hasEasyTuneTarget,
+  hasEasyTuneVariables: () => hasEasyTuneVariables,
+  removeEasyTuneTarget: () => removeEasyTuneTarget,
+  removeEasyTuneVariables: () => removeEasyTuneVariables,
+  setEasyTuneTarget: () => setEasyTuneTarget,
+  setEasyTuneVariables: () => setEasyTuneVariables
+});
+var _myEasyTuneVariablesList = /* @__PURE__ */ new WeakMap();
+var _myEasyTuneTargets = /* @__PURE__ */ new WeakMap();
+function getEasyTuneVariables(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const easyTuneVariables = _myEasyTuneVariablesList.get(engine);
+  return easyTuneVariables != null ? easyTuneVariables : null;
+}
+function setEasyTuneVariables(easyTuneVariables, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myEasyTuneVariablesList.set(engine, easyTuneVariables);
+  }
+}
+function removeEasyTuneVariables(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myEasyTuneVariablesList.delete(engine);
+  }
+}
+function hasEasyTuneVariables(engine = Globals.getMainEngine()) {
+  return engine != null ? _myEasyTuneVariablesList.has(engine) : false;
+}
+function getEasyTuneTarget(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const easyTuneTarget = _myEasyTuneTargets.get(engine);
+  return easyTuneTarget != null ? easyTuneTarget : null;
+}
+function setEasyTuneTarget(easyTuneTarget, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myEasyTuneTargets.set(engine, easyTuneTarget);
+  }
+}
+function removeEasyTuneTarget(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myEasyTuneTargets.delete(engine);
+  }
+}
+function hasEasyTuneTarget(engine = Globals.getMainEngine()) {
+  return engine != null ? _myEasyTuneTargets.has(engine) : false;
+}
+
+// dist/pp/globals.js
+var Globals = {
+  ...engine_globals_exports,
+  ...scene_objects_globals_exports,
+  ...default_resources_globals_exports,
+  ...audio_globals_exports,
+  ...visual_globals_exports,
+  ...debug_globals_exports,
+  ...object_pool_globals_exports,
+  ...character_collision_system_globals_exports,
+  ...input_globals_exports,
+  ...save_globals_exports,
+  ...analytics_globals_exports,
+  ...tool_globals_exports,
+  ...console_vr_globals_exports,
+  ...easy_tune_globals_exports
+};
+
+// dist/pp/components/pp_gateway_component.js
+import { Component as Component17, Property as Property13 } from "@wonderlandengine/api";
+
+// dist/audio/components/audio_manager_component.js
+import { Component, Property } from "@wonderlandengine/api";
+
+// dist/audio/audio_manager.js
+import { Howler as Howler2 } from "howler";
+
+// dist/audio/audio_player.js
+import { RetainEmitter } from "@wonderlandengine/api";
+import { Howl, Howler } from "howler";
+
+// dist/audio/audio_setup.js
+var AudioSetup = class _AudioSetup {
+  constructor(audioFilePath = null) {
+    this.myAudioFilePath = audioFilePath;
+    this.myLoop = false;
+    this.myAutoPlay = false;
+    this.myVolume = 1;
+    this._myRate = 1;
+    this.myPool = 5;
+    this.myPreload = true;
+    this.myPreventPlayWhenAudioContextNotRunning = false;
+    this.myPosition = null;
+    this.mySpatial = true;
+    this.myReferenceDistance = Number.MAX_VALUE;
+  }
+  clone() {
+    let audioSetup = new _AudioSetup();
+    audioSetup.myAudioFilePath = this.myAudioFilePath;
+    audioSetup.myLoop = this.myLoop;
+    audioSetup.myAutoPlay = this.myAutoPlay;
+    audioSetup.myVolume = this.myVolume;
+    audioSetup.myPitch = this.myPitch;
+    audioSetup.myRate = this.myRate;
+    audioSetup.myPool = this.myPool;
+    audioSetup.myPreload = this.myPreload;
+    audioSetup.myPreventPlayWhenAudioContextNotRunning = this.myPreventPlayWhenAudioContextNotRunning;
+    if (this.myPosition != null) {
+      audioSetup.myPosition = this.myPosition.vec3_clone();
+    } else {
+      audioSetup.myPosition = null;
+    }
+    audioSetup.mySpatial = this.mySpatial;
+    audioSetup.myReferenceDistance = this.myReferenceDistance;
+    return audioSetup;
+  }
+  get myPitch() {
+    return this._myRate;
+  }
+  get myRate() {
+    return this._myRate;
+  }
+  set myPitch(pitch) {
+    this._myRate = pitch;
+  }
+  set myRate(rate) {
+    this._myRate = rate;
+  }
+};
+
+// dist/audio/audio_player.js
+var AudioEvent = {
+  END: "end",
+  STOP: "stop",
+  LOAD: "load",
+  LOAD_ERROR: "loaderror",
+  PLAY: "play",
+  PLAY_ERROR: "playerror",
+  PAUSE: "pause",
+  MUTE: "mute",
+  VOLUME: "volume",
+  RATE: "rate",
+  SEEK: "seek",
+  FADE: "fade",
+  UNLOCK: "unlock"
+};
+var AudioPlayer = class {
+  /**
+   * TS type inference helper
+   *
+   * @param {any} audioInstance
+   */
+  constructor(audioSetupOrAudioFilePath, audioInstance = null) {
+    if (audioSetupOrAudioFilePath == null) {
+      this._myAudioSetup = new AudioSetup();
+    } else if (typeof audioSetupOrAudioFilePath == "string") {
+      this._myAudioSetup = new AudioSetup(audioSetupOrAudioFilePath);
+    } else {
+      this._myAudioSetup = audioSetupOrAudioFilePath.clone();
+    }
+    this._myAudio = null;
+    if (audioInstance == null) {
+      this._myAudio = new Howl({
+        src: [this._myAudioSetup.myAudioFilePath],
+        loop: this._myAudioSetup.myLoop,
+        volume: this._myAudioSetup.myVolume,
+        autoplay: false,
+        rate: this._myAudioSetup.myRate,
+        pool: this._myAudioSetup.myPool,
+        pos: this._myAudioSetup.mySpatial ? this._myAudioSetup.myPosition : null,
+        refDistance: this._myAudioSetup.myReferenceDistance,
+        preload: this._myAudioSetup.myPreload
+      });
+      this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
+    } else {
+      this._myAudio = audioInstance;
+    }
+    this._myLastAudioID = null;
+    this._myAudioEventEmitters = /* @__PURE__ */ new Map();
+    for (let eventKey in AudioEvent) {
+      this._myAudioEventEmitters.set(AudioEvent[eventKey], new RetainEmitter());
+    }
+    this._addListeners();
+    if (this._myAudioSetup.myAutoPlay) {
+      this.play();
+    }
+    this._myDestroyed = false;
+  }
+  isValid() {
+    return this._myAudio != null;
+  }
+  play() {
+    if (Howler.state != "running" && this._myAudioSetup.myPreventPlayWhenAudioContextNotRunning) {
+      return false;
+    }
+    let audioID = this._myAudio.play();
+    if (audioID != null) {
+      this._myLastAudioID = audioID;
+      this.updatePosition(this._myAudioSetup.myPosition, true);
+      this.updatePitch(this._myAudioSetup.myPitch, true);
+      this.updateVolume(this._myAudioSetup.myVolume, true);
+    }
+    return audioID != null;
+  }
+  stop() {
+    this._myAudio.stop();
+  }
+  pause() {
+    this._myAudio.pause();
+  }
+  resume() {
+    this._myAudio.play();
+  }
+  isPlaying(checkOnlyLast = false) {
+    let playing = false;
+    if (checkOnlyLast) {
+      playing = this._myAudio.playing(this._myLastAudioID);
+    } else {
+      playing = this._myAudio.playing();
+    }
+    return playing;
+  }
+  isLoaded() {
+    return this._myAudio.state() == "loaded";
+  }
+  fade(fromVolume, toVolume, duration, updateOnlyLast = true, setValueOnPlayer = true) {
+    if (setValueOnPlayer) {
+      this.setVolume(toVolume);
+    }
+    if (updateOnlyLast) {
+      this._myAudio.fade(fromVolume, toVolume, duration * 1e3, this._myLastAudioID);
+    } else {
+      this._myAudio.fade(fromVolume, toVolume, duration * 1e3);
+    }
+  }
+  isFading(checkOnlyLast = true) {
+    let fading = false;
+    if (checkOnlyLast) {
+      let lastSound = this._myAudio._soundById(this._myLastAudioID);
+      if (lastSound != null) {
+        fading = lastSound._fadeTo != null;
+      }
+    } else {
+      for (let sound of this._myAudio._sounds) {
+        if (sound._fadeTo != null) {
+          fading = true;
+          break;
+        }
+      }
+    }
+    return fading;
+  }
+  updatePosition(position, updateOnlyLast = true, setValueOnPlayer = true) {
+    if (setValueOnPlayer) {
+      this.setPosition(position);
+    }
+    if (this._myAudioSetup.mySpatial && position) {
+      if (updateOnlyLast) {
+        this._myAudio.pos(position[0], position[1], position[2], this._myLastAudioID);
+      } else {
+        this._myAudio.pos(position[0], position[1], position[2]);
+      }
+    }
+  }
+  updatePitch(pitch, updateOnlyLast = true, setValueOnPlayer = true) {
+    this.updateRate(pitch, updateOnlyLast, setValueOnPlayer);
+  }
+  updateRate(rate, updateOnlyLast = true, setValueOnPlayer = true) {
+    if (setValueOnPlayer) {
+      this.setRate(rate);
+    }
+    if (rate != null) {
+      if (updateOnlyLast) {
+        this._myAudio.rate(rate, this._myLastAudioID);
+      } else {
+        this._myAudio.rate(rate);
+      }
+    }
+  }
+  updateVolume(volume, updateOnlyLast = true, setValueOnPlayer = true) {
+    if (setValueOnPlayer) {
+      this.setVolume(volume);
+    }
+    if (volume != null) {
+      if (updateOnlyLast) {
+        this._myAudio.volume(volume, this._myLastAudioID);
+      } else {
+        this._myAudio.volume(volume);
+      }
+    }
+  }
+  setSpatial(spatial) {
+    this._myAudioSetup.mySpatial = spatial;
+  }
+  setPosition(position) {
+    this._myAudioSetup.myPosition = position;
+  }
+  setPitch(pitch) {
+    this._myAudioSetup.myPitch = pitch;
+  }
+  setRate(rate) {
+    this._myAudioSetup.myRate = rate;
+  }
+  setVolume(volume) {
+    this._myAudioSetup.myVolume = volume;
+  }
+  getDuration() {
+    return this._myAudio.duration();
+  }
+  getVolume() {
+    return this._myAudioSetup.myVolume;
+  }
+  getPitch() {
+    return this._myAudioSetup.myPitch;
+  }
+  getRate() {
+    return this._myAudioSetup.myRate;
+  }
+  registerAudioEventListener(audioEvent, id, listener, notifyOnce = false, notifyIfAlreadyHappened = false) {
+    this._myAudioEventEmitters.get(audioEvent).add(listener, { id, once: notifyOnce, immediate: notifyIfAlreadyHappened });
+  }
+  unregisterAudioEventListener(audioEvent, id) {
+    this._myAudioEventEmitters.get(audioEvent).remove(id);
+  }
+  _addListeners() {
+    if (this._myAudio != null) {
+      for (let eventKey in AudioEvent) {
+        let event = AudioEvent[eventKey];
+        this._myAudio.on(event, function(audioID) {
+          let emitter = this._myAudioEventEmitters.get(event);
+          emitter.notify(audioID);
+        }.bind(this));
+      }
+    }
+  }
+  destroy() {
+    this._myDestroyed = true;
+    this._myAudio.unload();
+  }
+  isDestroyed() {
+    return this._myDestroyed;
+  }
+};
+
+// dist/audio/audio_manager.js
+var AudioManager = class {
+  constructor(preloadAudio = true, engine = Globals.getMainEngine()) {
+    this._myEngine = engine;
+    this._myPreloadAudio = preloadAudio;
+    this._myAudioSetups = /* @__PURE__ */ new Map();
+    this._myAudioPlayersCreatedForPreload = [];
+  }
+  createAudioPlayer(audioSetupID) {
+    let audioSetup = this.getAudioSetup(audioSetupID);
+    if (audioSetup != null) {
+      return new AudioPlayer(this.getAudioSetup(audioSetupID));
+    }
+    return null;
+  }
+  getAudioSetup(id) {
+    return this._myAudioSetups.get(id);
+  }
+  addAudioSetup(id, audioSetup, preloadAudioOverride = null) {
+    this._myAudioSetups.set(id, audioSetup);
+    if (this._myPreloadAudio && preloadAudioOverride == null || preloadAudioOverride != null && preloadAudioOverride) {
+      this._myAudioPlayersCreatedForPreload.push(this.createAudioPlayer(id));
+    }
+  }
+  removeAudioSetup(id) {
+    this._myAudioSetups.delete(id);
+  }
+  setVolume(volume) {
+    Howler2.volume(volume);
+  }
+  setMute(mute) {
+    Howler2.mute(mute);
+  }
+  stop() {
+    Howler2.stop();
+  }
+  unloadAllAudioSources() {
+    Howler2.unload();
+  }
+};
+
+// dist/audio/components/audio_manager_component.js
+var AudioManagerComponent = class extends Component {
+  static TypeName = "pp-audio-manager";
+  static Properties = {
+    _myPreloadAudio: Property.bool(false),
+    _myCleanUpAudioSourcesOnInit: Property.bool(false)
+  };
+  init() {
+    this._myAudioManager = null;
+    if (!Globals.hasAudioManager(this.engine)) {
+      this._myAudioManager = new AudioManager(this._myPreloadAudio, this.engine);
+      if (this._myCleanUpAudioSourcesOnInit) {
+        this._myAudioManager.unloadAllAudioSources();
+      }
+      Globals.setAudioManager(this._myAudioManager, this.engine);
+    }
+  }
+  onDestroy() {
+    if (this._myAudioManager != null && Globals.getAudioManager(this.engine) == this._myAudioManager) {
+      Globals.removeAudioManager(this.engine);
+    }
+  }
+};
+
+// dist/cauldron/cauldron/components/analytics_manager_component.js
+import { Component as Component2, Property as Property2 } from "@wonderlandengine/api";
+
+// dist/cauldron/utils/xr_utils.js
+function getSession(engine = Globals.getMainEngine()) {
+  let xr = Globals.getXR(engine);
+  return xr != null ? xr.session : null;
+}
+function getSessionMode(engine = Globals.getMainEngine()) {
+  let xr = Globals.getXR(engine);
+  return xr != null ? xr.sessionMode : null;
+}
+function getReferenceSpace(engine = Globals.getMainEngine()) {
+  let xr = Globals.getXR(engine);
+  return xr != null ? xr.currentReferenceSpace : null;
+}
+function getReferenceSpaceType(engine = Globals.getMainEngine()) {
+  let type = "local";
+  try {
+    let xr = Globals.getXR(engine);
+    type = xr != null ? xr.currentReferenceSpaceType : null;
+  } catch (error3) {
+  }
+  return type;
+}
+function getFrame(engine = Globals.getMainEngine()) {
+  let xr = Globals.getXR(engine);
+  return xr != null ? xr.frame : null;
+}
+function isSessionActive(engine = Globals.getMainEngine()) {
+  return XRUtils.getSession(engine) != null;
+}
+function isReferenceSpaceFloorBased(engine = Globals.getMainEngine()) {
+  return XRUtils.getReferenceSpaceType(engine).includes("floor");
+}
+function exitSession(engine = Globals.getMainEngine()) {
+  let xrSession = XRUtils.getSession(engine);
+  if (xrSession != null) {
+    xrSession.end();
+  }
+}
+function registerSessionStartEventListener(id, listener, manuallyCallSessionStartIfSessionAlreadyActive = true, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
+  if (listener != null) {
+    if (addManualCallFlagToStartListener) {
+      engine.onXRSessionStart.add(listener.bind(void 0, false), { id, immediate: false });
+    } else {
+      engine.onXRSessionStart.add(listener, { id, immediate: false });
+    }
+    if (manuallyCallSessionStartIfSessionAlreadyActive && XRUtils.isSessionActive(engine)) {
+      if (addManualCallFlagToStartListener) {
+        listener(true, XRUtils.getSession(engine), XRUtils.getSessionMode(engine));
+      } else {
+        listener(XRUtils.getSession(engine), XRUtils.getSessionMode(engine));
+      }
+    }
+  }
+}
+function unregisterSessionStartEventListener(id, engine = Globals.getMainEngine()) {
+  engine.onXRSessionStart.remove(id);
+}
+function registerSessionEndEventListener(id, listener, engine = Globals.getMainEngine()) {
+  if (listener != null) {
+    engine.onXRSessionEnd.add(listener, { id });
+  }
+}
+function unregisterSessionEndEventListener(id, engine = Globals.getMainEngine()) {
+  return engine.onXRSessionEnd.remove(id);
+}
+function registerSessionStartEndEventListeners(id, startListener, endListener, manuallyCallSessionStartIfSessionAlreadyActive = true, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
+  XRUtils.registerSessionEndEventListener(id, endListener, engine);
+  XRUtils.registerSessionStartEventListener(id, startListener, manuallyCallSessionStartIfSessionAlreadyActive, addManualCallFlagToStartListener, engine);
+}
+function unregisterSessionStartEndEventListeners(id, engine = Globals.getMainEngine()) {
+  XRUtils.unregisterSessionEndEventListener(id, engine);
+  XRUtils.unregisterSessionStartEventListener(id, engine);
+}
+function isXRSupported(engine = Globals.getMainEngine()) {
+  return XRUtils.isVRSupported(engine) || XRUtils.isARSupported(engine);
+}
+function isVRSupported(engine = Globals.getMainEngine()) {
+  return engine.vrSupported;
+}
+function isARSupported(engine = Globals.getMainEngine()) {
+  return engine.arSupported;
+}
+function isDeviceEmulated(onlyOnLocalhost = true) {
+  let emulated = window.CustomWebXRPolyfill != null && (!onlyOnLocalhost || BrowserUtils.isLocalhost());
+  return emulated;
+}
+var XRUtils = {
+  getSession,
+  getSessionMode,
+  getReferenceSpace,
+  getReferenceSpaceType,
+  getFrame,
+  isSessionActive,
+  exitSession,
+  registerSessionStartEventListener,
+  unregisterSessionStartEventListener,
+  registerSessionEndEventListener,
+  unregisterSessionEndEventListener,
+  registerSessionStartEndEventListeners,
+  unregisterSessionStartEndEventListeners,
+  isReferenceSpaceFloorBased,
+  isXRSupported,
+  isVRSupported,
+  isARSupported,
+  isDeviceEmulated
+};
+
+// dist/cauldron/utils/browser_utils.js
+var isMobile = function() {
+  let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
+  return function isMobile2() {
+    let userAgent = navigator.userAgent;
+    return userAgent != null && userAgent.match(checkMobileRegex) != null;
+  };
+}();
+function isDesktop() {
+  return !BrowserUtils.isMobile();
+}
+var isLocalhost = function() {
+  let localhostRegex = new RegExp("(localhost|127\\.0\\.0\\.1)(:(\\d{4}))?");
+  return function isLocalhost2(port = null, isRegex = false) {
+    let isLocalhost3 = false;
+    let localhostMatch = window.location.origin.match(localhostRegex);
+    if (localhostMatch != null) {
+      if (port == null) {
+        isLocalhost3 = true;
+      } else if (localhostMatch.length >= 4 && localhostMatch[3] != null) {
+        let portMatch = localhostMatch[3];
+        if (isRegex) {
+          isLocalhost3 = portMatch.match(port) != null;
+        } else {
+          isLocalhost3 = portMatch == port;
+        }
+      }
+    }
+    return isLocalhost3;
+  };
+}();
+function openLink(url, newTab = true, exitXRSessionBeforeOpen = true, exitXRSessionOnSuccess = true, tryOpenLinkOnClickOnFailure = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
+  let element = document.createElement("a");
+  element.style.display = "none";
+  document.body.appendChild(element);
+  element.addEventListener("click", function() {
+    let targetPage = void 0;
+    if (newTab) {
+      targetPage = "_blank";
+    } else {
+      targetPage = "_top";
+    }
+    let result = window.open(url, targetPage);
+    if (result != null) {
+      if (!exitXRSessionBeforeOpen && exitXRSessionOnSuccess) {
+        XRUtils.exitSession(engine);
+      }
+      if (onSuccessCallback != null) {
+        onSuccessCallback();
+      }
+    } else {
+      if (tryOpenLinkOnClickOnFailure) {
+        setTimeout(function() {
+          BrowserUtils.openLinkOnClick(url, newTab, exitXRSessionOnSuccess, onSuccessCallback, onFailureCallback);
+        }, 100);
+      } else if (onFailureCallback != null) {
+        onFailureCallback();
+      }
+    }
+  });
+  if (exitXRSessionBeforeOpen) {
+    XRUtils.exitSession(engine);
+  }
+  element.click();
+  document.body.removeChild(element);
+}
+function openLinkOnClick(url, newTab = true, exitXRSessionOnSuccess = true, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
+  document.addEventListener("click", function() {
+    let targetPage = void 0;
+    if (newTab) {
+      targetPage = "_blank";
+    } else {
+      targetPage = "_top";
+    }
+    let result = window.open(url, targetPage);
+    if (result != null) {
+      if (exitXRSessionOnSuccess) {
+        XRUtils.exitSession(engine);
+      }
+      if (onSuccessCallback != null) {
+        onSuccessCallback();
+      }
+    } else {
+      if (onFailureCallback != null) {
+        onFailureCallback();
+      }
+    }
+  }, { once: true });
+}
+var BrowserUtils = {
+  isMobile,
+  isDesktop,
+  isLocalhost,
+  openLink,
+  openLinkOnClick
+};
+
+// dist/cauldron/cauldron/analytics_manager.js
+var AnalyticsManager = class {
+  constructor() {
+    this._myAnalyticsEnabled = true;
+    this._mySendDataCallback = null;
+    this._myDefaultEventCooldown = 0;
+    this._myEventCooldowns = /* @__PURE__ */ new Map();
+    this._myDataLogEnabled = false;
+    this._myEventsLogEnabled = false;
+    this._myErrorsLogEnabled = false;
+  }
+  update(dt) {
+    if (this._myEventCooldowns.size > 0) {
+      let eventNamesToUpdateCooldown = this._myEventCooldowns.keys();
+      for (let eventName of eventNamesToUpdateCooldown) {
+        let newCooldown = this._myEventCooldowns.get(eventName) - dt;
+        if (newCooldown <= 0) {
+          this._myEventCooldowns.delete(eventName);
+        } else {
+          this._myEventCooldowns.set(eventName, newCooldown);
+        }
+      }
+    }
+  }
+  setAnalyticsEnabled(enabled) {
+    this._myAnalyticsEnabled = enabled;
+  }
+  isAnalyticsEnabled() {
+    return this._myAnalyticsEnabled;
+  }
+  setSendDataCallback(callback) {
+    this._mySendDataCallback = callback;
+  }
+  sendData(...args) {
+    let dataSent = false;
+    try {
+      if (this._myAnalyticsEnabled) {
+        if (this._myDataLogEnabled) {
+          console.log("Analytics Data: " + args);
+        }
+        if (this._mySendDataCallback != null) {
+          this._mySendDataCallback(...args);
+          dataSent = true;
+        } else if (this._myErrorsLogEnabled) {
+          console.error("Analytics Error: You need to set the send data callback");
+        } else {
+          console.warn("Analytics Error: You need to set the send data callback");
+        }
+      }
+    } catch (error3) {
+      if (this._myErrorsLogEnabled) {
+        console.error(error3);
+      }
+      dataSent = false;
+    }
+    return dataSent;
+  }
+  sendEvent(eventName, value = null) {
+    let eventSent = false;
+    try {
+      if (this._myAnalyticsEnabled) {
+        if (this._myEventsLogEnabled) {
+          if (value != null) {
+            console.log("Analytics Event: " + eventName + " - Value: " + value);
+          } else {
+            console.log("Analytics Event: " + eventName);
+          }
+        }
+        if (this._mySendDataCallback != null) {
+          if (value != null) {
+            this._mySendDataCallback("event", eventName, { "value": value });
+          } else {
+            this._mySendDataCallback("event", eventName);
+          }
+          eventSent = true;
+        } else if (this._myErrorsLogEnabled) {
+          console.error("Analytics Error: You need to set the send data callback");
+        } else {
+          console.warn("Analytics Error: You need to set the send data callback");
+        }
+      }
+    } catch (error3) {
+      if (this._myErrorsLogEnabled) {
+        console.error(error3);
+      }
+      eventSent = false;
+    }
+    return eventSent;
+  }
+  sendEventOnce(eventName, value = null) {
+    if (this._myAnalyticsEnabled) {
+      if (!this.hasEventAlreadyBeenSent(eventName)) {
+        let eventSent = this.sendEvent(eventName, value, true);
+        if (eventSent) {
+          this._myEventsSentOnce.pp_pushUnique(eventName);
+        }
+      }
+    }
+  }
+  clearEventSentOnceState(eventName) {
+    this._myEventsSentOnce.pp_removeEqual(eventName);
+  }
+  clearAllEventsSentOnceState() {
+    this._myEventsSentOnce.pp_clear();
+  }
+  hasEventAlreadyBeenSent(eventName) {
+    return this._myEventsSentOnce.pp_hasEqual(eventName);
+  }
+  getEventsAlreadyBeenSent() {
+    return this._myEventsSentOnce;
+  }
+  sendEventWithCooldown(eventName, value = null, cooldownSeconds = this._myDefaultEventCooldown) {
+    if (this._myAnalyticsEnabled) {
+      if (this.getEventCooldown(eventName) <= 0) {
+        let eventSent = this.sendEvent(eventName, value, true);
+        if (eventSent) {
+          this._myEventCooldowns.set(eventName, cooldownSeconds);
+        }
+      }
+    }
+  }
+  getDefaultEventCooldown() {
+    return this._myDefaultEventCooldown;
+  }
+  setDefaultEventCooldown(cooldownSeconds) {
+    this._myDefaultEventCooldown = cooldownSeconds;
+  }
+  clearEventCooldown(eventName) {
+    this._myEventCooldowns.delete(eventName);
+  }
+  clearAllEventCooldowns() {
+    this._myEventCooldowns.clear();
+  }
+  getEventCooldown(eventName) {
+    let eventCooldown = this._myEventCooldowns.get(eventName);
+    if (eventCooldown != null) {
+      return eventCooldown;
+    }
+    return 0;
+  }
+  getEventCooldowns() {
+    return this._myEventCooldowns;
+  }
+  setDataLogEnabled(enabled) {
+    this._myDataLogEnabled = enabled;
+  }
+  isDataLogEnabled() {
+    return this._myDataLogEnabled;
+  }
+  setEventsLogEnabled(enabled) {
+    this._myEventsLogEnabled = enabled;
+  }
+  isEventsLogEnabled() {
+    return this._myEventsLogEnabled;
+  }
+  setErrorsLogEnabled(enabled) {
+    this._myErrorsLogEnabled = enabled;
+  }
+  isErrorsLogEnabled() {
+    return this._myErrorsLogEnabled;
+  }
+};
+
+// dist/cauldron/cauldron/components/analytics_manager_component.js
+var AnalyticsManagerComponent = class extends Component2 {
+  static TypeName = "pp-analytics-manager";
+  static Properties = {
+    _myDisableAnalyticsOnLocalhost: Property2.bool(true)
+  };
+  init() {
+    this._myAnalyticsManager = null;
+    if (!Globals.hasAnalyticsManager(this.engine)) {
+      this._myAnalyticsManager = new AnalyticsManager();
+      if (BrowserUtils.isLocalhost() && this._myDisableAnalyticsOnLocalhost) {
+        this._myAnalyticsManager.setAnalyticsEnabled(false);
+      }
+      Globals.setAnalyticsManager(this._myAnalyticsManager, this.engine);
+    }
+  }
+  update(dt) {
+    if (this._myAnalyticsManager != null) {
+      this._myAnalyticsManager.update(dt);
+    }
+  }
+  onDestroy() {
+    if (this._myAnalyticsManager != null && Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
+      Globals.removeAnalyticsManager(this.engine);
+    }
+  }
+};
+
+// dist/cauldron/cauldron/components/save_manager_component.js
+import { Component as Component3, Property as Property3 } from "@wonderlandengine/api";
+
+// dist/cauldron/cauldron/save_manager.js
+import { Emitter as Emitter2 } from "@wonderlandengine/api";
+
+// dist/cauldron/utils/save_utils.js
+function save(id, value) {
+  if (value != null) {
+    localStorage.setItem(id, value);
+  }
+}
+function has(id) {
+  return SaveUtils.loadString(id, null) != null;
+}
+function remove(id) {
+  return localStorage.removeItem(id);
+}
+function clear() {
+  return localStorage.clear();
+}
+function load(id, defaultValue = null) {
+  return SaveUtils.loadString(id, defaultValue);
+}
+function loadString(id, defaultValue = null) {
+  const item = localStorage.getItem(id);
+  if (item != null) {
+    return item;
+  }
+  return defaultValue;
+}
+function loadNumber(id, defaultValue = null) {
+  const item = SaveUtils.loadString(id);
+  if (item != null) {
+    return Number(item);
+  }
+  return defaultValue;
+}
+function loadBool(id, defaultValue = null) {
+  const item = SaveUtils.loadString(id);
+  if (item == "true") {
+    return true;
+  } else if (item == "false") {
+    return false;
+  }
+  return defaultValue;
+}
+function loadObject(id, defaultValue = null) {
+  const item = SaveUtils.loadString(id);
+  if (item != null) {
+    try {
+      const parsedValue = JSON.parse(item);
+      if (parsedValue.constructor == Object) {
+        return parsedValue;
+      }
+    } catch (error3) {
+    }
+  }
+  return defaultValue;
+}
+function loadArray(id, defaultValue = null) {
+  const item = SaveUtils.loadString(id);
+  if (item != null) {
+    try {
+      const parsedValue = JSON.parse(item);
+      if (Array.isArray(parsedValue)) {
+        return parsedValue;
+      }
+    } catch (error3) {
+    }
+  }
+  return defaultValue;
+}
+var SaveUtils = {
+  save,
+  has,
+  remove,
+  clear,
+  load,
+  loadString,
+  loadNumber,
+  loadBool,
+  loadObject,
+  loadArray
+};
+
+// dist/cauldron/cauldron/timer.js
+import { Emitter } from "@wonderlandengine/api";
+var Timer = class {
+  constructor(duration, autoStart = true) {
+    this._myDuration = duration;
+    this._myOnEndEmitter = new Emitter();
+    this._myDone = false;
+    this._myJustDone = false;
+    this._myStarted = false;
+    if (autoStart) {
+      this.start();
+    } else {
+      this.reset();
+    }
+  }
+  start(duration = null) {
+    this.reset(duration);
+    this._myStarted = true;
+  }
+  end() {
+    this._done();
+  }
+  reset(duration = null) {
+    if (duration != null) {
+      this._myDuration = Math.max(0, duration);
+    }
+    this._myTimeLeft = this._myDuration;
+    this._myDone = false;
+    this._myJustDone = false;
+    this._myStarted = false;
+  }
+  update(dt) {
+    this._myJustDone = false;
+    if (this.isRunning()) {
+      this._myTimeLeft = Math.max(0, this._myTimeLeft - dt);
+      if (this._myTimeLeft == 0) {
+        this._done();
+      }
+    }
+  }
+  isDone() {
+    return this._myDone;
+  }
+  isJustDone() {
+    return this._myJustDone;
+  }
+  isStarted() {
+    return this._myStarted;
+  }
+  isRunning() {
+    return this.isStarted() && !this.isDone();
+  }
+  getDuration() {
+    return this._myDuration;
+  }
+  setDuration(duration) {
+    const newDuration = Math.max(0, duration);
+    if (this.isRunning()) {
+      const timeElapsed = Math.max(0, this._myDuration - this._myTimeLeft);
+      this._myTimeLeft = Math.max(0, newDuration - timeElapsed);
+    }
+    this._myDuration = newDuration;
+  }
+  getTimeLeft() {
+    return this._myTimeLeft;
+  }
+  setTimeLeft(timeLeft) {
+    if (this.isRunning()) {
+      this._myTimeLeft = Math.max(0, timeLeft);
+      if (this._myTimeLeft > this._myDuration) {
+        this._myDuration = this._myTimeLeft;
+      }
+    }
+  }
+  getTimeElapsed() {
+    let timeElapsed = 0;
+    if (this.isRunning()) {
+      timeElapsed = this._myDuration - this._myTimeLeft;
+    }
+    return Math.max(0, timeElapsed);
+  }
+  setTimeElapsed(timeElapsed) {
+    this.setTimeLeft(this._myDuration - Math.max(0, timeElapsed));
+  }
+  getPercentage() {
+    let percentage = 1;
+    if (this._myTimeLeft > 0 && this._myDuration > 0) {
+      percentage = (this._myDuration - this._myTimeLeft) / this._myDuration;
+    }
+    return Math.pp_clamp(percentage, 0, 1);
+  }
+  setPercentage(percentage) {
+    if (this.isRunning()) {
+      let durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
+      this._myTimeLeft = this._myDuration * durationPercentage;
+    }
+  }
+  onEnd(listener, id = null) {
+    this._myOnEndEmitter.add(listener, { id });
+  }
+  unregisterOnEnd(id = null) {
+    this._myOnEndEmitter.remove(id);
+  }
+  _done() {
+    this._myTimeLeft = 0;
+    this._myDone = true;
+    this._myJustDone = true;
+    this._myOnEndEmitter.notify();
+  }
+};
+
+// dist/cauldron/cauldron/save_manager.js
+var SaveManager = class {
+  constructor(saveID, autoLoadSaves = true, engine = Globals.getMainEngine()) {
+    this._myEngine = engine;
+    this._mySaveID = saveID;
+    this._myCommitSavesDelayTimer = new Timer(0, false);
+    this._myDelaySavesCommit = true;
+    this._myCommitSavesDirty = false;
+    this._myCommitSavesDirtyClearOnFail = true;
+    this._myCommitSavesOnInterrupt = true;
+    this._myCommitSavesWhenLoadSavesFailed = false;
+    this._myResetSaveObjectOnLoadSavesFail = false;
+    this._mySaveObject = {};
+    this._myLoadSavesSucceded = false;
+    this._mySaveObjectLoadedOnce = false;
+    this._myAtLeastOneValueSavedOnce = false;
+    this._myClearEmitter = new Emitter2();
+    this._myDeleteEmitter = new Emitter2();
+    this._myDeleteIDEmitters = /* @__PURE__ */ new Map();
+    this._mySaveEmitter = new Emitter2();
+    this._mySaveValueChangedEmitter = new Emitter2();
+    this._mySaveIDEmitters = /* @__PURE__ */ new Map();
+    this._mySaveValueChangedIDEmitters = /* @__PURE__ */ new Map();
+    this._myCommitSavesEmitter = new Emitter2();
+    this._myLoadEmitter = new Emitter2();
+    this._myLoadIDEmitters = /* @__PURE__ */ new Map();
+    this._myLoadSavesEmitter = new Emitter2();
+    if (autoLoadSaves) {
+      this.loadSaves();
+    }
+    this._myXRVisibilityChangeEventListener = null;
+    XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
+    this._myWindowVisibilityChangeEventListener = function() {
+      if (document.visibilityState != "visible") {
+        this._onInterrupt();
+      }
+    }.bind(this);
+    window.addEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
+    this._myDestroyed = false;
+  }
+  setCommitSavesDelay(delay) {
+    this._myCommitSavesDelayTimer.start(delay);
+  }
+  setDelaySavesCommit(delayed) {
+    this._myDelaySavesCommit = delayed;
+  }
+  setCommitSavesDirty(dirty, startDelayTimer = true) {
+    this._myCommitSavesDirty = dirty;
+    if (dirty && startDelayTimer) {
+      if (!this.startDelayTimer.isRunning()) {
+        this._myCommitSavesDelayTimer.start();
+      }
+    } else {
+      this._myCommitSavesDelayTimer.reset();
+    }
+  }
+  setCommitSavesDirtyClearOnFail(clearOnFail) {
+    this._myCommitSavesDirtyClearOnFail = clearOnFail;
+  }
+  setCommitSavesOnInterrupt(commitSavesOnInterrupt) {
+    this._myCommitSavesOnInterrupt = commitSavesOnInterrupt;
+  }
+  setCommitSavesWhenLoadSavesFailed(commitSavesWhenLoadSavesFailed) {
+    this._myCommitSavesWhenLoadSavesFailed = commitSavesWhenLoadSavesFailed;
+  }
+  setResetSaveObjectOnLoadSavesFail(resetSaveObjectOnLoadSavesFail) {
+    this._myResetSaveObjectOnLoadSavesFail = resetSaveObjectOnLoadSavesFail;
+  }
+  getCommitSavesDelay() {
+    return this._myCommitSavesDelayTimer.getDuration();
+  }
+  isDelaySavesCommit() {
+    return this._myDelaySavesCommit;
+  }
+  isCommitSavesDirty() {
+    return this._myCommitSavesDirty;
+  }
+  isCommitSavesDirtyClearOnFail() {
+    return this._myCommitSavesDirtyClearOnFail;
+  }
+  isCommitSavesOnInterrupt() {
+    return this._myCommitSavesOnInterrupt;
+  }
+  isCommitSavesWhenLoadSavesFailed() {
+    return this._myCommitSavesWhenLoadSavesFailed;
+  }
+  isResetSaveObjectOnLoadSavesFail() {
+    return this._myResetSaveObjectOnLoadSavesFail;
+  }
+  hasLoadSavesSucceded() {
+    return this._myLoadSavesSucceded;
+  }
+  update(dt) {
+    if (this._myCommitSavesDelayTimer.isRunning()) {
+      this._myCommitSavesDelayTimer.update(dt);
+      if (this._myCommitSavesDelayTimer.isDone()) {
+        if (this._myCommitSavesDirty) {
+          this._commitSaves();
+        }
+      }
+    } else {
+      if (this._myCommitSavesDirty) {
+        this._commitSaves();
+      }
+    }
+  }
+  has(id) {
+    return id in this._mySaveObject;
+  }
+  save(id, value, overrideDelaySavesCommit = null) {
+    let sameValue = false;
+    if (this.has(id)) {
+      sameValue = this._mySaveObject[id] === value;
+    }
+    if (!sameValue) {
+      this._mySaveObject[id] = value;
+      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
+        this._myCommitSavesDirty = true;
+        if (!this._myCommitSavesDelayTimer.isRunning()) {
+          this._myCommitSavesDelayTimer.start();
+        }
+      } else {
+        this._commitSaves();
+      }
+    }
+    this._myAtLeastOneValueSavedOnce = true;
+    this._mySaveEmitter.notify(id, value);
+    if (this._mySaveIDEmitters.size > 0) {
+      let emitter = this._mySaveIDEmitters.get(id);
+      if (emitter != null) {
+        emitter.notify(id, value);
+      }
+    }
+    if (!sameValue) {
+      this._mySaveValueChangedEmitter.notify(id, value);
+      if (this._mySaveValueChangedIDEmitters.size > 0) {
+        let emitter = this._mySaveValueChangedIDEmitters.get(id);
+        if (emitter != null) {
+          emitter.notify(id, value);
+        }
+      }
+    }
+  }
+  delete(id, overrideDelaySavesCommit = null) {
+    if (this.has(id)) {
+      delete this._mySaveObject[id];
+      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
+        this._myCommitSavesDirty = true;
+        if (!this._myCommitSavesDelayTimer.isRunning()) {
+          this._myCommitSavesDelayTimer.start();
+        }
+      } else {
+        this._commitSaves();
+      }
+    }
+    this._myAtLeastOneValueSavedOnce = true;
+    this._myDeleteEmitter.notify(id);
+    if (this._myDeleteIDEmitters.size > 0) {
+      let emitter = this._myDeleteIDEmitters.get(id);
+      if (emitter != null) {
+        emitter.notify(id);
+      }
+    }
+  }
+  clear(overrideDelaySavesCommit = null) {
+    if (Object.keys(this._mySaveObject).length > 0) {
+      this._mySaveObject = {};
+      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
+        this._myCommitSavesDirty = true;
+        if (!this._myCommitSavesDelayTimer.isRunning()) {
+          this._myCommitSavesDelayTimer.start();
+        }
+      } else {
+        this._commitSaves();
+      }
+    }
+    this._myAtLeastOneValueSavedOnce = true;
+    this._myClearEmitter.notify();
+  }
+  load(id, defaultValue) {
+    let value = this._mySaveObject[id];
+    if (value == null && defaultValue != null) {
+      value = defaultValue;
+    }
+    this._myLoadEmitter.notify(id, value);
+    if (this._myLoadIDEmitters.size > 0) {
+      let emitter = this._myLoadIDEmitters.get(id);
+      if (emitter != null) {
+        emitter.notify(id, value);
+      }
+    }
+    return value;
+  }
+  commitSaves(commitSavesOnlyIfDirty = true) {
+    if (this._myCommitSavesDirty || !commitSavesOnlyIfDirty) {
+      this._commitSaves();
+    }
+  }
+  _commitSaves() {
+    let succeded = true;
+    if (this._myLoadSavesSucceded || this._myCommitSavesWhenLoadSavesFailed) {
+      try {
+        let saveObjectStringified = JSON.stringify(this._mySaveObject);
+        SaveUtils.save(this._mySaveID, saveObjectStringified);
+      } catch (error3) {
+        succeded = false;
+      }
+    }
+    if (succeded || this._myCommitSavesDirtyClearOnFail) {
+      this._myCommitSavesDirty = false;
+      this._myCommitSavesDelayTimer.reset();
+    }
+    this._myCommitSavesEmitter.notify(succeded);
+    return succeded;
+  }
+  loadSaves() {
+    let saveObject = {};
+    let loadSavesSucceded = false;
+    let saveObjectReset = false;
+    let maxLoadObjectAttempts = 3;
+    do {
+      try {
+        saveObject = SaveUtils.loadObject(this._mySaveID, {});
+        loadSavesSucceded = true;
+      } catch (error3) {
+        maxLoadObjectAttempts--;
+      }
+    } while (maxLoadObjectAttempts > 0 && !loadSavesSucceded);
+    if (loadSavesSucceded) {
+      this._mySaveObject = saveObject;
+      this._myLoadSavesSucceded = true;
+    } else if (this._myResetSaveObjectOnLoadSavesFail) {
+      this._mySaveObject = {};
+      this._myLoadSavesSucceded = false;
+      saveObjectReset = true;
+    }
+    this._mySaveObjectLoadedOnce = true;
+    this._myLoadSavesEmitter.notify(loadSavesSucceded, saveObjectReset);
+    return loadSavesSucceded;
+  }
+  _onXRSessionStart(session) {
+    this._myXRVisibilityChangeEventListener = function(event) {
+      if (event.session.visibilityState != "visible") {
+        this._onInterrupt();
+      }
+    }.bind(this);
+    session.addEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
+  }
+  _onXRSessionEnd() {
+    this._myXRVisibilityChangeEventListener = null;
+    this._onInterrupt();
+  }
+  _onInterrupt() {
+    if (this._myCommitSavesOnInterrupt && this._myCommitSavesDirty && (this._mySaveObjectLoadedOnce || this._myAtLeastOneValueSavedOnce)) {
+      this.commitSaves();
+    }
+  }
+  registerClearEventListener(listenerID, listener) {
+    this._myClearEmitter.add(listener, { id: listenerID });
+  }
+  unregisterClearEventListener(listenerID) {
+    this._myClearEmitter.remove(listenerID);
+  }
+  registerDeleteEventListener(listenerID, listener) {
+    this._myDeleteEmitter.add(listener, { id: listenerID });
+  }
+  unregisterDeleteEventListener(listenerID) {
+    this._myDeleteEmitter.remove(listenerID);
+  }
+  registerDeleteIDEventListener(valueID, listenerID, listener) {
+    let valueIDEmitter = this._myDeleteIDEmitters.get(valueID);
+    if (valueIDEmitter == null) {
+      this._myDeleteIDEmitters.set(valueID, /* @__PURE__ */ new Map());
+      valueIDEmitter = this._myDeleteIDEmitters.get(valueID);
+    }
+    valueIDEmitter.add(listener, { id: listenerID });
+  }
+  unregisterDeleteIDEventListener(valueID, listenerID) {
+    let valueIDEmitter = this._myDeleteIDEmitters.get(valueID);
+    if (valueIDEmitter != null) {
+      valueIDEmitter.remove(listenerID);
+      if (valueIDEmitter.size <= 0) {
+        this._myDeleteIDEmitters.delete(valueID);
+      }
+    }
+  }
+  registerSaveEventListener(listenerID, listener) {
+    this._mySaveEmitter.add(listener, { id: listenerID });
+  }
+  unregisterSaveEventListener(listenerID) {
+    this._mySaveEmitter.remove(listenerID);
+  }
+  registerSaveIDEventListener(valueID, listenerID, listener) {
+    let valueIDEmitter = this._mySaveIDEmitters.get(valueID);
+    if (valueIDEmitter == null) {
+      this._mySaveIDEmitters.set(valueID, /* @__PURE__ */ new Map());
+      valueIDEmitter = this._mySaveIDEmitters.get(valueID);
+    }
+    valueIDEmitter.add(listener, { id: listenerID });
+  }
+  unregisterSaveIDEventListener(valueID, listenerID) {
+    let valueIDEmitter = this._mySaveIDEmitters.get(valueID);
+    if (valueIDEmitter != null) {
+      valueIDEmitter.remove(listenerID);
+      if (valueIDEmitter.size <= 0) {
+        this._mySaveIDEmitters.delete(valueID);
+      }
+    }
+  }
+  registerSaveValueChangedEventListener(listenerID, listener) {
+    this._mySaveValueChangedEmitter.add(listener, { id: listenerID });
+  }
+  unregisterSaveValueChangedEventListener(listenerID) {
+    this._mySaveValueChangedEmitter.remove(listenerID);
+  }
+  registerSaveValueChangedIDEventListener(valueID, listenerID, listener) {
+    let valueIDEmitter = this._mySaveValueChangedIDEmitters.get(valueID);
+    if (valueIDEmitter == null) {
+      this._mySaveValueChangedIDEmitters.set(valueID, /* @__PURE__ */ new Map());
+      valueIDEmitter = this._mySaveValueChangedIDEmitters.get(valueID);
+    }
+    valueIDEmitter.add(listener, { id: listenerID });
+  }
+  unregisterSaveValueChangedIDEventListener(valueID, listenerID) {
+    let valueIDEmitter = this._mySaveValueChangedIDEmitters.get(valueID);
+    if (valueIDEmitter != null) {
+      valueIDEmitter.remove(listenerID);
+      if (valueIDEmitter.size <= 0) {
+        this._mySaveValueChangedIDEmitters.delete(valueID);
+      }
+    }
+  }
+  registerCommitSavesEventListener(listenerID, listener) {
+    this._myCommitSavesEmitter.add(listener, { id: listenerID });
+  }
+  unregisterCommitSavesEventListener(listenerID) {
+    this._myCommitSavesEmitter.remove(listenerID);
+  }
+  registerLoadEventListener(listenerID, listener) {
+    this._myLoadEmitter.add(listener, { id: listenerID });
+  }
+  unregisterLoadEventListener(listenerID) {
+    this._myLoadEmitter.remove(listenerID);
+  }
+  registerLoadIDEventListener(valueID, listenerID, listener) {
+    let valueIDEmitter = this._myLoadIDEmitters.get(valueID);
+    if (valueIDEmitter == null) {
+      this._myLoadIDEmitters.set(valueID, /* @__PURE__ */ new Map());
+      valueIDEmitter = this._myLoadIDEmitters.get(valueID);
+    }
+    valueIDEmitter.add(listener, { id: listenerID });
+  }
+  unregisterLoadIDEventListener(valueID, listenerID) {
+    let valueIDEmitter = this._myLoadIDEmitters.get(valueID);
+    if (valueIDEmitter != null) {
+      valueIDEmitter.remove(listenerID);
+      if (valueIDEmitter.size <= 0) {
+        this._myLoadIDEmitters.delete(valueID);
+      }
+    }
+  }
+  registerLoadSavesEventListener(listenerID, listener) {
+    this._myLoadSavesEmitter.add(listener, { id: listenerID });
+  }
+  unregisterLoadSavesEventListener(listenerID) {
+    this._myLoadSavesEmitter.remove(listenerID);
+  }
+  destroy() {
+    this._myDestroyed = true;
+    XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
+    XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+    window.removeEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
+  }
+  isDestroyed() {
+    return this._myDestroyed;
+  }
+};
+
+// dist/cauldron/cauldron/components/save_manager_component.js
+var SaveManagerComponent = class extends Component3 {
+  static TypeName = "pp-save-manager";
+  static Properties = {
+    _mySaveID: Property3.string(""),
+    _myAutoLoadSaves: Property3.bool(true)
+  };
+  init() {
+    this._mySaveManager = null;
+    if (this._mySaveID.length > 0 && !Globals.hasSaveManager(this.engine)) {
+      this._mySaveManager = new SaveManager(this._mySaveID, this._myAutoLoadSaves, this.engine);
+      Globals.setSaveManager(this._mySaveManager, this.engine);
+    }
+  }
+  update(dt) {
+    if (this._mySaveManager != null) {
+      this._mySaveManager.update(dt);
+    }
+  }
+  onDestroy() {
+    if (this._mySaveManager != null && Globals.getSaveManager(this.engine) == this._mySaveManager) {
+      Globals.removeSaveManager(this.engine);
+    }
+  }
+};
+
+// dist/cauldron/object_pool/components/object_pool_manager_component.js
+import { Component as Component4 } from "@wonderlandengine/api";
+
+// dist/cauldron/object_pool/object_pool_manager.js
+var ObjectPoolManager = class {
+  constructor() {
+    this._myPools = /* @__PURE__ */ new Map();
+    this._myDestroyed = false;
+  }
+  addPool(poolID, pool) {
+    if (!this._myPools.has(poolID)) {
+      this._myPools.set(poolID, pool);
+    } else {
+      console.warn("Trying to add a Pool with an ID that has been already used:", poolID);
+    }
+  }
+  destroyPool(poolID) {
+    let poolToRemove = this._myPools.get(poolID);
+    if (poolToRemove != null) {
+      this._myPools.delete(poolID);
+      poolToRemove.destroy();
+    }
+  }
+  getPool(poolID) {
+    return this._myPools.get(poolID);
+  }
+  hasPool(poolID) {
+    return this._myPools.has(poolID);
+  }
+  get(poolID) {
+    if (this._myPools.has(poolID)) {
+      return this._myPools.get(poolID).get();
+    }
+    return null;
+  }
+  has(poolIDOrObject, object = void 0) {
+    let hasObject = false;
+    if (object == null) {
+      for (let pool of this._myPools.values()) {
+        if (pool.has(poolIDOrObject)) {
+          hasObject = true;
+          break;
+        }
+      }
+    } else {
+      hasObject = this._myPools.get(poolIDOrObject).has(object);
+    }
+    return hasObject;
+  }
+  isBusy(poolIDOrObject, object = void 0) {
+    let busy = false;
+    if (object == null) {
+      for (let pool of this._myPools.values()) {
+        if (pool.isBusy(poolIDOrObject)) {
+          busy = true;
+          break;
+        }
+      }
+    } else {
+      busy = this._myPools.get(poolIDOrObject).isBusy(object);
+    }
+    return busy;
+  }
+  isAvailable(poolIDOrObject, object = void 0) {
+    let available = false;
+    if (object == null) {
+      for (let pool of this._myPools.values()) {
+        if (pool.isAvailable(poolIDOrObject)) {
+          available = true;
+          break;
+        }
+      }
+    } else {
+      available = this._myPools.get(poolIDOrObject).isAvailable(object);
+    }
+    return available;
+  }
+  release(poolIDOrObject, object = void 0) {
+    if (object == null) {
+      for (let pool of this._myPools.values()) {
+        pool.release(poolIDOrObject);
+      }
+    } else {
+      this._myPools.get(poolIDOrObject).release(object);
+    }
+  }
+  releaseAll(poolID = void 0) {
+    if (poolID == null) {
+      for (let pool of this._myPools.values()) {
+        pool.releaseAll();
+      }
+    } else {
+      this._myPools.get(poolID).releaseAll();
+    }
+  }
+  increase(poolID, amount) {
+    let pool = this._myPools.get(poolID);
+    if (pool) {
+      pool.increase(amount);
+    }
+  }
+  increasePercentage(poolID, percentage) {
+    let pool = this._myPools.get(poolID);
+    if (pool) {
+      pool.increasePercentage(percentage);
+    }
+  }
+  getSize(poolID) {
+    if (this._myPools.has(poolID)) {
+      return this._myPools.get(poolID).getSize();
+    }
+    return null;
+  }
+  getAvailableSize(poolID) {
+    if (this._myPools.has(poolID)) {
+      return this._myPools.get(poolID).getAvailableSize();
+    }
+    return null;
+  }
+  getBusySize(poolID) {
+    if (this._myPools.has(poolID)) {
+      return this._myPools.get(poolID).getBusySize();
+    }
+    return null;
+  }
+  destroy() {
+    this._myDestroyed = true;
+    for (let pool of this._myPools.values()) {
+      pool.destroy();
+    }
+  }
+  isDestroyed() {
+    return this._myDestroyed;
+  }
+};
+
+// dist/cauldron/object_pool/components/object_pool_manager_component.js
+var ObjectPoolManagerComponent = class extends Component4 {
+  static TypeName = "pp-object-pools-manager";
+  init() {
+    this._myObjectPoolManager = null;
+    if (!Globals.hasObjectPoolManager(this.engine)) {
+      this._myObjectPoolManager = new ObjectPoolManager();
+      Globals.setObjectPoolManager(this._myObjectPoolManager, this.engine);
+    }
+  }
+  onDestroy() {
+    if (this._myObjectPoolManager != null && Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+      Globals.removeObjectPoolManager(this.engine);
+    }
+  }
+};
+
+// dist/cauldron/visual/components/visual_manager_component.js
+import { Component as Component5 } from "@wonderlandengine/api";
+
+// dist/cauldron/utils/array/mat3_utils.js
+import { mat3 as gl_mat32, quat as gl_quat3 } from "gl-matrix";
+
+// dist/cauldron/utils/array/quat_utils.js
+import { mat3 as gl_mat3, quat as gl_quat } from "gl-matrix";
+
+// dist/cauldron/utils/math_utils.js
 var EasingFunction = {
   linear: (valueToEase) => valueToEase,
   easeInVeryWeak: (valueToEase) => 1 - Math.cos(valueToEase * Math.PI / 2),
@@ -585,10 +2591,10 @@ var EPSILON = 1e-6;
 var EPSILON_SQUARED = EPSILON * EPSILON;
 var EPSILON_DEGREES = 1e-5;
 function clamp(value, start, end) {
-  let fixedStart = start != null ? start : -Number.MAX_VALUE;
-  let fixedEnd = end != null ? end : Number.MAX_VALUE;
-  let min = Math.min(fixedStart, fixedEnd);
-  let max = Math.max(fixedStart, fixedEnd);
+  const fixedStart = start != null ? start : -Number.MAX_VALUE;
+  const fixedEnd = end != null ? end : Number.MAX_VALUE;
+  const min = Math.min(fixedStart, fixedEnd);
+  const max = Math.max(fixedStart, fixedEnd);
   return Math.min(Math.max(value, min), max);
 }
 function sign(value, zeroSign = 1) {
@@ -605,7 +2611,7 @@ function toRadians(angle2) {
   return angle2 * (Math.PI / 180);
 }
 function roundDecimal(number, decimalPlaces) {
-  let factor = Math.pow(10, decimalPlaces);
+  const factor = Math.pow(10, decimalPlaces);
   number = Math.round(number * factor) / factor;
   return number;
 }
@@ -613,22 +2619,22 @@ function mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newR
   if (originRangeStart == originRangeEnd) {
     return newRangeStart;
   }
-  let clampedValue = MathUtils.clamp(value, originRangeStart, originRangeEnd);
+  const clampedValue = MathUtils.clamp(value, originRangeStart, originRangeEnd);
   if (clampedValue == originRangeStart) {
     return newRangeStart;
   } else if (clampedValue == originRangeEnd) {
     return newRangeEnd;
   }
-  let newValue = newRangeStart + (newRangeEnd - newRangeStart) / (originRangeEnd - originRangeStart) * (clampedValue - originRangeStart);
-  let clampedNewValue = MathUtils.clamp(newValue, newRangeStart, newRangeEnd);
+  const newValue = newRangeStart + (newRangeEnd - newRangeStart) / (originRangeEnd - originRangeStart) * (clampedValue - originRangeStart);
+  const clampedNewValue = MathUtils.clamp(newValue, newRangeStart, newRangeEnd);
   return clampedNewValue;
 }
 function random(start = 0, end = 1) {
   return Math.random() * (end - start) + start;
 }
 function randomInt(start, end) {
-  let min = Math.min(start, end);
-  let max = Math.max(start, end);
+  const min = Math.min(start, end);
+  const max = Math.max(start, end);
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 function randomBool() {
@@ -641,22 +2647,26 @@ function randomPick(...args) {
   let random2 = null;
   if (args.length > 0) {
     if (args.length == 1 && args[0].length != null) {
-      if (args[0].length > 0) {
-        let randomIndex = MathUtils.randomInt(0, args[0].length - 1);
-        random2 = args[0][randomIndex];
+      const arrayArg0 = args[0];
+      if (arrayArg0.length > 0) {
+        const randomIndex = MathUtils.randomInt(0, arrayArg0.length - 1);
+        random2 = arrayArg0[randomIndex];
       }
     } else {
-      let randomIndex = MathUtils.randomInt(0, args.length - 1);
+      const randomIndex = MathUtils.randomInt(0, args.length - 1);
       random2 = args[randomIndex];
     }
   }
   return random2;
 }
 var randomUUID = function() {
-  let uuidRandomValues = new Uint8Array(1);
-  let uuidSkeleton = "10000000-1000-4000-8000-" + 1e11;
-  let replaceUUIDSkeletonRegex = new RegExp("[018]", "g");
-  let replaceUUIDSkeletonCallback = (c) => ((c ^ crypto.getRandomValues(uuidRandomValues)[0] & 15) >> c / 4).toString(16);
+  const uuidRandomValues = new Uint8Array(1);
+  const uuidSkeleton = "10000000-1000-4000-8000-" + 1e11;
+  const replaceUUIDSkeletonRegex = new RegExp("[018]", "g");
+  const replaceUUIDSkeletonCallback = function(charString) {
+    const digit = parseInt(charString.charAt(0));
+    return (digit ^ (crypto.getRandomValues(uuidRandomValues)[0] & 15) >> digit / 4).toString(16);
+  };
   return function randomUUID2() {
     let uuid = "";
     if (crypto.randomUUID != null) {
@@ -676,11 +2686,11 @@ function lerp(from, to, interpolationFactor) {
   return interpolationFactor * (to - from) + from;
 }
 function interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
-  let lerpFactor = easingFunction(interpolationFactor);
+  const lerpFactor = easingFunction(interpolationFactor);
   return MathUtils.lerp(from, to, lerpFactor);
 }
 function interpolatePeriodic(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
-  let adjustedInterpolationFactor = EasingSupportFunction.positiveTriangleWave(interpolationFactor);
+  const adjustedInterpolationFactor = EasingSupportFunction.positiveTriangleWave(interpolationFactor);
   return MathUtils.interpolate(from, to, adjustedInterpolationFactor, easingFunction);
 }
 function angleDistance(from, to) {
@@ -696,8 +2706,8 @@ function angleDistanceSigned(from, to) {
   return MathUtils.angleDistanceSignedDegrees(from, to);
 }
 function angleDistanceSignedDegrees(from, to) {
-  let clampedFrom = MathUtils.angleClampDegrees(from, true);
-  let clampedTo = MathUtils.angleClampDegrees(to, true);
+  const clampedFrom = MathUtils.angleClampDegrees(from, true);
+  const clampedTo = MathUtils.angleClampDegrees(to, true);
   let distance2 = clampedTo - clampedFrom;
   if (clampedTo - clampedFrom > 180) {
     distance2 = clampedTo - clampedFrom - 360;
@@ -732,12 +2742,12 @@ function isInsideAngleRange(angle2, start, end, useShortestAngle = false) {
 }
 function isInsideAngleRangeDegrees(angle2, start, end, useShortestAngle = false) {
   let insideAngleRange = false;
-  let anglePositive = MathUtils.angleClampDegrees(angle2, true);
+  const anglePositive = MathUtils.angleClampDegrees(angle2, true);
   let startPositive = MathUtils.angleClampDegrees(start, true);
   let endPositive = MathUtils.angleClampDegrees(end, true);
   if (useShortestAngle) {
     if (MathUtils.angleDistanceSignedDegrees(startPositive, endPositive) < 0) {
-      let temp = startPositive;
+      const temp = startPositive;
       startPositive = endPositive;
       endPositive = temp;
     }
@@ -785,226 +2795,33 @@ var MathUtils = {
   isInsideAngleRangeRadians
 };
 
-// dist/cauldron/js/utils/mat3_utils.js
-import { mat3 as gl_mat32, quat as gl_quat3 } from "gl-matrix";
-
-// dist/cauldron/js/utils/quat_utils.js
-import { mat3 as gl_mat3, quat as gl_quat } from "gl-matrix";
-
-// dist/cauldron/js/utils/array_utils.js
-function first(array) {
-  return array.length > 0 ? array[0] : void 0;
-}
-function last(array) {
-  return array.length > 0 ? array[array.length - 1] : void 0;
-}
-function has(array, callback) {
-  return ArrayUtils.find(array, callback) != void 0;
-}
-function hasEqual(array, elementToFind, elementsEqualCallback = null) {
-  return ArrayUtils.findEqual(array, elementToFind, elementsEqualCallback) != void 0;
-}
-function find(array, callback) {
-  let elementFound = void 0;
-  let index = array.findIndex(callback);
-  if (index >= 0) {
-    elementFound = array[index];
-  }
-  return elementFound;
-}
-function findIndex(array, callback) {
-  return array.findIndex(callback);
-}
-function findAll(array, callback) {
-  let elementsFound = array.filter(callback);
-  return elementsFound;
-}
-function findAllIndexes(array, callback) {
-  let indexes = [];
-  for (let i = 0; i < array.length; i++) {
-    let element = array[i];
-    if (callback(element)) {
-      indexes.push(i);
+// dist/cauldron/utils/array/array_utils.js
+function copy(from, to, copyCallback) {
+  const _to = to;
+  if (_to.pop != null) {
+    while (to.length > from.length) {
+      _to.pop();
     }
-  }
-  return indexes;
-}
-function findEqual(array, elementToFind, elementsEqualCallback = null) {
-  if (elementsEqualCallback == null) {
-    let index = ArrayUtils.findIndexEqual(array, elementToFind);
-    return index < 0 ? void 0 : array[index];
-  }
-  let elementFound = void 0;
-  for (let i = 0; i < array.length; i++) {
-    let currentElement = array[i];
-    if (elementsEqualCallback(currentElement, elementToFind)) {
-      elementFound = currentElement;
-      break;
-    }
-  }
-  return elementFound;
-}
-function findAllEqual(array, elementToFind, elementsEqualCallback = null) {
-  if (elementsEqualCallback == null) {
-    return _findAllEqualOptimized(array, elementToFind, false);
-  }
-  let elementsFound = [];
-  for (let i = 0; i < array.length; i++) {
-    let currentElement = array[i];
-    if (elementsEqualCallback(currentElement, elementToFind)) {
-      elementsFound.push(currentElement);
-    }
-  }
-  return elementsFound;
-}
-function findIndexEqual(array, elementToFind, elementsEqualCallback = null) {
-  if (elementsEqualCallback == null) {
-    return array.indexOf(elementToFind);
-  }
-  let indexFound = -1;
-  for (let i = 0; i < array.length; i++) {
-    let currentElement = array[i];
-    if (elementsEqualCallback(currentElement, elementToFind)) {
-      indexFound = i;
-      break;
-    }
-  }
-  return indexFound;
-}
-function findAllIndexesEqual(array, elementToFind, elementsEqualCallback = null) {
-  if (elementsEqualCallback == null) {
-    return _findAllEqualOptimized(array, elementToFind, true);
-  }
-  let indexesFound = [];
-  for (let i = 0; i < array.length; i++) {
-    let currentElement = array[i];
-    if (elementsEqualCallback(currentElement, elementToFind)) {
-      indexesFound.push(i);
-    }
-  }
-  return indexesFound;
-}
-function removeIndex(array, index) {
-  let elementRemoved = void 0;
-  if (index >= 0 && index < array.length) {
-    let arrayRemoved = array.splice(index, 1);
-    if (arrayRemoved.length == 1) {
-      elementRemoved = arrayRemoved[0];
-    }
-  }
-  return elementRemoved;
-}
-function removeAllIndexes(array, indexes) {
-  let elementsRemoved = [];
-  for (let index of indexes) {
-    let elementRemoved = ArrayUtils.removeIndex(array, index);
-    if (elementRemoved !== void 0) {
-      elementsRemoved.push(elementRemoved);
-    }
-  }
-  return elementsRemoved;
-}
-function remove(array, callback) {
-  let elementRemoved = void 0;
-  let index = array.findIndex(callback);
-  if (index >= 0) {
-    elementRemoved = ArrayUtils.removeIndex(array, index);
-  }
-  return elementRemoved;
-}
-function removeAll(array, callback) {
-  let elementsRemoved = [];
-  let currentElement = void 0;
-  do {
-    currentElement = ArrayUtils.remove(array, callback);
-    if (currentElement !== void 0) {
-      elementsRemoved.push(currentElement);
-    }
-  } while (currentElement !== void 0);
-  return elementsRemoved;
-}
-function removeEqual(array, elementToRemove, elementsEqualCallback = null) {
-  return ArrayUtils.removeIndex(array, ArrayUtils.findIndexEqual(array, elementToRemove, elementsEqualCallback));
-}
-function removeAllEqual(array, elementToRemove, elementsEqualCallback = null) {
-  return ArrayUtils.removeAllIndexes(array, ArrayUtils.findAllIndexesEqual(array, elementToRemove, elementsEqualCallback));
-}
-function pushUnique(array, element, elementsEqualCallback = null) {
-  let length5 = array.length;
-  let hasElement = ArrayUtils.hasEqual(array, element, elementsEqualCallback);
-  if (!hasElement) {
-    length5 = array.push(element);
-  }
-  return length5;
-}
-function unshiftUnique(array, element, elementsEqualCallback = null) {
-  let length5 = array.length;
-  let hasElement = ArrayUtils.hasEqual(array, element, elementsEqualCallback);
-  if (!hasElement) {
-    length5 = array.unshift(element);
-  }
-  return length5;
-}
-function copy(from, to, copyCallback = null) {
-  while (to.length > from.length) {
-    to.pop();
   }
   for (let i = 0; i < from.length; i++) {
     if (copyCallback == null) {
       to[i] = from[i];
     } else {
-      to[i] = copyCallback(to[i], from[i]);
+      to[i] = copyCallback(from[i], to[i]);
     }
   }
   return to;
 }
-function clone(array, cloneCallback = null) {
-  if (cloneCallback == null) {
-    return array.slice(0);
+function clone(array, cloneCallback) {
+  const clonedArray = array.slice(0);
+  if (cloneCallback != null) {
+    for (let i = 0; i < array.length; i++) {
+      clonedArray[i] = cloneCallback(array[i]);
+    }
   }
-  let clone10 = null;
-  switch (array.constructor.name) {
-    case "Array":
-      clone10 = new Array(array.length);
-      break;
-    case "Uint8ClampedArray":
-      clone10 = new Uint8ClampedArray(array.length);
-      break;
-    case "Uint8Array":
-      clone10 = new Uint8Array(array.length);
-      break;
-    case "Uint16Array":
-      clone10 = new Uint16Array(array.length);
-      break;
-    case "Uint32Array":
-      clone10 = new Uint32Array(array.length);
-      break;
-    case "Int8Array":
-      clone10 = new Int8Array(array.length);
-      break;
-    case "Int16Array":
-      clone10 = new Int16Array(array.length);
-      break;
-    case "Int32Array":
-      clone10 = new Int32Array(array.length);
-      break;
-    case "Float32Array":
-      clone10 = new Float32Array(array.length);
-      break;
-    case "Float64Array":
-      clone10 = new Float64Array(array.length);
-      break;
-    default:
-      clone10 = new Array(array.length);
-      console.error("Cloned array type not supported!");
-      break;
-  }
-  for (let i = 0; i < array.length; i++) {
-    clone10[i] = ArrayUtils.cloneCallback(array[i]);
-  }
-  return clone10;
+  return clonedArray;
 }
-function equals(array, other, elementsEqualCallback = null) {
+function equals(array, other, elementsEqualCallback) {
   let equals5 = true;
   if (other != null && array.length == other.length) {
     for (let i = 0; i < array.length; i++) {
@@ -1018,14 +2835,176 @@ function equals(array, other, elementsEqualCallback = null) {
   }
   return equals5;
 }
-function clear(array) {
+function first(array) {
+  return array.length > 0 ? array[0] : void 0;
+}
+function last(array) {
+  return array.length > 0 ? array[array.length - 1] : void 0;
+}
+function has2(array, callback) {
+  return ArrayUtils.find(array, callback) != void 0;
+}
+function hasEqual(array, elementToFind, elementsEqualCallback) {
+  return ArrayUtils.findEqual(array, elementToFind, elementsEqualCallback) != void 0;
+}
+function find(array, callback) {
+  let elementFound = void 0;
+  const index = ArrayUtils.findIndex(array, callback);
+  if (index >= 0) {
+    elementFound = array[index];
+  }
+  return elementFound;
+}
+function findIndex(array, callback) {
+  return array.findIndex(callback);
+}
+function findAll(array, callback) {
+  const elementsFound = [];
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i];
+    if (callback(element, i)) {
+      elementsFound.push(element);
+    }
+  }
+  return elementsFound;
+}
+function findAllIndexes(array, callback) {
+  const indexes = [];
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i];
+    if (callback(element, i)) {
+      indexes.push(i);
+    }
+  }
+  return indexes;
+}
+function findEqual(array, elementToFind, elementsEqualCallback) {
+  if (elementsEqualCallback == null) {
+    const index = ArrayUtils.findIndexEqual(array, elementToFind);
+    return index < 0 ? void 0 : array[index];
+  }
+  let elementFound = void 0;
+  for (let i = 0; i < array.length; i++) {
+    const currentElement = array[i];
+    if (elementsEqualCallback(currentElement, elementToFind)) {
+      elementFound = currentElement;
+      break;
+    }
+  }
+  return elementFound;
+}
+function findAllEqual(array, elementToFind, elementsEqualCallback) {
+  if (elementsEqualCallback == null) {
+    return _findAllEqualOptimized(array, elementToFind);
+  }
+  const elementsFound = [];
+  for (let i = 0; i < array.length; i++) {
+    const currentElement = array[i];
+    if (elementsEqualCallback(currentElement, elementToFind)) {
+      elementsFound.push(currentElement);
+    }
+  }
+  return elementsFound;
+}
+function findIndexEqual(array, elementToFind, elementsEqualCallback) {
+  if (elementsEqualCallback == null) {
+    return array.indexOf(elementToFind);
+  }
+  let indexFound = -1;
+  for (let i = 0; i < array.length; i++) {
+    const currentElement = array[i];
+    if (elementsEqualCallback(currentElement, elementToFind)) {
+      indexFound = i;
+      break;
+    }
+  }
+  return indexFound;
+}
+function findAllIndexesEqual(array, elementToFind, elementsEqualCallback) {
+  if (elementsEqualCallback == null) {
+    return _findAllIndexesEqualOptimized(array, elementToFind);
+  }
+  const indexesFound = [];
+  for (let i = 0; i < array.length; i++) {
+    const currentElement = array[i];
+    if (elementsEqualCallback(currentElement, elementToFind)) {
+      indexesFound.push(i);
+    }
+  }
+  return indexesFound;
+}
+function remove2(array, callback) {
+  let elementRemoved = void 0;
+  const index = array.findIndex(callback);
+  if (index >= 0) {
+    elementRemoved = ArrayUtils.removeIndex(array, index);
+  }
+  return elementRemoved;
+}
+function removeIndex(array, index) {
+  let elementRemoved = void 0;
+  if (index >= 0 && index < array.length) {
+    const arrayRemoved = array.splice(index, 1);
+    if (arrayRemoved.length == 1) {
+      elementRemoved = arrayRemoved[0];
+    }
+  }
+  return elementRemoved;
+}
+function removeAll(array, callback) {
+  const elementsRemoved = [];
+  let currentElement = void 0;
+  do {
+    currentElement = ArrayUtils.remove(array, callback);
+    if (currentElement !== void 0) {
+      elementsRemoved.push(currentElement);
+    }
+  } while (currentElement !== void 0);
+  return elementsRemoved;
+}
+function removeAllIndexes(array, indexes) {
+  const elementsRemoved = [];
+  for (const index of indexes) {
+    const elementRemoved = ArrayUtils.removeIndex(array, index);
+    if (elementRemoved !== void 0) {
+      elementsRemoved.push(elementRemoved);
+    }
+  }
+  return elementsRemoved;
+}
+function removeEqual(array, elementToRemove, elementsEqualCallback) {
+  return ArrayUtils.removeIndex(array, ArrayUtils.findIndexEqual(array, elementToRemove, elementsEqualCallback));
+}
+function removeAllEqual(array, elementToRemove, elementsEqualCallback) {
+  return ArrayUtils.removeAllIndexes(array, ArrayUtils.findAllIndexesEqual(array, elementToRemove, elementsEqualCallback));
+}
+function clear2(array) {
   array.length = 0;
   return array;
 }
+function pushUnique(array, elementToAdd, elementsEqualCallback) {
+  let length5 = array.length;
+  const hasElement = ArrayUtils.hasEqual(array, elementToAdd, elementsEqualCallback);
+  if (!hasElement) {
+    length5 = array.push(elementToAdd);
+  }
+  return length5;
+}
+function unshiftUnique(array, elementToAdd, elementsEqualCallback) {
+  let length5 = array.length;
+  const hasElement = ArrayUtils.hasEqual(array, elementToAdd, elementsEqualCallback);
+  if (!hasElement) {
+    length5 = array.unshift(elementToAdd);
+  }
+  return length5;
+}
 var ArrayUtils = {
+  copy,
+  clone,
+  equals,
   first,
   last,
-  has,
+  has: has2,
   hasEqual,
   find,
   findIndex,
@@ -1035,45 +3014,50 @@ var ArrayUtils = {
   findAllEqual,
   findIndexEqual,
   findAllIndexesEqual,
+  remove: remove2,
   removeIndex,
-  removeAllIndexes,
-  remove,
   removeAll,
+  removeAllIndexes,
   removeEqual,
   removeAllEqual,
+  clear: clear2,
   pushUnique,
-  unshiftUnique,
-  copy,
-  clone,
-  equals,
-  clear
+  unshiftUnique
 };
-function _findAllEqualOptimized(array, elementToFind, getIndexes) {
-  let elementsFound = [];
+function _findAllEqualOptimized(array, elementToFind) {
+  const elementsFound = [];
   let index = -1;
   while ((index = array.indexOf(elementToFind, index + 1)) >= 0) {
-    elementsFound.push(getIndexes ? index : array[index]);
+    elementsFound.push(array[index]);
+  }
+  return elementsFound;
+}
+function _findAllIndexesEqualOptimized(array, elementToFind) {
+  const elementsFound = [];
+  let index = -1;
+  while ((index = array.indexOf(elementToFind, index + 1)) >= 0) {
+    elementsFound.push(index);
   }
   return elementsFound;
 }
 
-// dist/cauldron/js/utils/vec3_utils.js
+// dist/cauldron/utils/array/vec3_utils.js
 import { vec3 as gl_vec3 } from "gl-matrix";
 
-// dist/cauldron/js/utils/mat4_utils.js
+// dist/cauldron/utils/array/mat4_utils.js
 import { mat4 as gl_mat42 } from "gl-matrix";
 
-// dist/cauldron/js/utils/quat2_utils.js
+// dist/cauldron/utils/array/quat2_utils.js
 import { mat4 as gl_mat4, quat2 as gl_quat2 } from "gl-matrix";
 function create4(x1, y1, z1, w1, x2, y2, z2, w2) {
   let out = gl_quat2.create();
-  if (x1 !== void 0) {
+  if (x1 != null) {
     set(out, x1, y1, z1, w1, x2, y2, z2, w2);
   }
   return out;
 }
 function set(quat, x1, y1, z1, w1, x2, y2, z2, w2) {
-  if (y1 === void 0) {
+  if (y1 == null) {
     gl_quat2.set(quat, x1, x1, x1, x1, x1, x1, x1, x1);
   } else {
     gl_quat2.set(quat, x1, y1, z1, w1, x2, y2, z2, w2);
@@ -1385,16 +3369,16 @@ var _customGLMatrixFromQuat2 = function() {
   };
 }();
 
-// dist/cauldron/js/utils/mat4_utils.js
+// dist/cauldron/utils/array/mat4_utils.js
 function create5(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
   let out = gl_mat42.create();
-  if (m00 !== void 0) {
+  if (m00 != null) {
     set3(out, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
   }
   return out;
 }
 function set3(matrix, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
-  if (m01 === void 0) {
+  if (m01 == null) {
     gl_mat42.set(matrix, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00);
   } else {
     gl_mat42.set(matrix, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
@@ -1752,16 +3736,16 @@ var _customGLMatrixGetRotation = function() {
   };
 }();
 
-// dist/cauldron/js/utils/vec3_utils.js
+// dist/cauldron/utils/array/vec3_utils.js
 function create3(x, y, z) {
   let out = gl_vec3.create();
-  if (x !== void 0) {
+  if (x != null) {
     set2(out, x, y, z);
   }
   return out;
 }
 function set2(vector, x, y, z) {
-  if (y === void 0) {
+  if (y == null) {
     gl_vec3.set(vector, x, x, x);
   } else {
     gl_vec3.set(vector, x, y, z);
@@ -2541,16 +4525,16 @@ var Vec3Utils = {
   perpendicularRandom
 };
 
-// dist/cauldron/js/utils/quat_utils.js
+// dist/cauldron/utils/array/quat_utils.js
 function create2(x, y, z, w) {
   let out = gl_quat.create();
-  if (x !== void 0) {
+  if (x != null) {
     QuatUtils.set(out, x, y, z, w);
   }
   return out;
 }
 function set4(quat, x, y, z, w) {
-  if (y === void 0) {
+  if (y == null) {
     gl_quat.set(quat, x, x, x, x);
   } else {
     gl_quat.set(quat, x, y, z, w);
@@ -3203,37 +5187,46 @@ var _setAxes = function() {
   };
 }();
 
-// dist/cauldron/js/utils/mat3_utils.js
+// dist/cauldron/utils/array/mat3_utils.js
 function create(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
-  let out = gl_mat32.create();
-  if (m00 !== void 0) {
+  const out = gl_mat32.create();
+  if (m00 != null) {
     set5(out, m00, m01, m02, m10, m11, m12, m20, m21, m22);
   }
   return out;
 }
 function set5(matrix, m00, m01, m02, m10, m11, m12, m20, m21, m22) {
-  if (m01 === void 0) {
+  if (m01 == null) {
     gl_mat32.set(matrix, m00, m00, m00, m00, m00, m00, m00, m00, m00);
   } else {
     gl_mat32.set(matrix, m00, m01, m02, m10, m11, m12, m20, m21, m22);
   }
   return matrix;
 }
+function copy6(from, to) {
+  gl_mat32.copy(to, from);
+  return to;
+}
+function clone5(matrix) {
+  return matrix.slice(0);
+}
 var toDegrees4 = function() {
-  let quat = create2();
-  return function toDegrees5(matrix, out = Vec3Utils.create()) {
+  const quat = create2();
+  function toDegrees5(matrix, out = Vec3Utils.create()) {
     Mat3Utils.toQuat(matrix, quat);
     QuatUtils.toDegrees(quat, out);
     return out;
-  };
+  }
+  return toDegrees5;
 }();
 var toRadians4 = function() {
-  let quat = create2();
-  return function toRadians5(matrix, out = Vec3Utils.create()) {
+  const quat = create2();
+  function toRadians5(matrix, out = Vec3Utils.create()) {
     Mat3Utils.toQuat(matrix, quat);
     QuatUtils.toRadians(quat, out);
     return out;
-  };
+  }
+  return toRadians5;
 }();
 function toQuat3(matrix, out = QuatUtils.create()) {
   gl_quat3.fromMat3(out, matrix);
@@ -3246,3019 +5239,43 @@ function fromAxes2(leftAxis, upAxis, forwardAxis, out = Mat3Utils.create()) {
 var Mat3Utils = {
   create,
   set: set5,
+  copy: copy6,
+  clone: clone5,
   toDegrees: toDegrees4,
   toRadians: toRadians4,
   toQuat: toQuat3,
   fromAxes: fromAxes2
 };
 
-// dist/cauldron/wl/utils/object_utils.js
-var CloneParams = class {
-  constructor() {
-    this.myCloneParent = void 0;
-    this.myIgnoreNonCloneable = false;
-    this.myIgnoreComponents = false;
-    this.myIgnoreDescendants = false;
-    this.myComponentsToIgnore = [];
-    this.myComponentsToInclude = [];
-    this.myIgnoreComponentCallback = null;
-    this.myDescendantsToIgnore = [];
-    this.myDescendantsToInclude = [];
-    this.myIgnoreDescendantCallback = null;
-    this.myUseDefaultComponentClone = false;
-    this.myUseDefaultComponentCloneAsFallback = false;
-    this.myDefaultComponentCloneAutoStartIfNotActive = true;
-    this.myUseDefaultObjectClone = false;
-    this.myUseDefaultObjectCloneAsFallback = false;
-    this.myComponentDeepCloneParams = new DeepCloneParams();
-    this.myComponentCustomCloneParams = new CustomCloneParams();
-  }
-};
-function getPosition3(object, position) {
-  return ObjectUtils.getPositionWorld(object, position);
-}
-function getPositionWorld(object, position = Vec3Utils.create()) {
-  object.getPositionWorld(position);
-  return position;
-}
-function getPositionLocal(object, position = Vec3Utils.create()) {
-  object.getPositionLocal(position);
-  return position;
-}
-function getRotation3(object, rotation) {
-  return ObjectUtils.getRotationWorld(object, rotation);
-}
-function getRotationDegrees3(object, rotation) {
-  return ObjectUtils.getRotationWorldDegrees(object, rotation);
-}
-function getRotationRadians3(object, rotation) {
-  return ObjectUtils.getRotationWorldRadians(object, rotation);
-}
-function getRotationMatrix(object, rotation) {
-  return ObjectUtils.getRotationWorldMatrix(object, rotation);
-}
-function getRotationQuat3(object, rotation) {
-  return ObjectUtils.getRotationWorldQuat(object, rotation);
-}
-function getRotationWorld(object, rotation) {
-  return ObjectUtils.getRotationWorldDegrees(object, rotation);
-}
-function getRotationWorldDegrees(object, rotation) {
-  rotation = ObjectUtils.getRotationWorldRadians(object, rotation);
-  rotation = Vec3Utils.toDegrees(rotation, rotation);
-  return rotation;
-}
-var getRotationWorldRadians = function() {
-  let quat = QuatUtils.create();
-  return function getRotationWorldRadians2(object, rotation = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.toRadians(quat, rotation);
-    return rotation;
-  };
-}();
-var getRotationWorldMatrix = function() {
-  let quat = QuatUtils.create();
-  return function getRotationWorldMatrix2(object, rotation = Mat3Utils.create()) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.toMatrix(quat, rotation);
-    return rotation;
-  };
-}();
-function getRotationWorldQuat(object, rotation = QuatUtils.create()) {
-  object.getRotationWorld(rotation);
-  return rotation;
-}
-function getRotationLocal(object, rotation) {
-  return ObjectUtils.getRotationLocalDegrees(object, rotation);
-}
-function getRotationLocalDegrees(object, rotation) {
-  rotation = ObjectUtils.getRotationLocalRadians(object, rotation);
-  rotation = Vec3Utils.toDegrees(rotation, rotation);
-  return rotation;
-}
-var getRotationLocalRadians = function() {
-  let quat = QuatUtils.create();
-  return function getRotationLocalRadians2(object, rotation = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.toRadians(quat, rotation);
-    return rotation;
-  };
-}();
-var getRotationLocalMatrix = function() {
-  let quat = QuatUtils.create();
-  return function getRotationLocalMatrix2(object, rotation = Mat3Utils.create()) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.toMatrix(quat, rotation);
-    return rotation;
-  };
-}();
-function getRotationLocalQuat(object, rotation = QuatUtils.create()) {
-  object.getRotationLocal(rotation);
-  return rotation;
-}
-function getScale2(object, scale4) {
-  return ObjectUtils.getScaleWorld(object, scale4);
-}
-function getScaleWorld(object, scale4 = Vec3Utils.create()) {
-  object.getScalingWorld(scale4);
-  return scale4;
-}
-function getScaleLocal(object, scale4 = Vec3Utils.create()) {
-  object.getScalingLocal(scale4);
-  return scale4;
-}
-function getTransform(object, transform) {
-  return ObjectUtils.getTransformWorld(object, transform);
-}
-function getTransformMatrix(object, transform) {
-  return ObjectUtils.getTransformWorldMatrix(object, transform);
-}
-function getTransformQuat(object, transform) {
-  return ObjectUtils.getTransformWorldQuat(object, transform);
-}
-function getTransformWorld(object, transform) {
-  return ObjectUtils.getTransformWorldMatrix(object, transform);
-}
-var getTransformWorldMatrix = function() {
-  let transformQuat2 = Quat2Utils.create();
-  let scale4 = Vec3Utils.create();
-  return function getTransformWorldMatrix2(object, transform = Mat4Utils.create()) {
-    ObjectUtils.getTransformWorldQuat(object, transformQuat2);
-    ObjectUtils.getScaleWorld(object, scale4);
-    Mat4Utils.fromQuat(transformQuat2, transform);
-    Mat4Utils.scale(transform, scale4, transform);
-    return transform;
-  };
-}();
-function getTransformWorldQuat(object, transform = Quat2Utils.create()) {
-  object.getTransformWorld(transform);
-  return transform;
-}
-function getTransformLocal(object, transform) {
-  return ObjectUtils.getTransformLocalMatrix(object, transform);
-}
-var getTransformLocalMatrix = function() {
-  let transformQuat2 = Quat2Utils.create();
-  let scale4 = Vec3Utils.create();
-  return function getTransformLocalMatrix2(object, transform = Mat4Utils.create()) {
-    ObjectUtils.getTransformLocalQuat(object, transformQuat2);
-    ObjectUtils.getScaleLocal(object, scale4);
-    Mat4Utils.fromQuat(transformQuat2, transform);
-    Mat4Utils.scale(transform, scale4, transform);
-    return transform;
-  };
-}();
-function getTransformLocalQuat(object, transform = Quat2Utils.create()) {
-  object.getTransformLocal(transform);
-  return transform;
-}
-function getAxes4(object, axes) {
-  return ObjectUtils.getAxesWorld(object, axes);
-}
-function getAxesWorld(object, axes = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-  ObjectUtils.getLeftWorld(object, axes[0]);
-  ObjectUtils.getUpWorld(object, axes[1]);
-  ObjectUtils.getForwardWorld(object, axes[2]);
-  return axes;
-}
-function getAxesLocal(object, axes = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-  ObjectUtils.getLeftLocal(object, axes[0]);
-  ObjectUtils.getUpLocal(object, axes[1]);
-  ObjectUtils.getForwardLocal(object, axes[2]);
-  return axes;
-}
-function getForward4(object, forward) {
-  return ObjectUtils.getForwardWorld(object, forward);
-}
-var getForwardWorld = function() {
-  let rotation = Mat3Utils.create();
-  return function getForwardWorld2(object, forward = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldMatrix(object, rotation);
-    forward[0] = rotation[6];
-    forward[1] = rotation[7];
-    forward[2] = rotation[8];
-    return forward;
-  };
-}();
-var getForwardLocal = function() {
-  let rotation = Mat3Utils.create();
-  return function getForwardLocal2(object, forward = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalMatrix(object, rotation);
-    forward[0] = rotation[6];
-    forward[1] = rotation[7];
-    forward[2] = rotation[8];
-    return forward;
-  };
-}();
-function getBackward4(object, backward) {
-  return ObjectUtils.getBackwardWorld(object, backward);
-}
-var getBackwardWorld = function() {
-  let rotation = Mat3Utils.create();
-  return function getBackwardWorld2(object, backward = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldMatrix(object, rotation);
-    backward[0] = -rotation[6];
-    backward[1] = -rotation[7];
-    backward[2] = -rotation[8];
-    return backward;
-  };
-}();
-var getBackwardLocal = function() {
-  let rotation = Mat3Utils.create();
-  return function getBackwardLocal2(object, backward = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalMatrix(object, rotation);
-    backward[0] = -rotation[6];
-    backward[1] = -rotation[7];
-    backward[2] = -rotation[8];
-    return backward;
-  };
-}();
-function getUp4(object, up) {
-  return ObjectUtils.getUpWorld(object, up);
-}
-var getUpWorld = function() {
-  let rotation = Mat3Utils.create();
-  return function getUpWorld2(object, up = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldMatrix(object, rotation);
-    up[0] = rotation[3];
-    up[1] = rotation[4];
-    up[2] = rotation[5];
-    return up;
-  };
-}();
-var getUpLocal = function() {
-  let rotation = Mat3Utils.create();
-  return function getUpLocal2(object, up = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalMatrix(object, rotation);
-    up[0] = rotation[3];
-    up[1] = rotation[4];
-    up[2] = rotation[5];
-    return up;
-  };
-}();
-function getDown4(object, down) {
-  return ObjectUtils.getDownWorld(object, down);
-}
-var getDownWorld = function() {
-  let rotation = Mat3Utils.create();
-  return function getDownWorld2(object, down = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldMatrix(object, rotation);
-    down[0] = -rotation[3];
-    down[1] = -rotation[4];
-    down[2] = -rotation[5];
-    return down;
-  };
-}();
-var getDownLocal = function() {
-  let rotation = Mat3Utils.create();
-  return function getDownLocal2(object, down = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalMatrix(object, rotation);
-    down[0] = -rotation[3];
-    down[1] = -rotation[4];
-    down[2] = -rotation[5];
-    return down;
-  };
-}();
-function getLeft4(object, left) {
-  return ObjectUtils.getLeftWorld(object, left);
-}
-var getLeftWorld = function() {
-  let rotation = Mat3Utils.create();
-  return function getLeftWorld2(object, left = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldMatrix(object, rotation);
-    left[0] = rotation[0];
-    left[1] = rotation[1];
-    left[2] = rotation[2];
-    return left;
-  };
-}();
-var getLeftLocal = function() {
-  let rotation = Mat3Utils.create();
-  return function getLeftLocal2(object, left = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalMatrix(object, rotation);
-    left[0] = rotation[0];
-    left[1] = rotation[1];
-    left[2] = rotation[2];
-    return left;
-  };
-}();
-function getRight4(object, right) {
-  return ObjectUtils.getRightWorld(object, right);
-}
-var getRightWorld = function() {
-  let rotation = Mat3Utils.create();
-  return function getRightWorld2(object, right = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldMatrix(object, rotation);
-    right[0] = -rotation[0];
-    right[1] = -rotation[1];
-    right[2] = -rotation[2];
-    return right;
-  };
-}();
-var getRightLocal = function() {
-  let rotation = Mat3Utils.create();
-  return function getRightLocal2(object, right = Vec3Utils.create()) {
-    ObjectUtils.getRotationLocalMatrix(object, rotation);
-    right[0] = -rotation[0];
-    right[1] = -rotation[1];
-    right[2] = -rotation[2];
-    return right;
-  };
-}();
-function setPosition3(object, position) {
-  ObjectUtils.setPositionWorld(object, position);
-}
-function setPositionWorld(object, position) {
-  object.setTranslationWorld(position);
-}
-function setPositionLocal(object, position) {
-  object.setTranslationLocal(position);
-}
-function setRotation3(object, rotation) {
-  ObjectUtils.setRotationWorld(object, rotation);
-}
-function setRotationDegrees3(object, rotation) {
-  ObjectUtils.setRotationWorldDegrees(object, rotation);
-}
-function setRotationRadians3(object, rotation) {
-  ObjectUtils.setRotationWorldRadians(object, rotation);
-}
-function setRotationMatrix(object, rotation) {
-  ObjectUtils.setRotationWorldMatrix(object, rotation);
-}
-function setRotationQuat3(object, rotation) {
-  ObjectUtils.setRotationWorldQuat(object, rotation);
-}
-function setRotationWorld(object, rotation) {
-  ObjectUtils.setRotationWorldDegrees(object, rotation);
-}
-var setRotationWorldDegrees = function() {
-  let quat = QuatUtils.create();
-  return function setRotationWorldDegrees2(object, rotation) {
-    Vec3Utils.degreesToQuat(rotation, quat);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setRotationWorldRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function setRotationWorldRadians2(object, rotation) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.setRotationWorldDegrees(object, degreesRotation);
-  };
-}();
-var setRotationWorldMatrix = function() {
-  let quat = QuatUtils.create();
-  return function setRotationWorldMatrix2(object, rotation) {
-    Mat3Utils.toQuat(rotation, quat);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-function setRotationWorldQuat(object, rotation) {
-  object.setRotationWorld(rotation);
-}
-function setRotationLocal(object, rotation) {
-  ObjectUtils.setRotationLocalDegrees(object, rotation);
-}
-var setRotationLocalDegrees = function() {
-  let quat = QuatUtils.create();
-  return function setRotationLocalDegrees2(object, rotation) {
-    Vec3Utils.degreesToQuat(rotation, quat);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-var setRotationLocalRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function setRotationLocalRadians2(object, rotation) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.setRotationLocalDegrees(object, degreesRotation);
-  };
-}();
-var setRotationLocalMatrix = function() {
-  let quat = QuatUtils.create();
-  return function setRotationLocalMatrix2(object, rotation) {
-    Mat3Utils.toQuat(rotation, quat);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setRotationLocalQuat(object, rotation) {
-  object.setRotationLocal(rotation);
-}
-function setScale2(object, scale4) {
-  ObjectUtils.setScaleWorld(object, scale4);
-}
-var setScaleWorld = function() {
-  let vector = Vec3Utils.create();
-  return function setScaleWorld2(object, scale4) {
-    if (isNaN(scale4)) {
-      object.setScalingWorld(scale4);
-    } else {
-      Vec3Utils.set(vector, scale4);
-      object.setScalingWorld(vector);
-    }
-  };
-}();
-var setScaleLocal = function() {
-  let vector = Vec3Utils.create();
-  return function setScaleLocal2(object, scale4) {
-    if (isNaN(scale4)) {
-      object.setScalingLocal(scale4);
-    } else {
-      Vec3Utils.set(vector, scale4);
-      object.setScalingLocal(vector);
-    }
-  };
-}();
-function setAxes2(object, left, up, forward) {
-  ObjectUtils.setAxesWorld(object, left, up, forward);
-}
-function setAxesWorld(object, left, up, forward) {
-  if (forward != null) {
-    ObjectUtils.setForwardWorld(object, forward, up, left);
-  } else if (up != null) {
-    ObjectUtils.setUpWorld(object, up, forward, left);
-  } else {
-    ObjectUtils.setLeftWorld(object, left, up, forward);
-  }
-}
-function setAxesLocal(object, left, up, forward) {
-  if (forward != null) {
-    ObjectUtils.setForwardLocal(object, forward, up, left);
-  } else if (up != null) {
-    ObjectUtils.setUpLocal(object, up, forward, left);
-  } else {
-    ObjectUtils.setLeftLocal(object, left, up, forward);
-  }
-}
-function setForward2(object, forward, up, left) {
-  ObjectUtils.setForwardWorld(object, forward, up, left);
-}
-var setForwardWorld = function() {
-  let quat = QuatUtils.create();
-  return function setForwardWorld2(object, forward, up = null, left = null) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.setForward(quat, forward, up, left);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setForwardLocal = function() {
-  let quat = QuatUtils.create();
-  return function setForwardLocal2(object, forward, up = null, left = null) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.setForward(quat, forward, up, left);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setBackward2(object, backward, up, left) {
-  ObjectUtils.setBackwardWorld(object, backward, up, left);
-}
-var setBackwardWorld = function() {
-  let quat = QuatUtils.create();
-  return function setBackwardWorld2(object, backward, up = null, left = null) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.setBackward(quat, backward, up, left);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setBackwardLocal = function() {
-  let quat = QuatUtils.create();
-  return function setBackwardLocal2(object, backward, up = null, left = null) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.setBackward(quat, backward, up, left);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setUp2(object, up, forward, left) {
-  ObjectUtils.setUpWorld(object, up, forward, left);
-}
-var setUpWorld = function() {
-  let quat = QuatUtils.create();
-  return function setUpWorld2(object, up, forward = null, left = null) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.setUp(quat, up, forward, left);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setUpLocal = function() {
-  let quat = QuatUtils.create();
-  return function setUpLocal2(object, up, forward = null, left = null) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.setUp(quat, up, forward, left);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setDown2(object, down, forward, left) {
-  ObjectUtils.setDownWorld(object, down, forward, left);
-}
-var setDownWorld = function() {
-  let quat = QuatUtils.create();
-  return function setDownWorld2(object, down, forward = null, left = null) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.setDown(quat, down, forward, left);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setDownLocal = function() {
-  let quat = QuatUtils.create();
-  return function setDownLocal2(object, down, forward = null, left = null) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.setDown(quat, down, forward, left);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setLeft2(object, left, up, forward) {
-  ObjectUtils.setLeftWorld(object, left, up, forward);
-}
-var setLeftWorld = function() {
-  let quat = QuatUtils.create();
-  return function setLeftWorld2(object, left, up = null, forward = null) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.setLeft(quat, left, up, forward);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setLeftLocal = function() {
-  let quat = QuatUtils.create();
-  return function setLeftLocal2(object, left, up = null, forward = null) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.setLeft(quat, left, up, forward);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setRight2(object, right, up, forward) {
-  ObjectUtils.setRightWorld(object, right, up, forward);
-}
-var setRightWorld = function() {
-  let quat = QuatUtils.create();
-  return function setRightWorld2(object, right, up = null, forward = null) {
-    ObjectUtils.getRotationWorldQuat(object, quat);
-    QuatUtils.setRight(quat, right, up, forward);
-    ObjectUtils.setRotationWorldQuat(object, quat);
-  };
-}();
-var setRightLocal = function() {
-  let quat = QuatUtils.create();
-  return function setRightLocal2(object, right, up = null, forward = null) {
-    ObjectUtils.getRotationLocalQuat(object, quat);
-    QuatUtils.setRight(quat, right, up, forward);
-    ObjectUtils.setRotationLocalQuat(object, quat);
-  };
-}();
-function setTransform(object, transform) {
-  ObjectUtils.setTransformWorld(object, transform);
-}
-function setTransformMatrix(object, transform) {
-  ObjectUtils.setTransformWorldMatrix(object, transform);
-}
-function setTransformQuat(object, transform) {
-  ObjectUtils.setTransformWorldQuat(object, transform);
-}
-function setTransformWorld(object, transform) {
-  return ObjectUtils.setTransformWorldMatrix(object, transform);
-}
-var setTransformWorldMatrix = function() {
-  let position = Vec3Utils.create();
-  let rotation = QuatUtils.create();
-  let scale4 = Vec3Utils.create();
-  let transformMatrixNoScale = Mat4Utils.create();
-  let inverseScale = Vec3Utils.create();
-  let one = Vec3Utils.create(1);
-  return function setTransformWorldMatrix2(object, transform) {
-    Mat4Utils.getPosition(transform, position);
-    Mat4Utils.getScale(transform, scale4);
-    Vec3Utils.div(one, scale4, inverseScale);
-    Mat4Utils.scale(transform, inverseScale, transformMatrixNoScale);
-    Mat4Utils.getRotationQuat(transformMatrixNoScale, rotation);
-    QuatUtils.normalize(rotation, rotation);
-    ObjectUtils.setScaleWorld(object, scale4);
-    ObjectUtils.setRotationWorldQuat(object, rotation);
-    ObjectUtils.setPositionWorld(object, position);
-  };
-}();
-function setTransformWorldQuat(object, transform) {
-  object.setTransformWorld(transform);
-}
-function setTransformLocal(object, transform) {
-  return ObjectUtils.setTransformLocalMatrix(object, transform);
-}
-var setTransformLocalMatrix = function() {
-  let position = Vec3Utils.create();
-  let rotation = QuatUtils.create();
-  let scale4 = Vec3Utils.create();
-  let transformMatrixNoScale = Mat4Utils.create();
-  let inverseScale = Vec3Utils.create();
-  let one = Vec3Utils.create(1);
-  return function setTransformLocalMatrix2(object, transform) {
-    Mat4Utils.getPosition(transform, position);
-    Mat4Utils.getScale(transform, scale4);
-    Vec3Utils.div(one, scale4, inverseScale);
-    Mat4Utils.scale(transform, inverseScale, transformMatrixNoScale);
-    Mat4Utils.getRotationQuat(transformMatrixNoScale, rotation);
-    QuatUtils.normalize(rotation, rotation);
-    ObjectUtils.setScaleLocal(object, scale4);
-    ObjectUtils.setRotationLocalQuat(object, rotation);
-    ObjectUtils.setPositionLocal(object, position);
-  };
-}();
-function setTransformLocalQuat(object, transform) {
-  object.setTransformLocal(transform);
-}
-function resetPosition(object) {
-  ObjectUtils.resetPositionWorld(object);
-}
-var resetPositionWorld = function() {
-  let zero4 = Vec3Utils.create();
-  return function resetPositionWorld2(object) {
-    ObjectUtils.setPositionWorld(object, zero4);
-  };
-}();
-var resetPositionLocal = function() {
-  let zero4 = Vec3Utils.create();
-  return function resetPositionLocal2(object) {
-    ObjectUtils.setPositionLocal(object, zero4);
-  };
-}();
-function resetRotation(object) {
-  ObjectUtils.resetRotationWorld(object);
-}
-var resetRotationWorld = function() {
-  let identity4 = QuatUtils.create();
-  return function resetRotationWorld2(object) {
-    ObjectUtils.setRotationWorldQuat(object, identity4);
-  };
-}();
-var resetRotationLocal = function() {
-  let identity4 = QuatUtils.create();
-  return function resetRotationLocal2(object) {
-    ObjectUtils.setRotationLocalQuat(object, identity4);
-  };
-}();
-function resetScale(object) {
-  ObjectUtils.resetScaleWorld(object);
-}
-var resetScaleWorld = function() {
-  let one = Vec3Utils.create(1);
-  return function resetScaleWorld2(object) {
-    ObjectUtils.setScaleWorld(object, one);
-  };
-}();
-var resetScaleLocal = function() {
-  let one = Vec3Utils.create(1);
-  return function resetScaleLocal2(object) {
-    ObjectUtils.setScaleLocal(object, one);
-  };
-}();
-function resetTransform(object) {
-  ObjectUtils.resetTransformWorld(object);
-}
-function resetTransformWorld(object) {
-  ObjectUtils.resetScaleWorld(object);
-  ObjectUtils.resetRotationWorld(object);
-  ObjectUtils.resetPositionWorld(object);
-}
-function resetTransformLocal(object) {
-  ObjectUtils.resetScaleLocal(object);
-  ObjectUtils.resetRotationLocal(object);
-  ObjectUtils.resetPositionLocal(object);
-}
-function translate(object, translation) {
-  ObjectUtils.translateWorld(object, translation);
-}
-function translateWorld(object, translation) {
-  object.translateWorld(translation);
-}
-function translateLocal(object, translation) {
-  object.translate(translation);
-}
-function translateObject(object, translation) {
-  object.translateObject(translation);
-}
-function translateAxis(object, amount, direction) {
-  ObjectUtils.translateAxisWorld(object, amount, direction);
-}
-var translateAxisWorld = function() {
-  let translation = Vec3Utils.create();
-  return function translateAxisWorld2(object, amount, direction) {
-    Vec3Utils.scale(direction, amount, translation);
-    ObjectUtils.translateWorld(object, translation);
-  };
-}();
-var translateAxisLocal = function() {
-  let translation = Vec3Utils.create();
-  return function translateAxisLocal2(object, amount, direction) {
-    Vec3Utils.scale(direction, amount, translation);
-    ObjectUtils.translateLocal(object, translation);
-  };
-}();
-var translateAxisObject = function() {
-  let translation = Vec3Utils.create();
-  return function translateAxisObject2(object, amount, direction) {
-    Vec3Utils.scale(direction, amount, translation);
-    ObjectUtils.translateObject(object, translation);
-  };
-}();
-function rotate3(object, rotation) {
-  ObjectUtils.rotateWorld(object, rotation);
-}
-function rotateDegrees3(object, rotation) {
-  ObjectUtils.rotateWorldDegrees(object, rotation);
-}
-function rotateRadians3(object, rotation) {
-  ObjectUtils.rotateWorldRadians(object, rotation);
-}
-function rotateMatrix(object, rotation) {
-  ObjectUtils.rotateWorldMatrix(object, rotation);
-}
-function rotateQuat3(object, rotation) {
-  ObjectUtils.rotateWorldQuat(object, rotation);
-}
-function rotateWorld(object, rotation) {
-  ObjectUtils.rotateWorldDegrees(object, rotation);
-}
-var rotateWorldDegrees = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateWorldDegrees2(object, rotation) {
-    Vec3Utils.degreesToQuat(rotation, rotationQuat);
-    ObjectUtils.rotateWorldQuat(object, rotationQuat);
-  };
-}();
-var rotateWorldRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function rotateWorldRadians2(object, rotation) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.rotateWorldDegrees(object, degreesRotation);
-  };
-}();
-var rotateWorldMatrix = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateWorldMatrix2(object, rotation) {
-    Mat3Utils.toQuat(rotation, rotationQuat);
-    QuatUtils.normalize(rotationQuat, rotationQuat);
-    ObjectUtils.rotateWorldQuat(object, rotationQuat);
-  };
-}();
-var rotateWorldQuat = function() {
-  let currentRotationQuat = QuatUtils.create();
-  return function rotateWorldQuat2(object, rotation) {
-    ObjectUtils.getRotationWorldQuat(object, currentRotationQuat);
-    QuatUtils.mul(rotation, currentRotationQuat, currentRotationQuat);
-    QuatUtils.normalize(currentRotationQuat, currentRotationQuat);
-    ObjectUtils.setRotationWorldQuat(object, currentRotationQuat);
-  };
-}();
-function rotateLocal(object, rotation) {
-  ObjectUtils.rotateLocalDegrees(object, rotation);
-}
-var rotateLocalDegrees = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateLocalDegrees2(object, rotation) {
-    Vec3Utils.degreesToQuat(rotation, rotationQuat);
-    ObjectUtils.rotateLocalQuat(object, rotationQuat);
-  };
-}();
-var rotateLocalRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function rotateLocalRadians2(object, rotation) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.rotateLocalDegrees(object, degreesRotation);
-  };
-}();
-var rotateLocalMatrix = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateLocalMatrix2(object, rotation) {
-    Mat3Utils.toQuat(rotation, rotationQuat);
-    QuatUtils.normalize(rotationQuat, rotationQuat);
-    ObjectUtils.rotateLocalQuat(object, rotationQuat);
-  };
-}();
-var rotateLocalQuat = function() {
-  let currentRotationQuat = QuatUtils.create();
-  return function rotateLocalQuat2(object, rotation) {
-    ObjectUtils.getRotationLocalQuat(object, currentRotationQuat);
-    QuatUtils.mul(rotation, currentRotationQuat, currentRotationQuat);
-    QuatUtils.normalize(currentRotationQuat, currentRotationQuat);
-    ObjectUtils.setRotationLocalQuat(object, currentRotationQuat);
-  };
-}();
-function rotateObject(object, rotation) {
-  ObjectUtils.rotateObjectDegrees(object, rotation);
-}
-var rotateObjectDegrees = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateObjectDegrees2(object, rotation) {
-    Vec3Utils.degreesToQuat(rotation, rotationQuat);
-    ObjectUtils.rotateObjectQuat(object, rotationQuat);
-  };
-}();
-var rotateObjectRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function rotateObjectRadians2(object, rotation) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.rotateObjectDegrees(object, degreesRotation);
-  };
-}();
-var rotateObjectMatrix = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateObjectMatrix2(object, rotation) {
-    Mat3Utils.toQuat(rotation, rotationQuat);
-    QuatUtils.normalize(rotationQuat, rotationQuat);
-    ObjectUtils.rotateObjectQuat(object, rotationQuat);
-  };
-}();
-function rotateObjectQuat(object, rotation) {
-  object.rotateObject(rotation);
-}
-function rotateAxis4(object, angle2, axis) {
-  ObjectUtils.rotateAxisWorld(object, angle2, axis);
-}
-function rotateAxisDegrees4(object, angle2, axis) {
-  ObjectUtils.rotateAxisWorldDegrees(object, angle2, axis);
-}
-function rotateAxisRadians4(object, angle2, axis) {
-  ObjectUtils.rotateAxisWorldRadians(object, angle2, axis);
-}
-function rotateAxisWorld(object, angle2, axis) {
-  ObjectUtils.rotateAxisWorldDegrees(object, angle2, axis);
-}
-function rotateAxisWorldDegrees(object, angle2, axis) {
-  ObjectUtils.rotateAxisWorldRadians(object, MathUtils.toRadians(angle2), axis);
-}
-var rotateAxisWorldRadians = function() {
-  let rotation = QuatUtils.create();
-  return function rotateAxisWorldRadians2(object, angle2, axis) {
-    QuatUtils.fromAxisRadians(angle2, axis, rotation);
-    ObjectUtils.rotateWorldQuat(object, rotation);
-  };
-}();
-function rotateAxisLocal(object, angle2, axis) {
-  ObjectUtils.rotateAxisLocalDegrees(object, angle2, axis);
-}
-function rotateAxisLocalDegrees(object, angle2, axis) {
-  ObjectUtils.rotateAxisLocalRadians(object, MathUtils.toRadians(angle2), axis);
-}
-var rotateAxisLocalRadians = function() {
-  let rotation = QuatUtils.create();
-  return function rotateAxisLocalRadians2(object, angle2, axis) {
-    QuatUtils.fromAxisRadians(angle2, axis, rotation);
-    ObjectUtils.rotateLocalQuat(object, rotation);
-  };
-}();
-function rotateAxisObject(object, angle2, axis) {
-  ObjectUtils.rotateAxisObjectDegrees(object, angle2, axis);
-}
-function rotateAxisObjectDegrees(object, angle2, axis) {
-  ObjectUtils.rotateAxisObjectRadians(object, MathUtils.toRadians(angle2), axis);
-}
-var rotateAxisObjectRadians = function() {
-  let rotation = QuatUtils.create();
-  return function rotateAxisObjectRadians2(object, angle2, axis) {
-    QuatUtils.fromAxisRadians(angle2, axis, rotation);
-    ObjectUtils.rotateObjectQuat(object, rotation);
-  };
-}();
-function rotateAround2(object, rotation, origin) {
-  ObjectUtils.rotateAroundWorld(object, rotation, origin);
-}
-function rotateAroundDegrees2(object, rotation, origin) {
-  ObjectUtils.rotateAroundWorldDegrees(object, rotation, origin);
-}
-function rotateAroundRadians2(object, rotation, origin) {
-  ObjectUtils.rotateAroundWorldRadians(object, rotation, origin);
-}
-function rotateAroundMatrix(object, rotation, origin) {
-  ObjectUtils.rotateAroundWorldMatrix(object, rotation, origin);
-}
-function rotateAroundQuat2(object, rotation, origin) {
-  ObjectUtils.rotateAroundWorldQuat(object, rotation, origin);
-}
-function rotateAroundWorld(object, rotation, origin) {
-  ObjectUtils.rotateAroundWorldDegrees(object, rotation, origin);
-}
-var rotateAroundWorldDegrees = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateAroundWorldDegrees2(object, rotation, origin) {
-    Vec3Utils.degreesToQuat(rotation, rotationQuat);
-    ObjectUtils.rotateAroundWorldQuat(object, rotationQuat, origin);
-  };
-}();
-var rotateAroundWorldRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function rotateAroundWorldRadians2(object, rotation, origin) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.rotateAroundWorldDegrees(object, degreesRotation, origin);
-  };
-}();
-var rotateAroundWorldMatrix = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateAroundWorldMatrix2(object, rotation, origin) {
-    Mat3Utils.toQuat(rotation, rotationQuat);
-    QuatUtils.normalize(rotationQuat, rotationQuat);
-    ObjectUtils.rotateAroundWorldQuat(object, rotationQuat, origin);
-  };
-}();
-var rotateAroundWorldQuat = function() {
-  let axis = Vec3Utils.create();
-  return function rotateAroundWorldQuat2(object, rotation, origin) {
-    QuatUtils.getAxis(rotation, axis);
-    let angle2 = QuatUtils.getAngleRadians(rotation);
-    ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, axis, origin);
-  };
-}();
-function rotateAroundLocal(object, rotation, origin) {
-  ObjectUtils.rotateAroundLocalDegrees(object, rotation, origin);
-}
-var rotateAroundLocalDegrees = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateAroundLocalDegrees2(object, rotation, origin) {
-    Vec3Utils.degreesToQuat(rotation, rotationQuat);
-    ObjectUtils.rotateAroundLocalQuat(object, rotationQuat, origin);
-  };
-}();
-var rotateAroundLocalRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function rotateAroundLocalRadians2(object, rotation, origin) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.rotateAroundLocalDegrees(object, degreesRotation, origin);
-  };
-}();
-var rotateAroundLocalMatrix = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateAroundLocalMatrix2(object, rotation, origin) {
-    Mat3Utils.toQuat(rotation, rotationQuat);
-    QuatUtils.normalize(rotationQuat, rotationQuat);
-    ObjectUtils.rotateAroundLocalQuat(object, rotationQuat, origin);
-  };
-}();
-var rotateAroundLocalQuat = function() {
-  let axis = Vec3Utils.create();
-  return function rotateAroundLocalQuat2(object, rotation, origin) {
-    QuatUtils.getAxis(rotation, axis);
-    let angle2 = QuatUtils.getAngleRadians(rotation);
-    ObjectUtils.rotateAroundAxisLocalRadians(object, angle2, axis, origin);
-  };
-}();
-function rotateAroundObject(object, rotation, origin) {
-  ObjectUtils.rotateAroundObjectDegrees(object, rotation, origin);
-}
-var rotateAroundObjectDegrees = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateAroundObjectDegrees2(object, rotation, origin) {
-    Vec3Utils.degreesToQuat(rotation, rotationQuat);
-    ObjectUtils.rotateAroundObjectQuat(object, rotationQuat, origin);
-  };
-}();
-var rotateAroundObjectRadians = function() {
-  let degreesRotation = Vec3Utils.create();
-  return function rotateAroundObjectRadians2(object, rotation, origin) {
-    degreesRotation = Vec3Utils.toDegrees(rotation, degreesRotation);
-    ObjectUtils.rotateAroundObjectDegrees(object, degreesRotation, origin);
-  };
-}();
-var rotateAroundObjectMatrix = function() {
-  let rotationQuat = QuatUtils.create();
-  return function rotateAroundObjectMatrix2(object, rotation, origin) {
-    Mat3Utils.toQuat(rotation, rotationQuat);
-    QuatUtils.normalize(rotationQuat, rotationQuat);
-    ObjectUtils.rotateAroundObjectQuat(object, rotationQuat, origin);
-  };
-}();
-var rotateAroundObjectQuat = function() {
-  let axis = Vec3Utils.create();
-  return function rotateAroundObjectQuat2(object, rotation, origin) {
-    QuatUtils.getAxis(rotation, axis);
-    let angle2 = QuatUtils.getAngleRadians(rotation);
-    ObjectUtils.rotateAroundAxisObjectRadians(object, angle2, axis, origin);
-  };
-}();
-function rotateAroundAxis2(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisWorld(object, angle2, axis, origin);
-}
-function rotateAroundAxisDegrees2(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisWorldDegrees(object, angle2, axis, origin);
-}
-function rotateAroundAxisRadians2(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, axis, origin);
-}
-function rotateAroundAxisWorld(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisWorldDegrees(object, angle2, axis, origin);
-}
-function rotateAroundAxisWorldDegrees(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisWorldRadians(object, MathUtils.toRadians(angle2), axis, origin);
-}
-var rotateAroundAxisWorldRadians = function() {
-  let transformToRotate = Quat2Utils.create();
-  let transformToRotateConjugate = Quat2Utils.create();
-  let transformQuat2 = Quat2Utils.create();
-  let defaultQuat = QuatUtils.create();
-  return function rotateAroundAxisWorldRadians2(object, angle2, axis, origin) {
-    Quat2Utils.setPositionRotationQuat(transformToRotate, origin, defaultQuat);
-    ObjectUtils.getTransformWorldQuat(object, transformQuat2);
-    Quat2Utils.conjugate(transformToRotate, transformToRotateConjugate);
-    Quat2Utils.mul(transformToRotateConjugate, transformQuat2, transformQuat2);
-    Quat2Utils.rotateAxisRadians(transformToRotate, angle2, axis, transformToRotate);
-    Quat2Utils.mul(transformToRotate, transformQuat2, transformQuat2);
-    ObjectUtils.setTransformWorldQuat(object, transformQuat2);
-  };
-}();
-function rotateAroundAxisLocal(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisLocalDegrees(object, angle2, axis, origin);
-}
-function rotateAroundAxisLocalDegrees(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisLocalRadians(object, MathUtils.toRadians(angle2), axis, origin);
-}
-var rotateAroundAxisLocalRadians = function() {
-  let convertedPosition = Vec3Utils.create();
-  let convertedAxis = Vec3Utils.create();
-  return function rotateAroundAxisLocalRadians2(object, angle2, axis, origin) {
-    ObjectUtils.convertPositionLocalToWorld(object, origin, convertedPosition);
-    ObjectUtils.convertDirectionLocalToWorld(object, axis, convertedAxis);
-    ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, convertedAxis, convertedPosition);
-  };
-}();
-function rotateAroundAxisObject(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisObjectDegrees(object, angle2, axis, origin);
-}
-function rotateAroundAxisObjectDegrees(object, angle2, axis, origin) {
-  ObjectUtils.rotateAroundAxisObjectRadians(object, MathUtils.toRadians(angle2), axis, origin);
-}
-var rotateAroundAxisObjectRadians = function() {
-  let convertedPosition = Vec3Utils.create();
-  let convertedAxis = Vec3Utils.create();
-  return function rotateAroundAxisObjectRadians2(object, angle2, axis, origin) {
-    ObjectUtils.convertPositionObjectToWorld(object, origin, convertedPosition);
-    ObjectUtils.convertDirectionObjectToWorld(object, axis, convertedAxis);
-    ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, convertedAxis, convertedPosition);
-  };
-}();
-var scaleObject = function() {
-  let vector = Vec3Utils.create();
-  return function scaleObject2(object, scale4) {
-    if (isNaN(scale4)) {
-      object.scale(scale4);
-    } else {
-      Vec3Utils.set(vector, scale4);
-      object.scale(vector);
-    }
-  };
-}();
-function lookAt(object, position, up) {
-  ObjectUtils.lookAtWorld(object, position, up);
-}
-var lookAtWorld = function() {
-  let direction = Vec3Utils.create();
-  return function lookAtWorld2(object, position, up) {
-    ObjectUtils.getPositionWorld(object, direction);
-    Vec3Utils.sub(position, direction, direction);
-    ObjectUtils.lookToWorld(object, direction, up);
-  };
-}();
-var lookAtLocal = function() {
-  let direction = Vec3Utils.create();
-  return function lookAtLocal2(object, position, up) {
-    ObjectUtils.getPositionLocal(object, direction);
-    Vec3Utils.sub(position, direction, direction);
-    ObjectUtils.lookToLocal(object, direction, up);
-  };
-}();
-function lookTo(object, direction, up) {
-  ObjectUtils.lookToWorld(object, direction, up);
-}
-var lookToWorld = function() {
-  let internalUp = Vec3Utils.create();
-  return function lookToWorld2(object, direction, up = ObjectUtils.getUpWorld(object, internalUp)) {
-    ObjectUtils.setForwardWorld(object, direction, up);
-  };
-}();
-var lookToLocal = function() {
-  let internalUp = Vec3Utils.create();
-  return function lookToLocal2(object, direction, up = ObjectUtils.getUpLocal(object, internalUp)) {
-    ObjectUtils.setForwardLocal(object, direction, up);
-  };
-}();
-var setParent = function() {
-  let position = Vec3Utils.create();
-  let rotation = QuatUtils.create();
-  let scale4 = Vec3Utils.create();
-  return function setParent2(object, newParent, keepTransformWorld = true) {
-    if (!keepTransformWorld) {
-      object.parent = newParent;
-    } else {
-      ObjectUtils.getPositionWorld(object, position);
-      ObjectUtils.getRotationWorldQuat(object, rotation);
-      ObjectUtils.getScaleWorld(object, scale4);
-      object.parent = newParent;
-      ObjectUtils.setScaleWorld(object, scale4);
-      ObjectUtils.setRotationWorldQuat(object, rotation);
-      ObjectUtils.setPositionWorld(object, position);
-    }
-  };
-}();
-function getParent(object) {
-  return object.parent;
-}
-var convertPositionObjectToWorld = function() {
-  let matrix = Mat4Utils.create();
-  return function convertPositionObjectToWorld2(object, position, resultPosition = Vec3Utils.create()) {
-    ObjectUtils.getTransformWorldMatrix(object, matrix);
-    Vec3Utils.transformMat4(position, matrix, resultPosition);
-    return resultPosition;
-  };
-}();
-var convertDirectionObjectToWorld = function() {
-  let rotation = QuatUtils.create();
-  return function convertDirectionObjectToWorld2(object, direction, resultDirection = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldQuat(object, rotation);
-    Vec3Utils.transformQuat(direction, rotation, resultDirection);
-    return resultDirection;
-  };
-}();
-var convertPositionWorldToObject = function() {
-  let matrix = Mat4Utils.create();
-  return function convertPositionWorldToObject2(object, position, resultPosition = Vec3Utils.create()) {
-    ObjectUtils.getTransformWorldMatrix(object, matrix);
-    Mat4Utils.invert(matrix, matrix);
-    Vec3Utils.transformMat4(position, matrix, resultPosition);
-    return resultPosition;
-  };
-}();
-var convertDirectionWorldToObject = function() {
-  let rotation = QuatUtils.create();
-  return function convertDirectionWorldToObject2(object, direction, resultDirection = Vec3Utils.create()) {
-    ObjectUtils.getRotationWorldQuat(object, rotation);
-    QuatUtils.conjugate(rotation, rotation);
-    Vec3Utils.transformQuat(direction, rotation, resultDirection);
-    return resultDirection;
-  };
-}();
-function convertPositionLocalToWorld(object, position, resultPosition = Vec3Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertPositionObjectToWorld(ObjectUtils.getParent(object), position, resultPosition);
-  } else {
-    Vec3Utils.copy(position, resultPosition);
-  }
-  return resultPosition;
-}
-function convertDirectionLocalToWorld(object, direction, resultDirection = Vec3Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertDirectionObjectToWorld(ObjectUtils.getParent(object), direction, resultDirection);
-  } else {
-    Vec3Utils.copy(direction, resultDirection);
-  }
-  return resultDirection;
-}
-function convertPositionWorldToLocal(object, position, resultPosition = Vec3Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertPositionWorldToObject(ObjectUtils.getParent(object), position, resultPosition);
-  } else {
-    Vec3Utils.copy(position, resultPosition);
-  }
-  return resultPosition;
-}
-function convertDirectionWorldToLocal(object, direction, resultDirection = Vec3Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertDirectionWorldToObject(ObjectUtils.getParent(object), direction, resultDirection);
-  } else {
-    Vec3Utils.copy(direction, resultDirection);
-  }
-  return resultDirection;
-}
-function convertPositionObjectToLocal(object, position, resultPosition = Vec3Utils.create()) {
-  ObjectUtils.convertPositionObjectToWorld(object, position, resultPosition);
-  ObjectUtils.convertPositionWorldToLocal(object, resultPosition, resultPosition);
-  return resultPosition;
-}
-function convertDirectionObjectToLocal(object, direction, resultDirection = Vec3Utils.create()) {
-  ObjectUtils.convertDirectionObjectToWorld(object, direction, resultDirection);
-  ObjectUtils.convertDirectionWorldToLocal(object, resultDirection, resultDirection);
-  return resultDirection;
-}
-function convertPositionLocalToObject(object, position, resultPosition = Vec3Utils.create()) {
-  ObjectUtils.convertPositionLocalToWorld(object, position, resultPosition);
-  ObjectUtils.convertPositionWorldToObject(object, resultPosition, resultPosition);
-  return resultPosition;
-}
-function convertDirectionLocalToObject(object, direction, resultDirection = Vec3Utils.create()) {
-  ObjectUtils.convertDirectionLocalToWorld(object, direction, resultDirection);
-  ObjectUtils.convertDirectionWorldToObject(object, resultDirection, resultDirection);
-  return resultDirection;
-}
-function convertTransformObjectToWorld(object, transform, resultTransform) {
-  return ObjectUtils.convertTransformObjectToWorldMatrix(object, transform, resultTransform);
-}
-var convertTransformObjectToWorldMatrix = function() {
-  let convertTransform = Mat4Utils.create();
-  let position = Vec3Utils.create();
-  let scale4 = Vec3Utils.create();
-  let inverseScale = Vec3Utils.create();
-  let one = Vec3Utils.create(1);
-  return function convertTransformObjectToWorldMatrix2(object, transform, resultTransform = Mat4Utils.create()) {
-    ObjectUtils.getTransformWorldMatrix(object, convertTransform);
-    if (ObjectUtils.hasUniformScaleWorld(object)) {
-      Mat4Utils.mul(convertTransform, transform, resultTransform);
-    } else {
-      Vec3Utils.set(position, transform[12], transform[13], transform[14]);
-      ObjectUtils.convertPositionObjectToWorld(object, position, position);
-      Mat4Utils.getScale(convertTransform, scale4);
-      Vec3Utils.div(one, scale4, inverseScale);
-      Mat4Utils.scale(convertTransform, inverseScale, convertTransform);
-      Mat4Utils.mul(convertTransform, transform, resultTransform);
-      Mat4Utils.scale(resultTransform, scale4, resultTransform);
-      resultTransform[12] = position[0];
-      resultTransform[13] = position[1];
-      resultTransform[14] = position[2];
-      resultTransform[15] = 1;
-    }
-    return resultTransform;
-  };
-}();
-var convertTransformObjectToWorldQuat = function() {
-  let position = Vec3Utils.create();
-  let rotation = QuatUtils.create();
-  return function convertTransformObjectToWorldQuat2(object, transform, resultTransform = Quat2Utils.create()) {
-    ObjectUtils.getRotationWorldQuat(object, rotation);
-    QuatUtils.mul(rotation, transform, rotation);
-    Quat2Utils.getPosition(transform, position);
-    ObjectUtils.convertPositionObjectToWorld(object, position, position);
-    Quat2Utils.setPositionRotationQuat(resultTransform, position, rotation);
-    return resultTransform;
-  };
-}();
-function convertTransformWorldToObject(object, transform, resultTransform) {
-  return ObjectUtils.convertTransformWorldToObjectMatrix(object, transform, resultTransform);
-}
-var convertTransformWorldToObjectMatrix = function() {
-  let convertTransform = Mat4Utils.create();
-  let position = Vec3Utils.create();
-  let scale4 = Vec3Utils.create();
-  let inverseScale = Vec3Utils.create();
-  let one = Vec3Utils.create(1);
-  return function convertTransformWorldToObjectMatrix2(object, transform, resultTransform = Mat4Utils.create()) {
-    ObjectUtils.getTransformWorldMatrix(object, convertTransform);
-    if (ObjectUtils.hasUniformScaleWorld(object)) {
-      Mat4Utils.invert(convertTransform, convertTransform);
-      Mat4Utils.mul(convertTransform, transform, resultTransform);
-    } else {
-      Vec3Utils.set(position, transform[12], transform[13], transform[14]);
-      ObjectUtils.convertPositionWorldToObject(object, position, position);
-      Mat4Utils.getScale(convertTransform, scale4);
-      Vec3Utils.div(one, scale4, inverseScale);
-      Mat4Utils.scale(convertTransform, inverseScale, convertTransform);
-      Mat4Utils.invert(convertTransform, convertTransform);
-      Mat4Utils.mul(convertTransform, transform, resultTransform);
-      Mat4Utils.scale(resultTransform, inverseScale, resultTransform);
-      resultTransform[12] = position[0];
-      resultTransform[13] = position[1];
-      resultTransform[14] = position[2];
-      resultTransform[15] = 1;
-    }
-    return resultTransform;
-  };
-}();
-var convertTransformWorldToObjectQuat = function() {
-  let position = Vec3Utils.create();
-  let rotation = QuatUtils.create();
-  return function convertTransformWorldToObjectQuat2(object, transform, resultTransform = Quat2Utils.create()) {
-    ObjectUtils.getRotationWorldQuat(object, rotation);
-    QuatUtils.conjugate(rotation, rotation);
-    QuatUtils.mul(rotation, transform, rotation);
-    Quat2Utils.getPosition(transform, position);
-    ObjectUtils.convertPositionWorldToObject(object, position, position);
-    Quat2Utils.setPositionRotationQuat(resultTransform, position, rotation);
-    return resultTransform;
-  };
-}();
-function convertTransformLocalToWorld(object, transform, resultTransform) {
-  return ObjectUtils.convertTransformLocalToWorldMatrix(object, transform, resultTransform);
-}
-function convertTransformLocalToWorldMatrix(object, transform, resultTransform = Mat4Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertTransformObjectToWorldMatrix(ObjectUtils.getParent(object), transform, resultTransform);
-  } else {
-    Mat4Utils.copy(transform, resultTransform);
-  }
-  return resultTransform;
-}
-function convertTransformLocalToWorldQuat(object, transform, resultTransform = Quat2Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertTransformObjectToWorldQuat(ObjectUtils.getParent(object), transform, resultTransform);
-  } else {
-    Quat2Utils.copy(transform, resultTransform);
-  }
-  return resultTransform;
-}
-function convertTransformWorldToLocal(object, transform, resultTransform) {
-  return ObjectUtils.convertTransformWorldToLocalMatrix(object, transform, resultTransform);
-}
-function convertTransformWorldToLocalMatrix(object, transform, resultTransform = Mat4Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertTransformWorldToObjectMatrix(ObjectUtils.getParent(object), transform, resultTransform);
-  } else {
-    Mat4Utils.copy(transform, resultTransform);
-  }
-  return resultTransform;
-}
-function convertTransformWorldToLocalQuat(object, transform, resultTransform = Quat2Utils.create()) {
-  if (ObjectUtils.getParent(object)) {
-    ObjectUtils.convertTransformWorldToObjectQuat(ObjectUtils.getParent(object), transform, resultTransform);
-  } else {
-    Quat2Utils.copy(transform, resultTransform);
-  }
-  return resultTransform;
-}
-function convertTransformObjectToLocal(object, transform, resultTransform) {
-  return ObjectUtils.convertTransformObjectToLocalMatrix(object, transform, resultTransform);
-}
-function convertTransformObjectToLocalMatrix(object, transform, resultTransform = Mat4Utils.create()) {
-  ObjectUtils.convertTransformObjectToWorldMatrix(object, transform, resultTransform);
-  ObjectUtils.convertTransformWorldToLocalMatrix(object, resultTransform, resultTransform);
-  return resultTransform;
-}
-function convertTransformObjectToLocalQuat(object, transform, resultTransform = Quat2Utils.create()) {
-  ObjectUtils.convertTransformObjectToWorldQuat(object, transform, resultTransform);
-  ObjectUtils.convertTransformWorldToLocalQuat(object, resultTransform, resultTransform);
-  return resultTransform;
-}
-function convertTransformLocalToObject(object, transform, resultTransform) {
-  return ObjectUtils.convertTransformLocalToObjectMatrix(object, transform, resultTransform);
-}
-function convertTransformLocalToObjectMatrix(object, transform, resultTransform = Mat4Utils.create()) {
-  ObjectUtils.convertTransformLocalToWorldMatrix(object, transform, resultTransform);
-  ObjectUtils.convertTransformWorldToObjectMatrix(object, resultTransform, resultTransform);
-  return resultTransform;
-}
-function convertTransformLocalToObjectQuat(object, transform, resultTransform = Quat2Utils.create()) {
-  ObjectUtils.convertTransformLocalToWorldQuat(object, transform, resultTransform);
-  ObjectUtils.convertTransformWorldToObjectQuat(object, resultTransform, resultTransform);
-  return resultTransform;
-}
-function addComponent(object, typeOrClass, paramsOrActive, active = null) {
-  let params = null;
-  if (typeof paramsOrActive == "boolean") {
-    params = {};
-    params["active"] = paramsOrActive;
-  } else {
-    params = paramsOrActive;
-    if (active != null) {
-      if (params == null) {
-        params = {};
-      }
-      params["active"] = active;
-    }
-  }
-  return object.addComponent(typeOrClass, params);
-}
-function getComponent(object, typeOrClass, index = 0) {
-  return ObjectUtils.getComponentHierarchy(object, typeOrClass, index);
-}
-function getComponentSelf(object, typeOrClass, index = 0) {
-  return object.getComponent(typeOrClass, index);
-}
-function getComponentHierarchy(object, typeOrClass, index = 0) {
-  return ObjectUtils.getComponentHierarchyBreadth(object, typeOrClass, index);
-}
-function getComponentHierarchyBreadth(object, typeOrClass, index = 0) {
-  let objects = ObjectUtils.getHierarchyBreadth(object);
-  return ObjectUtils.getComponentObjects(objects, typeOrClass, index);
-}
-function getComponentHierarchyDepth(object, typeOrClass, index = 0) {
-  let objects = ObjectUtils.getHierarchyDepth(object);
-  return ObjectUtils.getComponentObjects(objects, typeOrClass, index);
-}
-function getComponentDescendants(object, typeOrClass, index = 0) {
-  return ObjectUtils.getComponentDescendantsBreadth(object, typeOrClass, index);
-}
-function getComponentDescendantsBreadth(object, typeOrClass, index = 0) {
-  let objects = ObjectUtils.getDescendantsBreadth(object);
-  return ObjectUtils.getComponentObjects(objects, typeOrClass, index);
-}
-function getComponentDescendantsDepth(object, typeOrClass, index = 0) {
-  let objects = ObjectUtils.getDescendantsDepth(object);
-  return ObjectUtils.getComponentObjects(objects, typeOrClass, index);
-}
-function getComponentChildren(object, typeOrClass, index = 0) {
-  let objects = ObjectUtils.getChildren(object);
-  return ObjectUtils.getComponentObjects(objects, typeOrClass, index);
-}
-function getComponents(object, typeOrClass) {
-  return ObjectUtils.getComponentsHierarchy(object, typeOrClass);
-}
-function getComponentsSelf(object, typeOrClass) {
-  return object.getComponents(typeOrClass);
-}
-function getComponentsHierarchy(object, typeOrClass) {
-  return ObjectUtils.getComponentsHierarchyBreadth(object, typeOrClass);
-}
-function getComponentsHierarchyBreadth(object, typeOrClass) {
-  let objects = ObjectUtils.getHierarchyBreadth(object);
-  return ObjectUtils.getComponentsObjects(objects, typeOrClass);
-}
-function getComponentsHierarchyDepth(object, typeOrClass) {
-  let objects = ObjectUtils.getHierarchyDepth(object);
-  return ObjectUtils.getComponentsObjects(objects, typeOrClass);
-}
-function getComponentsDescendants(object, typeOrClass) {
-  return ObjectUtils.getComponentsDescendantsBreadth(object, typeOrClass);
-}
-function getComponentsDescendantsBreadth(object, typeOrClass) {
-  let objects = ObjectUtils.getDescendantsBreadth(object);
-  return ObjectUtils.getComponentsObjects(objects, typeOrClass);
-}
-function getComponentsDescendantsDepth(object, typeOrClass) {
-  let objects = ObjectUtils.getDescendantsDepth(object);
-  return ObjectUtils.getComponentsObjects(objects, typeOrClass);
-}
-function getComponentsChildren(object, typeOrClass) {
-  let objects = ObjectUtils.getChildren(object);
-  return ObjectUtils.getComponentsObjects(objects, typeOrClass);
-}
-function setActive(object, active) {
-  ObjectUtils.setActiveHierarchy(object, active);
-}
-function setActiveSelf(object, active) {
-  object.active = active;
-}
-function setActiveHierarchy(object, active) {
-  ObjectUtils.setActiveHierarchyBreadth(object, active);
-}
-function setActiveHierarchyBreadth(object, active) {
-  let objects = ObjectUtils.getHierarchyBreadth(object);
-  ObjectUtils.setActiveObjects(objects, active);
-}
-function setActiveHierarchyDepth(object, active) {
-  let objects = ObjectUtils.getHierarchyDepth(object);
-  ObjectUtils.setActiveObjects(objects, active);
-}
-function setActiveDescendants(object, active) {
-  ObjectUtils.setActiveDescendantsBreadth(object, active);
-}
-function setActiveDescendantsBreadth(object, active) {
-  let objects = ObjectUtils.getDescendantsBreadth(object);
-  ObjectUtils.setActiveObjects(objects, active);
-}
-function setActiveDescendantsDepth(object, active) {
-  let objects = ObjectUtils.getDescendantsDepth(object);
-  ObjectUtils.setActiveObjects(objects, active);
-}
-function setActiveChildren(object, active) {
-  let objects = ObjectUtils.getChildren(object);
-  ObjectUtils.setActiveObjects(objects, active);
-}
-function hasUniformScale2(object) {
-  return ObjectUtils.hasUniformScaleWorld(object);
-}
-var hasUniformScaleWorld = function() {
-  let scale4 = Vec3Utils.create();
-  return function hasUniformScaleWorld2(object) {
-    ObjectUtils.getScaleWorld(object, scale4);
-    return Math.abs(scale4[0] - scale4[1]) < MathUtils.EPSILON && Math.abs(scale4[1] - scale4[2]) < MathUtils.EPSILON && Math.abs(scale4[0] - scale4[2]) < MathUtils.EPSILON;
-  };
-}();
-var hasUniformScaleLocal = function() {
-  let scale4 = Vec3Utils.create();
-  return function hasUniformScaleLocal2(object) {
-    ObjectUtils.getScaleLocal(object, scale4);
-    return Math.abs(scale4[0] - scale4[1]) < MathUtils.EPSILON && Math.abs(scale4[1] - scale4[2]) < MathUtils.EPSILON && Math.abs(scale4[0] - scale4[2]) < MathUtils.EPSILON;
-  };
-}();
-var clone5 = function() {
-  let scale4 = Vec3Utils.create();
-  let transformQuat2 = Quat2Utils.create();
-  return function clone10(object, cloneParams = new CloneParams()) {
-    let clonedObject = null;
-    let cloneParent = cloneParams.myCloneParent === void 0 ? ObjectUtils.getParent(object) : cloneParams.myCloneParent;
-    if (cloneParams.myUseDefaultObjectClone) {
-      clonedObject = object.clone(cloneParent);
-      if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive) {
-        let clonedComponents = clonedObject.pp_getComponents();
-        for (let clonedComponent of clonedComponents) {
-          if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive && !clonedComponent.active) {
-            clonedComponent.active = true;
-            clonedComponent.active = false;
-          }
-        }
-      }
-    } else if (ObjectUtils.isCloneable(object, cloneParams)) {
-      let objectsToCloneData = [];
-      objectsToCloneData.push([cloneParent, object]);
-      let objectsToCloneComponentsData = [];
-      while (objectsToCloneData.length > 0) {
-        let cloneData = objectsToCloneData.shift();
-        let parent = cloneData[0];
-        let objectToClone = cloneData[1];
-        let currentClonedObject = parent != null ? ObjectUtils.addObject(parent) : SceneUtils.addObject(Globals.getScene(ObjectUtils.getEngine(object)));
-        ObjectUtils.setName(currentClonedObject, ObjectUtils.getName(objectToClone));
-        ObjectUtils.setScaleLocal(currentClonedObject, ObjectUtils.getScaleLocal(objectToClone, scale4));
-        ObjectUtils.setTransformLocalQuat(currentClonedObject, ObjectUtils.getTransformLocalQuat(objectToClone, transformQuat2));
-        if (!cloneParams.myIgnoreComponents) {
-          objectsToCloneComponentsData.push([objectToClone, currentClonedObject]);
-        }
-        if (!cloneParams.myIgnoreDescendants) {
-          for (let child of ObjectUtils.getChildren(objectToClone)) {
-            let cloneDescendant = false;
-            if (cloneParams.myDescendantsToInclude.length > 0) {
-              cloneDescendant = cloneParams.myDescendantsToInclude.find((descendantToInclude) => ObjectUtils.equals(descendantToInclude, child)) != null;
-            } else {
-              cloneDescendant = cloneParams.myDescendantsToIgnore.find((descendantToIgnore) => ObjectUtils.equals(descendantToIgnore, child)) == null;
-            }
-            if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
-              cloneDescendant = !cloneParams.myIgnoreDescendantCallback(child);
-            }
-            if (cloneDescendant) {
-              objectsToCloneData.push([currentClonedObject, child]);
-            }
-          }
-        }
-        if (clonedObject == null) {
-          clonedObject = currentClonedObject;
-        }
-      }
-      let componentsToCloneData = [];
-      while (objectsToCloneComponentsData.length > 0) {
-        let cloneData = objectsToCloneComponentsData.shift();
-        let objectToClone = cloneData[0];
-        let currentClonedObject = cloneData[1];
-        let components = ObjectUtils.getComponentsSelf(objectToClone);
-        for (let component of components) {
-          if (ComponentUtils.isCloneable(component.type, cloneParams.myUseDefaultComponentClone || cloneParams.myUseDefaultComponentCloneAsFallback, ObjectUtils.getEngine(object))) {
-            let cloneComponent = false;
-            if (cloneParams.myComponentsToInclude.length > 0) {
-              cloneComponent = cloneParams.myComponentsToInclude.indexOf(component.type) != -1;
-            } else {
-              cloneComponent = cloneParams.myComponentsToIgnore.indexOf(component.type) == -1;
-            }
-            if (cloneComponent && cloneParams.myIgnoreComponentCallback != null) {
-              cloneComponent = !cloneParams.myIgnoreComponentCallback(component);
-            }
-            if (cloneComponent) {
-              componentsToCloneData.push([component, currentClonedObject]);
-            }
-          }
-        }
-      }
-      let componentsToPostProcessData = [];
-      while (componentsToCloneData.length > 0) {
-        let cloneData = componentsToCloneData.shift();
-        let componentToClone = cloneData[0];
-        let currentClonedObject = cloneData[1];
-        let clonedComponent = null;
-        if (!cloneParams.myUseDefaultComponentClone) {
-          clonedComponent = ComponentUtils.clone(componentToClone, currentClonedObject, cloneParams.myComponentDeepCloneParams, cloneParams.myComponentCustomCloneParams, cloneParams.myUseDefaultComponentCloneAsFallback, cloneParams.myDefaultComponentCloneAutoStartIfNotActive);
-        } else {
-          clonedComponent = ComponentUtils.cloneDefault(componentToClone, currentClonedObject, cloneParams.myDefaultComponentCloneAutoStartIfNotActive);
-        }
-        if (clonedComponent != null) {
-          if (ComponentUtils.hasClonePostProcess(componentToClone.type, ObjectUtils.getEngine(object))) {
-            componentsToPostProcessData.push([componentToClone, clonedComponent]);
-          }
-        }
-      }
-      while (componentsToPostProcessData.length > 0) {
-        let cloneData = componentsToPostProcessData.shift();
-        let componentToClone = cloneData[0];
-        let currentClonedComponent = cloneData[1];
-        ComponentUtils.clonePostProcess(componentToClone, currentClonedComponent, cloneParams.myComponentDeepCloneParams, cloneParams.myComponentCustomCloneParams);
-      }
-    } else if (cloneParams.myUseDefaultObjectCloneAsFallback) {
-      clonedObject = object.clone(cloneParent);
-      if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive) {
-        let clonedComponents = clonedObject.pp_getComponents();
-        for (let clonedComponent of clonedComponents) {
-          if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive && !clonedComponent.active) {
-            clonedComponent.active = true;
-            clonedComponent.active = false;
-          }
-        }
-      }
-    }
-    return clonedObject;
-  };
-}();
-function isCloneable(object, cloneParams = new CloneParams()) {
-  if (cloneParams.myIgnoreNonCloneable || cloneParams.myIgnoreComponents || cloneParams.myUseDefaultComponentClone || cloneParams.myUseDefaultComponentCloneAsFallback) {
-    return true;
-  }
-  let cloneable = true;
-  let objectsToClone = [];
-  objectsToClone.push(object);
-  while (cloneable && objectsToClone.length > 0) {
-    let objectToClone = objectsToClone.shift();
-    let components = ObjectUtils.getComponentsSelf(objectToClone);
-    for (let component of components) {
-      let cloneComponent = false;
-      if (cloneParams.myComponentsToInclude.length > 0) {
-        cloneComponent = cloneParams.myComponentsToInclude.indexOf(component.type) != -1;
-      } else {
-        cloneComponent = cloneParams.myComponentsToIgnore.indexOf(component.type) == -1;
-      }
-      if (cloneComponent && cloneParams.myIgnoreComponentCallback != null) {
-        cloneComponent = !cloneParams.myIgnoreComponentCallback(component);
-      }
-      if (cloneComponent && !ComponentUtils.isCloneable(component.type, false, ObjectUtils.getEngine(object))) {
-        cloneable = false;
-        break;
-      }
-    }
-    if (cloneable && !cloneParams.myIgnoreDescendants) {
-      for (let child of ObjectUtils.getChildren(objectToClone)) {
-        let cloneDescendant = false;
-        if (cloneParams.myDescendantsToInclude.length > 0) {
-          cloneDescendant = cloneParams.myDescendantsToInclude.find((descendantToInclude) => ObjectUtils.equals(descendantToInclude, child)) != null;
-        } else {
-          cloneDescendant = cloneParams.myDescendantsToIgnore.find((descendantToInclude) => ObjectUtils.equals(descendantToInclude, child)) == null;
-        }
-        if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
-          cloneDescendant = !cloneParams.myIgnoreDescendantCallback(child);
-        }
-        if (cloneDescendant) {
-          objectsToClone.push(child);
-        }
-      }
-    }
-  }
-  return cloneable;
-}
-function toString(object) {
-  return ObjectUtils.toStringCompact(object);
-}
-var toStringExtended = function() {
-  let tab = "    ";
-  let newLine = "\n";
-  let startObject = "{";
-  let endObject = "}";
-  let nameLabel = "name: ";
-  let idLabel = "id: ";
-  let componentsLabel = "components: ";
-  let typeLabel = "type: ";
-  let childrenLabel = "children: ";
-  let startComponents = "[";
-  let endComponents = "]";
-  let startChildren = startComponents;
-  let endChildren = endComponents;
-  let separator = ",";
-  let newLineTab = newLine.concat(tab, tab);
-  return function toStringExtended3(object) {
-    let objectString = "";
-    objectString = objectString.concat(startObject, newLine);
-    let components = ObjectUtils.getComponentsSelf(object);
-    let children = ObjectUtils.getChildren(object);
-    let name = ObjectUtils.getName(object);
-    if (components.length > 0 || children.length > 0 || name.length > 0) {
-      objectString = objectString.concat(tab, idLabel, ObjectUtils.getID(object), separator, newLine);
-    } else {
-      objectString = objectString.concat(tab, idLabel, ObjectUtils.getID(object), newLine);
-    }
-    if (name.length > 0) {
-      if (components.length > 0 || children.length > 0) {
-        objectString = objectString.concat(tab, nameLabel, ObjectUtils.getName(object), separator, newLine);
-      } else {
-        objectString = objectString.concat(tab, nameLabel, ObjectUtils.getName(object), newLine);
-      }
-    }
-    if (components.length > 0) {
-      objectString = objectString.concat(tab, componentsLabel, newLine, tab, startComponents, newLine);
-      for (let i = 0; i < components.length; i++) {
-        let component = components[i];
-        objectString = objectString.concat(tab, tab, startObject, newLine);
-        objectString = objectString.concat(tab, tab, tab, typeLabel, component.type, separator, newLine);
-        objectString = objectString.concat(tab, tab, tab, idLabel, component._id, separator, newLine);
-        objectString = objectString.concat(tab, tab, endObject);
-        if (i != components.length - 1) {
-          objectString = objectString.concat(separator, newLine);
-        } else {
-          objectString = objectString.concat(newLine);
-        }
-      }
-      if (children.length > 0) {
-        objectString = objectString.concat(tab, endComponents, separator, newLine);
-      } else {
-        objectString = objectString.concat(tab, endComponents, newLine);
-      }
-    }
-    if (children.length > 0) {
-      objectString = objectString.concat(tab, childrenLabel, newLine, tab, startChildren, newLine);
-      for (let i = 0; i < children.length; i++) {
-        let child = children[i];
-        let childString = ObjectUtils.toStringExtended(child);
-        childString = childString.replaceAll(newLine, newLineTab);
-        childString = tab.concat(tab, childString);
-        objectString = objectString.concat(childString);
-        if (i != children.length - 1) {
-          objectString = objectString.concat(separator, newLine);
-        } else {
-          objectString = objectString.concat(newLine);
-        }
-      }
-      objectString = objectString.concat(tab, endChildren, newLine);
-    }
-    objectString = objectString.concat(endObject);
-    return objectString;
-  };
-}();
-var toStringCompact = function() {
-  let tab = "    ";
-  let newLine = "\n";
-  let emptyName = "<none>";
-  let nameLabel = "name: ";
-  let componentsLabel = "components: ";
-  let separator = ", ";
-  let newLineTab = newLine.concat(tab);
-  return function toStringCompact3(object) {
-    let objectString = "";
-    let name = ObjectUtils.getName(object);
-    if (name.length > 0) {
-      objectString = objectString.concat(nameLabel, name);
-    } else {
-      objectString = objectString.concat(nameLabel, emptyName);
-    }
-    let components = ObjectUtils.getComponentsSelf(object);
-    if (components.length > 0) {
-      objectString = objectString.concat(separator, componentsLabel);
-      for (let i = 0; i < components.length; i++) {
-        let component = components[i];
-        objectString = objectString.concat(component.type);
-        if (i != components.length - 1) {
-          objectString = objectString.concat(separator);
-        }
-      }
-    }
-    let children = ObjectUtils.getChildren(object);
-    if (children.length > 0) {
-      objectString = objectString.concat(newLine);
-      for (let i = 0; i < children.length; i++) {
-        let child = children[i];
-        let childString = ObjectUtils.toStringCompact(child);
-        childString = childString.replaceAll(newLine, newLineTab);
-        childString = tab.concat(childString);
-        objectString = objectString.concat(childString);
-        if (i != children.length - 1) {
-          objectString = objectString.concat(newLine);
-        }
-      }
-    }
-    return objectString;
-  };
-}();
-function getObjectByName(object, name, isRegex = false, index = 0) {
-  return ObjectUtils.getObjectByNameHierarchy(object, name, isRegex, index);
-}
-function getObjectByNameHierarchy(object, name, isRegex = false, index = 0) {
-  return ObjectUtils.getObjectByNameHierarchyBreadth(object, name, isRegex, index);
-}
-function getObjectByNameHierarchyBreadth(object, name, isRegex = false, index = 0) {
-  let objects = ObjectUtils.getHierarchyBreadth(object);
-  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
-}
-function getObjectByNameHierarchyDepth(object, name, isRegex = false, index = 0) {
-  let objects = ObjectUtils.getHierarchyDepth(object);
-  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
-}
-function getObjectByNameDescendants(object, name, isRegex = false, index = 0) {
-  return ObjectUtils.getObjectByNameDescendantsBreadth(object, name, isRegex, index);
-}
-function getObjectByNameDescendantsBreadth(object, name, isRegex = false, index = 0) {
-  let objects = ObjectUtils.getDescendantsBreadth(object);
-  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
-}
-function getObjectByNameDescendantsDepth(object, name, isRegex = false, index = 0) {
-  let objects = ObjectUtils.getDescendantsDepth(object);
-  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
-}
-function getObjectByNameChildren(object, name, isRegex = false, index = 0) {
-  let objects = ObjectUtils.getChildren(object);
-  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
-}
-function getObjectsByName(object, name, isRegex = false) {
-  return ObjectUtils.getObjectsByNameHierarchy(object, name, isRegex);
-}
-function getObjectsByNameHierarchy(object, name, isRegex = false) {
-  return ObjectUtils.getObjectsByNameHierarchyBreadth(object, name, isRegex);
-}
-function getObjectsByNameHierarchyBreadth(object, name, isRegex = false) {
-  let objects = ObjectUtils.getHierarchyBreadth(object);
-  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
-}
-function getObjectsByNameHierarchyDepth(object, name, isRegex = false) {
-  let objects = ObjectUtils.getHierarchyDepth(object);
-  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
-}
-function getObjectsByNameDescendants(object, name, isRegex = false) {
-  return ObjectUtils.getObjectsByNameDescendantsBreadth(object, name, isRegex);
-}
-function getObjectsByNameDescendantsBreadth(object, name, isRegex = false) {
-  let objects = ObjectUtils.getDescendantsBreadth(object);
-  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
-}
-function getObjectsByNameDescendantsDepth(object, name, isRegex = false) {
-  let objects = ObjectUtils.getDescendantsDepth(object);
-  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
-}
-function getObjectsByNameChildren(object, name, isRegex = false) {
-  let objects = ObjectUtils.getChildren(object);
-  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
-}
-function getObjectByID(object, id) {
-  return ObjectUtils.getObjectByIDHierarchy(object, id);
-}
-function getObjectByIDHierarchy(object, id) {
-  return ObjectUtils.getObjectByIDHierarchyBreadth(object, id);
-}
-function getObjectByIDHierarchyBreadth(object, id) {
-  let objects = ObjectUtils.getHierarchyBreadth(object);
-  return ObjectUtils.getObjectByIDObjects(objects, id);
-}
-function getObjectByIDHierarchyDepth(object, id) {
-  let objects = ObjectUtils.getHierarchyDepth(object);
-  return ObjectUtils.getObjectByIDObjects(objects, id);
-}
-function getObjectByIDDescendants(object, id) {
-  return ObjectUtils.getObjectByIDDescendantsBreadth(object, id);
-}
-function getObjectByIDDescendantsBreadth(object, id) {
-  let objects = ObjectUtils.getDescendantsBreadth(object);
-  return ObjectUtils.getObjectByIDObjects(objects, id);
-}
-function getObjectByIDDescendantsDepth(object, id) {
-  let objects = ObjectUtils.getDescendantsDepth(object);
-  return ObjectUtils.getObjectByIDObjects(objects, id);
-}
-function getObjectByIDChildren(object, id) {
-  let objects = ObjectUtils.getChildren(object);
-  return ObjectUtils.getObjectByIDObjects(objects, id);
-}
-function getHierarchy(object) {
-  return ObjectUtils.getHierarchyBreadth(object);
-}
-function getHierarchyBreadth(object) {
-  let hierarchy = ObjectUtils.getDescendantsBreadth(object);
-  hierarchy.unshift(object);
-  return hierarchy;
-}
-function getHierarchyDepth(object) {
-  let hierarchy = ObjectUtils.getDescendantsDepth(object);
-  hierarchy.unshift(object);
-  return hierarchy;
-}
-function getDescendants(object) {
-  return ObjectUtils.getDescendantsBreadth(object);
-}
-function getDescendantsBreadth(object) {
-  let descendants = [];
-  let descendantsQueue = ObjectUtils.getChildren(object);
-  while (descendantsQueue.length > 0) {
-    let descendant = descendantsQueue.shift();
-    descendants.push(descendant);
-    for (let child of ObjectUtils.getChildren(descendant)) {
-      descendantsQueue.push(child);
-    }
-  }
-  return descendants;
-}
-function getDescendantsDepth(object) {
-  let descendants = [];
-  let children = ObjectUtils.getChildren(object);
-  for (let child of children) {
-    descendants.push(child);
-    let childDescendants = ObjectUtils.getDescendantsDepth(child);
-    for (let i = 0; i < childDescendants.length; i++) {
-      descendants.push(childDescendants[i]);
-    }
-  }
-  return descendants;
-}
-function getChildren(object) {
-  return object.children;
-}
-function getSelf(object) {
-  return object;
-}
-function addObject(object) {
-  return Globals.getScene(ObjectUtils.getEngine(object)).addObject(object);
-}
-function getName(object) {
-  return object.name;
-}
-function setName(object, name) {
-  object.name = name;
-}
-function getEngine(object) {
-  return object.engine;
-}
-function getID(object) {
-  return object.objectId;
-}
-function markDirty(object) {
-  return object.setDirty();
-}
-function isTransformChanged(object) {
-  return object.changed;
-}
-function equals3(object, otherObject) {
-  return object.equals(otherObject);
-}
-function destroy(object) {
-  let destroyReturnValue = void 0;
-  try {
-    destroyReturnValue = object.destroy();
-  } catch (error3) {
-  }
-  return destroyReturnValue;
-}
-function reserveObjects(object, count) {
-  ObjectUtils.reserveObjectsHierarchy(object, count);
-}
-function reserveObjectsSelf(object, count) {
-  let componentsAmountMap = ObjectUtils.getComponentsAmountMapSelf(object);
-  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
-}
-function reserveObjectsHierarchy(object, count) {
-  let componentsAmountMap = ObjectUtils.getComponentsAmountMapHierarchy(object);
-  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
-}
-function reserveObjectsDescendants(object, count) {
-  let componentsAmountMap = ObjectUtils.getComponentsAmountMapDescendants(object);
-  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
-}
-function reserveObjectsChildren(object, count) {
-  let componentsAmountMap = ObjectUtils.getComponentsAmountMapChildren(object);
-  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
-}
-function getComponentsAmountMap(object, amountMap = /* @__PURE__ */ new Map()) {
-  return ObjectUtils.getComponentsAmountMapHierarchy(object, amountMap);
-}
-function getComponentsAmountMapSelf(object, amountMap = /* @__PURE__ */ new Map()) {
-  let objectsAmount = amountMap.get("object");
-  if (objectsAmount == null) {
-    objectsAmount = 0;
-  }
-  objectsAmount += 1;
-  amountMap.set("object", objectsAmount);
-  let components = ObjectUtils.getComponentsSelf(object);
-  for (let component of components) {
-    let type = component.type;
-    let typeAmount = amountMap.get(type);
-    if (typeAmount == null) {
-      typeAmount = 0;
-    }
-    typeAmount += 1;
-    amountMap.set(type, typeAmount);
-  }
-  return amountMap;
-}
-function getComponentsAmountMapHierarchy(object, amountMap = /* @__PURE__ */ new Map()) {
-  let hierarchy = ObjectUtils.getHierarchy(object);
-  for (let hierarchyObject of hierarchy) {
-    ObjectUtils.getComponentsAmountMapSelf(hierarchyObject, amountMap);
-  }
-  return amountMap;
-}
-function getComponentsAmountMapDescendants(object, amountMap = /* @__PURE__ */ new Map()) {
-  let descendants = ObjectUtils.getDescendants(object);
-  for (let descendant of descendants) {
-    ObjectUtils.getComponentsAmountMapSelf(descendant, amountMap);
-  }
-  return amountMap;
-}
-function getComponentsAmountMapChildren(object, amountMap = /* @__PURE__ */ new Map()) {
-  let children = ObjectUtils.getChildren(object);
-  for (let child of children) {
-    ObjectUtils.getComponentsAmountMapSelf(child, amountMap);
-  }
-  return amountMap;
-}
-function getComponentObjects(objects, typeOrClass, index = 0) {
-  let component = null;
-  for (let object of objects) {
-    component = object.getComponent(typeOrClass, index);
-    if (component != null) {
-      break;
-    }
-  }
-  return component;
-}
-function getComponentsObjects(objects, typeOrClass) {
-  let components = [];
-  for (let currentObject of objects) {
-    let currentObjectComponents = currentObject.getComponents(typeOrClass);
-    for (let i = 0; i < currentObjectComponents.length; i++) {
-      components.push(currentObjectComponents[i]);
-    }
-  }
-  return components;
-}
-function setActiveObjects(objects, active) {
-  for (let currentObject of objects) {
-    currentObject.active = active;
-  }
-}
-function getObjectByNameObjects(objects, name, isRegex = false, index = 0) {
-  let objectFound = null;
-  let currentIndex = index;
-  for (let currentObject of objects) {
-    let objectName = ObjectUtils.getName(currentObject);
-    if (!isRegex && objectName == name || isRegex && objectName.match(name) != null) {
-      if (currentIndex == 0) {
-        objectFound = currentObject;
-        break;
-      }
-      currentIndex--;
-    }
-  }
-  return objectFound;
-}
-function getObjectsByNameObjects(objects, name, isRegex = false) {
-  let objectsFound = [];
-  for (let currentObject of objects) {
-    let objectName = ObjectUtils.getName(currentObject);
-    if (!isRegex && objectName == name || isRegex && objectName.match(name) != null) {
-      objectsFound.push(currentObject);
-    }
-  }
-  return objectsFound;
-}
-function getObjectByIDObjects(objects, id, index = 0) {
-  let objectFound = null;
-  let currentIndex = index;
-  for (let currentObject of objects) {
-    if (ObjectUtils.getID(currentObject) == id) {
-      if (currentIndex == 0) {
-        objectFound = currentObject;
-        break;
-      }
-      currentIndex--;
-    }
-  }
-  return objectFound;
-}
-function getObjectsByIDObjects(objects, id) {
-  let objectsFound = [];
-  for (let currentObject of objects) {
-    if (ObjectUtils.getID(currentObject) == id) {
-      objectsFound.push(currentObject);
-    }
-  }
-  return objectsFound;
-}
-function wrapObject(id, engine = Globals.getMainEngine()) {
-  return engine.wrapObject(id);
-}
-var ObjectUtils = {
-  getPosition: getPosition3,
-  getPositionWorld,
-  getPositionLocal,
-  getRotation: getRotation3,
-  getRotationDegrees: getRotationDegrees3,
-  getRotationRadians: getRotationRadians3,
-  getRotationMatrix,
-  getRotationQuat: getRotationQuat3,
-  getRotationWorld,
-  getRotationWorldDegrees,
-  getRotationWorldRadians,
-  getRotationWorldMatrix,
-  getRotationWorldQuat,
-  getRotationLocal,
-  getRotationLocalDegrees,
-  getRotationLocalRadians,
-  getRotationLocalMatrix,
-  getRotationLocalQuat,
-  getScale: getScale2,
-  getScaleWorld,
-  getScaleLocal,
-  getTransform,
-  getTransformMatrix,
-  getTransformQuat,
-  getTransformWorld,
-  getTransformWorldMatrix,
-  getTransformWorldQuat,
-  getTransformLocal,
-  getTransformLocalMatrix,
-  getTransformLocalQuat,
-  getAxes: getAxes4,
-  getAxesWorld,
-  getAxesLocal,
-  getForward: getForward4,
-  getForwardWorld,
-  getForwardLocal,
-  getBackward: getBackward4,
-  getBackwardWorld,
-  getBackwardLocal,
-  getUp: getUp4,
-  getUpWorld,
-  getUpLocal,
-  getDown: getDown4,
-  getDownWorld,
-  getDownLocal,
-  getLeft: getLeft4,
-  getLeftWorld,
-  getLeftLocal,
-  getRight: getRight4,
-  getRightWorld,
-  getRightLocal,
-  setPosition: setPosition3,
-  setPositionWorld,
-  setPositionLocal,
-  setRotation: setRotation3,
-  setRotationDegrees: setRotationDegrees3,
-  setRotationRadians: setRotationRadians3,
-  setRotationMatrix,
-  setRotationQuat: setRotationQuat3,
-  setRotationWorld,
-  setRotationWorldDegrees,
-  setRotationWorldRadians,
-  setRotationWorldMatrix,
-  setRotationWorldQuat,
-  setRotationLocal,
-  setRotationLocalDegrees,
-  setRotationLocalRadians,
-  setRotationLocalMatrix,
-  setRotationLocalQuat,
-  setScale: setScale2,
-  setScaleWorld,
-  setScaleLocal,
-  setAxes: setAxes2,
-  setAxesWorld,
-  setAxesLocal,
-  setForward: setForward2,
-  setForwardWorld,
-  setForwardLocal,
-  setBackward: setBackward2,
-  setBackwardWorld,
-  setBackwardLocal,
-  setUp: setUp2,
-  setUpWorld,
-  setUpLocal,
-  setDown: setDown2,
-  setDownWorld,
-  setDownLocal,
-  setLeft: setLeft2,
-  setLeftWorld,
-  setLeftLocal,
-  setRight: setRight2,
-  setRightWorld,
-  setRightLocal,
-  setTransform,
-  setTransformMatrix,
-  setTransformQuat,
-  setTransformWorld,
-  setTransformWorldMatrix,
-  setTransformWorldQuat,
-  setTransformLocal,
-  setTransformLocalMatrix,
-  setTransformLocalQuat,
-  resetPosition,
-  resetPositionWorld,
-  resetPositionLocal,
-  resetRotation,
-  resetRotationWorld,
-  resetRotationLocal,
-  resetScale,
-  resetScaleWorld,
-  resetScaleLocal,
-  resetTransform,
-  resetTransformWorld,
-  resetTransformLocal,
-  translate,
-  translateWorld,
-  translateLocal,
-  translateObject,
-  translateAxis,
-  translateAxisWorld,
-  translateAxisLocal,
-  translateAxisObject,
-  rotate: rotate3,
-  rotateDegrees: rotateDegrees3,
-  rotateRadians: rotateRadians3,
-  rotateMatrix,
-  rotateQuat: rotateQuat3,
-  rotateWorld,
-  rotateWorldDegrees,
-  rotateWorldRadians,
-  rotateWorldMatrix,
-  rotateWorldQuat,
-  rotateLocal,
-  rotateLocalDegrees,
-  rotateLocalRadians,
-  rotateLocalMatrix,
-  rotateLocalQuat,
-  rotateObject,
-  rotateObjectDegrees,
-  rotateObjectRadians,
-  rotateObjectMatrix,
-  rotateObjectQuat,
-  rotateAxis: rotateAxis4,
-  rotateAxisDegrees: rotateAxisDegrees4,
-  rotateAxisRadians: rotateAxisRadians4,
-  rotateAxisWorld,
-  rotateAxisWorldDegrees,
-  rotateAxisWorldRadians,
-  rotateAxisLocal,
-  rotateAxisLocalDegrees,
-  rotateAxisLocalRadians,
-  rotateAxisObject,
-  rotateAxisObjectDegrees,
-  rotateAxisObjectRadians,
-  rotateAround: rotateAround2,
-  rotateAroundDegrees: rotateAroundDegrees2,
-  rotateAroundRadians: rotateAroundRadians2,
-  rotateAroundMatrix,
-  rotateAroundQuat: rotateAroundQuat2,
-  rotateAroundWorld,
-  rotateAroundWorldDegrees,
-  rotateAroundWorldRadians,
-  rotateAroundWorldMatrix,
-  rotateAroundWorldQuat,
-  rotateAroundLocal,
-  rotateAroundLocalDegrees,
-  rotateAroundLocalRadians,
-  rotateAroundLocalMatrix,
-  rotateAroundLocalQuat,
-  rotateAroundObject,
-  rotateAroundObjectDegrees,
-  rotateAroundObjectRadians,
-  rotateAroundObjectMatrix,
-  rotateAroundObjectQuat,
-  rotateAroundAxis: rotateAroundAxis2,
-  rotateAroundAxisDegrees: rotateAroundAxisDegrees2,
-  rotateAroundAxisRadians: rotateAroundAxisRadians2,
-  rotateAroundAxisWorld,
-  rotateAroundAxisWorldDegrees,
-  rotateAroundAxisWorldRadians,
-  rotateAroundAxisLocal,
-  rotateAroundAxisLocalDegrees,
-  rotateAroundAxisLocalRadians,
-  rotateAroundAxisObject,
-  rotateAroundAxisObjectDegrees,
-  rotateAroundAxisObjectRadians,
-  scaleObject,
-  lookAt,
-  lookAtWorld,
-  lookAtLocal,
-  lookTo,
-  lookToWorld,
-  lookToLocal,
-  setParent,
-  getParent,
-  convertPositionObjectToWorld,
-  convertDirectionObjectToWorld,
-  convertPositionWorldToObject,
-  convertDirectionWorldToObject,
-  convertPositionLocalToWorld,
-  convertDirectionLocalToWorld,
-  convertPositionWorldToLocal,
-  convertDirectionWorldToLocal,
-  convertPositionObjectToLocal,
-  convertDirectionObjectToLocal,
-  convertPositionLocalToObject,
-  convertDirectionLocalToObject,
-  convertTransformObjectToWorld,
-  convertTransformObjectToWorldMatrix,
-  convertTransformObjectToWorldQuat,
-  convertTransformWorldToObject,
-  convertTransformWorldToObjectMatrix,
-  convertTransformWorldToObjectQuat,
-  convertTransformLocalToWorld,
-  convertTransformLocalToWorldMatrix,
-  convertTransformLocalToWorldQuat,
-  convertTransformWorldToLocal,
-  convertTransformWorldToLocalMatrix,
-  convertTransformWorldToLocalQuat,
-  convertTransformObjectToLocal,
-  convertTransformObjectToLocalMatrix,
-  convertTransformObjectToLocalQuat,
-  convertTransformLocalToObject,
-  convertTransformLocalToObjectMatrix,
-  convertTransformLocalToObjectQuat,
-  addComponent,
-  getComponent,
-  getComponentSelf,
-  getComponentHierarchy,
-  getComponentHierarchyBreadth,
-  getComponentHierarchyDepth,
-  getComponentDescendants,
-  getComponentDescendantsBreadth,
-  getComponentDescendantsDepth,
-  getComponentChildren,
-  getComponents,
-  getComponentsSelf,
-  getComponentsHierarchy,
-  getComponentsHierarchyBreadth,
-  getComponentsHierarchyDepth,
-  getComponentsDescendants,
-  getComponentsDescendantsBreadth,
-  getComponentsDescendantsDepth,
-  getComponentsChildren,
-  setActive,
-  setActiveSelf,
-  setActiveHierarchy,
-  setActiveHierarchyBreadth,
-  setActiveHierarchyDepth,
-  setActiveDescendants,
-  setActiveDescendantsBreadth,
-  setActiveDescendantsDepth,
-  setActiveChildren,
-  hasUniformScale: hasUniformScale2,
-  hasUniformScaleWorld,
-  hasUniformScaleLocal,
-  clone: clone5,
-  isCloneable,
-  toString,
-  toStringExtended,
-  toStringCompact,
-  getObjectByName,
-  getObjectByNameHierarchy,
-  getObjectByNameHierarchyBreadth,
-  getObjectByNameHierarchyDepth,
-  getObjectByNameDescendants,
-  getObjectByNameDescendantsBreadth,
-  getObjectByNameDescendantsDepth,
-  getObjectByNameChildren,
-  getObjectsByName,
-  getObjectsByNameHierarchy,
-  getObjectsByNameHierarchyBreadth,
-  getObjectsByNameHierarchyDepth,
-  getObjectsByNameDescendants,
-  getObjectsByNameDescendantsBreadth,
-  getObjectsByNameDescendantsDepth,
-  getObjectsByNameChildren,
-  getObjectByID,
-  getObjectByIDHierarchy,
-  getObjectByIDHierarchyBreadth,
-  getObjectByIDHierarchyDepth,
-  getObjectByIDDescendants,
-  getObjectByIDDescendantsBreadth,
-  getObjectByIDDescendantsDepth,
-  getObjectByIDChildren,
-  getHierarchy,
-  getHierarchyBreadth,
-  getHierarchyDepth,
-  getDescendants,
-  getDescendantsBreadth,
-  getDescendantsDepth,
-  getChildren,
-  getSelf,
-  addObject,
-  getName,
-  setName,
-  getEngine,
-  getID,
-  markDirty,
-  isTransformChanged,
-  equals: equals3,
-  destroy,
-  reserveObjects,
-  reserveObjectsSelf,
-  reserveObjectsHierarchy,
-  reserveObjectsDescendants,
-  reserveObjectsChildren,
-  getComponentsAmountMap,
-  getComponentsAmountMapSelf,
-  getComponentsAmountMapHierarchy,
-  getComponentsAmountMapDescendants,
-  getComponentsAmountMapChildren,
-  getComponentObjects,
-  getComponentsObjects,
-  setActiveObjects,
-  getObjectByNameObjects,
-  getObjectsByNameObjects,
-  getObjectByIDObjects,
-  getObjectsByIDObjects,
-  wrapObject
-};
-function _reserveObjects(count, componentsAmountMap, scene) {
-  let objectsToReserve = componentsAmountMap.get("object") * count;
-  componentsAmountMap.delete("object");
-  let componentsToReserve = {};
-  for (let [componentName, componentCount] of componentsAmountMap.entries()) {
-    componentsToReserve[componentName] = componentCount * count;
-  }
-  scene.reserveObjects(objectsToReserve, componentsToReserve);
-}
-
-// dist/cauldron/wl/utils/scene_utils.js
-function getRoot(scene) {
-  return ObjectUtils.wrapObject(0, scene.engine);
-}
-function addObject2(scene) {
-  return ObjectUtils.addObject(SceneUtils.getRoot(scene));
-}
-function getObjects(scene) {
-  return SceneUtils.getObjectsBreadth(scene);
-}
-function getObjectsBreadth(scene) {
-  return ObjectUtils.getHierarchyBreadth(SceneUtils.getRoot(scene));
-}
-function getObjectsDepth(scene) {
-  return ObjectUtils.getHierarchyDepth(SceneUtils.getRoot(scene));
-}
-function getComponent2(scene, typeOrClass, index = 0) {
-  return SceneUtils.getComponentBreadth(scene, typeOrClass, index);
-}
-function getComponentBreadth(scene, typeOrClass, index = 0) {
-  return ObjectUtils.getComponentHierarchyBreadth(SceneUtils.getRoot(scene), typeOrClass, index);
-}
-function getComponentDepth(scene, typeOrClass, index = 0) {
-  return ObjectUtils.getComponentHierarchyDepth(SceneUtils.getRoot(scene), typeOrClass, index);
-}
-function getComponents2(scene, typeOrClass) {
-  return SceneUtils.getComponentsBreadth(scene, typeOrClass);
-}
-function getComponentsBreadth(scene, typeOrClass) {
-  return ObjectUtils.getComponentsHierarchyBreadth(SceneUtils.getRoot(scene), typeOrClass);
-}
-function getComponentsDepth(scene, typeOrClass) {
-  return ObjectUtils.getComponentsHierarchyDepth(SceneUtils.getRoot(scene), typeOrClass);
-}
-function getObjectByName2(scene, name, isRegex = false, index = 0) {
-  return SceneUtils.getObjectByNameBreadth(scene, name, isRegex, index);
-}
-function getObjectByNameBreadth(scene, name, isRegex = false, index = 0) {
-  return ObjectUtils.getObjectByNameHierarchyBreadth(SceneUtils.getRoot(scene), name, isRegex, index);
-}
-function getObjectByNameDepth(scene, name, isRegex = false, index = 0) {
-  return ObjectUtils.getObjectByNameHierarchyDepth(SceneUtils.getRoot(scene), name, isRegex, index);
-}
-function getObjectsByName2(scene, name, isRegex = false) {
-  return SceneUtils.getObjectsByNameBreadth(scene, name, isRegex);
-}
-function getObjectsByNameBreadth(scene, name, isRegex = false) {
-  return ObjectUtils.getObjectsByNameHierarchyBreadth(SceneUtils.getRoot(scene), name, isRegex);
-}
-function getObjectsByNameDepth(scene, name, isRegex = false) {
-  return ObjectUtils.getObjectsByNameHierarchyDepth(SceneUtils.getRoot(scene), name, isRegex);
-}
-function getObjectByID2(scene, id) {
-  return SceneUtils.getObjectByIDBreadth(scene, id);
-}
-function getObjectByIDBreadth(scene, id) {
-  return ObjectUtils.getObjectByIDHierarchyBreadth(SceneUtils.getRoot(scene), id);
-}
-function getObjectByIDDepth(scene, id) {
-  return ObjectUtils.getObjectByIDHierarchyDepth(SceneUtils.getRoot(scene), id);
-}
-function toString2(scene) {
-  return SceneUtils.toStringCompact(scene);
-}
-function toStringCompact2(scene) {
-  return ObjectUtils.toStringCompact(SceneUtils.getRoot(scene));
-}
-function toStringExtended2(scene) {
-  return ObjectUtils.toStringExtended(SceneUtils.getRoot(scene));
-}
-function getComponentsAmountMap2(scene, amountMap = /* @__PURE__ */ new Map()) {
-  return ObjectUtils.getComponentsAmountMap(SceneUtils.getRoot(scene), amountMap);
-}
-var SceneUtils = {
-  getRoot,
-  addObject: addObject2,
-  getObjects,
-  getObjectsBreadth,
-  getObjectsDepth,
-  getComponent: getComponent2,
-  getComponentBreadth,
-  getComponentDepth,
-  getComponents: getComponents2,
-  getComponentsBreadth,
-  getComponentsDepth,
-  getObjectByName: getObjectByName2,
-  getObjectByNameBreadth,
-  getObjectByNameDepth,
-  getObjectsByName: getObjectsByName2,
-  getObjectsByNameBreadth,
-  getObjectsByNameDepth,
-  getObjectByID: getObjectByID2,
-  getObjectByIDBreadth,
-  getObjectByIDDepth,
-  toString: toString2,
-  toStringCompact: toStringCompact2,
-  toStringExtended: toStringExtended2,
-  getComponentsAmountMap: getComponentsAmountMap2
-};
-
-// dist/cauldron/wl/engine_globals.js
-var _myMainEngine = null;
-var _myEngines = [];
-function initEngine(engine) {
-  if (engine != null) {
-    addEngine(engine);
-    if (getMainEngine() == null) {
-      setMainEngine(engine);
-    }
-  }
-}
-function getMainEngine() {
-  return _myMainEngine;
-}
-function setMainEngine(engine) {
-  if (hasEngine(engine)) {
-    _myMainEngine = engine;
-  }
-}
-function removeMainEngine() {
-  _myMainEngine = null;
-}
-function getEngines() {
-  return _myEngines;
-}
-function addEngine(engine) {
-  removeEngine(engine);
-  _myEngines.push(engine);
-}
-function removeEngine(engine) {
-  let index = _myEngines.indexOf(engine);
-  if (index >= 0) {
-    _myEngines.splice(index, 1);
-    if (getMainEngine() == engine) {
-      removeMainEngine();
-    }
-  }
-}
-function hasEngine(engine) {
-  return _myEngines.indexOf(engine) >= 0;
-}
-function getScene(engine = getMainEngine()) {
-  let scene = null;
-  if (engine != null) {
-    scene = engine.scene;
-  }
-  return scene;
-}
-function getRoot2(engine = getMainEngine()) {
-  let root = null;
-  let scene = getScene(engine);
-  if (scene != null) {
-    root = SceneUtils.getRoot(scene);
-  }
-  return root;
-}
-function getPhysics(engine = getMainEngine()) {
-  let physics = null;
-  if (engine != null) {
-    physics = engine.physics;
-  }
-  return physics;
-}
-function getCanvas(engine = getMainEngine()) {
-  let canvas = null;
-  if (engine != null) {
-    canvas = engine.canvas;
-  }
-  return canvas;
-}
-function getWASM(engine = getMainEngine()) {
-  let wasm = null;
-  if (engine != null) {
-    wasm = engine.wasm;
-  }
-  return wasm;
-}
-function getXR(engine = getMainEngine()) {
-  let xr = null;
-  if (engine != null) {
-    xr = engine.xr;
-  }
-  return xr;
-}
-
-// dist/debug/debug_globals.js
-var debug_globals_exports = {};
-__export(debug_globals_exports, {
-  getDebugManager: () => getDebugManager,
-  getDebugVisualManager: () => getDebugVisualManager,
-  hasDebugEnabled: () => hasDebugEnabled,
-  hasDebugManager: () => hasDebugManager,
-  isDebugEnabled: () => isDebugEnabled,
-  removeDebugEnabled: () => removeDebugEnabled,
-  removeDebugManager: () => removeDebugManager,
-  setDebugEnabled: () => setDebugEnabled,
-  setDebugManager: () => setDebugManager
-});
-var _myDebugManagers = /* @__PURE__ */ new WeakMap();
-var _myDebugEnableds = /* @__PURE__ */ new WeakMap();
-function getDebugManager(engine = Globals.getMainEngine()) {
-  return _myDebugManagers.get(engine);
-}
-function setDebugManager(debugManager, engine = Globals.getMainEngine()) {
-  _myDebugManagers.set(engine, debugManager);
-}
-function removeDebugManager(engine = Globals.getMainEngine()) {
-  _myDebugManagers.delete(engine);
-}
-function hasDebugManager(engine = Globals.getMainEngine()) {
-  return _myDebugManagers.has(engine);
-}
-function getDebugVisualManager(engine = Globals.getMainEngine()) {
-  let debugManager = getDebugManager(engine);
-  if (debugManager != null) {
-    return debugManager.getDebugVisualManager();
-  }
-  return null;
-}
-function isDebugEnabled(engine = Globals.getMainEngine()) {
-  return _myDebugEnableds.get(engine);
-}
-function setDebugEnabled(debugEnabled, engine = Globals.getMainEngine()) {
-  _myDebugEnableds.set(engine, debugEnabled);
-}
-function removeDebugEnabled(engine = Globals.getMainEngine()) {
-  _myDebugEnableds.delete(engine);
-}
-function hasDebugEnabled(engine = Globals.getMainEngine()) {
-  return _myDebugEnableds.has(engine);
-}
-
-// dist/gameplay/experimental/character_controller/collision/character_collision_system_globals.js
-var character_collision_system_globals_exports = {};
-__export(character_collision_system_globals_exports, {
-  getCharacterCollisionSystem: () => getCharacterCollisionSystem,
-  hasCharacterCollisionSystem: () => hasCharacterCollisionSystem,
-  removeCharacterCollisionSystem: () => removeCharacterCollisionSystem,
-  setCharacterCollisionSystem: () => setCharacterCollisionSystem
-});
-var _myCharacterCollisionSystems = /* @__PURE__ */ new WeakMap();
-function getCharacterCollisionSystem(engine = Globals.getMainEngine()) {
-  return _myCharacterCollisionSystems.get(engine);
-}
-function setCharacterCollisionSystem(characterCollisionSystem, engine = Globals.getMainEngine()) {
-  _myCharacterCollisionSystems.set(engine, characterCollisionSystem);
-}
-function removeCharacterCollisionSystem(engine = Globals.getMainEngine()) {
-  _myCharacterCollisionSystems.delete(engine);
-}
-function hasCharacterCollisionSystem(engine = Globals.getMainEngine()) {
-  return _myCharacterCollisionSystems.has(engine);
-}
-
-// dist/input/cauldron/input_globals.js
-var input_globals_exports = {};
-__export(input_globals_exports, {
-  getGamepad: () => getGamepad,
-  getGamepads: () => getGamepads,
-  getGamepadsManager: () => getGamepadsManager,
-  getHandPose: () => getHandPose,
-  getHandPoses: () => getHandPoses,
-  getHeadPose: () => getHeadPose,
-  getInputManager: () => getInputManager,
-  getKeyboard: () => getKeyboard,
-  getLeftGamepad: () => getLeftGamepad,
-  getLeftHandPose: () => getLeftHandPose,
-  getLeftTrackedHandPose: () => getLeftTrackedHandPose,
-  getMouse: () => getMouse,
-  getRightGamepad: () => getRightGamepad,
-  getRightHandPose: () => getRightHandPose,
-  getRightTrackedHandPose: () => getRightTrackedHandPose,
-  getTrackedHandPose: () => getTrackedHandPose,
-  getTrackedHandPoses: () => getTrackedHandPoses,
-  hasInputManager: () => hasInputManager,
-  hasPoseForwardFixed: () => hasPoseForwardFixed,
-  isPoseForwardFixed: () => isPoseForwardFixed,
-  removeInputManager: () => removeInputManager,
-  removePoseForwardFixed: () => removePoseForwardFixed,
-  setInputManager: () => setInputManager,
-  setPoseForwardFixed: () => setPoseForwardFixed
-});
-var _myInputManagers = /* @__PURE__ */ new WeakMap();
-var _myPoseForwardFixeds = /* @__PURE__ */ new WeakMap();
-function getInputManager(engine = Globals.getMainEngine()) {
-  return _myInputManagers.get(engine);
-}
-function setInputManager(inputManager, engine = Globals.getMainEngine()) {
-  _myInputManagers.set(engine, inputManager);
-}
-function removeInputManager(engine = Globals.getMainEngine()) {
-  _myInputManagers.delete(engine);
-}
-function hasInputManager(engine = Globals.getMainEngine()) {
-  return _myInputManagers.has(engine);
-}
-function getMouse(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getMouse();
-  }
-  return null;
-}
-function getKeyboard(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getKeyboard();
-  }
-  return null;
-}
-function getGamepadsManager(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getGamepadsManager();
-  }
-  return null;
-}
-function getGamepad(handedness, engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getGamepadsManager().getGamepad(handedness);
-  }
-  return null;
-}
-function getGamepads(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getGamepadsManager().getGamepads();
-  }
-  return null;
-}
-function getLeftGamepad(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getGamepadsManager().getLeftGamepad();
-  }
-  return null;
-}
-function getRightGamepad(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getGamepadsManager().getRightGamepad();
-  }
-  return null;
-}
-function getHeadPose(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getHeadPose();
-  }
-  return null;
-}
-function getHandPose(handedness, engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getHandPose(handedness);
-  }
-  return null;
-}
-function getHandPoses(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getHandPoses();
-  }
-  return null;
-}
-function getLeftHandPose(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getLeftHandPose();
-  }
-  return null;
-}
-function getRightHandPose(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getRightHandPose();
-  }
-  return null;
-}
-function getTrackedHandPose(handedness, engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getTrackedHandPose(handedness);
-  }
-  return null;
-}
-function getTrackedHandPoses(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getTrackedHandPoses();
-  }
-  return null;
-}
-function getLeftTrackedHandPose(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getLeftTrackedHandPose();
-  }
-  return null;
-}
-function getRightTrackedHandPose(engine = Globals.getMainEngine()) {
-  let inputManager = getInputManager(engine);
-  if (inputManager != null) {
-    return inputManager.getRightTrackedHandPose();
-  }
-  return null;
-}
-function isPoseForwardFixed(engine = Globals.getMainEngine()) {
-  return _myPoseForwardFixeds.get(engine);
-}
-function setPoseForwardFixed(toolEnabled, engine = Globals.getMainEngine()) {
-  _myPoseForwardFixeds.set(engine, toolEnabled);
-}
-function removePoseForwardFixed(engine = Globals.getMainEngine()) {
-  _myPoseForwardFixeds.delete(engine);
-}
-function hasPoseForwardFixed(engine = Globals.getMainEngine()) {
-  return _myPoseForwardFixeds.has(engine);
-}
-
-// dist/tool/cauldron/tool_globals.js
-var tool_globals_exports = {};
-__export(tool_globals_exports, {
-  hasToolEnabled: () => hasToolEnabled,
-  isToolEnabled: () => isToolEnabled,
-  removeToolEnabled: () => removeToolEnabled,
-  setToolEnabled: () => setToolEnabled
-});
-var _myToolEnableds = /* @__PURE__ */ new WeakMap();
-function isToolEnabled(engine = Globals.getMainEngine()) {
-  return _myToolEnableds.get(engine);
-}
-function setToolEnabled(toolEnabled, engine = Globals.getMainEngine()) {
-  _myToolEnableds.set(engine, toolEnabled);
-}
-function removeToolEnabled(engine = Globals.getMainEngine()) {
-  _myToolEnableds.delete(engine);
-}
-function hasToolEnabled(engine = Globals.getMainEngine()) {
-  return _myToolEnableds.has(engine);
-}
-
-// dist/tool/console_vr/console_vr_globals.js
-var console_vr_globals_exports = {};
-__export(console_vr_globals_exports, {
-  getConsoleVR: () => getConsoleVR,
-  hasConsoleVR: () => hasConsoleVR,
-  removeConsoleVR: () => removeConsoleVR,
-  setConsoleVR: () => setConsoleVR
-});
-var _myConsoleVRs = /* @__PURE__ */ new WeakMap();
-function getConsoleVR(engine = Globals.getMainEngine()) {
-  return _myConsoleVRs.get(engine);
-}
-function setConsoleVR(consoleVR, engine = Globals.getMainEngine()) {
-  _myConsoleVRs.set(engine, consoleVR);
-}
-function removeConsoleVR(engine = Globals.getMainEngine()) {
-  _myConsoleVRs.delete(engine);
-}
-function hasConsoleVR(engine = Globals.getMainEngine()) {
-  return _myConsoleVRs.has(engine);
-}
-
-// dist/tool/easy_tune/easy_tune_globals.js
-var easy_tune_globals_exports = {};
-__export(easy_tune_globals_exports, {
-  getEasyTuneTarget: () => getEasyTuneTarget,
-  getEasyTuneVariables: () => getEasyTuneVariables,
-  hasEasyTuneTarget: () => hasEasyTuneTarget,
-  hasEasyTuneVariables: () => hasEasyTuneVariables,
-  removeEasyTuneTarget: () => removeEasyTuneTarget,
-  removeEasyTuneVariables: () => removeEasyTuneVariables,
-  setEasyTuneTarget: () => setEasyTuneTarget,
-  setEasyTuneVariables: () => setEasyTuneVariables
-});
-var _myEasyTuneVariablesList = /* @__PURE__ */ new WeakMap();
-var _myEasyTuneTargets = /* @__PURE__ */ new WeakMap();
-function getEasyTuneVariables(engine = Globals.getMainEngine()) {
-  return _myEasyTuneVariablesList.get(engine);
-}
-function setEasyTuneVariables(easyTuneVariables, engine = Globals.getMainEngine()) {
-  _myEasyTuneVariablesList.set(engine, easyTuneVariables);
-}
-function removeEasyTuneVariables(engine = Globals.getMainEngine()) {
-  _myEasyTuneVariablesList.delete(engine);
-}
-function hasEasyTuneVariables(engine = Globals.getMainEngine()) {
-  return _myEasyTuneVariablesList.has(engine);
-}
-function getEasyTuneTarget(engine = Globals.getMainEngine()) {
-  return _myEasyTuneTargets.get(engine);
-}
-function setEasyTuneTarget(easyTuneTarget, engine = Globals.getMainEngine()) {
-  _myEasyTuneTargets.set(engine, easyTuneTarget);
-}
-function removeEasyTuneTarget(engine = Globals.getMainEngine()) {
-  _myEasyTuneTargets.delete(engine);
-}
-function hasEasyTuneTarget(engine = Globals.getMainEngine()) {
-  return _myEasyTuneTargets.has(engine);
-}
-
-// dist/pp/default_resources_globals.js
-var default_resources_globals_exports = {};
-__export(default_resources_globals_exports, {
-  getDefaultMaterials: () => getDefaultMaterials,
-  getDefaultMeshes: () => getDefaultMeshes,
-  getDefaultResources: () => getDefaultResources,
-  hasDefaultResources: () => hasDefaultResources,
-  removeDefaultResources: () => removeDefaultResources,
-  setDefaultResources: () => setDefaultResources
-});
-var _myDefaultResourcesContainer = /* @__PURE__ */ new WeakMap();
-function getDefaultResources(engine = Globals.getMainEngine()) {
-  return _myDefaultResourcesContainer.get(engine);
-}
-function setDefaultResources(defaultResources, engine = Globals.getMainEngine()) {
-  _myDefaultResourcesContainer.set(engine, defaultResources);
-}
-function removeDefaultResources(engine = Globals.getMainEngine()) {
-  _myDefaultResourcesContainer.delete(engine);
-}
-function hasDefaultResources(engine = Globals.getMainEngine()) {
-  return _myDefaultResourcesContainer.has(engine);
-}
-function getDefaultMeshes(engine = Globals.getMainEngine()) {
-  let defaultResources = getDefaultResources(engine);
-  if (defaultResources != null) {
-    return defaultResources.myMeshes;
-  }
-  return null;
-}
-function getDefaultMaterials(engine = Globals.getMainEngine()) {
-  let defaultResources = getDefaultResources(engine);
-  if (defaultResources != null) {
-    return defaultResources.myMaterials;
-  }
-  return null;
-}
-
-// dist/pp/scene_objects_globals.js
-var scene_objects_globals_exports = {};
-__export(scene_objects_globals_exports, {
-  getPlayerObjects: () => getPlayerObjects,
-  getSceneObjects: () => getSceneObjects,
-  hasSceneObjects: () => hasSceneObjects,
-  removeSceneObjects: () => removeSceneObjects,
-  setSceneObjects: () => setSceneObjects
-});
-var _mySceneObjectsContainer = /* @__PURE__ */ new WeakMap();
-function getSceneObjects(engine = Globals.getMainEngine()) {
-  return _mySceneObjectsContainer.get(engine);
-}
-function setSceneObjects(sceneObjects, engine = Globals.getMainEngine()) {
-  _mySceneObjectsContainer.set(engine, sceneObjects);
-}
-function removeSceneObjects(engine = Globals.getMainEngine()) {
-  _mySceneObjectsContainer.delete(engine);
-}
-function hasSceneObjects(engine = Globals.getMainEngine()) {
-  return _mySceneObjectsContainer.has(engine);
-}
-function getPlayerObjects(engine = Globals.getMainEngine()) {
-  let sceneObjects = getSceneObjects(engine);
-  if (sceneObjects != null) {
-    return sceneObjects.myPlayerObjects;
-  }
-  return null;
-}
-
-// dist/pp/globals.js
-var Globals = {
-  ...engine_globals_exports,
-  ...scene_objects_globals_exports,
-  ...default_resources_globals_exports,
-  ...audio_globals_exports,
-  ...visual_globals_exports,
-  ...debug_globals_exports,
-  ...window_globals_exports,
-  ...object_pool_globals_exports,
-  ...character_collision_system_globals_exports,
-  ...input_globals_exports,
-  ...save_globals_exports,
-  ...analytics_globals_exports,
-  ...tool_globals_exports,
-  ...console_vr_globals_exports,
-  ...easy_tune_globals_exports
-};
-
-// dist/cauldron/wl/utils/default_wl_component_clone_callbacks.js
-import { MeshComponent, TextComponent } from "@wonderlandengine/api";
-
-// dist/cauldron/utils/mesh_utils.js
-import { Mesh, MeshAttribute, MeshIndexType } from "@wonderlandengine/api";
-
-// dist/cauldron/js/utils/vec2_utils.js
+// dist/cauldron/utils/array/vec2_utils.js
 import { vec2 as gl_vec2 } from "gl-matrix";
 function create6(x, y) {
-  let out = gl_vec2.create();
-  if (x !== void 0) {
+  const out = gl_vec2.create();
+  if (x != null) {
     set6(out, x, y);
   }
   return out;
 }
 function set6(vector, x, y) {
-  if (y === void 0) {
+  if (y == null) {
     gl_vec2.set(vector, x, x);
   } else {
     gl_vec2.set(vector, x, y);
   }
   return vector;
 }
-function length4(vector) {
-  return gl_vec2.length(vector);
-}
-function normalize4(vector, out = create6()) {
-  gl_vec2.normalize(out, vector);
-  return out;
-}
-function copy6(from, to) {
+function copy7(from, to) {
   gl_vec2.copy(to, from);
   return to;
 }
-function clone6(vector, out = create6()) {
-  Vec2Utils.copy(vector, out);
+function clone6(vector) {
+  return vector.slice(0);
+}
+function length4(vector) {
+  return gl_vec2.length(vector);
+}
+function normalize4(vector, out = Vec2Utils.clone(vector)) {
+  gl_vec2.normalize(out, vector);
   return out;
 }
 function zero2(vector) {
@@ -6271,32 +5288,32 @@ function isZero2(vector, epsilon = 0) {
 var Vec2Utils = {
   create: create6,
   set: set6,
+  copy: copy7,
+  clone: clone6,
   length: length4,
   normalize: normalize4,
-  copy: copy6,
-  clone: clone6,
   zero: zero2,
   isZero: isZero2
 };
 
-// dist/cauldron/js/utils/vec4_utils.js
+// dist/cauldron/utils/array/vec4_utils.js
 import { vec4 as gl_vec4 } from "gl-matrix";
 function create7(x, y, z, w) {
   let out = gl_vec4.create();
-  if (x !== void 0) {
+  if (x != null) {
     set7(out, x, y, z, w);
   }
   return out;
 }
 function set7(vector, x, y, z, w) {
-  if (y === void 0) {
+  if (y == null) {
     gl_vec4.set(vector, x, x, x, x);
   } else {
     gl_vec4.set(vector, x, y, z, w);
   }
   return vector;
 }
-function copy7(from, to) {
+function copy8(from, to) {
   gl_vec4.copy(to, from);
   return to;
 }
@@ -6307,475 +5324,11 @@ function clone7(vector, out = create7()) {
 var Vec4Utils = {
   create: create7,
   set: set7,
-  copy: copy7,
+  copy: copy8,
   clone: clone7
 };
 
-// dist/cauldron/js/utils/vec_utils.js
-function zero3(vector, out = null) {
-  out = _prepareOut(vector, out);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = 0;
-  }
-  return out;
-}
-function isZero3(vector, epsilon = 0) {
-  let zero4 = true;
-  for (let i = 0; i < vector.length && zero4; i++) {
-    zero4 = zero4 && Math.abs(vector[i]) <= epsilon;
-  }
-  return zero4;
-}
-function scale3(vector, value, out = null) {
-  out = _prepareOut(vector, out);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = out[i] * value;
-  }
-  return out;
-}
-function round(vector, out = null) {
-  out = _prepareOut(vector, out);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = Math.round(out[i]);
-  }
-  return out;
-}
-function floor(vector, out = null) {
-  out = _prepareOut(vector, out);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = Math.floor(out[i]);
-  }
-  return out;
-}
-function ceil(vector, out = null) {
-  out = _prepareOut(vector, out);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = Math.ceil(out[i]);
-  }
-  return out;
-}
-function clamp2(vector, start, end, out = null) {
-  out = _prepareOut(vector, out);
-  let fixedStart = start != null ? start : -Number.MAX_VALUE;
-  let fixedEnd = end != null ? end : Number.MAX_VALUE;
-  let min = Math.min(fixedStart, fixedEnd);
-  let max = Math.max(fixedStart, fixedEnd);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = MathUtils.clamp(out[i], min, max);
-  }
-  return out;
-}
-function equals4(vector, other, epsilon = 0) {
-  let equals5 = vector.length == other.length;
-  for (let i = 0; i < vector.length && equals5; i++) {
-    equals5 = equals5 && Math.abs(vector[i] - other[i]) <= epsilon;
-  }
-  return equals5;
-}
-function toString3(vector, decimalPlaces = null) {
-  let message = _buildConsoleMessage(vector, decimalPlaces);
-  return message;
-}
-function log(vector, decimalPlaces = 4) {
-  let message = _buildConsoleMessage(vector, decimalPlaces);
-  console.log(message);
-}
-function error(vector, decimalPlaces = 4) {
-  let message = _buildConsoleMessage(vector, decimalPlaces);
-  console.error(message);
-}
-function warn(vector, decimalPlaces = 4) {
-  let message = _buildConsoleMessage(vector, decimalPlaces);
-  console.warn(message);
-}
-var VecUtils = {
-  zero: zero3,
-  isZero: isZero3,
-  scale: scale3,
-  round,
-  floor,
-  ceil,
-  clamp: clamp2,
-  equals: equals4,
-  toString: toString3,
-  log,
-  error,
-  warn
-};
-function _buildConsoleMessage(vector, decimalPlaces) {
-  let message = "[";
-  for (let i = 0; i < vector.length; i++) {
-    if (i != 0) {
-      message = message.concat(", ");
-    }
-    if (decimalPlaces != null) {
-      message = message.concat(vector[i].toFixed(decimalPlaces));
-    } else {
-      message = message.concat(vector[i].toString());
-    }
-  }
-  message = message.concat("]");
-  return message;
-}
-function _prepareOut(vector, out) {
-  if (out == null) {
-    out = ArrayUtils.clone(vector);
-  } else if (out != vector) {
-    ArrayUtils.copy(vector, out);
-  }
-  return out;
-}
-
-// dist/cauldron/js/utils/js_utils.js
-function getObjectPrototypes(object) {
-  let prototypes = [];
-  prototypes.push(object);
-  let objectProto = Object.getPrototypeOf(object);
-  while (objectProto != null) {
-    ArrayUtils.pushUnique(prototypes, objectProto);
-    objectProto = Object.getPrototypeOf(objectProto);
-  }
-  let prototypesToCheck = [object];
-  while (prototypesToCheck.length > 0) {
-    let prototypeToCheck = prototypesToCheck.shift();
-    if (prototypeToCheck != null) {
-      ArrayUtils.pushUnique(prototypes, prototypeToCheck);
-      ArrayUtils.pushUnique(prototypesToCheck, Object.getPrototypeOf(prototypeToCheck));
-      try {
-        ArrayUtils.pushUnique(prototypesToCheck, prototypeToCheck.prototype);
-      } catch (error3) {
-      }
-    }
-  }
-  return prototypes;
-}
-function getObjectPropertyNames(object) {
-  let propertyNames = [];
-  let prototypes = JSUtils.getObjectPrototypes(object);
-  for (let prototype of prototypes) {
-    if (prototype != null) {
-      let ownPropertyNames = Object.getOwnPropertyNames(prototype);
-      for (let ownPropertyName of ownPropertyNames) {
-        ArrayUtils.pushUnique(propertyNames, ownPropertyName);
-      }
-    }
-  }
-  return propertyNames;
-}
-function getObjectPropertyDescriptor(object, propertyName) {
-  let propertyDescriptor = null;
-  let propertyParent = JSUtils.getObjectPropertyOwnParent(object, propertyName);
-  if (propertyParent != null) {
-    propertyDescriptor = Object.getOwnPropertyDescriptor(propertyParent, propertyName);
-  }
-  return propertyDescriptor;
-}
-function getObjectProperty(object, propertyName) {
-  let property = void 0;
-  let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
-  if (propertyDescriptor != null) {
-    if (propertyDescriptor.get != null) {
-      property = propertyDescriptor.get.bind(object)();
-    } else {
-      property = propertyDescriptor.value;
-    }
-  }
-  return property;
-}
-function setObjectProperty(valueToSet, object, propertyName) {
-  let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
-  let setUsed = false;
-  if (propertyDescriptor != null) {
-    if (propertyDescriptor.set != null) {
-      setUsed = true;
-      propertyDescriptor.set.bind(object)(valueToSet);
-    }
-  }
-  if (!setUsed) {
-    let propertyParent = JSUtils.getObjectPropertyOwnParent(object, propertyName);
-    if (propertyParent == null) {
-      propertyParent = object;
-    }
-    Object.defineProperty(propertyParent, propertyName, {
-      value: valueToSet
-    });
-  }
-}
-function getObjectPropertyOwnParent(object, propertyName) {
-  let parent = null;
-  let parents = JSUtils.getObjectPropertyOwnParents(object, propertyName);
-  if (parents.length > 0) {
-    parent = parents[0];
-  }
-  return parent;
-}
-function getObjectPropertyOwnParents(object, propertyName) {
-  let parents = [];
-  let possibleParents = JSUtils.getObjectPrototypes(object);
-  for (let possibleParent of possibleParents) {
-    let propertyNames = Object.getOwnPropertyNames(possibleParent);
-    if (ArrayUtils.hasEqual(propertyNames, propertyName)) {
-      parents.push(possibleParent);
-    }
-  }
-  return parents;
-}
-function getObjectFromPath(path, pathStartObject = Globals.getWindow()) {
-  let object = null;
-  let objectName = JSUtils.getObjectNameFromPath(path);
-  if (objectName != null) {
-    object = JSUtils.getObjectProperty(JSUtils.getObjectParentFromPath(path, pathStartObject), objectName);
-  }
-  return object;
-}
-function getObjectNameFromPath(path) {
-  let objectName = null;
-  if (path != null) {
-    let pathSplit = path.split(".");
-    if (pathSplit.length > 0) {
-      objectName = pathSplit[pathSplit.length - 1];
-    }
-  }
-  return objectName;
-}
-function getObjectParentFromPath(path, pathStartObject = Globals.getWindow()) {
-  let pathSplit = path.split(".");
-  let currentParent = pathStartObject;
-  for (let i = 0; i < pathSplit.length - 1; i++) {
-    currentParent = JSUtils.getObjectProperty(currentParent, pathSplit[i]);
-  }
-  return currentParent;
-}
-function overwriteObjectProperty(newProperty, object, propertyName, overwriteOnOwnParent = true, jsObjectFunctionsSpecialOverwrite = false, logEnabled = false) {
-  let success = false;
-  try {
-    let propertyOwnParent = JSUtils.getObjectPropertyOwnParent(object, propertyName);
-    if (propertyOwnParent != null) {
-      let originalPropertyDescriptor = Object.getOwnPropertyDescriptor(propertyOwnParent, propertyName);
-      if (originalPropertyDescriptor != null) {
-        let originalProperty = JSUtils.getObjectProperty(propertyOwnParent, propertyName);
-        JSUtils.copyObjectProperties(originalProperty, newProperty, true, jsObjectFunctionsSpecialOverwrite, logEnabled);
-        let overwriteTarget = object;
-        if (overwriteOnOwnParent) {
-          overwriteTarget = propertyOwnParent;
-        }
-        Object.defineProperty(overwriteTarget, propertyName, {
-          value: newProperty,
-          enumerable: originalPropertyDescriptor.enumerable,
-          writable: originalPropertyDescriptor.writable,
-          configurable: originalPropertyDescriptor.configurable
-        });
-        success = true;
-      } else {
-        Object.defineProperty(object, propertyName, {
-          value: newProperty
-        });
-        success = true;
-      }
-    } else {
-      Object.defineProperty(object, propertyName, {
-        value: newProperty
-      });
-      success = true;
-    }
-  } catch (error3) {
-    if (logEnabled) {
-      console.error("Property:", propertyName, "of:", object, "can't be overwritten.");
-    }
-  }
-  return success;
-}
-function copyObjectProperties(fromObject, toObject, cleanCopy = false, jsObjectFunctionsSpecialCopy = false, logEnabled = false) {
-  if (fromObject != null) {
-    if (cleanCopy) {
-      JSUtils.cleanObjectProperties(toObject);
-    }
-    Object.setPrototypeOf(toObject, Object.getPrototypeOf(fromObject));
-    let fromObjectPropertyNames = Object.getOwnPropertyNames(fromObject);
-    for (let fromObjectPropertyName of fromObjectPropertyNames) {
-      try {
-        let fromObjectPropertyDescriptor = Object.getOwnPropertyDescriptor(fromObject, fromObjectPropertyName);
-        Object.defineProperty(toObject, fromObjectPropertyName, {
-          value: fromObjectPropertyDescriptor.value,
-          enumerable: fromObjectPropertyDescriptor.enumerable,
-          writable: fromObjectPropertyDescriptor.writable,
-          configurable: fromObjectPropertyDescriptor.configurable
-        });
-      } catch (error3) {
-        if (logEnabled) {
-          console.error("Property:", fromObjectPropertyName, "of:", fromObject.name, "can't be overwritten.");
-        }
-      }
-    }
-    if (jsObjectFunctionsSpecialCopy) {
-      _jsObjectFunctionsSpecialCopy(fromObject, toObject);
-    }
-  }
-}
-function cleanObjectProperties(object) {
-  let objectNames = Object.getOwnPropertyNames(object);
-  ArrayUtils.pushUnique(objectNames, "__proto__");
-  for (let objectName of objectNames) {
-    try {
-      Object.defineProperty(object, objectName, {
-        value: void 0
-      });
-    } catch (error3) {
-    }
-    try {
-      delete object[objectName];
-    } catch (error3) {
-    }
-  }
-  Object.setPrototypeOf(object, null);
-}
-function doesObjectPropertyUseAccessors(object, propertyName) {
-  let propertyUseAccessors = false;
-  let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
-  if (propertyDescriptor != null && (propertyDescriptor.get != null || propertyDescriptor.set != null)) {
-    propertyUseAccessors = true;
-  }
-  return propertyUseAccessors;
-}
-function isFunctionByName(functionParent, functionName) {
-  let isFunctionResult = false;
-  let functionProperty = JSUtils.getObjectProperty(functionParent, functionName);
-  if (functionProperty != null) {
-    isFunctionResult = JSUtils.isFunction(functionProperty);
-  }
-  return isFunctionResult;
-}
-function isClassByName(classParent, className) {
-  let isClassResult = false;
-  let classProperty = JSUtils.getObjectProperty(classParent, className);
-  if (classProperty != null) {
-    isClassResult = JSUtils.isClass(classProperty);
-  }
-  return isClassResult;
-}
-function isObjectByName(objectParent, objectName) {
-  let isObjectResult = false;
-  let objectProperty = JSUtils.getObjectProperty(objectParent, objectName);
-  if (objectProperty != null) {
-    isObjectResult = JSUtils.isObject(objectProperty);
-  }
-  return isObjectResult;
-}
-function isFunction(property) {
-  return typeof property == "function" && !JSUtils.isClass(property);
-}
-var isClass = function() {
-  let checkClassRegex = new RegExp("^class");
-  return function isClass2(property) {
-    return typeof property == "function" && property.prototype != null && typeof property.prototype.constructor == "function" && property.toString != null && typeof property.toString == "function" && property.toString()?.match(checkClassRegex) != null;
-  };
-}();
-function isObject(property) {
-  return typeof property == "object";
-}
-var JSUtils = {
-  getObjectPrototypes,
-  getObjectPropertyNames,
-  getObjectPropertyDescriptor,
-  getObjectProperty,
-  setObjectProperty,
-  getObjectPropertyOwnParent,
-  getObjectPropertyOwnParents,
-  getObjectFromPath,
-  getObjectNameFromPath,
-  getObjectParentFromPath,
-  overwriteObjectProperty,
-  copyObjectProperties,
-  cleanObjectProperties,
-  doesObjectPropertyUseAccessors,
-  isFunctionByName,
-  isClassByName,
-  isObjectByName,
-  isFunction,
-  isClass,
-  isObject
-};
-function _jsObjectFunctionsSpecialCopy(fromObject, toObject) {
-  try {
-    if (typeof toObject == "function" && typeof fromObject == "function") {
-      let functionsToOverwrite = ["toString", "toLocaleString", "valueOf"];
-      for (let functionToOverwrite of functionsToOverwrite) {
-        let propertyDescriptorToOverwrite = JSUtils.getObjectPropertyDescriptor(fromObject, functionToOverwrite);
-        if (propertyDescriptorToOverwrite != null && propertyDescriptorToOverwrite.value != null && propertyDescriptorToOverwrite.value == Object[functionToOverwrite]) {
-          let valueToReturn = Object[functionToOverwrite].bind(fromObject)();
-          let overwrittenFunction = function() {
-            return valueToReturn;
-          };
-          JSUtils.overwriteObjectProperty(overwrittenFunction, toObject, functionToOverwrite, false, false);
-        }
-      }
-    }
-  } catch (error3) {
-  }
-}
-
-// dist/plugin/utils/plugin_utils.js
-function injectProperties(fromReference, toReference, enumerable = true, writable = true, configurable = true, keepOriginalDescriptorAttributes = true, bindThisAsFirstParam = false, prefix = null, functionNamesToExclude = []) {
-  let ownPropertyNames = Object.getOwnPropertyNames(fromReference);
-  for (let ownPropertyName of ownPropertyNames) {
-    if (functionNamesToExclude.includes(ownPropertyName))
-      continue;
-    let enumerableToUse = enumerable;
-    let writableToUse = writable;
-    let configurableToUse = configurable;
-    if (keepOriginalDescriptorAttributes) {
-      let originalDescriptor = Object.getOwnPropertyDescriptor(toReference, ownPropertyName);
-      if (originalDescriptor != null) {
-        enumerableToUse = originalDescriptor.enumerable;
-        writableToUse = originalDescriptor.writable;
-        configurableToUse = originalDescriptor.configurable;
-      }
-    }
-    let adjustedPropertyName = ownPropertyName;
-    if (prefix != null) {
-      if (adjustedPropertyName.length > 0 && adjustedPropertyName[0] == adjustedPropertyName[0].toUpperCase()) {
-        adjustedPropertyName = prefix.toUpperCase() + adjustedPropertyName;
-      } else {
-        adjustedPropertyName = prefix + adjustedPropertyName;
-      }
-    }
-    let propertyDescriptor = Object.getOwnPropertyDescriptor(fromReference, ownPropertyName);
-    let useAccessors = propertyDescriptor != null && (propertyDescriptor.get != null || propertyDescriptor.set != null);
-    if (!useAccessors) {
-      let adjustedProperyValue = fromReference[ownPropertyName];
-      if (bindThisAsFirstParam && JSUtils.isFunction(adjustedProperyValue)) {
-        let originalFunction = fromReference[ownPropertyName];
-        adjustedProperyValue = function() {
-          return originalFunction(this, ...arguments);
-        };
-        Object.defineProperty(adjustedProperyValue, "name", {
-          value: adjustedPropertyName
-        });
-      }
-      Object.defineProperty(toReference, adjustedPropertyName, {
-        value: adjustedProperyValue,
-        enumerable: enumerableToUse,
-        writable: writableToUse,
-        configurable: configurableToUse
-      });
-    } else {
-      Object.defineProperty(toReference, adjustedPropertyName, {
-        get: propertyDescriptor.get,
-        set: propertyDescriptor.set,
-        enumerable: enumerableToUse,
-        configurable: configurableToUse
-      });
-    }
-  }
-}
-var PluginUtils = {
-  injectProperties
-};
-
-// dist/plugin/js/extensions/array_extension.js
-function initArrayExtension() {
-  initArrayExtensionProtoype();
-}
+// dist/plugin/js/extensions/array/vec_create_extension.js
 function vec2_create(x, y) {
   return Vec2Utils.create(x, y);
 }
@@ -6797,5510 +5350,6 @@ function mat3_create(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
 function mat4_create(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
   return Mat4Utils.create(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
 }
-function initArrayExtensionProtoype() {
-  let arrayExtension = {};
-  arrayExtension.pp_first = function pp_first() {
-    return ArrayUtils.first(this);
-  };
-  arrayExtension.pp_last = function pp_last() {
-    return ArrayUtils.last(this);
-  };
-  arrayExtension.pp_has = function pp_has(callback) {
-    return ArrayUtils.has(this, callback);
-  };
-  arrayExtension.pp_hasEqual = function pp_hasEqual(elementToFind, elementsEqualCallback = null) {
-    return ArrayUtils.hasEqual(this, elementToFind, elementsEqualCallback);
-  };
-  arrayExtension.pp_find = function pp_find(callback) {
-    return ArrayUtils.find(this, callback);
-  };
-  arrayExtension.pp_findIndex = function pp_findIndex(callback) {
-    return ArrayUtils.findIndex(this, callback);
-  };
-  arrayExtension.pp_findAll = function pp_findAll(callback) {
-    return ArrayUtils.findAll(this, callback);
-  };
-  arrayExtension.pp_findAllIndexes = function pp_findAllIndexes(callback) {
-    return ArrayUtils.findAllIndexes(this, callback);
-  };
-  arrayExtension.pp_findEqual = function pp_findEqual(elementToFind, elementsEqualCallback = null) {
-    return ArrayUtils.findEqual(this, elementToFind, elementsEqualCallback);
-  };
-  arrayExtension.pp_findAllEqual = function pp_findAllEqual(elementToFind, elementsEqualCallback = null) {
-    return ArrayUtils.findAllEqual(this, elementToFind, elementsEqualCallback);
-  };
-  arrayExtension.pp_findIndexEqual = function pp_findIndexEqual(elementToFind, elementsEqualCallback = null) {
-    return ArrayUtils.findIndexEqual(this, elementToFind, elementsEqualCallback);
-  };
-  arrayExtension.pp_findAllIndexesEqual = function pp_findAllIndexesEqual(elementToFind, elementsEqualCallback = null) {
-    return ArrayUtils.findAllIndexesEqual(this, elementToFind, elementsEqualCallback);
-  };
-  arrayExtension.pp_removeIndex = function pp_removeIndex(index) {
-    return ArrayUtils.removeIndex(this, index);
-  };
-  arrayExtension.pp_removeAllIndexes = function pp_removeAllIndexes(indexes) {
-    return ArrayUtils.removeAllIndexes(this, indexes);
-  };
-  arrayExtension.pp_remove = function pp_remove(callback) {
-    return ArrayUtils.remove(this, callback);
-  };
-  arrayExtension.pp_removeAll = function pp_removeAll(callback) {
-    return ArrayUtils.removeAll(this, callback);
-  };
-  arrayExtension.pp_removeEqual = function pp_removeEqual(elementToRemove, elementsEqualCallback = null) {
-    return ArrayUtils.removeEqual(this, elementToRemove, elementsEqualCallback);
-  };
-  arrayExtension.pp_removeAllEqual = function pp_removeAllEqual(elementToRemove, elementsEqualCallback = null) {
-    return ArrayUtils.removeAllEqual(this, elementToRemove, elementsEqualCallback);
-  };
-  arrayExtension.pp_pushUnique = function pp_pushUnique(element, elementsEqualCallback = null) {
-    return ArrayUtils.pushUnique(this, element, elementsEqualCallback);
-  };
-  arrayExtension.pp_unshiftUnique = function pp_unshiftUnique(element, elementsEqualCallback = null) {
-    return ArrayUtils.unshiftUnique(this, element, elementsEqualCallback);
-  };
-  arrayExtension.pp_copy = function pp_copy(array, copyCallback = null) {
-    return ArrayUtils.copy(array, this, copyCallback);
-  };
-  arrayExtension.pp_clone = function pp_clone(cloneCallback = null) {
-    return ArrayUtils.clone(this, cloneCallback);
-  };
-  arrayExtension.pp_equals = function pp_equals(array, elementsEqualCallback = null) {
-    return ArrayUtils.equals(this, array, elementsEqualCallback);
-  };
-  arrayExtension.pp_clear = function pp_clear() {
-    return ArrayUtils.clear(this);
-  };
-  let vecExtension = {};
-  vecExtension.vec_zero = function vec_zero(out = null) {
-    return VecUtils.zero(this, out);
-  };
-  vecExtension.vec_isZero = function vec_isZero(epsilon = 0) {
-    return VecUtils.isZero(this, epsilon);
-  };
-  vecExtension.vec_scale = function vec_scale(value, out = null) {
-    return VecUtils.scale(this, value, out);
-  };
-  vecExtension.vec_round = function vec_round(out = null) {
-    return VecUtils.round(this, out);
-  };
-  vecExtension.vec_floor = function vec_floor(out = null) {
-    return VecUtils.floor(this, out);
-  };
-  vecExtension.vec_ceil = function vec_ceil(out = null) {
-    return VecUtils.ceil(this, out);
-  };
-  vecExtension.vec_clamp = function vec_clamp(start, end, out = null) {
-    return VecUtils.clamp(this, start, end, out);
-  };
-  vecExtension.vec_equals = function vec_equals(vector, epsilon = 0) {
-    return VecUtils.equals(this, vector, epsilon);
-  };
-  vecExtension.vec_toString = function vec_toString(decimalPlaces = null) {
-    return VecUtils.toString(this, decimalPlaces);
-  };
-  vecExtension.vec_log = function vec_log(decimalPlaces = 4) {
-    return VecUtils.log(this, decimalPlaces);
-  };
-  vecExtension.vec_error = function vec_error(decimalPlaces = 4) {
-    return VecUtils.error(this, decimalPlaces);
-  };
-  vecExtension.vec_warn = function vec_warn(decimalPlaces = 4) {
-    return VecUtils.warn(this, decimalPlaces);
-  };
-  let vec2Extension = {};
-  vec2Extension.vec2_set = function vec2_set(x, y) {
-    return Vec2Utils.set(this, x, y);
-  };
-  vec2Extension.vec2_length = function vec2_length() {
-    return Vec2Utils.length(this);
-  };
-  vec2Extension.vec2_normalize = function vec2_normalize(out = Vec2Utils.create()) {
-    return Vec2Utils.normalize(this, out);
-  };
-  vec2Extension.vec2_copy = function vec2_copy(vector) {
-    return Vec2Utils.copy(vector, this);
-  };
-  vec2Extension.vec2_clone = function vec2_clone(out = Vec2Utils.create()) {
-    return Vec2Utils.clone(this, out);
-  };
-  vec2Extension.vec2_zero = function vec2_zero() {
-    return Vec2Utils.zero(this);
-  };
-  vec2Extension.vec2_isZero = function vec2_isZero(epsilon = 0) {
-    return Vec2Utils.isZero(this, epsilon);
-  };
-  let vec3Extension = {};
-  vec3Extension.vec3_set = function vec3_set(x, y, z) {
-    return Vec3Utils.set(this, x, y, z);
-  };
-  vec3Extension.vec3_normalize = function vec3_normalize(out = Vec3Utils.create()) {
-    return Vec3Utils.normalize(this, out);
-  };
-  vec3Extension.vec3_copy = function vec3_copy(vector) {
-    return Vec3Utils.copy(vector, this);
-  };
-  vec3Extension.vec3_clone = function vec3_clone(out = Vec3Utils.create()) {
-    return Vec3Utils.clone(this, out);
-  };
-  vec3Extension.vec3_zero = function vec3_zero() {
-    return Vec3Utils.zero(this);
-  };
-  vec3Extension.vec3_angle = function vec3_angle(vector) {
-    return Vec3Utils.angle(this, vector);
-  };
-  vec3Extension.vec3_angleDegrees = function vec3_angleDegrees(vector) {
-    return Vec3Utils.angleDegrees(this, vector);
-  };
-  vec3Extension.vec3_angleRadians = function vec3_angleRadians(vector) {
-    return Vec3Utils.angleRadians(this, vector);
-  };
-  vec3Extension.vec3_equals = function vec3_equals(vector, epsilon = 0) {
-    return Vec3Utils.equals(this, vector, epsilon);
-  };
-  vec3Extension.vec3_length = function vec3_length() {
-    return Vec3Utils.length(this);
-  };
-  vec3Extension.vec3_lengthSquared = function vec3_lengthSquared() {
-    return Vec3Utils.lengthSquared(this);
-  };
-  vec3Extension.vec3_distance = function vec3_distance(vector) {
-    return Vec3Utils.distance(this, vector);
-  };
-  vec3Extension.vec3_distanceSquared = function vec3_distanceSquared(vector) {
-    return Vec3Utils.distanceSquared(this, vector);
-  };
-  vec3Extension.vec3_add = function vec3_add(vector, out = Vec3Utils.create()) {
-    return Vec3Utils.add(this, vector, out);
-  };
-  vec3Extension.vec3_sub = function vec3_sub(vector, out = Vec3Utils.create()) {
-    return Vec3Utils.sub(this, vector, out);
-  };
-  vec3Extension.vec3_mul = function vec3_mul(vector, out = Vec3Utils.create()) {
-    return Vec3Utils.mul(this, vector, out);
-  };
-  vec3Extension.vec3_div = function vec3_div(vector, out = Vec3Utils.create()) {
-    return Vec3Utils.div(this, vector, out);
-  };
-  vec3Extension.vec3_scale = function vec3_scale(value, out = Vec3Utils.create()) {
-    return Vec3Utils.scale(this, value, out);
-  };
-  vec3Extension.vec3_dot = function vec3_dot(vector) {
-    return Vec3Utils.dot(this, vector);
-  };
-  vec3Extension.vec3_negate = function vec3_negate(out = Vec3Utils.create()) {
-    return Vec3Utils.negate(this, out);
-  };
-  vec3Extension.vec3_cross = function vec3_cross(vector, out = Vec3Utils.create()) {
-    return Vec3Utils.cross(this, vector, out);
-  };
-  vec3Extension.vec3_transformQuat = function vec3_transformQuat(quat, out = Vec3Utils.create()) {
-    return Vec3Utils.transformQuat(this, quat, out);
-  };
-  vec3Extension.vec3_transformMat3 = function vec3_transformMat3(matrix, out = Vec3Utils.create()) {
-    return Vec3Utils.transformMat3(this, matrix, out);
-  };
-  vec3Extension.vec3_transformMat4 = function vec3_transformMat4(matrix, out = Vec3Utils.create()) {
-    return Vec3Utils.transformMat4(this, matrix, out);
-  };
-  vec3Extension.vec3_lengthSigned = function vec3_lengthSigned(positiveDirection) {
-    return Vec3Utils.lengthSigned(this, positiveDirection);
-  };
-  vec3Extension.vec3_angleSigned = function vec3_angleSigned(vector, referenceAxis) {
-    return Vec3Utils.angleSigned(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_angleSignedDegrees = function vec3_angleSignedDegrees(vector, referenceAxis) {
-    return Vec3Utils.angleSignedDegrees(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_angleSignedRadians = function vec3_angleSignedRadians(vector, referenceAxis) {
-    return Vec3Utils.angleSignedRadians(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_anglePivoted = function vec3_anglePivoted(vector, referenceAxis) {
-    return Vec3Utils.anglePivoted(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_anglePivotedDegrees = function vec3_anglePivotedDegrees(vector, referenceAxis) {
-    return Vec3Utils.anglePivotedDegrees(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_anglePivotedRadians = function vec3_anglePivotedRadians(vector, referenceAxis) {
-    return Vec3Utils.anglePivotedRadians(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_anglePivotedSigned = function vec3_anglePivotedSigned(vector, referenceAxis) {
-    return Vec3Utils.anglePivotedSigned(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_anglePivotedSignedDegrees = function vec3_anglePivotedSignedDegrees(vector, referenceAxis) {
-    return Vec3Utils.anglePivotedSignedDegrees(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_anglePivotedSignedRadians = function vec3_anglePivotedSignedRadians(vector, referenceAxis) {
-    return Vec3Utils.anglePivotedSignedRadians(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_toRadians = function vec3_toRadians(out = Vec3Utils.create()) {
-    return Vec3Utils.toRadians(this, out);
-  };
-  vec3Extension.vec3_toDegrees = function vec3_toDegrees(out = Vec3Utils.create()) {
-    return Vec3Utils.toDegrees(this, out);
-  };
-  vec3Extension.vec3_toQuat = function vec3_toQuat(out) {
-    return Vec3Utils.toQuat(this, out);
-  };
-  vec3Extension.vec3_radiansToQuat = function vec3_radiansToQuat(out = QuatUtils.create()) {
-    return Vec3Utils.radiansToQuat(this, out);
-  };
-  vec3Extension.vec3_degreesToQuat = function vec3_degreesToQuat(out = QuatUtils.create()) {
-    return Vec3Utils.degreesToQuat(this, out);
-  };
-  vec3Extension.vec3_isNormalized = function vec3_isNormalized(epsilon = MathUtils.EPSILON) {
-    return Vec3Utils.isNormalized(this, epsilon);
-  };
-  vec3Extension.vec3_isZero = function vec3_isZero(epsilon = 0) {
-    return Vec3Utils.isZero(this, epsilon);
-  };
-  vec3Extension.vec3_valueAlongAxis = function vec3_valueAlongAxis(axis) {
-    return Vec3Utils.valueAlongAxis(this, axis);
-  };
-  vec3Extension.vec3_valueAlongPlane = function vec3_valueAlongPlane(planeNormal) {
-    return Vec3Utils.valueAlongPlane(this, planeNormal);
-  };
-  vec3Extension.vec3_componentAlongAxis = function vec3_componentAlongAxis(axis, out = Vec3Utils.create()) {
-    return Vec3Utils.componentAlongAxis(this, axis, out);
-  };
-  vec3Extension.vec3_removeComponentAlongAxis = function vec3_removeComponentAlongAxis(axis, out = Vec3Utils.create()) {
-    return Vec3Utils.removeComponentAlongAxis(this, axis, out);
-  };
-  vec3Extension.vec3_copyComponentAlongAxis = function vec3_copyComponentAlongAxis(vector, axis, out = Vec3Utils.create()) {
-    return Vec3Utils.copyComponentAlongAxis(vector, this, axis, out);
-  };
-  vec3Extension.vec3_isConcordant = function vec3_isConcordant(vector) {
-    return Vec3Utils.isConcordant(this, vector);
-  };
-  vec3Extension.vec3_isFartherAlongAxis = function vec3_isFartherAlongAxis(vector, axis) {
-    return Vec3Utils.isFartherAlongAxis(this, vector, axis);
-  };
-  vec3Extension.vec3_isToTheRight = function vec3_isToTheRight(vector, referenceAxis) {
-    return Vec3Utils.isToTheRight(this, vector, referenceAxis);
-  };
-  vec3Extension.vec3_signTo = function vec3_signTo(vector, referenceAxis, zeroSign = 1) {
-    return Vec3Utils.signTo(this, vector, referenceAxis, zeroSign);
-  };
-  vec3Extension.vec3_projectOnAxis = function vec3_projectOnAxis(axis, out = Vec3Utils.create()) {
-    return Vec3Utils.projectOnAxis(this, axis, out);
-  };
-  vec3Extension.vec3_projectOnAxisAlongAxis = function vec3_projectOnAxisAlongAxis(axis, projectAlongAxis, out = Vec3Utils.create()) {
-    return Vec3Utils.projectOnAxisAlongAxis(this, axis, projectAlongAxis, out);
-  };
-  vec3Extension.vec3_projectOnPlane = function vec3_projectOnPlane(planeNormal, out = Vec3Utils.create()) {
-    return Vec3Utils.projectOnPlane(this, planeNormal, out);
-  };
-  vec3Extension.vec3_projectOnPlaneAlongAxis = function vec3_projectOnPlaneAlongAxis(planeNormal, projectAlongAxis, out = Vec3Utils.create()) {
-    return Vec3Utils.projectOnPlaneAlongAxis(this, planeNormal, projectAlongAxis, out);
-  };
-  vec3Extension.vec3_isOnAxis = function vec3_isOnAxis(axis) {
-    return Vec3Utils.isOnAxis(this, axis);
-  };
-  vec3Extension.vec3_isOnPlane = function vec3_isOnPlane(planeNormal) {
-    return Vec3Utils.isOnPlane(this, planeNormal);
-  };
-  vec3Extension.vec3_rotate = function vec3_rotate(rotation, out) {
-    return Vec3Utils.rotate(this, rotation, out);
-  };
-  vec3Extension.vec3_rotateDegrees = function vec3_rotateDegrees(rotation, out) {
-    return Vec3Utils.rotateDegrees(this, rotation, out);
-  };
-  vec3Extension.vec3_rotateRadians = function vec3_rotateRadians(rotation, out) {
-    return Vec3Utils.rotateRadians(this, rotation, out);
-  };
-  vec3Extension.vec3_rotateQuat = function vec3_rotateQuat(rotation, out) {
-    return Vec3Utils.rotateQuat(this, rotation, out);
-  };
-  vec3Extension.vec3_rotateAxis = function vec3_rotateAxis(angle2, axis, out) {
-    return Vec3Utils.rotateAxis(this, angle2, axis, out);
-  };
-  vec3Extension.vec3_rotateAxisDegrees = function vec3_rotateAxisDegrees(angle2, axis, out) {
-    return Vec3Utils.rotateAxisDegrees(this, angle2, axis, out);
-  };
-  vec3Extension.vec3_rotateAxisRadians = function vec3_rotateAxisRadians(angle2, axis, out) {
-    return Vec3Utils.rotateAxisRadians(this, angle2, axis, out);
-  };
-  vec3Extension.vec3_rotateAround = function vec3_rotateAround(rotation, origin, out) {
-    return Vec3Utils.rotateAround(this, rotation, origin, out);
-  };
-  vec3Extension.vec3_rotateAroundDegrees = function vec3_rotateAroundDegrees(rotation, origin, out = Vec3Utils.create()) {
-    return Vec3Utils.rotateAroundDegrees(this, rotation, origin, out);
-  };
-  vec3Extension.vec3_rotateAroundRadians = function vec3_rotateAroundRadians(rotation, origin, out = Vec3Utils.create()) {
-    return Vec3Utils.rotateAroundRadians(this, rotation, origin, out);
-  };
-  vec3Extension.vec3_rotateAroundQuat = function vec3_rotateAroundQuat(rotation, origin, out = Vec3Utils.create()) {
-    return Vec3Utils.rotateAroundQuat(this, rotation, origin, out);
-  };
-  vec3Extension.vec3_rotateAroundAxis = function vec3_rotateAroundAxis(angle2, axis, origin, out) {
-    return Vec3Utils.rotateAroundAxis(this, angle2, axis, origin, out);
-  };
-  vec3Extension.vec3_rotateAroundAxisDegrees = function vec3_rotateAroundAxisDegrees(angle2, axis, origin, out) {
-    return Vec3Utils.rotateAroundAxisDegrees(this, angle2, axis, origin, out);
-  };
-  vec3Extension.vec3_rotateAroundAxisRadians = function vec3_rotateAroundAxisRadians(angle2, axis, origin, out = Vec3Utils.create()) {
-    return Vec3Utils.rotateAroundAxisRadians(this, angle2, axis, origin, out);
-  };
-  vec3Extension.vec3_convertPositionToWorld = function vec3_convertPositionToWorld(parentTransform, out) {
-    return Vec3Utils.convertPositionToWorld(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertPositionToLocal = function vec3_convertPositionToLocal(parentTransform, out) {
-    return Vec3Utils.convertPositionToLocal(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertPositionToWorldMatrix = function vec3_convertPositionToWorldMatrix(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertPositionToWorldMatrix(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertPositionToLocalMatrix = function vec3_convertPositionToLocalMatrix(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertPositionToLocalMatrix(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertPositionToWorldQuat = function vec3_convertPositionToWorldQuat(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertPositionToWorldQuat(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertPositionToLocalQuat = function vec3_convertPositionToLocalQuat(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertPositionToLocalQuat(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertDirectionToWorld = function vec3_convertDirectionToWorld(parentTransform, out) {
-    return Vec3Utils.convertDirectionToWorld(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertDirectionToLocal = function vec3_convertDirectionToLocal(parentTransform, out) {
-    return Vec3Utils.convertDirectionToLocal(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertDirectionToWorldMatrix = function vec3_convertDirectionToWorldMatrix(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertDirectionToWorldMatrix(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertDirectionToLocalMatrix = function vec3_convertDirectionToLocalMatrix(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertDirectionToLocalMatrix(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertDirectionToWorldQuat = function vec3_convertDirectionToWorldQuat(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertDirectionToWorldQuat(this, parentTransform, out);
-  };
-  vec3Extension.vec3_convertDirectionToLocalQuat = function vec3_convertDirectionToLocalQuat(parentTransform, out = Vec3Utils.create()) {
-    return Vec3Utils.convertDirectionToLocalQuat(this, parentTransform, out);
-  };
-  vec3Extension.vec3_addRotation = function vec3_addRotation(rotation, out) {
-    return Vec3Utils.addRotation(this, rotation, out);
-  };
-  vec3Extension.vec3_addRotationDegrees = function vec3_addRotationDegrees(rotation, out) {
-    return Vec3Utils.addRotationDegrees(this, rotation, out);
-  };
-  vec3Extension.vec3_addRotationRadians = function vec3_addRotationRadians(rotation, out) {
-    return Vec3Utils.addRotationRadians(this, rotation, out);
-  };
-  vec3Extension.vec3_addRotationQuat = function vec3_addRotationQuat(rotation, out) {
-    return Vec3Utils.addRotationQuat(this, rotation, out);
-  };
-  vec3Extension.vec3_degreesAddRotation = function vec3_degreesAddRotation(rotation, out) {
-    return Vec3Utils.degreesAddRotation(this, rotation, out);
-  };
-  vec3Extension.vec3_degreesAddRotationDegrees = function vec3_degreesAddRotationDegrees(rotation, out = Vec3Utils.create()) {
-    return Vec3Utils.degreesAddRotationDegrees(this, rotation, out);
-  };
-  vec3Extension.vec3_degreesAddRotationRadians = function vec3_degreesAddRotationRadians(rotation, out = Vec3Utils.create()) {
-    return Vec3Utils.degreesAddRotationRadians(this, rotation, out);
-  };
-  vec3Extension.vec3_degreesAddRotationQuat = function vec3_degreesAddRotationQuat(rotation, out = Vec3Utils.create()) {
-    return Vec3Utils.degreesAddRotationQuat(this, rotation, out);
-  };
-  vec3Extension.vec3_radiansAddRotation = function vec3_radiansAddRotation(rotation, out) {
-    return Vec3Utils.radiansAddRotation(this, rotation, out);
-  };
-  vec3Extension.vec3_radiansAddRotationDegrees = function vec3_radiansAddRotationDegrees(rotation, out = Vec3Utils.create()) {
-    return Vec3Utils.radiansAddRotationDegrees(this, rotation, out);
-  };
-  vec3Extension.vec3_radiansAddRotationRadians = function vec3_radiansAddRotationRadians(rotation, out = Vec3Utils.create()) {
-    return Vec3Utils.radiansAddRotationRadians(this, rotation, out);
-  };
-  vec3Extension.vec3_radiansAddRotationQuat = function vec3_radiansAddRotationQuat(rotation, out = Vec3Utils.create()) {
-    return Vec3Utils.radiansAddRotationQuat(this, rotation, out);
-  };
-  vec3Extension.vec3_toMatrix = function vec3_toMatrix(out = Mat3Utils.create()) {
-    return Vec3Utils.toMatrix(this, out);
-  };
-  vec3Extension.vec3_degreesToMatrix = function vec3_degreesToMatrix(out = Mat3Utils.create()) {
-    return Vec3Utils.degreesToMatrix(this, out);
-  };
-  vec3Extension.vec3_radiansToMatrix = function vec3_radiansToMatrix(out = Mat3Utils.create()) {
-    return Vec3Utils.radiansToMatrix(this, out);
-  };
-  vec3Extension.vec3_rotationTo = function vec3_rotationTo(to, out) {
-    return Vec3Utils.rotationTo(this, to, out);
-  };
-  vec3Extension.vec3_rotationToDegrees = function vec3_rotationToDegrees(to, out = Vec3Utils.create()) {
-    return Vec3Utils.rotationToDegrees(this, to, out);
-  };
-  vec3Extension.vec3_rotationToRadians = function vec3_rotationToRadians(to, out = Vec3Utils.create()) {
-    return Vec3Utils.rotationToRadians(this, to, out);
-  };
-  vec3Extension.vec3_rotationToQuat = function vec3_rotationToQuat(to, out = QuatUtils.create()) {
-    return Vec3Utils.rotationToQuat(this, to, out);
-  };
-  vec3Extension.vec3_rotationToPivoted = function vec3_rotationToPivoted(to, pivotAxis, out) {
-    return Vec3Utils.rotationToPivoted(this, to, pivotAxis, out);
-  };
-  vec3Extension.vec3_rotationToPivotedDegrees = function vec3_rotationToPivotedDegrees(to, pivotAxis, out = Vec3Utils.create()) {
-    return Vec3Utils.rotationToPivotedDegrees(this, to, pivotAxis, out);
-  };
-  vec3Extension.vec3_rotationToPivotedRadians = function vec3_rotationToPivotedRadians(to, pivotAxis, out = Vec3Utils.create()) {
-    return Vec3Utils.rotationToPivotedRadians(this, to, pivotAxis, out);
-  };
-  vec3Extension.vec3_rotationToPivotedQuat = function vec3_rotationToPivotedQuat(to, pivotAxis, out = QuatUtils.create()) {
-    return Vec3Utils.rotationToPivotedQuat(this, to, pivotAxis, out);
-  };
-  vec3Extension.vec3_lerp = function vec3_lerp(to, interpolationFactor, out = Vec3Utils.create()) {
-    return Vec3Utils.lerp(this, to, interpolationFactor, out);
-  };
-  vec3Extension.vec3_interpolate = function vec3_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
-    return Vec3Utils.interpolate(this, to, interpolationFactor, easingFunction, out);
-  };
-  vec3Extension.vec3_perpendicularRandom = function vec3_perpendicularRandom(out = Vec3Utils.create()) {
-    return Vec3Utils.perpendicularRandom(this, out);
-  };
-  let vec4Extension = {};
-  vec4Extension.vec4_set = function vec4_set(x, y, z, w) {
-    return Vec4Utils.set(this, x, y, z, w);
-  };
-  vec4Extension.vec4_copy = function vec4_copy(vector) {
-    return Vec4Utils.copy(vector, this);
-  };
-  vec4Extension.vec4_clone = function vec4_clone(out = Vec4Utils.create()) {
-    return Vec4Utils.clone(this, out);
-  };
-  let quatExtension = {};
-  quatExtension.quat_set = function quat_set(x, y, z, w) {
-    return QuatUtils.set(this, x, y, z, w);
-  };
-  quatExtension.quat_normalize = function quat_normalize(out = QuatUtils.create()) {
-    return QuatUtils.normalize(this, out);
-  };
-  quatExtension.quat_copy = function quat_copy(quat) {
-    return QuatUtils.copy(quat, this);
-  };
-  quatExtension.quat_clone = function quat_clone(out = QuatUtils.create()) {
-    return QuatUtils.clone(this, out);
-  };
-  quatExtension.quat_identity = function quat_identity() {
-    return QuatUtils.identity(this);
-  };
-  quatExtension.quat_length = function quat_length() {
-    return QuatUtils.length(this);
-  };
-  quatExtension.quat_lengthSquared = function quat_lengthSquared() {
-    return QuatUtils.lengthSquared(this);
-  };
-  quatExtension.quat_invert = function quat_invert(out = QuatUtils.create()) {
-    return QuatUtils.invert(this, out);
-  };
-  quatExtension.quat_conjugate = function quat_conjugate(out = QuatUtils.create()) {
-    return QuatUtils.conjugate(this, out);
-  };
-  quatExtension.quat_mul = function quat_mul(rotation, out = QuatUtils.create()) {
-    return QuatUtils.mul(this, rotation, out);
-  };
-  quatExtension.quat_getAxis = function quat_getAxis(out = Vec3Utils.create()) {
-    return QuatUtils.getAxis(this, out);
-  };
-  quatExtension.quat_getAngle = function quat_getAngle() {
-    return QuatUtils.getAngle(this);
-  };
-  quatExtension.quat_getAngleDegrees = function quat_getAngleDegrees() {
-    return QuatUtils.getAngleDegrees(this);
-  };
-  quatExtension.quat_getAngleRadians = function quat_getAngleRadians() {
-    return QuatUtils.getAngleRadians(this);
-  };
-  quatExtension.quat_getAxisScaled = function quat_getAxisScaled(out = Vec3Utils.create()) {
-    return QuatUtils.getAxisScaled(this, out);
-  };
-  quatExtension.quat_getAxisScaledDegrees = function quat_getAxisScaledDegrees(out = Vec3Utils.create()) {
-    return QuatUtils.getAxisScaledDegrees(this, out);
-  };
-  quatExtension.quat_getAxisScaledRadians = function quat_getAxisScaledRadians(out = Vec3Utils.create()) {
-    return QuatUtils.getAxisScaledRadians(this, out);
-  };
-  quatExtension.quat_getAxes = function quat_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-    return QuatUtils.getAxes(this, out);
-  };
-  quatExtension.quat_getForward = function quat_getForward(out = Vec3Utils.create()) {
-    return QuatUtils.getForward(this, out);
-  };
-  quatExtension.quat_getBackward = function quat_getBackward(out) {
-    return QuatUtils.getBackward(this, out);
-  };
-  quatExtension.quat_getLeft = function quat_getLeft(out = Vec3Utils.create()) {
-    return QuatUtils.getLeft(this, out);
-  };
-  quatExtension.quat_getRight = function quat_getRight(out) {
-    return QuatUtils.getRight(this, out);
-  };
-  quatExtension.quat_getUp = function quat_getUp(out = Vec3Utils.create()) {
-    return QuatUtils.getUp(this, out);
-  };
-  quatExtension.quat_getDown = function quat_getDown(out) {
-    return QuatUtils.getDown(this, out);
-  };
-  quatExtension.quat_setAxes = function quat_setAxes(left, up, forward) {
-    return QuatUtils.setAxes(this, left, up, forward);
-  };
-  quatExtension.quat_setForward = function quat_setForward(forward, up = null, left = null) {
-    return QuatUtils.setForward(this, forward, up, left);
-  };
-  quatExtension.quat_setBackward = function quat_setBackward(backward, up = null, left = null) {
-    return QuatUtils.setBackward(this, backward, up, left);
-  };
-  quatExtension.quat_setUp = function quat_setUp(up, forward = null, left = null) {
-    return QuatUtils.setUp(this, up, forward, left);
-  };
-  quatExtension.quat_setDown = function quat_setDown(down, forward = null, left = null) {
-    return QuatUtils.setDown(this, down, forward, left);
-  };
-  quatExtension.quat_setLeft = function quat_setLeft(left, up = null, forward = null) {
-    return QuatUtils.setLeft(this, left, up, forward);
-  };
-  quatExtension.quat_setRight = function quat_setRight(right, up = null, forward = null) {
-    return QuatUtils.setRight(this, right, up, forward);
-  };
-  quatExtension.quat_toWorld = function quat_toWorld(parentQuat, out = QuatUtils.create()) {
-    return QuatUtils.toWorld(this, parentQuat, out);
-  };
-  quatExtension.quat_toLocal = function quat_toLocal(parentQuat, out = QuatUtils.create()) {
-    return QuatUtils.toLocal(this, parentQuat, out);
-  };
-  quatExtension.quat_fromAxis = function quat_fromAxis(angle2, axis) {
-    return QuatUtils.fromAxis(angle2, axis, this);
-  };
-  quatExtension.quat_fromAxisDegrees = function quat_fromAxisDegrees(angle2, axis) {
-    return QuatUtils.fromAxisDegrees(angle2, axis, this);
-  };
-  quatExtension.quat_fromAxisRadians = function quat_fromAxisRadians(angle2, axis) {
-    return QuatUtils.fromAxisRadians(angle2, axis, this);
-  };
-  quatExtension.quat_fromAxes = function quat_fromAxes(leftAxis, upAxis, forwardAxis) {
-    return QuatUtils.fromAxes(leftAxis, upAxis, forwardAxis, this);
-  };
-  quatExtension.quat_fromRadians = function quat_fromRadians(radiansRotation) {
-    return QuatUtils.fromRadians(radiansRotation, this);
-  };
-  quatExtension.quat_fromDegrees = function quat_fromDegrees(degreesRotation) {
-    return QuatUtils.fromDegrees(degreesRotation, this);
-  };
-  quatExtension.quat_toRadians = function quat_toRadians(out = Vec3Utils.create()) {
-    return QuatUtils.toRadians(this, out);
-  };
-  quatExtension.quat_toDegrees = function quat_toDegrees(out = Vec3Utils.create()) {
-    return QuatUtils.toDegrees(this, out);
-  };
-  quatExtension.quat_isNormalized = function quat_isNormalized(epsilon = MathUtils.EPSILON) {
-    return QuatUtils.isNormalized(this, epsilon);
-  };
-  quatExtension.quat_addRotation = function quat_addRotation(rotation, out) {
-    return QuatUtils.addRotation(this, rotation, out);
-  };
-  quatExtension.quat_addRotationDegrees = function quat_addRotationDegrees(rotation, out) {
-    return QuatUtils.addRotationDegrees(this, rotation, out);
-  };
-  quatExtension.quat_addRotationRadians = function quat_addRotationRadians(rotation, out) {
-    return QuatUtils.addRotationRadians(this, rotation, out);
-  };
-  quatExtension.quat_addRotationQuat = function quat_addRotationQuat(rotation, out = QuatUtils.create()) {
-    return QuatUtils.addRotationQuat(this, rotation, out);
-  };
-  quatExtension.quat_subRotation = function quat_subRotation(rotation, out) {
-    return QuatUtils.subRotation(this, rotation, out);
-  };
-  quatExtension.quat_subRotationDegrees = function quat_subRotationDegrees(rotation, out) {
-    return QuatUtils.subRotationDegrees(this, rotation, out);
-  };
-  quatExtension.quat_subRotationRadians = function quat_subRotationRadians(rotation, out) {
-    return QuatUtils.subRotationRadians(this, rotation, out);
-  };
-  quatExtension.quat_subRotationQuat = function quat_subRotationQuat(rotation, out = QuatUtils.create()) {
-    return QuatUtils.subRotationQuat(this, rotation, out);
-  };
-  quatExtension.quat_rotationTo = function quat_rotationTo(to, out) {
-    return QuatUtils.rotationTo(this, to, out);
-  };
-  quatExtension.quat_rotationToDegrees = function quat_rotationToDegrees(to, out) {
-    return QuatUtils.rotationToDegrees(this, to, out);
-  };
-  quatExtension.quat_rotationToRadians = function quat_rotationToRadians(to, out) {
-    return QuatUtils.rotationToRadians(this, to, out);
-  };
-  quatExtension.quat_rotationToQuat = function quat_rotationToQuat(to, out) {
-    return QuatUtils.rotationToQuat(this, to, out);
-  };
-  quatExtension.quat_rotationAroundAxis = function quat_rotationAroundAxis(axis, out) {
-    return QuatUtils.rotationAroundAxis(this, axis, out);
-  };
-  quatExtension.quat_rotationAroundAxisDegrees = function quat_rotationAroundAxisDegrees(axis, out = Vec3Utils.create()) {
-    return QuatUtils.rotationAroundAxisDegrees(this, axis, out);
-  };
-  quatExtension.quat_rotationAroundAxisRadians = function quat_rotationAroundAxisRadians(axis, out = Vec3Utils.create()) {
-    return QuatUtils.rotationAroundAxisRadians(this, axis, out);
-  };
-  quatExtension.quat_rotationAroundAxisQuat = function quat_rotationAroundAxisQuat(axis, out = QuatUtils.create()) {
-    return QuatUtils.rotationAroundAxisQuat(this, axis, out);
-  };
-  quatExtension.quat_getTwist = function quat_getTwist(axis, out = QuatUtils.create()) {
-    return QuatUtils.getTwist(this, axis, out);
-  };
-  quatExtension.quat_getSwing = function quat_getSwing(axis, out = QuatUtils.create()) {
-    return QuatUtils.getSwing(this, axis, out);
-  };
-  quatExtension.quat_getSwingFromTwist = function quat_getSwingFromTwist(twist, out = QuatUtils.create()) {
-    return QuatUtils.getSwingFromTwist(this, twist, out);
-  };
-  quatExtension.quat_getTwistFromSwing = function quat_getTwistFromSwing(swing, out = QuatUtils.create()) {
-    return QuatUtils.getTwistFromSwing(this, swing, out);
-  };
-  quatExtension.quat_fromTwistSwing = function quat_fromTwistSwing(twist, swing) {
-    return QuatUtils.fromTwistSwing(twist, swing, this);
-  };
-  quatExtension.quat_toMatrix = function quat_toMatrix(out = Mat3Utils.create()) {
-    return QuatUtils.toMatrix(this, out);
-  };
-  quatExtension.quat_rotate = function quat_rotate(rotation, out) {
-    return QuatUtils.rotate(this, rotation, out);
-  };
-  quatExtension.quat_rotateDegrees = function quat_rotateDegrees(rotation, out) {
-    return QuatUtils.rotateDegrees(this, rotation, out);
-  };
-  quatExtension.quat_rotateRadians = function quat_rotateRadians(rotation, out) {
-    return QuatUtils.rotateRadians(this, rotation, out);
-  };
-  quatExtension.quat_rotateQuat = function quat_rotateQuat(rotation, out) {
-    return QuatUtils.rotateQuat(this, rotation, out);
-  };
-  quatExtension.quat_rotateAxis = function quat_rotateAxis(angle2, axis, out) {
-    return QuatUtils.rotateAxis(this, angle2, axis, out);
-  };
-  quatExtension.quat_rotateAxisDegrees = function quat_rotateAxisDegrees(angle2, axis, out) {
-    return QuatUtils.rotateAxisDegrees(this, angle2, axis, out);
-  };
-  quatExtension.quat_rotateAxisRadians = function quat_rotateAxisRadians(angle2, axis, out) {
-    return QuatUtils.rotateAxisRadians(this, angle2, axis, out);
-  };
-  quatExtension.quat_lerp = function quat_lerp(to, interpolationFactor, out = QuatUtils.create()) {
-    return QuatUtils.lerp(this, to, interpolationFactor, out);
-  };
-  quatExtension.quat_interpolate = function quat_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
-    return QuatUtils.interpolate(this, to, interpolationFactor, easingFunction, out);
-  };
-  quatExtension.quat_slerp = function quat_slerp(to, interpolationFactor, out = QuatUtils.create()) {
-    return QuatUtils.slerp(this, to, interpolationFactor, out);
-  };
-  quatExtension.quat_sinterpolate = function quat_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
-    return QuatUtils.sinterpolate(this, to, interpolationFactor, easingFunction, out);
-  };
-  let quat2Extension = {};
-  quat2Extension.quat2_set = function quat2_set(x1, y1, z1, w1, x2, y2, z2, w2) {
-    return Quat2Utils.set(this, x1, y1, z1, w1, x2, y2, z2, w2);
-  };
-  quat2Extension.quat2_normalize = function quat2_normalize(out = Quat2Utils.create()) {
-    return Quat2Utils.normalize(this, out);
-  };
-  quat2Extension.quat2_invert = function quat2_invert(out = Quat2Utils.create()) {
-    return Quat2Utils.invert(this, out);
-  };
-  quat2Extension.quat2_conjugate = function quat2_conjugate(out = Quat2Utils.create()) {
-    return Quat2Utils.conjugate(this, out);
-  };
-  quat2Extension.quat2_copy = function quat2_copy(quat) {
-    return Quat2Utils.copy(quat, this);
-  };
-  quat2Extension.quat2_identity = function quat2_identity() {
-    return Quat2Utils.identity(this);
-  };
-  quat2Extension.quat2_getPosition = function quat2_getPosition(out = Vec3Utils.create()) {
-    return Quat2Utils.getPosition(this, out);
-  };
-  quat2Extension.quat2_getRotation = function quat2_getRotation(out) {
-    return Quat2Utils.getRotation(this, out);
-  };
-  quat2Extension.quat2_getRotationDegrees = function quat2_getRotationDegrees(out = Vec3Utils.create()) {
-    return Quat2Utils.getRotationDegrees(this, out);
-  };
-  quat2Extension.quat2_getRotationRadians = function quat2_getRotationRadians(out = Vec3Utils.create()) {
-    return Quat2Utils.getRotationRadians(this, out);
-  };
-  quat2Extension.quat2_getRotationQuat = function quat2_getRotationQuat(out = QuatUtils.create()) {
-    return Quat2Utils.getRotationQuat(this, out);
-  };
-  quat2Extension.quat2_setPosition = function quat2_setPosition(position) {
-    return Quat2Utils.setPosition(this, position);
-  };
-  quat2Extension.quat2_setRotation = function quat2_setRotation(rotation) {
-    return Quat2Utils.setRotation(this, rotation);
-  };
-  quat2Extension.quat2_setRotationDegrees = function quat2_setRotationDegrees(rotation) {
-    return Quat2Utils.setRotationDegrees(this, rotation);
-  };
-  quat2Extension.quat2_setRotationRadians = function quat2_setRotationRadians(rotation) {
-    return Quat2Utils.setRotationRadians(this, rotation);
-  };
-  quat2Extension.quat2_setRotationQuat = function quat2_setRotationQuat(rotation) {
-    return Quat2Utils.setRotationQuat(this, rotation);
-  };
-  quat2Extension.quat2_setPositionRotation = function quat2_setPositionRotation(position, rotation) {
-    return Quat2Utils.setPositionRotation(this, position, rotation);
-  };
-  quat2Extension.quat2_setPositionRotationDegrees = function quat2_setPositionRotationDegrees(position, rotation) {
-    return Quat2Utils.setPositionRotationDegrees(this, position, rotation);
-  };
-  quat2Extension.quat2_setPositionRotationRadians = function quat2_setPositionRotationRadians(position, rotation) {
-    return Quat2Utils.setPositionRotationRadians(this, position, rotation);
-  };
-  quat2Extension.quat2_setPositionRotationQuat = function quat2_setPositionRotationQuat(position, rotation) {
-    return Quat2Utils.setPositionRotationQuat(this, position, rotation);
-  };
-  quat2Extension.quat2_isNormalized = function quat2_isNormalized(epsilon = MathUtils.EPSILON) {
-    return Quat2Utils.isNormalized(this, epsilon);
-  };
-  quat2Extension.quat2_length = function quat2_length() {
-    return Quat2Utils.length(this);
-  };
-  quat2Extension.quat2_lengthSquared = function quat2_lengthSquared() {
-    return Quat2Utils.lengthSquared(this);
-  };
-  quat2Extension.quat2_mul = function quat2_mul(quat, out = Quat2Utils.create()) {
-    return Quat2Utils.mul(this, quat, out);
-  };
-  quat2Extension.quat2_getAxes = function quat2_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-    return Quat2Utils.getAxes(this, out);
-  };
-  quat2Extension.quat2_getForward = function quat2_getForward(out = Vec3Utils.create()) {
-    return Quat2Utils.getForward(this, out);
-  };
-  quat2Extension.quat2_getBackward = function quat2_getBackward(out) {
-    return Quat2Utils.getBackward(this, out);
-  };
-  quat2Extension.quat2_getLeft = function quat2_getLeft(out = Vec3Utils.create()) {
-    return Quat2Utils.getLeft(this, out);
-  };
-  quat2Extension.quat2_getRight = function quat2_getRight(out) {
-    return Quat2Utils.getRight(this, out);
-  };
-  quat2Extension.quat2_getUp = function quat2_getUp(out = Vec3Utils.create()) {
-    return Quat2Utils.getUp(this, out);
-  };
-  quat2Extension.quat2_getDown = function quat2_getDown(out) {
-    return Quat2Utils.getDown(this, out);
-  };
-  quat2Extension.quat2_toWorld = function quat2_toWorld(parentTransformQuat, out = Quat2Utils.create()) {
-    return Quat2Utils.toWorld(this, parentTransformQuat, out);
-  };
-  quat2Extension.quat2_toLocal = function quat2_toLocal(parentTransformQuat, out = Quat2Utils.create()) {
-    return Quat2Utils.toLocal(this, parentTransformQuat, out);
-  };
-  quat2Extension.quat2_rotateAxis = function quat2_rotateAxis(angle2, axis, out) {
-    return Quat2Utils.rotateAxis(this, angle2, axis, out);
-  };
-  quat2Extension.quat2_rotateAxisDegrees = function quat2_rotateAxisDegrees(angle2, axis, out) {
-    return Quat2Utils.rotateAxisDegrees(this, angle2, axis, out);
-  };
-  quat2Extension.quat2_rotateAxisRadians = function quat2_rotateAxisRadians(angle2, axis, out = Quat2Utils.create()) {
-    return Quat2Utils.rotateAxisRadians(this, angle2, axis, out);
-  };
-  quat2Extension.quat2_toMatrix = function quat2_toMatrix(out = Mat4Utils.create()) {
-    return Quat2Utils.toMatrix(this, out);
-  };
-  quat2Extension.quat2_fromMatrix = function quat2_fromMatrix(matrix) {
-    return Quat2Utils.fromMatrix(matrix, this);
-  };
-  quat2Extension.quat2_lerp = function quat2_lerp(to, interpolationFactor, out = Quat2Utils.create()) {
-    return Quat2Utils.lerp(this, to, interpolationFactor, out);
-  };
-  quat2Extension.quat2_interpolate = function quat2_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
-    return Quat2Utils.interpolate(this, to, interpolationFactor, easingFunction, out);
-  };
-  quat2Extension.quat2_slerp = function quat2_slerp(to, interpolationFactor, out = Quat2Utils.create()) {
-    return Quat2Utils.slerp(this, to, interpolationFactor, out);
-  };
-  quat2Extension.quat2_sinterpolate = function quat2_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
-    return Quat2Utils.sinterpolate(this, to, interpolationFactor, easingFunction, out);
-  };
-  let mat3Extension = {};
-  mat3Extension.mat3_set = function mat3_set(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
-    return Mat3Utils.set(this, m00, m01, m02, m10, m11, m12, m20, m21, m22);
-  };
-  mat3Extension.mat3_toDegrees = function mat3_toDegrees(out = Vec3Utils.create()) {
-    return Mat3Utils.toDegrees(this, out);
-  };
-  mat3Extension.mat3_toRadians = function mat3_toRadians(out = Vec3Utils.create()) {
-    return Mat3Utils.toRadians(this, out);
-  };
-  mat3Extension.mat3_toQuat = function mat3_toQuat(out = QuatUtils.create()) {
-    return Mat3Utils.toQuat(this, out);
-  };
-  mat3Extension.mat3_fromAxes = function mat3_fromAxes(leftAxis, upAxis, forwardAxis) {
-    return Mat3Utils.fromAxes(leftAxis, upAxis, forwardAxis, this);
-  };
-  let mat4Extension = {};
-  mat4Extension.mat4_set = function mat4_set(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
-    return Mat4Utils.set(this, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
-  };
-  mat4Extension.mat4_copy = function mat4_copy(matrix) {
-    return Mat4Utils.copy(matrix, this);
-  };
-  mat4Extension.mat4_identity = function mat4_identity() {
-    return Mat4Utils.identity(this);
-  };
-  mat4Extension.mat4_invert = function mat4_invert(out = Mat4Utils.create()) {
-    return Mat4Utils.invert(this, out);
-  };
-  mat4Extension.mat4_mul = function mat4_mul(matrix, out = Mat4Utils.create()) {
-    return Mat4Utils.mul(this, matrix, out);
-  };
-  mat4Extension.mat4_scale = function mat4_scale(vector, out = Mat4Utils.create()) {
-    return Mat4Utils.scale(this, vector, out);
-  };
-  mat4Extension.mat4_clone = function mat4_clone(out = Mat4Utils.create()) {
-    return Mat4Utils.clone(this, out);
-  };
-  mat4Extension.mat4_getPosition = function mat4_getPosition(out = Vec3Utils.create()) {
-    return Mat4Utils.getPosition(this, out);
-  };
-  mat4Extension.mat4_getRotation = function mat4_getRotation(out = Vec3Utils.create()) {
-    return Mat4Utils.getRotation(this, out);
-  };
-  mat4Extension.mat4_getRotationDegrees = function mat4_getRotationDegrees(out = Vec3Utils.create()) {
-    return Mat4Utils.getRotationDegrees(this, out);
-  };
-  mat4Extension.mat4_getRotationRadians = function mat4_getRotationRadians(out = Vec3Utils.create()) {
-    return Mat4Utils.getRotationRadians(this, out);
-  };
-  mat4Extension.mat4_getRotationQuat = function mat4_getRotationQuat(out = QuatUtils.create()) {
-    return Mat4Utils.getRotationQuat(this, out);
-  };
-  mat4Extension.mat4_getScale = function mat4_getScale(out = Vec3Utils.create()) {
-    return Mat4Utils.getScale(this, out);
-  };
-  mat4Extension.mat4_setPosition = function mat4_setPosition(position) {
-    return Mat4Utils.setPosition(this, position);
-  };
-  mat4Extension.mat4_setRotation = function mat4_setRotation(rotation) {
-    return Mat4Utils.setRotation(this, rotation);
-  };
-  mat4Extension.mat4_setRotationDegrees = function mat4_setRotationDegrees(rotation) {
-    return Mat4Utils.setRotationDegrees(this, rotation);
-  };
-  mat4Extension.mat4_setRotationRadians = function mat4_setRotationRadians(rotation) {
-    return Mat4Utils.setRotationRadians(this, rotation);
-  };
-  mat4Extension.mat4_setRotationQuat = function mat4_setRotationQuat(rotation) {
-    return Mat4Utils.setRotationQuat(this, rotation);
-  };
-  mat4Extension.mat4_setScale = function mat4_setScale(scale4) {
-    return Mat4Utils.setScale(this, scale4);
-  };
-  mat4Extension.mat4_setPositionRotationScale = function mat4_setPositionRotationScale(position, rotation, scale4) {
-    return Mat4Utils.setPositionRotationScale(this, position, rotation, scale4);
-  };
-  mat4Extension.mat4_setPositionRotationDegreesScale = function mat4_setPositionRotationDegreesScale(position, rotation, scale4) {
-    return Mat4Utils.setPositionRotationDegreesScale(this, position, rotation, scale4);
-  };
-  mat4Extension.mat4_setPositionRotationRadiansScale = function mat4_setPositionRotationRadiansScale(position, rotation, scale4) {
-    return Mat4Utils.setPositionRotationRadiansScale(this, position, rotation, scale4);
-  };
-  mat4Extension.mat4_setPositionRotationQuatScale = function mat4_setPositionRotationQuatScale(position, rotation, scale4) {
-    return Mat4Utils.setPositionRotationQuatScale(this, position, rotation, scale4);
-  };
-  mat4Extension.mat4_setPositionRotation = function mat4_setPositionRotation(position, rotation) {
-    return Mat4Utils.setPositionRotation(this, position, rotation);
-  };
-  mat4Extension.mat4_setPositionRotationDegrees = function mat4_setPositionRotationDegrees(position, rotation) {
-    return Mat4Utils.setPositionRotationDegrees(this, position, rotation);
-  };
-  mat4Extension.mat4_setPositionRotationRadians = function mat4_setPositionRotationRadians(position, rotation) {
-    return Mat4Utils.setPositionRotationRadians(this, position, rotation);
-  };
-  mat4Extension.mat4_setPositionRotationQuat = function mat4_setPositionRotationQuat(position, rotation) {
-    return Mat4Utils.setPositionRotationQuat(this, position, rotation);
-  };
-  mat4Extension.mat4_getAxes = function mat4_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-    return Mat4Utils.getAxes(this, out);
-  };
-  mat4Extension.mat4_getForward = function mat4_getForward(out = Vec3Utils.create()) {
-    return Mat4Utils.getForward(this, out);
-  };
-  mat4Extension.mat4_getBackward = function mat4_getBackward(out) {
-    return Mat4Utils.getBackward(this, out);
-  };
-  mat4Extension.mat4_getLeft = function mat4_getLeft(out = Vec3Utils.create()) {
-    return Mat4Utils.getLeft(this, out);
-  };
-  mat4Extension.mat4_getRight = function mat4_getRight(out) {
-    return Mat4Utils.getRight(this, out);
-  };
-  mat4Extension.mat4_getUp = function mat4_getUp(out = Vec3Utils.create()) {
-    return Mat4Utils.getUp(this, out);
-  };
-  mat4Extension.mat4_getDown = function mat4_getDown(out) {
-    return Mat4Utils.getDown(this, out);
-  };
-  mat4Extension.mat4_toWorld = function mat4_toWorld(parentTransformMatrix, out = Mat4Utils.create()) {
-    return Mat4Utils.toWorld(this, parentTransformMatrix, out);
-  };
-  mat4Extension.mat4_toLocal = function mat4_toLocal(parentTransformMatrix, out = Mat4Utils.create()) {
-    return Mat4Utils.toLocal(this, parentTransformMatrix, out);
-  };
-  mat4Extension.mat4_hasUniformScale = function mat4_hasUniformScale() {
-    return Mat4Utils.hasUniformScale(this);
-  };
-  mat4Extension.mat4_toQuat = function mat4_toQuat(out = Quat2Utils.create()) {
-    return Mat4Utils.toQuat(this, out);
-  };
-  mat4Extension.mat4_fromQuat = function mat4_fromQuat(quat) {
-    return Mat4Utils.fromQuat(quat, this);
-  };
-  let arrayPrototypesToExtend = [
-    Array.prototype,
-    Uint8ClampedArray.prototype,
-    Uint8Array.prototype,
-    Uint16Array.prototype,
-    Uint32Array.prototype,
-    Int8Array.prototype,
-    Int16Array.prototype,
-    Int32Array.prototype,
-    Float32Array.prototype,
-    Float64Array.prototype
-  ];
-  for (let arrayPrototypeToExtend of arrayPrototypesToExtend) {
-    PluginUtils.injectProperties(arrayExtension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(vecExtension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(vec2Extension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(vec3Extension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(vec4Extension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(quatExtension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(quat2Extension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(mat3Extension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(mat4Extension, arrayPrototypeToExtend, false, true, true);
-    PluginUtils.injectProperties(arrayExtension, arrayPrototypeToExtend, false, true, true);
-  }
-}
-
-// dist/cauldron/utils/mesh_utils.js
-var MeshCreationVertexParams = class {
-  constructor() {
-    this.myPosition = null;
-    this.myTextureCoordinates = null;
-    this.myNormal = null;
-    this.myColor = null;
-  }
-};
-var MeshCreationTriangleParams = class {
-  constructor() {
-    this.myIndexes = new Uint32Array(3);
-  }
-};
-var MeshCreationParams = class {
-  constructor(engine = Globals.getMainEngine()) {
-    this.myVertexes = [];
-    this.myTriangles = [];
-    this.myEngine = engine;
-  }
-};
-function create8(meshCreationParams) {
-  let indexData = [];
-  for (let triangle of meshCreationParams.myTriangles) {
-    indexData.push(triangle.myIndexes[0]);
-    indexData.push(triangle.myIndexes[1]);
-    indexData.push(triangle.myIndexes[2]);
-  }
-  let indexDataUnsignedInt = new Uint32Array(indexData.length);
-  indexDataUnsignedInt.pp_copy(indexData);
-  let vertexCount = meshCreationParams.myVertexes.length;
-  let mesh = new Mesh(meshCreationParams.myEngine, {
-    vertexCount,
-    indexData: indexDataUnsignedInt,
-    indexType: MeshIndexType.UnsignedInt
-  });
-  let positionAttribute = null;
-  let textureCoordinatesAttribute = null;
-  let normalAttribute = null;
-  let colorAttribute = null;
-  try {
-    positionAttribute = mesh.attribute(MeshAttribute.Position);
-  } catch (error3) {
-    positionAttribute = null;
-  }
-  try {
-    textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
-  } catch (error3) {
-    textureCoordinatesAttribute = null;
-  }
-  try {
-    normalAttribute = mesh.attribute(MeshAttribute.Normal);
-  } catch (error3) {
-    normalAttribute = null;
-  }
-  try {
-    colorAttribute = mesh.attribute(MeshAttribute.Color);
-  } catch (error3) {
-    colorAttribute = null;
-  }
-  for (let i = 0; i < meshCreationParams.myVertexes.length; i++) {
-    let vertex = meshCreationParams.myVertexes[i];
-    if (positionAttribute != null && vertex.myPosition) {
-      positionAttribute.set(i, vertex.myPosition);
-    }
-    if (textureCoordinatesAttribute != null && vertex.myTextureCoordinates) {
-      textureCoordinatesAttribute.set(i, vertex.myTextureCoordinates);
-    }
-    if (normalAttribute != null && vertex.myNormal) {
-      normalAttribute.set(i, vertex.myNormal);
-    }
-    if (colorAttribute != null && vertex.myColor) {
-      colorAttribute.set(i, vertex.myColor);
-    }
-  }
-  return mesh;
-}
-var clone8 = function() {
-  let position = vec3_create();
-  let textureCoordinates = vec2_create();
-  let normal = vec3_create();
-  let color = vec4_create();
-  return function clone10(mesh) {
-    if (mesh == null) {
-      return null;
-    }
-    let clonedIndexData = mesh.indexData.pp_clone();
-    let clonedMesh = new Mesh(mesh.engine, {
-      vertexCount: mesh.vertexCount,
-      indexData: clonedIndexData,
-      indexType: MeshIndexType.UnsignedInt
-    });
-    let positionAttribute = null;
-    let textureCoordinatesAttribute = null;
-    let normalAttribute = null;
-    let colorAttribute = null;
-    let clonedPositionAttribute = null;
-    let clonedTextureCoordinatesAttribute = null;
-    let clonedNormalAttribute = null;
-    let clonedColorAttribute = null;
-    try {
-      positionAttribute = mesh.attribute(MeshAttribute.Position);
-      clonedPositionAttribute = clonedMesh.attribute(MeshAttribute.Position);
-    } catch (error3) {
-      positionAttribute = null;
-      clonedPositionAttribute = null;
-    }
-    try {
-      textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
-      clonedTextureCoordinatesAttribute = clonedMesh.attribute(MeshAttribute.TextureCoordinate);
-    } catch (error3) {
-      textureCoordinatesAttribute = null;
-      clonedTextureCoordinatesAttribute = null;
-    }
-    try {
-      normalAttribute = mesh.attribute(MeshAttribute.Normal);
-      clonedNormalAttribute = clonedMesh.attribute(MeshAttribute.Normal);
-    } catch (error3) {
-      normalAttribute = null;
-      clonedNormalAttribute = null;
-    }
-    try {
-      colorAttribute = mesh.attribute(MeshAttribute.Color);
-      clonedColorAttribute = clonedMesh.attribute(MeshAttribute.Color);
-    } catch (error3) {
-      colorAttribute = null;
-      clonedColorAttribute = null;
-    }
-    for (let i = 0; i < mesh.vertexCount; i++) {
-      if (positionAttribute != null && clonedPositionAttribute != null) {
-        clonedPositionAttribute.set(i, positionAttribute.get(i, position));
-      }
-      if (textureCoordinatesAttribute != null && clonedTextureCoordinatesAttribute != null) {
-        clonedTextureCoordinatesAttribute.set(i, textureCoordinatesAttribute.get(i, textureCoordinates));
-      }
-      if (normalAttribute != null && clonedNormalAttribute != null) {
-        clonedNormalAttribute.set(i, normalAttribute.get(i, normal));
-      }
-      if (colorAttribute != null && clonedColorAttribute != null) {
-        clonedColorAttribute.set(i, colorAttribute.get(i, color));
-      }
-    }
-    return clonedMesh;
-  };
-}();
-var invert4 = function() {
-  let position = vec3_create();
-  let textureCoordinates = vec2_create();
-  let normal = vec3_create();
-  let color = vec4_create();
-  return function invert5(mesh) {
-    if (mesh == null) {
-      return null;
-    }
-    let invertedIndexData = new Uint32Array(mesh.indexData.length);
-    for (let i = 0; i < mesh.indexData.length / 3; i++) {
-      invertedIndexData[i * 3 + 0] = mesh.indexData[i * 3 + 2];
-      invertedIndexData[i * 3 + 1] = mesh.indexData[i * 3 + 1];
-      invertedIndexData[i * 3 + 2] = mesh.indexData[i * 3 + 0];
-    }
-    let invertedMesh = new Mesh(mesh.engine, {
-      vertexCount: mesh.vertexCount,
-      indexData: invertedIndexData,
-      indexType: MeshIndexType.UnsignedInt
-    });
-    let positionAttribute = null;
-    let textureCoordinatesAttribute = null;
-    let normalAttribute = null;
-    let colorAttribute = null;
-    let invertedPositionAttribute = null;
-    let invertedTextureCoordinatesAttribute = null;
-    let invertedNormalAttribute = null;
-    let invertedColorAttribute = null;
-    try {
-      positionAttribute = mesh.attribute(MeshAttribute.Position);
-      invertedPositionAttribute = invertedMesh.attribute(MeshAttribute.Position);
-    } catch (error3) {
-      positionAttribute = null;
-      invertedPositionAttribute = null;
-    }
-    try {
-      textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
-      invertedTextureCoordinatesAttribute = invertedMesh.attribute(MeshAttribute.TextureCoordinate);
-    } catch (error3) {
-      textureCoordinatesAttribute = null;
-      invertedTextureCoordinatesAttribute = null;
-    }
-    try {
-      normalAttribute = mesh.attribute(MeshAttribute.Normal);
-      invertedNormalAttribute = invertedMesh.attribute(MeshAttribute.Normal);
-    } catch (error3) {
-      normalAttribute = null;
-      invertedNormalAttribute = null;
-    }
-    try {
-      colorAttribute = mesh.attribute(MeshAttribute.Color);
-      invertedColorAttribute = invertedMesh.attribute(MeshAttribute.Color);
-    } catch (error3) {
-      colorAttribute = null;
-      invertedColorAttribute = null;
-    }
-    for (let i = 0; i < mesh.vertexCount; i++) {
-      if (positionAttribute != null && invertedPositionAttribute != null) {
-        invertedPositionAttribute.set(i, positionAttribute.get(i, position));
-      }
-      if (textureCoordinatesAttribute != null && invertedTextureCoordinatesAttribute != null) {
-        invertedTextureCoordinatesAttribute.set(i, textureCoordinatesAttribute.get(i, textureCoordinates));
-      }
-      if (normalAttribute != null && invertedNormalAttribute != null) {
-        normalAttribute.get(i, normal);
-        normal.vec3_negate(normal);
-        invertedNormalAttribute.set(i, normal);
-      }
-      if (colorAttribute != null && invertedColorAttribute != null) {
-        invertedColorAttribute.set(i, colorAttribute.get(i, color));
-      }
-    }
-    return invertedMesh;
-  };
-}();
-var makeDoubleSided = function() {
-  let position = vec3_create();
-  let textureCoordinates = vec2_create();
-  let normal = vec3_create();
-  let color = vec4_create();
-  return function makeDoubleSided2(mesh) {
-    if (mesh == null) {
-      return null;
-    }
-    let doubleSidedIndexData = new Uint32Array(mesh.indexData.length * 2);
-    for (let i = 0; i < doubleSidedIndexData.length / 3; i++) {
-      doubleSidedIndexData[i * 3 * 2 + 0] = mesh.indexData[i * 3 + 0] * 2;
-      doubleSidedIndexData[i * 3 * 2 + 1] = mesh.indexData[i * 3 + 1] * 2;
-      doubleSidedIndexData[i * 3 * 2 + 2] = mesh.indexData[i * 3 + 2] * 2;
-      doubleSidedIndexData[i * 3 * 2 + 3] = mesh.indexData[i * 3 + 2] * 2 + 1;
-      doubleSidedIndexData[i * 3 * 2 + 4] = mesh.indexData[i * 3 + 1] * 2 + 1;
-      doubleSidedIndexData[i * 3 * 2 + 5] = mesh.indexData[i * 3 + 0] * 2 + 1;
-    }
-    let doubleSidedMesh = new Mesh(mesh.engine, {
-      vertexCount: mesh.vertexCount * 2,
-      indexData: doubleSidedIndexData,
-      indexType: MeshIndexType.UnsignedInt
-    });
-    let positionAttribute = null;
-    let textureCoordinatesAttribute = null;
-    let normalAttribute = null;
-    let colorAttribute = null;
-    let doubleSidedPositionAttribute = null;
-    let doubleSidedTextureCoordinatesAttribute = null;
-    let doubleSidedNormalAttribute = null;
-    let doubleSidedColorAttribute = null;
-    try {
-      positionAttribute = mesh.attribute(MeshAttribute.Position);
-      doubleSidedPositionAttribute = doubleSidedMesh.attribute(MeshAttribute.Position);
-    } catch (error3) {
-      positionAttribute = null;
-      doubleSidedPositionAttribute = null;
-    }
-    try {
-      textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
-      doubleSidedTextureCoordinatesAttribute = doubleSidedMesh.attribute(MeshAttribute.TextureCoordinate);
-    } catch (error3) {
-      textureCoordinatesAttribute = null;
-      doubleSidedTextureCoordinatesAttribute = null;
-    }
-    try {
-      normalAttribute = mesh.attribute(MeshAttribute.Normal);
-      doubleSidedNormalAttribute = doubleSidedMesh.attribute(MeshAttribute.Normal);
-    } catch (error3) {
-      normalAttribute = null;
-      doubleSidedNormalAttribute = null;
-    }
-    try {
-      colorAttribute = mesh.attribute(MeshAttribute.Color);
-      doubleSidedColorAttribute = doubleSidedMesh.attribute(MeshAttribute.Color);
-    } catch (error3) {
-      colorAttribute = null;
-      doubleSidedColorAttribute = null;
-    }
-    for (let i = 0; i < mesh.vertexCount; i++) {
-      if (positionAttribute != null && doubleSidedPositionAttribute != null) {
-        doubleSidedPositionAttribute.set(i * 2, positionAttribute.get(i, position));
-        doubleSidedPositionAttribute.set(i * 2 + 1, positionAttribute.get(i, position));
-      }
-      if (textureCoordinatesAttribute != null && doubleSidedTextureCoordinatesAttribute != null) {
-        doubleSidedTextureCoordinatesAttribute.set(i * 2, textureCoordinatesAttribute.get(i, textureCoordinates));
-        doubleSidedTextureCoordinatesAttribute.set(i * 2 + 1, textureCoordinatesAttribute.get(i, textureCoordinates));
-      }
-      if (normalAttribute != null && doubleSidedNormalAttribute != null) {
-        normalAttribute.get(i, normal);
-        doubleSidedNormalAttribute.set(i * 2, normal);
-        let invertedNormal = normal.vec3_negate();
-        doubleSidedNormalAttribute.set(i * 2 + 1, invertedNormal);
-      }
-      if (colorAttribute != null && doubleSidedColorAttribute != null) {
-        doubleSidedColorAttribute.set(i * 2, colorAttribute.get(i, color));
-        doubleSidedColorAttribute.set(i * 2 + 1, colorAttribute.get(i, color));
-      }
-    }
-    return doubleSidedMesh;
-  };
-}();
-function createPlane(engine = Globals.getMainEngine()) {
-  let vertexCount = 4;
-  let meshCreationParams = new MeshCreationParams(engine);
-  for (let i = 0; i < vertexCount; ++i) {
-    let vertexCreationParams = new MeshCreationVertexParams();
-    vertexCreationParams.myPosition = new vec3_create();
-    vertexCreationParams.myPosition[0] = -1 + (i & 1) * 2;
-    vertexCreationParams.myPosition[1] = -1 + ((i & 2) >> 1) * 2;
-    vertexCreationParams.myPosition[2] = 0;
-    vertexCreationParams.myTextureCoordinates = new vec2_create();
-    vertexCreationParams.myTextureCoordinates[0] = i & 1;
-    vertexCreationParams.myTextureCoordinates[1] = (i & 2) >> 1;
-    vertexCreationParams.myNormal = new vec3_create();
-    vertexCreationParams.myNormal[0] = 0;
-    vertexCreationParams.myNormal[1] = 0;
-    vertexCreationParams.myNormal[2] = 1;
-    meshCreationParams.myVertexes.push(vertexCreationParams);
-  }
-  let firstTriangle = new MeshCreationTriangleParams();
-  firstTriangle.myIndexes[0] = 0;
-  firstTriangle.myIndexes[1] = 1;
-  firstTriangle.myIndexes[2] = 2;
-  let secondTriangle = new MeshCreationTriangleParams();
-  secondTriangle.myIndexes[0] = 2;
-  secondTriangle.myIndexes[1] = 1;
-  secondTriangle.myIndexes[2] = 3;
-  meshCreationParams.myTriangles.push(firstTriangle);
-  meshCreationParams.myTriangles.push(secondTriangle);
-  let mesh = MeshUtils.create(meshCreationParams);
-  return mesh;
-}
-var MeshUtils = {
-  create: create8,
-  clone: clone8,
-  invert: invert4,
-  makeDoubleSided,
-  createPlane
-};
-
-// dist/cauldron/wl/utils/default_wl_component_clone_callbacks.js
-function cloneMesh(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
-  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, true);
-  if (deepCloneParams.isDeepCloneComponentVariable(MeshComponent.TypeName, "material")) {
-    if (componentToClone.material != null) {
-      clonedComponent.material = componentToClone.material.clone();
-    }
-  }
-  if (deepCloneParams.isDeepCloneComponentVariable(MeshComponent.TypeName, "mesh")) {
-    clonedComponent.mesh = MeshUtils.clone(componentToClone.mesh);
-  }
-  return clonedComponent;
-}
-function cloneCollision(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
-  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
-  return clonedComponent;
-}
-function cloneText(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
-  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
-  if (deepCloneParams.isDeepCloneComponentVariable(TextComponent.TypeName, "material")) {
-    if (componentToClone.material != null) {
-      clonedComponent.material = componentToClone.material.clone();
-    }
-  }
-  return clonedComponent;
-}
-function clonePhysX(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
-  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
-  return clonedComponent;
-}
-var DefaultWLComponentCloneCallbacks = {
-  cloneMesh,
-  cloneCollision,
-  cloneText,
-  clonePhysX
-};
-
-// dist/cauldron/wl/utils/component_utils.js
-var _myCloneCallbacks = /* @__PURE__ */ new WeakMap();
-var _myClonePostProcessCallbacks = /* @__PURE__ */ new WeakMap();
-var DeepCloneParams = class {
-  constructor() {
-    this._myDeepCloneComponents = false;
-    this._myDeepCloneOverrideComponentsMap = /* @__PURE__ */ new Map();
-    this._myDeepCloneOverrideComponentsVariablesMap = /* @__PURE__ */ new Map();
-  }
-  // The implementation is component dependant, not every component implements the deep clone
-  setDeepCloneComponents(deepClone) {
-    this._myDeepCloneComponents = deepClone;
-  }
-  // This value override the deep clone components value
-  // The implementation is component dependant, not every component implements the deep clone
-  setDeepCloneComponent(componentName, deepClone) {
-    this._myDeepCloneOverrideComponentsMap.set(componentName, deepClone);
-  }
-  // This value override both the deep clone components value and the deep clone component override one
-  // The implementation is component dependant, not every component variable override is taken into consideration
-  setDeepCloneComponentVariable(componentName, variableName, deepClone) {
-    let componentsVariablesMap = null;
-    if (!this._myDeepCloneOverrideComponentsVariablesMap.has(componentName)) {
-      this._myDeepCloneOverrideComponentsVariablesMap.set(componentName, /* @__PURE__ */ new Map());
-    }
-    componentsVariablesMap = this._myDeepCloneOverrideComponentsVariablesMap.get(componentName);
-    componentsVariablesMap.set(variableName, deepClone);
-  }
-  isDeepCloneComponent(componentName) {
-    let deepCloneOverride = this._myDeepCloneOverrideComponentsMap.get(componentName);
-    if (deepCloneOverride != null) {
-      return deepCloneOverride;
-    }
-    return this._myDeepCloneComponents;
-  }
-  isDeepCloneComponentVariable(componentName, variableName) {
-    let componentsVariablesMap = this._myDeepCloneOverrideComponentsVariablesMap.get(componentName);
-    if (componentsVariablesMap != null) {
-      let deepCloneOverride = componentsVariablesMap.get(variableName);
-      if (deepCloneOverride != null) {
-        return deepCloneOverride;
-      }
-    }
-    return this.isDeepCloneComponent(componentName);
-  }
-};
-var CustomCloneParams = class {
-  constructor() {
-    this._myParams = /* @__PURE__ */ new Map();
-  }
-  addParam(name, value) {
-    this._myParams.set(name, value);
-  }
-  removeParam(name) {
-    this._myParams.delete(name);
-  }
-  getParam(name) {
-    this._myParams.get(name);
-  }
-  hasParam(name) {
-    this._myParams.has(name);
-  }
-};
-function isWLComponent(typeOrClass) {
-  return ComponentUtils.isWLNativeComponent(typeOrClass) || ComponentUtils.isWLJavascriptComponent(typeOrClass);
-}
-function isWLNativeComponent(typeOrClass) {
-  let wlNative = false;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (ComponentUtils.getWLNativeComponentTypes().includes(type)) {
-    wlNative = true;
-  }
-  return wlNative;
-}
-function isWLJavascriptComponent(typeOrClass) {
-  let wlJavascript = false;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (ComponentUtils.getWLJavascriptComponentTypes().includes(type)) {
-    wlJavascript = true;
-  }
-  return wlJavascript;
-}
-function getWLNativeComponentTypes() {
-  return _myWLNativeComponentTypes;
-}
-function getWLJavascriptComponentTypes() {
-  return _myWLJavascriptComponentTypes;
-}
-function getTypeFromTypeOrClass(typeOrClass) {
-  if (typeOrClass == null)
-    return;
-  let type = typeOrClass;
-  if (typeOrClass.TypeName != null) {
-    type = typeOrClass.TypeName;
-  }
-  return type;
-}
-function getClassFromType(type, engine = Globals.getMainEngine()) {
-  let classToReturn = null;
-  if (ComponentUtils.isWLNativeComponent(type)) {
-    if (ComponentUtils.isWLNativeComponentRegistered(type, engine)) {
-      switch (type) {
-        case AnimationComponent.TypeName:
-          classToReturn = AnimationComponent;
-          break;
-        case CollisionComponent.TypeName:
-          classToReturn = CollisionComponent;
-          break;
-        case InputComponent.TypeName:
-          classToReturn = InputComponent;
-          break;
-        case LightComponent.TypeName:
-          classToReturn = LightComponent;
-          break;
-        case MeshComponent2.TypeName:
-          classToReturn = MeshComponent2;
-          break;
-        case PhysXComponent.TypeName:
-          classToReturn = PhysXComponent;
-          break;
-        case TextComponent2.TypeName:
-          classToReturn = TextComponent2;
-          break;
-        case ViewComponent.TypeName:
-          classToReturn = ViewComponent;
-          break;
-        default:
-          classToReturn = null;
-      }
-    }
-  } else {
-    classToReturn = ComponentUtils.getJavascriptComponentClass(type, engine);
-  }
-  return classToReturn;
-}
-function isRegistered(typeOrClass, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  return ComponentUtils.getClassFromType(type, engine) != null;
-}
-function getJavascriptComponentInstances(engine = Globals.getMainEngine()) {
-  return Globals.getWASM(engine)._components;
-}
-function getJavascriptComponentClass(type, engine = Globals.getMainEngine()) {
-  return ComponentUtils.getJavascriptComponentClassesByIndex(engine)[ComponentUtils.getJavascriptComponentTypeIndex(type, engine)];
-}
-function getJavascriptComponentClassesByIndex(engine = Globals.getMainEngine()) {
-  return Globals.getWASM(engine)._componentTypes;
-}
-function getJavascriptComponentTypeIndex(typeOrClass, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  return ComponentUtils.getJavascriptComponentTypeIndexes(engine)[type];
-}
-function getJavascriptComponentTypeIndexes(engine = Globals.getMainEngine()) {
-  return Globals.getWASM(engine)._componentTypeIndices;
-}
-function getJavascriptComponentTypeFromIndex(typeIndex, engine = Globals.getMainEngine()) {
-  let type = null;
-  let componentClass = ComponentUtils.getJavascriptComponentClassesByIndex(engine)[typeIndex];
-  if (componentClass != null) {
-    type = componentClass.TypeName;
-  }
-  return type;
-}
-function isWLNativeComponentRegistered(typeOrClass, engine = Globals.getMainEngine()) {
-  let wasm = Globals.getWASM(engine);
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  return wasm._wl_get_component_manager_index(wasm.tempUTF8(type)) >= 0;
-}
-function isCloneable2(typeOrClass, defaultCloneValid = false, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  return defaultCloneValid || ComponentUtils.hasCloneCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clone != null;
-}
-function hasClonePostProcess(typeOrClass, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  return ComponentUtils.hasClonePostProcessCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clonePostProcess != null;
-}
-function clone9(componentToClone, targetObject, deeCloneParams, customCloneParams, useDefaultCloneAsFallback = false, defaultCloneAutoStartIfNotActive = true) {
-  let clonedComponent = null;
-  let cloneCallback = ComponentUtils.getCloneCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
-  if (cloneCallback != null) {
-    clonedComponent = cloneCallback(componentToClone, targetObject, deeCloneParams, customCloneParams);
-  } else if (componentToClone.pp_clone != null) {
-    clonedComponent = componentToClone.pp_clone(targetObject, deeCloneParams, customCloneParams);
-  } else if (useDefaultCloneAsFallback) {
-    clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, defaultCloneAutoStartIfNotActive);
-  }
-  return clonedComponent;
-}
-function clonePostProcess(componentToClone, clonedComponent, deeCloneParams, customCloneParams) {
-  let clonePostProcessCallback = ComponentUtils.getClonePostProcessCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
-  if (clonePostProcessCallback != null) {
-    clonePostProcessCallback(componentToClone, clonedComponent, deeCloneParams, customCloneParams);
-  } else if (componentToClone.pp_clonePostProcess != null) {
-    componentToClone.pp_clonePostProcess(clonedComponent, deeCloneParams, customCloneParams);
-  }
-  return clonedComponent;
-}
-function cloneDefault(componentToClone, targetObject, autoStartIfNotActive = true) {
-  let clonedComponent = ObjectUtils.addComponent(targetObject, componentToClone.type, componentToClone);
-  if (autoStartIfNotActive && !clonedComponent.active) {
-    clonedComponent.active = true;
-    clonedComponent.active = false;
-  }
-  return clonedComponent;
-}
-function setCloneCallback(typeOrClass, callback, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (!_myCloneCallbacks.has(engine)) {
-    _myCloneCallbacks.set(engine, /* @__PURE__ */ new Map());
-  }
-  _myCloneCallbacks.get(engine).set(type, callback);
-}
-function removeCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (_myCloneCallbacks.has(engine)) {
-    _myCloneCallbacks.get(engine).delete(type);
-  }
-}
-function getCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
-  let callback = null;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (_myCloneCallbacks.has(engine)) {
-    callback = _myCloneCallbacks.get(engine).get(type);
-  }
-  return callback;
-}
-function hasCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
-  let hasCallback = false;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (_myCloneCallbacks.has(engine)) {
-    hasCallback = _myCloneCallbacks.get(engine).has(type);
-  }
-  return hasCallback;
-}
-function setClonePostProcessCallback(typeOrClass, callback, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (!_myClonePostProcessCallbacks.has(engine)) {
-    _myClonePostProcessCallbacks.set(engine, /* @__PURE__ */ new Map());
-  }
-  _myClonePostProcessCallbacks.get(engine).set(type, callback);
-}
-function removeClonePostProcessCallback(typeOrClass, engine = Globals.getMainEngine()) {
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (_myClonePostProcessCallbacks.has(engine)) {
-    _myClonePostProcessCallbacks.get(engine).delete(type);
-  }
-}
-function getClonePostProcessCallback(typeOrClass, engine = Globals.getMainEngine()) {
-  let callback = null;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (_myClonePostProcessCallbacks.has(engine)) {
-    callback = _myClonePostProcessCallbacks.get(engine).get(type);
-  }
-  return callback;
-}
-function hasClonePostProcessCallback(typeOrClass, engine = Globals.getMainEngine()) {
-  let hasCallback = false;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  if (_myClonePostProcessCallbacks.has(engine)) {
-    hasCallback = _myClonePostProcessCallbacks.get(engine).has(type);
-  }
-  return hasCallback;
-}
-function getDefaultWLComponentCloneCallback(typeOrClass) {
-  let callback = null;
-  let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
-  switch (type) {
-    case MeshComponent2.TypeName:
-      callback = DefaultWLComponentCloneCallbacks.cloneMesh;
-      break;
-    case CollisionComponent.TypeName:
-      callback = DefaultWLComponentCloneCallbacks.cloneCollision;
-      break;
-    case TextComponent2.TypeName:
-      callback = DefaultWLComponentCloneCallbacks.cloneText;
-      break;
-    case PhysXComponent.TypeName:
-      callback = DefaultWLComponentCloneCallbacks.clonePhysX;
-      break;
-    default:
-      callback = null;
-  }
-  return callback;
-}
-function hasDefaultWLComponentCloneCallback(typeOrClass) {
-  return ComponentUtils.getDefaultWLComponentCloneCallback(typeOrClass) != null;
-}
-function setDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngine()) {
-  for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
-    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
-    if (cloneCallback != null) {
-      ComponentUtils.setCloneCallback(nativeType, cloneCallback, engine);
-    }
-  }
-  for (let javascriptType of ComponentUtils.getWLJavascriptComponentTypes()) {
-    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
-    if (cloneCallback != null) {
-      ComponentUtils.setCloneCallback(javascriptType, cloneCallback, engine);
-    }
-  }
-}
-function removeDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngine()) {
-  for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
-    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
-    if (cloneCallback != null) {
-      if (ComponentUtils.getCloneCallback(nativeType, engine) == cloneCallback) {
-        ComponentUtils.removeCloneCallback(nativeType, engine);
-      }
-    }
-  }
-  for (let javascriptType of ComponentUtils.getWLNativeComponentTypes()) {
-    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
-    if (cloneCallback != null) {
-      if (ComponentUtils.getCloneCallback(javascriptType, engine) == cloneCallback) {
-        ComponentUtils.removeCloneCallback(javascriptType, engine);
-      }
-    }
-  }
-}
-var ComponentUtils = {
-  isWLComponent,
-  isWLNativeComponent,
-  isWLJavascriptComponent,
-  getWLNativeComponentTypes,
-  getWLJavascriptComponentTypes,
-  getTypeFromTypeOrClass,
-  getClassFromType,
-  isRegistered,
-  getJavascriptComponentInstances,
-  getJavascriptComponentClass,
-  getJavascriptComponentClassesByIndex,
-  getJavascriptComponentTypeIndex,
-  getJavascriptComponentTypeIndexes,
-  getJavascriptComponentTypeFromIndex,
-  isWLNativeComponentRegistered,
-  isCloneable: isCloneable2,
-  hasClonePostProcess,
-  clone: clone9,
-  clonePostProcess,
-  cloneDefault,
-  setCloneCallback,
-  removeCloneCallback,
-  getCloneCallback,
-  hasCloneCallback,
-  setClonePostProcessCallback,
-  removeClonePostProcessCallback,
-  getClonePostProcessCallback,
-  hasClonePostProcessCallback,
-  setDefaultWLComponentCloneCallbacks,
-  removeDefaultWLComponentCloneCallbacks,
-  getDefaultWLComponentCloneCallback,
-  hasDefaultWLComponentCloneCallback
-};
-var _myWLNativeComponentTypes = [
-  AnimationComponent.TypeName,
-  CollisionComponent.TypeName,
-  InputComponent.TypeName,
-  LightComponent.TypeName,
-  MeshComponent2.TypeName,
-  PhysXComponent.TypeName,
-  TextComponent2.TypeName,
-  ViewComponent.TypeName
-];
-var _myWLJavascriptComponentTypes = [
-  ARCamera8thwall2.TypeName,
-  Anchor.TypeName,
-  Cursor2.TypeName,
-  CursorTarget2.TypeName,
-  DebugObject2.TypeName,
-  DeviceOrientationLook2.TypeName,
-  FingerCursor2.TypeName,
-  FixedFoveation2.TypeName,
-  HandTracking2.TypeName,
-  HitTestLocation2.TypeName,
-  HowlerAudioListener2.TypeName,
-  HowlerAudioSource2.TypeName,
-  ImageTexture2.TypeName,
-  MouseLookComponent2.TypeName,
-  PlaneDetection.TypeName,
-  PlayerHeight2.TypeName,
-  TargetFramerate2.TypeName,
-  TeleportComponent2.TypeName,
-  Trail2.TypeName,
-  TwoJointIkSolver2.TypeName,
-  VideoTexture2.TypeName,
-  VrModeActiveSwitch2.TypeName,
-  Vrm2.TypeName,
-  WasdControlsComponent2.TypeName
-];
-
-// dist/plugin/js/extensions/math_extension.js
-function initMathExtension() {
-  initMathExtensionStatic();
-}
-function initMathExtensionStatic() {
-  let mathExtension = {};
-  Object.defineProperty(mathExtension, "PP_EPSILON", {
-    get() {
-      return MathUtils.EPSILON;
-    },
-    set(value) {
-      MathUtils.EPSILON = value;
-    }
-  });
-  Object.defineProperty(mathExtension, "PP_EPSILON_SQUARED", {
-    get() {
-      return MathUtils.EPSILON_SQUARED;
-    },
-    set(value) {
-      MathUtils.EPSILON = value;
-    }
-  });
-  Object.defineProperty(mathExtension, "PP_EPSILON_DEGREES", {
-    get() {
-      return MathUtils.EPSILON_DEGREES;
-    },
-    set(value) {
-      MathUtils.EPSILON = value;
-    }
-  });
-  mathExtension.pp_clamp = function pp_clamp(value, start, end) {
-    return MathUtils.clamp(value, start, end);
-  };
-  mathExtension.pp_sign = function pp_sign(value, zeroSign = 1) {
-    return MathUtils.sign(value, zeroSign);
-  };
-  mathExtension.pp_toDegrees = function pp_toDegrees(angle2) {
-    return MathUtils.toDegrees(angle2);
-  };
-  mathExtension.pp_toRadians = function pp_toRadians(angle2) {
-    return MathUtils.toRadians(angle2);
-  };
-  mathExtension.pp_roundDecimal = function pp_roundDecimal(number, decimalPlaces) {
-    return MathUtils.roundDecimal(number, decimalPlaces);
-  };
-  mathExtension.pp_mapToRange = function pp_mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd) {
-    return MathUtils.mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd);
-  };
-  mathExtension.pp_random = function pp_random(start = 0, end = 1) {
-    return MathUtils.random(start, end);
-  };
-  mathExtension.pp_randomInt = function pp_randomInt(start, end) {
-    return MathUtils.randomInt(start, end);
-  };
-  mathExtension.pp_randomBool = function pp_randomBool() {
-    return MathUtils.randomBool();
-  };
-  mathExtension.pp_randomSign = function pp_randomSign() {
-    return MathUtils.randomSign();
-  };
-  mathExtension.pp_randomPick = function pp_randomPick(...args) {
-    return MathUtils.randomPick(...args);
-  };
-  mathExtension.pp_randomUUID = function pp_randomUUID() {
-    return MathUtils.randomUUID();
-  };
-  mathExtension.pp_lerp = function pp_lerp(from, to, interpolationFactor) {
-    return MathUtils.lerp(from, to, interpolationFactor);
-  };
-  mathExtension.pp_interpolate = function pp_interpolate(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
-    return MathUtils.interpolate(from, to, interpolationFactor, easingFunction);
-  };
-  mathExtension.pp_interpolatePeriodic = function pp_interpolatePeriodic(from, to, interpolationFactor, easingFunction = EasingFunction.linear) {
-    return MathUtils.interpolatePeriodic(from, to, interpolationFactor, easingFunction);
-  };
-  mathExtension.pp_angleDistance = function pp_angleDistance(from, to) {
-    return MathUtils.angleDistance(from, to);
-  };
-  mathExtension.pp_angleDistanceDegrees = function pp_angleDistanceDegrees(from, to) {
-    return MathUtils.angleDistanceDegrees(from, to);
-  };
-  mathExtension.pp_angleDistanceRadians = function pp_angleDistanceRadians(from, to) {
-    return MathUtils.angleDistanceRadians(from, to);
-  };
-  mathExtension.pp_angleDistanceSigned = function pp_angleDistanceSigned(from, to) {
-    return MathUtils.angleDistanceSigned(from, to);
-  };
-  mathExtension.pp_angleDistanceSignedDegrees = function pp_angleDistanceSignedDegrees(from, to) {
-    return MathUtils.angleDistanceSignedDegrees(from, to);
-  };
-  mathExtension.pp_angleDistanceSignedRadians = function pp_angleDistanceSignedRadians(from, to) {
-    return MathUtils.angleDistanceSignedRadians(from, to);
-  };
-  mathExtension.pp_angleClamp = function pp_angleClamp(angle2, usePositiveRange = false) {
-    return MathUtils.angleClamp(angle2, usePositiveRange);
-  };
-  mathExtension.pp_angleClampDegrees = function pp_angleClampDegrees(angle2, usePositiveRange = false) {
-    return MathUtils.angleClampDegrees(angle2, usePositiveRange);
-  };
-  mathExtension.pp_angleClampRadians = function pp_angleClampRadians(angle2, usePositiveRange = false) {
-    return MathUtils.angleClampRadians(angle2, usePositiveRange);
-  };
-  mathExtension.pp_isInsideAngleRange = function pp_isInsideAngleRange(angle2, start, end, useShortestAngle = false) {
-    return MathUtils.isInsideAngleRange(angle2, start, end, useShortestAngle);
-  };
-  mathExtension.pp_isInsideAngleRangeDegrees = function pp_isInsideAngleRangeDegrees(angle2, start, end, useShortestAngle = false) {
-    return MathUtils.isInsideAngleRangeDegrees(angle2, start, end, useShortestAngle);
-  };
-  mathExtension.pp_isInsideAngleRangeRadians = function pp_isInsideAngleRangeRadians(angle2, start, end, useShortestAngle = false) {
-    return MathUtils.isInsideAngleRangeRadians(angle2, start, end, useShortestAngle);
-  };
-  PluginUtils.injectProperties(mathExtension, Math, false, true, true);
-}
-
-// dist/plugin/js/extensions/number_extension.js
-function initNumberExtension(engine) {
-  initNumberExtensionPrototype();
-}
-function initNumberExtensionPrototype() {
-  let numberExtension = {};
-  numberExtension.get = function get() {
-    return this.valueOf();
-  };
-  PluginUtils.injectProperties(numberExtension, Number.prototype, false, true, true);
-}
-
-// dist/plugin/js/extensions/init_js_extentions.js
-function initJSExtensions() {
-  initMathExtension();
-  initArrayExtension();
-  initNumberExtension();
-}
-
-// dist/plugin/js/init_js_plugins.js
-function initJSPlugins(engine) {
-  initJSExtensions(engine);
-}
-
-// dist/plugin/wl/extensions/getter_extensions.js
-import { Physics, RayHit } from "@wonderlandengine/api";
-function initGetterExtensions() {
-  initPhysicsGetterExtensionPrototype();
-  initRayHitGetterExtensionPrototype();
-}
-function initPhysicsGetterExtensionPrototype() {
-  let extension = {};
-  extension.pp_getEngine = function pp_getEngine() {
-    return this._engine;
-  };
-  PluginUtils.injectProperties(extension, Physics.prototype, false, true, true);
-}
-function initRayHitGetterExtensionPrototype() {
-  let extension = {};
-  extension.pp_getLocations = function pp_getLocations(out) {
-    if (!out)
-      out = Array.from({ length: this.hitCount }, () => new Float32Array(3));
-    const wasm = this._engine.wasm;
-    const alignedPtr = this._ptr / 4;
-    for (let i = 0; i < this.hitCount; ++i) {
-      const locationPtr = alignedPtr + 3 * i;
-      out[i][0] = wasm.HEAPF32[locationPtr];
-      out[i][1] = wasm.HEAPF32[locationPtr + 1];
-      out[i][2] = wasm.HEAPF32[locationPtr + 2];
-    }
-    return out;
-  };
-  extension.pp_getNormals = function pp_getNormals(out) {
-    if (!out)
-      out = Array.from({ length: this.hitCount }, () => new Float32Array(3));
-    const wasm = this._engine.wasm;
-    const alignedPtr = (this._ptr + 48) / 4;
-    for (let i = 0; i < this.hitCount; ++i) {
-      const normalPtr = alignedPtr + 3 * i;
-      out[i][0] = wasm.HEAPF32[normalPtr];
-      out[i][1] = wasm.HEAPF32[normalPtr + 1];
-      out[i][2] = wasm.HEAPF32[normalPtr + 2];
-    }
-    return out;
-  };
-  extension.pp_getDistances = function pp_getDistances(out = new Float32Array(this.hitCount)) {
-    const wasm = this._engine.wasm;
-    const alignedPtr = (this._ptr + 48 * 2) / 4;
-    for (let i = 0; i < this.hitCount; ++i) {
-      const distancePtr = alignedPtr + i;
-      out[i] = wasm.HEAPF32[distancePtr];
-    }
-    return out;
-  };
-  extension.pp_getObjects = function pp_getObjects(out = new Array(this.hitCount)) {
-    const HEAPU16 = this._engine.wasm.HEAPU16;
-    const alignedPtr = this._ptr + (48 * 2 + 16) >> 1;
-    for (let i = 0; i < this.hitCount; ++i) {
-      const objectPtr = alignedPtr + i;
-      out[i] = this._engine.wrapObject(HEAPU16[objectPtr + i]);
-    }
-    return out;
-  };
-  PluginUtils.injectProperties(extension, RayHit.prototype, false, true, true);
-}
-
-// dist/plugin/wl/extensions/object_extension.js
-import { Object3D } from "@wonderlandengine/api";
-function initObjectExtension() {
-  initObjectExtensionProtoype();
-}
-function initObjectExtensionProtoype() {
-  let objectExtension = {};
-  objectExtension.pp_getPosition = function pp_getPosition(position) {
-    return ObjectUtils.getPosition(this, position);
-  };
-  objectExtension.pp_getPositionWorld = function pp_getPositionWorld(position = Vec3Utils.create()) {
-    return ObjectUtils.getPositionWorld(this, position);
-  };
-  objectExtension.pp_getPositionLocal = function pp_getPositionLocal(position = Vec3Utils.create()) {
-    return ObjectUtils.getPositionLocal(this, position);
-  };
-  objectExtension.pp_getRotation = function pp_getRotation(rotation) {
-    return ObjectUtils.getRotation(this, rotation);
-  };
-  objectExtension.pp_getRotationDegrees = function pp_getRotationDegrees(rotation) {
-    return ObjectUtils.getRotationDegrees(this, rotation);
-  };
-  objectExtension.pp_getRotationRadians = function pp_getRotationRadians(rotation) {
-    return ObjectUtils.getRotationRadians(this, rotation);
-  };
-  objectExtension.pp_getRotationMatrix = function pp_getRotationMatrix(rotation) {
-    return ObjectUtils.getRotationMatrix(this, rotation);
-  };
-  objectExtension.pp_getRotationQuat = function pp_getRotationQuat(rotation) {
-    return ObjectUtils.getRotationQuat(this, rotation);
-  };
-  objectExtension.pp_getRotationWorld = function pp_getRotationWorld(rotation) {
-    return ObjectUtils.getRotationWorld(this, rotation);
-  };
-  objectExtension.pp_getRotationWorldDegrees = function pp_getRotationWorldDegrees(rotation) {
-    return ObjectUtils.getRotationWorldDegrees(this, rotation);
-  };
-  objectExtension.pp_getRotationWorldRadians = function pp_getRotationWorldRadians(rotation = Vec3Utils.create()) {
-    return ObjectUtils.getRotationWorldRadians(this, rotation);
-  };
-  objectExtension.pp_getRotationWorldMatrix = function pp_getRotationWorldMatrix(rotation = Mat3Utils.create()) {
-    return ObjectUtils.getRotationWorldMatrix(this, rotation);
-  };
-  objectExtension.pp_getRotationWorldQuat = function pp_getRotationWorldQuat(rotation = QuatUtils.create()) {
-    return ObjectUtils.getRotationWorldQuat(this, rotation);
-  };
-  objectExtension.pp_getRotationLocal = function pp_getRotationLocal(rotation) {
-    return ObjectUtils.getRotationLocal(this, rotation);
-  };
-  objectExtension.pp_getRotationLocalDegrees = function pp_getRotationLocalDegrees(rotation) {
-    return ObjectUtils.getRotationLocalDegrees(this, rotation);
-  };
-  objectExtension.pp_getRotationLocalRadians = function pp_getRotationLocalRadians(rotation = Vec3Utils.create()) {
-    return ObjectUtils.getRotationLocalRadians(this, rotation);
-  };
-  objectExtension.pp_getRotationLocalMatrix = function pp_getRotationLocalMatrix(rotation = Mat3Utils.create()) {
-    return ObjectUtils.getRotationLocalMatrix(this, rotation);
-  };
-  objectExtension.pp_getRotationLocalQuat = function pp_getRotationLocalQuat(rotation = QuatUtils.create()) {
-    return ObjectUtils.getRotationLocalQuat(this, rotation);
-  };
-  objectExtension.pp_getScale = function pp_getScale(scale4) {
-    return ObjectUtils.getScale(this, scale4);
-  };
-  objectExtension.pp_getScaleWorld = function pp_getScaleWorld(scale4 = Vec3Utils.create()) {
-    return ObjectUtils.getScaleWorld(this, scale4);
-  };
-  objectExtension.pp_getScaleLocal = function pp_getScaleLocal(scale4 = Vec3Utils.create()) {
-    return ObjectUtils.getScaleLocal(this, scale4);
-  };
-  objectExtension.pp_getTransform = function pp_getTransform(transform) {
-    return ObjectUtils.getTransform(this, transform);
-  };
-  objectExtension.pp_getTransformMatrix = function pp_getTransformMatrix(transform) {
-    return ObjectUtils.getTransformMatrix(this, transform);
-  };
-  objectExtension.pp_getTransformQuat = function pp_getTransformQuat(transform) {
-    return ObjectUtils.getTransformQuat(this, transform);
-  };
-  objectExtension.pp_getTransformWorld = function pp_getTransformWorld(transform) {
-    return ObjectUtils.getTransformWorld(this, transform);
-  };
-  objectExtension.pp_getTransformWorldMatrix = function pp_getTransformWorldMatrix(transform = Mat4Utils.create()) {
-    return ObjectUtils.getTransformWorldMatrix(this, transform);
-  };
-  objectExtension.pp_getTransformWorldQuat = function pp_getTransformWorldQuat(transform = Quat2Utils.create()) {
-    return ObjectUtils.getTransformWorldQuat(this, transform);
-  };
-  objectExtension.pp_getTransformLocal = function pp_getTransformLocal(transform) {
-    return ObjectUtils.getTransformLocal(this, transform);
-  };
-  objectExtension.pp_getTransformLocalMatrix = function pp_getTransformLocalMatrix(transform = Mat4Utils.create()) {
-    return ObjectUtils.getTransformLocalMatrix(this, transform);
-  };
-  objectExtension.pp_getTransformLocalQuat = function pp_getTransformLocalQuat(transform = Quat2Utils.create()) {
-    return ObjectUtils.getTransformLocalQuat(this, transform);
-  };
-  objectExtension.pp_getAxes = function pp_getAxes(axes) {
-    return ObjectUtils.getAxes(this, axes);
-  };
-  objectExtension.pp_getAxesWorld = function pp_getAxesWorld(axes = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-    return ObjectUtils.getAxesWorld(this, axes);
-  };
-  objectExtension.pp_getAxesLocal = function pp_getAxesLocal(axes = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
-    return ObjectUtils.getAxesLocal(this, axes);
-  };
-  objectExtension.pp_getForward = function pp_getForward(forward) {
-    return ObjectUtils.getForward(this, forward);
-  };
-  objectExtension.pp_getForwardWorld = function pp_getForwardWorld(forward = Vec3Utils.create()) {
-    return ObjectUtils.getForwardWorld(this, forward);
-  };
-  objectExtension.pp_getForwardLocal = function pp_getForwardLocal(forward = Vec3Utils.create()) {
-    return ObjectUtils.getForwardLocal(this, forward);
-  };
-  objectExtension.pp_getBackward = function pp_getBackward(backward) {
-    return ObjectUtils.getBackward(this, backward);
-  };
-  objectExtension.pp_getBackwardWorld = function pp_getBackwardWorld(backward = Vec3Utils.create()) {
-    return ObjectUtils.getBackwardWorld(this, backward);
-  };
-  objectExtension.pp_getBackwardLocal = function pp_getBackwardLocal(backward = Vec3Utils.create()) {
-    return ObjectUtils.getBackwardLocal(this, backward);
-  };
-  objectExtension.pp_getUp = function pp_getUp(up) {
-    return ObjectUtils.getUp(this, up);
-  };
-  objectExtension.pp_getUpWorld = function pp_getUpWorld(up = Vec3Utils.create()) {
-    return ObjectUtils.getUpWorld(this, up);
-  };
-  objectExtension.pp_getUpLocal = function pp_getUpLocal(up = Vec3Utils.create()) {
-    return ObjectUtils.getUpLocal(this, up);
-  };
-  objectExtension.pp_getDown = function pp_getDown(down) {
-    return ObjectUtils.getDown(this, down);
-  };
-  objectExtension.pp_getDownWorld = function pp_getDownWorld(down = Vec3Utils.create()) {
-    return ObjectUtils.getDownWorld(this, down);
-  };
-  objectExtension.pp_getDownLocal = function pp_getDownLocal(down = Vec3Utils.create()) {
-    return ObjectUtils.getDownLocal(this, down);
-  };
-  objectExtension.pp_getLeft = function pp_getLeft(left) {
-    return ObjectUtils.getLeft(this, left);
-  };
-  objectExtension.pp_getLeftWorld = function pp_getLeftWorld(left = Vec3Utils.create()) {
-    return ObjectUtils.getLeftWorld(this, left);
-  };
-  objectExtension.pp_getLeftLocal = function pp_getLeftLocal(left = Vec3Utils.create()) {
-    return ObjectUtils.getLeftLocal(this, left);
-  };
-  objectExtension.pp_getRight = function pp_getRight(right) {
-    return ObjectUtils.getRight(this, right);
-  };
-  objectExtension.pp_getRightWorld = function pp_getRightWorld(right = Vec3Utils.create()) {
-    return ObjectUtils.getRightWorld(this, right);
-  };
-  objectExtension.pp_getRightLocal = function pp_getRightLocal(right = Vec3Utils.create()) {
-    return ObjectUtils.getRightLocal(this, right);
-  };
-  objectExtension.pp_setPosition = function pp_setPosition(position) {
-    return ObjectUtils.setPosition(this, position);
-  };
-  objectExtension.pp_setPositionWorld = function pp_setPositionWorld(position) {
-    return ObjectUtils.setPositionWorld(this, position);
-  };
-  objectExtension.pp_setPositionLocal = function pp_setPositionLocal(position) {
-    return ObjectUtils.setPositionLocal(this, position);
-  };
-  objectExtension.pp_setRotation = function pp_setRotation(rotation) {
-    return ObjectUtils.setRotation(this, rotation);
-  };
-  objectExtension.pp_setRotationDegrees = function pp_setRotationDegrees(rotation) {
-    return ObjectUtils.setRotationDegrees(this, rotation);
-  };
-  objectExtension.pp_setRotationRadians = function pp_setRotationRadians(rotation) {
-    return ObjectUtils.setRotationRadians(this, rotation);
-  };
-  objectExtension.pp_setRotationMatrix = function pp_setRotationMatrix(rotation) {
-    return ObjectUtils.setRotationMatrix(this, rotation);
-  };
-  objectExtension.pp_setRotationQuat = function pp_setRotationQuat(rotation) {
-    return ObjectUtils.setRotationQuat(this, rotation);
-  };
-  objectExtension.pp_setRotationWorld = function pp_setRotationWorld(rotation) {
-    return ObjectUtils.setRotationWorld(this, rotation);
-  };
-  objectExtension.pp_setRotationWorldDegrees = function pp_setRotationWorldDegrees(rotation) {
-    return ObjectUtils.setRotationWorldDegrees(this, rotation);
-  };
-  objectExtension.pp_setRotationWorldRadians = function pp_setRotationWorldRadians(rotation) {
-    return ObjectUtils.setRotationWorldRadians(this, rotation);
-  };
-  objectExtension.pp_setRotationWorldMatrix = function pp_setRotationWorldMatrix(rotation) {
-    return ObjectUtils.setRotationWorldMatrix(this, rotation);
-  };
-  objectExtension.pp_setRotationWorldQuat = function pp_setRotationWorldQuat(rotation) {
-    return ObjectUtils.setRotationWorldQuat(this, rotation);
-  };
-  objectExtension.pp_setRotationLocal = function pp_setRotationLocal(rotation) {
-    return ObjectUtils.setRotationLocal(this, rotation);
-  };
-  objectExtension.pp_setRotationLocalDegrees = function pp_setRotationLocalDegrees(rotation) {
-    return ObjectUtils.setRotationLocalDegrees(this, rotation);
-  };
-  objectExtension.pp_setRotationLocalRadians = function pp_setRotationLocalRadians(rotation) {
-    return ObjectUtils.setRotationLocalRadians(this, rotation);
-  };
-  objectExtension.pp_setRotationLocalMatrix = function pp_setRotationLocalMatrix(rotation) {
-    return ObjectUtils.setRotationLocalMatrix(this, rotation);
-  };
-  objectExtension.pp_setRotationLocalQuat = function pp_setRotationLocalQuat(rotation) {
-    return ObjectUtils.setRotationLocalQuat(this, rotation);
-  };
-  objectExtension.pp_setScale = function pp_setScale(scale4) {
-    return ObjectUtils.setScale(this, scale4);
-  };
-  objectExtension.pp_setScaleWorld = function pp_setScaleWorld(scale4) {
-    return ObjectUtils.setScaleWorld(this, scale4);
-  };
-  objectExtension.pp_setScaleLocal = function pp_setScaleLocal(scale4) {
-    return ObjectUtils.setScaleLocal(this, scale4);
-  };
-  objectExtension.pp_setAxes = function pp_setAxes(left, up, forward) {
-    return ObjectUtils.setAxes(this, left, up, forward);
-  };
-  objectExtension.pp_setAxesWorld = function pp_setAxesWorld(left, up, forward) {
-    return ObjectUtils.setAxesWorld(this, left, up, forward);
-  };
-  objectExtension.pp_setAxesLocal = function pp_setAxesLocal(left, up, forward) {
-    return ObjectUtils.setAxesLocal(this, left, up, forward);
-  };
-  objectExtension.pp_setForward = function pp_setForward(forward, up, left) {
-    return ObjectUtils.setForward(this, forward, up, left);
-  };
-  objectExtension.pp_setForwardWorld = function pp_setForwardWorld(forward, up = null, left = null) {
-    return ObjectUtils.setForwardWorld(this, forward, up, left);
-  };
-  objectExtension.pp_setForwardLocal = function pp_setForwardLocal(forward, up = null, left = null) {
-    return ObjectUtils.setForwardLocal(this, forward, up, left);
-  };
-  objectExtension.pp_setBackward = function pp_setBackward(backward, up, left) {
-    return ObjectUtils.setBackward(this, backward, up, left);
-  };
-  objectExtension.pp_setBackwardWorld = function pp_setBackwardWorld(backward, up = null, left = null) {
-    return ObjectUtils.setBackwardWorld(this, backward, up, left);
-  };
-  objectExtension.pp_setBackwardLocal = function pp_setBackwardLocal(backward, up = null, left = null) {
-    return ObjectUtils.setBackwardLocal(this, backward, up, left);
-  };
-  objectExtension.pp_setUp = function pp_setUp(up, forward, left) {
-    return ObjectUtils.setUp(this, up, forward, left);
-  };
-  objectExtension.pp_setUpWorld = function pp_setUpWorld(up, forward = null, left = null) {
-    return ObjectUtils.setUpWorld(this, up, forward, left);
-  };
-  objectExtension.pp_setUpLocal = function pp_setUpLocal(up, forward = null, left = null) {
-    return ObjectUtils.setUpLocal(this, up, forward, left);
-  };
-  objectExtension.pp_setDown = function pp_setDown(down, forward, left) {
-    return ObjectUtils.setDown(this, down, forward, left);
-  };
-  objectExtension.pp_setDownWorld = function pp_setDownWorld(down, forward = null, left = null) {
-    return ObjectUtils.setDownWorld(this, down, forward, left);
-  };
-  objectExtension.pp_setDownLocal = function pp_setDownLocal(down, forward = null, left = null) {
-    return ObjectUtils.setDownLocal(this, down, forward, left);
-  };
-  objectExtension.pp_setLeft = function pp_setLeft(left, up, forward) {
-    return ObjectUtils.setLeft(this, left, up, forward);
-  };
-  objectExtension.pp_setLeftWorld = function pp_setLeftWorld(left, up = null, forward = null) {
-    return ObjectUtils.setLeftWorld(this, left, up, forward);
-  };
-  objectExtension.pp_setLeftLocal = function pp_setLeftLocal(left, up = null, forward = null) {
-    return ObjectUtils.setLeftLocal(this, left, up, forward);
-  };
-  objectExtension.pp_setRight = function pp_setRight(right, up, forward) {
-    return ObjectUtils.setRight(this, right, up, forward);
-  };
-  objectExtension.pp_setRightWorld = function pp_setRightWorld(right, up = null, forward = null) {
-    return ObjectUtils.setRightWorld(this, right, up, forward);
-  };
-  objectExtension.pp_setRightLocal = function pp_setRightLocal(right, up = null, forward = null) {
-    return ObjectUtils.setRightLocal(this, right, up, forward);
-  };
-  objectExtension.pp_setTransform = function pp_setTransform(transform) {
-    return ObjectUtils.setTransform(this, transform);
-  };
-  objectExtension.pp_setTransformMatrix = function pp_setTransformMatrix(transform) {
-    return ObjectUtils.setTransformMatrix(this, transform);
-  };
-  objectExtension.pp_setTransformQuat = function pp_setTransformQuat(transform) {
-    return ObjectUtils.setTransformQuat(this, transform);
-  };
-  objectExtension.pp_setTransformWorld = function pp_setTransformWorld(transform) {
-    return ObjectUtils.setTransformWorld(this, transform);
-  };
-  objectExtension.pp_setTransformWorldMatrix = function pp_setTransformWorldMatrix(transform) {
-    return ObjectUtils.setTransformWorldMatrix(this, transform);
-  };
-  objectExtension.pp_setTransformWorldQuat = function pp_setTransformWorldQuat(transform) {
-    return ObjectUtils.setTransformWorldQuat(this, transform);
-  };
-  objectExtension.pp_setTransformLocal = function pp_setTransformLocal(transform) {
-    return ObjectUtils.setTransformLocal(this, transform);
-  };
-  objectExtension.pp_setTransformLocalMatrix = function pp_setTransformLocalMatrix(transform) {
-    return ObjectUtils.setTransformLocalMatrix(this, transform);
-  };
-  objectExtension.pp_setTransformLocalQuat = function pp_setTransformLocalQuat(transform) {
-    return ObjectUtils.setTransformLocalQuat(this, transform);
-  };
-  objectExtension.pp_resetPosition = function pp_resetPosition() {
-    return ObjectUtils.resetPosition(this);
-  };
-  objectExtension.pp_resetPositionWorld = function pp_resetPositionWorld() {
-    return ObjectUtils.resetPositionWorld(this);
-  };
-  objectExtension.pp_resetPositionLocal = function pp_resetPositionLocal() {
-    return ObjectUtils.resetPositionLocal(this);
-  };
-  objectExtension.pp_resetRotation = function pp_resetRotation() {
-    return ObjectUtils.resetRotation(this);
-  };
-  objectExtension.pp_resetRotationWorld = function pp_resetRotationWorld() {
-    return ObjectUtils.resetRotationWorld(this);
-  };
-  objectExtension.pp_resetRotationLocal = function pp_resetRotationLocal() {
-    return ObjectUtils.resetRotationLocal(this);
-  };
-  objectExtension.pp_resetScale = function pp_resetScale() {
-    return ObjectUtils.resetScale(this);
-  };
-  objectExtension.pp_resetScaleWorld = function pp_resetScaleWorld() {
-    return ObjectUtils.resetScaleWorld(this);
-  };
-  objectExtension.pp_resetScaleLocal = function pp_resetScaleLocal() {
-    return ObjectUtils.resetScaleLocal(this);
-  };
-  objectExtension.pp_resetTransform = function pp_resetTransform() {
-    return ObjectUtils.resetTransform(this);
-  };
-  objectExtension.pp_resetTransformWorld = function pp_resetTransformWorld() {
-    return ObjectUtils.resetTransformWorld(this);
-  };
-  objectExtension.pp_resetTransformLocal = function pp_resetTransformLocal() {
-    return ObjectUtils.resetTransformLocal(this);
-  };
-  objectExtension.pp_translate = function pp_translate(translation) {
-    return ObjectUtils.translate(this, translation);
-  };
-  objectExtension.pp_translateWorld = function pp_translateWorld(translation) {
-    return ObjectUtils.translateWorld(this, translation);
-  };
-  objectExtension.pp_translateLocal = function pp_translateLocal(translation) {
-    return ObjectUtils.translateLocal(this, translation);
-  };
-  objectExtension.pp_translateObject = function pp_translateObject(translation) {
-    return ObjectUtils.translateObject(this, translation);
-  };
-  objectExtension.pp_translateAxis = function pp_translateAxis(amount, direction) {
-    return ObjectUtils.translateAxis(this, amount, direction);
-  };
-  objectExtension.pp_translateAxisWorld = function pp_translateAxisWorld(amount, direction) {
-    return ObjectUtils.translateAxisWorld(this, amount, direction);
-  };
-  objectExtension.pp_translateAxisLocal = function pp_translateAxisLocal(amount, direction) {
-    return ObjectUtils.translateAxisLocal(this, amount, direction);
-  };
-  objectExtension.pp_translateAxisObject = function pp_translateAxisObject(amount, direction) {
-    return ObjectUtils.translateAxisObject(this, amount, direction);
-  };
-  objectExtension.pp_rotate = function pp_rotate(rotation) {
-    return ObjectUtils.rotate(this, rotation);
-  };
-  objectExtension.pp_rotateDegrees = function pp_rotateDegrees(rotation) {
-    return ObjectUtils.rotateDegrees(this, rotation);
-  };
-  objectExtension.pp_rotateRadians = function pp_rotateRadians(rotation) {
-    return ObjectUtils.rotateRadians(this, rotation);
-  };
-  objectExtension.pp_rotateMatrix = function pp_rotateMatrix(rotation) {
-    return ObjectUtils.rotateMatrix(this, rotation);
-  };
-  objectExtension.pp_rotateQuat = function pp_rotateQuat(rotation) {
-    return ObjectUtils.rotateQuat(this, rotation);
-  };
-  objectExtension.pp_rotateWorld = function pp_rotateWorld(rotation) {
-    return ObjectUtils.rotateWorld(this, rotation);
-  };
-  objectExtension.pp_rotateWorldDegrees = function pp_rotateWorldDegrees(rotation) {
-    return ObjectUtils.rotateWorldDegrees(this, rotation);
-  };
-  objectExtension.pp_rotateWorldRadians = function pp_rotateWorldRadians(rotation) {
-    return ObjectUtils.rotateWorldRadians(this, rotation);
-  };
-  objectExtension.pp_rotateWorldMatrix = function pp_rotateWorldMatrix(rotation) {
-    return ObjectUtils.rotateWorldMatrix(this, rotation);
-  };
-  objectExtension.pp_rotateWorldQuat = function pp_rotateWorldQuat(rotation) {
-    return ObjectUtils.rotateWorldQuat(this, rotation);
-  };
-  objectExtension.pp_rotateLocal = function pp_rotateLocal(rotation) {
-    return ObjectUtils.rotateLocal(this, rotation);
-  };
-  objectExtension.pp_rotateLocalDegrees = function pp_rotateLocalDegrees(rotation) {
-    return ObjectUtils.rotateLocalDegrees(this, rotation);
-  };
-  objectExtension.pp_rotateLocalRadians = function pp_rotateLocalRadians(rotation) {
-    return ObjectUtils.rotateLocalRadians(this, rotation);
-  };
-  objectExtension.pp_rotateLocalMatrix = function pp_rotateLocalMatrix(rotation) {
-    return ObjectUtils.rotateLocalMatrix(this, rotation);
-  };
-  objectExtension.pp_rotateLocalQuat = function pp_rotateLocalQuat(rotation) {
-    return ObjectUtils.rotateLocalQuat(this, rotation);
-  };
-  objectExtension.pp_rotateObject = function pp_rotateObject(rotation) {
-    return ObjectUtils.rotateObject(this, rotation);
-  };
-  objectExtension.pp_rotateObjectDegrees = function pp_rotateObjectDegrees(rotation) {
-    return ObjectUtils.rotateObjectDegrees(this, rotation);
-  };
-  objectExtension.pp_rotateObjectRadians = function pp_rotateObjectRadians(rotation) {
-    return ObjectUtils.rotateObjectRadians(this, rotation);
-  };
-  objectExtension.pp_rotateObjectMatrix = function pp_rotateObjectMatrix(rotation) {
-    return ObjectUtils.rotateObjectMatrix(this, rotation);
-  };
-  objectExtension.pp_rotateObjectQuat = function pp_rotateObjectQuat(rotation) {
-    return ObjectUtils.rotateObjectQuat(this, rotation);
-  };
-  objectExtension.pp_rotateAxis = function pp_rotateAxis(angle2, axis) {
-    return ObjectUtils.rotateAxis(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisDegrees = function pp_rotateAxisDegrees(angle2, axis) {
-    return ObjectUtils.rotateAxisDegrees(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisRadians = function pp_rotateAxisRadians(angle2, axis) {
-    return ObjectUtils.rotateAxisRadians(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisWorld = function pp_rotateAxisWorld(angle2, axis) {
-    return ObjectUtils.rotateAxisWorld(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisWorldDegrees = function pp_rotateAxisWorldDegrees(angle2, axis) {
-    return ObjectUtils.rotateAxisWorldDegrees(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisWorldRadians = function pp_rotateAxisWorldRadians(angle2, axis) {
-    return ObjectUtils.rotateAxisWorldRadians(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisLocal = function pp_rotateAxisLocal(angle2, axis) {
-    return ObjectUtils.rotateAxisLocal(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisLocalDegrees = function pp_rotateAxisLocalDegrees(angle2, axis) {
-    return ObjectUtils.rotateAxisLocalDegrees(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisLocalRadians = function pp_rotateAxisLocalRadians(angle2, axis) {
-    return ObjectUtils.rotateAxisLocalRadians(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisObject = function pp_rotateAxisObject(angle2, axis) {
-    return ObjectUtils.rotateAxisObject(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisObjectDegrees = function pp_rotateAxisObjectDegrees(angle2, axis) {
-    return ObjectUtils.rotateAxisObjectDegrees(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAxisObjectRadians = function pp_rotateAxisObjectRadians(angle2, axis) {
-    return ObjectUtils.rotateAxisObjectRadians(this, angle2, axis);
-  };
-  objectExtension.pp_rotateAround = function pp_rotateAround(rotation, origin) {
-    return ObjectUtils.rotateAround(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundDegrees = function pp_rotateAroundDegrees(rotation, origin) {
-    return ObjectUtils.rotateAroundDegrees(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundRadians = function pp_rotateAroundRadians(rotation, origin) {
-    return ObjectUtils.rotateAroundRadians(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundMatrix = function pp_rotateAroundMatrix(rotation, origin) {
-    return ObjectUtils.rotateAroundMatrix(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundQuat = function pp_rotateAroundQuat(rotation, origin) {
-    return ObjectUtils.rotateAroundQuat(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundWorld = function pp_rotateAroundWorld(rotation, origin) {
-    return ObjectUtils.rotateAroundWorld(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundWorldDegrees = function pp_rotateAroundWorldDegrees(rotation, origin) {
-    return ObjectUtils.rotateAroundWorldDegrees(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundWorldRadians = function pp_rotateAroundWorldRadians(rotation, origin) {
-    return ObjectUtils.rotateAroundWorldRadians(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundWorldMatrix = function pp_rotateAroundWorldMatrix(rotation, origin) {
-    return ObjectUtils.rotateAroundWorldMatrix(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundWorldQuat = function pp_rotateAroundWorldQuat(rotation, origin) {
-    return ObjectUtils.rotateAroundWorldQuat(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundLocal = function pp_rotateAroundLocal(rotation, origin) {
-    return ObjectUtils.rotateAroundLocal(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundLocalDegrees = function pp_rotateAroundLocalDegrees(rotation, origin) {
-    return ObjectUtils.rotateAroundLocalDegrees(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundLocalRadians = function pp_rotateAroundLocalRadians(rotation, origin) {
-    return ObjectUtils.rotateAroundLocalRadians(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundLocalMatrix = function pp_rotateAroundLocalMatrix(rotation, origin) {
-    return ObjectUtils.rotateAroundLocalMatrix(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundLocalQuat = function pp_rotateAroundLocalQuat(rotation, origin) {
-    return ObjectUtils.rotateAroundLocalQuat(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundObject = function pp_rotateAroundObject(rotation, origin) {
-    return ObjectUtils.rotateAroundObject(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundObjectDegrees = function pp_rotateAroundObjectDegrees(rotation, origin) {
-    return ObjectUtils.rotateAroundObjectDegrees(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundObjectRadians = function pp_rotateAroundObjectRadians(rotation, origin) {
-    return ObjectUtils.rotateAroundObjectRadians(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundObjectMatrix = function pp_rotateAroundObjectMatrix(rotation, origin) {
-    return ObjectUtils.rotateAroundObjectMatrix(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundObjectQuat = function pp_rotateAroundObjectQuat(rotation, origin) {
-    return ObjectUtils.rotateAroundObjectQuat(this, rotation, origin);
-  };
-  objectExtension.pp_rotateAroundAxis = function pp_rotateAroundAxis(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxis(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisDegrees = function pp_rotateAroundAxisDegrees(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisDegrees(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisRadians = function pp_rotateAroundAxisRadians(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisRadians(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisWorld = function pp_rotateAroundAxisWorld(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisWorld(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisWorldDegrees = function pp_rotateAroundAxisWorldDegrees(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisWorldDegrees(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisWorldRadians = function pp_rotateAroundAxisWorldRadians(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisWorldRadians(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisLocal = function pp_rotateAroundAxisLocal(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisLocal(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisLocalDegrees = function pp_rotateAroundAxisLocalDegrees(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisLocalDegrees(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisLocalRadians = function pp_rotateAroundAxisLocalRadians(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisLocalRadians(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisObject = function pp_rotateAroundAxisObject(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisObject(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisObjectDegrees = function pp_rotateAroundAxisObjectDegrees(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisObjectDegrees(this, angle2, axis, origin);
-  };
-  objectExtension.pp_rotateAroundAxisObjectRadians = function pp_rotateAroundAxisObjectRadians(angle2, axis, origin) {
-    return ObjectUtils.rotateAroundAxisObjectRadians(this, angle2, axis, origin);
-  };
-  objectExtension.pp_scaleObject = function pp_scaleObject(scale4) {
-    return ObjectUtils.scaleObject(this, scale4);
-  };
-  objectExtension.pp_lookAt = function pp_lookAt(position, up) {
-    return ObjectUtils.lookAt(this, position, up);
-  };
-  objectExtension.pp_lookAtWorld = function pp_lookAtWorld(position, up) {
-    return ObjectUtils.lookAtWorld(this, position, up);
-  };
-  objectExtension.pp_lookAtLocal = function pp_lookAtLocal(position, up) {
-    return ObjectUtils.lookAtLocal(this, position, up);
-  };
-  objectExtension.pp_lookTo = function pp_lookTo(direction, up) {
-    return ObjectUtils.lookTo(this, direction, up);
-  };
-  objectExtension.pp_lookToWorld = function pp_lookToWorld(direction, up) {
-    return ObjectUtils.lookToWorld(this, direction, up);
-  };
-  objectExtension.pp_lookToLocal = function pp_lookToLocal(direction, up) {
-    return ObjectUtils.lookToLocal(this, direction, up);
-  };
-  objectExtension.pp_setParent = function pp_setParent(newParent, keepTransformWorld = true) {
-    return ObjectUtils.setParent(this, newParent, keepTransformWorld);
-  };
-  objectExtension.pp_getParent = function pp_getParent() {
-    return ObjectUtils.getParent(this);
-  };
-  objectExtension.pp_convertPositionObjectToWorld = function pp_convertPositionObjectToWorld(position, resultPosition = Vec3Utils.create()) {
-    return ObjectUtils.convertPositionObjectToWorld(this, position, resultPosition);
-  };
-  objectExtension.pp_convertDirectionObjectToWorld = function pp_convertDirectionObjectToWorld(direction, resultDirection = Vec3Utils.create()) {
-    return ObjectUtils.convertDirectionObjectToWorld(this, direction, resultDirection);
-  };
-  objectExtension.pp_convertPositionWorldToObject = function pp_convertPositionWorldToObject(position, resultPosition = Vec3Utils.create()) {
-    return ObjectUtils.convertPositionWorldToObject(this, position, resultPosition);
-  };
-  objectExtension.pp_convertDirectionWorldToObject = function pp_convertDirectionWorldToObject(direction, resultDirection = Vec3Utils.create()) {
-    return ObjectUtils.convertDirectionWorldToObject(this, direction, resultDirection);
-  };
-  objectExtension.pp_convertPositionLocalToWorld = function pp_convertPositionLocalToWorld(position, resultPosition = Vec3Utils.create()) {
-    return ObjectUtils.convertPositionLocalToWorld(this, position, resultPosition);
-  };
-  objectExtension.pp_convertDirectionLocalToWorld = function pp_convertDirectionLocalToWorld(direction, resultDirection = Vec3Utils.create()) {
-    return ObjectUtils.convertDirectionLocalToWorld(this, direction, resultDirection);
-  };
-  objectExtension.pp_convertPositionWorldToLocal = function pp_convertPositionWorldToLocal(position, resultPosition = Vec3Utils.create()) {
-    return ObjectUtils.convertPositionWorldToLocal(this, position, resultPosition);
-  };
-  objectExtension.pp_convertDirectionWorldToLocal = function pp_convertDirectionWorldToLocal(direction, resultDirection = Vec3Utils.create()) {
-    return ObjectUtils.convertDirectionWorldToLocal(this, direction, resultDirection);
-  };
-  objectExtension.pp_convertPositionObjectToLocal = function pp_convertPositionObjectToLocal(position, resultPosition = Vec3Utils.create()) {
-    return ObjectUtils.convertPositionObjectToLocal(this, position, resultPosition);
-  };
-  objectExtension.pp_convertDirectionObjectToLocal = function pp_convertDirectionObjectToLocal(direction, resultDirection = Vec3Utils.create()) {
-    return ObjectUtils.convertDirectionObjectToLocal(this, direction, resultDirection);
-  };
-  objectExtension.pp_convertPositionLocalToObject = function pp_convertPositionLocalToObject(position, resultPosition = Vec3Utils.create()) {
-    return ObjectUtils.convertPositionLocalToObject(this, position, resultPosition);
-  };
-  objectExtension.pp_convertDirectionLocalToObject = function pp_convertDirectionLocalToObject(direction, resultDirection = Vec3Utils.create()) {
-    return ObjectUtils.convertDirectionLocalToObject(this, direction, resultDirection);
-  };
-  objectExtension.pp_convertTransformObjectToWorld = function pp_convertTransformObjectToWorld(transform, resultTransform) {
-    return ObjectUtils.convertTransformObjectToWorld(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformObjectToWorldMatrix = function pp_convertTransformObjectToWorldMatrix(transform, resultTransform = Mat4Utils.create()) {
-    return ObjectUtils.convertTransformObjectToWorldMatrix(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformObjectToWorldQuat = function pp_convertTransformObjectToWorldQuat(transform, resultTransform = Quat2Utils.create()) {
-    return ObjectUtils.convertTransformObjectToWorldQuat(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformWorldToObject = function pp_convertTransformWorldToObject(transform, resultTransform) {
-    return ObjectUtils.convertTransformWorldToObject(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformWorldToObjectMatrix = function pp_convertTransformWorldToObjectMatrix(transform, resultTransform = Mat4Utils.create()) {
-    return ObjectUtils.convertTransformWorldToObjectMatrix(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformWorldToObjectQuat = function pp_convertTransformWorldToObjectQuat(transform, resultTransform = Quat2Utils.create()) {
-    return ObjectUtils.convertTransformWorldToObjectQuat(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformLocalToWorld = function pp_convertTransformLocalToWorld(transform, resultTransform) {
-    return ObjectUtils.convertTransformLocalToWorld(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformLocalToWorldMatrix = function pp_convertTransformLocalToWorldMatrix(transform, resultTransform = Mat4Utils.create()) {
-    return ObjectUtils.convertTransformLocalToWorldMatrix(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformLocalToWorldQuat = function pp_convertTransformLocalToWorldQuat(transform, resultTransform = Quat2Utils.create()) {
-    return ObjectUtils.convertTransformLocalToWorldQuat(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformWorldToLocal = function pp_convertTransformWorldToLocal(transform, resultTransform) {
-    return ObjectUtils.convertTransformWorldToLocal(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformWorldToLocalMatrix = function pp_convertTransformWorldToLocalMatrix(transform, resultTransform = Mat4Utils.create()) {
-    return ObjectUtils.convertTransformWorldToLocalMatrix(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformWorldToLocalQuat = function pp_convertTransformWorldToLocalQuat(transform, resultTransform = Quat2Utils.create()) {
-    return ObjectUtils.convertTransformWorldToLocalQuat(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformObjectToLocal = function pp_convertTransformObjectToLocal(transform, resultTransform) {
-    return ObjectUtils.convertTransformObjectToLocal(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformObjectToLocalMatrix = function pp_convertTransformObjectToLocalMatrix(transform, resultTransform = Mat4Utils.create()) {
-    return ObjectUtils.convertTransformObjectToLocalMatrix(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformObjectToLocalQuat = function pp_convertTransformObjectToLocalQuat(transform, resultTransform = Quat2Utils.create()) {
-    return ObjectUtils.convertTransformObjectToLocalQuat(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformLocalToObject = function pp_convertTransformLocalToObject(transform, resultTransform) {
-    return ObjectUtils.convertTransformLocalToObject(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformLocalToObjectMatrix = function pp_convertTransformLocalToObjectMatrix(transform, resultTransform = Mat4Utils.create()) {
-    return ObjectUtils.convertTransformLocalToObjectMatrix(this, transform, resultTransform);
-  };
-  objectExtension.pp_convertTransformLocalToObjectQuat = function pp_convertTransformLocalToObjectQuat(transform, resultTransform = Quat2Utils.create()) {
-    return ObjectUtils.convertTransformLocalToObjectQuat(this, transform, resultTransform);
-  };
-  objectExtension.pp_addComponent = function pp_addComponent(typeOrClass, paramsOrActive, active = null) {
-    return ObjectUtils.addComponent(this, typeOrClass, paramsOrActive, active);
-  };
-  objectExtension.pp_getComponent = function pp_getComponent(typeOrClass, index = 0) {
-    return ObjectUtils.getComponent(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentSelf = function pp_getComponentSelf(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentSelf(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentHierarchy = function pp_getComponentHierarchy(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentHierarchy(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentHierarchyBreadth = function pp_getComponentHierarchyBreadth(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentHierarchyBreadth(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentHierarchyDepth = function pp_getComponentHierarchyDepth(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentHierarchyDepth(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentDescendants = function pp_getComponentDescendants(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentDescendants(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentDescendantsBreadth = function pp_getComponentDescendantsBreadth(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentDescendantsBreadth(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentDescendantsDepth = function pp_getComponentDescendantsDepth(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentDescendantsDepth(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponentChildren = function pp_getComponentChildren(typeOrClass, index = 0) {
-    return ObjectUtils.getComponentChildren(this, typeOrClass, index);
-  };
-  objectExtension.pp_getComponents = function pp_getComponents(typeOrClass) {
-    return ObjectUtils.getComponents(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsSelf = function pp_getComponentsSelf(typeOrClass) {
-    return ObjectUtils.getComponentsSelf(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsHierarchy = function pp_getComponentsHierarchy(typeOrClass) {
-    return ObjectUtils.getComponentsHierarchy(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsHierarchyBreadth = function pp_getComponentsHierarchyBreadth(typeOrClass) {
-    return ObjectUtils.getComponentsHierarchyBreadth(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsHierarchyDepth = function pp_getComponentsHierarchyDepth(typeOrClass) {
-    return ObjectUtils.getComponentsHierarchyDepth(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsDescendants = function pp_getComponentsDescendants(typeOrClass) {
-    return ObjectUtils.getComponentsDescendants(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsDescendantsBreadth = function pp_getComponentsDescendantsBreadth(typeOrClass) {
-    return ObjectUtils.getComponentsDescendantsBreadth(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsDescendantsDepth = function pp_getComponentsDescendantsDepth(typeOrClass) {
-    return ObjectUtils.getComponentsDescendantsDepth(this, typeOrClass);
-  };
-  objectExtension.pp_getComponentsChildren = function pp_getComponentsChildren(typeOrClass) {
-    return ObjectUtils.getComponentsChildren(this, typeOrClass);
-  };
-  objectExtension.pp_setActive = function pp_setActive(active) {
-    return ObjectUtils.setActive(this, active);
-  };
-  objectExtension.pp_setActiveSelf = function pp_setActiveSelf(active) {
-    return ObjectUtils.setActiveSelf(this, active);
-  };
-  objectExtension.pp_setActiveHierarchy = function pp_setActiveHierarchy(active) {
-    return ObjectUtils.setActiveHierarchy(this, active);
-  };
-  objectExtension.pp_setActiveHierarchyBreadth = function pp_setActiveHierarchyBreadth(active) {
-    return ObjectUtils.setActiveHierarchyBreadth(this, active);
-  };
-  objectExtension.pp_setActiveHierarchyDepth = function pp_setActiveHierarchyDepth(active) {
-    return ObjectUtils.setActiveHierarchyDepth(this, active);
-  };
-  objectExtension.pp_setActiveDescendants = function pp_setActiveDescendants(active) {
-    return ObjectUtils.setActiveDescendants(this, active);
-  };
-  objectExtension.pp_setActiveDescendantsBreadth = function pp_setActiveDescendantsBreadth(active) {
-    return ObjectUtils.setActiveDescendantsBreadth(this, active);
-  };
-  objectExtension.pp_setActiveDescendantsDepth = function pp_setActiveDescendantsDepth(active) {
-    return ObjectUtils.setActiveDescendantsDepth(this, active);
-  };
-  objectExtension.pp_setActiveChildren = function pp_setActiveChildren(active) {
-    return ObjectUtils.setActiveChildren(this, active);
-  };
-  objectExtension.pp_hasUniformScale = function pp_hasUniformScale() {
-    return ObjectUtils.hasUniformScale(this);
-  };
-  objectExtension.pp_hasUniformScaleWorld = function pp_hasUniformScaleWorld() {
-    return ObjectUtils.hasUniformScaleWorld(this);
-  };
-  objectExtension.pp_hasUniformScaleLocal = function pp_hasUniformScaleLocal() {
-    return ObjectUtils.hasUniformScaleLocal(this);
-  };
-  objectExtension.pp_clone = function pp_clone(cloneParams = new CloneParams()) {
-    return ObjectUtils.clone(this, cloneParams);
-  };
-  objectExtension.pp_isCloneable = function pp_isCloneable(cloneParams = new CloneParams()) {
-    return ObjectUtils.isCloneable(this, cloneParams);
-  };
-  objectExtension.pp_toString = function pp_toString() {
-    return ObjectUtils.toString(this);
-  };
-  objectExtension.pp_toStringExtended = function pp_toStringExtended() {
-    return ObjectUtils.toStringExtended(this);
-  };
-  objectExtension.pp_toStringCompact = function pp_toStringCompact() {
-    return ObjectUtils.toStringCompact(this);
-  };
-  objectExtension.pp_getObjectByName = function pp_getObjectByName(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByName(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameHierarchy = function pp_getObjectByNameHierarchy(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchy(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameHierarchyBreadth = function pp_getObjectByNameHierarchyBreadth(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchyBreadth(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameHierarchyDepth = function pp_getObjectByNameHierarchyDepth(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameHierarchyDepth(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameDescendants = function pp_getObjectByNameDescendants(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameDescendants(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameDescendantsBreadth = function pp_getObjectByNameDescendantsBreadth(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameDescendantsBreadth(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameDescendantsDepth = function pp_getObjectByNameDescendantsDepth(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameDescendantsDepth(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectByNameChildren = function pp_getObjectByNameChildren(name, isRegex = false, index = 0) {
-    return ObjectUtils.getObjectByNameChildren(this, name, isRegex, index);
-  };
-  objectExtension.pp_getObjectsByName = function pp_getObjectsByName(name, isRegex = false) {
-    return ObjectUtils.getObjectsByName(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameHierarchy = function pp_getObjectsByNameHierarchy(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameHierarchy(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameHierarchyBreadth = function pp_getObjectsByNameHierarchyBreadth(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameHierarchyBreadth(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameHierarchyDepth = function pp_getObjectsByNameHierarchyDepth(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameHierarchyDepth(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameDescendants = function pp_getObjectsByNameDescendants(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameDescendants(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameDescendantsBreadth = function pp_getObjectsByNameDescendantsBreadth(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameDescendantsBreadth(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameDescendantsDepth = function pp_getObjectsByNameDescendantsDepth(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameDescendantsDepth(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectsByNameChildren = function pp_getObjectsByNameChildren(name, isRegex = false) {
-    return ObjectUtils.getObjectsByNameChildren(this, name, isRegex);
-  };
-  objectExtension.pp_getObjectByID = function pp_getObjectByID(id) {
-    return ObjectUtils.getObjectByID(this, id);
-  };
-  objectExtension.pp_getObjectByIDHierarchy = function pp_getObjectByIDHierarchy(id) {
-    return ObjectUtils.getObjectByIDHierarchy(this, id);
-  };
-  objectExtension.pp_getObjectByIDHierarchyBreadth = function pp_getObjectByIDHierarchyBreadth(id) {
-    return ObjectUtils.getObjectByIDHierarchyBreadth(this, id);
-  };
-  objectExtension.pp_getObjectByIDHierarchyDepth = function pp_getObjectByIDHierarchyDepth(id) {
-    return ObjectUtils.getObjectByIDHierarchyDepth(this, id);
-  };
-  objectExtension.pp_getObjectByIDDescendants = function pp_getObjectByIDDescendants(id) {
-    return ObjectUtils.getObjectByIDDescendants(this, id);
-  };
-  objectExtension.pp_getObjectByIDDescendantsBreadth = function pp_getObjectByIDDescendantsBreadth(id) {
-    return ObjectUtils.getObjectByIDDescendantsBreadth(this, id);
-  };
-  objectExtension.pp_getObjectByIDDescendantsDepth = function pp_getObjectByIDDescendantsDepth(id) {
-    return ObjectUtils.getObjectByIDDescendantsDepth(this, id);
-  };
-  objectExtension.pp_getObjectByIDChildren = function pp_getObjectByIDChildren(id) {
-    return ObjectUtils.getObjectByIDChildren(this, id);
-  };
-  objectExtension.pp_getHierarchyBreadth = function pp_getHierarchyBreadth() {
-    return ObjectUtils.getHierarchyBreadth(this);
-  };
-  objectExtension.pp_getHierarchyDepth = function pp_getHierarchyDepth() {
-    return ObjectUtils.getHierarchyDepth(this);
-  };
-  objectExtension.pp_getDescendants = function pp_getDescendants() {
-    return ObjectUtils.getDescendants(this);
-  };
-  objectExtension.pp_getDescendantsBreadth = function pp_getDescendantsBreadth() {
-    return ObjectUtils.getDescendantsBreadth(this);
-  };
-  objectExtension.pp_getDescendantsDepth = function pp_getDescendantsDepth() {
-    return ObjectUtils.getDescendantsDepth(this);
-  };
-  objectExtension.pp_getChildren = function pp_getChildren() {
-    return ObjectUtils.getChildren(this);
-  };
-  objectExtension.pp_getSelf = function pp_getSelf() {
-    return ObjectUtils.getSelf(this);
-  };
-  objectExtension.pp_addObject = function pp_addObject() {
-    return ObjectUtils.addObject(this);
-  };
-  objectExtension.pp_getName = function pp_getName() {
-    return ObjectUtils.getName(this);
-  };
-  objectExtension.pp_setName = function pp_setName(name) {
-    return ObjectUtils.setName(this, name);
-  };
-  objectExtension.pp_getEngine = function pp_getEngine() {
-    return ObjectUtils.getEngine(this);
-  };
-  objectExtension.pp_getID = function pp_getID() {
-    return ObjectUtils.getID(this);
-  };
-  objectExtension.pp_markDirty = function pp_markDirty() {
-    return ObjectUtils.markDirty(this);
-  };
-  objectExtension.pp_isTransformChanged = function pp_isTransformChanged() {
-    return ObjectUtils.isTransformChanged(this);
-  };
-  objectExtension.pp_equals = function pp_equals(otherObject) {
-    return ObjectUtils.equals(this, otherObject);
-  };
-  objectExtension.pp_destroy = function pp_destroy() {
-    return ObjectUtils.destroy(this);
-  };
-  objectExtension.pp_reserveObjects = function pp_reserveObjects(count) {
-    return ObjectUtils.reserveObjects(this, count);
-  };
-  objectExtension.pp_reserveObjectsSelf = function pp_reserveObjectsSelf(count) {
-    return ObjectUtils.reserveObjectsSelf(this, count);
-  };
-  objectExtension.pp_reserveObjectsHierarchy = function pp_reserveObjectsHierarchy(count) {
-    return ObjectUtils.reserveObjectsHierarchy(this, count);
-  };
-  objectExtension.pp_reserveObjectsDescendants = function pp_reserveObjectsDescendants(count) {
-    return ObjectUtils.reserveObjectsDescendants(this, count);
-  };
-  objectExtension.pp_reserveObjectsChildren = function pp_reserveObjectsChildren(count) {
-    return ObjectUtils.reserveObjectsChildren(this, count);
-  };
-  objectExtension.pp_getComponentsAmountMap = function pp_getComponentsAmountMap(amountMap = /* @__PURE__ */ new Map()) {
-    return ObjectUtils.getComponentsAmountMap(this, amountMap);
-  };
-  objectExtension.pp_getComponentsAmountMapSelf = function pp_getComponentsAmountMapSelf(amountMap = /* @__PURE__ */ new Map()) {
-    return ObjectUtils.getComponentsAmountMapSelf(this, amountMap);
-  };
-  objectExtension.pp_getComponentsAmountMapHierarchy = function pp_getComponentsAmountMapHierarchy(amountMap = /* @__PURE__ */ new Map()) {
-    return ObjectUtils.getComponentsAmountMapHierarchy(this, amountMap);
-  };
-  objectExtension.pp_getComponentsAmountMapDescendants = function pp_getComponentsAmountMapDescendants(amountMap = /* @__PURE__ */ new Map()) {
-    return ObjectUtils.getComponentsAmountMapDescendants(this, amountMap);
-  };
-  objectExtension.pp_getComponentsAmountMapChildren = function pp_getComponentsAmountMapChildren(amountMap = /* @__PURE__ */ new Map()) {
-    return ObjectUtils.getComponentsAmountMapChildren(this, amountMap);
-  };
-  PluginUtils.injectProperties(objectExtension, Object3D.prototype, false, true, true);
-}
-
-// dist/plugin/wl/extensions/scene_extension.js
-import { Scene } from "@wonderlandengine/api";
-function initSceneExtension() {
-  initSceneExtensionPrototype();
-}
-function initSceneExtensionPrototype() {
-  let sceneExtension = {};
-  sceneExtension.pp_getRoot = function pp_getRoot() {
-    return SceneUtils.getRoot(this);
-  };
-  sceneExtension.pp_addObject = function pp_addObject() {
-    return SceneUtils.addObject(this);
-  };
-  sceneExtension.pp_getObjects = function pp_getObjects() {
-    return SceneUtils.getObjects(this);
-  };
-  sceneExtension.pp_getObjectsBreadth = function pp_getObjectsBreadth() {
-    return SceneUtils.getObjectsBreadth(this);
-  };
-  sceneExtension.pp_getObjectsDepth = function pp_getObjectsDepth() {
-    return SceneUtils.getObjectsDepth(this);
-  };
-  sceneExtension.pp_getComponent = function pp_getComponent(typeOrClass, index = 0) {
-    return SceneUtils.getComponent(this, typeOrClass, index);
-  };
-  sceneExtension.pp_getComponentBreadth = function pp_getComponentBreadth(typeOrClass, index = 0) {
-    return SceneUtils.getComponentBreadth(this, typeOrClass, index);
-  };
-  sceneExtension.pp_getComponentDepth = function pp_getComponentDepth(typeOrClass, index = 0) {
-    return SceneUtils.getComponentDepth(this, typeOrClass, index);
-  };
-  sceneExtension.pp_getComponents = function pp_getComponents(typeOrClass) {
-    return SceneUtils.getComponents(this, typeOrClass);
-  };
-  sceneExtension.pp_getComponentsBreadth = function pp_getComponentsBreadth(typeOrClass) {
-    return SceneUtils.getComponentsBreadth(this, typeOrClass);
-  };
-  sceneExtension.pp_getComponentsDepth = function pp_getComponentsDepth(typeOrClass) {
-    return SceneUtils.getComponentsDepth(this, typeOrClass);
-  };
-  sceneExtension.pp_getObjectByName = function pp_getObjectByName(name, isRegex = false, index = 0) {
-    return SceneUtils.getObjectByName(this, name, isRegex, index);
-  };
-  sceneExtension.pp_getObjectByNameBreadth = function pp_getObjectByNameBreadth(name, isRegex = false, index = 0) {
-    return SceneUtils.getObjectByNameBreadth(this, name, isRegex, index);
-  };
-  sceneExtension.pp_getObjectByNameDepth = function pp_getObjectByNameDepth(name, isRegex = false, index = 0) {
-    return SceneUtils.getObjectByNameDepth(this, name, isRegex, index);
-  };
-  sceneExtension.pp_getObjectsByName = function pp_getObjectsByName(name, isRegex = false) {
-    return SceneUtils.getObjectsByName(this, name, isRegex);
-  };
-  sceneExtension.pp_getObjectsByNameBreadth = function pp_getObjectsByNameBreadth(name, isRegex = false) {
-    return SceneUtils.getObjectsByNameBreadth(this, name, isRegex);
-  };
-  sceneExtension.pp_getObjectsByNameDepth = function pp_getObjectsByNameDepth(name, isRegex = false) {
-    return SceneUtils.getObjectsByNameDepth(this, name, isRegex);
-  };
-  sceneExtension.pp_getObjectByID = function pp_getObjectByID(id) {
-    return SceneUtils.getObjectByID(this, id);
-  };
-  sceneExtension.pp_getObjectByIDBreadth = function pp_getObjectByIDBreadth(id) {
-    return SceneUtils.getObjectByIDBreadth(this, id);
-  };
-  sceneExtension.pp_getObjectByIDDepth = function pp_getObjectByIDDepth(id) {
-    return SceneUtils.getObjectByIDDepth(this, id);
-  };
-  sceneExtension.pp_toString = function pp_toString() {
-    return SceneUtils.toString(this);
-  };
-  sceneExtension.pp_toStringCompact = function pp_toStringCompact() {
-    return SceneUtils.toStringCompact(this);
-  };
-  sceneExtension.pp_toStringExtended = function pp_toStringExtended() {
-    return SceneUtils.toStringExtended(this);
-  };
-  sceneExtension.pp_getComponentsAmountMap = function pp_getComponentsAmountMap(amountMap = /* @__PURE__ */ new Map()) {
-    return SceneUtils.getComponentsAmountMap(this, amountMap);
-  };
-  PluginUtils.injectProperties(sceneExtension, Scene.prototype, false, true, true);
-}
-
-// dist/plugin/wl/extensions/init_wl_extentions.js
-function initWLExtensions(engine) {
-  initObjectExtension();
-  initSceneExtension();
-  initGetterExtensions();
-}
-
-// dist/plugin/wl/mods/components/cauldron_mods.js
-import { Emitter } from "@wonderlandengine/api";
-function initCauldronMods() {
-  initEmitterModPrototype();
-}
-function initEmitterModPrototype() {
-  let mod = {};
-  mod._flushTransactions = function _flushTransactions() {
-    let listeners = this._listeners;
-    for (let i = 0; i < this._transactions.length; i++) {
-      let transaction = this._transactions[i];
-      if (transaction.type === 1) {
-        listeners.push(transaction.data);
-      } else {
-        this.remove(transaction.data);
-      }
-    }
-    this._transactions.length = 0;
-  };
-  PluginUtils.injectProperties(mod, Emitter.prototype, false, true, true);
-}
-
-// dist/plugin/wl/mods/components/cursor_component_mod.js
-import { InputComponent as InputComponent2, ViewComponent as ViewComponent2 } from "@wonderlandengine/api";
-import { Cursor as Cursor3, CursorTarget as CursorTarget3, HitTestLocation as HitTestLocation3 } from "@wonderlandengine/components";
-
-// dist/cauldron/utils/browser_utils.js
-var isMobile = function() {
-  let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
-  return function isMobile2() {
-    let userAgent = window.navigator.userAgent;
-    return userAgent != null && userAgent.match(checkMobileRegex) != null;
-  };
-}();
-function isDesktop() {
-  return !BrowserUtils.isMobile();
-}
-var isLocalhost = function() {
-  let localhostRegex = new RegExp("(localhost|127\\.0\\.0\\.1)(:(\\d{4}))?");
-  return function isLocalhost2(port = null, isRegex = false) {
-    let isLocalhost3 = false;
-    let localhostMatch = window.location.origin.match(localhostRegex);
-    if (localhostMatch != null) {
-      if (port == null) {
-        isLocalhost3 = true;
-      } else if (localhostMatch.length >= 4 && localhostMatch[3] != null) {
-        let portMatch = localhostMatch[3];
-        if (isRegex) {
-          isLocalhost3 = portMatch.match(port) != null;
-        } else {
-          isLocalhost3 = portMatch == port;
-        }
-      }
-    }
-    return isLocalhost3;
-  };
-}();
-function openLink(url, newTab = true, exitXRSessionBeforeOpen = true, exitXRSessionOnSuccess = true, tryOpenLinkOnClickOnFailure = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
-  let element = document.createElement("a");
-  element.style.display = "none";
-  document.body.appendChild(element);
-  element.addEventListener("click", function() {
-    let targetPage = void 0;
-    if (newTab) {
-      targetPage = "_blank";
-    } else {
-      targetPage = "_top";
-    }
-    let result = window.open(url, targetPage);
-    if (result != null) {
-      if (!exitXRSessionBeforeOpen && exitXRSessionOnSuccess) {
-        XRUtils.exitSession(engine);
-      }
-      if (onSuccessCallback != null) {
-        onSuccessCallback();
-      }
-    } else {
-      if (tryOpenLinkOnClickOnFailure) {
-        setTimeout(function() {
-          BrowserUtils.openLinkOnClick(url, newTab, exitXRSessionOnSuccess, onSuccessCallback, onFailureCallback);
-        }, 100);
-      } else if (onFailureCallback != null) {
-        onFailureCallback();
-      }
-    }
-  });
-  if (exitXRSessionBeforeOpen) {
-    XRUtils.exitSession(engine);
-  }
-  element.click();
-  document.body.removeChild(element);
-}
-function openLinkOnClick(url, newTab = true, exitXRSessionOnSuccess = true, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
-  document.addEventListener("click", function() {
-    let targetPage = void 0;
-    if (newTab) {
-      targetPage = "_blank";
-    } else {
-      targetPage = "_top";
-    }
-    let result = window.open(url, targetPage);
-    if (result != null) {
-      if (exitXRSessionOnSuccess) {
-        XRUtils.exitSession(engine);
-      }
-      if (onSuccessCallback != null) {
-        onSuccessCallback();
-      }
-    } else {
-      if (onFailureCallback != null) {
-        onFailureCallback();
-      }
-    }
-  }, { once: true });
-}
-var BrowserUtils = {
-  isMobile,
-  isDesktop,
-  isLocalhost,
-  openLink,
-  openLinkOnClick
-};
-
-// dist/cauldron/utils/xr_utils.js
-function getSession(engine = Globals.getMainEngine()) {
-  let xr = Globals.getXR(engine);
-  return xr != null ? xr.session : null;
-}
-function getSessionMode(engine = Globals.getMainEngine()) {
-  let xr = Globals.getXR(engine);
-  return xr != null ? xr.sessionMode : null;
-}
-function getReferenceSpace(engine = Globals.getMainEngine()) {
-  let xr = Globals.getXR(engine);
-  return xr != null ? xr.currentReferenceSpace : null;
-}
-function getReferenceSpaceType(engine = Globals.getMainEngine()) {
-  let type = "local";
-  try {
-    let xr = Globals.getXR(engine);
-    type = xr != null ? xr.currentReferenceSpaceType : null;
-  } catch (error3) {
-  }
-  return type;
-}
-function getFrame(engine = Globals.getMainEngine()) {
-  let xr = Globals.getXR(engine);
-  return xr != null ? xr.frame : null;
-}
-function isSessionActive(engine = Globals.getMainEngine()) {
-  return XRUtils.getSession(engine) != null;
-}
-function isReferenceSpaceFloorBased(engine = Globals.getMainEngine()) {
-  return XRUtils.getReferenceSpaceType(engine).includes("floor");
-}
-function exitSession(engine = Globals.getMainEngine()) {
-  let xrSession = XRUtils.getSession(engine);
-  if (xrSession != null) {
-    xrSession.end();
-  }
-}
-function registerSessionStartEventListener(id, listener, manuallyCallSessionStartIfSessionAlreadyActive = true, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
-  if (listener != null) {
-    if (addManualCallFlagToStartListener) {
-      engine.onXRSessionStart.add(listener.bind(void 0, false), { id, immediate: false });
-    } else {
-      engine.onXRSessionStart.add(listener, { id, immediate: false });
-    }
-    if (manuallyCallSessionStartIfSessionAlreadyActive && XRUtils.isSessionActive(engine)) {
-      if (addManualCallFlagToStartListener) {
-        listener(true, XRUtils.getSession(engine), XRUtils.getSessionMode(engine));
-      } else {
-        listener(XRUtils.getSession(engine), XRUtils.getSessionMode(engine));
-      }
-    }
-  }
-}
-function unregisterSessionStartEventListener(id, engine = Globals.getMainEngine()) {
-  engine.onXRSessionStart.remove(id);
-}
-function registerSessionEndEventListener(id, listener, engine = Globals.getMainEngine()) {
-  if (listener != null) {
-    engine.onXRSessionEnd.add(listener, { id });
-  }
-}
-function unregisterSessionEndEventListener(id, engine = Globals.getMainEngine()) {
-  return engine.onXRSessionEnd.remove(id);
-}
-function registerSessionStartEndEventListeners(id, startListener, endListener, manuallyCallSessionStartIfSessionAlreadyActive = true, addManualCallFlagToStartListener = false, engine = Globals.getMainEngine()) {
-  XRUtils.registerSessionEndEventListener(id, endListener, engine);
-  XRUtils.registerSessionStartEventListener(id, startListener, manuallyCallSessionStartIfSessionAlreadyActive, addManualCallFlagToStartListener, engine);
-}
-function unregisterSessionStartEndEventListeners(id, engine = Globals.getMainEngine()) {
-  XRUtils.unregisterSessionEndEventListener(id, engine);
-  XRUtils.unregisterSessionStartEventListener(id, engine);
-}
-function isXRSupported(engine = Globals.getMainEngine()) {
-  return XRUtils.isVRSupported(engine) || XRUtils.isARSupported(engine);
-}
-function isVRSupported(engine = Globals.getMainEngine()) {
-  return engine.vrSupported;
-}
-function isARSupported(engine = Globals.getMainEngine()) {
-  return engine.arSupported;
-}
-function isDeviceEmulated(onlyOnLocalhost = true) {
-  let emulated = window.CustomWebXRPolyfill != null && (!onlyOnLocalhost || BrowserUtils.isLocalhost());
-  return emulated;
-}
-var XRUtils = {
-  getSession,
-  getSessionMode,
-  getReferenceSpace,
-  getReferenceSpaceType,
-  getFrame,
-  isSessionActive,
-  exitSession,
-  registerSessionStartEventListener,
-  unregisterSessionStartEventListener,
-  registerSessionEndEventListener,
-  unregisterSessionEndEventListener,
-  registerSessionStartEndEventListeners,
-  unregisterSessionStartEndEventListeners,
-  isReferenceSpaceFloorBased,
-  isXRSupported,
-  isVRSupported,
-  isARSupported,
-  isDeviceEmulated
-};
-
-// dist/input/cauldron/input_types.js
-var Handedness = {
-  LEFT: "left",
-  RIGHT: "right"
-};
-var HandednessIndex = {
-  LEFT: 0,
-  RIGHT: 1
-};
-var InputSourceType = {
-  GAMEPAD: 0,
-  TRACKED_HAND: 1
-};
-var TrackedHandJointID = {
-  WRIST: "wrist",
-  THUMB_METACARPAL: "thumb-metacarpal",
-  THUMB_PHALANX_PROXIMAL: "thumb-phalanx-proximal",
-  THUMB_PHALANX_DISTAL: "thumb-phalanx-distal",
-  THUMB_TIP: "thumb-tip",
-  INDEX_FINGER_METACARPAL: "index-finger-metacarpal",
-  INDEX_FINGER_PHALANX_PROXIMAL: "index-finger-phalanx-proximal",
-  INDEX_FINGER_PHALANX_INTERMEDIATE: "index-finger-phalanx-intermediate",
-  INDEX_FINGER_PHALANX_DISTAL: "index-finger-phalanx-distal",
-  INDEX_FINGER_TIP: "index-finger-tip",
-  MIDDLE_FINGER_METACARPAL: "middle-finger-metacarpal",
-  MIDDLE_FINGER_PHALANX_PROXIMAL: "middle-finger-phalanx-proximal",
-  MIDDLE_FINGER_PHALANX_INTERMEDIATE: "middle-finger-phalanx-intermediate",
-  MIDDLE_FINGER_PHALANX_DISTAL: "middle-finger-phalanx-distal",
-  MIDDLE_FINGER_TIP: "middle-finger-tip",
-  RING_FINGER_METACARPAL: "ring-finger-metacarpal",
-  RING_FINGER_PHALANX_PROXIMAL: "ring-finger-phalanx-proximal",
-  RING_FINGER_PHALANX_INTERMEDIATE: "ring-finger-phalanx-intermediate",
-  RING_FINGER_PHALANX_DISTAL: "ring-finger-phalanx-distal",
-  RING_FINGER_TIP: "ring-finger-tip",
-  PINKY_FINGER_METACARPAL: "pinky-finger-metacarpal",
-  PINKY_FINGER_PHALANX_PROXIMAL: "pinky-finger-phalanx-proximal",
-  PINKY_FINGER_PHALANX_INTERMEDIATE: "pinky-finger-phalanx-intermediate",
-  PINKY_FINGER_PHALANX_DISTAL: "pinky-finger-phalanx-distal",
-  PINKY_FINGER_TIP: "pinky-finger-tip"
-};
-var TrackedHandJointIDIndex = {
-  WRIST: 0,
-  THUMB_METACARPAL: 1,
-  THUMB_PHALANX_PROXIMAL: 2,
-  THUMB_PHALANX_DISTAL: 3,
-  THUMB_TIP: 4,
-  INDEX_FINGER_METACARPAL: 5,
-  INDEX_FINGER_PHALANX_PROXIMAL: 6,
-  INDEX_FINGER_PHALANX_INTERMEDIATE: 7,
-  INDEX_FINGER_PHALANX_DISTAL: 8,
-  INDEX_FINGER_TIP: 9,
-  MIDDLE_FINGER_METACARPAL: 10,
-  MIDDLE_FINGER_PHALANX_PROXIMAL: 11,
-  MIDDLE_FINGER_PHALANX_INTERMEDIATE: 12,
-  MIDDLE_FINGER_PHALANX_DISTAL: 13,
-  MIDDLE_FINGER_TIP: 14,
-  RING_FINGER_METACARPAL: 15,
-  RING_FINGER_PHALANX_PROXIMAL: 16,
-  RING_FINGER_PHALANX_INTERMEDIATE: 17,
-  RING_FINGER_PHALANX_DISTAL: 18,
-  RING_FINGER_TIP: 19,
-  PINKY_FINGER_METACARPAL: 20,
-  PINKY_FINGER_PHALANX_PROXIMAL: 21,
-  PINKY_FINGER_PHALANX_INTERMEDIATE: 22,
-  PINKY_FINGER_PHALANX_DISTAL: 23,
-  PINKY_FINGER_TIP: 24
-};
-
-// dist/input/cauldron/input_utils.js
-function getHandednessByIndex(index) {
-  let handedness = null;
-  switch (index) {
-    case HandednessIndex.LEFT:
-      handedness = Handedness.LEFT;
-      break;
-    case HandednessIndex.RIGHT:
-      handedness = Handedness.RIGHT;
-      break;
-  }
-  return handedness;
-}
-function getInputSource(handedness, inputSourceType = null, engine = Globals.getMainEngine()) {
-  let inputSource = null;
-  let xrSession = XRUtils.getSession(engine);
-  if (xrSession != null && xrSession.inputSources != null) {
-    for (let i = 0; i < xrSession.inputSources.length; i++) {
-      let input = xrSession.inputSources[i];
-      let correctType = !inputSourceType || inputSourceType == InputSourceType.GAMEPAD && !input.hand || inputSourceType == InputSourceType.TRACKED_HAND && input.hand;
-      if (correctType && input.handedness == handedness) {
-        inputSource = input;
-        break;
-      }
-    }
-  }
-  return inputSource;
-}
-function getInputSourceTypeByHandedness(handedness, engine) {
-  let inputSource = InputUtils.getInputSource(handedness, void 0, engine);
-  return InputUtils.getInputSourceType(inputSource);
-}
-function getInputSourceType(inputSource) {
-  let inputSourceType = null;
-  if (inputSource) {
-    if (inputSource.hand) {
-      inputSourceType = InputSourceType.TRACKED_HAND;
-    } else {
-      inputSourceType = InputSourceType.GAMEPAD;
-    }
-  }
-  return inputSourceType;
-}
-function getOppositeHandedness(handedness) {
-  let oppositeHandedness = null;
-  switch (handedness) {
-    case Handedness.LEFT:
-      oppositeHandedness = Handedness.RIGHT;
-      break;
-    case Handedness.RIGHT:
-      oppositeHandedness = Handedness.LEFT;
-      break;
-  }
-  return oppositeHandedness;
-}
-function getJointIDByIndex(index) {
-  let jointID = null;
-  let jointIDKey = null;
-  for (let jointIDIndexKey in TrackedHandJointIDIndex) {
-    if (TrackedHandJointIDIndex[jointIDIndexKey] == index) {
-      jointIDKey = jointIDIndexKey;
-      break;
-    }
-  }
-  if (jointIDKey != null) {
-    jointID = TrackedHandJointID[jointIDKey];
-  }
-  return jointID;
-}
-var InputUtils = {
-  getHandednessByIndex,
-  getInputSource,
-  getInputSourceTypeByHandedness,
-  getInputSourceType,
-  getOppositeHandedness,
-  getJointIDByIndex
-};
-
-// dist/plugin/wl/mods/components/cursor_component_mod.js
-function initCursorComponentMod() {
-  initCursorComponentModPrototype();
-}
-function initCursorComponentModPrototype() {
-  let cursorComponentMod = {};
-  cursorComponentMod.init = function init() {
-    this.maxDistance = 100;
-    this.visible = false;
-    this.globalTarget = this.object.pp_addComponent(CursorTarget3);
-    this.hitTestTarget = this.object.pp_addComponent(CursorTarget3);
-    this.hoveringObject = null;
-    this.hoveringObjectTarget = null;
-    this.cursorPos = vec3_create();
-    this._collisionMask = 1 << this.collisionGroup;
-    this._doubleClickTimer = 0;
-    this._tripleClickTimer = 0;
-    this._multipleClickObject = null;
-    this._multipleClickDelay = 0.3;
-    this._onDestroyCallbacks = [];
-    this._prevHitLocationLocalToTarget = vec3_create();
-    this._pointerID = null;
-    this._updatePointerStyle = false;
-    this._lastClientX = null;
-    this._lastClientY = null;
-    this._lastWidth = null;
-    this._lastHeight = null;
-    this._lastPointerID = null;
-    this._lastOriginalMouseEvent = null;
-    this._lastOriginalGamepadEvent = null;
-    this._pointerLeaveToProcess = false;
-    this._pointerLeaveMouseEvent = null;
-    this._transformQuat = quat2_create();
-    this._origin = vec3_create();
-    this._direction = vec3_create();
-    this._isHovering = false;
-    this._isDown = false;
-    this._lastIsDown = false;
-    this._isRealDown = false;
-    this._isDownForUpWithDown = false;
-    this._isUpWithNoDown = false;
-    this._tempVec = vec3_create();
-    this._viewComponent = null;
-    this._cursorRayOrigin = vec3_create();
-    this._cursorRayScale = vec3_create();
-    this._projectionMatrix = mat4_create();
-    this._hitTestLocation = null;
-    this._hitTestObject = null;
-    this._rayHitLocation = vec3_create();
-    this._hitObjectData = [null, null, null];
-    this._myViewEventListenersRegistered = false;
-  };
-  cursorComponentMod.start = function start() {
-    if (this.handedness == 0) {
-      let inputComp = this.object.pp_getComponent(InputComponent2);
-      if (!inputComp) {
-        console.warn("cursor component on object " + this.object.pp_getName() + ' was configured with handedness "input component", but object has no input component.');
-      } else {
-        this.handedness = inputComp.handedness;
-        this.input = inputComp;
-      }
-    } else {
-      this.handedness = InputUtils.getHandednessByIndex(this.handedness - 1);
-    }
-    this.pp_setViewComponent(this.object.pp_getComponent(ViewComponent2));
-    XRUtils.registerSessionStartEventListener(this, this.setupVREvents.bind(this), true, false, this.engine);
-    this._onDestroyCallbacks.push(() => {
-      XRUtils.unregisterSessionStartEventListener(this, this.engine);
-    });
-    if (this.cursorRayObject) {
-      this.cursorRayObject.pp_setActive(false);
-      this._cursorRayScale.set(this.cursorRayObject.pp_getScaleLocal());
-      this._setCursorRayTransform(null);
-    }
-    this._setCursorVisibility(false);
-    if (this.useWebXRHitTest) {
-      this._hitTestObject = this.object.pp_addObject();
-      this._hitTestLocation = this.hitTestObject.pp_addComponent(HitTestLocation3, { scaleObject: false });
-    }
-  };
-  cursorComponentMod.update = function update(dt) {
-    if (this._doubleClickTimer > 0) {
-      this._doubleClickTimer -= dt;
-    }
-    if (this._tripleClickTimer > 0) {
-      this._tripleClickTimer -= dt;
-    }
-    if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null) {
-      if (this.arTouchDown && this._pp_isAR()) {
-        let axes = XRUtils.getSession(this.engine).inputSources[0].gamepad.axes;
-        this._direction.vec3_set(axes[0], -axes[1], -1);
-        this.updateDirection();
-      } else {
-        this.object.pp_getPosition(this._origin);
-        this.object.pp_getForward(this._direction);
-      }
-      let hitObjectData = this._pp_rayCast();
-      this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalGamepadEvent);
-    } else if (!XRUtils.isSessionActive(this.engine) && this._viewComponent != null) {
-      if (this._lastPointerID != null) {
-        this._pp_updateMousePos(this._lastClientX, this._lastClientY, this._lastWidth, this._lastHeight);
-        let hitObjectData = this._pp_rayCast();
-        this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalMouseEvent);
-        if (this.hoveringObject != null) {
-          this._pointerID = this._lastPointerID;
-        } else {
-          this._pointerID = null;
-        }
-      } else if (this.hoveringObject != null) {
-        this._pp_hoverBehaviour(null, null, null, this._lastOriginalMouseEvent, true);
-      }
-    } else if (this.hoveringObject != null) {
-      this._pp_hoverBehaviour(null, null, null, null, true);
-    }
-    this._pp_processPointerLeave();
-    if (this.hoveringObject != null && (this.cursorPos[0] != 0 || this.cursorPos[1] != 0 || this.cursorPos[2] != 0)) {
-      if (this.cursorObject) {
-        this._setCursorVisibility(true);
-        this.cursorObject.pp_setPosition(this.cursorPos);
-        this.cursorObject.pp_setTransformLocalQuat(this.cursorObject.pp_getTransformLocalQuat(this._transformQuat).quat2_normalize(this._transformQuat));
-      }
-      if (this.cursorRayObject) {
-        this._setCursorRayTransform(this.cursorPos);
-      }
-    } else {
-      if (this.cursorObject) {
-        this._setCursorVisibility(false);
-      }
-      if (this.cursorRayObject) {
-        this._setCursorRayTransform(null);
-      }
-    }
-    if (this.cursorRayObject) {
-      if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null || !XRUtils.isSessionActive(this.engine) && this._viewComponent != null && this.handedness != Handedness.LEFT && this.handedness != Handedness.RIGHT) {
-        this.cursorRayObject.pp_setActive(true);
-      } else {
-        this.cursorRayObject.pp_setActive(false);
-      }
-    }
-    if (this.hoveringObject == null) {
-      this._pointerID = null;
-    }
-    this._updatePointerStyle = false;
-    this._lastOriginalMouseEvent = null;
-    this._lastOriginalGamepadEvent = null;
-  };
-  cursorComponentMod.onActivate = function onActivate() {
-    this._isDown = false;
-    this._lastIsDown = false;
-    this._isDownForUpWithDown = false;
-    this._isUpWithNoDown = false;
-  };
-  cursorComponentMod.onDeactivate = function onDeactivate() {
-    if (this.hoveringObject != null) {
-      this._pp_hoverBehaviour(null, null, null, null, true);
-    }
-    this.hoveringObject = null;
-    this.hoveringObjectTarget = null;
-    this._pp_updateCursorStyle();
-    this._setCursorVisibility(false);
-    if (this.cursorRayObject) {
-      this.cursorRayObject.pp_setActive(false);
-    }
-    this._isDown = false;
-    this._lastIsDown = false;
-    this._isRealDown = false;
-    this._isDownForUpWithDown = false;
-    this._isUpWithNoDown = false;
-    this._pointerID = null;
-    this._lastPointerID = null;
-    this._lastClientX = null;
-    this._lastClientY = null;
-    this._lastWidth = null;
-    this._lastHeight = null;
-    this._lastOriginalMouseEvent = null;
-    this._lastOriginalGamepadEvent = null;
-    this._pointerLeaveToProcess = false;
-    this._pointerLeaveMouseEvent = null;
-  };
-  cursorComponentMod.onDestroy = function onDestroy() {
-    if (this._hitTestObject != null) {
-      this._hitTestObject.pp_destroy();
-    }
-    for (let callback of this._onDestroyCallbacks) {
-      callback();
-    }
-  };
-  cursorComponentMod.updateDirection = function() {
-    let transformWorld = quat2_create();
-    return function updateDirection() {
-      this.object.pp_getPosition(this._origin);
-      this._direction.vec3_transformMat4(this._projectionMatrix, this._direction);
-      this._direction.vec3_normalize(this._direction);
-      this._direction.vec3_transformQuat(this.object.pp_getTransformQuat(transformWorld), this._direction);
-    };
-  }();
-  cursorComponentMod.setupVREvents = function setupVREvents(session) {
-    let onSelect = this.onSelect.bind(this);
-    session.addEventListener("select", onSelect);
-    let onSelectStart = this.onSelectStart.bind(this);
-    session.addEventListener("selectstart", onSelectStart);
-    let onSelectEnd = this.onSelectEnd.bind(this);
-    session.addEventListener("selectend", onSelectEnd);
-    this._onDestroyCallbacks.push(() => {
-      if (!XRUtils.isSessionActive(this.engine))
-        return;
-      let session2 = XRUtils.getSession(this.engine);
-      session2.removeEventListener("select", onSelect);
-      session2.removeEventListener("selectstart", onSelectStart);
-      session2.removeEventListener("selectend", onSelectEnd);
-    });
-    this._onViewportResize();
-  };
-  cursorComponentMod.onSelect = function onSelect(e) {
-  };
-  cursorComponentMod.onSelectStart = function onSelectStart(e) {
-    if (this.active) {
-      if (this._pp_isAR()) {
-        this.arTouchDown = true;
-        this._lastOriginalGamepadEvent = e;
-      } else if (e.inputSource.handedness == this.handedness) {
-        this._isDown = true;
-        this._isRealDown = true;
-        if (!this._lastIsDown) {
-          this._isDownForUpWithDown = true;
-        }
-        this._lastOriginalGamepadEvent = e;
-      }
-    }
-  };
-  cursorComponentMod.onSelectEnd = function onSelectEnd(e) {
-    if (this.active) {
-      if (this._pp_isAR()) {
-        this.arTouchDown = false;
-        this._lastOriginalGamepadEvent = e;
-      } else if (e.inputSource.handedness == this.handedness) {
-        if (!this._isDownForUpWithDown) {
-          this._isUpWithNoDown = true;
-        }
-        this._isDown = false;
-        this._isRealDown = false;
-        this._isDownForUpWithDown = false;
-        this._lastOriginalGamepadEvent = e;
-      }
-    }
-  };
-  cursorComponentMod.onPointerMove = function onPointerMove(e) {
-    if (this.active && !this._pointerLeaveToProcess) {
-      if (this._pointerID != null && this._pointerID != e.pointerId)
-        return;
-      let bounds = Globals.getBody(this.engine).getBoundingClientRect();
-      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
-    }
-  };
-  cursorComponentMod.onClick = function onClick(e) {
-  };
-  cursorComponentMod.onPointerDown = function onPointerDown(e) {
-    if (this.active && !this._pointerLeaveToProcess) {
-      if (this._pointerID != null && this._pointerID != e.pointerId || e.button !== 0)
-        return;
-      let bounds = Globals.getBody(this.engine).getBoundingClientRect();
-      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
-      this._isDown = true;
-      this._isRealDown = true;
-      if (!this._lastIsDown) {
-        this._isDownForUpWithDown = true;
-      }
-    }
-  };
-  cursorComponentMod.onPointerUp = function onPointerUp(e) {
-    if (this.active && !this._pointerLeaveToProcess) {
-      if (this._pointerID != null && this._pointerID != e.pointerId || e.button !== 0)
-        return;
-      let bounds = Globals.getBody(this.engine).getBoundingClientRect();
-      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
-      if (!this._isDownForUpWithDown) {
-        this._isUpWithNoDown = true;
-      }
-      this._isDown = false;
-      this._isRealDown = false;
-      this._isDownForUpWithDown = false;
-      this._updatePointerStyle = true;
-    }
-  };
-  cursorComponentMod._onViewportResize = function _onViewportResize() {
-    if (!this._viewComponent)
-      return;
-    this._viewComponent.projectionMatrix.mat4_invert(this._projectionMatrix);
-  };
-  cursorComponentMod._setCursorRayTransform = function _setCursorRayTransform(hitPosition) {
-    if (!this.cursorRayObject)
-      return;
-    if (this.cursorRayScalingAxis != 4) {
-      this.cursorRayObject.pp_resetScaleLocal();
-      if (hitPosition != null) {
-        this.cursorRayObject.pp_getPosition(this._cursorRayOrigin);
-        let dist = this._cursorRayOrigin.vec3_distance(hitPosition);
-        this._cursorRayScale[this.cursorRayScalingAxis] = dist;
-        this.cursorRayObject.pp_scaleObject(this._cursorRayScale);
-      }
-    }
-  };
-  cursorComponentMod._setCursorVisibility = function _setCursorVisibility(visible) {
-    this.visible = visible;
-    if (!this.cursorObject)
-      return;
-    this.cursorObject.pp_setActive(visible);
-  };
-  cursorComponentMod._pp_hoverBehaviour = function _pp_hoverBehaviour(hitObject, hitLocation, hitTestResults, originalEvent = null, forceUnhover = false) {
-    if (!forceUnhover && hitObject != null) {
-      let hoveringObjectChanged = false;
-      if (this.hoveringObject == null || !this.hoveringObject.pp_equals(hitObject)) {
-        if (this.hoveringObject != null) {
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
-          }
-        }
-        hoveringObjectChanged = true;
-        this.hoveringObject = hitObject;
-        this.hoveringObjectTarget = this.hoveringObject.pp_getComponent(CursorTarget3);
-        if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
-            this.hoveringObjectTarget.onHover.notify(this.hoveringObject, this, originalEvent);
-          this.globalTarget.onHover.notify(this.hoveringObject, this, originalEvent);
-        } else {
-          this.hitTestTarget.onHover.notify(hitTestResults, this, originalEvent);
-        }
-        this._pp_updateCursorStyle();
-        if (!this._pp_isDownToProcess() && this._isRealDown) {
-          this._isDown = true;
-          this._lastIsDown = true;
-          this._isDownForUpWithDown = false;
-          this._isUpWithNoDown = false;
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onDownOnHover.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onDownOnHover.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onDownOnHover.notify(hitTestResults, this, originalEvent);
-          }
-        }
-      }
-      if (this._updatePointerStyle) {
-        this._pp_updateCursorStyle();
-      }
-      if (!hoveringObjectChanged && this._pp_isMoving(hitLocation)) {
-        if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
-            this.hoveringObjectTarget.onMove.notify(this.hoveringObject, this, originalEvent);
-          this.globalTarget.onMove.notify(this.hoveringObject, this, originalEvent);
-        } else {
-          this.hitTestTarget.onMove.notify(hitTestResults, this, originalEvent);
-        }
-      }
-      if (this._pp_isDownToProcess()) {
-        if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
-            this.hoveringObjectTarget.onDown.notify(this.hoveringObject, this, originalEvent);
-          this.globalTarget.onDown.notify(this.hoveringObject, this, originalEvent);
-        } else {
-          this.hitTestTarget.onDown.notify(hitTestResults, this, originalEvent);
-        }
-        if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
-            this.hoveringObjectTarget.onClick.notify(this.hoveringObject, this, originalEvent);
-          this.globalTarget.onClick.notify(this.hoveringObject, this, originalEvent);
-        } else {
-          this.hitTestTarget.onClick.notify(hitTestResults, this, originalEvent);
-        }
-        if (this._tripleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject.pp_equals(this.hoveringObject)) {
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onTripleClick.notify(hitTestResults, this, originalEvent);
-          }
-          this._tripleClickTimer = 0;
-        } else if (this._doubleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject.pp_equals(this.hoveringObject)) {
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onDoubleClick.notify(hitTestResults, this, originalEvent);
-          }
-          this._tripleClickTimer = this._multipleClickDelay;
-          this._doubleClickTimer = 0;
-        } else {
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onSingleClick.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onSingleClick.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onSingleClick.notify(hitTestResults, this, originalEvent);
-          }
-          this._tripleClickTimer = 0;
-          this._doubleClickTimer = this._multipleClickDelay;
-          this._multipleClickObject = this.hoveringObject;
-        }
-      } else {
-        if (!this._isUpWithNoDown && !hoveringObjectChanged && this._pp_isUpToProcess()) {
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onUp.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onUp.notify(this.hoveringObject, this, originalEvent);
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onUpWithDown.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onUpWithDown.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onUp.notify(hitTestResults, this, originalEvent);
-            this.hitTestTarget.onUpWithDown.notify(hitTestResults, this, originalEvent);
-          }
-        } else if (this._isUpWithNoDown || hoveringObjectChanged && this._pp_isUpToProcess()) {
-          if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onUp.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onUp.notify(this.hoveringObject, this, originalEvent);
-            if (this.hoveringObjectTarget)
-              this.hoveringObjectTarget.onUpWithNoDown.notify(this.hoveringObject, this, originalEvent);
-            this.globalTarget.onUpWithNoDown.notify(this.hoveringObject, this, originalEvent);
-          } else {
-            this.hitTestTarget.onUp.notify(hitTestResults, this, originalEvent);
-            this.hitTestTarget.onUpWithNoDown.notify(hitTestResults, this, originalEvent);
-          }
-        }
-      }
-      this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
-    } else if (this.hoveringObject != null && (forceUnhover || hitObject == null)) {
-      if (!this.hoveringReality) {
-        if (this.hoveringObjectTarget)
-          this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
-        this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
-      } else {
-        this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
-      }
-      this.hoveringObject = null;
-      this.hoveringObjectTarget = null;
-      this._pp_updateCursorStyle();
-    }
-    if (this.hoveringObject != null) {
-      this._lastIsDown = this._isDown;
-    } else {
-      this._isDown = false;
-      this._lastIsDown = false;
-      this._isDownForUpWithDown = false;
-    }
-    this._isUpWithNoDown = false;
-  };
-  cursorComponentMod._pp_rayCast = function _pp_rayCast() {
-    let rayHit = this.rayCastMode == 0 ? Globals.getScene(this.engine).rayCast(this._origin, this._direction, this._collisionMask) : Globals.getPhysics(this.engine).rayCast(this._origin, this._direction, this._collisionMask, this.maxDistance);
-    let rayHitCollisionDistanceValid = true;
-    if (this.rayCastMode == 0 && rayHit.hitCount > 0 && rayHit.distances[0] > this.maxDistance) {
-      rayHitCollisionDistanceValid = false;
-    }
-    this._hitObjectData[0] = null;
-    this._hitObjectData[1] = null;
-    this._hitObjectData[2] = null;
-    let hitTestResultDistance = Infinity;
-    if (this._hitTestLocation != null && this._hitTestLocation.visible) {
-      this._hitTestObject.pp_getPositionWorld(this.cursorPos);
-      this._rayHitLocation.vec3_copy(this.cursorPos);
-      hitTestResultDistance = this.cursorPos.vec3_distance(this.object.pp_getPositionWorld(this._tempVec));
-      this._hitObjectData[0] = this._hitTestObject;
-      this._hitObjectData[1] = this._rayHitLocation;
-    }
-    this.hoveringReality = false;
-    if (rayHit.hitCount > 0 && rayHitCollisionDistanceValid) {
-      let rayHitDistance = rayHit.distances[0];
-      if (rayHitDistance <= hitTestResultDistance) {
-        this.cursorPos.vec3_copy(rayHit.locations[0]);
-        this._rayHitLocation.vec3_copy(this.cursorPos);
-        this._hitObjectData[0] = rayHit.objects[0];
-        this._hitObjectData[1] = this._rayHitLocation;
-      } else {
-        this.hoveringReality = true;
-      }
-    } else if (hitTestResultDistance == Infinity) {
-      this.cursorPos.vec3_zero();
-      this._hitObjectData[0] = null;
-      this._hitObjectData[1] = null;
-    }
-    let xrFrame = XRUtils.getFrame(this.engine);
-    if (this.hoveringReality && xrFrame != null) {
-      this._hitObjectData[2] = this._hitTestLocation.getHitTestResults(xrFrame)[0];
-    }
-    return this._hitObjectData;
-  };
-  cursorComponentMod._pp_updateMouseData = function _pp_updateMouseData(e, clientX, clientY, w, h, pointerID) {
-    this._lastClientX = clientX;
-    this._lastClientY = clientY;
-    this._lastWidth = w;
-    this._lastHeight = h;
-    this._lastPointerID = pointerID;
-    this._lastOriginalMouseEvent = e;
-  };
-  cursorComponentMod._pp_updateMousePos = function _pp_updateMousePos(clientX, clientY, w, h) {
-    let left = clientX / w;
-    let top = clientY / h;
-    this._direction.vec3_set(left * 2 - 1, -top * 2 + 1, -1);
-    this.updateDirection();
-  };
-  cursorComponentMod.pp_setViewComponent = function pp_setViewComponent(viewComponent) {
-    this._viewComponent = viewComponent;
-    if (this._viewComponent != null) {
-      this._viewComponent.projectionMatrix.mat4_invert(this._projectionMatrix);
-      if (!this._myViewEventListenersRegistered) {
-        this._myViewEventListenersRegistered = true;
-        let onClick = this.onClick.bind(this);
-        Globals.getCanvas(this.engine).addEventListener("click", onClick);
-        let onPointerDown = this.onPointerDown.bind(this);
-        Globals.getCanvas(this.engine).addEventListener("pointerdown", onPointerDown);
-        let onPointerMove = this.onPointerMove.bind(this);
-        Globals.getCanvas(this.engine).addEventListener("pointermove", onPointerMove);
-        let onPointerUp = this.onPointerUp.bind(this);
-        Globals.getCanvas(this.engine).addEventListener("pointerup", onPointerUp);
-        let onPointerLeave = this._pp_onPointerLeave.bind(this);
-        Globals.getCanvas(this.engine).addEventListener("pointerleave", onPointerLeave);
-        let onViewportResize = this._onViewportResize.bind(this);
-        this.engine.onResize.add(onViewportResize);
-        this._onDestroyCallbacks.push(() => {
-          Globals.getCanvas(this.engine).removeEventListener("click", onClick);
-          Globals.getCanvas(this.engine).removeEventListener("pointerdown", onPointerDown);
-          Globals.getCanvas(this.engine).removeEventListener("pointermove", onPointerMove);
-          Globals.getCanvas(this.engine).removeEventListener("pointerup", onPointerUp);
-          Globals.getCanvas(this.engine).removeEventListener("pointerleave", onPointerLeave);
-          this.engine.onResize.remove(onViewportResize);
-          this._myViewEventListenersRegistered = false;
-        });
-      }
-    }
-  };
-  cursorComponentMod._pp_onPointerLeave = function _pp_onPointerLeave(e) {
-    if (this._pointerID == null || this._pointerID == e.pointerId) {
-      this._pointerLeaveToProcess = true;
-      this._pointerLeaveMouseEvent = e;
-    }
-  };
-  cursorComponentMod._pp_processPointerLeave = function _pp_processPointerLeave() {
-    if (this._pointerLeaveToProcess) {
-      this._pointerID = null;
-      this._lastPointerID = null;
-      this._lastClientX = null;
-      this._lastClientY = null;
-      this._lastWidth = null;
-      this._lastHeight = null;
-      this._lastOriginalMouseEvent = this._pointerLeaveMouseEvent;
-      this._pointerLeaveToProcess = false;
-      this._pointerLeaveMouseEvent = null;
-      if (this.hoveringObject != null) {
-        this._pp_hoverBehaviour(null, null, null, this._lastOriginalMouseEvent, true);
-      }
-      this._isDown = false;
-      this._lastIsDown = false;
-      this._isRealDown = false;
-      this._isDownForUpWithDown = false;
-      this._isUpWithNoDown = false;
-    }
-  };
-  cursorComponentMod._pp_isDownToProcess = function _pp_isDownToProcess() {
-    return this._isDown !== this._lastIsDown && this._isDown;
-  };
-  cursorComponentMod._pp_isUpToProcess = function _pp_isUpToProcess() {
-    return this._isDown !== this._lastIsDown && !this._isDown;
-  };
-  cursorComponentMod._pp_isMoving = function() {
-    let hitLocationLocalToTarget = vec3_create();
-    return function _pp_isMoving(hitLocation) {
-      let moving = false;
-      hitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, hitLocationLocalToTarget);
-      if (!hitLocationLocalToTarget.vec_equals(this._prevHitLocationLocalToTarget, 1e-4)) {
-        moving = true;
-      }
-      return moving;
-    };
-  }();
-  cursorComponentMod._pp_isAR = function _pp_isAR() {
-    let firstInputSource = XRUtils.getSession(this.engine).inputSources[0];
-    return this.input != null && firstInputSource.handedness === "none" && firstInputSource.gamepad != null;
-  };
-  cursorComponentMod._pp_updateCursorStyle = function _pp_updateCursorStyle() {
-    if (this.styleCursor) {
-      if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isSurface) {
-        Globals.getBody(this.engine).style.cursor = "pointer";
-      } else if (Globals.getBody(this.engine).style.cursor == "pointer") {
-        Globals.getBody(this.engine).style.cursor = "default";
-      }
-    }
-  };
-  PluginUtils.injectProperties(cursorComponentMod, Cursor3.prototype, false, true, true);
-}
-
-// dist/plugin/wl/mods/components/cursor_target_component_mod.js
-import { Emitter as Emitter2 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget4 } from "@wonderlandengine/components";
-function initCursorTargetComponentMod() {
-  initCursorTargetComponentModPrototype();
-}
-function initCursorTargetComponentModPrototype() {
-  let cursorTargetComponentMod = {};
-  cursorTargetComponentMod.init = function init() {
-    this.onSingleClick = new Emitter2();
-    this.onDoubleClick = new Emitter2();
-    this.onTripleClick = new Emitter2();
-    this.onDownOnHover = new Emitter2();
-    this.onUpWithDown = new Emitter2();
-    this.onUpWithNoDown = new Emitter2();
-    this.isSurface = false;
-  };
-  cursorTargetComponentMod.start = function start() {
-  };
-  cursorTargetComponentMod.update = function update(dt) {
-  };
-  cursorTargetComponentMod.onActivate = function onActivate() {
-  };
-  cursorTargetComponentMod.onDeactivate = function onDeactivate() {
-  };
-  cursorTargetComponentMod.onDestroy = function onDestroy() {
-  };
-  PluginUtils.injectProperties(cursorTargetComponentMod, CursorTarget4.prototype, false, true, true);
-}
-
-// dist/plugin/wl/mods/components/mouse_look_component_mod.js
-import { MouseLookComponent as MouseLookComponent3 } from "@wonderlandengine/components";
-
-// dist/cauldron/cauldron/timer.js
-import { Emitter as Emitter3 } from "@wonderlandengine/api";
-var Timer = class {
-  constructor(duration, autoStart = true) {
-    this._myDuration = duration;
-    this._myOnEndEmitter = new Emitter3();
-    this._myDone = false;
-    this._myJustDone = false;
-    this._myStarted = false;
-    if (autoStart) {
-      this.start();
-    } else {
-      this.reset();
-    }
-  }
-  start(duration = null) {
-    this.reset(duration);
-    this._myStarted = true;
-  }
-  end() {
-    this._done();
-  }
-  reset(duration = null) {
-    if (duration != null) {
-      this._myDuration = Math.max(0, duration);
-    }
-    this._myTimeLeft = this._myDuration;
-    this._myDone = false;
-    this._myJustDone = false;
-    this._myStarted = false;
-  }
-  update(dt) {
-    this._myJustDone = false;
-    if (this.isRunning()) {
-      this._myTimeLeft = Math.max(0, this._myTimeLeft - dt);
-      if (this._myTimeLeft == 0) {
-        this._done();
-      }
-    }
-  }
-  isDone() {
-    return this._myDone;
-  }
-  isJustDone() {
-    return this._myJustDone;
-  }
-  isStarted() {
-    return this._myStarted;
-  }
-  isRunning() {
-    return this.isStarted() && !this.isDone();
-  }
-  getDuration() {
-    return this._myDuration;
-  }
-  setDuration(duration) {
-    this._myDuration = Math.max(0, duration);
-  }
-  getTimeLeft() {
-    return this._myTimeLeft;
-  }
-  getPercentage() {
-    let percentage = 1;
-    if (this._myTimeLeft > 0 && this._myDuration > 0) {
-      percentage = (this._myDuration - this._myTimeLeft) / this._myDuration;
-    }
-    return Math.pp_clamp(percentage, 0, 1);
-  }
-  setPercentage(percentage) {
-    if (this.isRunning()) {
-      let durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
-      this._myTimeLeft = this._myDuration * durationPercentage;
-    }
-  }
-  onEnd(listener, id = null) {
-    this._myOnEndEmitter.add(listener, { id });
-  }
-  unregisterOnEnd(id = null) {
-    this._myOnEndEmitter.remove(id);
-  }
-  _done() {
-    this._myTimeLeft = 0;
-    this._myDone = true;
-    this._myJustDone = true;
-    this._myOnEndEmitter.notify();
-  }
-};
-
-// dist/plugin/wl/mods/components/mouse_look_component_mod.js
-function initMouseLookComponentMod() {
-  initMouseLookComponentModPrototype();
-}
-function initMouseLookComponentModPrototype() {
-  let mouseLookComponentMod = {};
-  mouseLookComponentMod.init = function init() {
-    this.pointerId = null;
-    this.prevMoveEvent = null;
-    this.resetMovingDelay = 0.15;
-    this.resetMovingTimer = new Timer(this.resetMovingDelay, false);
-    this.isMoving = false;
-    this.mouseDown = false;
-    this.pointerMoveListener = this._onMove.bind(this);
-    this.contextMenuListener = function(event) {
-      if (this.active) {
-        event.preventDefault();
-      }
-    }.bind(this);
-    this.pointerDown = function(event) {
-      if (this.active) {
-        if (this.pointerId != null)
-          return;
-        if (!this.mouseDown) {
-          if (event.button == this.mouseButtonIndex) {
-            this.pointerId = event.pointerId;
-            this.mouseDown = true;
-            if (event.button == 1) {
-              event.preventDefault();
-              return false;
-            }
-          }
-        }
-      }
-    }.bind(this);
-    this.pointerUp = function(event) {
-      if (this.active) {
-        if (event.pointerId != this.pointerId)
-          return;
-        if (this.mouseDown) {
-          if (event.button == this.mouseButtonIndex) {
-            this.mouseDown = false;
-          }
-        }
-      }
-    }.bind(this);
-    this.pointerLeave = function(event) {
-      if (this.active) {
-        if (event.pointerId != this.pointerId)
-          return;
-        this.pointerId = null;
-        this.prevMoveEvent = null;
-        if (this.mouseDown) {
-          this.mouseDown = false;
-        }
-      }
-    }.bind(this);
-    Globals.getBody(this.engine).addEventListener("pointermove", this.pointerMoveListener);
-    if (this.requireMouseDown) {
-      if (this.mouseButtonIndex == 2) {
-        Globals.getCanvas(this.engine).addEventListener("contextmenu", this.contextMenuListener, false);
-      }
-      Globals.getCanvas(this.engine).addEventListener("pointerdown", this.pointerDown);
-      Globals.getBody(this.engine).addEventListener("pointerup", this.pointerUp);
-    }
-    Globals.getBody(this.engine).addEventListener("pointerleave", this.pointerLeave);
-  };
-  mouseLookComponentMod.start = function start() {
-  };
-  mouseLookComponentMod.onActivate = function onActivate() {
-  };
-  mouseLookComponentMod.onDeactivate = function onDeactivate() {
-    if (this.mouseDown) {
-    }
-    this.isMoving = false;
-    this.mouseDown = false;
-    this.pointerId = null;
-    this.prevMoveEvent = null;
-  };
-  mouseLookComponentMod.onDestroy = function onDestroy() {
-    Globals.getBody(this.engine).removeEventListener("pointermove", this.pointerMoveListener);
-    Globals.getCanvas(this.engine).removeEventListener("contextmenu", this.contextMenuListener);
-    Globals.getCanvas(this.engine).removeEventListener("pointerdown", this.pointerDown);
-    Globals.getBody(this.engine).removeEventListener("pointerup", this.pointerUp);
-    Globals.getBody(this.engine).removeEventListener("pointerleave", this.pointerLeave);
-  };
-  mouseLookComponentMod.update = function update(dt) {
-    if (this.resetMovingTimer.isRunning()) {
-      this.resetMovingTimer.update(dt);
-      if (this.resetMovingTimer.isDone()) {
-        this.resetMovingTimer.reset();
-        this.isMoving = false;
-      }
-    }
-    if (!this.isMoving) {
-      if (!this.requireMouseDown || !this.mouseDown) {
-        this.pointerId = null;
-      }
-      this.prevMoveEvent = null;
-    }
-  };
-  mouseLookComponentMod._onMove = function() {
-    let viewForward = vec3_create();
-    let viewUp = vec3_create();
-    let referenceUp = vec3_create();
-    let referenceUpNegate = vec3_create();
-    let referenceRight = vec3_create();
-    let newUp = vec3_create();
-    return function _onMove(event) {
-      if (this.active) {
-        if (this.pointerId != null && event.pointerId != this.pointerId)
-          return;
-        if (this.mouseDown || !this.requireMouseDown) {
-          viewForward = this.object.pp_getBackward(viewForward);
-          viewUp = this.object.pp_getUp(viewUp);
-          referenceUp.vec3_set(0, 1, 0);
-          if (this.object.pp_getParent() != null) {
-            referenceUp = this.object.pp_getParent().pp_getUp(referenceUp);
-          }
-          referenceRight = viewForward.vec3_cross(referenceUp, referenceRight);
-          let minAngle = 1;
-          if (viewForward.vec3_angle(referenceUp) < minAngle) {
-            referenceRight = viewUp.vec3_negate(referenceRight).vec3_cross(referenceUp, referenceRight);
-          } else if (viewForward.vec3_angle(referenceUp.vec3_negate(referenceUpNegate)) < minAngle) {
-            referenceRight = viewUp.vec3_cross(referenceUp, referenceRight);
-          } else if (!viewUp.vec3_isConcordant(referenceUp)) {
-            referenceRight.vec3_negate(referenceRight);
-          }
-          referenceRight.vec3_normalize(referenceRight);
-          let movementX = event.movementX;
-          let movementY = event.movementY;
-          if (movementX == null || movementY == null) {
-            if (this.prevMoveEvent != null) {
-              movementX = event.pageX - this.prevMoveEvent.pageX;
-              movementY = event.pageY - this.prevMoveEvent.pageY;
-            } else {
-              movementX = 0;
-              movementY = 0;
-            }
-          }
-          this.rotationX = -this.sensitity * movementX;
-          this.rotationY = -this.sensitity * movementY;
-          this.object.pp_rotateAxis(this.rotationY, referenceRight);
-          let maxVerticalAngle = 89 - 1e-3;
-          newUp = this.object.pp_getUp(newUp);
-          let angleWithUp = Math.pp_angleClamp(newUp.vec3_angleSigned(referenceUp, referenceRight));
-          if (Math.abs(angleWithUp) > maxVerticalAngle) {
-            let fixAngle = (Math.abs(angleWithUp) - maxVerticalAngle) * Math.pp_sign(angleWithUp);
-            this.object.pp_rotateAxis(fixAngle, referenceRight);
-          }
-          this.object.pp_rotateAxis(this.rotationX, referenceUp);
-          this.prevMoveEvent = event;
-          this.pointerId = event.pointerId;
-          this.resetMovingTimer.start(this.resetMovingDelay);
-          this.isMoving = true;
-        }
-      }
-    };
-  }();
-  PluginUtils.injectProperties(mouseLookComponentMod, MouseLookComponent3.prototype, false, true, true);
-}
-
-// dist/plugin/wl/mods/components/init_component_mods.js
-function initComponentMods() {
-  initCursorComponentMod();
-  initCursorTargetComponentMod();
-  initMouseLookComponentMod();
-  initCauldronMods();
-}
-
-// dist/plugin/wl/mods/init_wl_mods.js
-function initWLMods() {
-  initComponentMods();
-}
-
-// dist/plugin/wl/init_wl_plugins.js
-function initWLPlugins(engine) {
-  initWLExtensions(engine);
-  initWLMods();
-}
-
-// dist/plugin/init_plugins.js
-function initPlugins(engine) {
-  initJSPlugins();
-  initWLPlugins(engine);
-}
-
-// dist/pp/register_pp_components.js
-function registerPPComponents(engine) {
-  engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleOnXRSessionStartComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshAmbientFactorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, SetActiveComponent, SetHandLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
-}
-
-// dist/pp/init_pp.js
-function initPP(engine) {
-  Globals.initEngine(engine);
-  ComponentUtils.setDefaultWLComponentCloneCallbacks(engine);
-  registerWLComponents(engine);
-  registerPPComponents(engine);
-  initPlugins(engine);
-}
-
-// dist/pp/scene_objects.js
-var SceneObjects = class {
-  constructor() {
-    this.myScene = null;
-    this.myCauldron = null;
-    this.myDynamics = null;
-    this.myParticles = null;
-    this.myVisualElements = null;
-    this.myTools = null;
-    this.myPlayerObjects = new PlayerObjects();
-  }
-};
-var PlayerObjects = class {
-  constructor() {
-    this.myPlayer = null;
-    this.myCauldron = null;
-    this.myReferenceSpace = null;
-    this.myCameraNonXR = null;
-    this.myEyes = [];
-    this.myEyeLeft = null;
-    this.myEyeRight = null;
-    this.myHands = [];
-    this.myHandLeft = null;
-    this.myHandRight = null;
-    this.myHead = null;
-    this.myHeadDebugs = null;
-  }
-};
-
-// dist/pp/default_resources.js
-var DefaultResources = class {
-  constructor() {
-    this.myMeshes = new DefaultResourcesMeshes();
-    this.myMaterials = new DefaultResourcesMaterials();
-  }
-};
-var DefaultResourcesMeshes = class {
-  constructor() {
-    this.myPlane = null;
-    this.myCube = null;
-    this.mySphere = null;
-    this.myCone = null;
-    this.myCylinder = null;
-    this.myCircle = null;
-    this.myInvertedCube = null;
-    this.myInvertedSphere = null;
-    this.myInvertedCone = null;
-    this.myInvertedCylinder = null;
-    this.myDoubleSidedPlane = null;
-    this.myDoubleSidedCube = null;
-    this.myDoubleSidedSphere = null;
-    this.myDoubleSidedCone = null;
-    this.myDoubleSidedCylinder = null;
-    this.myDoubleSidedCircle = null;
-  }
-};
-var DefaultResourcesMaterials = class {
-  constructor() {
-    this.myFlatOpaque = null;
-    this.myFlatTransparentNoDepth = null;
-    this.myPhongOpaque = null;
-    this.myText = null;
-  }
-};
-
-// dist/pp/components/pp_gateway_component.js
-import { Component as Component17, Property as Property13 } from "@wonderlandengine/api";
-
-// dist/audio/components/audio_manager_component.js
-import { Component, Property } from "@wonderlandengine/api";
-
-// dist/audio/audio_manager.js
-import { Howler as Howler2 } from "howler";
-
-// dist/audio/audio_player.js
-import { RetainEmitter } from "@wonderlandengine/api";
-import { Howl, Howler } from "howler";
-
-// dist/audio/audio_setup.js
-var AudioSetup = class _AudioSetup {
-  constructor(audioFilePath = null) {
-    this.myAudioFilePath = audioFilePath;
-    this.myLoop = false;
-    this.myAutoPlay = false;
-    this.myVolume = 1;
-    this._myRate = 1;
-    this.myPool = 5;
-    this.myPreload = true;
-    this.myPreventPlayWhenAudioContextNotRunning = false;
-    this.myPosition = null;
-    this.mySpatial = true;
-    this.myReferenceDistance = Number.MAX_VALUE;
-  }
-  clone() {
-    let audioSetup = new _AudioSetup();
-    audioSetup.myAudioFilePath = this.myAudioFilePath;
-    audioSetup.myLoop = this.myLoop;
-    audioSetup.myAutoPlay = this.myAutoPlay;
-    audioSetup.myVolume = this.myVolume;
-    audioSetup.myPitch = this.myPitch;
-    audioSetup.myRate = this.myRate;
-    audioSetup.myPool = this.myPool;
-    audioSetup.myPreload = this.myPreload;
-    audioSetup.myPreventPlayWhenAudioContextNotRunning = this.myPreventPlayWhenAudioContextNotRunning;
-    if (this.myPosition != null) {
-      audioSetup.myPosition = this.myPosition.vec3_clone();
-    } else {
-      audioSetup.myPosition = null;
-    }
-    audioSetup.mySpatial = this.mySpatial;
-    audioSetup.myReferenceDistance = this.myReferenceDistance;
-    return audioSetup;
-  }
-  get myPitch() {
-    return this._myRate;
-  }
-  get myRate() {
-    return this._myRate;
-  }
-  set myPitch(pitch) {
-    this._myRate = pitch;
-  }
-  set myRate(rate) {
-    this._myRate = rate;
-  }
-};
-
-// dist/audio/audio_player.js
-var AudioEvent = {
-  END: "end",
-  STOP: "stop",
-  LOAD: "load",
-  LOAD_ERROR: "loaderror",
-  PLAY: "play",
-  PLAY_ERROR: "playerror",
-  PAUSE: "pause",
-  MUTE: "mute",
-  VOLUME: "volume",
-  RATE: "rate",
-  SEEK: "seek",
-  FADE: "fade",
-  UNLOCK: "unlock"
-};
-var AudioPlayer = class {
-  /**
-   * TS type inference helper
-   *
-   * @param {any} audioInstance
-   */
-  constructor(audioSetupOrAudioFilePath, audioInstance = null) {
-    if (audioSetupOrAudioFilePath == null) {
-      this._myAudioSetup = new AudioSetup();
-    } else if (typeof audioSetupOrAudioFilePath === "string") {
-      this._myAudioSetup = new AudioSetup(audioSetupOrAudioFilePath);
-    } else {
-      this._myAudioSetup = audioSetupOrAudioFilePath.clone();
-    }
-    this._myAudio = null;
-    if (audioInstance == null) {
-      this._myAudio = new Howl({
-        src: [this._myAudioSetup.myAudioFilePath],
-        loop: this._myAudioSetup.myLoop,
-        volume: this._myAudioSetup.myVolume,
-        autoplay: false,
-        rate: this._myAudioSetup.myRate,
-        pool: this._myAudioSetup.myPool,
-        pos: this._myAudioSetup.mySpatial ? this._myAudioSetup.myPosition : null,
-        refDistance: this._myAudioSetup.myReferenceDistance,
-        preload: this._myAudioSetup.myPreload
-      });
-      this._myAudio._pannerAttr.refDistance = this._myAudioSetup.myReferenceDistance;
-    } else {
-      this._myAudio = audioInstance;
-    }
-    this._myLastAudioID = null;
-    this._myAudioEventEmitters = /* @__PURE__ */ new Map();
-    for (let eventKey in AudioEvent) {
-      this._myAudioEventEmitters.set(AudioEvent[eventKey], new RetainEmitter());
-    }
-    this._addListeners();
-    if (this._myAudioSetup.myAutoPlay) {
-      this.play();
-    }
-    this._myDestroyed = false;
-  }
-  isValid() {
-    return this._myAudio != null;
-  }
-  play() {
-    if (Howler.state != "running" && this._myAudioSetup.myPreventPlayWhenAudioContextNotRunning) {
-      return false;
-    }
-    let audioID = this._myAudio.play();
-    if (audioID != null) {
-      this._myLastAudioID = audioID;
-      this.updatePosition(this._myAudioSetup.myPosition, true);
-      this.updatePitch(this._myAudioSetup.myPitch, true);
-      this.updateVolume(this._myAudioSetup.myVolume, true);
-    }
-    return audioID != null;
-  }
-  stop() {
-    this._myAudio.stop();
-  }
-  pause() {
-    this._myAudio.pause();
-  }
-  resume() {
-    this._myAudio.play();
-  }
-  isPlaying(checkOnlyLast = false) {
-    let playing = false;
-    if (checkOnlyLast) {
-      playing = this._myAudio.playing(this._myLastAudioID);
-    } else {
-      playing = this._myAudio.playing();
-    }
-    return playing;
-  }
-  isLoaded() {
-    return this._myAudio.state() == "loaded";
-  }
-  fade(fromVolume, toVolume, duration, updateOnlyLast = true, setValueOnPlayer = true) {
-    if (setValueOnPlayer) {
-      this.setVolume(toVolume);
-    }
-    if (updateOnlyLast) {
-      this._myAudio.fade(fromVolume, toVolume, duration * 1e3, this._myLastAudioID);
-    } else {
-      this._myAudio.fade(fromVolume, toVolume, duration * 1e3);
-    }
-  }
-  isFading(checkOnlyLast = true) {
-    let fading = false;
-    if (checkOnlyLast) {
-      let lastSound = this._myAudio._soundById(this._myLastAudioID);
-      if (lastSound != null) {
-        fading = lastSound._fadeTo != null;
-      }
-    } else {
-      for (let sound of this._myAudio._sounds) {
-        if (sound._fadeTo != null) {
-          fading = true;
-          break;
-        }
-      }
-    }
-    return fading;
-  }
-  updatePosition(position, updateOnlyLast = true, setValueOnPlayer = true) {
-    if (setValueOnPlayer) {
-      this.setPosition(position);
-    }
-    if (this._myAudioSetup.mySpatial && position) {
-      if (updateOnlyLast) {
-        this._myAudio.pos(position[0], position[1], position[2], this._myLastAudioID);
-      } else {
-        this._myAudio.pos(position[0], position[1], position[2]);
-      }
-    }
-  }
-  updatePitch(pitch, updateOnlyLast = true, setValueOnPlayer = true) {
-    this.updateRate(pitch, updateOnlyLast, setValueOnPlayer);
-  }
-  updateRate(rate, updateOnlyLast = true, setValueOnPlayer = true) {
-    if (setValueOnPlayer) {
-      this.setRate(rate);
-    }
-    if (rate != null) {
-      if (updateOnlyLast) {
-        this._myAudio.rate(rate, this._myLastAudioID);
-      } else {
-        this._myAudio.rate(rate);
-      }
-    }
-  }
-  updateVolume(volume, updateOnlyLast = true, setValueOnPlayer = true) {
-    if (setValueOnPlayer) {
-      this.setVolume(volume);
-    }
-    if (volume != null) {
-      if (updateOnlyLast) {
-        this._myAudio.volume(volume, this._myLastAudioID);
-      } else {
-        this._myAudio.volume(volume);
-      }
-    }
-  }
-  setSpatial(spatial) {
-    this._myAudioSetup.mySpatial = spatial;
-  }
-  setPosition(position) {
-    this._myAudioSetup.myPosition = position;
-  }
-  setPitch(pitch) {
-    this._myAudioSetup.myPitch = pitch;
-  }
-  setRate(rate) {
-    this._myAudioSetup.myRate = rate;
-  }
-  setVolume(volume) {
-    this._myAudioSetup.myVolume = volume;
-  }
-  getDuration() {
-    return this._myAudio.duration();
-  }
-  getVolume() {
-    return this._myAudioSetup.myVolume;
-  }
-  getPitch() {
-    return this._myAudioSetup.myPitch;
-  }
-  getRate() {
-    return this._myAudioSetup.myRate;
-  }
-  registerAudioEventListener(audioEvent, id, listener, notifyOnce = false, notifyIfAlreadyHappened = false) {
-    this._myAudioEventEmitters.get(audioEvent).add(listener, { id, once: notifyOnce, immediate: notifyIfAlreadyHappened });
-  }
-  unregisterAudioEventListener(audioEvent, id) {
-    this._myAudioEventEmitters.get(audioEvent).remove(id);
-  }
-  _addListeners() {
-    if (this._myAudio != null) {
-      for (let eventKey in AudioEvent) {
-        let event = AudioEvent[eventKey];
-        this._myAudio.on(event, function(audioID) {
-          let emitter = this._myAudioEventEmitters.get(event);
-          emitter.notify(audioID);
-        }.bind(this));
-      }
-    }
-  }
-  destroy() {
-    this._myDestroyed = true;
-    this._myAudio.unload();
-  }
-  isDestroyed() {
-    return this._myDestroyed;
-  }
-};
-
-// dist/audio/audio_manager.js
-var AudioManager = class {
-  constructor(preloadAudio = true, engine = Globals.getMainEngine()) {
-    this._myEngine = engine;
-    this._myPreloadAudio = preloadAudio;
-    this._myAudioSetups = /* @__PURE__ */ new Map();
-    this._myAudioPlayersCreatedForPreload = [];
-  }
-  createAudioPlayer(audioSetupID) {
-    let audioSetup = this.getAudioSetup(audioSetupID);
-    if (audioSetup != null) {
-      return new AudioPlayer(this.getAudioSetup(audioSetupID));
-    }
-    return null;
-  }
-  getAudioSetup(id) {
-    return this._myAudioSetups.get(id);
-  }
-  addAudioSetup(id, audioSetup, preloadAudioOverride = null) {
-    this._myAudioSetups.set(id, audioSetup);
-    if (this._myPreloadAudio && preloadAudioOverride == null || preloadAudioOverride != null && preloadAudioOverride) {
-      this._myAudioPlayersCreatedForPreload.push(this.createAudioPlayer(id));
-    }
-  }
-  removeAudioSetup(id) {
-    this._myAudioSetups.delete(id);
-  }
-  setVolume(volume) {
-    Howler2.volume(volume);
-  }
-  setMute(mute) {
-    Howler2.mute(mute);
-  }
-  stop() {
-    Howler2.stop();
-  }
-  unloadAllAudioSources() {
-    Howler2.unload();
-  }
-};
-
-// dist/audio/components/audio_manager_component.js
-var AudioManagerComponent = class extends Component {
-  static TypeName = "pp-audio-manager";
-  static Properties = {
-    _myPreloadAudio: Property.bool(false),
-    _myCleanUpAudioSourcesOnInit: Property.bool(false)
-  };
-  init() {
-    this._myAudioManager = null;
-    if (!Globals.hasAudioManager(this.engine)) {
-      this._myAudioManager = new AudioManager(this._myPreloadAudio, this.engine);
-      if (this._myCleanUpAudioSourcesOnInit) {
-        this._myAudioManager.unloadAllAudioSources();
-      }
-      Globals.setAudioManager(this._myAudioManager, this.engine);
-    }
-  }
-  onDestroy() {
-    if (this._myAudioManager != null && Globals.getAudioManager(this.engine) == this._myAudioManager) {
-      Globals.removeAudioManager(this.engine);
-    }
-  }
-};
-
-// dist/cauldron/cauldron/components/analytics_manager_component.js
-import { Component as Component2, Property as Property2 } from "@wonderlandengine/api";
-
-// dist/cauldron/cauldron/analytics_manager.js
-var AnalyticsManager = class {
-  constructor() {
-    this._myAnalyticsEnabled = true;
-    this._mySendDataCallback = null;
-    this._myDefaultEventCooldown = 0;
-    this._myEventCooldowns = /* @__PURE__ */ new Map();
-    this._myDataLogEnabled = false;
-    this._myEventsLogEnabled = false;
-    this._myErrorsLogEnabled = false;
-  }
-  update(dt) {
-    if (this._myEventCooldowns.size > 0) {
-      let eventNamesToUpdateCooldown = this._myEventCooldowns.keys();
-      for (let eventName of eventNamesToUpdateCooldown) {
-        let newCooldown = this._myEventCooldowns.get(eventName) - dt;
-        if (newCooldown <= 0) {
-          this._myEventCooldowns.delete(eventName);
-        } else {
-          this._myEventCooldowns.set(eventName, newCooldown);
-        }
-      }
-    }
-  }
-  setAnalyticsEnabled(enabled) {
-    this._myAnalyticsEnabled = enabled;
-  }
-  isAnalyticsEnabled() {
-    return this._myAnalyticsEnabled;
-  }
-  setSendDataCallback(callback) {
-    this._mySendDataCallback = callback;
-  }
-  sendData(...args) {
-    let dataSent = false;
-    try {
-      if (this._myAnalyticsEnabled) {
-        if (this._myDataLogEnabled) {
-          console.log("Analytics Data: " + args);
-        }
-        if (this._mySendDataCallback != null) {
-          this._mySendDataCallback(...args);
-          dataSent = true;
-        } else if (this._myErrorsLogEnabled) {
-          console.error("Analytics Error: You need to set the send data callback");
-        } else {
-          console.warn("Analytics Error: You need to set the send data callback");
-        }
-      }
-    } catch (error3) {
-      if (this._myErrorsLogEnabled) {
-        console.error(error3);
-      }
-      dataSent = false;
-    }
-    return dataSent;
-  }
-  sendEvent(eventName, value = null) {
-    let eventSent = false;
-    try {
-      if (this._myAnalyticsEnabled) {
-        if (this._myEventsLogEnabled) {
-          if (value != null) {
-            console.log("Analytics Event: " + eventName + " - Value: " + value);
-          } else {
-            console.log("Analytics Event: " + eventName);
-          }
-        }
-        if (this._mySendDataCallback != null) {
-          if (value != null) {
-            this._mySendDataCallback("event", eventName, { "value": value });
-          } else {
-            this._mySendDataCallback("event", eventName);
-          }
-          eventSent = true;
-        } else if (this._myErrorsLogEnabled) {
-          console.error("Analytics Error: You need to set the send data callback");
-        } else {
-          console.warn("Analytics Error: You need to set the send data callback");
-        }
-      }
-    } catch (error3) {
-      if (this._myErrorsLogEnabled) {
-        console.error(error3);
-      }
-      eventSent = false;
-    }
-    return eventSent;
-  }
-  sendEventOnce(eventName, value = null) {
-    if (this._myAnalyticsEnabled) {
-      if (!this.hasEventAlreadyBeenSent(eventName)) {
-        let eventSent = this.sendEvent(eventName, value, true);
-        if (eventSent) {
-          this._myEventsSentOnce.pp_pushUnique(eventName);
-        }
-      }
-    }
-  }
-  clearEventSentOnceState(eventName) {
-    this._myEventsSentOnce.pp_removeEqual(eventName);
-  }
-  clearAllEventsSentOnceState() {
-    this._myEventsSentOnce.pp_clear();
-  }
-  hasEventAlreadyBeenSent(eventName) {
-    return this._myEventsSentOnce.pp_hasEqual(eventName);
-  }
-  getEventsAlreadyBeenSent() {
-    return this._myEventsSentOnce;
-  }
-  sendEventWithCooldown(eventName, value = null, cooldownSeconds = this._myDefaultEventCooldown) {
-    if (this._myAnalyticsEnabled) {
-      if (this.getEventCooldown(eventName) <= 0) {
-        let eventSent = this.sendEvent(eventName, value, true);
-        if (eventSent) {
-          this._myEventCooldowns.set(eventName, cooldownSeconds);
-        }
-      }
-    }
-  }
-  getDefaultEventCooldown() {
-    return this._myDefaultEventCooldown;
-  }
-  setDefaultEventCooldown(cooldownSeconds) {
-    this._myDefaultEventCooldown = cooldownSeconds;
-  }
-  clearEventCooldown(eventName) {
-    this._myEventCooldowns.delete(eventName);
-  }
-  clearAllEventCooldowns() {
-    this._myEventCooldowns.clear();
-  }
-  getEventCooldown(eventName) {
-    let eventCooldown = this._myEventCooldowns.get(eventName);
-    if (eventCooldown != null) {
-      return eventCooldown;
-    }
-    return 0;
-  }
-  getEventCooldowns() {
-    return this._myEventCooldowns;
-  }
-  setDataLogEnabled(enabled) {
-    this._myDataLogEnabled = enabled;
-  }
-  isDataLogEnabled() {
-    return this._myDataLogEnabled;
-  }
-  setEventsLogEnabled(enabled) {
-    this._myEventsLogEnabled = enabled;
-  }
-  isEventsLogEnabled() {
-    return this._myEventsLogEnabled;
-  }
-  setErrorsLogEnabled(enabled) {
-    this._myErrorsLogEnabled = enabled;
-  }
-  isErrorsLogEnabled() {
-    return this._myErrorsLogEnabled;
-  }
-};
-
-// dist/cauldron/cauldron/components/analytics_manager_component.js
-var AnalyticsManagerComponent = class extends Component2 {
-  static TypeName = "pp-analytics-manager";
-  static Properties = {
-    _myDisableAnalyticsOnLocalhost: Property2.bool(true)
-  };
-  init() {
-    this._myAnalyticsManager = null;
-    if (!Globals.hasAnalyticsManager(this.engine)) {
-      this._myAnalyticsManager = new AnalyticsManager();
-      if (BrowserUtils.isLocalhost() && this._myDisableAnalyticsOnLocalhost) {
-        this._myAnalyticsManager.setAnalyticsEnabled(false);
-      }
-      Globals.setAnalyticsManager(this._myAnalyticsManager, this.engine);
-    }
-  }
-  update(dt) {
-    if (this._myAnalyticsManager != null) {
-      this._myAnalyticsManager.update(dt);
-    }
-  }
-  onDestroy() {
-    if (this._myAnalyticsManager != null && Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
-      Globals.removeAnalyticsManager(this.engine);
-    }
-  }
-};
-
-// dist/cauldron/cauldron/components/save_manager_component.js
-import { Component as Component3, Property as Property3 } from "@wonderlandengine/api";
-
-// dist/cauldron/cauldron/save_manager.js
-import { Emitter as Emitter4 } from "@wonderlandengine/api";
-
-// dist/cauldron/utils/save_utils.js
-function save(id, value) {
-  if (value != null) {
-    localStorage.setItem(id, value);
-  }
-}
-function has2(id) {
-  return SaveUtils.loadString(id, null) != null;
-}
-function remove2(id) {
-  return localStorage.removeItem(id);
-}
-function clear2() {
-  return localStorage.clear();
-}
-function load(id, defaultValue = null) {
-  return SaveUtils.loadString(id, defaultValue);
-}
-function loadString(id, defaultValue = null) {
-  const item = localStorage.getItem(id);
-  if (item != null) {
-    return item;
-  }
-  return defaultValue;
-}
-function loadNumber(id, defaultValue = null) {
-  const item = SaveUtils.loadString(id);
-  if (item != null) {
-    return Number(item);
-  }
-  return defaultValue;
-}
-function loadBool(id, defaultValue = null) {
-  const item = SaveUtils.loadString(id);
-  if (item == "true") {
-    return true;
-  } else if (item == "false") {
-    return false;
-  }
-  return defaultValue;
-}
-function loadObject(id, defaultValue = null) {
-  const item = SaveUtils.loadString(id);
-  if (item != null) {
-    try {
-      return JSON.parse(item);
-    } catch (error3) {
-    }
-  }
-  return defaultValue;
-}
-var SaveUtils = {
-  save,
-  has: has2,
-  remove: remove2,
-  clear: clear2,
-  load,
-  loadString,
-  loadNumber,
-  loadBool,
-  loadObject
-};
-
-// dist/cauldron/cauldron/save_manager.js
-var SaveManager = class {
-  constructor(saveID, autoLoadSaves = true, engine = Globals.getMainEngine()) {
-    this._myEngine = engine;
-    this._mySaveID = saveID;
-    this._myCommitSavesDelayTimer = new Timer(0, false);
-    this._myDelaySavesCommit = true;
-    this._myCommitSavesDirty = false;
-    this._myCommitSavesDirtyClearOnFail = true;
-    this._myCommitSavesOnInterrupt = true;
-    this._myCommitSavesWhenLoadSavesFailed = false;
-    this._myResetSaveObjectOnLoadSavesFail = false;
-    this._mySaveObject = {};
-    this._myLoadSavesSucceded = false;
-    this._mySaveObjectLoadedOnce = false;
-    this._myAtLeastOneValueSavedOnce = false;
-    this._myClearEmitter = new Emitter4();
-    this._myDeleteEmitter = new Emitter4();
-    this._myDeleteIDEmitters = /* @__PURE__ */ new Map();
-    this._mySaveEmitter = new Emitter4();
-    this._mySaveValueChangedEmitter = new Emitter4();
-    this._mySaveIDEmitters = /* @__PURE__ */ new Map();
-    this._mySaveValueChangedIDEmitters = /* @__PURE__ */ new Map();
-    this._myCommitSavesEmitter = new Emitter4();
-    this._myLoadEmitter = new Emitter4();
-    this._myLoadIDEmitters = /* @__PURE__ */ new Map();
-    this._myLoadSavesEmitter = new Emitter4();
-    if (autoLoadSaves) {
-      this.loadSaves();
-    }
-    this._myXRVisibilityChangeEventListener = null;
-    XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
-    this._myWindowVisibilityChangeEventListener = function() {
-      if (document.visibilityState != "visible") {
-        this._onInterrupt();
-      }
-    }.bind(this);
-    window.addEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
-    this._myDestroyed = false;
-  }
-  setCommitSavesDelay(delay) {
-    this._myCommitSavesDelayTimer.start(delay);
-  }
-  setDelaySavesCommit(delayed) {
-    this._myDelaySavesCommit = delayed;
-  }
-  setCommitSavesDirty(dirty, startDelayTimer = true) {
-    this._myCommitSavesDirty = dirty;
-    if (dirty && startDelayTimer) {
-      if (!this.startDelayTimer.isRunning()) {
-        this._myCommitSavesDelayTimer.start();
-      }
-    } else {
-      this._myCommitSavesDelayTimer.reset();
-    }
-  }
-  setCommitSavesDirtyClearOnFail(clearOnFail) {
-    this._myCommitSavesDirtyClearOnFail = clearOnFail;
-  }
-  setCommitSavesOnInterrupt(commitSavesOnInterrupt) {
-    this._myCommitSavesOnInterrupt = commitSavesOnInterrupt;
-  }
-  setCommitSavesWhenLoadSavesFailed(commitSavesWhenLoadSavesFailed) {
-    this._myCommitSavesWhenLoadSavesFailed = commitSavesWhenLoadSavesFailed;
-  }
-  setResetSaveObjectOnLoadSavesFail(resetSaveObjectOnLoadSavesFail) {
-    this._myResetSaveObjectOnLoadSavesFail = resetSaveObjectOnLoadSavesFail;
-  }
-  getCommitSavesDelay() {
-    return this._myCommitSavesDelayTimer.getDuration();
-  }
-  isDelaySavesCommit() {
-    return this._myDelaySavesCommit;
-  }
-  isCommitSavesDirty() {
-    return this._myCommitSavesDirty;
-  }
-  isCommitSavesDirtyClearOnFail() {
-    return this._myCommitSavesDirtyClearOnFail;
-  }
-  isCommitSavesOnInterrupt() {
-    return this._myCommitSavesOnInterrupt;
-  }
-  isCommitSavesWhenLoadSavesFailed() {
-    return this._myCommitSavesWhenLoadSavesFailed;
-  }
-  isResetSaveObjectOnLoadSavesFail() {
-    return this._myResetSaveObjectOnLoadSavesFail;
-  }
-  hasLoadSavesSucceded() {
-    return this._myLoadSavesSucceded;
-  }
-  update(dt) {
-    if (this._myCommitSavesDelayTimer.isRunning()) {
-      this._myCommitSavesDelayTimer.update(dt);
-      if (this._myCommitSavesDelayTimer.isDone()) {
-        if (this._myCommitSavesDirty) {
-          this._commitSaves();
-        }
-      }
-    } else {
-      if (this._myCommitSavesDirty) {
-        this._commitSaves();
-      }
-    }
-  }
-  has(id) {
-    return id in this._mySaveObject;
-  }
-  save(id, value, overrideDelaySavesCommit = null) {
-    let sameValue = false;
-    if (this.has(id)) {
-      sameValue = this._mySaveObject[id] === value;
-    }
-    if (!sameValue) {
-      this._mySaveObject[id] = value;
-      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
-        this._myCommitSavesDirty = true;
-        if (!this._myCommitSavesDelayTimer.isRunning()) {
-          this._myCommitSavesDelayTimer.start();
-        }
-      } else {
-        this._commitSaves();
-      }
-    }
-    this._myAtLeastOneValueSavedOnce = true;
-    this._mySaveEmitter.notify(id, value);
-    if (this._mySaveIDEmitters.size > 0) {
-      let emitter = this._mySaveIDEmitters.get(id);
-      if (emitter != null) {
-        emitter.notify(id, value);
-      }
-    }
-    if (!sameValue) {
-      this._mySaveValueChangedEmitter.notify(id, value);
-      if (this._mySaveValueChangedIDEmitters.size > 0) {
-        let emitter = this._mySaveValueChangedIDEmitters.get(id);
-        if (emitter != null) {
-          emitter.notify(id, value);
-        }
-      }
-    }
-  }
-  delete(id, overrideDelaySavesCommit = null) {
-    if (this.has(id)) {
-      delete this._mySaveObject[id];
-      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
-        this._myCommitSavesDirty = true;
-        if (!this._myCommitSavesDelayTimer.isRunning()) {
-          this._myCommitSavesDelayTimer.start();
-        }
-      } else {
-        this._commitSaves();
-      }
-    }
-    this._myAtLeastOneValueSavedOnce = true;
-    this._myDeleteEmitter.notify(id);
-    if (this._myDeleteIDEmitters.size > 0) {
-      let emitter = this._myDeleteIDEmitters.get(id);
-      if (emitter != null) {
-        emitter.notify(id);
-      }
-    }
-  }
-  clear(overrideDelaySavesCommit = null) {
-    if (Object.keys(this._mySaveObject).length > 0) {
-      this._mySaveObject = {};
-      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
-        this._myCommitSavesDirty = true;
-        if (!this._myCommitSavesDelayTimer.isRunning()) {
-          this._myCommitSavesDelayTimer.start();
-        }
-      } else {
-        this._commitSaves();
-      }
-    }
-    this._myAtLeastOneValueSavedOnce = true;
-    this._myClearEmitter.notify();
-  }
-  load(id, defaultValue) {
-    let value = this._mySaveObject[id];
-    if (value == null && defaultValue != null) {
-      value = defaultValue;
-    }
-    this._myLoadEmitter.notify(id, value);
-    if (this._myLoadIDEmitters.size > 0) {
-      let emitter = this._myLoadIDEmitters.get(id);
-      if (emitter != null) {
-        emitter.notify(id, value);
-      }
-    }
-    return value;
-  }
-  commitSaves(commitSavesOnlyIfDirty = true) {
-    if (this._myCommitSavesDirty || !commitSavesOnlyIfDirty) {
-      this._commitSaves();
-    }
-  }
-  _commitSaves() {
-    let succeded = true;
-    if (this._myLoadSavesSucceded || this._myCommitSavesWhenLoadSavesFailed) {
-      try {
-        let saveObjectStringified = JSON.stringify(this._mySaveObject);
-        SaveUtils.save(this._mySaveID, saveObjectStringified);
-      } catch (error3) {
-        succeded = false;
-      }
-    }
-    if (succeded || this._myCommitSavesDirtyClearOnFail) {
-      this._myCommitSavesDirty = false;
-      this._myCommitSavesDelayTimer.reset();
-    }
-    this._myCommitSavesEmitter.notify(succeded);
-    return succeded;
-  }
-  loadSaves() {
-    let saveObject = {};
-    let loadSavesSucceded = false;
-    let saveObjectReset = false;
-    let maxLoadObjectAttempts = 3;
-    do {
-      try {
-        saveObject = SaveUtils.loadObject(this._mySaveID, {});
-        loadSavesSucceded = true;
-      } catch (error3) {
-        maxLoadObjectAttempts--;
-      }
-    } while (maxLoadObjectAttempts > 0 && !loadSavesSucceded);
-    if (loadSavesSucceded) {
-      this._mySaveObject = saveObject;
-      this._myLoadSavesSucceded = true;
-    } else if (this._myResetSaveObjectOnLoadSavesFail) {
-      this._mySaveObject = {};
-      this._myLoadSavesSucceded = false;
-      saveObjectReset = true;
-    }
-    this._mySaveObjectLoadedOnce = true;
-    this._myLoadSavesEmitter.notify(loadSavesSucceded, saveObjectReset);
-    return loadSavesSucceded;
-  }
-  _onXRSessionStart(session) {
-    this._myXRVisibilityChangeEventListener = function(event) {
-      if (event.session.visibilityState != "visible") {
-        this._onInterrupt();
-      }
-    }.bind(this);
-    session.addEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
-  }
-  _onXRSessionEnd() {
-    this._myXRVisibilityChangeEventListener = null;
-    this._onInterrupt();
-  }
-  _onInterrupt() {
-    if (this._myCommitSavesOnInterrupt && this._myCommitSavesDirty && (this._mySaveObjectLoadedOnce || this._myAtLeastOneValueSavedOnce)) {
-      this.commitSaves();
-    }
-  }
-  registerClearEventListener(listenerID, listener) {
-    this._myClearEmitter.add(listener, { id: listenerID });
-  }
-  unregisterClearEventListener(listenerID) {
-    this._myClearEmitter.remove(listenerID);
-  }
-  registerDeleteEventListener(listenerID, listener) {
-    this._myDeleteEmitter.add(listener, { id: listenerID });
-  }
-  unregisterDeleteEventListener(listenerID) {
-    this._myDeleteEmitter.remove(listenerID);
-  }
-  registerDeleteIDEventListener(valueID, listenerID, listener) {
-    let valueIDEmitter = this._myDeleteIDEmitters.get(valueID);
-    if (valueIDEmitter == null) {
-      this._myDeleteIDEmitters.set(valueID, /* @__PURE__ */ new Map());
-      valueIDEmitter = this._myDeleteIDEmitters.get(valueID);
-    }
-    valueIDEmitter.add(listener, { id: listenerID });
-  }
-  unregisterDeleteIDEventListener(valueID, listenerID) {
-    let valueIDEmitter = this._myDeleteIDEmitters.get(valueID);
-    if (valueIDEmitter != null) {
-      valueIDEmitter.remove(listenerID);
-      if (valueIDEmitter.size <= 0) {
-        this._myDeleteIDEmitters.delete(valueID);
-      }
-    }
-  }
-  registerSaveEventListener(listenerID, listener) {
-    this._mySaveEmitter.add(listener, { id: listenerID });
-  }
-  unregisterSaveEventListener(listenerID) {
-    this._mySaveEmitter.remove(listenerID);
-  }
-  registerSaveIDEventListener(valueID, listenerID, listener) {
-    let valueIDEmitter = this._mySaveIDEmitters.get(valueID);
-    if (valueIDEmitter == null) {
-      this._mySaveIDEmitters.set(valueID, /* @__PURE__ */ new Map());
-      valueIDEmitter = this._mySaveIDEmitters.get(valueID);
-    }
-    valueIDEmitter.add(listener, { id: listenerID });
-  }
-  unregisterSaveIDEventListener(valueID, listenerID) {
-    let valueIDEmitter = this._mySaveIDEmitters.get(valueID);
-    if (valueIDEmitter != null) {
-      valueIDEmitter.remove(listenerID);
-      if (valueIDEmitter.size <= 0) {
-        this._mySaveIDEmitters.delete(valueID);
-      }
-    }
-  }
-  registerSaveValueChangedEventListener(listenerID, listener) {
-    this._mySaveValueChangedEmitter.add(listener, { id: listenerID });
-  }
-  unregisterSaveValueChangedEventListener(listenerID) {
-    this._mySaveValueChangedEmitter.remove(listenerID);
-  }
-  registerSaveValueChangedIDEventListener(valueID, listenerID, listener) {
-    let valueIDEmitter = this._mySaveValueChangedIDEmitters.get(valueID);
-    if (valueIDEmitter == null) {
-      this._mySaveValueChangedIDEmitters.set(valueID, /* @__PURE__ */ new Map());
-      valueIDEmitter = this._mySaveValueChangedIDEmitters.get(valueID);
-    }
-    valueIDEmitter.add(listener, { id: listenerID });
-  }
-  unregisterSaveValueChangedIDEventListener(valueID, listenerID) {
-    let valueIDEmitter = this._mySaveValueChangedIDEmitters.get(valueID);
-    if (valueIDEmitter != null) {
-      valueIDEmitter.remove(listenerID);
-      if (valueIDEmitter.size <= 0) {
-        this._mySaveValueChangedIDEmitters.delete(valueID);
-      }
-    }
-  }
-  registerCommitSavesEventListener(listenerID, listener) {
-    this._myCommitSavesEmitter.add(listener, { id: listenerID });
-  }
-  unregisterCommitSavesEventListener(listenerID) {
-    this._myCommitSavesEmitter.remove(listenerID);
-  }
-  registerLoadEventListener(listenerID, listener) {
-    this._myLoadEmitter.add(listener, { id: listenerID });
-  }
-  unregisterLoadEventListener(listenerID) {
-    this._myLoadEmitter.remove(listenerID);
-  }
-  registerLoadIDEventListener(valueID, listenerID, listener) {
-    let valueIDEmitter = this._myLoadIDEmitters.get(valueID);
-    if (valueIDEmitter == null) {
-      this._myLoadIDEmitters.set(valueID, /* @__PURE__ */ new Map());
-      valueIDEmitter = this._myLoadIDEmitters.get(valueID);
-    }
-    valueIDEmitter.add(listener, { id: listenerID });
-  }
-  unregisterLoadIDEventListener(valueID, listenerID) {
-    let valueIDEmitter = this._myLoadIDEmitters.get(valueID);
-    if (valueIDEmitter != null) {
-      valueIDEmitter.remove(listenerID);
-      if (valueIDEmitter.size <= 0) {
-        this._myLoadIDEmitters.delete(valueID);
-      }
-    }
-  }
-  registerLoadSavesEventListener(listenerID, listener) {
-    this._myLoadSavesEmitter.add(listener, { id: listenerID });
-  }
-  unregisterLoadSavesEventListener(listenerID) {
-    this._myLoadSavesEmitter.remove(listenerID);
-  }
-  destroy() {
-    this._myDestroyed = true;
-    XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
-    XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
-    window.removeEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
-  }
-  isDestroyed() {
-    return this._myDestroyed;
-  }
-};
-
-// dist/cauldron/cauldron/components/save_manager_component.js
-var SaveManagerComponent = class extends Component3 {
-  static TypeName = "pp-save-manager";
-  static Properties = {
-    _mySaveID: Property3.string(""),
-    _myAutoLoadSaves: Property3.bool(true)
-  };
-  init() {
-    this._mySaveManager = null;
-    if (this._mySaveID.length > 0 && !Globals.hasSaveManager(this.engine)) {
-      this._mySaveManager = new SaveManager(this._mySaveID, this._myAutoLoadSaves, this.engine);
-      Globals.setSaveManager(this._mySaveManager, this.engine);
-    }
-  }
-  update(dt) {
-    if (this._mySaveManager != null) {
-      this._mySaveManager.update(dt);
-    }
-  }
-  onDestroy() {
-    if (this._mySaveManager != null && Globals.getSaveManager(this.engine) == this._mySaveManager) {
-      Globals.removeSaveManager(this.engine);
-    }
-  }
-};
-
-// dist/cauldron/object_pool/components/object_pool_manager_component.js
-import { Component as Component4 } from "@wonderlandengine/api";
-
-// dist/cauldron/object_pool/object_pool_manager.js
-var ObjectPoolManager = class {
-  constructor() {
-    this._myPools = /* @__PURE__ */ new Map();
-    this._myDestroyed = false;
-  }
-  addPool(poolID, pool) {
-    if (!this._myPools.has(poolID)) {
-      this._myPools.set(poolID, pool);
-    } else {
-      console.warn("Trying to add a Pool with an ID that has been already used:", poolID);
-    }
-  }
-  destroyPool(poolID) {
-    let poolToRemove = this._myPools.get(poolID);
-    if (poolToRemove != null) {
-      this._myPools.delete(poolID);
-      poolToRemove.destroy();
-    }
-  }
-  getPool(poolID) {
-    return this._myPools.get(poolID);
-  }
-  hasPool(poolID) {
-    return this._myPools.has(poolID);
-  }
-  get(poolID) {
-    if (this._myPools.has(poolID)) {
-      return this._myPools.get(poolID).get();
-    }
-    return null;
-  }
-  has(poolIDOrObject, object) {
-    let hasObject = false;
-    if (object === void 0) {
-      for (let pool of this._myPools.values()) {
-        if (pool.has(poolIDOrObject)) {
-          hasObject = true;
-          break;
-        }
-      }
-    } else {
-      hasObject = this._myPools.get(poolIDOrObject).has(object);
-    }
-    return hasObject;
-  }
-  isBusy(poolIDOrObject, object) {
-    let busy = false;
-    if (object === void 0) {
-      for (let pool of this._myPools.values()) {
-        if (pool.isBusy(poolIDOrObject)) {
-          busy = true;
-          break;
-        }
-      }
-    } else {
-      busy = this._myPools.get(poolIDOrObject).isBusy(object);
-    }
-    return busy;
-  }
-  isAvailable(poolIDOrObject, object) {
-    let available = false;
-    if (object === void 0) {
-      for (let pool of this._myPools.values()) {
-        if (pool.isAvailable(poolIDOrObject)) {
-          available = true;
-          break;
-        }
-      }
-    } else {
-      available = this._myPools.get(poolIDOrObject).isAvailable(object);
-    }
-    return available;
-  }
-  release(poolIDOrObject, object) {
-    if (object === void 0) {
-      for (let pool of this._myPools.values()) {
-        pool.release(poolIDOrObject);
-      }
-    } else {
-      this._myPools.get(poolIDOrObject).release(object);
-    }
-  }
-  releaseAll(poolID = void 0) {
-    if (poolID === void 0) {
-      for (let pool of this._myPools.values()) {
-        pool.releaseAll();
-      }
-    } else {
-      this._myPools.get(poolID).releaseAll();
-    }
-  }
-  increase(poolID, amount) {
-    let pool = this._myPools.get(poolID);
-    if (pool) {
-      pool.increase(amount);
-    }
-  }
-  increasePercentage(poolID, percentage) {
-    let pool = this._myPools.get(poolID);
-    if (pool) {
-      pool.increasePercentage(percentage);
-    }
-  }
-  getSize(poolID) {
-    if (this._myPools.has(poolID)) {
-      return this._myPools.get(poolID).getSize();
-    }
-    return null;
-  }
-  getAvailableSize(poolID) {
-    if (this._myPools.has(poolID)) {
-      return this._myPools.get(poolID).getAvailableSize();
-    }
-    return null;
-  }
-  getBusySize(poolID) {
-    if (this._myPools.has(poolID)) {
-      return this._myPools.get(poolID).getBusySize();
-    }
-    return null;
-  }
-  destroy() {
-    this._myDestroyed = true;
-    for (let pool of this._myPools.values()) {
-      pool.destroy();
-    }
-  }
-  isDestroyed() {
-    return this._myDestroyed;
-  }
-};
-
-// dist/cauldron/object_pool/components/object_pool_manager_component.js
-var ObjectPoolManagerComponent = class extends Component4 {
-  static TypeName = "pp-object-pools-manager";
-  static Properties = {};
-  init() {
-    this._myObjectPoolManager = null;
-    if (!Globals.hasObjectPoolManager(this.engine)) {
-      this._myObjectPoolManager = new ObjectPoolManager();
-      Globals.setObjectPoolManager(this._myObjectPoolManager, this.engine);
-    }
-  }
-  onDestroy() {
-    if (this._myObjectPoolManager != null && Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
-      Globals.removeObjectPoolManager(this.engine);
-    }
-  }
-};
-
-// dist/cauldron/visual/components/visual_manager_component.js
-import { Component as Component5 } from "@wonderlandengine/api";
 
 // dist/cauldron/object_pool/object_pool.js
 var ObjectPoolParams = class {
@@ -12413,20 +5462,20 @@ var ObjectPool = class {
     }
   }
   _clone(object) {
-    let clone10 = null;
+    let clone12 = null;
     if (this._myObjectPoolParams.myCloneCallback != null) {
-      clone10 = this._myObjectPoolParams.myCloneCallback(object, this._myObjectPoolParams.myCloneParams);
+      clone12 = this._myObjectPoolParams.myCloneCallback(object, this._myObjectPoolParams.myCloneParams);
     } else if (object.pp_clone != null) {
-      clone10 = object.pp_clone(this._myObjectPoolParams.myCloneParams);
+      clone12 = object.pp_clone(this._myObjectPoolParams.myCloneParams);
     } else if (object.clone != null) {
-      clone10 = object.clone(this._myObjectPoolParams.myCloneParams);
+      clone12 = object.clone(this._myObjectPoolParams.myCloneParams);
     }
-    if (clone10 == null) {
+    if (clone12 == null) {
       console.error("Object not cloneable, pool will return null");
     } else {
-      this._setActive(clone10, false);
+      this._setActive(clone12, false);
     }
-    return clone10;
+    return clone12;
   }
   _setActive(object, active) {
     if (this._myObjectPoolParams.mySetActiveCallback != null) {
@@ -12475,7 +5524,7 @@ var ObjectPool = class {
 };
 
 // dist/cauldron/visual/elements/visual_arrow.js
-import { MeshComponent as MeshComponent4 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent2 } from "@wonderlandengine/api";
 
 // dist/cauldron/visual/elements/visual_element_types.js
 var VisualElementType = {
@@ -12490,7 +5539,7 @@ var VisualElementType = {
 };
 
 // dist/cauldron/visual/elements/visual_line.js
-import { MeshComponent as MeshComponent3 } from "@wonderlandengine/api";
+import { MeshComponent } from "@wonderlandengine/api";
 var VisualLineParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myStart = vec3_create();
@@ -12567,7 +5616,7 @@ var VisualLine = class _VisualLine {
   _build() {
     this._myLineParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
     this._myLineObject = this._myLineParentObject.pp_addObject();
-    this._myLineMeshComponent = this._myLineObject.pp_addComponent(MeshComponent3);
+    this._myLineMeshComponent = this._myLineObject.pp_addComponent(MeshComponent);
   }
   _markDirty() {
     this._myDirty = true;
@@ -12578,11 +5627,11 @@ var VisualLine = class _VisualLine {
   clone() {
     let clonedParams = new VisualLineParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualLine(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualLine(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   _refresh() {
   }
@@ -12639,7 +5688,7 @@ VisualLine.prototype._refresh = function() {
     }
   };
 }();
-VisualLineParams.prototype.copy = function copy8(other) {
+VisualLineParams.prototype.copy = function copy9(other) {
   this.myStart.vec3_copy(other.myStart);
   this.myDirection.vec3_copy(other.myDirection);
   this.myLength = other.myLength;
@@ -12750,7 +5799,7 @@ var VisualArrow = class _VisualArrow {
   _build() {
     this._myArrowParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
     this._myArrowObject = this._myArrowParentObject.pp_addObject();
-    this._myArrowMeshComponent = this._myArrowObject.pp_addComponent(MeshComponent4);
+    this._myArrowMeshComponent = this._myArrowObject.pp_addComponent(MeshComponent2);
   }
   _markDirty() {
     this._myDirty = true;
@@ -12761,11 +5810,11 @@ var VisualArrow = class _VisualArrow {
   clone() {
     let clonedParams = new VisualArrowParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualArrow(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualArrow(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   _refresh() {
   }
@@ -12839,7 +5888,7 @@ VisualArrow.prototype._refresh = function() {
     this._myVisualLine.paramsUpdated();
   };
 }();
-VisualArrowParams.prototype.copy = function copy9(other) {
+VisualArrowParams.prototype.copy = function copy10(other) {
   this.myStart.vec3_copy(other.myStart);
   this.myDirection.vec3_copy(other.myDirection);
   this.myLength = other.myLength;
@@ -12869,7 +5918,7 @@ VisualArrowParams.prototype.copy = function copy9(other) {
 };
 
 // dist/cauldron/visual/elements/visual_mesh.js
-import { MeshComponent as MeshComponent5 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent3 } from "@wonderlandengine/api";
 var VisualMeshParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myTransform = mat4_create();
@@ -12950,7 +5999,7 @@ var VisualMesh = class _VisualMesh {
   }
   _build() {
     this._myMeshObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
-    this._myMeshComponent = this._myMeshObject.pp_addComponent(MeshComponent5);
+    this._myMeshComponent = this._myMeshObject.pp_addComponent(MeshComponent3);
   }
   _markDirty() {
     this._myDirty = true;
@@ -12961,11 +6010,11 @@ var VisualMesh = class _VisualMesh {
   clone() {
     let clonedParams = new VisualMeshParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualMesh(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualMesh(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   destroy() {
     this._myDestroyed = true;
@@ -12975,7 +6024,7 @@ var VisualMesh = class _VisualMesh {
     return this._myDestroyed;
   }
 };
-VisualMeshParams.prototype.copy = function copy10(other) {
+VisualMeshParams.prototype.copy = function copy11(other) {
   this.myTransform.pp_copy(other.myTransform);
   if (other.myMesh != null) {
     this.myMesh = other.myMesh;
@@ -12993,7 +6042,7 @@ VisualMeshParams.prototype.copy = function copy10(other) {
 };
 
 // dist/cauldron/visual/elements/visual_point.js
-import { MeshComponent as MeshComponent6 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent4 } from "@wonderlandengine/api";
 var VisualPointParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPosition = vec3_create();
@@ -13059,7 +6108,7 @@ var VisualPoint = class _VisualPoint {
   }
   _build() {
     this._myPointObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
-    this._myPointMeshComponent = this._myPointObject.pp_addComponent(MeshComponent6);
+    this._myPointMeshComponent = this._myPointObject.pp_addComponent(MeshComponent4);
   }
   _markDirty() {
     this._myDirty = true;
@@ -13070,11 +6119,11 @@ var VisualPoint = class _VisualPoint {
   clone() {
     let clonedParams = new VisualPointParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualPoint(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualPoint(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   _refresh() {
   }
@@ -13119,7 +6168,7 @@ VisualPoint.prototype._refresh = function() {
     }
   };
 }();
-VisualPointParams.prototype.copy = function copy11(other) {
+VisualPointParams.prototype.copy = function copy12(other) {
   this.myPosition.vec3_copy(other.myPosition);
   this.myRadius = other.myRadius;
   this.myMesh = other.myMesh;
@@ -13488,14 +6537,14 @@ var RaycastHit = class {
   }
 };
 RaycastResults.prototype.copy = function() {
-  let copyHitCallback = function(currentElement, elementToCopy) {
+  let copyHitCallback = function(elementToCopy, currentElement) {
     if (currentElement == null) {
       currentElement = new RaycastHit();
     }
     currentElement.copy(elementToCopy);
     return currentElement;
   };
-  return function copy35(other) {
+  return function copy36(other) {
     if (other.myRaycastParams == null) {
       this.myRaycastParams = null;
     } else {
@@ -13697,11 +6746,11 @@ var VisualRaycast = class _VisualRaycast {
   clone() {
     let clonedParams = new VisualRaycastParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualRaycast(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualRaycast(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   _addVisualRaycastHit() {
     let visualRaycastHit = new VisualArrow(new VisualArrowParams(this._myParams.myParent.pp_getEngine()));
@@ -13720,7 +6769,7 @@ var VisualRaycast = class _VisualRaycast {
     return this._myDestroyed;
   }
 };
-VisualRaycastParams.prototype.copy = function copy12(other) {
+VisualRaycastParams.prototype.copy = function copy13(other) {
   this.myRaycastResults = other.myRaycastResults;
   this.myHitNormalLength = other.myHitNormalLength;
   this.myThickness = other.myThickness;
@@ -13741,7 +6790,7 @@ VisualRaycastParams.prototype.copy = function copy12(other) {
 };
 
 // dist/cauldron/visual/elements/visual_text.js
-import { Alignment, Justification, TextComponent as TextComponent3 } from "@wonderlandengine/api";
+import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
 var VisualTextParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myText = "";
@@ -13811,7 +6860,7 @@ var VisualText = class _VisualText {
   }
   _build() {
     this._myTextObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
-    this._myTextComponent = this._myTextObject.pp_addComponent(TextComponent3);
+    this._myTextComponent = this._myTextObject.pp_addComponent(TextComponent);
   }
   _markDirty() {
     this._myDirty = true;
@@ -13822,11 +6871,11 @@ var VisualText = class _VisualText {
   clone() {
     let clonedParams = new VisualTextParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualText(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualText(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   destroy() {
     this._myDestroyed = true;
@@ -13836,7 +6885,7 @@ var VisualText = class _VisualText {
     return this._myDestroyed;
   }
 };
-VisualTextParams.prototype.copy = function copy13(other) {
+VisualTextParams.prototype.copy = function copy14(other) {
   this.myText = other.myText;
   this.myAlignment = other.myAlignment;
   this.myJustification = other.myJustification;
@@ -14000,11 +7049,11 @@ var VisualTorus = class _VisualTorus {
   clone() {
     let clonedParams = new VisualTorusParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualTorus(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualTorus(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   _refresh() {
   }
@@ -14069,7 +7118,7 @@ VisualTorus.prototype._refresh = function() {
     }
   };
 }();
-VisualTorusParams.prototype.copy = function copy14(other) {
+VisualTorusParams.prototype.copy = function copy15(other) {
   this.myRadius = other.myRadius;
   this.mySegmentsAmount = other.mySegmentsAmount;
   this.mySegmentThickness = other.mySegmentThickness;
@@ -14178,11 +7227,11 @@ var VisualTransform = class _VisualTransform {
   clone() {
     let clonedParams = new VisualTransformParams(this._myParams.myParent.pp_getEngine());
     clonedParams.copy(this._myParams);
-    let clone10 = new _VisualTransform(clonedParams);
-    clone10.setAutoRefresh(this._myAutoRefresh);
-    clone10.setVisible(this._myVisible);
-    clone10._myDirty = this._myDirty;
-    return clone10;
+    let clone12 = new _VisualTransform(clonedParams);
+    clone12.setAutoRefresh(this._myAutoRefresh);
+    clone12.setVisible(this._myVisible);
+    clone12._myDirty = this._myDirty;
+    return clone12;
   }
   _refresh() {
   }
@@ -14264,7 +7313,7 @@ VisualTransform.prototype._refresh = function() {
     }
   };
 }();
-VisualTransformParams.prototype.copy = function copy15(other) {
+VisualTransformParams.prototype.copy = function copy16(other) {
   this.myTransform.mat4_copy(other.myTransform);
   this.myLength = other.myLength;
   this.myThickness = other.myThickness;
@@ -14544,7 +7593,6 @@ var VisualResourcesMaterials = class {
 // dist/cauldron/visual/components/visual_manager_component.js
 var VisualManagerComponent = class extends Component5 {
   static TypeName = "pp-visual-manager";
-  static Properties = {};
   init() {
     this._myVisualManager = null;
     if (!Globals.hasVisualManager(this.engine)) {
@@ -14602,7 +7650,7 @@ var AddWLToWindowComponent = class extends Component6 {
   };
   init() {
     if (this._myAdd) {
-      Globals.getWindow(this.engine).WL = {};
+      window.WL = {};
       this._addProperties(WLAPI);
       this._addProperties(WLComponents);
     }
@@ -14611,17 +7659,613 @@ var AddWLToWindowComponent = class extends Component6 {
     let propertyNames = Object.getOwnPropertyNames(object);
     for (let propertyName of propertyNames) {
       if (object[propertyName] != void 0) {
-        Globals.getWindow(this.engine).WL[propertyName] = object[propertyName];
+        window.WL[propertyName] = object[propertyName];
       }
     }
   }
   onDestroy() {
-    Globals.getWindow(this.engine).WL = void 0;
+    window.WL = void 0;
+  }
+};
+
+// dist/cauldron/wl/getters/components/get_default_resources_component.js
+import { Component as Component7, Property as Property5 } from "@wonderlandengine/api";
+
+// dist/cauldron/wl/utils/mesh_utils.js
+import { Mesh, MeshAttribute, MeshIndexType } from "@wonderlandengine/api";
+var MeshCreationVertexParams = class {
+  constructor() {
+    this.myPosition = null;
+    this.myTextureCoordinates = null;
+    this.myNormal = null;
+    this.myColor = null;
+  }
+};
+var MeshCreationTriangleParams = class {
+  constructor() {
+    this.myIndexes = new Uint32Array(3);
+  }
+};
+var MeshCreationParams = class {
+  constructor(engine = Globals.getMainEngine()) {
+    this.myVertexes = [];
+    this.myTriangles = [];
+    this.myEngine = engine;
+  }
+};
+function create8(meshCreationParams) {
+  let indexData = [];
+  for (let triangle of meshCreationParams.myTriangles) {
+    indexData.push(triangle.myIndexes[0]);
+    indexData.push(triangle.myIndexes[1]);
+    indexData.push(triangle.myIndexes[2]);
+  }
+  let indexDataUnsignedInt = new Uint32Array(indexData.length);
+  indexDataUnsignedInt.pp_copy(indexData);
+  let vertexCount = meshCreationParams.myVertexes.length;
+  let mesh = new Mesh(meshCreationParams.myEngine, {
+    vertexCount,
+    indexData: indexDataUnsignedInt,
+    indexType: MeshIndexType.UnsignedInt
+  });
+  let positionAttribute = null;
+  let textureCoordinatesAttribute = null;
+  let normalAttribute = null;
+  let colorAttribute = null;
+  try {
+    positionAttribute = mesh.attribute(MeshAttribute.Position);
+  } catch (error3) {
+    positionAttribute = null;
+  }
+  try {
+    textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
+  } catch (error3) {
+    textureCoordinatesAttribute = null;
+  }
+  try {
+    normalAttribute = mesh.attribute(MeshAttribute.Normal);
+  } catch (error3) {
+    normalAttribute = null;
+  }
+  try {
+    colorAttribute = mesh.attribute(MeshAttribute.Color);
+  } catch (error3) {
+    colorAttribute = null;
+  }
+  for (let i = 0; i < meshCreationParams.myVertexes.length; i++) {
+    let vertex = meshCreationParams.myVertexes[i];
+    if (positionAttribute != null && vertex.myPosition) {
+      positionAttribute.set(i, vertex.myPosition);
+    }
+    if (textureCoordinatesAttribute != null && vertex.myTextureCoordinates) {
+      textureCoordinatesAttribute.set(i, vertex.myTextureCoordinates);
+    }
+    if (normalAttribute != null && vertex.myNormal) {
+      normalAttribute.set(i, vertex.myNormal);
+    }
+    if (colorAttribute != null && vertex.myColor) {
+      colorAttribute.set(i, vertex.myColor);
+    }
+  }
+  return mesh;
+}
+var clone8 = function() {
+  let position = vec3_create();
+  let textureCoordinates = vec2_create();
+  let normal = vec3_create();
+  let color = vec4_create();
+  return function clone12(mesh) {
+    if (mesh == null) {
+      return null;
+    }
+    let clonedIndexData = mesh.indexData.pp_clone();
+    let clonedMesh = new Mesh(mesh.engine, {
+      vertexCount: mesh.vertexCount,
+      indexData: clonedIndexData,
+      indexType: MeshIndexType.UnsignedInt
+    });
+    let positionAttribute = null;
+    let textureCoordinatesAttribute = null;
+    let normalAttribute = null;
+    let colorAttribute = null;
+    let clonedPositionAttribute = null;
+    let clonedTextureCoordinatesAttribute = null;
+    let clonedNormalAttribute = null;
+    let clonedColorAttribute = null;
+    try {
+      positionAttribute = mesh.attribute(MeshAttribute.Position);
+      clonedPositionAttribute = clonedMesh.attribute(MeshAttribute.Position);
+    } catch (error3) {
+      positionAttribute = null;
+      clonedPositionAttribute = null;
+    }
+    try {
+      textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
+      clonedTextureCoordinatesAttribute = clonedMesh.attribute(MeshAttribute.TextureCoordinate);
+    } catch (error3) {
+      textureCoordinatesAttribute = null;
+      clonedTextureCoordinatesAttribute = null;
+    }
+    try {
+      normalAttribute = mesh.attribute(MeshAttribute.Normal);
+      clonedNormalAttribute = clonedMesh.attribute(MeshAttribute.Normal);
+    } catch (error3) {
+      normalAttribute = null;
+      clonedNormalAttribute = null;
+    }
+    try {
+      colorAttribute = mesh.attribute(MeshAttribute.Color);
+      clonedColorAttribute = clonedMesh.attribute(MeshAttribute.Color);
+    } catch (error3) {
+      colorAttribute = null;
+      clonedColorAttribute = null;
+    }
+    for (let i = 0; i < mesh.vertexCount; i++) {
+      if (positionAttribute != null && clonedPositionAttribute != null) {
+        clonedPositionAttribute.set(i, positionAttribute.get(i, position));
+      }
+      if (textureCoordinatesAttribute != null && clonedTextureCoordinatesAttribute != null) {
+        clonedTextureCoordinatesAttribute.set(i, textureCoordinatesAttribute.get(i, textureCoordinates));
+      }
+      if (normalAttribute != null && clonedNormalAttribute != null) {
+        clonedNormalAttribute.set(i, normalAttribute.get(i, normal));
+      }
+      if (colorAttribute != null && clonedColorAttribute != null) {
+        clonedColorAttribute.set(i, colorAttribute.get(i, color));
+      }
+    }
+    return clonedMesh;
+  };
+}();
+var invert4 = function() {
+  let position = vec3_create();
+  let textureCoordinates = vec2_create();
+  let normal = vec3_create();
+  let color = vec4_create();
+  return function invert5(mesh) {
+    if (mesh == null) {
+      return null;
+    }
+    let invertedIndexData = new Uint32Array(mesh.indexData.length);
+    for (let i = 0; i < mesh.indexData.length / 3; i++) {
+      invertedIndexData[i * 3 + 0] = mesh.indexData[i * 3 + 2];
+      invertedIndexData[i * 3 + 1] = mesh.indexData[i * 3 + 1];
+      invertedIndexData[i * 3 + 2] = mesh.indexData[i * 3 + 0];
+    }
+    let invertedMesh = new Mesh(mesh.engine, {
+      vertexCount: mesh.vertexCount,
+      indexData: invertedIndexData,
+      indexType: MeshIndexType.UnsignedInt
+    });
+    let positionAttribute = null;
+    let textureCoordinatesAttribute = null;
+    let normalAttribute = null;
+    let colorAttribute = null;
+    let invertedPositionAttribute = null;
+    let invertedTextureCoordinatesAttribute = null;
+    let invertedNormalAttribute = null;
+    let invertedColorAttribute = null;
+    try {
+      positionAttribute = mesh.attribute(MeshAttribute.Position);
+      invertedPositionAttribute = invertedMesh.attribute(MeshAttribute.Position);
+    } catch (error3) {
+      positionAttribute = null;
+      invertedPositionAttribute = null;
+    }
+    try {
+      textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
+      invertedTextureCoordinatesAttribute = invertedMesh.attribute(MeshAttribute.TextureCoordinate);
+    } catch (error3) {
+      textureCoordinatesAttribute = null;
+      invertedTextureCoordinatesAttribute = null;
+    }
+    try {
+      normalAttribute = mesh.attribute(MeshAttribute.Normal);
+      invertedNormalAttribute = invertedMesh.attribute(MeshAttribute.Normal);
+    } catch (error3) {
+      normalAttribute = null;
+      invertedNormalAttribute = null;
+    }
+    try {
+      colorAttribute = mesh.attribute(MeshAttribute.Color);
+      invertedColorAttribute = invertedMesh.attribute(MeshAttribute.Color);
+    } catch (error3) {
+      colorAttribute = null;
+      invertedColorAttribute = null;
+    }
+    for (let i = 0; i < mesh.vertexCount; i++) {
+      if (positionAttribute != null && invertedPositionAttribute != null) {
+        invertedPositionAttribute.set(i, positionAttribute.get(i, position));
+      }
+      if (textureCoordinatesAttribute != null && invertedTextureCoordinatesAttribute != null) {
+        invertedTextureCoordinatesAttribute.set(i, textureCoordinatesAttribute.get(i, textureCoordinates));
+      }
+      if (normalAttribute != null && invertedNormalAttribute != null) {
+        normalAttribute.get(i, normal);
+        normal.vec3_negate(normal);
+        invertedNormalAttribute.set(i, normal);
+      }
+      if (colorAttribute != null && invertedColorAttribute != null) {
+        invertedColorAttribute.set(i, colorAttribute.get(i, color));
+      }
+    }
+    return invertedMesh;
+  };
+}();
+var makeDoubleSided = function() {
+  let position = vec3_create();
+  let textureCoordinates = vec2_create();
+  let normal = vec3_create();
+  let color = vec4_create();
+  return function makeDoubleSided2(mesh) {
+    if (mesh == null) {
+      return null;
+    }
+    let doubleSidedIndexData = new Uint32Array(mesh.indexData.length * 2);
+    for (let i = 0; i < doubleSidedIndexData.length / 3; i++) {
+      doubleSidedIndexData[i * 3 * 2 + 0] = mesh.indexData[i * 3 + 0] * 2;
+      doubleSidedIndexData[i * 3 * 2 + 1] = mesh.indexData[i * 3 + 1] * 2;
+      doubleSidedIndexData[i * 3 * 2 + 2] = mesh.indexData[i * 3 + 2] * 2;
+      doubleSidedIndexData[i * 3 * 2 + 3] = mesh.indexData[i * 3 + 2] * 2 + 1;
+      doubleSidedIndexData[i * 3 * 2 + 4] = mesh.indexData[i * 3 + 1] * 2 + 1;
+      doubleSidedIndexData[i * 3 * 2 + 5] = mesh.indexData[i * 3 + 0] * 2 + 1;
+    }
+    let doubleSidedMesh = new Mesh(mesh.engine, {
+      vertexCount: mesh.vertexCount * 2,
+      indexData: doubleSidedIndexData,
+      indexType: MeshIndexType.UnsignedInt
+    });
+    let positionAttribute = null;
+    let textureCoordinatesAttribute = null;
+    let normalAttribute = null;
+    let colorAttribute = null;
+    let doubleSidedPositionAttribute = null;
+    let doubleSidedTextureCoordinatesAttribute = null;
+    let doubleSidedNormalAttribute = null;
+    let doubleSidedColorAttribute = null;
+    try {
+      positionAttribute = mesh.attribute(MeshAttribute.Position);
+      doubleSidedPositionAttribute = doubleSidedMesh.attribute(MeshAttribute.Position);
+    } catch (error3) {
+      positionAttribute = null;
+      doubleSidedPositionAttribute = null;
+    }
+    try {
+      textureCoordinatesAttribute = mesh.attribute(MeshAttribute.TextureCoordinate);
+      doubleSidedTextureCoordinatesAttribute = doubleSidedMesh.attribute(MeshAttribute.TextureCoordinate);
+    } catch (error3) {
+      textureCoordinatesAttribute = null;
+      doubleSidedTextureCoordinatesAttribute = null;
+    }
+    try {
+      normalAttribute = mesh.attribute(MeshAttribute.Normal);
+      doubleSidedNormalAttribute = doubleSidedMesh.attribute(MeshAttribute.Normal);
+    } catch (error3) {
+      normalAttribute = null;
+      doubleSidedNormalAttribute = null;
+    }
+    try {
+      colorAttribute = mesh.attribute(MeshAttribute.Color);
+      doubleSidedColorAttribute = doubleSidedMesh.attribute(MeshAttribute.Color);
+    } catch (error3) {
+      colorAttribute = null;
+      doubleSidedColorAttribute = null;
+    }
+    for (let i = 0; i < mesh.vertexCount; i++) {
+      if (positionAttribute != null && doubleSidedPositionAttribute != null) {
+        doubleSidedPositionAttribute.set(i * 2, positionAttribute.get(i, position));
+        doubleSidedPositionAttribute.set(i * 2 + 1, positionAttribute.get(i, position));
+      }
+      if (textureCoordinatesAttribute != null && doubleSidedTextureCoordinatesAttribute != null) {
+        doubleSidedTextureCoordinatesAttribute.set(i * 2, textureCoordinatesAttribute.get(i, textureCoordinates));
+        doubleSidedTextureCoordinatesAttribute.set(i * 2 + 1, textureCoordinatesAttribute.get(i, textureCoordinates));
+      }
+      if (normalAttribute != null && doubleSidedNormalAttribute != null) {
+        normalAttribute.get(i, normal);
+        doubleSidedNormalAttribute.set(i * 2, normal);
+        let invertedNormal = normal.vec3_negate();
+        doubleSidedNormalAttribute.set(i * 2 + 1, invertedNormal);
+      }
+      if (colorAttribute != null && doubleSidedColorAttribute != null) {
+        doubleSidedColorAttribute.set(i * 2, colorAttribute.get(i, color));
+        doubleSidedColorAttribute.set(i * 2 + 1, colorAttribute.get(i, color));
+      }
+    }
+    return doubleSidedMesh;
+  };
+}();
+function createPlane(engine = Globals.getMainEngine()) {
+  let vertexCount = 4;
+  let meshCreationParams = new MeshCreationParams(engine);
+  for (let i = 0; i < vertexCount; ++i) {
+    let vertexCreationParams = new MeshCreationVertexParams();
+    vertexCreationParams.myPosition = new vec3_create();
+    vertexCreationParams.myPosition[0] = -1 + (i & 1) * 2;
+    vertexCreationParams.myPosition[1] = -1 + ((i & 2) >> 1) * 2;
+    vertexCreationParams.myPosition[2] = 0;
+    vertexCreationParams.myTextureCoordinates = new vec2_create();
+    vertexCreationParams.myTextureCoordinates[0] = i & 1;
+    vertexCreationParams.myTextureCoordinates[1] = (i & 2) >> 1;
+    vertexCreationParams.myNormal = new vec3_create();
+    vertexCreationParams.myNormal[0] = 0;
+    vertexCreationParams.myNormal[1] = 0;
+    vertexCreationParams.myNormal[2] = 1;
+    meshCreationParams.myVertexes.push(vertexCreationParams);
+  }
+  let firstTriangle = new MeshCreationTriangleParams();
+  firstTriangle.myIndexes[0] = 0;
+  firstTriangle.myIndexes[1] = 1;
+  firstTriangle.myIndexes[2] = 2;
+  let secondTriangle = new MeshCreationTriangleParams();
+  secondTriangle.myIndexes[0] = 2;
+  secondTriangle.myIndexes[1] = 1;
+  secondTriangle.myIndexes[2] = 3;
+  meshCreationParams.myTriangles.push(firstTriangle);
+  meshCreationParams.myTriangles.push(secondTriangle);
+  let mesh = MeshUtils.create(meshCreationParams);
+  return mesh;
+}
+var MeshUtils = {
+  create: create8,
+  clone: clone8,
+  invert: invert4,
+  makeDoubleSided,
+  createPlane
+};
+
+// dist/cauldron/wl/getters/default_resources.js
+var DefaultResources = class {
+  myMeshes = new DefaultResourcesMeshes();
+  myMaterials = new DefaultResourcesMaterials();
+};
+var DefaultResourcesMeshes = class {
+  myPlane = null;
+  myCube = null;
+  mySphere = null;
+  myCone = null;
+  myCylinder = null;
+  myCircle = null;
+  myInvertedCube = null;
+  myInvertedSphere = null;
+  myInvertedCone = null;
+  myInvertedCylinder = null;
+  myDoubleSidedPlane = null;
+  myDoubleSidedCube = null;
+  myDoubleSidedSphere = null;
+  myDoubleSidedCone = null;
+  myDoubleSidedCylinder = null;
+  myDoubleSidedCircle = null;
+};
+var DefaultResourcesMaterials = class {
+  myFlatOpaque = null;
+  /** For now, the pipeline associated to this material needs to be the last one to make it work properly */
+  myFlatTransparentNoDepth = null;
+  myPhongOpaque = null;
+  myText = null;
+};
+
+// dist/cauldron/wl/getters/components/get_default_resources_component.js
+var GetDefaultResourcesComponent = class extends Component7 {
+  static TypeName = "pp-get-default-resources";
+  static Properties = {
+    _myPlane: Property5.mesh(),
+    _myCube: Property5.mesh(),
+    _mySphere: Property5.mesh(),
+    _myCone: Property5.mesh(),
+    _myCylinder: Property5.mesh(),
+    _myCircle: Property5.mesh(),
+    _myFlatOpaque: Property5.material(),
+    _myFlatTransparentNoDepth: Property5.material(),
+    _myPhongOpaque: Property5.material(),
+    _myText: Property5.material()
+  };
+  init() {
+    this._myDefaultResources = null;
+    if (!Globals.hasDefaultResources(this.engine)) {
+      this._myDefaultResources = new DefaultResources();
+      this._myDefaultResources.myMeshes.myPlane = MeshUtils.clone(this._myPlane);
+      this._myDefaultResources.myMeshes.myCube = MeshUtils.clone(this._myCube);
+      this._myDefaultResources.myMeshes.mySphere = MeshUtils.clone(this._mySphere);
+      this._myDefaultResources.myMeshes.myCone = MeshUtils.clone(this._myCone);
+      this._myDefaultResources.myMeshes.myCylinder = MeshUtils.clone(this._myCylinder);
+      this._myDefaultResources.myMeshes.myCircle = MeshUtils.clone(this._myCircle);
+      this._myDefaultResources.myMeshes.myInvertedCube = MeshUtils.invert(this._myCube);
+      this._myDefaultResources.myMeshes.myInvertedSphere = MeshUtils.invert(this._mySphere);
+      this._myDefaultResources.myMeshes.myInvertedCone = MeshUtils.invert(this._myCone);
+      this._myDefaultResources.myMeshes.myInvertedCylinder = MeshUtils.invert(this._myCylinder);
+      this._myDefaultResources.myMeshes.myDoubleSidedPlane = MeshUtils.makeDoubleSided(this._myPlane);
+      this._myDefaultResources.myMeshes.myDoubleSidedCube = MeshUtils.makeDoubleSided(this._myCube);
+      this._myDefaultResources.myMeshes.myDoubleSidedSphere = MeshUtils.makeDoubleSided(this._mySphere);
+      this._myDefaultResources.myMeshes.myDoubleSidedCone = MeshUtils.makeDoubleSided(this._myCone);
+      this._myDefaultResources.myMeshes.myDoubleSidedCylinder = MeshUtils.makeDoubleSided(this._myCylinder);
+      this._myDefaultResources.myMeshes.myDoubleSidedCircle = MeshUtils.makeDoubleSided(this._myCircle);
+      if (this._myFlatOpaque != null) {
+        this._myDefaultResources.myMaterials.myFlatOpaque = this._myFlatOpaque.clone();
+      }
+      if (this._myFlatTransparentNoDepth != null) {
+        this._myDefaultResources.myMaterials.myFlatTransparentNoDepth = this._myFlatTransparentNoDepth.clone();
+      }
+      if (this._myPhongOpaque != null) {
+        this._myDefaultResources.myMaterials.myPhongOpaque = this._myPhongOpaque.clone();
+      }
+      if (this._myText != null) {
+        this._myDefaultResources.myMaterials.myText = this._myText.clone();
+      }
+      Globals.setDefaultResources(this._myDefaultResources, this.engine);
+    }
+  }
+  onDestroy() {
+    if (this._myDefaultResources != null && Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
+      Globals.removeDefaultResources(this.engine);
+    }
+  }
+};
+
+// dist/cauldron/wl/getters/components/get_scene_objects_component.js
+import { Component as Component8, Property as Property6 } from "@wonderlandengine/api";
+
+// dist/input/cauldron/input_types.js
+var Handedness;
+(function(Handedness2) {
+  Handedness2["LEFT"] = "left";
+  Handedness2["RIGHT"] = "right";
+})(Handedness || (Handedness = {}));
+var HandednessIndex;
+(function(HandednessIndex2) {
+  HandednessIndex2[HandednessIndex2["LEFT"] = 0] = "LEFT";
+  HandednessIndex2[HandednessIndex2["RIGHT"] = 1] = "RIGHT";
+})(HandednessIndex || (HandednessIndex = {}));
+var InputSourceType;
+(function(InputSourceType2) {
+  InputSourceType2[InputSourceType2["GAMEPAD"] = 0] = "GAMEPAD";
+  InputSourceType2[InputSourceType2["TRACKED_HAND"] = 1] = "TRACKED_HAND";
+})(InputSourceType || (InputSourceType = {}));
+var TrackedHandJointID;
+(function(TrackedHandJointID2) {
+  TrackedHandJointID2["WRIST"] = "wrist";
+  TrackedHandJointID2["THUMB_METACARPAL"] = "thumb-metacarpal";
+  TrackedHandJointID2["THUMB_PHALANX_PROXIMAL"] = "thumb-phalanx-proximal";
+  TrackedHandJointID2["THUMB_PHALANX_DISTAL"] = "thumb-phalanx-distal";
+  TrackedHandJointID2["THUMB_TIP"] = "thumb-tip";
+  TrackedHandJointID2["INDEX_FINGER_METACARPAL"] = "index-finger-metacarpal";
+  TrackedHandJointID2["INDEX_FINGER_PHALANX_PROXIMAL"] = "index-finger-phalanx-proximal";
+  TrackedHandJointID2["INDEX_FINGER_PHALANX_INTERMEDIATE"] = "index-finger-phalanx-intermediate";
+  TrackedHandJointID2["INDEX_FINGER_PHALANX_DISTAL"] = "index-finger-phalanx-distal";
+  TrackedHandJointID2["INDEX_FINGER_TIP"] = "index-finger-tip";
+  TrackedHandJointID2["MIDDLE_FINGER_METACARPAL"] = "middle-finger-metacarpal";
+  TrackedHandJointID2["MIDDLE_FINGER_PHALANX_PROXIMAL"] = "middle-finger-phalanx-proximal";
+  TrackedHandJointID2["MIDDLE_FINGER_PHALANX_INTERMEDIATE"] = "middle-finger-phalanx-intermediate";
+  TrackedHandJointID2["MIDDLE_FINGER_PHALANX_DISTAL"] = "middle-finger-phalanx-distal";
+  TrackedHandJointID2["MIDDLE_FINGER_TIP"] = "middle-finger-tip";
+  TrackedHandJointID2["RING_FINGER_METACARPAL"] = "ring-finger-metacarpal";
+  TrackedHandJointID2["RING_FINGER_PHALANX_PROXIMAL"] = "ring-finger-phalanx-proximal";
+  TrackedHandJointID2["RING_FINGER_PHALANX_INTERMEDIATE"] = "ring-finger-phalanx-intermediate";
+  TrackedHandJointID2["RING_FINGER_PHALANX_DISTAL"] = "ring-finger-phalanx-distal";
+  TrackedHandJointID2["RING_FINGER_TIP"] = "ring-finger-tip";
+  TrackedHandJointID2["PINKY_FINGER_METACARPAL"] = "pinky-finger-metacarpal";
+  TrackedHandJointID2["PINKY_FINGER_PHALANX_PROXIMAL"] = "pinky-finger-phalanx-proximal";
+  TrackedHandJointID2["PINKY_FINGER_PHALANX_INTERMEDIATE"] = "pinky-finger-phalanx-intermediate";
+  TrackedHandJointID2["PINKY_FINGER_PHALANX_DISTAL"] = "pinky-finger-phalanx-distal";
+  TrackedHandJointID2["PINKY_FINGER_TIP"] = "pinky-finger-tip";
+})(TrackedHandJointID || (TrackedHandJointID = {}));
+var TrackedHandJointIDIndex;
+(function(TrackedHandJointIDIndex2) {
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["WRIST"] = 0] = "WRIST";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["THUMB_METACARPAL"] = 1] = "THUMB_METACARPAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["THUMB_PHALANX_PROXIMAL"] = 2] = "THUMB_PHALANX_PROXIMAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["THUMB_PHALANX_DISTAL"] = 3] = "THUMB_PHALANX_DISTAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["THUMB_TIP"] = 4] = "THUMB_TIP";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["INDEX_FINGER_METACARPAL"] = 5] = "INDEX_FINGER_METACARPAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["INDEX_FINGER_PHALANX_PROXIMAL"] = 6] = "INDEX_FINGER_PHALANX_PROXIMAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["INDEX_FINGER_PHALANX_INTERMEDIATE"] = 7] = "INDEX_FINGER_PHALANX_INTERMEDIATE";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["INDEX_FINGER_PHALANX_DISTAL"] = 8] = "INDEX_FINGER_PHALANX_DISTAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["INDEX_FINGER_TIP"] = 9] = "INDEX_FINGER_TIP";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["MIDDLE_FINGER_METACARPAL"] = 10] = "MIDDLE_FINGER_METACARPAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["MIDDLE_FINGER_PHALANX_PROXIMAL"] = 11] = "MIDDLE_FINGER_PHALANX_PROXIMAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["MIDDLE_FINGER_PHALANX_INTERMEDIATE"] = 12] = "MIDDLE_FINGER_PHALANX_INTERMEDIATE";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["MIDDLE_FINGER_PHALANX_DISTAL"] = 13] = "MIDDLE_FINGER_PHALANX_DISTAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["MIDDLE_FINGER_TIP"] = 14] = "MIDDLE_FINGER_TIP";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["RING_FINGER_METACARPAL"] = 15] = "RING_FINGER_METACARPAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["RING_FINGER_PHALANX_PROXIMAL"] = 16] = "RING_FINGER_PHALANX_PROXIMAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["RING_FINGER_PHALANX_INTERMEDIATE"] = 17] = "RING_FINGER_PHALANX_INTERMEDIATE";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["RING_FINGER_PHALANX_DISTAL"] = 18] = "RING_FINGER_PHALANX_DISTAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["RING_FINGER_TIP"] = 19] = "RING_FINGER_TIP";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["PINKY_FINGER_METACARPAL"] = 20] = "PINKY_FINGER_METACARPAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["PINKY_FINGER_PHALANX_PROXIMAL"] = 21] = "PINKY_FINGER_PHALANX_PROXIMAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["PINKY_FINGER_PHALANX_INTERMEDIATE"] = 22] = "PINKY_FINGER_PHALANX_INTERMEDIATE";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["PINKY_FINGER_PHALANX_DISTAL"] = 23] = "PINKY_FINGER_PHALANX_DISTAL";
+  TrackedHandJointIDIndex2[TrackedHandJointIDIndex2["PINKY_FINGER_TIP"] = 24] = "PINKY_FINGER_TIP";
+})(TrackedHandJointIDIndex || (TrackedHandJointIDIndex = {}));
+
+// dist/cauldron/wl/getters/scene_objects.js
+var SceneObjects = class {
+  myRoot = null;
+  myScene = null;
+  myCauldron = null;
+  myDynamics = null;
+  myParticles = null;
+  myVisualElements = null;
+  myTools = null;
+  myPlayerObjects = new PlayerObjects();
+};
+var PlayerObjects = class {
+  myPlayer = null;
+  myCauldron = null;
+  myReferenceSpace = null;
+  myCameraNonXR = null;
+  myEyes = { [Handedness.LEFT]: null, [Handedness.RIGHT]: null };
+  myEyeLeft = null;
+  myEyeRight = null;
+  myHands = { [Handedness.LEFT]: null, [Handedness.RIGHT]: null };
+  myHandLeft = null;
+  myHandRight = null;
+  myHead = null;
+  myHeadDebugs = null;
+};
+
+// dist/cauldron/wl/getters/components/get_scene_objects_component.js
+var GetSceneObjectsComponent = class extends Component8 {
+  static TypeName = "pp-get-scene-objects";
+  static Properties = {
+    _myRoot: Property6.object(),
+    _myScene: Property6.object(),
+    _myPlayer: Property6.object(),
+    _myReferenceSpace: Property6.object(),
+    // If u don't have a pivot under the player you set this to null, by default will be the same as the player
+    _myCameraNonXR: Property6.object(),
+    _myEyeLeft: Property6.object(),
+    _myEyeRight: Property6.object(),
+    _myHandLeft: Property6.object(),
+    _myHandRight: Property6.object(),
+    _myHead: Property6.object()
+  };
+  init() {
+    this._mySceneObjects = null;
+    if (!Globals.hasSceneObjects(this.engine)) {
+      this._mySceneObjects = new SceneObjects();
+      this._mySceneObjects.myRoot = this._myRoot;
+      this._mySceneObjects.myScene = this._myScene;
+      this._mySceneObjects.myPlayerObjects.myPlayer = this._myPlayer;
+      this._mySceneObjects.myPlayerObjects.myReferenceSpace = this._myReferenceSpace;
+      this._mySceneObjects.myPlayerObjects.myCameraNonXR = this._myCameraNonXR;
+      this._mySceneObjects.myPlayerObjects.myEyeLeft = this._myEyeLeft;
+      this._mySceneObjects.myPlayerObjects.myEyeRight = this._myEyeRight;
+      this._mySceneObjects.myPlayerObjects.myHandLeft = this._myHandLeft;
+      this._mySceneObjects.myPlayerObjects.myHandRight = this._myHandRight;
+      this._mySceneObjects.myPlayerObjects.myEyes[Handedness.LEFT] = this._myEyeLeft;
+      this._mySceneObjects.myPlayerObjects.myEyes[Handedness.RIGHT] = this._myEyeRight;
+      this._mySceneObjects.myPlayerObjects.myHands[Handedness.LEFT] = this._myHandLeft;
+      this._mySceneObjects.myPlayerObjects.myHands[Handedness.RIGHT] = this._myHandRight;
+      this._mySceneObjects.myPlayerObjects.myHead = this._myHead;
+      if (this._mySceneObjects.myPlayerObjects.myReferenceSpace == null) {
+        this._mySceneObjects.myPlayerObjects.myReferenceSpace = this._mySceneObjects.myPlayerObjects.myPlayer;
+      }
+      this._mySceneObjects.myCauldron = this._mySceneObjects.myScene.pp_addObject();
+      this._mySceneObjects.myCauldron.pp_setName("Cauldron");
+      this._mySceneObjects.myDynamics = this._mySceneObjects.myScene.pp_addObject();
+      this._mySceneObjects.myDynamics.pp_setName("Dynamics");
+      this._mySceneObjects.myParticles = this._mySceneObjects.myScene.pp_addObject();
+      this._mySceneObjects.myParticles.pp_setName("Particles");
+      this._mySceneObjects.myVisualElements = this._mySceneObjects.myScene.pp_addObject();
+      this._mySceneObjects.myVisualElements.pp_setName("Visual Elements");
+      this._mySceneObjects.myTools = this._mySceneObjects.myScene.pp_addObject();
+      this._mySceneObjects.myTools.pp_setName("Tools");
+      this._mySceneObjects.myPlayerObjects.myCauldron = this._mySceneObjects.myPlayerObjects.myPlayer.pp_addObject();
+      this._mySceneObjects.myPlayerObjects.myCauldron.pp_setName("Cauldron");
+      this._mySceneObjects.myPlayerObjects.myHeadDebugs = this._mySceneObjects.myPlayerObjects.myHead.pp_addObject();
+      this._mySceneObjects.myPlayerObjects.myHeadDebugs.pp_setName("Head Debugs");
+      Globals.setSceneObjects(this._mySceneObjects, this.engine);
+    }
+  }
+  onDestroy() {
+    if (this._mySceneObjects != null && Globals.getSceneObjects(this.engine) == this._mySceneObjects) {
+      Globals.removeSceneObjects(this.engine);
+    }
   }
 };
 
 // dist/debug/components/debug_manager_component.js
-import { Component as Component7 } from "@wonderlandengine/api";
+import { Component as Component9 } from "@wonderlandengine/api";
 
 // dist/debug/debug_visual_manager.js
 import { Alignment as Alignment2, Justification as Justification2 } from "@wonderlandengine/api";
@@ -14819,9 +8463,8 @@ var DebugManager = class {
 };
 
 // dist/debug/components/debug_manager_component.js
-var DebugManagerComponent = class extends Component7 {
+var DebugManagerComponent = class extends Component9 {
   static TypeName = "pp-debug-manager";
-  static Properties = {};
   init() {
     this._myDebugManager = null;
     if (!Globals.hasDebugManager(this.engine)) {
@@ -14848,11 +8491,11 @@ var DebugManagerComponent = class extends Component7 {
 };
 
 // dist/debug/components/enable_debug_component.js
-import { Component as Component8, Property as Property5 } from "@wonderlandengine/api";
-var EnableDebugComponent = class extends Component8 {
+import { Component as Component10, Property as Property7 } from "@wonderlandengine/api";
+var EnableDebugComponent = class extends Component10 {
   static TypeName = "pp-enable-debug";
   static Properties = {
-    _myEnable: Property5.bool(true)
+    _myEnable: Property7.bool(true)
   };
   init() {
     this._myDebugEnabled = null;
@@ -14869,7 +8512,7 @@ var EnableDebugComponent = class extends Component8 {
 };
 
 // dist/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
-import { Component as Component9 } from "@wonderlandengine/api";
+import { Component as Component11 } from "@wonderlandengine/api";
 
 // dist/gameplay/experimental/character_controller/collision/character_collision_results.js
 var CharacterCollisionResults = class {
@@ -14906,6 +8549,7 @@ var CharacterCollisionCheckType = {
 var CharacterCollisionSurfaceInfo = class {
   constructor() {
     this.myOnSurface = false;
+    this.mySurfaceReferenceCollisionHit = new RaycastHit();
     this.mySurfaceAngle = 0;
     this.mySurfacePerceivedAngle = 0;
     this.mySurfaceNormal = vec3_create();
@@ -14913,6 +8557,7 @@ var CharacterCollisionSurfaceInfo = class {
     this.mySurfaceHitMaxNormal = vec3_create();
     this.mySurfaceDistance = null;
     this.myBaseInsideCollision = false;
+    this.myOnSurfaceDueToBasePartiallyInsideCollision = false;
   }
   reset() {
   }
@@ -15046,7 +8691,7 @@ CharacterCollisionResults.prototype.reset = function reset() {
   this.mySplitMovementResults.reset();
   this.myInternalResults.reset();
 };
-CharacterCollisionResults.prototype.copy = function copy16(other) {
+CharacterCollisionResults.prototype.copy = function copy17(other) {
   this.myCheckType = other.myCheckType;
   this.myTransformResults.copy(other.myTransformResults);
   this.myMovementResults.copy(other.myMovementResults);
@@ -15067,20 +8712,24 @@ CharacterCollisionSurfaceInfo.prototype.reset = function reset2() {
   this.mySurfaceAngle = 0;
   this.mySurfacePerceivedAngle = 0;
   this.mySurfaceNormal.vec3_zero();
+  this.mySurfaceReferenceCollisionHit.reset();
   this.mySurfaceHitMaxAngle = 0;
   this.mySurfaceHitMaxNormal.vec3_zero();
   this.mySurfaceDistance = null;
   this.myBaseInsideCollision = false;
+  this.myOnSurfaceDueToBasePartiallyInsideCollision = false;
 };
-CharacterCollisionSurfaceInfo.prototype.copy = function copy17(other) {
+CharacterCollisionSurfaceInfo.prototype.copy = function copy18(other) {
   this.myOnSurface = other.myOnSurface;
   this.mySurfaceAngle = other.mySurfaceAngle;
   this.mySurfacePerceivedAngle = other.mySurfacePerceivedAngle;
   this.mySurfaceNormal.vec3_copy(other.mySurfaceNormal);
+  this.mySurfaceReferenceCollisionHit.copy(other.mySurfaceReferenceCollisionHit);
   this.mySurfaceHitMaxAngle = other.mySurfaceHitMaxAngle;
   this.mySurfaceHitMaxNormal.vec3_copy(other.mySurfaceHitMaxNormal);
   this.mySurfaceDistance = other.mySurfaceDistance;
   this.myBaseInsideCollision = other.myBaseInsideCollision;
+  this.myOnSurfaceDueToBasePartiallyInsideCollision = other.myOnSurfaceDueToBasePartiallyInsideCollision;
 };
 CharacterCollisionWallSlideResults.prototype.reset = function reset3() {
   this.myHasSlid = false;
@@ -15088,7 +8737,7 @@ CharacterCollisionWallSlideResults.prototype.reset = function reset3() {
   this.mySlideMovementWallAngle = 0;
   this.myWallNormal.vec3_zero();
 };
-CharacterCollisionWallSlideResults.prototype.copy = function copy18(other) {
+CharacterCollisionWallSlideResults.prototype.copy = function copy19(other) {
   this.myHasSlid = other.myHasSlid;
   this.mySlideMovementAngle = other.mySlideMovementAngle;
   this.mySlideMovementWallAngle = other.mySlideMovementWallAngle;
@@ -15098,7 +8747,7 @@ CharacterCollisionTransformResults.prototype.reset = function reset4() {
   this.myInitialTransformQuat.quat2_identity();
   this.myFinalTransformQuat.quat2_identity();
 };
-CharacterCollisionTransformResults.prototype.copy = function copy19(other) {
+CharacterCollisionTransformResults.prototype.copy = function copy20(other) {
   this.myInitialTransformQuat.quat2_copy(other.myInitialTransformQuat);
   this.myFinalTransformQuat.quat2_copy(other.myFinalTransformQuat);
 };
@@ -15109,7 +8758,7 @@ CharacterCollisionMovementResults.prototype.reset = function reset5() {
   this.myMovementCollided = false;
   this.myReferenceCollisionHit.reset();
 };
-CharacterCollisionMovementResults.prototype.copy = function copy20(other) {
+CharacterCollisionMovementResults.prototype.copy = function copy21(other) {
   this.myInitialMovement.vec3_copy(other.myInitialMovement);
   this.myFinalMovement.vec3_copy(other.myFinalMovement);
   this.myMovementFailed = other.myMovementFailed;
@@ -15121,7 +8770,7 @@ CharacterCollisionTeleportResults.prototype.reset = function reset6() {
   this.myFinalTeleportTransformQuat.quat2_identity();
   this.myTeleportFailed = false;
 };
-CharacterCollisionTeleportResults.prototype.copy = function copy21(other) {
+CharacterCollisionTeleportResults.prototype.copy = function copy22(other) {
   this.myInitialTeleportTransformQuat.quat2_copy(other.myInitialTeleportTransformQuat);
   this.myFinalTeleportTransformQuat.quat2_copy(other.myFinalTeleportTransformQuat);
   this.myTeleportFailed = other.myTeleportFailed;
@@ -15131,7 +8780,7 @@ CharacterCollisionCheckTransformResults.prototype.reset = function reset7() {
   this.myFinalCheckTransformQuat.quat2_identity();
   this.myCheckTransformFailed = false;
 };
-CharacterCollisionCheckTransformResults.prototype.copy = function copy22(other) {
+CharacterCollisionCheckTransformResults.prototype.copy = function copy23(other) {
   this.myInitialCheckTransformQuat.quat2_copy(other.myInitialCheckTransformQuat);
   this.myFinalCheckTransformQuat.quat2_copy(other.myFinalCheckTransformQuat);
   this.myCheckTransformFailed = other.myCheckTransformFailed;
@@ -15143,7 +8792,7 @@ CharacterCollisionSurfaceResults.prototype.reset = function reset8() {
   this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleUphill = false;
   this.myHasVerticalMovementAdjustedHorizontalMovementOverSurfaceAngleDownhill = false;
 };
-CharacterCollisionSurfaceResults.prototype.copy = function copy23(other) {
+CharacterCollisionSurfaceResults.prototype.copy = function copy24(other) {
   this.myHasSnappedOnSurface = other.myHasSnappedOnSurface;
   this.myHasPoppedOutSurface = other.myHasPoppedOutSurface;
   this.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill = other.myHasHorizontalMovementAdjustedVerticalMovementOverSurfacePerceivedAngleDownhill;
@@ -15156,7 +8805,7 @@ CharacterCollisionSplitMovementResults.prototype.reset = function reset9() {
   this.myMovementInterrupted = false;
   this.myMovementChecked.vec3_zero();
 };
-CharacterCollisionSplitMovementResults.prototype.copy = function copy24(other) {
+CharacterCollisionSplitMovementResults.prototype.copy = function copy25(other) {
   this.myStepsToPerform = other.myStepsToPerform;
   this.myStepsPerformed = other.myStepsPerformed;
   this.myMovementInterrupted = other.myMovementInterrupted;
@@ -15165,12 +8814,12 @@ CharacterCollisionSplitMovementResults.prototype.copy = function copy24(other) {
 CharacterCollisionDebugResults.prototype.reset = function reset10() {
   this._myRaycastsPerformed = 0;
 };
-CharacterCollisionDebugResults.prototype.copy = function copy25(other) {
+CharacterCollisionDebugResults.prototype.copy = function copy26(other) {
   this._myRaycastsPerformed = other._myRaycastsPerformed;
 };
 CharacterCollisionInternalResults.prototype.reset = function reset11() {
 };
-CharacterCollisionInternalResults.prototype.copy = function copy26(other) {
+CharacterCollisionInternalResults.prototype.copy = function copy27(other) {
   this.myLastRelevantInitialHorizontalMovement.vec3_copy(other.myLastRelevantInitialHorizontalMovement);
   this.myLastRelevantAdjustedInitialHorizontalMovement.vec3_copy(other.myLastRelevantAdjustedInitialHorizontalMovement);
   this.myLastRelevantFinalHorizontalMovement.vec3_copy(other.myLastRelevantFinalHorizontalMovement);
@@ -15318,6 +8967,10 @@ var CollisionCheckParams = class {
     this.myFindGroundDistanceMaxInsideDistance = 0;
     this.myFindCeilingDistanceMaxOutsideDistance = 0;
     this.myFindCeilingDistanceMaxInsideDistance = 0;
+    this.myCollectGroundCollisionHitOutsideDistance = 0;
+    this.myCollectGroundCollisionHitInsideDistance = 0;
+    this.myCollectCeilingCollisionHitOutsideDistance = 0;
+    this.myCollectCeilingCollisionHitInsideDistance = 0;
     this.myAllowGroundSteepFix = false;
     this.myAllowCeilingSteepFix = false;
     this.myMustStayOnGround = false;
@@ -15499,6 +9152,10 @@ var CollisionCheckParams = class {
     this.myFindGroundDistanceMaxInsideDistance = other.myFindGroundDistanceMaxInsideDistance;
     this.myFindCeilingDistanceMaxOutsideDistance = other.myFindCeilingDistanceMaxOutsideDistance;
     this.myFindCeilingDistanceMaxInsideDistance = other.myFindCeilingDistanceMaxInsideDistance;
+    this.myCollectGroundCollisionHitOutsideDistance = other.myCollectGroundCollisionHitOutsideDistance;
+    this.myCollectGroundCollisionHitInsideDistance = other.myCollectGroundCollisionHitInsideDistance;
+    this.myCollectCeilingCollisionHitOutsideDistance = other.myCollectCeilingCollisionHitOutsideDistance;
+    this.myCollectCeilingCollisionHitInsideDistance = other.myCollectCeilingCollisionHitInsideDistance;
     this.myAllowGroundSteepFix = other.myAllowGroundSteepFix;
     this.myAllowCeilingSteepFix = other.myAllowCeilingSteepFix;
     this.myMustStayOnGround = other.myMustStayOnGround;
@@ -15569,6 +9226,7 @@ var CollisionRuntimeParams = class {
     this.myLastValidEndHorizontalMovement = vec3_create();
     this.myLastValidEndVerticalMovement = vec3_create();
     this.myIsOnGround = false;
+    this.myGroundCollisionHit = new RaycastHit();
     this.myGroundAngle = 0;
     this.myGroundPerceivedAngle = 0;
     this.myGroundNormal = vec3_create();
@@ -15577,6 +9235,7 @@ var CollisionRuntimeParams = class {
     this.myGroundDistance = null;
     this.myGroundIsBaseInsideCollision = false;
     this.myIsOnCeiling = false;
+    this.myCeilingCollisionHit = new RaycastHit();
     this.myCeilingAngle = 0;
     this.myCeilingPerceivedAngle = 0;
     this.myCeilingNormal = vec3_create();
@@ -15646,6 +9305,7 @@ var CollisionRuntimeParams = class {
     this.myLastValidEndHorizontalMovement.vec3_zero();
     this.myLastValidEndVerticalMovement.vec3_zero();
     this.myIsOnGround = false;
+    this.myGroundCollisionHit.reset();
     this.myGroundAngle = 0;
     this.myGroundPerceivedAngle = 0;
     this.myGroundNormal.vec3_zero();
@@ -15654,6 +9314,7 @@ var CollisionRuntimeParams = class {
     this.myGroundDistance = null;
     this.myGroundIsBaseInsideCollision = false;
     this.myIsOnCeiling = false;
+    this.myCeilingCollisionHit.reset();
     this.myCeilingAngle = 0;
     this.myCeilingPerceivedAngle = 0;
     this.myCeilingNormal.vec3_zero();
@@ -15723,6 +9384,7 @@ var CollisionRuntimeParams = class {
     this.myLastValidEndHorizontalMovement.vec3_copy(other.myLastValidEndHorizontalMovement);
     this.myLastValidEndVerticalMovement.vec3_copy(other.myLastValidEndVerticalMovement);
     this.myIsOnGround = other.myIsOnGround;
+    this.myGroundCollisionHit.copy(other.myGroundCollisionHit);
     this.myGroundAngle = other.myGroundAngle;
     this.myGroundPerceivedAngle = other.myGroundPerceivedAngle;
     this.myGroundNormal.vec3_copy(other.myGroundNormal);
@@ -15731,6 +9393,7 @@ var CollisionRuntimeParams = class {
     this.myGroundDistance = other.myGroundDistance;
     this.myGroundIsBaseInsideCollision = other.myGroundIsBaseInsideCollision;
     this.myIsOnCeiling = other.myIsOnCeiling;
+    this.myCeilingCollisionHit.copy(other.myCeilingCollisionHit);
     this.myCeilingAngle = other.myCeilingAngle;
     this.myCeilingPerceivedAngle = other.myCeilingPerceivedAngle;
     this.myCeilingNormal.vec3_copy(other.myCeilingNormal);
@@ -15894,6 +9557,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForMoveCollisionCheckDisabled = fu
     collisionRuntimeParams.reset();
     collisionRuntimeParams.myRealIsOnGround = true;
     collisionRuntimeParams.myIsOnGround = true;
+    collisionRuntimeParams.myGroundCollisionHit.reset();
     collisionRuntimeParams.myGroundAngle = 0;
     collisionRuntimeParams.myGroundPerceivedAngle = 0;
     collisionRuntimeParams.myGroundNormal.vec3_set(0, 1, 0);
@@ -15901,8 +9565,10 @@ CollisionCheckBase.prototype._setRuntimeParamsForMoveCollisionCheckDisabled = fu
     collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
     collisionRuntimeParams.myGroundDistance = 0;
     collisionRuntimeParams.myGroundIsBaseInsideCollision = false;
+    collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = false;
     collisionRuntimeParams.myRealIsOnCeiling = false;
     collisionRuntimeParams.myIsOnCeiling = false;
+    collisionRuntimeParams.myCeilingCollisionHit.reset();
     collisionRuntimeParams.myCeilingAngle = 0;
     collisionRuntimeParams.myCeilingPerceivedAngle = 0;
     collisionRuntimeParams.myCeilingNormal.vec3_set(0, 1, 0);
@@ -15910,6 +9576,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForMoveCollisionCheckDisabled = fu
     collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
     collisionRuntimeParams.myCeilingDistance = 0;
     collisionRuntimeParams.myCeilingIsBaseInsideCollision = false;
+    collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = false;
     collisionRuntimeParams.mySplitMovementSteps = 1;
     collisionRuntimeParams.mySplitMovementStepsPerformed = 1;
     collisionRuntimeParams.mySplitMovementStop = false;
@@ -15937,6 +9604,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForTeleportCollisionCheckDisabled 
     collisionRuntimeParams.reset();
     collisionRuntimeParams.myRealIsOnGround = true;
     collisionRuntimeParams.myIsOnGround = true;
+    collisionRuntimeParams.myGroundCollisionHit.reset();
     collisionRuntimeParams.myGroundAngle = 0;
     collisionRuntimeParams.myGroundPerceivedAngle = 0;
     collisionRuntimeParams.myGroundNormal.vec3_set(0, 1, 0);
@@ -15944,8 +9612,10 @@ CollisionCheckBase.prototype._setRuntimeParamsForTeleportCollisionCheckDisabled 
     collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
     collisionRuntimeParams.myGroundDistance = 0;
     collisionRuntimeParams.myGroundIsBaseInsideCollision = false;
+    collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = false;
     collisionRuntimeParams.myRealIsOnCeiling = false;
     collisionRuntimeParams.myIsOnCeiling = false;
+    collisionRuntimeParams.myCeilingCollisionHit.reset();
     collisionRuntimeParams.myCeilingAngle = 0;
     collisionRuntimeParams.myCeilingPerceivedAngle = 0;
     collisionRuntimeParams.myCeilingNormal.vec3_set(0, 1, 0);
@@ -15953,6 +9623,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForTeleportCollisionCheckDisabled 
     collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
     collisionRuntimeParams.myCeilingDistance = 0;
     collisionRuntimeParams.myCeilingIsBaseInsideCollision = false;
+    collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = false;
     collisionRuntimeParams.myOriginalUp = transformQuat2.quat2_getUp(collisionRuntimeParams.myOriginalUp);
     collisionRuntimeParams.myOriginalForward = transformQuat2.quat2_getForward(collisionRuntimeParams.myOriginalForward);
     collisionRuntimeParams.myOriginalPosition = transformQuat2.quat2_getPosition(collisionRuntimeParams.myOriginalPosition);
@@ -15989,6 +9660,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
   return function _setRuntimeParamsForUpdateSurfaceInfoCollisionCheckDisabled(transformQuat2, collisionCheckParams, collisionRuntimeParams) {
     collisionRuntimeParams.myRealIsOnGround = true;
     collisionRuntimeParams.myIsOnGround = true;
+    collisionRuntimeParams.myGroundCollisionHit.reset();
     collisionRuntimeParams.myGroundAngle = 0;
     collisionRuntimeParams.myGroundPerceivedAngle = 0;
     collisionRuntimeParams.myGroundNormal.vec3_set(0, 1, 0);
@@ -15996,8 +9668,10 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
     collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
     collisionRuntimeParams.myGroundDistance = 0;
     collisionRuntimeParams.myGroundIsBaseInsideCollision = false;
+    collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = false;
     collisionRuntimeParams.myRealIsOnCeiling = false;
     collisionRuntimeParams.myIsOnCeiling = false;
+    collisionRuntimeParams.myCeilingCollisionHit.reset();
     collisionRuntimeParams.myCeilingAngle = 0;
     collisionRuntimeParams.myCeilingPerceivedAngle = 0;
     collisionRuntimeParams.myCeilingNormal.vec3_set(0, 1, 0);
@@ -16005,6 +9679,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
     collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
     collisionRuntimeParams.myCeilingDistance = 0;
     collisionRuntimeParams.myCeilingIsBaseInsideCollision = false;
+    collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = false;
   };
 }();
 
@@ -16405,6 +10080,8 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
   let startPosition = vec3_create();
   let endPosition = vec3_create();
   let direction = vec3_create();
+  let surfaceCollisionHit = new RaycastHit();
+  let surfaceCollisionHitForBaseInsideCollision = new RaycastHit();
   return function _gatherSurfaceInfo(feetPosition, height, up, forwardForPerceivedAngle, forwardForVertical, isGround, collisionCheckParams, collisionRuntimeParams) {
     this._myDebugEnabled = collisionCheckParams.myDebugEnabled && (isGround && collisionCheckParams.myDebugGroundInfoEnabled || !isGround && collisionCheckParams.myDebugCeilingInfoEnabled);
     let checkPositions = this._getVerticalCheckPositions(feetPosition, up, forwardForVertical, collisionCheckParams, collisionRuntimeParams);
@@ -16412,9 +10089,11 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
     let distanceToBeOnSurface = collisionCheckParams.myDistanceToBeOnGround;
     let distanceToComputeSurfaceInfo = collisionCheckParams.myDistanceToComputeGroundInfo;
     let distanceToFindSurfaceDistance = collisionCheckParams.myFindGroundDistanceMaxOutsideDistance;
+    let distanceToCollectCollisionHit = collisionCheckParams.myCollectGroundCollisionHitOutsideDistance;
     let verticalFixToBeOnSurface = collisionCheckParams.myVerticalFixToBeOnGround;
     let verticalFixToComputeSurfaceInfo = collisionCheckParams.myVerticalFixToComputeGroundInfo;
     let verticalFixToFindSurfaceDistance = collisionCheckParams.myFindGroundDistanceMaxInsideDistance;
+    let verticalFixToCollectCollisionHit = collisionCheckParams.myCollectGroundCollisionHitInsideDistance;
     let isOnSurfaceIfInsideHit = collisionCheckParams.myIsOnGroundIfInsideHit;
     let isBaseInsideCollisionCheckEnabled = collisionCheckParams.myGroundIsBaseInsideCollisionCheckEnabled;
     if (!isGround) {
@@ -16422,9 +10101,11 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
       distanceToBeOnSurface = collisionCheckParams.myDistanceToBeOnCeiling;
       distanceToComputeSurfaceInfo = collisionCheckParams.myDistanceToComputeCeilingInfo;
       distanceToFindSurfaceDistance = collisionCheckParams.myFindCeilingDistanceMaxOutsideDistance;
+      distanceToCollectCollisionHit = collisionCheckParams.myCollectCeilingCollisionHitOutsideDistance;
       verticalFixToBeOnSurface = collisionCheckParams.myVerticalFixToBeOnCeiling;
       verticalFixToComputeSurfaceInfo = collisionCheckParams.myVerticalFixToComputeCeilingInfo;
       verticalFixToFindSurfaceDistance = collisionCheckParams.myFindCeilingDistanceMaxInsideDistance;
+      verticalFixToCollectCollisionHit = collisionCheckParams.myCollectCeilingCollisionHitInsideDistance;
       isOnSurfaceIfInsideHit = collisionCheckParams.myIsOnCeilingIfInsideHit;
       isBaseInsideCollisionCheckEnabled = collisionCheckParams.myCeilingIsBaseInsideCollisionCheckEnabled;
     }
@@ -16436,12 +10117,16 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
     }
     smallOffset = verticalDirection.vec3_scale(1e-4, smallOffset);
     let isOnSurface = false;
+    let isActuallyOnSurface = false;
     let surfaceAngle = 0;
     let surfacePerceivedAngle = 0;
     surfaceNormal.vec3_zero();
+    surfaceCollisionHit.reset();
+    surfaceCollisionHitForBaseInsideCollision.reset();
     let surfaceHitMaxAngle = 0;
     surfaceHitMaxNormal.vec3_zero();
     let surfaceDistance = null;
+    let surfaceDistanceForCollectCollisionHit = null;
     let isBaseInsideCollision = checkPositions.length > 0;
     for (let i = 0; i < checkPositions.length; i++) {
       let currentPosition = checkPositions[i];
@@ -16457,6 +10142,7 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
         let raycastResult = this._raycastAndDebug(origin, direction, distance2, false, false, collisionCheckParams, collisionRuntimeParams);
         if (raycastResult.isColliding()) {
           baseHitIsInsideCollision = raycastResult.myHits[0].myInsideCollision;
+          surfaceCollisionHitForBaseInsideCollision.copy(raycastResult.myHits[0]);
         }
       }
       isBaseInsideCollision &&= baseHitIsInsideCollision;
@@ -16473,6 +10159,7 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
           let hitFromCurrentPositionLength = hitFromCurrentPosition.vec3_lengthSigned(verticalDirection);
           if (hitFromCurrentPositionLength >= 0 && hitFromCurrentPositionLength <= verticalFixToBeOnSurface + 1e-5 || hitFromCurrentPositionLength < 0 && Math.abs(hitFromCurrentPositionLength) <= distanceToBeOnSurface + 1e-5) {
             isOnSurface = true;
+            isActuallyOnSurface = true;
           }
           if (hitFromCurrentPositionLength >= 0 && hitFromCurrentPositionLength <= verticalFixToComputeSurfaceInfo + 1e-5 || hitFromCurrentPositionLength < 0 && Math.abs(hitFromCurrentPositionLength) <= distanceToComputeSurfaceInfo + 1e-5) {
             let currentSurfaceNormal = raycastResult.myHits[0].myNormal;
@@ -16492,9 +10179,25 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
               }
             }
           }
+          if (hitFromCurrentPositionLength >= 0 && hitFromCurrentPositionLength <= verticalFixToCollectCollisionHit + 1e-5 || hitFromCurrentPositionLength < 0 && Math.abs(hitFromCurrentPositionLength) <= distanceToCollectCollisionHit + 1e-5) {
+            if (surfaceDistanceForCollectCollisionHit == null) {
+              surfaceDistanceForCollectCollisionHit = -hitFromCurrentPositionLength;
+              surfaceCollisionHit.copy(raycastResult.myHits[0]);
+            } else {
+              if (Math.abs(hitFromCurrentPositionLength) < Math.abs(surfaceDistanceForCollectCollisionHit)) {
+                surfaceDistanceForCollectCollisionHit = -hitFromCurrentPositionLength;
+                surfaceCollisionHit.copy(raycastResult.myHits[0]);
+              }
+            }
+          }
         }
       } else if (isOnSurfaceIfInsideHit) {
-        isOnSurface = true;
+        if (!isOnSurface) {
+          isOnSurface = true;
+          if (!surfaceCollisionHit.isValid()) {
+            surfaceCollisionHit.copy(surfaceCollisionHitForBaseInsideCollision);
+          }
+        }
       }
     }
     if (!surfaceNormal.vec3_isZero()) {
@@ -16511,6 +10214,7 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
     }
     if (isGround) {
       collisionRuntimeParams.myRealIsOnGround = isOnSurface;
+      collisionRuntimeParams.myGroundCollisionHit.copy(surfaceCollisionHit);
       collisionRuntimeParams.myGroundAngle = surfaceAngle;
       collisionRuntimeParams.myGroundPerceivedAngle = surfacePerceivedAngle;
       collisionRuntimeParams.myGroundNormal.vec3_copy(surfaceNormal);
@@ -16523,8 +10227,10 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
       } else {
         collisionRuntimeParams.myIsOnGround = false;
       }
+      collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = isOnSurface && !isActuallyOnSurface;
     } else {
       collisionRuntimeParams.myRealIsOnCeiling = isOnSurface;
+      collisionRuntimeParams.myCeilingCollisionHit.copy(surfaceCollisionHit);
       collisionRuntimeParams.myCeilingAngle = surfaceAngle;
       collisionRuntimeParams.myCeilingPerceivedAngle = surfacePerceivedAngle;
       collisionRuntimeParams.myCeilingNormal.vec3_copy(surfaceNormal);
@@ -16537,6 +10243,7 @@ CollisionCheckSurface.prototype._gatherSurfaceInfo = function() {
       } else {
         collisionRuntimeParams.myIsOnCeiling = false;
       }
+      collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = isOnSurface && !isActuallyOnSurface;
     }
   };
 }();
@@ -18323,6 +12030,7 @@ CollisionCheckMove.prototype._moveStep = function() {
         } else {
           collisionRuntimeParams.myRealIsOnGround = this._myPrevCollisionRuntimeParams.myRealIsOnGround;
           collisionRuntimeParams.myIsOnGround = this._myPrevCollisionRuntimeParams.myIsOnGround;
+          collisionRuntimeParams.myGroundCollisionHit.copy(this._myPrevCollisionRuntimeParams.myGroundCollisionHit);
           collisionRuntimeParams.myGroundAngle = this._myPrevCollisionRuntimeParams.myGroundAngle;
           collisionRuntimeParams.myGroundPerceivedAngle = this._myPrevCollisionRuntimeParams.myGroundPerceivedAngle;
           collisionRuntimeParams.myGroundNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myGroundNormal);
@@ -18330,12 +12038,14 @@ CollisionCheckMove.prototype._moveStep = function() {
           collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myGroundHitMaxNormal);
           collisionRuntimeParams.myGroundDistance = this._myPrevCollisionRuntimeParams.myGroundDistance;
           collisionRuntimeParams.myGroundIsBaseInsideCollision = this._myPrevCollisionRuntimeParams.myGroundIsBaseInsideCollision;
+          collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = this._myPrevCollisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision;
         }
         if (collisionCheckParams.myComputeCeilingInfoEnabled && collisionCheckParams.myRegatherCeilingInfoOnSurfaceCheckFail) {
           this._gatherSurfaceInfo(newFeetPosition, height, transformUp, forwardForPerceivedAngle, forwardForVertical, false, collisionCheckParams, collisionRuntimeParams);
         } else {
           collisionRuntimeParams.myRealIsOnCeiling = this._myPrevCollisionRuntimeParams.myRealIsOnCeiling;
           collisionRuntimeParams.myIsOnCeiling = this._myPrevCollisionRuntimeParams.myIsOnCeiling;
+          collisionRuntimeParams.myCeilingCollisionHit.copy(this._myPrevCollisionRuntimeParams.myCeilingCollisionHit);
           collisionRuntimeParams.myCeilingAngle = this._myPrevCollisionRuntimeParams.myCeilingAngle;
           collisionRuntimeParams.myCeilingPerceivedAngle = this._myPrevCollisionRuntimeParams.myCeilingPerceivedAngle;
           collisionRuntimeParams.myCeilingNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myCeilingNormal);
@@ -18343,6 +12053,7 @@ CollisionCheckMove.prototype._moveStep = function() {
           collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myCeilingHitMaxNormal);
           collisionRuntimeParams.myCeilingDistance = this._myPrevCollisionRuntimeParams.myCeilingDistance;
           collisionRuntimeParams.myCeilingIsBaseInsideCollision = this._myPrevCollisionRuntimeParams.myCeilingIsBaseInsideCollision;
+          collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = this._myPrevCollisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision;
         }
       }
     }
@@ -18605,6 +12316,7 @@ CollisionCheckTeleport.prototype._teleport = function() {
           } else {
             collisionRuntimeParams.myRealIsOnGround = this._myPrevCollisionRuntimeParams.myRealIsOnGround;
             collisionRuntimeParams.myIsOnGround = this._myPrevCollisionRuntimeParams.myIsOnGround;
+            collisionRuntimeParams.myGroundCollisionHit.copy(this._myPrevCollisionRuntimeParams.myGroundCollisionHit);
             collisionRuntimeParams.myGroundAngle = this._myPrevCollisionRuntimeParams.myGroundAngle;
             collisionRuntimeParams.myGroundPerceivedAngle = this._myPrevCollisionRuntimeParams.myGroundPerceivedAngle;
             collisionRuntimeParams.myGroundNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myGroundNormal);
@@ -18612,12 +12324,14 @@ CollisionCheckTeleport.prototype._teleport = function() {
             collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myGroundHitMaxNormal);
             collisionRuntimeParams.myGroundDistance = this._myPrevCollisionRuntimeParams.myGroundDistance;
             collisionRuntimeParams.myGroundIsBaseInsideCollision = this._myPrevCollisionRuntimeParams.myGroundIsBaseInsideCollision;
+            collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = this._myPrevCollisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision;
           }
           if (collisionCheckParams.myComputeCeilingInfoEnabled && collisionCheckParams.myRegatherCeilingInfoOnSurfaceCheckFail) {
             this._gatherSurfaceInfo(newFeetPosition, height, transformUp, forwardForPerceivedAngle, forwardForVertical, false, collisionCheckParams, collisionRuntimeParams);
           } else {
             collisionRuntimeParams.myRealIsOnCeiling = this._myPrevCollisionRuntimeParams.myRealIsOnCeiling;
             collisionRuntimeParams.myIsOnCeiling = this._myPrevCollisionRuntimeParams.myIsOnCeiling;
+            collisionRuntimeParams.myCeilingCollisionHit.copy(this._myPrevCollisionRuntimeParams.myCeilingCollisionHit);
             collisionRuntimeParams.myCeilingAngle = this._myPrevCollisionRuntimeParams.myCeilingAngle;
             collisionRuntimeParams.myCeilingPerceivedAngle = this._myPrevCollisionRuntimeParams.myCeilingPerceivedAngle;
             collisionRuntimeParams.myCeilingNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myCeilingNormal);
@@ -18625,6 +12339,7 @@ CollisionCheckTeleport.prototype._teleport = function() {
             collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(this._myPrevCollisionRuntimeParams.myCeilingHitMaxNormal);
             collisionRuntimeParams.myCeilingDistance = this._myPrevCollisionRuntimeParams.myCeilingDistance;
             collisionRuntimeParams.myCeilingIsBaseInsideCollision = this._myPrevCollisionRuntimeParams.myCeilingIsBaseInsideCollision;
+            collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = this._myPrevCollisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision;
           }
         }
       } else {
@@ -18797,6 +12512,7 @@ function convertCharacterCollisionResultsToCollisionRuntimeParams(characterColli
   outCollisionRuntimeParams.myLastValidSurfaceAdjustedHorizontalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantAdjustedInitialHorizontalMovement);
   outCollisionRuntimeParams.myLastValidSurfaceAdjustedVerticalMovement.vec3_copy(characterCollisionResults.myInternalResults.myLastRelevantAdjustedInitialVerticalMovement);
   outCollisionRuntimeParams.myIsOnGround = characterCollisionResults.myGroundInfo.myOnSurface;
+  outCollisionRuntimeParams.myGroundCollisionHit.copy(characterCollisionResults.myGroundInfo.mySurfaceReferenceCollisionHit);
   outCollisionRuntimeParams.myGroundAngle = characterCollisionResults.myGroundInfo.mySurfaceAngle;
   outCollisionRuntimeParams.myGroundPerceivedAngle = characterCollisionResults.myGroundInfo.mySurfacePerceivedAngle;
   outCollisionRuntimeParams.myGroundNormal.vec3_copy(characterCollisionResults.myGroundInfo.mySurfaceNormal);
@@ -18804,7 +12520,9 @@ function convertCharacterCollisionResultsToCollisionRuntimeParams(characterColli
   outCollisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(characterCollisionResults.myGroundInfo.mySurfaceHitMaxNormal);
   outCollisionRuntimeParams.myGroundDistance = characterCollisionResults.myGroundInfo.mySurfaceDistance;
   outCollisionRuntimeParams.myGroundIsBaseInsideCollision = characterCollisionResults.myGroundInfo.myBaseInsideCollision;
+  outCollisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = characterCollisionResults.myGroundInfo.myOnSurfaceDueToBasePartiallyInsideCollision;
   outCollisionRuntimeParams.myIsOnCeiling = characterCollisionResults.myCeilingInfo.myOnSurface;
+  outCollisionRuntimeParams.myCeilingCollisionHit.copy(characterCollisionResults.myCeilingInfo.mySurfaceReferenceCollisionHit);
   outCollisionRuntimeParams.myCeilingAngle = characterCollisionResults.myCeilingInfo.mySurfaceAngle;
   outCollisionRuntimeParams.myCeilingPerceivedAngle = characterCollisionResults.myCeilingInfo.mySurfacePerceivedAngle;
   outCollisionRuntimeParams.myCeilingNormal.vec3_copy(characterCollisionResults.myCeilingInfo.mySurfaceNormal);
@@ -18812,6 +12530,7 @@ function convertCharacterCollisionResultsToCollisionRuntimeParams(characterColli
   outCollisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(characterCollisionResults.myCeilingInfo.mySurfaceHitMaxNormal);
   outCollisionRuntimeParams.myCeilingDistance = characterCollisionResults.myCeilingInfo.mySurfaceDistance;
   outCollisionRuntimeParams.myCeilingIsBaseInsideCollision = characterCollisionResults.myCeilingInfo.myBaseInsideCollision;
+  outCollisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = characterCollisionResults.myCeilingInfo.myOnSurfaceDueToBasePartiallyInsideCollision;
   outCollisionRuntimeParams.myHorizontalMovementCanceled = characterCollisionResults.myHorizontalMovementResults.myMovementFailed;
   outCollisionRuntimeParams.myIsCollidingHorizontally = characterCollisionResults.myHorizontalMovementResults.myMovementCollided;
   outCollisionRuntimeParams.myHorizontalCollisionHit.copy(characterCollisionResults.myHorizontalMovementResults.myReferenceCollisionHit);
@@ -18902,6 +12621,7 @@ var convertCollisionRuntimeParamsToCharacterCollisionResults = function() {
     outCharacterCollisionResults.myWallSlideResults.mySlideMovementWallAngle = collisionRuntimeParams.mySlidingCollisionAngle;
     outCharacterCollisionResults.myWallSlideResults.myWallNormal.vec3_copy(collisionRuntimeParams.mySlidingWallNormal);
     outCharacterCollisionResults.myGroundInfo.myOnSurface = collisionRuntimeParams.myIsOnGround;
+    outCharacterCollisionResults.myGroundInfo.mySurfaceReferenceCollisionHit.copy(collisionRuntimeParams.myGroundCollisionHit);
     outCharacterCollisionResults.myGroundInfo.mySurfaceAngle = collisionRuntimeParams.myGroundAngle;
     outCharacterCollisionResults.myGroundInfo.mySurfacePerceivedAngle = collisionRuntimeParams.myGroundPerceivedAngle;
     outCharacterCollisionResults.myGroundInfo.mySurfaceNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
@@ -18910,6 +12630,7 @@ var convertCollisionRuntimeParamsToCharacterCollisionResults = function() {
     outCharacterCollisionResults.myGroundInfo.mySurfaceDistance = collisionRuntimeParams.myGroundDistance;
     outCharacterCollisionResults.myGroundInfo.myBaseInsideCollision = collisionRuntimeParams.myGroundIsBaseInsideCollision;
     outCharacterCollisionResults.myCeilingInfo.myOnSurface = collisionRuntimeParams.myIsOnCeiling;
+    outCharacterCollisionResults.myCeilingInfo.mySurfaceReferenceCollisionHit.copy(collisionRuntimeParams.myCeilingCollisionHit);
     outCharacterCollisionResults.myCeilingInfo.mySurfaceAngle = collisionRuntimeParams.myCeilingAngle;
     outCharacterCollisionResults.myCeilingInfo.mySurfacePerceivedAngle = collisionRuntimeParams.myCeilingPerceivedAngle;
     outCharacterCollisionResults.myCeilingInfo.mySurfaceNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
@@ -19064,10 +12785,14 @@ var convertCharacterColliderSetupToCollisionCheckParams = function() {
     outCollisionCheckParams.myCeilingIsBaseInsideCollisionCheckEnabled = characterColliderSetup.myCeilingParams.myBaseInsideCollisionCheckEnabled;
     outCollisionCheckParams.myIsOnGroundIfInsideHit = characterColliderSetup.myGroundParams.myOnSurfaceIfBaseInsideCollision;
     outCollisionCheckParams.myIsOnCeilingIfInsideHit = characterColliderSetup.myCeilingParams.myOnSurfaceIfBaseInsideCollision;
-    outCollisionCheckParams.myFindGroundDistanceMaxOutsideDistance = characterColliderSetup.myGroundParams.myFindSurfaceDistanceMaxOutsideDistance;
-    outCollisionCheckParams.myFindGroundDistanceMaxInsideDistance = characterColliderSetup.myGroundParams.myFindSurfaceDistanceMaxInsideDistance;
-    outCollisionCheckParams.myFindCeilingDistanceMaxOutsideDistance = characterColliderSetup.myCeilingParams.myFindSurfaceDistanceMaxOutsideDistance;
-    outCollisionCheckParams.myFindCeilingDistanceMaxInsideDistance = characterColliderSetup.myCeilingParams.myFindSurfaceDistanceMaxInsideDistance;
+    outCollisionCheckParams.myFindGroundDistanceMaxOutsideDistance = characterColliderSetup.myGroundParams.myCollectSurfaceDistanceOutsideDistance;
+    outCollisionCheckParams.myFindGroundDistanceMaxInsideDistance = characterColliderSetup.myGroundParams.myCollectSurfaceDistanceInsideDistance;
+    outCollisionCheckParams.myFindCeilingDistanceMaxOutsideDistance = characterColliderSetup.myCeilingParams.myCollectSurfaceDistanceOutsideDistance;
+    outCollisionCheckParams.myFindCeilingDistanceMaxInsideDistance = characterColliderSetup.myCeilingParams.myCollectSurfaceDistanceInsideDistance;
+    outCollisionCheckParams.myCollectGroundCollisionHitOutsideDistance = characterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitOutsideDistance;
+    outCollisionCheckParams.myCollectGroundCollisionHitInsideDistance = characterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitInsideDistance;
+    outCollisionCheckParams.myCollectCeilingCollisionHitOutsideDistance = characterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitOutsideDistance;
+    outCollisionCheckParams.myCollectCeilingCollisionHitInsideDistance = characterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitInsideDistance;
     outCollisionCheckParams.myAllowGroundSteepFix = characterColliderSetup.myGroundParams.myHorizontalMovementAllowExitAttemptWhenOnNotIgnorableSurfacePerceivedAngle;
     outCollisionCheckParams.myAllowCeilingSteepFix = characterColliderSetup.myCeilingParams.myHorizontalMovementAllowExitAttemptWhenOnNotIgnorableSurfacePerceivedAngle;
     outCollisionCheckParams.myMustStayOnGround = characterColliderSetup.myGroundParams.myMovementMustStayOnSurface;
@@ -19213,9 +12938,8 @@ CharacterCollisionSystem.prototype.checkTeleportToPosition = function() {
 }();
 
 // dist/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
-var CharacterCollisionSystemComponent = class extends Component9 {
+var CharacterCollisionSystemComponent = class extends Component11 {
   static TypeName = "pp-character-collision-system";
-  static Properties = {};
   init() {
     this._myCharacterCollisionSystem = null;
     if (!Globals.hasCharacterCollisionSystem(this.engine)) {
@@ -19236,7 +12960,7 @@ var CharacterCollisionSystemComponent = class extends Component9 {
 };
 
 // dist/input/cauldron/components/input_manager_component.js
-import { Component as Component10, Property as Property6 } from "@wonderlandengine/api";
+import { Component as Component12, Property as Property8 } from "@wonderlandengine/api";
 
 // dist/input/gamepad/gamepad_buttons.js
 var GamepadButtonID = {
@@ -19482,13 +13206,13 @@ var ClassicGamepadCore = class extends GamepadCore {
   constructor(gamepadIndex, handPose) {
     super(handPose);
     this._myGamepadIndex = gamepadIndex;
-    this._myCurrentGamepads = window.navigator.getGamepads();
+    this._myCurrentGamepads = navigator.getGamepads();
     this._myButtonData = this._createButtonData();
     this._myAxesData = this._createAxesData();
     this._myHapticActuators = [];
   }
   _preUpdateHook(dt) {
-    this._myCurrentGamepads = window.navigator.getGamepads();
+    this._myCurrentGamepads = navigator.getGamepads();
   }
   isGamepadCoreActive() {
     let classicGamepad = this._getClassicGamepad();
@@ -19751,12 +13475,12 @@ var Keyboard = class {
   }
   start() {
     this._myOnKeyDownEventListener = this._keyDown.bind(this);
-    Globals.getWindow(this._myEngine).addEventListener("keydown", this._myOnKeyDownEventListener);
+    window.addEventListener("keydown", this._myOnKeyDownEventListener);
     this._myOnKeyUpEventListener = this._keyUp.bind(this);
-    Globals.getWindow(this._myEngine).addEventListener("keyup", this._myOnKeyUpEventListener);
+    window.addEventListener("keyup", this._myOnKeyUpEventListener);
   }
   update(dt) {
-    if (!Globals.getDocument(this._myEngine).hasFocus()) {
+    if (!document.hasFocus()) {
       for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
         let id = this._myKeyInfosIDs[i];
         let keyInfo = this._myKeyInfos[id];
@@ -19804,8 +13528,8 @@ var Keyboard = class {
   }
   destroy() {
     this._myDestroyed = true;
-    Globals.getWindow(this._myEngine).removeEventListener("keydown", this._myOnKeyDownEventListener);
-    Globals.getWindow(this._myEngine).removeEventListener("keyup", this._myOnKeyUpEventListener);
+    window.removeEventListener("keydown", this._myOnKeyDownEventListener);
+    window.removeEventListener("keyup", this._myOnKeyUpEventListener);
   }
   isDestroyed() {
     return this._myDestroyed;
@@ -20075,10 +13799,10 @@ var XRGamepadCore = class extends GamepadCore {
 };
 
 // dist/input/cauldron/input_manager.js
-import { Emitter as Emitter7 } from "@wonderlandengine/api";
+import { Emitter as Emitter5 } from "@wonderlandengine/api";
 
 // dist/input/gamepad/base_gamepad.js
-import { Emitter as Emitter5 } from "@wonderlandengine/api";
+import { Emitter as Emitter3 } from "@wonderlandengine/api";
 var BaseGamepad = class {
   constructor(handedness) {
     this._myHandedness = handedness;
@@ -20098,14 +13822,14 @@ var BaseGamepad = class {
     for (let key in GamepadButtonID) {
       this._myButtonEmitters[GamepadButtonID[key]] = [];
       for (let eventKey in GamepadButtonEvent) {
-        this._myButtonEmitters[GamepadButtonID[key]][GamepadButtonEvent[eventKey]] = new Emitter5();
+        this._myButtonEmitters[GamepadButtonID[key]][GamepadButtonEvent[eventKey]] = new Emitter3();
       }
     }
     this._myAxesEmitters = [];
     for (let key in GamepadAxesID) {
       this._myAxesEmitters[GamepadAxesID[key]] = [];
       for (let eventKey in GamepadAxesEvent) {
-        this._myAxesEmitters[GamepadAxesID[key]][GamepadAxesEvent[eventKey]] = new Emitter5();
+        this._myAxesEmitters[GamepadAxesID[key]][GamepadAxesEvent[eventKey]] = new Emitter3();
       }
     }
     this._myPulseInfo = new GamepadPulseInfo();
@@ -20601,7 +14325,7 @@ var GamepadsManager = class {
 };
 
 // dist/input/pose/base_pose.js
-import { Emitter as Emitter6 } from "@wonderlandengine/api";
+import { Emitter as Emitter4 } from "@wonderlandengine/api";
 var BasePoseParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myReferenceObject = null;
@@ -20627,9 +14351,9 @@ var BasePose = class {
     this._myValid = false;
     this._myLinearVelocityEmulated = true;
     this._myAngularVelocityEmulated = true;
-    this._myPrePoseUpdatedEventEmitter = new Emitter6();
-    this._myPoseUpdatedEmitter = new Emitter6();
-    this._myPostPoseUpdatedEventEmitter = new Emitter6();
+    this._myPrePoseUpdatedEventEmitter = new Emitter4();
+    this._myPoseUpdatedEmitter = new Emitter4();
+    this._myPostPoseUpdatedEventEmitter = new Emitter4();
     this._myViewResetEventListener = null;
     this._myDestroyed = false;
   }
@@ -20681,6 +14405,12 @@ var BasePose = class {
   }
   getTransformMatrix(out = mat4_create(), referenceObjectOverride = void 0) {
   }
+  /**
+   * TS type inference helper
+   *
+   * @param {any} referenceObjectOverride
+   * @return {any}
+   */
   getTransformQuat(out = quat2_create(), referenceObjectOverride = void 0) {
   }
   getLinearVelocity(out = vec3_create(), referenceObjectOverride = void 0) {
@@ -20957,6 +14687,84 @@ BasePose.prototype._computeEmulatedAngularVelocity = function() {
   };
 }();
 
+// dist/input/cauldron/input_utils.js
+function getHandednessByIndex(index) {
+  let handedness = null;
+  switch (index) {
+    case HandednessIndex.LEFT:
+      handedness = Handedness.LEFT;
+      break;
+    case HandednessIndex.RIGHT:
+      handedness = Handedness.RIGHT;
+      break;
+  }
+  return handedness;
+}
+function getInputSource(handedness, inputSourceType = null, engine = Globals.getMainEngine()) {
+  let inputSource = null;
+  let xrSession = XRUtils.getSession(engine);
+  if (xrSession != null && xrSession.inputSources != null) {
+    for (let i = 0; i < xrSession.inputSources.length; i++) {
+      let input = xrSession.inputSources[i];
+      let correctType = !inputSourceType || inputSourceType == InputSourceType.GAMEPAD && !input.hand || inputSourceType == InputSourceType.TRACKED_HAND && input.hand;
+      if (correctType && input.handedness == handedness) {
+        inputSource = input;
+        break;
+      }
+    }
+  }
+  return inputSource;
+}
+function getInputSourceTypeByHandedness(handedness, engine) {
+  let inputSource = InputUtils.getInputSource(handedness, void 0, engine);
+  return InputUtils.getInputSourceType(inputSource);
+}
+function getInputSourceType(inputSource) {
+  let inputSourceType = null;
+  if (inputSource) {
+    if (inputSource.hand) {
+      inputSourceType = InputSourceType.TRACKED_HAND;
+    } else {
+      inputSourceType = InputSourceType.GAMEPAD;
+    }
+  }
+  return inputSourceType;
+}
+function getOppositeHandedness(handedness) {
+  let oppositeHandedness = null;
+  switch (handedness) {
+    case Handedness.LEFT:
+      oppositeHandedness = Handedness.RIGHT;
+      break;
+    case Handedness.RIGHT:
+      oppositeHandedness = Handedness.LEFT;
+      break;
+  }
+  return oppositeHandedness;
+}
+function getJointIDByIndex(index) {
+  let jointID = null;
+  let jointIDKey = null;
+  for (let jointIDIndexKey in TrackedHandJointIDIndex) {
+    if (TrackedHandJointIDIndex[jointIDIndexKey] == index) {
+      jointIDKey = jointIDIndexKey;
+      break;
+    }
+  }
+  if (jointIDKey != null) {
+    jointID = TrackedHandJointID[jointIDKey];
+  }
+  return jointID;
+}
+var InputUtils = {
+  getHandednessByIndex,
+  getInputSource,
+  getInputSourceTypeByHandedness,
+  getInputSourceType,
+  getOppositeHandedness,
+  getJointIDByIndex
+};
+
 // dist/input/pose/hand_pose.js
 var HandPoseParams = class extends BasePoseParams {
   constructor(engine) {
@@ -21223,7 +15031,7 @@ var TrackedHandPose = class {
 };
 
 // dist/input/cauldron/mouse.js
-import { ViewComponent as ViewComponent3 } from "@wonderlandengine/api";
+import { ViewComponent } from "@wonderlandengine/api";
 var MouseButtonID = {
   LEFT: 0,
   MIDDLE: 1,
@@ -21270,19 +15078,19 @@ var Mouse = class {
   }
   start() {
     this._myPointerMoveEventListener = this._onPointerAction.bind(this, this._onPointerMove.bind(this));
-    Globals.getBody(this._myEngine).addEventListener("pointermove", this._myPointerMoveEventListener);
+    document.body.addEventListener("pointermove", this._myPointerMoveEventListener);
     this._myPointerDownEventListener = this._onPointerAction.bind(this, this._onPointerDown.bind(this));
-    Globals.getBody(this._myEngine).addEventListener("pointerdown", this._myPointerDownEventListener);
+    document.body.addEventListener("pointerdown", this._myPointerDownEventListener);
     this._myPointerUpEventListener = this._onPointerAction.bind(this, this._onPointerUp.bind(this));
-    Globals.getBody(this._myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
+    document.body.addEventListener("pointerup", this._myPointerUpEventListener);
     this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
-    Globals.getBody(this._myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+    document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
     this._myPointerEnterEventListener = this._onPointerEnter.bind(this);
-    Globals.getBody(this._myEngine).addEventListener("pointerenter", this._myPointerEnterEventListener);
+    document.body.addEventListener("pointerenter", this._myPointerEnterEventListener);
     this._myMouseDownEventListener = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
-    Globals.getBody(this._myEngine).addEventListener("mousedown", this._myMouseDownEventListener);
+    document.body.addEventListener("mousedown", this._myMouseDownEventListener);
     this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
-    Globals.getBody(this._myEngine).addEventListener("mouseup", this._myMouseUpEventListener);
+    document.body.addEventListener("mouseup", this._myMouseUpEventListener);
   }
   update(dt) {
     if (this._myResetMovingTimer.isRunning()) {
@@ -21402,9 +15210,9 @@ var Mouse = class {
     directionLocal.vec3_set(right * 2 - 1, -up * 2 + 1, -1);
     let projectionMatrixInvert = this._myProjectionMatrixInverse;
     if (XRUtils.isSessionActive(this._myEngine)) {
-      projectionMatrixInvert = Globals.getPlayerObjects(this._myEngine).myEyeLeft.pp_getComponent(ViewComponent3).projectionMatrix.mat4_invert(projectionMatrixInvert);
+      projectionMatrixInvert = Globals.getPlayerObjects(this._myEngine).myEyeLeft.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
     } else {
-      projectionMatrixInvert = Globals.getPlayerObjects(this._myEngine).myCameraNonXR.pp_getComponent(ViewComponent3).projectionMatrix.mat4_invert(projectionMatrixInvert);
+      projectionMatrixInvert = Globals.getPlayerObjects(this._myEngine).myCameraNonXR.pp_getComponent(ViewComponent).projectionMatrix.mat4_invert(projectionMatrixInvert);
     }
     directionLocal.vec3_transformMat4(projectionMatrixInvert, directionLocal);
     directionLocal.vec3_normalize(directionLocal);
@@ -21461,9 +15269,9 @@ var Mouse = class {
   setContextMenuActive(active) {
     if (this._myContextMenuActive != active) {
       if (active) {
-        Globals.getBody(this._myEngine).removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+        document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
       } else {
-        Globals.getBody(this._myEngine).addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
+        document.body.addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
       }
       this._myContextMenuActive = active;
     }
@@ -21474,9 +15282,9 @@ var Mouse = class {
   setMiddleButtonScrollActive(active) {
     if (this._myMiddleButtonScrollActive != active) {
       if (active) {
-        Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+        document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
       } else {
-        Globals.getBody(this._myEngine).addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
+        document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
       }
       this._myMiddleButtonScrollActive = active;
     }
@@ -21576,7 +15384,7 @@ var Mouse = class {
     this._myValid = true;
   }
   _updateScreenSize() {
-    let bounds = Globals.getBody(this._myEngine).getBoundingClientRect();
+    let bounds = document.body.getBoundingClientRect();
     this._myScreenSize[0] = bounds.width;
     this._myScreenSize[1] = bounds.height;
   }
@@ -21611,15 +15419,15 @@ var Mouse = class {
   }
   destroy() {
     this._myDestroyed = true;
-    Globals.getBody(this._myEngine).removeEventListener("pointermove", this._myPointerMoveEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("pointerdown", this._myPointerDownEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("pointerenter", this._myPointerEnterEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myMouseDownEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("mouseup", this._myMouseUpEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
-    Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+    document.body.removeEventListener("pointermove", this._myPointerMoveEventListener);
+    document.body.removeEventListener("pointerdown", this._myPointerDownEventListener);
+    document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+    document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+    document.body.removeEventListener("pointerenter", this._myPointerEnterEventListener);
+    document.body.removeEventListener("mousedown", this._myMouseDownEventListener);
+    document.body.removeEventListener("mouseup", this._myMouseUpEventListener);
+    document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+    document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
   }
   isDestroyed() {
     return this._myDestroyed;
@@ -21653,8 +15461,8 @@ var InputManager = class {
     this._myStarted = false;
     this._myTrackedHandPosesEnabled = true;
     this._myTrackedHandPosesStarted = false;
-    this._myPreUpdateEmitter = new Emitter7();
-    this._myPostUpdateEmitter = new Emitter7();
+    this._myPreUpdateEmitter = new Emitter5();
+    this._myPostUpdateEmitter = new Emitter5();
     this._myDestroyed = false;
   }
   start() {
@@ -21785,13 +15593,13 @@ var InputManager = class {
 };
 
 // dist/input/cauldron/components/input_manager_component.js
-var InputManagerComponent = class extends Component10 {
+var InputManagerComponent = class extends Component12 {
   static TypeName = "pp-input-manager";
   static Properties = {
-    _myPoseForwardFixed: Property6.bool(true),
-    _myPreventMouseContextMenu: Property6.bool(true),
-    _myPreventMouseMiddleButtonScroll: Property6.bool(true),
-    _myEnableTrackedHandPoses: Property6.bool(true)
+    _myPoseForwardFixed: Property8.bool(true),
+    _myPreventMouseContextMenu: Property8.bool(true),
+    _myPreventMouseMiddleButtonScroll: Property8.bool(true),
+    _myEnableTrackedHandPoses: Property8.bool(true)
   };
   init() {
     this._myInputManager = null;
@@ -21854,11 +15662,11 @@ var InputManagerComponent = class extends Component10 {
 };
 
 // dist/tool/cauldron/components/enable_tool_component.js
-import { Component as Component11, Property as Property7 } from "@wonderlandengine/api";
-var EnableToolComponent = class extends Component11 {
+import { Component as Component13, Property as Property9 } from "@wonderlandengine/api";
+var EnableToolComponent = class extends Component13 {
   static TypeName = "pp-enable-tools";
   static Properties = {
-    _myEnable: Property7.bool(true)
+    _myEnable: Property9.bool(true)
   };
   init() {
     this._myToolEnabled = null;
@@ -21875,7 +15683,7 @@ var EnableToolComponent = class extends Component11 {
 };
 
 // dist/tool/console_vr/components/init_console_vr_component.js
-import { Component as Component12, Property as Property8 } from "@wonderlandengine/api";
+import { Component as Component14, Property as Property10 } from "@wonderlandengine/api";
 
 // dist/tool/console_vr/console_original_functions.js
 var _myConsoleOriginalLog = console.log;
@@ -21885,13 +15693,13 @@ var _myConsoleOriginalInfo = console.info;
 var _myConsoleOriginalDebug = console.debug;
 var _myConsoleOriginalAssert = console.assert;
 var _myConsoleOriginalClear = console.clear;
-function log2(engine = Globals.getMainEngine(), ...args) {
+function log(engine = Globals.getMainEngine(), ...args) {
   return ConsoleOriginalFunctions.getLog(engine).apply(console, args);
 }
-function error2(engine = Globals.getMainEngine(), ...args) {
+function error(engine = Globals.getMainEngine(), ...args) {
   return ConsoleOriginalFunctions.getError(engine).apply(console, args);
 }
-function warn2(engine = Globals.getMainEngine(), ...args) {
+function warn(engine = Globals.getMainEngine(), ...args) {
   return ConsoleOriginalFunctions.getWarn(engine).apply(console, args);
 }
 function info(engine = Globals.getMainEngine(), ...args) {
@@ -21928,9 +15736,9 @@ function getClear(engine = Globals.getMainEngine()) {
   return _myConsoleOriginalClear;
 }
 var ConsoleOriginalFunctions = {
-  log: log2,
-  error: error2,
-  warn: warn2,
+  log,
+  error,
+  warn,
   info,
   debug,
   assert,
@@ -21994,10 +15802,10 @@ var ConsoleVR = class {
 };
 
 // dist/tool/console_vr/components/init_console_vr_component.js
-var InitConsoleVRComponent = class extends Component12 {
+var InitConsoleVRComponent = class extends Component14 {
   static TypeName = "pp-init-console-vr";
   static Properties = {
-    _myInit: Property8.bool(true)
+    _myInit: Property10.bool(true)
   };
   init() {
     this._myConsoleVR = null;
@@ -22016,7 +15824,7 @@ var InitConsoleVRComponent = class extends Component12 {
 };
 
 // dist/tool/easy_tune/components/init_easy_tune_variables_component.js
-import { Component as Component13, Property as Property9 } from "@wonderlandengine/api";
+import { Component as Component15, Property as Property11 } from "@wonderlandengine/api";
 
 // dist/tool/easy_tune/easy_tune_variables.js
 var EasyTuneVariables = class {
@@ -22070,8 +15878,9 @@ var EasyTuneVariables = class {
     let objectJSON = JSON.parse(json);
     for (let variable of this._myVariables.values()) {
       if (variable.isManualImportEnabled() && manualImport || variable.isAutoImportEnabled() && !manualImport) {
-        let variableValueJSON = objectJSON[variable.getName()];
-        if (variableValueJSON !== void 0) {
+        let variableName = variable.getName();
+        if (Object.hasOwn(objectJSON, variableName)) {
+          let variableValueJSON = objectJSON[variableName];
           variable.fromJSON(variableValueJSON, resetDefaultValue);
         }
       }
@@ -22095,10 +15904,10 @@ var EasyTuneVariables = class {
 };
 
 // dist/tool/easy_tune/components/init_easy_tune_variables_component.js
-var InitEasyTuneVariablesComponent = class extends Component13 {
+var InitEasyTuneVariablesComponent = class extends Component15 {
   static TypeName = "pp-init-easy-tune-variables";
   static Properties = {
-    _myInit: Property9.bool(true)
+    _myInit: Property11.bool(true)
   };
   init() {
     this._myEasyTuneVariables = null;
@@ -22116,16 +15925,6375 @@ var InitEasyTuneVariablesComponent = class extends Component13 {
   }
 };
 
+// dist/cauldron/wl/register_wl_components.js
+import { ARCamera8thwall, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent } from "@wonderlandengine/components";
+function registerWLComponents(engine) {
+  engine.registerComponent(ARCamera8thwall, Cursor, CursorTarget, DebugObject, DeviceOrientationLook, FingerCursor, FixedFoveation, HandTracking, HitTestLocation, HowlerAudioListener, HowlerAudioSource, ImageTexture, MouseLookComponent, PlayerHeight, TargetFramerate, TeleportComponent, Trail, TwoJointIkSolver, VideoTexture, VrModeActiveSwitch, Vrm, WasdControlsComponent);
+}
+
+// dist/cauldron/wl/utils/component_utils.js
+import { AnimationComponent, CollisionComponent, InputComponent, LightComponent, MeshComponent as MeshComponent6, PhysXComponent, TextComponent as TextComponent3, ViewComponent as ViewComponent2 } from "@wonderlandengine/api";
+import { ARCamera8thwall as ARCamera8thwall2, Anchor, Cursor as Cursor2, CursorTarget as CursorTarget2, DebugObject as DebugObject2, DeviceOrientationLook as DeviceOrientationLook2, FingerCursor as FingerCursor2, FixedFoveation as FixedFoveation2, HandTracking as HandTracking2, HitTestLocation as HitTestLocation2, HowlerAudioListener as HowlerAudioListener2, HowlerAudioSource as HowlerAudioSource2, ImageTexture as ImageTexture2, MouseLookComponent as MouseLookComponent2, PlaneDetection, PlayerHeight as PlayerHeight2, TargetFramerate as TargetFramerate2, TeleportComponent as TeleportComponent2, Trail as Trail2, TwoJointIkSolver as TwoJointIkSolver2, VideoTexture as VideoTexture2, VrModeActiveSwitch as VrModeActiveSwitch2, Vrm as Vrm2, WasdControlsComponent as WasdControlsComponent2 } from "@wonderlandengine/components";
+
+// dist/cauldron/wl/utils/default_wl_component_clone_callbacks.js
+import { MeshComponent as MeshComponent5, TextComponent as TextComponent2 } from "@wonderlandengine/api";
+function cloneMesh(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, true);
+  if (deepCloneParams.isDeepCloneComponentVariable(MeshComponent5.TypeName, "material")) {
+    if (componentToClone.material != null) {
+      clonedComponent.material = componentToClone.material.clone();
+    }
+  }
+  if (deepCloneParams.isDeepCloneComponentVariable(MeshComponent5.TypeName, "mesh")) {
+    clonedComponent.mesh = MeshUtils.clone(componentToClone.mesh);
+  }
+  return clonedComponent;
+}
+function cloneCollision(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
+  return clonedComponent;
+}
+function cloneText(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
+  if (deepCloneParams.isDeepCloneComponentVariable(TextComponent2.TypeName, "material")) {
+    if (componentToClone.material != null) {
+      clonedComponent.material = componentToClone.material.clone();
+    }
+  }
+  return clonedComponent;
+}
+function clonePhysX(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+  let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
+  return clonedComponent;
+}
+var DefaultWLComponentCloneCallbacks = {
+  cloneMesh,
+  cloneCollision,
+  cloneText,
+  clonePhysX
+};
+
+// dist/cauldron/wl/utils/object_utils.js
+var CloneParams = class {
+  /** Defaults to the object to clone parent, null can be used to specify u want the scene root as the parent */
+  myCloneParent = void 0;
+  /** Ignores components that are not clonable */
+  myIgnoreNonCloneable = false;
+  /** All components are ignored, cloning only the object hierarchy */
+  myIgnoreComponents = false;
+  /** Clones only the given object without the descendants */
+  myIgnoreDescendants = false;
+  /** Ignores all component types in this list (example: `["mesh"]`), has lower priority over `myComponentsToInclude` */
+  myComponentsToIgnore = [];
+  /** Clones only the component types in this list (example: `["mesh"]`), has higher priority over `myComponentsToIgnore`, if empty it's ignored */
+  myComponentsToInclude = [];
+  /** Returns true if the component must be ignored. It's called after the previous filters */
+  myIgnoreComponentCallback = null;
+  /** Ignores all the objects in this list, has lower priority over `myDescendantsToInclude` */
+  myDescendantsToIgnore = [];
+  /** Clones only the objects in this list, has higher priority over `myDescendantsToIgnore`, if empty it's ignored */
+  myDescendantsToInclude = [];
+  /** Returns true if the object must be ignored. It's called after the previous filters */
+  myIgnoreDescendantCallback = null;
+  /** Uses the default component clone function */
+  myUseDefaultComponentClone = false;
+  /** Uses the default component clone function only as fallback, that is if there is no custom component clone */
+  myUseDefaultComponentCloneAsFallback = false;
+  /** Automatically starts the component even if it's cloned not activated, keeping it not active. This also triggers `onActivate` and `onDeactivate` once */
+  myDefaultComponentCloneAutoStartIfNotActive = true;
+  /** Uses the default object clone function, ignoring all the other clone settings but `myCloneParent` and `myDefaultComponentCloneAutoStartIfNotActive` */
+  myUseDefaultObjectClone = false;
+  /** Uses the default object clone function only as fallback, that is if the object is not PP cloneable */
+  myUseDefaultObjectCloneAsFallback = false;
+  /** Used to specify if the object components must be deep cloned or not, you can also override the behavior for specific components and variables */
+  myComponentDeepCloneParams = new DeepCloneParams();
+  /** This class can be filled with whatever custom paramater the component clone functions could need */
+  myComponentCustomCloneParams = new CustomCloneParams();
+};
+function getPosition3(object, outPosition) {
+  return ObjectUtils.getPositionWorld(object, outPosition);
+}
+function getPositionWorld(object, outPosition = Vec3Utils.create()) {
+  object.getPositionWorld(outPosition);
+  return outPosition;
+}
+function getPositionLocal(object, outPosition = Vec3Utils.create()) {
+  object.getPositionLocal(outPosition);
+  return outPosition;
+}
+function getRotation3(object, outRotation) {
+  return ObjectUtils.getRotationWorld(object, outRotation);
+}
+function getRotationDegrees3(object, outRotation) {
+  return ObjectUtils.getRotationWorldDegrees(object, outRotation);
+}
+function getRotationRadians3(object, outRotation) {
+  return ObjectUtils.getRotationWorldRadians(object, outRotation);
+}
+function getRotationMatrix(object, outRotation) {
+  return ObjectUtils.getRotationWorldMatrix(object, outRotation);
+}
+function getRotationQuat3(object, outRotation) {
+  return ObjectUtils.getRotationWorldQuat(object, outRotation);
+}
+function getRotationWorld(object, outRotation) {
+  return ObjectUtils.getRotationWorldDegrees(object, outRotation);
+}
+function getRotationWorldDegrees(object, outRotation) {
+  outRotation = ObjectUtils.getRotationWorldRadians(object, outRotation);
+  outRotation = Vec3Utils.toDegrees(outRotation, outRotation);
+  return outRotation;
+}
+var getRotationWorldRadians = function() {
+  const quat = QuatUtils.create();
+  return function getRotationWorldRadians2(object, outRotation = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.toRadians(quat, outRotation);
+    return outRotation;
+  };
+}();
+var getRotationWorldMatrix = function() {
+  const quat = QuatUtils.create();
+  function getRotationWorldMatrix2(object, outRotation = Mat3Utils.create()) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.toMatrix(quat, outRotation);
+    return outRotation;
+  }
+  return getRotationWorldMatrix2;
+}();
+function getRotationWorldQuat(object, outRotation = QuatUtils.create()) {
+  object.getRotationWorld(outRotation);
+  return outRotation;
+}
+function getRotationLocal(object, outRotation) {
+  return ObjectUtils.getRotationLocalDegrees(object, outRotation);
+}
+function getRotationLocalDegrees(object, outRotation) {
+  outRotation = ObjectUtils.getRotationLocalRadians(object, outRotation);
+  outRotation = Vec3Utils.toDegrees(outRotation, outRotation);
+  return outRotation;
+}
+var getRotationLocalRadians = function() {
+  const quat = QuatUtils.create();
+  return function getRotationLocalRadians2(object, outRotation = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.toRadians(quat, outRotation);
+    return outRotation;
+  };
+}();
+var getRotationLocalMatrix = function() {
+  const quat = QuatUtils.create();
+  function getRotationLocalMatrix2(object, outRotation = Mat3Utils.create()) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.toMatrix(quat, outRotation);
+    return outRotation;
+  }
+  return getRotationLocalMatrix2;
+}();
+function getRotationLocalQuat(object, outRotation = QuatUtils.create()) {
+  object.getRotationLocal(outRotation);
+  return outRotation;
+}
+function getScale2(object, outScale) {
+  return ObjectUtils.getScaleWorld(object, outScale);
+}
+function getScaleWorld(object, outScale = Vec3Utils.create()) {
+  object.getScalingWorld(outScale);
+  return outScale;
+}
+function getScaleLocal(object, outScale = Vec3Utils.create()) {
+  object.getScalingLocal(outScale);
+  return outScale;
+}
+function getTransform(object, outTransform) {
+  return ObjectUtils.getTransformWorld(object, outTransform);
+}
+function getTransformMatrix(object, outTransform) {
+  return ObjectUtils.getTransformWorldMatrix(object, outTransform);
+}
+function getTransformQuat(object, outTransform) {
+  return ObjectUtils.getTransformWorldQuat(object, outTransform);
+}
+function getTransformWorld(object, outTransform) {
+  return ObjectUtils.getTransformWorldMatrix(object, outTransform);
+}
+var getTransformWorldMatrix = function() {
+  const transformQuat2 = Quat2Utils.create();
+  const scale4 = Vec3Utils.create();
+  return function getTransformWorldMatrix2(object, outTransform = Mat4Utils.create()) {
+    ObjectUtils.getTransformWorldQuat(object, transformQuat2);
+    ObjectUtils.getScaleWorld(object, scale4);
+    Mat4Utils.fromQuat(transformQuat2, outTransform);
+    Mat4Utils.scale(outTransform, scale4, outTransform);
+    return outTransform;
+  };
+}();
+function getTransformWorldQuat(object, outTransform = Quat2Utils.create()) {
+  object.getTransformWorld(outTransform);
+  return outTransform;
+}
+function getTransformLocal(object, outTransform) {
+  return ObjectUtils.getTransformLocalMatrix(object, outTransform);
+}
+var getTransformLocalMatrix = function() {
+  const transformQuat2 = Quat2Utils.create();
+  const scale4 = Vec3Utils.create();
+  return function getTransformLocalMatrix2(object, outTransform = Mat4Utils.create()) {
+    ObjectUtils.getTransformLocalQuat(object, transformQuat2);
+    ObjectUtils.getScaleLocal(object, scale4);
+    Mat4Utils.fromQuat(transformQuat2, outTransform);
+    Mat4Utils.scale(outTransform, scale4, outTransform);
+    return outTransform;
+  };
+}();
+function getTransformLocalQuat(object, outTransform = Quat2Utils.create()) {
+  object.getTransformLocal(outTransform);
+  return outTransform;
+}
+function getAxes4(object, outAxes) {
+  return ObjectUtils.getAxesWorld(object, outAxes);
+}
+function getAxesWorld(object, outAxes = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
+  ObjectUtils.getLeftWorld(object, outAxes[0]);
+  ObjectUtils.getUpWorld(object, outAxes[1]);
+  ObjectUtils.getForwardWorld(object, outAxes[2]);
+  return outAxes;
+}
+function getAxesLocal(object, outAxes = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
+  ObjectUtils.getLeftLocal(object, outAxes[0]);
+  ObjectUtils.getUpLocal(object, outAxes[1]);
+  ObjectUtils.getForwardLocal(object, outAxes[2]);
+  return outAxes;
+}
+function getForward4(object, outForward) {
+  return ObjectUtils.getForwardWorld(object, outForward);
+}
+var getForwardWorld = function() {
+  const rotation = Mat3Utils.create();
+  return function getForwardWorld2(object, outForward = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldMatrix(object, rotation);
+    outForward[0] = rotation[6];
+    outForward[1] = rotation[7];
+    outForward[2] = rotation[8];
+    return outForward;
+  };
+}();
+var getForwardLocal = function() {
+  const rotation = Mat3Utils.create();
+  return function getForwardLocal2(object, outForward = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalMatrix(object, rotation);
+    outForward[0] = rotation[6];
+    outForward[1] = rotation[7];
+    outForward[2] = rotation[8];
+    return outForward;
+  };
+}();
+function getBackward4(object, outBackward) {
+  return ObjectUtils.getBackwardWorld(object, outBackward);
+}
+var getBackwardWorld = function() {
+  const rotation = Mat3Utils.create();
+  return function getBackwardWorld2(object, outBackward = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldMatrix(object, rotation);
+    outBackward[0] = -rotation[6];
+    outBackward[1] = -rotation[7];
+    outBackward[2] = -rotation[8];
+    return outBackward;
+  };
+}();
+var getBackwardLocal = function() {
+  const rotation = Mat3Utils.create();
+  return function getBackwardLocal2(object, outBackward = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalMatrix(object, rotation);
+    outBackward[0] = -rotation[6];
+    outBackward[1] = -rotation[7];
+    outBackward[2] = -rotation[8];
+    return outBackward;
+  };
+}();
+function getUp4(object, outUp) {
+  return ObjectUtils.getUpWorld(object, outUp);
+}
+var getUpWorld = function() {
+  const rotation = Mat3Utils.create();
+  return function getUpWorld2(object, outUp = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldMatrix(object, rotation);
+    outUp[0] = rotation[3];
+    outUp[1] = rotation[4];
+    outUp[2] = rotation[5];
+    return outUp;
+  };
+}();
+var getUpLocal = function() {
+  const rotation = Mat3Utils.create();
+  return function getUpLocal2(object, outUp = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalMatrix(object, rotation);
+    outUp[0] = rotation[3];
+    outUp[1] = rotation[4];
+    outUp[2] = rotation[5];
+    return outUp;
+  };
+}();
+function getDown4(object, outDown) {
+  return ObjectUtils.getDownWorld(object, outDown);
+}
+var getDownWorld = function() {
+  const rotation = Mat3Utils.create();
+  return function getDownWorld2(object, outDown = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldMatrix(object, rotation);
+    outDown[0] = -rotation[3];
+    outDown[1] = -rotation[4];
+    outDown[2] = -rotation[5];
+    return outDown;
+  };
+}();
+var getDownLocal = function() {
+  const rotation = Mat3Utils.create();
+  return function getDownLocal2(object, outDown = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalMatrix(object, rotation);
+    outDown[0] = -rotation[3];
+    outDown[1] = -rotation[4];
+    outDown[2] = -rotation[5];
+    return outDown;
+  };
+}();
+function getLeft4(object, outLeft) {
+  return ObjectUtils.getLeftWorld(object, outLeft);
+}
+var getLeftWorld = function() {
+  const rotation = Mat3Utils.create();
+  return function getLeftWorld2(object, outLeft = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldMatrix(object, rotation);
+    outLeft[0] = rotation[0];
+    outLeft[1] = rotation[1];
+    outLeft[2] = rotation[2];
+    return outLeft;
+  };
+}();
+var getLeftLocal = function() {
+  const rotation = Mat3Utils.create();
+  return function getLeftLocal2(object, outLeft = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalMatrix(object, rotation);
+    outLeft[0] = rotation[0];
+    outLeft[1] = rotation[1];
+    outLeft[2] = rotation[2];
+    return outLeft;
+  };
+}();
+function getRight4(object, outRight) {
+  return ObjectUtils.getRightWorld(object, outRight);
+}
+var getRightWorld = function() {
+  const rotation = Mat3Utils.create();
+  return function getRightWorld2(object, outRight = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldMatrix(object, rotation);
+    outRight[0] = -rotation[0];
+    outRight[1] = -rotation[1];
+    outRight[2] = -rotation[2];
+    return outRight;
+  };
+}();
+var getRightLocal = function() {
+  const rotation = Mat3Utils.create();
+  return function getRightLocal2(object, outRight = Vec3Utils.create()) {
+    ObjectUtils.getRotationLocalMatrix(object, rotation);
+    outRight[0] = -rotation[0];
+    outRight[1] = -rotation[1];
+    outRight[2] = -rotation[2];
+    return outRight;
+  };
+}();
+function setPosition3(object, position) {
+  return ObjectUtils.setPositionWorld(object, position);
+}
+function setPositionWorld(object, position) {
+  return object.setPositionWorld(position);
+}
+function setPositionLocal(object, position) {
+  return object.setPositionLocal(position);
+}
+function setRotation3(object, rotation) {
+  return ObjectUtils.setRotationWorld(object, rotation);
+}
+function setRotationDegrees3(object, rotation) {
+  return ObjectUtils.setRotationWorldDegrees(object, rotation);
+}
+function setRotationRadians3(object, rotation) {
+  return ObjectUtils.setRotationWorldRadians(object, rotation);
+}
+function setRotationMatrix(object, rotation) {
+  return ObjectUtils.setRotationWorldMatrix(object, rotation);
+}
+function setRotationQuat3(object, rotation) {
+  return ObjectUtils.setRotationWorldQuat(object, rotation);
+}
+function setRotationWorld(object, rotation) {
+  return ObjectUtils.setRotationWorldDegrees(object, rotation);
+}
+var setRotationWorldDegrees = function() {
+  const quat = QuatUtils.create();
+  return function setRotationWorldDegrees2(object, rotation) {
+    Vec3Utils.degreesToQuat(rotation, quat);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setRotationWorldRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function setRotationWorldRadians2(object, rotation) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.setRotationWorldDegrees(object, degreesRotation);
+  };
+}();
+var setRotationWorldMatrix = function() {
+  const quat = QuatUtils.create();
+  return function setRotationWorldMatrix2(object, rotation) {
+    Mat3Utils.toQuat(rotation, quat);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+function setRotationWorldQuat(object, rotation) {
+  return object.setRotationWorld(rotation);
+}
+function setRotationLocal(object, rotation) {
+  return ObjectUtils.setRotationLocalDegrees(object, rotation);
+}
+var setRotationLocalDegrees = function() {
+  const quat = QuatUtils.create();
+  return function setRotationLocalDegrees2(object, rotation) {
+    Vec3Utils.degreesToQuat(rotation, quat);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+var setRotationLocalRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function setRotationLocalRadians2(object, rotation) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.setRotationLocalDegrees(object, degreesRotation);
+  };
+}();
+var setRotationLocalMatrix = function() {
+  const quat = QuatUtils.create();
+  return function setRotationLocalMatrix2(object, rotation) {
+    Mat3Utils.toQuat(rotation, quat);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setRotationLocalQuat(object, rotation) {
+  return object.setRotationLocal(rotation);
+}
+function setScale2(object, scale4) {
+  return ObjectUtils.setScaleWorld(object, scale4);
+}
+var setScaleWorld = function() {
+  const vector = Vec3Utils.create();
+  function setScaleWorld2(object, scale4) {
+    if (isNaN(scale4)) {
+      return object.setScalingWorld(scale4);
+    } else {
+      Vec3Utils.set(vector, scale4);
+      return object.setScalingWorld(vector);
+    }
+  }
+  return setScaleWorld2;
+}();
+var setScaleLocal = function() {
+  const vector = Vec3Utils.create();
+  function setScaleLocal2(object, scale4) {
+    if (isNaN(scale4)) {
+      return object.setScalingLocal(scale4);
+    } else {
+      Vec3Utils.set(vector, scale4);
+      return object.setScalingLocal(vector);
+    }
+  }
+  return setScaleLocal2;
+}();
+function setAxes2(object, left, up, forward) {
+  return ObjectUtils.setAxesWorld(object, left, up, forward);
+}
+function setAxesWorld(object, left, up, forward) {
+  if (forward != null) {
+    return ObjectUtils.setForwardWorld(object, forward, up, left);
+  } else if (up != null) {
+    return ObjectUtils.setUpWorld(object, up, forward, left);
+  } else if (left != null) {
+    return ObjectUtils.setLeftWorld(object, left, up, forward);
+  }
+  return object;
+}
+function setAxesLocal(object, left, up, forward) {
+  if (forward != null) {
+    return ObjectUtils.setForwardLocal(object, forward, up, left);
+  } else if (up != null) {
+    return ObjectUtils.setUpLocal(object, up, forward, left);
+  } else if (left != null) {
+    return ObjectUtils.setLeftLocal(object, left, up, forward);
+  }
+  return object;
+}
+function setForward2(object, forward, up, left) {
+  return ObjectUtils.setForwardWorld(object, forward, up, left);
+}
+var setForwardWorld = function() {
+  const quat = QuatUtils.create();
+  return function setForwardWorld2(object, forward, up, left) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.setForward(quat, forward, up, left);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setForwardLocal = function() {
+  const quat = QuatUtils.create();
+  return function setForwardLocal2(object, forward, up, left) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.setForward(quat, forward, up, left);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setBackward2(object, backward, up, left) {
+  return ObjectUtils.setBackwardWorld(object, backward, up, left);
+}
+var setBackwardWorld = function() {
+  const quat = QuatUtils.create();
+  return function setBackwardWorld2(object, backward, up, left) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.setBackward(quat, backward, up, left);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setBackwardLocal = function() {
+  const quat = QuatUtils.create();
+  return function setBackwardLocal2(object, backward, up, left) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.setBackward(quat, backward, up, left);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setUp2(object, up, forward, left) {
+  return ObjectUtils.setUpWorld(object, up, forward, left);
+}
+var setUpWorld = function() {
+  const quat = QuatUtils.create();
+  return function setUpWorld2(object, up, forward, left) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.setUp(quat, up, forward, left);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setUpLocal = function() {
+  const quat = QuatUtils.create();
+  return function setUpLocal2(object, up, forward, left) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.setUp(quat, up, forward, left);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setDown2(object, down, forward, left) {
+  return ObjectUtils.setDownWorld(object, down, forward, left);
+}
+var setDownWorld = function() {
+  const quat = QuatUtils.create();
+  return function setDownWorld2(object, down, forward, left) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.setDown(quat, down, forward, left);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setDownLocal = function() {
+  const quat = QuatUtils.create();
+  return function setDownLocal2(object, down, forward, left) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.setDown(quat, down, forward, left);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setLeft2(object, left, up, forward) {
+  return ObjectUtils.setLeftWorld(object, left, up, forward);
+}
+var setLeftWorld = function() {
+  const quat = QuatUtils.create();
+  return function setLeftWorld2(object, left, up, forward) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.setLeft(quat, left, up, forward);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setLeftLocal = function() {
+  const quat = QuatUtils.create();
+  return function setLeftLocal2(object, left, up, forward) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.setLeft(quat, left, up, forward);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setRight2(object, right, up, forward) {
+  return ObjectUtils.setRightWorld(object, right, up, forward);
+}
+var setRightWorld = function() {
+  const quat = QuatUtils.create();
+  return function setRightWorld2(object, right, up, forward) {
+    ObjectUtils.getRotationWorldQuat(object, quat);
+    QuatUtils.setRight(quat, right, up, forward);
+    return ObjectUtils.setRotationWorldQuat(object, quat);
+  };
+}();
+var setRightLocal = function() {
+  const quat = QuatUtils.create();
+  return function setRightLocal2(object, right, up, forward) {
+    ObjectUtils.getRotationLocalQuat(object, quat);
+    QuatUtils.setRight(quat, right, up, forward);
+    return ObjectUtils.setRotationLocalQuat(object, quat);
+  };
+}();
+function setTransform(object, transform) {
+  return ObjectUtils.setTransformWorld(object, transform);
+}
+function setTransformMatrix(object, transform) {
+  return ObjectUtils.setTransformWorldMatrix(object, transform);
+}
+function setTransformQuat(object, transform) {
+  return ObjectUtils.setTransformWorldQuat(object, transform);
+}
+function setTransformWorld(object, transform) {
+  return ObjectUtils.setTransformWorldMatrix(object, transform);
+}
+var setTransformWorldMatrix = function() {
+  const position = Vec3Utils.create();
+  const rotation = QuatUtils.create();
+  const scale4 = Vec3Utils.create();
+  const transformMatrixNoScale = Mat4Utils.create();
+  const inverseScale = Vec3Utils.create();
+  const one = Vec3Utils.create(1);
+  return function setTransformWorldMatrix2(object, transform) {
+    Mat4Utils.getPosition(transform, position);
+    Mat4Utils.getScale(transform, scale4);
+    Vec3Utils.div(one, scale4, inverseScale);
+    Mat4Utils.scale(transform, inverseScale, transformMatrixNoScale);
+    Mat4Utils.getRotationQuat(transformMatrixNoScale, rotation);
+    QuatUtils.normalize(rotation, rotation);
+    ObjectUtils.setScaleWorld(object, scale4);
+    ObjectUtils.setRotationWorldQuat(object, rotation);
+    ObjectUtils.setPositionWorld(object, position);
+    return object;
+  };
+}();
+function setTransformWorldQuat(object, transform) {
+  return object.setTransformWorld(transform);
+}
+function setTransformLocal(object, transform) {
+  return ObjectUtils.setTransformLocalMatrix(object, transform);
+}
+var setTransformLocalMatrix = function() {
+  const position = Vec3Utils.create();
+  const rotation = QuatUtils.create();
+  const scale4 = Vec3Utils.create();
+  const transformMatrixNoScale = Mat4Utils.create();
+  const inverseScale = Vec3Utils.create();
+  const one = Vec3Utils.create(1);
+  return function setTransformLocalMatrix2(object, transform) {
+    Mat4Utils.getPosition(transform, position);
+    Mat4Utils.getScale(transform, scale4);
+    Vec3Utils.div(one, scale4, inverseScale);
+    Mat4Utils.scale(transform, inverseScale, transformMatrixNoScale);
+    Mat4Utils.getRotationQuat(transformMatrixNoScale, rotation);
+    QuatUtils.normalize(rotation, rotation);
+    ObjectUtils.setScaleLocal(object, scale4);
+    ObjectUtils.setRotationLocalQuat(object, rotation);
+    ObjectUtils.setPositionLocal(object, position);
+    return object;
+  };
+}();
+function setTransformLocalQuat(object, transform) {
+  return object.setTransformLocal(transform);
+}
+function resetPosition(object) {
+  return ObjectUtils.resetPositionWorld(object);
+}
+var resetPositionWorld = function() {
+  const zero4 = Vec3Utils.create();
+  return function resetPositionWorld2(object) {
+    return ObjectUtils.setPositionWorld(object, zero4);
+  };
+}();
+var resetPositionLocal = function() {
+  const zero4 = Vec3Utils.create();
+  return function resetPositionLocal2(object) {
+    return ObjectUtils.setPositionLocal(object, zero4);
+  };
+}();
+function resetRotation(object) {
+  return ObjectUtils.resetRotationWorld(object);
+}
+var resetRotationWorld = function() {
+  const identity4 = QuatUtils.create();
+  return function resetRotationWorld2(object) {
+    return ObjectUtils.setRotationWorldQuat(object, identity4);
+  };
+}();
+var resetRotationLocal = function() {
+  const identity4 = QuatUtils.create();
+  return function resetRotationLocal2(object) {
+    return ObjectUtils.setRotationLocalQuat(object, identity4);
+  };
+}();
+function resetScale(object) {
+  return ObjectUtils.resetScaleWorld(object);
+}
+var resetScaleWorld = function() {
+  const one = Vec3Utils.create(1);
+  return function resetScaleWorld2(object) {
+    return ObjectUtils.setScaleWorld(object, one);
+  };
+}();
+var resetScaleLocal = function() {
+  const one = Vec3Utils.create(1);
+  return function resetScaleLocal2(object) {
+    return ObjectUtils.setScaleLocal(object, one);
+  };
+}();
+function resetTransform(object) {
+  return ObjectUtils.resetTransformWorld(object);
+}
+function resetTransformWorld(object) {
+  ObjectUtils.resetScaleWorld(object);
+  ObjectUtils.resetRotationWorld(object);
+  ObjectUtils.resetPositionWorld(object);
+  return object;
+}
+function resetTransformLocal(object) {
+  ObjectUtils.resetScaleLocal(object);
+  ObjectUtils.resetRotationLocal(object);
+  ObjectUtils.resetPositionLocal(object);
+  return object;
+}
+function translate(object, translation) {
+  return ObjectUtils.translateWorld(object, translation);
+}
+function translateWorld(object, translation) {
+  return object.translateWorld(translation);
+}
+function translateLocal(object, translation) {
+  return object.translateLocal(translation);
+}
+function translateObject(object, translation) {
+  return object.translateObject(translation);
+}
+function translateAxis(object, amount, direction) {
+  return ObjectUtils.translateAxisWorld(object, amount, direction);
+}
+var translateAxisWorld = function() {
+  const translation = Vec3Utils.create();
+  return function translateAxisWorld2(object, amount, direction) {
+    Vec3Utils.scale(direction, amount, translation);
+    return ObjectUtils.translateWorld(object, translation);
+  };
+}();
+var translateAxisLocal = function() {
+  const translation = Vec3Utils.create();
+  return function translateAxisLocal2(object, amount, direction) {
+    Vec3Utils.scale(direction, amount, translation);
+    return ObjectUtils.translateLocal(object, translation);
+  };
+}();
+var translateAxisObject = function() {
+  const translation = Vec3Utils.create();
+  return function translateAxisObject2(object, amount, direction) {
+    Vec3Utils.scale(direction, amount, translation);
+    return ObjectUtils.translateObject(object, translation);
+  };
+}();
+function rotate3(object, rotation) {
+  return ObjectUtils.rotateWorld(object, rotation);
+}
+function rotateDegrees3(object, rotation) {
+  return ObjectUtils.rotateWorldDegrees(object, rotation);
+}
+function rotateRadians3(object, rotation) {
+  return ObjectUtils.rotateWorldRadians(object, rotation);
+}
+function rotateMatrix(object, rotation) {
+  return ObjectUtils.rotateWorldMatrix(object, rotation);
+}
+function rotateQuat3(object, rotation) {
+  return ObjectUtils.rotateWorldQuat(object, rotation);
+}
+function rotateWorld(object, rotation) {
+  return ObjectUtils.rotateWorldDegrees(object, rotation);
+}
+var rotateWorldDegrees = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateWorldDegrees2(object, rotation) {
+    Vec3Utils.degreesToQuat(rotation, rotationQuat);
+    return ObjectUtils.rotateWorldQuat(object, rotationQuat);
+  };
+}();
+var rotateWorldRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function rotateWorldRadians2(object, rotation) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.rotateWorldDegrees(object, degreesRotation);
+  };
+}();
+var rotateWorldMatrix = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateWorldMatrix2(object, rotation) {
+    Mat3Utils.toQuat(rotation, rotationQuat);
+    QuatUtils.normalize(rotationQuat, rotationQuat);
+    return ObjectUtils.rotateWorldQuat(object, rotationQuat);
+  };
+}();
+var rotateWorldQuat = function() {
+  const currentRotationQuat = QuatUtils.create();
+  return function rotateWorldQuat2(object, rotation) {
+    ObjectUtils.getRotationWorldQuat(object, currentRotationQuat);
+    QuatUtils.mul(rotation, currentRotationQuat, currentRotationQuat);
+    QuatUtils.normalize(currentRotationQuat, currentRotationQuat);
+    return ObjectUtils.setRotationWorldQuat(object, currentRotationQuat);
+  };
+}();
+function rotateLocal(object, rotation) {
+  return ObjectUtils.rotateLocalDegrees(object, rotation);
+}
+var rotateLocalDegrees = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateLocalDegrees2(object, rotation) {
+    Vec3Utils.degreesToQuat(rotation, rotationQuat);
+    return ObjectUtils.rotateLocalQuat(object, rotationQuat);
+  };
+}();
+var rotateLocalRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function rotateLocalRadians2(object, rotation) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.rotateLocalDegrees(object, degreesRotation);
+  };
+}();
+var rotateLocalMatrix = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateLocalMatrix2(object, rotation) {
+    Mat3Utils.toQuat(rotation, rotationQuat);
+    QuatUtils.normalize(rotationQuat, rotationQuat);
+    return ObjectUtils.rotateLocalQuat(object, rotationQuat);
+  };
+}();
+var rotateLocalQuat = function() {
+  const currentRotationQuat = QuatUtils.create();
+  return function rotateLocalQuat2(object, rotation) {
+    ObjectUtils.getRotationLocalQuat(object, currentRotationQuat);
+    QuatUtils.mul(rotation, currentRotationQuat, currentRotationQuat);
+    QuatUtils.normalize(currentRotationQuat, currentRotationQuat);
+    return ObjectUtils.setRotationLocalQuat(object, currentRotationQuat);
+  };
+}();
+function rotateObject(object, rotation) {
+  return ObjectUtils.rotateObjectDegrees(object, rotation);
+}
+var rotateObjectDegrees = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateObjectDegrees2(object, rotation) {
+    Vec3Utils.degreesToQuat(rotation, rotationQuat);
+    return ObjectUtils.rotateObjectQuat(object, rotationQuat);
+  };
+}();
+var rotateObjectRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function rotateObjectRadians2(object, rotation) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.rotateObjectDegrees(object, degreesRotation);
+  };
+}();
+var rotateObjectMatrix = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateObjectMatrix2(object, rotation) {
+    Mat3Utils.toQuat(rotation, rotationQuat);
+    QuatUtils.normalize(rotationQuat, rotationQuat);
+    return ObjectUtils.rotateObjectQuat(object, rotationQuat);
+  };
+}();
+function rotateObjectQuat(object, rotation) {
+  return object.rotateObject(rotation);
+}
+function rotateAxis4(object, angle2, axis) {
+  return ObjectUtils.rotateAxisWorld(object, angle2, axis);
+}
+function rotateAxisDegrees4(object, angle2, axis) {
+  return ObjectUtils.rotateAxisWorldDegrees(object, angle2, axis);
+}
+function rotateAxisRadians4(object, angle2, axis) {
+  return ObjectUtils.rotateAxisWorldRadians(object, angle2, axis);
+}
+function rotateAxisWorld(object, angle2, axis) {
+  return ObjectUtils.rotateAxisWorldDegrees(object, angle2, axis);
+}
+function rotateAxisWorldDegrees(object, angle2, axis) {
+  return ObjectUtils.rotateAxisWorldRadians(object, MathUtils.toRadians(angle2), axis);
+}
+var rotateAxisWorldRadians = function() {
+  const rotation = QuatUtils.create();
+  return function rotateAxisWorldRadians2(object, angle2, axis) {
+    QuatUtils.fromAxisRadians(angle2, axis, rotation);
+    return ObjectUtils.rotateWorldQuat(object, rotation);
+  };
+}();
+function rotateAxisLocal(object, angle2, axis) {
+  return ObjectUtils.rotateAxisLocalDegrees(object, angle2, axis);
+}
+function rotateAxisLocalDegrees(object, angle2, axis) {
+  return ObjectUtils.rotateAxisLocalRadians(object, MathUtils.toRadians(angle2), axis);
+}
+var rotateAxisLocalRadians = function() {
+  const rotation = QuatUtils.create();
+  return function rotateAxisLocalRadians2(object, angle2, axis) {
+    QuatUtils.fromAxisRadians(angle2, axis, rotation);
+    return ObjectUtils.rotateLocalQuat(object, rotation);
+  };
+}();
+function rotateAxisObject(object, angle2, axis) {
+  return ObjectUtils.rotateAxisObjectDegrees(object, angle2, axis);
+}
+function rotateAxisObjectDegrees(object, angle2, axis) {
+  return ObjectUtils.rotateAxisObjectRadians(object, MathUtils.toRadians(angle2), axis);
+}
+var rotateAxisObjectRadians = function() {
+  const rotation = QuatUtils.create();
+  return function rotateAxisObjectRadians2(object, angle2, axis) {
+    QuatUtils.fromAxisRadians(angle2, axis, rotation);
+    return ObjectUtils.rotateObjectQuat(object, rotation);
+  };
+}();
+function rotateAround2(object, rotation, origin) {
+  return ObjectUtils.rotateAroundWorld(object, rotation, origin);
+}
+function rotateAroundDegrees2(object, rotation, origin) {
+  return ObjectUtils.rotateAroundWorldDegrees(object, rotation, origin);
+}
+function rotateAroundRadians2(object, rotation, origin) {
+  return ObjectUtils.rotateAroundWorldRadians(object, rotation, origin);
+}
+function rotateAroundMatrix(object, rotation, origin) {
+  return ObjectUtils.rotateAroundWorldMatrix(object, rotation, origin);
+}
+function rotateAroundQuat2(object, rotation, origin) {
+  return ObjectUtils.rotateAroundWorldQuat(object, rotation, origin);
+}
+function rotateAroundWorld(object, rotation, origin) {
+  return ObjectUtils.rotateAroundWorldDegrees(object, rotation, origin);
+}
+var rotateAroundWorldDegrees = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateAroundWorldDegrees2(object, rotation, origin) {
+    Vec3Utils.degreesToQuat(rotation, rotationQuat);
+    return ObjectUtils.rotateAroundWorldQuat(object, rotationQuat, origin);
+  };
+}();
+var rotateAroundWorldRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function rotateAroundWorldRadians2(object, rotation, origin) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.rotateAroundWorldDegrees(object, degreesRotation, origin);
+  };
+}();
+var rotateAroundWorldMatrix = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateAroundWorldMatrix2(object, rotation, origin) {
+    Mat3Utils.toQuat(rotation, rotationQuat);
+    QuatUtils.normalize(rotationQuat, rotationQuat);
+    return ObjectUtils.rotateAroundWorldQuat(object, rotationQuat, origin);
+  };
+}();
+var rotateAroundWorldQuat = function() {
+  const axis = Vec3Utils.create();
+  return function rotateAroundWorldQuat2(object, rotation, origin) {
+    QuatUtils.getAxis(rotation, axis);
+    const angle2 = QuatUtils.getAngleRadians(rotation);
+    return ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, axis, origin);
+  };
+}();
+function rotateAroundLocal(object, rotation, origin) {
+  return ObjectUtils.rotateAroundLocalDegrees(object, rotation, origin);
+}
+var rotateAroundLocalDegrees = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateAroundLocalDegrees2(object, rotation, origin) {
+    Vec3Utils.degreesToQuat(rotation, rotationQuat);
+    return ObjectUtils.rotateAroundLocalQuat(object, rotationQuat, origin);
+  };
+}();
+var rotateAroundLocalRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function rotateAroundLocalRadians2(object, rotation, origin) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.rotateAroundLocalDegrees(object, degreesRotation, origin);
+  };
+}();
+var rotateAroundLocalMatrix = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateAroundLocalMatrix2(object, rotation, origin) {
+    Mat3Utils.toQuat(rotation, rotationQuat);
+    QuatUtils.normalize(rotationQuat, rotationQuat);
+    return ObjectUtils.rotateAroundLocalQuat(object, rotationQuat, origin);
+  };
+}();
+var rotateAroundLocalQuat = function() {
+  const axis = Vec3Utils.create();
+  return function rotateAroundLocalQuat2(object, rotation, origin) {
+    QuatUtils.getAxis(rotation, axis);
+    const angle2 = QuatUtils.getAngleRadians(rotation);
+    return ObjectUtils.rotateAroundAxisLocalRadians(object, angle2, axis, origin);
+  };
+}();
+function rotateAroundObject(object, rotation, origin) {
+  return ObjectUtils.rotateAroundObjectDegrees(object, rotation, origin);
+}
+var rotateAroundObjectDegrees = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateAroundObjectDegrees2(object, rotation, origin) {
+    Vec3Utils.degreesToQuat(rotation, rotationQuat);
+    return ObjectUtils.rotateAroundObjectQuat(object, rotationQuat, origin);
+  };
+}();
+var rotateAroundObjectRadians = function() {
+  const degreesRotation = Vec3Utils.create();
+  return function rotateAroundObjectRadians2(object, rotation, origin) {
+    Vec3Utils.toDegrees(rotation, degreesRotation);
+    return ObjectUtils.rotateAroundObjectDegrees(object, degreesRotation, origin);
+  };
+}();
+var rotateAroundObjectMatrix = function() {
+  const rotationQuat = QuatUtils.create();
+  return function rotateAroundObjectMatrix2(object, rotation, origin) {
+    Mat3Utils.toQuat(rotation, rotationQuat);
+    QuatUtils.normalize(rotationQuat, rotationQuat);
+    return ObjectUtils.rotateAroundObjectQuat(object, rotationQuat, origin);
+  };
+}();
+var rotateAroundObjectQuat = function() {
+  const axis = Vec3Utils.create();
+  return function rotateAroundObjectQuat2(object, rotation, origin) {
+    QuatUtils.getAxis(rotation, axis);
+    const angle2 = QuatUtils.getAngleRadians(rotation);
+    return ObjectUtils.rotateAroundAxisObjectRadians(object, angle2, axis, origin);
+  };
+}();
+function rotateAroundAxis2(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisWorld(object, angle2, axis, origin);
+}
+function rotateAroundAxisDegrees2(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisWorldDegrees(object, angle2, axis, origin);
+}
+function rotateAroundAxisRadians2(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, axis, origin);
+}
+function rotateAroundAxisWorld(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisWorldDegrees(object, angle2, axis, origin);
+}
+function rotateAroundAxisWorldDegrees(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisWorldRadians(object, MathUtils.toRadians(angle2), axis, origin);
+}
+var rotateAroundAxisWorldRadians = function() {
+  const transformToRotate = Quat2Utils.create();
+  const transformToRotateConjugate = Quat2Utils.create();
+  const transformQuat2 = Quat2Utils.create();
+  const defaultQuat = QuatUtils.create();
+  return function rotateAroundAxisWorldRadians2(object, angle2, axis, origin) {
+    Quat2Utils.setPositionRotationQuat(transformToRotate, origin, defaultQuat);
+    ObjectUtils.getTransformWorldQuat(object, transformQuat2);
+    Quat2Utils.conjugate(transformToRotate, transformToRotateConjugate);
+    Quat2Utils.mul(transformToRotateConjugate, transformQuat2, transformQuat2);
+    Quat2Utils.rotateAxisRadians(transformToRotate, angle2, axis, transformToRotate);
+    Quat2Utils.mul(transformToRotate, transformQuat2, transformQuat2);
+    return ObjectUtils.setTransformWorldQuat(object, transformQuat2);
+  };
+}();
+function rotateAroundAxisLocal(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisLocalDegrees(object, angle2, axis, origin);
+}
+function rotateAroundAxisLocalDegrees(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisLocalRadians(object, MathUtils.toRadians(angle2), axis, origin);
+}
+var rotateAroundAxisLocalRadians = function() {
+  const convertedPosition = Vec3Utils.create();
+  const convertedAxis = Vec3Utils.create();
+  return function rotateAroundAxisLocalRadians2(object, angle2, axis, origin) {
+    ObjectUtils.convertPositionLocalToWorld(object, origin, convertedPosition);
+    ObjectUtils.convertDirectionLocalToWorld(object, axis, convertedAxis);
+    return ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, convertedAxis, convertedPosition);
+  };
+}();
+function rotateAroundAxisObject(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisObjectDegrees(object, angle2, axis, origin);
+}
+function rotateAroundAxisObjectDegrees(object, angle2, axis, origin) {
+  return ObjectUtils.rotateAroundAxisObjectRadians(object, MathUtils.toRadians(angle2), axis, origin);
+}
+var rotateAroundAxisObjectRadians = function() {
+  const convertedPosition = Vec3Utils.create();
+  const convertedAxis = Vec3Utils.create();
+  return function rotateAroundAxisObjectRadians2(object, angle2, axis, origin) {
+    ObjectUtils.convertPositionObjectToWorld(object, origin, convertedPosition);
+    ObjectUtils.convertDirectionObjectToWorld(object, axis, convertedAxis);
+    return ObjectUtils.rotateAroundAxisWorldRadians(object, angle2, convertedAxis, convertedPosition);
+  };
+}();
+var scaleObject = function() {
+  const vector = Vec3Utils.create();
+  function scaleObject2(object, scale4) {
+    if (isNaN(scale4)) {
+      return object.scaleLocal(scale4);
+    } else {
+      Vec3Utils.set(vector, scale4);
+      return object.scaleLocal(vector);
+    }
+  }
+  return scaleObject2;
+}();
+function lookAt(object, position, up) {
+  return ObjectUtils.lookAtWorld(object, position, up);
+}
+var lookAtWorld = function() {
+  const direction = Vec3Utils.create();
+  return function lookAtWorld2(object, position, up) {
+    ObjectUtils.getPositionWorld(object, direction);
+    Vec3Utils.sub(position, direction, direction);
+    return ObjectUtils.lookToWorld(object, direction, up);
+  };
+}();
+var lookAtLocal = function() {
+  const direction = Vec3Utils.create();
+  return function lookAtLocal2(object, position, up) {
+    ObjectUtils.getPositionLocal(object, direction);
+    Vec3Utils.sub(position, direction, direction);
+    return ObjectUtils.lookToLocal(object, direction, up);
+  };
+}();
+function lookTo(object, direction, up) {
+  return ObjectUtils.lookToWorld(object, direction, up);
+}
+var lookToWorld = function() {
+  const internalUp = Vec3Utils.create();
+  return function lookToWorld2(object, direction, up = ObjectUtils.getUpWorld(object, internalUp)) {
+    return ObjectUtils.setForwardWorld(object, direction, up);
+  };
+}();
+var lookToLocal = function() {
+  const internalUp = Vec3Utils.create();
+  return function lookToLocal2(object, direction, up = ObjectUtils.getUpLocal(object, internalUp)) {
+    return ObjectUtils.setForwardLocal(object, direction, up);
+  };
+}();
+var convertPositionObjectToWorld = function() {
+  const matrix = Mat4Utils.create();
+  return function convertPositionObjectToWorld2(object, position, outPosition = Vec3Utils.create()) {
+    ObjectUtils.getTransformWorldMatrix(object, matrix);
+    Vec3Utils.transformMat4(position, matrix, outPosition);
+    return outPosition;
+  };
+}();
+var convertDirectionObjectToWorld = function() {
+  const rotation = QuatUtils.create();
+  return function convertDirectionObjectToWorld2(object, direction, outDirection = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldQuat(object, rotation);
+    Vec3Utils.transformQuat(direction, rotation, outDirection);
+    return outDirection;
+  };
+}();
+var convertPositionWorldToObject = function() {
+  const matrix = Mat4Utils.create();
+  return function convertPositionWorldToObject2(object, position, outPosition = Vec3Utils.create()) {
+    ObjectUtils.getTransformWorldMatrix(object, matrix);
+    Mat4Utils.invert(matrix, matrix);
+    Vec3Utils.transformMat4(position, matrix, outPosition);
+    return outPosition;
+  };
+}();
+var convertDirectionWorldToObject = function() {
+  const rotation = QuatUtils.create();
+  return function convertDirectionWorldToObject2(object, direction, outDirection = Vec3Utils.create()) {
+    ObjectUtils.getRotationWorldQuat(object, rotation);
+    QuatUtils.conjugate(rotation, rotation);
+    Vec3Utils.transformQuat(direction, rotation, outDirection);
+    return outDirection;
+  };
+}();
+function convertPositionLocalToWorld(object, position, outPosition = Vec3Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertPositionObjectToWorld(ObjectUtils.getParent(object), position, outPosition);
+  } else {
+    Vec3Utils.copy(position, outPosition);
+  }
+  return outPosition;
+}
+function convertDirectionLocalToWorld(object, direction, outDirection = Vec3Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertDirectionObjectToWorld(ObjectUtils.getParent(object), direction, outDirection);
+  } else {
+    Vec3Utils.copy(direction, outDirection);
+  }
+  return outDirection;
+}
+function convertPositionWorldToLocal(object, position, outPosition = Vec3Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertPositionWorldToObject(ObjectUtils.getParent(object), position, outPosition);
+  } else {
+    Vec3Utils.copy(position, outPosition);
+  }
+  return outPosition;
+}
+function convertDirectionWorldToLocal(object, direction, outDirection = Vec3Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertDirectionWorldToObject(ObjectUtils.getParent(object), direction, outDirection);
+  } else {
+    Vec3Utils.copy(direction, outDirection);
+  }
+  return outDirection;
+}
+function convertPositionObjectToLocal(object, position, outPosition = Vec3Utils.create()) {
+  ObjectUtils.convertPositionObjectToWorld(object, position, outPosition);
+  ObjectUtils.convertPositionWorldToLocal(object, outPosition, outPosition);
+  return outPosition;
+}
+function convertDirectionObjectToLocal(object, direction, outDirection = Vec3Utils.create()) {
+  ObjectUtils.convertDirectionObjectToWorld(object, direction, outDirection);
+  ObjectUtils.convertDirectionWorldToLocal(object, outDirection, outDirection);
+  return outDirection;
+}
+function convertPositionLocalToObject(object, position, outPosition = Vec3Utils.create()) {
+  ObjectUtils.convertPositionLocalToWorld(object, position, outPosition);
+  ObjectUtils.convertPositionWorldToObject(object, outPosition, outPosition);
+  return outPosition;
+}
+function convertDirectionLocalToObject(object, direction, outDirection = Vec3Utils.create()) {
+  ObjectUtils.convertDirectionLocalToWorld(object, direction, outDirection);
+  ObjectUtils.convertDirectionWorldToObject(object, outDirection, outDirection);
+  return outDirection;
+}
+function convertTransformObjectToWorld(object, transform, outTransform) {
+  return ObjectUtils.convertTransformObjectToWorldMatrix(object, transform, outTransform);
+}
+var convertTransformObjectToWorldMatrix = function() {
+  const convertTransform = Mat4Utils.create();
+  const position = Vec3Utils.create();
+  const scale4 = Vec3Utils.create();
+  const inverseScale = Vec3Utils.create();
+  const one = Vec3Utils.create(1);
+  return function convertTransformObjectToWorldMatrix2(object, transform, outTransform = Mat4Utils.create()) {
+    ObjectUtils.getTransformWorldMatrix(object, convertTransform);
+    if (ObjectUtils.hasUniformScaleWorld(object)) {
+      Mat4Utils.mul(convertTransform, transform, outTransform);
+    } else {
+      Vec3Utils.set(position, transform[12], transform[13], transform[14]);
+      ObjectUtils.convertPositionObjectToWorld(object, position, position);
+      Mat4Utils.getScale(convertTransform, scale4);
+      Vec3Utils.div(one, scale4, inverseScale);
+      Mat4Utils.scale(convertTransform, inverseScale, convertTransform);
+      Mat4Utils.mul(convertTransform, transform, outTransform);
+      Mat4Utils.scale(outTransform, scale4, outTransform);
+      outTransform[12] = position[0];
+      outTransform[13] = position[1];
+      outTransform[14] = position[2];
+      outTransform[15] = 1;
+    }
+    return outTransform;
+  };
+}();
+var convertTransformObjectToWorldQuat = function() {
+  const position = Vec3Utils.create();
+  const rotation = QuatUtils.create();
+  return function convertTransformObjectToWorldQuat2(object, transform, outTransform = Quat2Utils.create()) {
+    ObjectUtils.getRotationWorldQuat(object, rotation);
+    QuatUtils.mul(rotation, transform, rotation);
+    Quat2Utils.getPosition(transform, position);
+    ObjectUtils.convertPositionObjectToWorld(object, position, position);
+    Quat2Utils.setPositionRotationQuat(outTransform, position, rotation);
+    return outTransform;
+  };
+}();
+function convertTransformWorldToObject(object, transform, outTransform) {
+  return ObjectUtils.convertTransformWorldToObjectMatrix(object, transform, outTransform);
+}
+var convertTransformWorldToObjectMatrix = function() {
+  const convertTransform = Mat4Utils.create();
+  const position = Vec3Utils.create();
+  const scale4 = Vec3Utils.create();
+  const inverseScale = Vec3Utils.create();
+  const one = Vec3Utils.create(1);
+  return function convertTransformWorldToObjectMatrix2(object, transform, outTransform = Mat4Utils.create()) {
+    ObjectUtils.getTransformWorldMatrix(object, convertTransform);
+    if (ObjectUtils.hasUniformScaleWorld(object)) {
+      Mat4Utils.invert(convertTransform, convertTransform);
+      Mat4Utils.mul(convertTransform, transform, outTransform);
+    } else {
+      Vec3Utils.set(position, transform[12], transform[13], transform[14]);
+      ObjectUtils.convertPositionWorldToObject(object, position, position);
+      Mat4Utils.getScale(convertTransform, scale4);
+      Vec3Utils.div(one, scale4, inverseScale);
+      Mat4Utils.scale(convertTransform, inverseScale, convertTransform);
+      Mat4Utils.invert(convertTransform, convertTransform);
+      Mat4Utils.mul(convertTransform, transform, outTransform);
+      Mat4Utils.scale(outTransform, inverseScale, outTransform);
+      outTransform[12] = position[0];
+      outTransform[13] = position[1];
+      outTransform[14] = position[2];
+      outTransform[15] = 1;
+    }
+    return outTransform;
+  };
+}();
+var convertTransformWorldToObjectQuat = function() {
+  const position = Vec3Utils.create();
+  const rotation = QuatUtils.create();
+  return function convertTransformWorldToObjectQuat2(object, transform, outTransform = Quat2Utils.create()) {
+    ObjectUtils.getRotationWorldQuat(object, rotation);
+    QuatUtils.conjugate(rotation, rotation);
+    QuatUtils.mul(rotation, transform, rotation);
+    Quat2Utils.getPosition(transform, position);
+    ObjectUtils.convertPositionWorldToObject(object, position, position);
+    Quat2Utils.setPositionRotationQuat(outTransform, position, rotation);
+    return outTransform;
+  };
+}();
+function convertTransformLocalToWorld(object, transform, outTransform) {
+  return ObjectUtils.convertTransformLocalToWorldMatrix(object, transform, outTransform);
+}
+function convertTransformLocalToWorldMatrix(object, transform, outTransform = Mat4Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertTransformObjectToWorldMatrix(ObjectUtils.getParent(object), transform, outTransform);
+  } else {
+    Mat4Utils.copy(transform, outTransform);
+  }
+  return outTransform;
+}
+function convertTransformLocalToWorldQuat(object, transform, outTransform = Quat2Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertTransformObjectToWorldQuat(ObjectUtils.getParent(object), transform, outTransform);
+  } else {
+    Quat2Utils.copy(transform, outTransform);
+  }
+  return outTransform;
+}
+function convertTransformWorldToLocal(object, transform, outTransform) {
+  return ObjectUtils.convertTransformWorldToLocalMatrix(object, transform, outTransform);
+}
+function convertTransformWorldToLocalMatrix(object, transform, outTransform = Mat4Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertTransformWorldToObjectMatrix(ObjectUtils.getParent(object), transform, outTransform);
+  } else {
+    Mat4Utils.copy(transform, outTransform);
+  }
+  return outTransform;
+}
+function convertTransformWorldToLocalQuat(object, transform, outTransform = Quat2Utils.create()) {
+  if (ObjectUtils.getParent(object) != null) {
+    ObjectUtils.convertTransformWorldToObjectQuat(ObjectUtils.getParent(object), transform, outTransform);
+  } else {
+    Quat2Utils.copy(transform, outTransform);
+  }
+  return outTransform;
+}
+function convertTransformObjectToLocal(object, transform, outTransform) {
+  return ObjectUtils.convertTransformObjectToLocalMatrix(object, transform, outTransform);
+}
+function convertTransformObjectToLocalMatrix(object, transform, outTransform = Mat4Utils.create()) {
+  ObjectUtils.convertTransformObjectToWorldMatrix(object, transform, outTransform);
+  ObjectUtils.convertTransformWorldToLocalMatrix(object, outTransform, outTransform);
+  return outTransform;
+}
+function convertTransformObjectToLocalQuat(object, transform, outTransform = Quat2Utils.create()) {
+  ObjectUtils.convertTransformObjectToWorldQuat(object, transform, outTransform);
+  ObjectUtils.convertTransformWorldToLocalQuat(object, outTransform, outTransform);
+  return outTransform;
+}
+function convertTransformLocalToObject(object, transform, outTransform) {
+  return ObjectUtils.convertTransformLocalToObjectMatrix(object, transform, outTransform);
+}
+function convertTransformLocalToObjectMatrix(object, transform, outTransform = Mat4Utils.create()) {
+  ObjectUtils.convertTransformLocalToWorldMatrix(object, transform, outTransform);
+  ObjectUtils.convertTransformWorldToObjectMatrix(object, outTransform, outTransform);
+  return outTransform;
+}
+function convertTransformLocalToObjectQuat(object, transform, outTransform = Quat2Utils.create()) {
+  ObjectUtils.convertTransformLocalToWorldQuat(object, transform, outTransform);
+  ObjectUtils.convertTransformWorldToObjectQuat(object, outTransform, outTransform);
+  return outTransform;
+}
+var setParent = function() {
+  const position = Vec3Utils.create();
+  const rotation = QuatUtils.create();
+  const scale4 = Vec3Utils.create();
+  return function setParent2(object, newParent, keepTransformWorld = true) {
+    if (!keepTransformWorld) {
+      object.parent = newParent;
+    } else {
+      ObjectUtils.getPositionWorld(object, position);
+      ObjectUtils.getRotationWorldQuat(object, rotation);
+      ObjectUtils.getScaleWorld(object, scale4);
+      object.parent = newParent;
+      ObjectUtils.setScaleWorld(object, scale4);
+      ObjectUtils.setRotationWorldQuat(object, rotation);
+      ObjectUtils.setPositionWorld(object, position);
+    }
+    return object;
+  };
+}();
+function getParent(object) {
+  return object.parent;
+}
+function addComponent(object, classOrType, paramsOrActive, active) {
+  let params = void 0;
+  if (typeof paramsOrActive == "boolean") {
+    params = {};
+    params["active"] = paramsOrActive;
+  } else {
+    if (paramsOrActive != null) {
+      params = paramsOrActive;
+    }
+    if (active != null) {
+      if (params == null) {
+        params = {};
+      }
+      params["active"] = active;
+    }
+  }
+  return object.addComponent(classOrType, params);
+}
+function getComponent(object, classOrType, index = 0) {
+  return ObjectUtils.getComponentHierarchy(object, classOrType, index);
+}
+function getComponentSelf(object, classOrType, index = 0) {
+  return object.getComponent(classOrType, index);
+}
+function getComponentHierarchy(object, classOrType, index = 0) {
+  return ObjectUtils.getComponentHierarchyBreadth(object, classOrType, index);
+}
+function getComponentHierarchyBreadth(object, classOrType, index = 0) {
+  const objects = ObjectUtils.getHierarchyBreadth(object);
+  return ObjectUtils.getComponentObjects(objects, classOrType, index);
+}
+function getComponentHierarchyDepth(object, classOrType, index = 0) {
+  const objects = ObjectUtils.getHierarchyDepth(object);
+  return ObjectUtils.getComponentObjects(objects, classOrType, index);
+}
+function getComponentDescendants(object, classOrType, index = 0) {
+  return ObjectUtils.getComponentDescendantsBreadth(object, classOrType, index);
+}
+function getComponentDescendantsBreadth(object, classOrType, index = 0) {
+  const objects = ObjectUtils.getDescendantsBreadth(object);
+  return ObjectUtils.getComponentObjects(objects, classOrType, index);
+}
+function getComponentDescendantsDepth(object, classOrType, index = 0) {
+  const objects = ObjectUtils.getDescendantsDepth(object);
+  return ObjectUtils.getComponentObjects(objects, classOrType, index);
+}
+function getComponentChildren(object, classOrType, index = 0) {
+  const objects = ObjectUtils.getChildren(object);
+  return ObjectUtils.getComponentObjects(objects, classOrType, index);
+}
+function getComponents(object, classOrType) {
+  return ObjectUtils.getComponentsHierarchy(object, classOrType);
+}
+function getComponentsSelf(object, classOrType) {
+  return object.getComponents(classOrType);
+}
+function getComponentsHierarchy(object, classOrType) {
+  return ObjectUtils.getComponentsHierarchyBreadth(object, classOrType);
+}
+function getComponentsHierarchyBreadth(object, classOrType) {
+  const objects = ObjectUtils.getHierarchyBreadth(object);
+  return ObjectUtils.getComponentsObjects(objects, classOrType);
+}
+function getComponentsHierarchyDepth(object, classOrType) {
+  const objects = ObjectUtils.getHierarchyDepth(object);
+  return ObjectUtils.getComponentsObjects(objects, classOrType);
+}
+function getComponentsDescendants(object, classOrType) {
+  return ObjectUtils.getComponentsDescendantsBreadth(object, classOrType);
+}
+function getComponentsDescendantsBreadth(object, classOrType) {
+  const objects = ObjectUtils.getDescendantsBreadth(object);
+  return ObjectUtils.getComponentsObjects(objects, classOrType);
+}
+function getComponentsDescendantsDepth(object, classOrType) {
+  const objects = ObjectUtils.getDescendantsDepth(object);
+  return ObjectUtils.getComponentsObjects(objects, classOrType);
+}
+function getComponentsChildren(object, classOrType) {
+  const objects = ObjectUtils.getChildren(object);
+  return ObjectUtils.getComponentsObjects(objects, classOrType);
+}
+function setActive(object, active) {
+  return ObjectUtils.setActiveHierarchy(object, active);
+}
+function setActiveSelf(object, active) {
+  object.active = active;
+  return object;
+}
+function setActiveHierarchy(object, active) {
+  return ObjectUtils.setActiveHierarchyBreadth(object, active);
+}
+function setActiveHierarchyBreadth(object, active) {
+  const objects = ObjectUtils.getHierarchyBreadth(object);
+  ObjectUtils.setActiveObjects(objects, active);
+  return object;
+}
+function setActiveHierarchyDepth(object, active) {
+  const objects = ObjectUtils.getHierarchyDepth(object);
+  ObjectUtils.setActiveObjects(objects, active);
+  return object;
+}
+function setActiveDescendants(object, active) {
+  return ObjectUtils.setActiveDescendantsBreadth(object, active);
+}
+function setActiveDescendantsBreadth(object, active) {
+  const objects = ObjectUtils.getDescendantsBreadth(object);
+  ObjectUtils.setActiveObjects(objects, active);
+  return object;
+}
+function setActiveDescendantsDepth(object, active) {
+  const objects = ObjectUtils.getDescendantsDepth(object);
+  ObjectUtils.setActiveObjects(objects, active);
+  return object;
+}
+function setActiveChildren(object, active) {
+  const objects = ObjectUtils.getChildren(object);
+  ObjectUtils.setActiveObjects(objects, active);
+  return object;
+}
+function hasUniformScale2(object) {
+  return ObjectUtils.hasUniformScaleWorld(object);
+}
+var hasUniformScaleWorld = function() {
+  const scale4 = Vec3Utils.create();
+  return function hasUniformScaleWorld2(object) {
+    ObjectUtils.getScaleWorld(object, scale4);
+    return Math.abs(scale4[0] - scale4[1]) < MathUtils.EPSILON && Math.abs(scale4[1] - scale4[2]) < MathUtils.EPSILON && Math.abs(scale4[0] - scale4[2]) < MathUtils.EPSILON;
+  };
+}();
+var hasUniformScaleLocal = function() {
+  const scale4 = Vec3Utils.create();
+  return function hasUniformScaleLocal2(object) {
+    ObjectUtils.getScaleLocal(object, scale4);
+    return Math.abs(scale4[0] - scale4[1]) < MathUtils.EPSILON && Math.abs(scale4[1] - scale4[2]) < MathUtils.EPSILON && Math.abs(scale4[0] - scale4[2]) < MathUtils.EPSILON;
+  };
+}();
+var clone9 = function() {
+  const scale4 = Vec3Utils.create();
+  const transformQuat2 = Quat2Utils.create();
+  return function clone12(object, cloneParams = new CloneParams()) {
+    let clonedObject = null;
+    const cloneParent = cloneParams.myCloneParent === void 0 ? ObjectUtils.getParent(object) : cloneParams.myCloneParent;
+    if (cloneParams.myUseDefaultObjectClone) {
+      clonedObject = object.clone(cloneParent);
+      if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive) {
+        const clonedComponents = ObjectUtils.getComponents(clonedObject);
+        for (const clonedComponent of clonedComponents) {
+          if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive && !clonedComponent.active) {
+            clonedComponent.active = true;
+            clonedComponent.active = false;
+          }
+        }
+      }
+    } else if (ObjectUtils.isCloneable(object, cloneParams)) {
+      const objectsToCloneData = [];
+      objectsToCloneData.push([cloneParent, object]);
+      const objectsToCloneComponentsData = [];
+      while (objectsToCloneData.length > 0) {
+        const cloneData = objectsToCloneData.shift();
+        const parent = cloneData[0];
+        const objectToClone = cloneData[1];
+        const currentClonedObject = parent != null ? ObjectUtils.addObject(parent) : ObjectUtils.addObject(Globals.getRootObject(ObjectUtils.getEngine(object)));
+        ObjectUtils.setName(currentClonedObject, ObjectUtils.getName(objectToClone));
+        ObjectUtils.setScaleLocal(currentClonedObject, ObjectUtils.getScaleLocal(objectToClone, scale4));
+        ObjectUtils.setTransformLocalQuat(currentClonedObject, ObjectUtils.getTransformLocalQuat(objectToClone, transformQuat2));
+        if (!cloneParams.myIgnoreComponents) {
+          objectsToCloneComponentsData.push([objectToClone, currentClonedObject]);
+        }
+        if (!cloneParams.myIgnoreDescendants) {
+          for (const child of ObjectUtils.getChildren(objectToClone)) {
+            let cloneDescendant = false;
+            if (cloneParams.myDescendantsToInclude.length > 0) {
+              cloneDescendant = cloneParams.myDescendantsToInclude.find((descendantToInclude) => ObjectUtils.equals(descendantToInclude, child)) != null;
+            } else {
+              cloneDescendant = cloneParams.myDescendantsToIgnore.find((descendantToIgnore) => ObjectUtils.equals(descendantToIgnore, child)) == null;
+            }
+            if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
+              cloneDescendant = !cloneParams.myIgnoreDescendantCallback(child);
+            }
+            if (cloneDescendant) {
+              objectsToCloneData.push([currentClonedObject, child]);
+            }
+          }
+        }
+        if (clonedObject == null) {
+          clonedObject = currentClonedObject;
+        }
+      }
+      const componentsToCloneData = [];
+      while (objectsToCloneComponentsData.length > 0) {
+        const cloneData = objectsToCloneComponentsData.shift();
+        const objectToClone = cloneData[0];
+        const currentClonedObject = cloneData[1];
+        const components = ObjectUtils.getComponentsSelf(objectToClone);
+        for (const component of components) {
+          if (ComponentUtils.isCloneable(component.type, cloneParams.myUseDefaultComponentClone || cloneParams.myUseDefaultComponentCloneAsFallback, ObjectUtils.getEngine(object))) {
+            let cloneComponent = false;
+            if (cloneParams.myComponentsToInclude.length > 0) {
+              cloneComponent = cloneParams.myComponentsToInclude.indexOf(component.type) != -1;
+            } else {
+              cloneComponent = cloneParams.myComponentsToIgnore.indexOf(component.type) == -1;
+            }
+            if (cloneComponent && cloneParams.myIgnoreComponentCallback != null) {
+              cloneComponent = !cloneParams.myIgnoreComponentCallback(component);
+            }
+            if (cloneComponent) {
+              componentsToCloneData.push([component, currentClonedObject]);
+            }
+          }
+        }
+      }
+      const componentsToPostProcessData = [];
+      while (componentsToCloneData.length > 0) {
+        const cloneData = componentsToCloneData.shift();
+        const componentToClone = cloneData[0];
+        const currentClonedObject = cloneData[1];
+        let clonedComponent = null;
+        if (!cloneParams.myUseDefaultComponentClone) {
+          clonedComponent = ComponentUtils.clone(componentToClone, currentClonedObject, cloneParams.myComponentDeepCloneParams, cloneParams.myComponentCustomCloneParams, cloneParams.myUseDefaultComponentCloneAsFallback, cloneParams.myDefaultComponentCloneAutoStartIfNotActive);
+        } else {
+          clonedComponent = ComponentUtils.cloneDefault(componentToClone, currentClonedObject, cloneParams.myDefaultComponentCloneAutoStartIfNotActive);
+        }
+        if (clonedComponent != null) {
+          if (ComponentUtils.hasClonePostProcess(componentToClone.type, ObjectUtils.getEngine(object))) {
+            componentsToPostProcessData.push([componentToClone, clonedComponent]);
+          }
+        }
+      }
+      while (componentsToPostProcessData.length > 0) {
+        const cloneData = componentsToPostProcessData.shift();
+        const componentToClone = cloneData[0];
+        const currentClonedComponent = cloneData[1];
+        ComponentUtils.clonePostProcess(componentToClone, currentClonedComponent, cloneParams.myComponentDeepCloneParams, cloneParams.myComponentCustomCloneParams);
+      }
+    } else if (cloneParams.myUseDefaultObjectCloneAsFallback) {
+      clonedObject = object.clone(cloneParent);
+      if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive) {
+        const clonedComponents = ObjectUtils.getComponents(clonedObject);
+        for (const clonedComponent of clonedComponents) {
+          if (cloneParams.myDefaultComponentCloneAutoStartIfNotActive && !clonedComponent.active) {
+            clonedComponent.active = true;
+            clonedComponent.active = false;
+          }
+        }
+      }
+    }
+    return clonedObject;
+  };
+}();
+function isCloneable(object, cloneParams = new CloneParams()) {
+  if (cloneParams.myIgnoreNonCloneable || cloneParams.myIgnoreComponents || cloneParams.myUseDefaultComponentClone || cloneParams.myUseDefaultComponentCloneAsFallback) {
+    return true;
+  }
+  let cloneable = true;
+  const objectsToClone = [];
+  objectsToClone.push(object);
+  while (cloneable && objectsToClone.length > 0) {
+    const objectToClone = objectsToClone.shift();
+    const components = ObjectUtils.getComponentsSelf(objectToClone);
+    for (const component of components) {
+      let cloneComponent = false;
+      if (cloneParams.myComponentsToInclude.length > 0) {
+        cloneComponent = cloneParams.myComponentsToInclude.indexOf(component.type) != -1;
+      } else {
+        cloneComponent = cloneParams.myComponentsToIgnore.indexOf(component.type) == -1;
+      }
+      if (cloneComponent && cloneParams.myIgnoreComponentCallback != null) {
+        cloneComponent = !cloneParams.myIgnoreComponentCallback(component);
+      }
+      if (cloneComponent && !ComponentUtils.isCloneable(component.type, false, ObjectUtils.getEngine(object))) {
+        cloneable = false;
+        break;
+      }
+    }
+    if (cloneable && !cloneParams.myIgnoreDescendants) {
+      for (const child of ObjectUtils.getChildren(objectToClone)) {
+        let cloneDescendant = false;
+        if (cloneParams.myDescendantsToInclude.length > 0) {
+          cloneDescendant = cloneParams.myDescendantsToInclude.find((descendantToInclude) => ObjectUtils.equals(descendantToInclude, child)) != null;
+        } else {
+          cloneDescendant = cloneParams.myDescendantsToIgnore.find((descendantToInclude) => ObjectUtils.equals(descendantToInclude, child)) == null;
+        }
+        if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
+          cloneDescendant = !cloneParams.myIgnoreDescendantCallback(child);
+        }
+        if (cloneDescendant) {
+          objectsToClone.push(child);
+        }
+      }
+    }
+  }
+  return cloneable;
+}
+function toString(object) {
+  return ObjectUtils.toStringCompact(object);
+}
+var toStringExtended = function() {
+  const tab = "    ";
+  const newLine = "\n";
+  const startObject = "{";
+  const endObject = "}";
+  const nameLabel = "name: ";
+  const idLabel = "id: ";
+  const componentsLabel = "components: ";
+  const typeLabel = "type: ";
+  const childrenLabel = "children: ";
+  const startComponents = "[";
+  const endComponents = "]";
+  const startChildren = startComponents;
+  const endChildren = endComponents;
+  const separator = ",";
+  const newLineTab = newLine.concat(tab, tab);
+  return function toStringExtended2(object) {
+    let objectString = "";
+    objectString = objectString.concat(startObject, newLine);
+    const components = ObjectUtils.getComponentsSelf(object);
+    const children = ObjectUtils.getChildren(object);
+    const name = ObjectUtils.getName(object);
+    if (components.length > 0 || children.length > 0 || name.length > 0) {
+      objectString = objectString.concat(tab, idLabel, ObjectUtils.getID(object).toString(), separator, newLine);
+    } else {
+      objectString = objectString.concat(tab, idLabel, ObjectUtils.getID(object).toString(), newLine);
+    }
+    if (name.length > 0) {
+      if (components.length > 0 || children.length > 0) {
+        objectString = objectString.concat(tab, nameLabel, ObjectUtils.getName(object), separator, newLine);
+      } else {
+        objectString = objectString.concat(tab, nameLabel, ObjectUtils.getName(object), newLine);
+      }
+    }
+    if (components.length > 0) {
+      objectString = objectString.concat(tab, componentsLabel, newLine, tab, startComponents, newLine);
+      for (let i = 0; i < components.length; i++) {
+        const component = components[i];
+        objectString = objectString.concat(tab, tab, startObject, newLine);
+        objectString = objectString.concat(tab, tab, tab, typeLabel, component.type, separator, newLine);
+        objectString = objectString.concat(tab, tab, tab, idLabel, component._id.toString(), separator, newLine);
+        objectString = objectString.concat(tab, tab, endObject);
+        if (i != components.length - 1) {
+          objectString = objectString.concat(separator, newLine);
+        } else {
+          objectString = objectString.concat(newLine);
+        }
+      }
+      if (children.length > 0) {
+        objectString = objectString.concat(tab, endComponents, separator, newLine);
+      } else {
+        objectString = objectString.concat(tab, endComponents, newLine);
+      }
+    }
+    if (children.length > 0) {
+      objectString = objectString.concat(tab, childrenLabel, newLine, tab, startChildren, newLine);
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        let childString = ObjectUtils.toStringExtended(child);
+        childString = childString.replaceAll(newLine, newLineTab);
+        childString = tab.concat(tab, childString);
+        objectString = objectString.concat(childString);
+        if (i != children.length - 1) {
+          objectString = objectString.concat(separator, newLine);
+        } else {
+          objectString = objectString.concat(newLine);
+        }
+      }
+      objectString = objectString.concat(tab, endChildren, newLine);
+    }
+    objectString = objectString.concat(endObject);
+    return objectString;
+  };
+}();
+var toStringCompact = function() {
+  const tab = "    ";
+  const newLine = "\n";
+  const emptyName = "<none>";
+  const nameLabel = "name: ";
+  const componentsLabel = "components: ";
+  const separator = ", ";
+  const newLineTab = newLine.concat(tab);
+  return function toStringCompact2(object) {
+    let objectString = "";
+    const name = ObjectUtils.getName(object);
+    if (name.length > 0) {
+      objectString = objectString.concat(nameLabel, name);
+    } else {
+      objectString = objectString.concat(nameLabel, emptyName);
+    }
+    const components = ObjectUtils.getComponentsSelf(object);
+    if (components.length > 0) {
+      objectString = objectString.concat(separator, componentsLabel);
+      for (let i = 0; i < components.length; i++) {
+        const component = components[i];
+        objectString = objectString.concat(component.type);
+        if (i != components.length - 1) {
+          objectString = objectString.concat(separator);
+        }
+      }
+    }
+    const children = ObjectUtils.getChildren(object);
+    if (children.length > 0) {
+      objectString = objectString.concat(newLine);
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        let childString = ObjectUtils.toStringCompact(child);
+        childString = childString.replaceAll(newLine, newLineTab);
+        childString = tab.concat(childString);
+        objectString = objectString.concat(childString);
+        if (i != children.length - 1) {
+          objectString = objectString.concat(newLine);
+        }
+      }
+    }
+    return objectString;
+  };
+}();
+function getObjectByName(object, name, isRegex = false, index = 0) {
+  return ObjectUtils.getObjectByNameHierarchy(object, name, isRegex, index);
+}
+function getObjectByNameHierarchy(object, name, isRegex = false, index = 0) {
+  return ObjectUtils.getObjectByNameHierarchyBreadth(object, name, isRegex, index);
+}
+function getObjectByNameHierarchyBreadth(object, name, isRegex = false, index = 0) {
+  const objects = ObjectUtils.getHierarchyBreadth(object);
+  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
+}
+function getObjectByNameHierarchyDepth(object, name, isRegex = false, index = 0) {
+  const objects = ObjectUtils.getHierarchyDepth(object);
+  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
+}
+function getObjectByNameDescendants(object, name, isRegex = false, index = 0) {
+  return ObjectUtils.getObjectByNameDescendantsBreadth(object, name, isRegex, index);
+}
+function getObjectByNameDescendantsBreadth(object, name, isRegex = false, index = 0) {
+  const objects = ObjectUtils.getDescendantsBreadth(object);
+  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
+}
+function getObjectByNameDescendantsDepth(object, name, isRegex = false, index = 0) {
+  const objects = ObjectUtils.getDescendantsDepth(object);
+  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
+}
+function getObjectByNameChildren(object, name, isRegex = false, index = 0) {
+  const objects = ObjectUtils.getChildren(object);
+  return ObjectUtils.getObjectByNameObjects(objects, name, isRegex, index);
+}
+function getObjectsByName(object, name, isRegex = false) {
+  return ObjectUtils.getObjectsByNameHierarchy(object, name, isRegex);
+}
+function getObjectsByNameHierarchy(object, name, isRegex = false) {
+  return ObjectUtils.getObjectsByNameHierarchyBreadth(object, name, isRegex);
+}
+function getObjectsByNameHierarchyBreadth(object, name, isRegex = false) {
+  const objects = ObjectUtils.getHierarchyBreadth(object);
+  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
+}
+function getObjectsByNameHierarchyDepth(object, name, isRegex = false) {
+  const objects = ObjectUtils.getHierarchyDepth(object);
+  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
+}
+function getObjectsByNameDescendants(object, name, isRegex = false) {
+  return ObjectUtils.getObjectsByNameDescendantsBreadth(object, name, isRegex);
+}
+function getObjectsByNameDescendantsBreadth(object, name, isRegex = false) {
+  const objects = ObjectUtils.getDescendantsBreadth(object);
+  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
+}
+function getObjectsByNameDescendantsDepth(object, name, isRegex = false) {
+  const objects = ObjectUtils.getDescendantsDepth(object);
+  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
+}
+function getObjectsByNameChildren(object, name, isRegex = false) {
+  const objects = ObjectUtils.getChildren(object);
+  return ObjectUtils.getObjectsByNameObjects(objects, name, isRegex);
+}
+function getObjectByID(object, id) {
+  return ObjectUtils.getObjectByIDHierarchy(object, id);
+}
+function getObjectByIDHierarchy(object, id) {
+  return ObjectUtils.getObjectByIDHierarchyBreadth(object, id);
+}
+function getObjectByIDHierarchyBreadth(object, id) {
+  const objects = ObjectUtils.getHierarchyBreadth(object);
+  return ObjectUtils.getObjectByIDObjects(objects, id);
+}
+function getObjectByIDHierarchyDepth(object, id) {
+  const objects = ObjectUtils.getHierarchyDepth(object);
+  return ObjectUtils.getObjectByIDObjects(objects, id);
+}
+function getObjectByIDDescendants(object, id) {
+  return ObjectUtils.getObjectByIDDescendantsBreadth(object, id);
+}
+function getObjectByIDDescendantsBreadth(object, id) {
+  const objects = ObjectUtils.getDescendantsBreadth(object);
+  return ObjectUtils.getObjectByIDObjects(objects, id);
+}
+function getObjectByIDDescendantsDepth(object, id) {
+  const objects = ObjectUtils.getDescendantsDepth(object);
+  return ObjectUtils.getObjectByIDObjects(objects, id);
+}
+function getObjectByIDChildren(object, id) {
+  const objects = ObjectUtils.getChildren(object);
+  return ObjectUtils.getObjectByIDObjects(objects, id);
+}
+function getHierarchy(object) {
+  return ObjectUtils.getHierarchyBreadth(object);
+}
+function getHierarchyBreadth(object) {
+  const hierarchy = ObjectUtils.getDescendantsBreadth(object);
+  hierarchy.unshift(object);
+  return hierarchy;
+}
+function getHierarchyDepth(object) {
+  const hierarchy = ObjectUtils.getDescendantsDepth(object);
+  hierarchy.unshift(object);
+  return hierarchy;
+}
+function getDescendants(object) {
+  return ObjectUtils.getDescendantsBreadth(object);
+}
+function getDescendantsBreadth(object) {
+  const descendants = [];
+  const descendantsQueue = ObjectUtils.getChildren(object);
+  while (descendantsQueue.length > 0) {
+    const descendant = descendantsQueue.shift();
+    descendants.push(descendant);
+    for (const child of ObjectUtils.getChildren(descendant)) {
+      descendantsQueue.push(child);
+    }
+  }
+  return descendants;
+}
+function getDescendantsDepth(object) {
+  const descendants = [];
+  const children = ObjectUtils.getChildren(object);
+  for (const child of children) {
+    descendants.push(child);
+    const childDescendants = ObjectUtils.getDescendantsDepth(child);
+    for (let i = 0; i < childDescendants.length; i++) {
+      descendants.push(childDescendants[i]);
+    }
+  }
+  return descendants;
+}
+function getChildren(object) {
+  return object.children;
+}
+function getSelf(object) {
+  return object;
+}
+function addObject(object) {
+  return Globals.getScene(ObjectUtils.getEngine(object)).addObject(object);
+}
+function getName(object) {
+  return object.name;
+}
+function setName(object, name) {
+  object.name = name;
+  return object;
+}
+function getEngine(object) {
+  return object.engine;
+}
+function getID(object) {
+  return object.objectId;
+}
+function markDirty(object) {
+  object.setDirty();
+  return object;
+}
+function isTransformChanged(object) {
+  return object.changed;
+}
+function equals3(first2, second) {
+  return first2.equals(second);
+}
+function destroy(object) {
+  let destroyReturnValue = void 0;
+  try {
+    destroyReturnValue = object.destroy();
+  } catch (error3) {
+  }
+  return destroyReturnValue;
+}
+function reserveObjects(object, count) {
+  return ObjectUtils.reserveObjectsHierarchy(object, count);
+}
+function reserveObjectsSelf(object, count) {
+  const componentsAmountMap = ObjectUtils.getComponentsAmountMapSelf(object);
+  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
+  return object;
+}
+function reserveObjectsHierarchy(object, count) {
+  const componentsAmountMap = ObjectUtils.getComponentsAmountMapHierarchy(object);
+  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
+  return object;
+}
+function reserveObjectsDescendants(object, count) {
+  const componentsAmountMap = ObjectUtils.getComponentsAmountMapDescendants(object);
+  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
+  return object;
+}
+function reserveObjectsChildren(object, count) {
+  const componentsAmountMap = ObjectUtils.getComponentsAmountMapChildren(object);
+  _reserveObjects(count, componentsAmountMap, Globals.getScene(ObjectUtils.getEngine(object)));
+  return object;
+}
+function getComponentsAmountMap(object, outComponentsAmountMap = /* @__PURE__ */ new Map()) {
+  return ObjectUtils.getComponentsAmountMapHierarchy(object, outComponentsAmountMap);
+}
+function getComponentsAmountMapSelf(object, outComponentsAmountMap = /* @__PURE__ */ new Map()) {
+  let objectsAmount = outComponentsAmountMap.get("object");
+  if (objectsAmount == null) {
+    objectsAmount = 0;
+  }
+  objectsAmount += 1;
+  outComponentsAmountMap.set("object", objectsAmount);
+  const components = ObjectUtils.getComponentsSelf(object);
+  for (const component of components) {
+    const type = component.type;
+    let typeAmount = outComponentsAmountMap.get(type);
+    if (typeAmount == null) {
+      typeAmount = 0;
+    }
+    typeAmount += 1;
+    outComponentsAmountMap.set(type, typeAmount);
+  }
+  return outComponentsAmountMap;
+}
+function getComponentsAmountMapHierarchy(object, outComponentsAmountMap = /* @__PURE__ */ new Map()) {
+  const hierarchy = ObjectUtils.getHierarchy(object);
+  for (const hierarchyObject of hierarchy) {
+    ObjectUtils.getComponentsAmountMapSelf(hierarchyObject, outComponentsAmountMap);
+  }
+  return outComponentsAmountMap;
+}
+function getComponentsAmountMapDescendants(object, outComponentsAmountMap = /* @__PURE__ */ new Map()) {
+  const descendants = ObjectUtils.getDescendants(object);
+  for (const descendant of descendants) {
+    ObjectUtils.getComponentsAmountMapSelf(descendant, outComponentsAmountMap);
+  }
+  return outComponentsAmountMap;
+}
+function getComponentsAmountMapChildren(object, outComponentsAmountMap = /* @__PURE__ */ new Map()) {
+  const children = ObjectUtils.getChildren(object);
+  for (const child of children) {
+    ObjectUtils.getComponentsAmountMapSelf(child, outComponentsAmountMap);
+  }
+  return outComponentsAmountMap;
+}
+function getComponentObjects(objects, classOrType, index = 0) {
+  let component = null;
+  for (const object of objects) {
+    component = object.getComponent(classOrType, index);
+    if (component != null) {
+      break;
+    }
+  }
+  return component;
+}
+function getComponentsObjects(objects, classOrType) {
+  const components = [];
+  for (const currentObject of objects) {
+    const currentObjectComponents = currentObject.getComponents(classOrType);
+    for (let i = 0; i < currentObjectComponents.length; i++) {
+      components.push(currentObjectComponents[i]);
+    }
+  }
+  return components;
+}
+function setActiveObjects(objects, active) {
+  for (const currentObject of objects) {
+    currentObject.active = active;
+  }
+}
+function getObjectByNameObjects(objects, name, isRegex = false, index = 0) {
+  let objectFound = null;
+  let currentIndex = index;
+  for (const currentObject of objects) {
+    const objectName = ObjectUtils.getName(currentObject);
+    if (!isRegex && objectName == name || isRegex && objectName.match(name) != null) {
+      if (currentIndex == 0) {
+        objectFound = currentObject;
+        break;
+      }
+      currentIndex--;
+    }
+  }
+  return objectFound;
+}
+function getObjectsByNameObjects(objects, name, isRegex = false) {
+  const objectsFound = [];
+  for (const currentObject of objects) {
+    const objectName = ObjectUtils.getName(currentObject);
+    if (!isRegex && objectName == name || isRegex && objectName.match(name) != null) {
+      objectsFound.push(currentObject);
+    }
+  }
+  return objectsFound;
+}
+function getObjectByIDObjects(objects, id, index = 0) {
+  let objectFound = null;
+  let currentIndex = index;
+  for (const currentObject of objects) {
+    if (ObjectUtils.getID(currentObject) == id) {
+      if (currentIndex == 0) {
+        objectFound = currentObject;
+        break;
+      }
+      currentIndex--;
+    }
+  }
+  return objectFound;
+}
+function getObjectsByIDObjects(objects, id) {
+  const objectsFound = [];
+  for (const currentObject of objects) {
+    if (ObjectUtils.getID(currentObject) == id) {
+      objectsFound.push(currentObject);
+    }
+  }
+  return objectsFound;
+}
+function wrapObject(id, engine = Globals.getMainEngine()) {
+  return engine != null ? engine.wrapObject(id) : null;
+}
+var ObjectUtils = {
+  getPosition: getPosition3,
+  getPositionWorld,
+  getPositionLocal,
+  getRotation: getRotation3,
+  getRotationDegrees: getRotationDegrees3,
+  getRotationRadians: getRotationRadians3,
+  getRotationMatrix,
+  getRotationQuat: getRotationQuat3,
+  getRotationWorld,
+  getRotationWorldDegrees,
+  getRotationWorldRadians,
+  getRotationWorldMatrix,
+  getRotationWorldQuat,
+  getRotationLocal,
+  getRotationLocalDegrees,
+  getRotationLocalRadians,
+  getRotationLocalMatrix,
+  getRotationLocalQuat,
+  getScale: getScale2,
+  getScaleWorld,
+  getScaleLocal,
+  getTransform,
+  getTransformMatrix,
+  getTransformQuat,
+  getTransformWorld,
+  getTransformWorldMatrix,
+  getTransformWorldQuat,
+  getTransformLocal,
+  getTransformLocalMatrix,
+  getTransformLocalQuat,
+  getAxes: getAxes4,
+  getAxesWorld,
+  getAxesLocal,
+  getForward: getForward4,
+  getForwardWorld,
+  getForwardLocal,
+  getBackward: getBackward4,
+  getBackwardWorld,
+  getBackwardLocal,
+  getUp: getUp4,
+  getUpWorld,
+  getUpLocal,
+  getDown: getDown4,
+  getDownWorld,
+  getDownLocal,
+  getLeft: getLeft4,
+  getLeftWorld,
+  getLeftLocal,
+  getRight: getRight4,
+  getRightWorld,
+  getRightLocal,
+  setPosition: setPosition3,
+  setPositionWorld,
+  setPositionLocal,
+  setRotation: setRotation3,
+  setRotationDegrees: setRotationDegrees3,
+  setRotationRadians: setRotationRadians3,
+  setRotationMatrix,
+  setRotationQuat: setRotationQuat3,
+  setRotationWorld,
+  setRotationWorldDegrees,
+  setRotationWorldRadians,
+  setRotationWorldMatrix,
+  setRotationWorldQuat,
+  setRotationLocal,
+  setRotationLocalDegrees,
+  setRotationLocalRadians,
+  setRotationLocalMatrix,
+  setRotationLocalQuat,
+  setScale: setScale2,
+  setScaleWorld,
+  setScaleLocal,
+  setAxes: setAxes2,
+  setAxesWorld,
+  setAxesLocal,
+  setForward: setForward2,
+  setForwardWorld,
+  setForwardLocal,
+  setBackward: setBackward2,
+  setBackwardWorld,
+  setBackwardLocal,
+  setUp: setUp2,
+  setUpWorld,
+  setUpLocal,
+  setDown: setDown2,
+  setDownWorld,
+  setDownLocal,
+  setLeft: setLeft2,
+  setLeftWorld,
+  setLeftLocal,
+  setRight: setRight2,
+  setRightWorld,
+  setRightLocal,
+  setTransform,
+  setTransformMatrix,
+  setTransformQuat,
+  setTransformWorld,
+  setTransformWorldMatrix,
+  setTransformWorldQuat,
+  setTransformLocal,
+  setTransformLocalMatrix,
+  setTransformLocalQuat,
+  resetPosition,
+  resetPositionWorld,
+  resetPositionLocal,
+  resetRotation,
+  resetRotationWorld,
+  resetRotationLocal,
+  resetScale,
+  resetScaleWorld,
+  resetScaleLocal,
+  resetTransform,
+  resetTransformWorld,
+  resetTransformLocal,
+  translate,
+  translateWorld,
+  translateLocal,
+  translateObject,
+  translateAxis,
+  translateAxisWorld,
+  translateAxisLocal,
+  translateAxisObject,
+  rotate: rotate3,
+  rotateDegrees: rotateDegrees3,
+  rotateRadians: rotateRadians3,
+  rotateMatrix,
+  rotateQuat: rotateQuat3,
+  rotateWorld,
+  rotateWorldDegrees,
+  rotateWorldRadians,
+  rotateWorldMatrix,
+  rotateWorldQuat,
+  rotateLocal,
+  rotateLocalDegrees,
+  rotateLocalRadians,
+  rotateLocalMatrix,
+  rotateLocalQuat,
+  rotateObject,
+  rotateObjectDegrees,
+  rotateObjectRadians,
+  rotateObjectMatrix,
+  rotateObjectQuat,
+  rotateAxis: rotateAxis4,
+  rotateAxisDegrees: rotateAxisDegrees4,
+  rotateAxisRadians: rotateAxisRadians4,
+  rotateAxisWorld,
+  rotateAxisWorldDegrees,
+  rotateAxisWorldRadians,
+  rotateAxisLocal,
+  rotateAxisLocalDegrees,
+  rotateAxisLocalRadians,
+  rotateAxisObject,
+  rotateAxisObjectDegrees,
+  rotateAxisObjectRadians,
+  rotateAround: rotateAround2,
+  rotateAroundDegrees: rotateAroundDegrees2,
+  rotateAroundRadians: rotateAroundRadians2,
+  rotateAroundMatrix,
+  rotateAroundQuat: rotateAroundQuat2,
+  rotateAroundWorld,
+  rotateAroundWorldDegrees,
+  rotateAroundWorldRadians,
+  rotateAroundWorldMatrix,
+  rotateAroundWorldQuat,
+  rotateAroundLocal,
+  rotateAroundLocalDegrees,
+  rotateAroundLocalRadians,
+  rotateAroundLocalMatrix,
+  rotateAroundLocalQuat,
+  rotateAroundObject,
+  rotateAroundObjectDegrees,
+  rotateAroundObjectRadians,
+  rotateAroundObjectMatrix,
+  rotateAroundObjectQuat,
+  rotateAroundAxis: rotateAroundAxis2,
+  rotateAroundAxisDegrees: rotateAroundAxisDegrees2,
+  rotateAroundAxisRadians: rotateAroundAxisRadians2,
+  rotateAroundAxisWorld,
+  rotateAroundAxisWorldDegrees,
+  rotateAroundAxisWorldRadians,
+  rotateAroundAxisLocal,
+  rotateAroundAxisLocalDegrees,
+  rotateAroundAxisLocalRadians,
+  rotateAroundAxisObject,
+  rotateAroundAxisObjectDegrees,
+  rotateAroundAxisObjectRadians,
+  scaleObject,
+  lookAt,
+  lookAtWorld,
+  lookAtLocal,
+  lookTo,
+  lookToWorld,
+  lookToLocal,
+  convertPositionObjectToWorld,
+  convertDirectionObjectToWorld,
+  convertPositionWorldToObject,
+  convertDirectionWorldToObject,
+  convertPositionLocalToWorld,
+  convertDirectionLocalToWorld,
+  convertPositionWorldToLocal,
+  convertDirectionWorldToLocal,
+  convertPositionObjectToLocal,
+  convertDirectionObjectToLocal,
+  convertPositionLocalToObject,
+  convertDirectionLocalToObject,
+  convertTransformObjectToWorld,
+  convertTransformObjectToWorldMatrix,
+  convertTransformObjectToWorldQuat,
+  convertTransformWorldToObject,
+  convertTransformWorldToObjectMatrix,
+  convertTransformWorldToObjectQuat,
+  convertTransformLocalToWorld,
+  convertTransformLocalToWorldMatrix,
+  convertTransformLocalToWorldQuat,
+  convertTransformWorldToLocal,
+  convertTransformWorldToLocalMatrix,
+  convertTransformWorldToLocalQuat,
+  convertTransformObjectToLocal,
+  convertTransformObjectToLocalMatrix,
+  convertTransformObjectToLocalQuat,
+  convertTransformLocalToObject,
+  convertTransformLocalToObjectMatrix,
+  convertTransformLocalToObjectQuat,
+  setParent,
+  getParent,
+  addComponent,
+  getComponent,
+  getComponentSelf,
+  getComponentHierarchy,
+  getComponentHierarchyBreadth,
+  getComponentHierarchyDepth,
+  getComponentDescendants,
+  getComponentDescendantsBreadth,
+  getComponentDescendantsDepth,
+  getComponentChildren,
+  getComponents,
+  getComponentsSelf,
+  getComponentsHierarchy,
+  getComponentsHierarchyBreadth,
+  getComponentsHierarchyDepth,
+  getComponentsDescendants,
+  getComponentsDescendantsBreadth,
+  getComponentsDescendantsDepth,
+  getComponentsChildren,
+  setActive,
+  setActiveSelf,
+  setActiveHierarchy,
+  setActiveHierarchyBreadth,
+  setActiveHierarchyDepth,
+  setActiveDescendants,
+  setActiveDescendantsBreadth,
+  setActiveDescendantsDepth,
+  setActiveChildren,
+  hasUniformScale: hasUniformScale2,
+  hasUniformScaleWorld,
+  hasUniformScaleLocal,
+  clone: clone9,
+  isCloneable,
+  toString,
+  toStringExtended,
+  toStringCompact,
+  getObjectByName,
+  getObjectByNameHierarchy,
+  getObjectByNameHierarchyBreadth,
+  getObjectByNameHierarchyDepth,
+  getObjectByNameDescendants,
+  getObjectByNameDescendantsBreadth,
+  getObjectByNameDescendantsDepth,
+  getObjectByNameChildren,
+  getObjectsByName,
+  getObjectsByNameHierarchy,
+  getObjectsByNameHierarchyBreadth,
+  getObjectsByNameHierarchyDepth,
+  getObjectsByNameDescendants,
+  getObjectsByNameDescendantsBreadth,
+  getObjectsByNameDescendantsDepth,
+  getObjectsByNameChildren,
+  getObjectByID,
+  getObjectByIDHierarchy,
+  getObjectByIDHierarchyBreadth,
+  getObjectByIDHierarchyDepth,
+  getObjectByIDDescendants,
+  getObjectByIDDescendantsBreadth,
+  getObjectByIDDescendantsDepth,
+  getObjectByIDChildren,
+  getHierarchy,
+  getHierarchyBreadth,
+  getHierarchyDepth,
+  getDescendants,
+  getDescendantsBreadth,
+  getDescendantsDepth,
+  getChildren,
+  getSelf,
+  addObject,
+  getName,
+  setName,
+  getEngine,
+  getID,
+  markDirty,
+  isTransformChanged,
+  equals: equals3,
+  destroy,
+  reserveObjects,
+  reserveObjectsSelf,
+  reserveObjectsHierarchy,
+  reserveObjectsDescendants,
+  reserveObjectsChildren,
+  getComponentsAmountMap,
+  getComponentsAmountMapSelf,
+  getComponentsAmountMapHierarchy,
+  getComponentsAmountMapDescendants,
+  getComponentsAmountMapChildren,
+  getComponentObjects,
+  getComponentsObjects,
+  setActiveObjects,
+  getObjectByNameObjects,
+  getObjectsByNameObjects,
+  getObjectByIDObjects,
+  getObjectsByIDObjects,
+  wrapObject
+};
+function _reserveObjects(count, componentsAmountMap, scene) {
+  if (componentsAmountMap.has("object")) {
+    const objectsToReserve = componentsAmountMap.get("object") * count;
+    const componentsToReserve = {};
+    for (const [componentName, componentCount] of componentsAmountMap.entries()) {
+      if (componentName != "object") {
+        componentsToReserve[componentName] = componentCount * count;
+      }
+    }
+    scene.reserveObjects(objectsToReserve, componentsToReserve);
+  }
+}
+
+// dist/cauldron/wl/utils/component_utils.js
+var _myCloneCallbacks = /* @__PURE__ */ new WeakMap();
+var _myClonePostProcessCallbacks = /* @__PURE__ */ new WeakMap();
+var DeepCloneParams = class {
+  constructor() {
+    this._myDeepCloneComponents = false;
+    this._myDeepCloneOverrideComponentsMap = /* @__PURE__ */ new Map();
+    this._myDeepCloneOverrideComponentsVariablesMap = /* @__PURE__ */ new Map();
+  }
+  // The implementation is component dependant, not every component implements the deep clone
+  setDeepCloneComponents(deepClone) {
+    this._myDeepCloneComponents = deepClone;
+  }
+  // This value override the deep clone components value
+  // The implementation is component dependant, not every component implements the deep clone
+  setDeepCloneComponent(componentName, deepClone) {
+    this._myDeepCloneOverrideComponentsMap.set(componentName, deepClone);
+  }
+  // This value override both the deep clone components value and the deep clone component override one
+  // The implementation is component dependant, not every component variable override is taken into consideration
+  setDeepCloneComponentVariable(componentName, variableName, deepClone) {
+    let componentsVariablesMap = null;
+    if (!this._myDeepCloneOverrideComponentsVariablesMap.has(componentName)) {
+      this._myDeepCloneOverrideComponentsVariablesMap.set(componentName, /* @__PURE__ */ new Map());
+    }
+    componentsVariablesMap = this._myDeepCloneOverrideComponentsVariablesMap.get(componentName);
+    componentsVariablesMap.set(variableName, deepClone);
+  }
+  isDeepCloneComponent(componentName) {
+    let deepCloneOverride = this._myDeepCloneOverrideComponentsMap.get(componentName);
+    if (deepCloneOverride != null) {
+      return deepCloneOverride;
+    }
+    return this._myDeepCloneComponents;
+  }
+  isDeepCloneComponentVariable(componentName, variableName) {
+    let componentsVariablesMap = this._myDeepCloneOverrideComponentsVariablesMap.get(componentName);
+    if (componentsVariablesMap != null) {
+      let deepCloneOverride = componentsVariablesMap.get(variableName);
+      if (deepCloneOverride != null) {
+        return deepCloneOverride;
+      }
+    }
+    return this.isDeepCloneComponent(componentName);
+  }
+};
+var CustomCloneParams = class {
+  constructor() {
+    this._myParams = /* @__PURE__ */ new Map();
+  }
+  addParam(name, value) {
+    this._myParams.set(name, value);
+  }
+  removeParam(name) {
+    this._myParams.delete(name);
+  }
+  getParam(name) {
+    this._myParams.get(name);
+  }
+  hasParam(name) {
+    this._myParams.has(name);
+  }
+};
+function isWLComponent(classOrType) {
+  return ComponentUtils.isWLNativeComponent(classOrType) || ComponentUtils.isWLJavascriptComponent(classOrType);
+}
+function isWLNativeComponent(classOrType) {
+  let wlNative = false;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (ComponentUtils.getWLNativeComponentTypes().includes(type)) {
+    wlNative = true;
+  }
+  return wlNative;
+}
+function isWLJavascriptComponent(classOrType) {
+  let wlJavascript = false;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (ComponentUtils.getWLJavascriptComponentTypes().includes(type)) {
+    wlJavascript = true;
+  }
+  return wlJavascript;
+}
+function getWLNativeComponentTypes() {
+  return _myWLNativeComponentTypes;
+}
+function getWLJavascriptComponentTypes() {
+  return _myWLJavascriptComponentTypes;
+}
+function getTypeFromClassOrType(classOrType) {
+  if (classOrType == null)
+    return;
+  let type = classOrType;
+  if (classOrType.TypeName != null) {
+    type = classOrType.TypeName;
+  }
+  return type;
+}
+function getClassFromType(type, engine = Globals.getMainEngine()) {
+  let classToReturn = null;
+  if (ComponentUtils.isWLNativeComponent(type)) {
+    if (ComponentUtils.isWLNativeComponentRegistered(type, engine)) {
+      switch (type) {
+        case AnimationComponent.TypeName:
+          classToReturn = AnimationComponent;
+          break;
+        case CollisionComponent.TypeName:
+          classToReturn = CollisionComponent;
+          break;
+        case InputComponent.TypeName:
+          classToReturn = InputComponent;
+          break;
+        case LightComponent.TypeName:
+          classToReturn = LightComponent;
+          break;
+        case MeshComponent6.TypeName:
+          classToReturn = MeshComponent6;
+          break;
+        case PhysXComponent.TypeName:
+          classToReturn = PhysXComponent;
+          break;
+        case TextComponent3.TypeName:
+          classToReturn = TextComponent3;
+          break;
+        case ViewComponent2.TypeName:
+          classToReturn = ViewComponent2;
+          break;
+        default:
+          classToReturn = null;
+      }
+    }
+  } else {
+    classToReturn = ComponentUtils.getJavascriptComponentClass(type, engine);
+  }
+  return classToReturn;
+}
+function isRegistered(classOrType, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  return ComponentUtils.getClassFromType(type, engine) != null;
+}
+function getJavascriptComponentInstances(engine = Globals.getMainEngine()) {
+  return Globals.getWASM(engine)._components;
+}
+function getJavascriptComponentClass(type, engine = Globals.getMainEngine()) {
+  return ComponentUtils.getJavascriptComponentClassesByIndex(engine)[ComponentUtils.getJavascriptComponentTypeIndex(type, engine)];
+}
+function getJavascriptComponentClassesByIndex(engine = Globals.getMainEngine()) {
+  return Globals.getWASM(engine)._componentTypes;
+}
+function getJavascriptComponentTypeIndex(classOrType, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  return ComponentUtils.getJavascriptComponentTypeIndexes(engine)[type];
+}
+function getJavascriptComponentTypeIndexes(engine = Globals.getMainEngine()) {
+  return Globals.getWASM(engine)._componentTypeIndices;
+}
+function getJavascriptComponentTypeFromIndex(typeIndex, engine = Globals.getMainEngine()) {
+  let type = null;
+  let componentClass = ComponentUtils.getJavascriptComponentClassesByIndex(engine)[typeIndex];
+  if (componentClass != null) {
+    type = componentClass.TypeName;
+  }
+  return type;
+}
+function isWLNativeComponentRegistered(classOrType, engine = Globals.getMainEngine()) {
+  let wasm = Globals.getWASM(engine);
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  return wasm._wl_get_component_manager_index(wasm.tempUTF8(type)) >= 0;
+}
+function isCloneable2(classOrType, defaultCloneValid = false, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  return defaultCloneValid || ComponentUtils.hasCloneCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clone != null;
+}
+function hasClonePostProcess(classOrType, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  return ComponentUtils.hasClonePostProcessCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clonePostProcess != null;
+}
+function clone10(componentToClone, targetObject, deeCloneParams, customCloneParams, useDefaultCloneAsFallback = false, defaultCloneAutoStartIfNotActive = true) {
+  let clonedComponent = null;
+  let cloneCallback = ComponentUtils.getCloneCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
+  if (cloneCallback != null) {
+    clonedComponent = cloneCallback(componentToClone, targetObject, deeCloneParams, customCloneParams);
+  } else if (componentToClone.pp_clone != null) {
+    clonedComponent = componentToClone.pp_clone(targetObject, deeCloneParams, customCloneParams);
+  } else if (useDefaultCloneAsFallback) {
+    clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, defaultCloneAutoStartIfNotActive);
+  }
+  return clonedComponent;
+}
+function clonePostProcess(componentToClone, clonedComponent, deeCloneParams, customCloneParams) {
+  let clonePostProcessCallback = ComponentUtils.getClonePostProcessCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
+  if (clonePostProcessCallback != null) {
+    clonePostProcessCallback(componentToClone, clonedComponent, deeCloneParams, customCloneParams);
+  } else if (componentToClone.pp_clonePostProcess != null) {
+    componentToClone.pp_clonePostProcess(clonedComponent, deeCloneParams, customCloneParams);
+  }
+  return clonedComponent;
+}
+function cloneDefault(componentToClone, targetObject, autoStartIfNotActive = true) {
+  let clonedComponent = ObjectUtils.addComponent(targetObject, componentToClone.type, componentToClone);
+  if (autoStartIfNotActive && !clonedComponent.active) {
+    clonedComponent.active = true;
+    clonedComponent.active = false;
+  }
+  return clonedComponent;
+}
+function setCloneCallback(classOrType, callback, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (!_myCloneCallbacks.has(engine)) {
+    _myCloneCallbacks.set(engine, /* @__PURE__ */ new Map());
+  }
+  _myCloneCallbacks.get(engine).set(type, callback);
+}
+function removeCloneCallback(classOrType, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (_myCloneCallbacks.has(engine)) {
+    _myCloneCallbacks.get(engine).delete(type);
+  }
+}
+function getCloneCallback(classOrType, engine = Globals.getMainEngine()) {
+  let callback = null;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (_myCloneCallbacks.has(engine)) {
+    callback = _myCloneCallbacks.get(engine).get(type);
+  }
+  return callback;
+}
+function hasCloneCallback(classOrType, engine = Globals.getMainEngine()) {
+  let hasCallback = false;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (_myCloneCallbacks.has(engine)) {
+    hasCallback = _myCloneCallbacks.get(engine).has(type);
+  }
+  return hasCallback;
+}
+function setClonePostProcessCallback(classOrType, callback, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (!_myClonePostProcessCallbacks.has(engine)) {
+    _myClonePostProcessCallbacks.set(engine, /* @__PURE__ */ new Map());
+  }
+  _myClonePostProcessCallbacks.get(engine).set(type, callback);
+}
+function removeClonePostProcessCallback(classOrType, engine = Globals.getMainEngine()) {
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (_myClonePostProcessCallbacks.has(engine)) {
+    _myClonePostProcessCallbacks.get(engine).delete(type);
+  }
+}
+function getClonePostProcessCallback(classOrType, engine = Globals.getMainEngine()) {
+  let callback = null;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (_myClonePostProcessCallbacks.has(engine)) {
+    callback = _myClonePostProcessCallbacks.get(engine).get(type);
+  }
+  return callback;
+}
+function hasClonePostProcessCallback(classOrType, engine = Globals.getMainEngine()) {
+  let hasCallback = false;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  if (_myClonePostProcessCallbacks.has(engine)) {
+    hasCallback = _myClonePostProcessCallbacks.get(engine).has(type);
+  }
+  return hasCallback;
+}
+function getDefaultWLComponentCloneCallback(classOrType) {
+  let callback = null;
+  let type = ComponentUtils.getTypeFromClassOrType(classOrType);
+  switch (type) {
+    case MeshComponent6.TypeName:
+      callback = DefaultWLComponentCloneCallbacks.cloneMesh;
+      break;
+    case CollisionComponent.TypeName:
+      callback = DefaultWLComponentCloneCallbacks.cloneCollision;
+      break;
+    case TextComponent3.TypeName:
+      callback = DefaultWLComponentCloneCallbacks.cloneText;
+      break;
+    case PhysXComponent.TypeName:
+      callback = DefaultWLComponentCloneCallbacks.clonePhysX;
+      break;
+    default:
+      callback = null;
+  }
+  return callback;
+}
+function hasDefaultWLComponentCloneCallback(classOrType) {
+  return ComponentUtils.getDefaultWLComponentCloneCallback(classOrType) != null;
+}
+function setDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngine()) {
+  for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
+    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
+    if (cloneCallback != null) {
+      ComponentUtils.setCloneCallback(nativeType, cloneCallback, engine);
+    }
+  }
+  for (let javascriptType of ComponentUtils.getWLJavascriptComponentTypes()) {
+    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
+    if (cloneCallback != null) {
+      ComponentUtils.setCloneCallback(javascriptType, cloneCallback, engine);
+    }
+  }
+}
+function removeDefaultWLComponentCloneCallbacks(engine = Globals.getMainEngine()) {
+  for (let nativeType of ComponentUtils.getWLNativeComponentTypes()) {
+    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(nativeType);
+    if (cloneCallback != null) {
+      if (ComponentUtils.getCloneCallback(nativeType, engine) == cloneCallback) {
+        ComponentUtils.removeCloneCallback(nativeType, engine);
+      }
+    }
+  }
+  for (let javascriptType of ComponentUtils.getWLNativeComponentTypes()) {
+    let cloneCallback = ComponentUtils.getDefaultWLComponentCloneCallback(javascriptType);
+    if (cloneCallback != null) {
+      if (ComponentUtils.getCloneCallback(javascriptType, engine) == cloneCallback) {
+        ComponentUtils.removeCloneCallback(javascriptType, engine);
+      }
+    }
+  }
+}
+var ComponentUtils = {
+  isWLComponent,
+  isWLNativeComponent,
+  isWLJavascriptComponent,
+  getWLNativeComponentTypes,
+  getWLJavascriptComponentTypes,
+  getTypeFromClassOrType,
+  getClassFromType,
+  isRegistered,
+  getJavascriptComponentInstances,
+  getJavascriptComponentClass,
+  getJavascriptComponentClassesByIndex,
+  getJavascriptComponentTypeIndex,
+  getJavascriptComponentTypeIndexes,
+  getJavascriptComponentTypeFromIndex,
+  isWLNativeComponentRegistered,
+  isCloneable: isCloneable2,
+  hasClonePostProcess,
+  clone: clone10,
+  clonePostProcess,
+  cloneDefault,
+  setCloneCallback,
+  removeCloneCallback,
+  getCloneCallback,
+  hasCloneCallback,
+  setClonePostProcessCallback,
+  removeClonePostProcessCallback,
+  getClonePostProcessCallback,
+  hasClonePostProcessCallback,
+  setDefaultWLComponentCloneCallbacks,
+  removeDefaultWLComponentCloneCallbacks,
+  getDefaultWLComponentCloneCallback,
+  hasDefaultWLComponentCloneCallback
+};
+var _myWLNativeComponentTypes = [
+  AnimationComponent.TypeName,
+  CollisionComponent.TypeName,
+  InputComponent.TypeName,
+  LightComponent.TypeName,
+  MeshComponent6.TypeName,
+  PhysXComponent.TypeName,
+  TextComponent3.TypeName,
+  ViewComponent2.TypeName
+];
+var _myWLJavascriptComponentTypes = [
+  ARCamera8thwall2.TypeName,
+  Anchor.TypeName,
+  Cursor2.TypeName,
+  CursorTarget2.TypeName,
+  DebugObject2.TypeName,
+  DeviceOrientationLook2.TypeName,
+  FingerCursor2.TypeName,
+  FixedFoveation2.TypeName,
+  HandTracking2.TypeName,
+  HitTestLocation2.TypeName,
+  HowlerAudioListener2.TypeName,
+  HowlerAudioSource2.TypeName,
+  ImageTexture2.TypeName,
+  MouseLookComponent2.TypeName,
+  PlaneDetection.TypeName,
+  PlayerHeight2.TypeName,
+  TargetFramerate2.TypeName,
+  TeleportComponent2.TypeName,
+  Trail2.TypeName,
+  TwoJointIkSolver2.TypeName,
+  VideoTexture2.TypeName,
+  VrModeActiveSwitch2.TypeName,
+  Vrm2.TypeName,
+  WasdControlsComponent2.TypeName
+];
+
+// dist/cauldron/utils/js_utils.js
+function getObjectPrototypes(object) {
+  let prototypes = [];
+  prototypes.push(object);
+  let objectProto = Object.getPrototypeOf(object);
+  while (objectProto != null) {
+    ArrayUtils.pushUnique(prototypes, objectProto);
+    objectProto = Object.getPrototypeOf(objectProto);
+  }
+  let prototypesToCheck = [object];
+  while (prototypesToCheck.length > 0) {
+    let prototypeToCheck = prototypesToCheck.shift();
+    if (prototypeToCheck != null) {
+      ArrayUtils.pushUnique(prototypes, prototypeToCheck);
+      ArrayUtils.pushUnique(prototypesToCheck, Object.getPrototypeOf(prototypeToCheck));
+      try {
+        ArrayUtils.pushUnique(prototypesToCheck, prototypeToCheck.prototype);
+      } catch (error3) {
+      }
+    }
+  }
+  return prototypes;
+}
+function getObjectPropertyNames(object) {
+  let propertyNames = [];
+  let prototypes = JSUtils.getObjectPrototypes(object);
+  for (let prototype of prototypes) {
+    if (prototype != null) {
+      let ownPropertyNames = Object.getOwnPropertyNames(prototype);
+      for (let ownPropertyName of ownPropertyNames) {
+        ArrayUtils.pushUnique(propertyNames, ownPropertyName);
+      }
+    }
+  }
+  return propertyNames;
+}
+function getObjectPropertyDescriptor(object, propertyName) {
+  let propertyDescriptor = null;
+  let propertyParent = JSUtils.getObjectPropertyOwnParent(object, propertyName);
+  if (propertyParent != null) {
+    propertyDescriptor = Object.getOwnPropertyDescriptor(propertyParent, propertyName);
+  }
+  return propertyDescriptor;
+}
+function getObjectProperty(object, propertyName) {
+  let property2 = void 0;
+  let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
+  if (propertyDescriptor != null) {
+    if (propertyDescriptor.get != null) {
+      property2 = propertyDescriptor.get.bind(object)();
+    } else {
+      property2 = propertyDescriptor.value;
+    }
+  }
+  return property2;
+}
+function setObjectProperty(valueToSet, object, propertyName) {
+  let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
+  let setUsed = false;
+  if (propertyDescriptor != null) {
+    if (propertyDescriptor.set != null) {
+      setUsed = true;
+      propertyDescriptor.set.bind(object)(valueToSet);
+    }
+  }
+  if (!setUsed) {
+    let propertyParent = JSUtils.getObjectPropertyOwnParent(object, propertyName);
+    if (propertyParent == null) {
+      propertyParent = object;
+    }
+    Object.defineProperty(propertyParent, propertyName, {
+      value: valueToSet
+    });
+  }
+}
+function getObjectPropertyOwnParent(object, propertyName) {
+  let parent = null;
+  let parents = JSUtils.getObjectPropertyOwnParents(object, propertyName);
+  if (parents.length > 0) {
+    parent = parents[0];
+  }
+  return parent;
+}
+function getObjectPropertyOwnParents(object, propertyName) {
+  let parents = [];
+  let possibleParents = JSUtils.getObjectPrototypes(object);
+  for (let possibleParent of possibleParents) {
+    let propertyNames = Object.getOwnPropertyNames(possibleParent);
+    if (ArrayUtils.hasEqual(propertyNames, propertyName)) {
+      parents.push(possibleParent);
+    }
+  }
+  return parents;
+}
+function getObjectFromPath(path, pathStartObject = window) {
+  let object = null;
+  let objectName = JSUtils.getObjectNameFromPath(path);
+  if (objectName != null) {
+    object = JSUtils.getObjectProperty(JSUtils.getObjectParentFromPath(path, pathStartObject), objectName);
+  }
+  return object;
+}
+function getObjectNameFromPath(path) {
+  let objectName = null;
+  if (path != null) {
+    let pathSplit = path.split(".");
+    if (pathSplit.length > 0) {
+      objectName = pathSplit[pathSplit.length - 1];
+    }
+  }
+  return objectName;
+}
+function getObjectParentFromPath(path, pathStartObject = window) {
+  let pathSplit = path.split(".");
+  let currentParent = pathStartObject;
+  for (let i = 0; i < pathSplit.length - 1; i++) {
+    currentParent = JSUtils.getObjectProperty(currentParent, pathSplit[i]);
+  }
+  return currentParent;
+}
+function overwriteObjectProperty(newProperty, object, propertyName, overwriteOnOwnParent = true, jsObjectFunctionsSpecialOverwrite = false, logEnabled = false) {
+  let success = false;
+  try {
+    let propertyOwnParent = JSUtils.getObjectPropertyOwnParent(object, propertyName);
+    if (propertyOwnParent != null) {
+      let originalPropertyDescriptor = Object.getOwnPropertyDescriptor(propertyOwnParent, propertyName);
+      if (originalPropertyDescriptor != null) {
+        let originalProperty = JSUtils.getObjectProperty(propertyOwnParent, propertyName);
+        JSUtils.copyObjectProperties(originalProperty, newProperty, true, jsObjectFunctionsSpecialOverwrite, logEnabled);
+        let overwriteTarget = object;
+        if (overwriteOnOwnParent) {
+          overwriteTarget = propertyOwnParent;
+        }
+        Object.defineProperty(overwriteTarget, propertyName, {
+          value: newProperty,
+          enumerable: originalPropertyDescriptor.enumerable,
+          writable: originalPropertyDescriptor.writable,
+          configurable: originalPropertyDescriptor.configurable
+        });
+        success = true;
+      } else {
+        Object.defineProperty(object, propertyName, {
+          value: newProperty
+        });
+        success = true;
+      }
+    } else {
+      Object.defineProperty(object, propertyName, {
+        value: newProperty
+      });
+      success = true;
+    }
+  } catch (error3) {
+    if (logEnabled) {
+      console.error("Property:", propertyName, "of:", object, "can't be overwritten.");
+    }
+  }
+  return success;
+}
+function copyObjectProperties(fromObject, toObject, cleanCopy = false, jsObjectFunctionsSpecialCopy = false, logEnabled = false) {
+  if (fromObject != null) {
+    if (cleanCopy) {
+      JSUtils.cleanObjectProperties(toObject);
+    }
+    Object.setPrototypeOf(toObject, Object.getPrototypeOf(fromObject));
+    let fromObjectPropertyNames = Object.getOwnPropertyNames(fromObject);
+    for (let fromObjectPropertyName of fromObjectPropertyNames) {
+      try {
+        let fromObjectPropertyDescriptor = Object.getOwnPropertyDescriptor(fromObject, fromObjectPropertyName);
+        Object.defineProperty(toObject, fromObjectPropertyName, {
+          value: fromObjectPropertyDescriptor.value,
+          enumerable: fromObjectPropertyDescriptor.enumerable,
+          writable: fromObjectPropertyDescriptor.writable,
+          configurable: fromObjectPropertyDescriptor.configurable
+        });
+      } catch (error3) {
+        if (logEnabled) {
+          console.error("Property:", fromObjectPropertyName, "of:", fromObject.name, "can't be overwritten.");
+        }
+      }
+    }
+    if (jsObjectFunctionsSpecialCopy) {
+      _jsObjectFunctionsSpecialCopy(fromObject, toObject);
+    }
+  }
+}
+function cleanObjectProperties(object) {
+  let objectNames = Object.getOwnPropertyNames(object);
+  ArrayUtils.pushUnique(objectNames, "__proto__");
+  for (let objectName of objectNames) {
+    try {
+      Object.defineProperty(object, objectName, {
+        value: void 0
+      });
+    } catch (error3) {
+    }
+    try {
+      delete object[objectName];
+    } catch (error3) {
+    }
+  }
+  Object.setPrototypeOf(object, null);
+}
+function doesObjectPropertyUseAccessors(object, propertyName) {
+  let propertyUseAccessors = false;
+  let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
+  if (propertyDescriptor != null && (propertyDescriptor.get != null || propertyDescriptor.set != null)) {
+    propertyUseAccessors = true;
+  }
+  return propertyUseAccessors;
+}
+function isFunctionByName(functionParent, functionName) {
+  let isFunctionResult = false;
+  let functionProperty = JSUtils.getObjectProperty(functionParent, functionName);
+  if (functionProperty != null) {
+    isFunctionResult = JSUtils.isFunction(functionProperty);
+  }
+  return isFunctionResult;
+}
+function isClassByName(classParent, className) {
+  let isClassResult = false;
+  let classProperty = JSUtils.getObjectProperty(classParent, className);
+  if (classProperty != null) {
+    isClassResult = JSUtils.isClass(classProperty);
+  }
+  return isClassResult;
+}
+function isObjectByName(objectParent, objectName) {
+  let isObjectResult = false;
+  let objectProperty = JSUtils.getObjectProperty(objectParent, objectName);
+  if (objectProperty != null) {
+    isObjectResult = JSUtils.isObject(objectProperty);
+  }
+  return isObjectResult;
+}
+function isFunction(property2) {
+  return typeof property2 == "function" && !JSUtils.isClass(property2);
+}
+var isClass = function() {
+  let checkClassRegex = new RegExp("^class");
+  return function isClass2(property2) {
+    return typeof property2 == "function" && property2.prototype != null && typeof property2.prototype.constructor == "function" && property2.toString != null && typeof property2.toString == "function" && property2.toString()?.match(checkClassRegex) != null;
+  };
+}();
+function isObject(property2) {
+  return typeof property2 == "object";
+}
+var JSUtils = {
+  getObjectPrototypes,
+  getObjectPropertyNames,
+  getObjectPropertyDescriptor,
+  getObjectProperty,
+  setObjectProperty,
+  getObjectPropertyOwnParent,
+  getObjectPropertyOwnParents,
+  getObjectFromPath,
+  getObjectNameFromPath,
+  getObjectParentFromPath,
+  overwriteObjectProperty,
+  copyObjectProperties,
+  cleanObjectProperties,
+  doesObjectPropertyUseAccessors,
+  isFunctionByName,
+  isClassByName,
+  isObjectByName,
+  isFunction,
+  isClass,
+  isObject
+};
+function _jsObjectFunctionsSpecialCopy(fromObject, toObject) {
+  try {
+    if (typeof toObject == "function" && typeof fromObject == "function") {
+      let functionsToOverwrite = ["toString", "toLocaleString", "valueOf"];
+      for (let functionToOverwrite of functionsToOverwrite) {
+        let propertyDescriptorToOverwrite = JSUtils.getObjectPropertyDescriptor(fromObject, functionToOverwrite);
+        if (propertyDescriptorToOverwrite != null && propertyDescriptorToOverwrite.value != null && propertyDescriptorToOverwrite.value == Object[functionToOverwrite]) {
+          let valueToReturn = Object[functionToOverwrite].bind(fromObject)();
+          let overwrittenFunction = function() {
+            return valueToReturn;
+          };
+          JSUtils.overwriteObjectProperty(overwrittenFunction, toObject, functionToOverwrite, false, false);
+        }
+      }
+    }
+  } catch (error3) {
+  }
+}
+
+// dist/plugin/utils/plugin_utils.js
+function injectProperties(fromReference, toReference, enumerable = true, writable = true, configurable = true, keepOriginalDescriptorAttributes = true, bindThisAsFirstParam = false, prefix, functionNamesToExclude = []) {
+  const ownPropertyNames = Object.getOwnPropertyNames(fromReference);
+  for (const ownPropertyName of ownPropertyNames) {
+    if (functionNamesToExclude.includes(ownPropertyName))
+      continue;
+    let enumerableToUse = enumerable;
+    let writableToUse = writable;
+    let configurableToUse = configurable;
+    if (keepOriginalDescriptorAttributes) {
+      const originalDescriptor = Object.getOwnPropertyDescriptor(toReference, ownPropertyName);
+      if (originalDescriptor != null) {
+        enumerableToUse = originalDescriptor.enumerable;
+        writableToUse = originalDescriptor.writable;
+        configurableToUse = originalDescriptor.configurable;
+      }
+    }
+    let adjustedPropertyName = ownPropertyName;
+    if (prefix != null) {
+      if (adjustedPropertyName.length > 0 && adjustedPropertyName[0] == adjustedPropertyName[0].toUpperCase()) {
+        adjustedPropertyName = prefix.toUpperCase() + adjustedPropertyName;
+      } else {
+        adjustedPropertyName = prefix + adjustedPropertyName;
+      }
+    }
+    const propertyDescriptor = Object.getOwnPropertyDescriptor(fromReference, ownPropertyName);
+    const useAccessors = propertyDescriptor != null && (propertyDescriptor.get != null || propertyDescriptor.set != null);
+    if (!useAccessors) {
+      let adjustedProperyValue = fromReference[ownPropertyName];
+      if (bindThisAsFirstParam && JSUtils.isFunction(adjustedProperyValue)) {
+        const originalFunction = fromReference[ownPropertyName];
+        adjustedProperyValue = function(...args) {
+          return originalFunction(this, ...args);
+        };
+        Object.defineProperty(adjustedProperyValue, "name", {
+          value: adjustedPropertyName
+        });
+      }
+      Object.defineProperty(toReference, adjustedPropertyName, {
+        value: adjustedProperyValue,
+        enumerable: enumerableToUse,
+        writable: writableToUse,
+        configurable: configurableToUse
+      });
+    } else {
+      Object.defineProperty(toReference, adjustedPropertyName, {
+        get: propertyDescriptor.get,
+        set: propertyDescriptor.set,
+        enumerable: enumerableToUse,
+        configurable: configurableToUse
+      });
+    }
+  }
+}
+var PluginUtils = {
+  injectProperties
+};
+
+// dist/plugin/js/extensions/array/array_extension_utils.js
+var ARRAY_LIKE_CLASSES = [
+  Array,
+  Uint8ClampedArray,
+  Uint8Array,
+  Uint16Array,
+  Uint32Array,
+  Int8Array,
+  Int16Array,
+  Int32Array,
+  Float32Array,
+  Float64Array
+];
+var ArrayExtensionUtils = {
+  ARRAY_LIKE_CLASSES
+};
+
+// dist/plugin/js/extensions/array/array_extension.js
+function initArrayExtension() {
+  _initArrayLikeExtensionProtoypes();
+  _initArrayExtensionProtoype();
+}
+function _initArrayLikeExtensionProtoypes() {
+  const arrayLikeExtension = {};
+  arrayLikeExtension.pp_copy = function pp_copy(array, copyCallback) {
+    return ArrayUtils.copy(array, this, copyCallback);
+  };
+  arrayLikeExtension.pp_clone = function pp_clone(cloneCallback) {
+    return ArrayUtils.clone(this, cloneCallback);
+  };
+  arrayLikeExtension.pp_equals = function pp_equals(array, elementsEqualCallback) {
+    return ArrayUtils.equals(this, array, elementsEqualCallback);
+  };
+  arrayLikeExtension.pp_first = function pp_first() {
+    return ArrayUtils.first(this);
+  };
+  arrayLikeExtension.pp_last = function pp_last() {
+    return ArrayUtils.last(this);
+  };
+  arrayLikeExtension.pp_has = function pp_has(callback) {
+    return ArrayUtils.has(this, callback);
+  };
+  arrayLikeExtension.pp_hasEqual = function pp_hasEqual(elementToFind, elementsEqualCallback) {
+    return ArrayUtils.hasEqual(this, elementToFind, elementsEqualCallback);
+  };
+  arrayLikeExtension.pp_find = function pp_find(callback) {
+    return ArrayUtils.find(this, callback);
+  };
+  arrayLikeExtension.pp_findIndex = function pp_findIndex(callback) {
+    return ArrayUtils.findIndex(this, callback);
+  };
+  arrayLikeExtension.pp_findAll = function pp_findAll(callback) {
+    return ArrayUtils.findAll(this, callback);
+  };
+  arrayLikeExtension.pp_findAllIndexes = function pp_findAllIndexes(callback) {
+    return ArrayUtils.findAllIndexes(this, callback);
+  };
+  arrayLikeExtension.pp_findEqual = function pp_findEqual(elementToFind, elementsEqualCallback) {
+    return ArrayUtils.findEqual(this, elementToFind, elementsEqualCallback);
+  };
+  arrayLikeExtension.pp_findAllEqual = function pp_findAllEqual(elementToFind, elementsEqualCallback) {
+    return ArrayUtils.findAllEqual(this, elementToFind, elementsEqualCallback);
+  };
+  arrayLikeExtension.pp_findIndexEqual = function pp_findIndexEqual(elementToFind, elementsEqualCallback) {
+    return ArrayUtils.findIndexEqual(this, elementToFind, elementsEqualCallback);
+  };
+  arrayLikeExtension.pp_findAllIndexesEqual = function pp_findAllIndexesEqual(elementToFind, elementsEqualCallback) {
+    return ArrayUtils.findAllIndexesEqual(this, elementToFind, elementsEqualCallback);
+  };
+  for (const arrayLikeClassToExtend of ArrayExtensionUtils.ARRAY_LIKE_CLASSES) {
+    PluginUtils.injectProperties(arrayLikeExtension, arrayLikeClassToExtend.prototype, false, true, true);
+  }
+}
+function _initArrayExtensionProtoype() {
+  const arrayExtension = {};
+  arrayExtension.pp_remove = function pp_remove(callback) {
+    return ArrayUtils.remove(this, callback);
+  };
+  arrayExtension.pp_removeIndex = function pp_removeIndex(index) {
+    return ArrayUtils.removeIndex(this, index);
+  };
+  arrayExtension.pp_removeAll = function pp_removeAll(callback) {
+    return ArrayUtils.removeAll(this, callback);
+  };
+  arrayExtension.pp_removeAllIndexes = function pp_removeAllIndexes(indexes) {
+    return ArrayUtils.removeAllIndexes(this, indexes);
+  };
+  arrayExtension.pp_removeEqual = function pp_removeEqual(elementToRemove, elementsEqualCallback) {
+    return ArrayUtils.removeEqual(this, elementToRemove, elementsEqualCallback);
+  };
+  arrayExtension.pp_removeAllEqual = function pp_removeAllEqual(elementToRemove, elementsEqualCallback) {
+    return ArrayUtils.removeAllEqual(this, elementToRemove, elementsEqualCallback);
+  };
+  arrayExtension.pp_clear = function pp_clear() {
+    return ArrayUtils.clear(this);
+  };
+  arrayExtension.pp_pushUnique = function pp_pushUnique(elementToAdd, elementsEqualCallback) {
+    return ArrayUtils.pushUnique(this, elementToAdd, elementsEqualCallback);
+  };
+  arrayExtension.pp_unshiftUnique = function pp_unshiftUnique(elementToAdd, elementsEqualCallback) {
+    return ArrayUtils.unshiftUnique(this, elementToAdd, elementsEqualCallback);
+  };
+  PluginUtils.injectProperties(arrayExtension, Array.prototype, false, true, true);
+}
+
+// dist/plugin/js/extensions/array/array_extension_legacy.js
+function initArrayExtensionLegacy() {
+  _initArrayExtensionLegacyProtoype();
+}
+function _initArrayExtensionLegacyProtoype() {
+  let vec3Extension = {};
+  vec3Extension.vec3_set = function vec3_set(x, y, z) {
+    return Vec3Utils.set(this, x, y, z);
+  };
+  vec3Extension.vec3_normalize = function vec3_normalize(out = Vec3Utils.create()) {
+    return Vec3Utils.normalize(this, out);
+  };
+  vec3Extension.vec3_copy = function vec3_copy(vector) {
+    return Vec3Utils.copy(vector, this);
+  };
+  vec3Extension.vec3_clone = function vec3_clone(out = Vec3Utils.create()) {
+    return Vec3Utils.clone(this, out);
+  };
+  vec3Extension.vec3_zero = function vec3_zero() {
+    return Vec3Utils.zero(this);
+  };
+  vec3Extension.vec3_angle = function vec3_angle(vector) {
+    return Vec3Utils.angle(this, vector);
+  };
+  vec3Extension.vec3_angleDegrees = function vec3_angleDegrees(vector) {
+    return Vec3Utils.angleDegrees(this, vector);
+  };
+  vec3Extension.vec3_angleRadians = function vec3_angleRadians(vector) {
+    return Vec3Utils.angleRadians(this, vector);
+  };
+  vec3Extension.vec3_equals = function vec3_equals(vector, epsilon = 0) {
+    return Vec3Utils.equals(this, vector, epsilon);
+  };
+  vec3Extension.vec3_length = function vec3_length() {
+    return Vec3Utils.length(this);
+  };
+  vec3Extension.vec3_lengthSquared = function vec3_lengthSquared() {
+    return Vec3Utils.lengthSquared(this);
+  };
+  vec3Extension.vec3_distance = function vec3_distance(vector) {
+    return Vec3Utils.distance(this, vector);
+  };
+  vec3Extension.vec3_distanceSquared = function vec3_distanceSquared(vector) {
+    return Vec3Utils.distanceSquared(this, vector);
+  };
+  vec3Extension.vec3_add = function vec3_add(vector, out = Vec3Utils.create()) {
+    return Vec3Utils.add(this, vector, out);
+  };
+  vec3Extension.vec3_sub = function vec3_sub(vector, out = Vec3Utils.create()) {
+    return Vec3Utils.sub(this, vector, out);
+  };
+  vec3Extension.vec3_mul = function vec3_mul(vector, out = Vec3Utils.create()) {
+    return Vec3Utils.mul(this, vector, out);
+  };
+  vec3Extension.vec3_div = function vec3_div(vector, out = Vec3Utils.create()) {
+    return Vec3Utils.div(this, vector, out);
+  };
+  vec3Extension.vec3_scale = function vec3_scale(value, out = Vec3Utils.create()) {
+    return Vec3Utils.scale(this, value, out);
+  };
+  vec3Extension.vec3_dot = function vec3_dot(vector) {
+    return Vec3Utils.dot(this, vector);
+  };
+  vec3Extension.vec3_negate = function vec3_negate(out = Vec3Utils.create()) {
+    return Vec3Utils.negate(this, out);
+  };
+  vec3Extension.vec3_cross = function vec3_cross(vector, out = Vec3Utils.create()) {
+    return Vec3Utils.cross(this, vector, out);
+  };
+  vec3Extension.vec3_transformQuat = function vec3_transformQuat(quat, out = Vec3Utils.create()) {
+    return Vec3Utils.transformQuat(this, quat, out);
+  };
+  vec3Extension.vec3_transformMat3 = function vec3_transformMat3(matrix, out = Vec3Utils.create()) {
+    return Vec3Utils.transformMat3(this, matrix, out);
+  };
+  vec3Extension.vec3_transformMat4 = function vec3_transformMat4(matrix, out = Vec3Utils.create()) {
+    return Vec3Utils.transformMat4(this, matrix, out);
+  };
+  vec3Extension.vec3_lengthSigned = function vec3_lengthSigned(positiveDirection) {
+    return Vec3Utils.lengthSigned(this, positiveDirection);
+  };
+  vec3Extension.vec3_angleSigned = function vec3_angleSigned(vector, referenceAxis) {
+    return Vec3Utils.angleSigned(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_angleSignedDegrees = function vec3_angleSignedDegrees(vector, referenceAxis) {
+    return Vec3Utils.angleSignedDegrees(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_angleSignedRadians = function vec3_angleSignedRadians(vector, referenceAxis) {
+    return Vec3Utils.angleSignedRadians(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_anglePivoted = function vec3_anglePivoted(vector, referenceAxis) {
+    return Vec3Utils.anglePivoted(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_anglePivotedDegrees = function vec3_anglePivotedDegrees(vector, referenceAxis) {
+    return Vec3Utils.anglePivotedDegrees(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_anglePivotedRadians = function vec3_anglePivotedRadians(vector, referenceAxis) {
+    return Vec3Utils.anglePivotedRadians(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_anglePivotedSigned = function vec3_anglePivotedSigned(vector, referenceAxis) {
+    return Vec3Utils.anglePivotedSigned(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_anglePivotedSignedDegrees = function vec3_anglePivotedSignedDegrees(vector, referenceAxis) {
+    return Vec3Utils.anglePivotedSignedDegrees(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_anglePivotedSignedRadians = function vec3_anglePivotedSignedRadians(vector, referenceAxis) {
+    return Vec3Utils.anglePivotedSignedRadians(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_toRadians = function vec3_toRadians(out = Vec3Utils.create()) {
+    return Vec3Utils.toRadians(this, out);
+  };
+  vec3Extension.vec3_toDegrees = function vec3_toDegrees(out = Vec3Utils.create()) {
+    return Vec3Utils.toDegrees(this, out);
+  };
+  vec3Extension.vec3_toQuat = function vec3_toQuat(out) {
+    return Vec3Utils.toQuat(this, out);
+  };
+  vec3Extension.vec3_radiansToQuat = function vec3_radiansToQuat(out = QuatUtils.create()) {
+    return Vec3Utils.radiansToQuat(this, out);
+  };
+  vec3Extension.vec3_degreesToQuat = function vec3_degreesToQuat(out = QuatUtils.create()) {
+    return Vec3Utils.degreesToQuat(this, out);
+  };
+  vec3Extension.vec3_isNormalized = function vec3_isNormalized(epsilon = MathUtils.EPSILON) {
+    return Vec3Utils.isNormalized(this, epsilon);
+  };
+  vec3Extension.vec3_isZero = function vec3_isZero(epsilon = 0) {
+    return Vec3Utils.isZero(this, epsilon);
+  };
+  vec3Extension.vec3_valueAlongAxis = function vec3_valueAlongAxis(axis) {
+    return Vec3Utils.valueAlongAxis(this, axis);
+  };
+  vec3Extension.vec3_valueAlongPlane = function vec3_valueAlongPlane(planeNormal) {
+    return Vec3Utils.valueAlongPlane(this, planeNormal);
+  };
+  vec3Extension.vec3_componentAlongAxis = function vec3_componentAlongAxis(axis, out = Vec3Utils.create()) {
+    return Vec3Utils.componentAlongAxis(this, axis, out);
+  };
+  vec3Extension.vec3_removeComponentAlongAxis = function vec3_removeComponentAlongAxis(axis, out = Vec3Utils.create()) {
+    return Vec3Utils.removeComponentAlongAxis(this, axis, out);
+  };
+  vec3Extension.vec3_copyComponentAlongAxis = function vec3_copyComponentAlongAxis(vector, axis, out = Vec3Utils.create()) {
+    return Vec3Utils.copyComponentAlongAxis(vector, this, axis, out);
+  };
+  vec3Extension.vec3_isConcordant = function vec3_isConcordant(vector) {
+    return Vec3Utils.isConcordant(this, vector);
+  };
+  vec3Extension.vec3_isFartherAlongAxis = function vec3_isFartherAlongAxis(vector, axis) {
+    return Vec3Utils.isFartherAlongAxis(this, vector, axis);
+  };
+  vec3Extension.vec3_isToTheRight = function vec3_isToTheRight(vector, referenceAxis) {
+    return Vec3Utils.isToTheRight(this, vector, referenceAxis);
+  };
+  vec3Extension.vec3_signTo = function vec3_signTo(vector, referenceAxis, zeroSign = 1) {
+    return Vec3Utils.signTo(this, vector, referenceAxis, zeroSign);
+  };
+  vec3Extension.vec3_projectOnAxis = function vec3_projectOnAxis(axis, out = Vec3Utils.create()) {
+    return Vec3Utils.projectOnAxis(this, axis, out);
+  };
+  vec3Extension.vec3_projectOnAxisAlongAxis = function vec3_projectOnAxisAlongAxis(axis, projectAlongAxis, out = Vec3Utils.create()) {
+    return Vec3Utils.projectOnAxisAlongAxis(this, axis, projectAlongAxis, out);
+  };
+  vec3Extension.vec3_projectOnPlane = function vec3_projectOnPlane(planeNormal, out = Vec3Utils.create()) {
+    return Vec3Utils.projectOnPlane(this, planeNormal, out);
+  };
+  vec3Extension.vec3_projectOnPlaneAlongAxis = function vec3_projectOnPlaneAlongAxis(planeNormal, projectAlongAxis, out = Vec3Utils.create()) {
+    return Vec3Utils.projectOnPlaneAlongAxis(this, planeNormal, projectAlongAxis, out);
+  };
+  vec3Extension.vec3_isOnAxis = function vec3_isOnAxis(axis) {
+    return Vec3Utils.isOnAxis(this, axis);
+  };
+  vec3Extension.vec3_isOnPlane = function vec3_isOnPlane(planeNormal) {
+    return Vec3Utils.isOnPlane(this, planeNormal);
+  };
+  vec3Extension.vec3_rotate = function vec3_rotate(rotation, out) {
+    return Vec3Utils.rotate(this, rotation, out);
+  };
+  vec3Extension.vec3_rotateDegrees = function vec3_rotateDegrees(rotation, out) {
+    return Vec3Utils.rotateDegrees(this, rotation, out);
+  };
+  vec3Extension.vec3_rotateRadians = function vec3_rotateRadians(rotation, out) {
+    return Vec3Utils.rotateRadians(this, rotation, out);
+  };
+  vec3Extension.vec3_rotateQuat = function vec3_rotateQuat(rotation, out) {
+    return Vec3Utils.rotateQuat(this, rotation, out);
+  };
+  vec3Extension.vec3_rotateAxis = function vec3_rotateAxis(angle2, axis, out) {
+    return Vec3Utils.rotateAxis(this, angle2, axis, out);
+  };
+  vec3Extension.vec3_rotateAxisDegrees = function vec3_rotateAxisDegrees(angle2, axis, out) {
+    return Vec3Utils.rotateAxisDegrees(this, angle2, axis, out);
+  };
+  vec3Extension.vec3_rotateAxisRadians = function vec3_rotateAxisRadians(angle2, axis, out) {
+    return Vec3Utils.rotateAxisRadians(this, angle2, axis, out);
+  };
+  vec3Extension.vec3_rotateAround = function vec3_rotateAround(rotation, origin, out) {
+    return Vec3Utils.rotateAround(this, rotation, origin, out);
+  };
+  vec3Extension.vec3_rotateAroundDegrees = function vec3_rotateAroundDegrees(rotation, origin, out = Vec3Utils.create()) {
+    return Vec3Utils.rotateAroundDegrees(this, rotation, origin, out);
+  };
+  vec3Extension.vec3_rotateAroundRadians = function vec3_rotateAroundRadians(rotation, origin, out = Vec3Utils.create()) {
+    return Vec3Utils.rotateAroundRadians(this, rotation, origin, out);
+  };
+  vec3Extension.vec3_rotateAroundQuat = function vec3_rotateAroundQuat(rotation, origin, out = Vec3Utils.create()) {
+    return Vec3Utils.rotateAroundQuat(this, rotation, origin, out);
+  };
+  vec3Extension.vec3_rotateAroundAxis = function vec3_rotateAroundAxis(angle2, axis, origin, out) {
+    return Vec3Utils.rotateAroundAxis(this, angle2, axis, origin, out);
+  };
+  vec3Extension.vec3_rotateAroundAxisDegrees = function vec3_rotateAroundAxisDegrees(angle2, axis, origin, out) {
+    return Vec3Utils.rotateAroundAxisDegrees(this, angle2, axis, origin, out);
+  };
+  vec3Extension.vec3_rotateAroundAxisRadians = function vec3_rotateAroundAxisRadians(angle2, axis, origin, out = Vec3Utils.create()) {
+    return Vec3Utils.rotateAroundAxisRadians(this, angle2, axis, origin, out);
+  };
+  vec3Extension.vec3_convertPositionToWorld = function vec3_convertPositionToWorld(parentTransform, out) {
+    return Vec3Utils.convertPositionToWorld(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertPositionToLocal = function vec3_convertPositionToLocal(parentTransform, out) {
+    return Vec3Utils.convertPositionToLocal(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertPositionToWorldMatrix = function vec3_convertPositionToWorldMatrix(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertPositionToWorldMatrix(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertPositionToLocalMatrix = function vec3_convertPositionToLocalMatrix(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertPositionToLocalMatrix(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertPositionToWorldQuat = function vec3_convertPositionToWorldQuat(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertPositionToWorldQuat(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertPositionToLocalQuat = function vec3_convertPositionToLocalQuat(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertPositionToLocalQuat(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertDirectionToWorld = function vec3_convertDirectionToWorld(parentTransform, out) {
+    return Vec3Utils.convertDirectionToWorld(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertDirectionToLocal = function vec3_convertDirectionToLocal(parentTransform, out) {
+    return Vec3Utils.convertDirectionToLocal(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertDirectionToWorldMatrix = function vec3_convertDirectionToWorldMatrix(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertDirectionToWorldMatrix(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertDirectionToLocalMatrix = function vec3_convertDirectionToLocalMatrix(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertDirectionToLocalMatrix(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertDirectionToWorldQuat = function vec3_convertDirectionToWorldQuat(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertDirectionToWorldQuat(this, parentTransform, out);
+  };
+  vec3Extension.vec3_convertDirectionToLocalQuat = function vec3_convertDirectionToLocalQuat(parentTransform, out = Vec3Utils.create()) {
+    return Vec3Utils.convertDirectionToLocalQuat(this, parentTransform, out);
+  };
+  vec3Extension.vec3_addRotation = function vec3_addRotation(rotation, out) {
+    return Vec3Utils.addRotation(this, rotation, out);
+  };
+  vec3Extension.vec3_addRotationDegrees = function vec3_addRotationDegrees(rotation, out) {
+    return Vec3Utils.addRotationDegrees(this, rotation, out);
+  };
+  vec3Extension.vec3_addRotationRadians = function vec3_addRotationRadians(rotation, out) {
+    return Vec3Utils.addRotationRadians(this, rotation, out);
+  };
+  vec3Extension.vec3_addRotationQuat = function vec3_addRotationQuat(rotation, out) {
+    return Vec3Utils.addRotationQuat(this, rotation, out);
+  };
+  vec3Extension.vec3_degreesAddRotation = function vec3_degreesAddRotation(rotation, out) {
+    return Vec3Utils.degreesAddRotation(this, rotation, out);
+  };
+  vec3Extension.vec3_degreesAddRotationDegrees = function vec3_degreesAddRotationDegrees(rotation, out = Vec3Utils.create()) {
+    return Vec3Utils.degreesAddRotationDegrees(this, rotation, out);
+  };
+  vec3Extension.vec3_degreesAddRotationRadians = function vec3_degreesAddRotationRadians(rotation, out = Vec3Utils.create()) {
+    return Vec3Utils.degreesAddRotationRadians(this, rotation, out);
+  };
+  vec3Extension.vec3_degreesAddRotationQuat = function vec3_degreesAddRotationQuat(rotation, out = Vec3Utils.create()) {
+    return Vec3Utils.degreesAddRotationQuat(this, rotation, out);
+  };
+  vec3Extension.vec3_radiansAddRotation = function vec3_radiansAddRotation(rotation, out) {
+    return Vec3Utils.radiansAddRotation(this, rotation, out);
+  };
+  vec3Extension.vec3_radiansAddRotationDegrees = function vec3_radiansAddRotationDegrees(rotation, out = Vec3Utils.create()) {
+    return Vec3Utils.radiansAddRotationDegrees(this, rotation, out);
+  };
+  vec3Extension.vec3_radiansAddRotationRadians = function vec3_radiansAddRotationRadians(rotation, out = Vec3Utils.create()) {
+    return Vec3Utils.radiansAddRotationRadians(this, rotation, out);
+  };
+  vec3Extension.vec3_radiansAddRotationQuat = function vec3_radiansAddRotationQuat(rotation, out = Vec3Utils.create()) {
+    return Vec3Utils.radiansAddRotationQuat(this, rotation, out);
+  };
+  vec3Extension.vec3_toMatrix = function vec3_toMatrix(out = Mat3Utils.create()) {
+    return Vec3Utils.toMatrix(this, out);
+  };
+  vec3Extension.vec3_degreesToMatrix = function vec3_degreesToMatrix(out = Mat3Utils.create()) {
+    return Vec3Utils.degreesToMatrix(this, out);
+  };
+  vec3Extension.vec3_radiansToMatrix = function vec3_radiansToMatrix(out = Mat3Utils.create()) {
+    return Vec3Utils.radiansToMatrix(this, out);
+  };
+  vec3Extension.vec3_rotationTo = function vec3_rotationTo(to, out) {
+    return Vec3Utils.rotationTo(this, to, out);
+  };
+  vec3Extension.vec3_rotationToDegrees = function vec3_rotationToDegrees(to, out = Vec3Utils.create()) {
+    return Vec3Utils.rotationToDegrees(this, to, out);
+  };
+  vec3Extension.vec3_rotationToRadians = function vec3_rotationToRadians(to, out = Vec3Utils.create()) {
+    return Vec3Utils.rotationToRadians(this, to, out);
+  };
+  vec3Extension.vec3_rotationToQuat = function vec3_rotationToQuat(to, out = QuatUtils.create()) {
+    return Vec3Utils.rotationToQuat(this, to, out);
+  };
+  vec3Extension.vec3_rotationToPivoted = function vec3_rotationToPivoted(to, pivotAxis, out) {
+    return Vec3Utils.rotationToPivoted(this, to, pivotAxis, out);
+  };
+  vec3Extension.vec3_rotationToPivotedDegrees = function vec3_rotationToPivotedDegrees(to, pivotAxis, out = Vec3Utils.create()) {
+    return Vec3Utils.rotationToPivotedDegrees(this, to, pivotAxis, out);
+  };
+  vec3Extension.vec3_rotationToPivotedRadians = function vec3_rotationToPivotedRadians(to, pivotAxis, out = Vec3Utils.create()) {
+    return Vec3Utils.rotationToPivotedRadians(this, to, pivotAxis, out);
+  };
+  vec3Extension.vec3_rotationToPivotedQuat = function vec3_rotationToPivotedQuat(to, pivotAxis, out = QuatUtils.create()) {
+    return Vec3Utils.rotationToPivotedQuat(this, to, pivotAxis, out);
+  };
+  vec3Extension.vec3_lerp = function vec3_lerp(to, interpolationFactor, out = Vec3Utils.create()) {
+    return Vec3Utils.lerp(this, to, interpolationFactor, out);
+  };
+  vec3Extension.vec3_interpolate = function vec3_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec3Utils.create()) {
+    return Vec3Utils.interpolate(this, to, interpolationFactor, easingFunction, out);
+  };
+  vec3Extension.vec3_perpendicularRandom = function vec3_perpendicularRandom(out = Vec3Utils.create()) {
+    return Vec3Utils.perpendicularRandom(this, out);
+  };
+  let vec4Extension = {};
+  vec4Extension.vec4_set = function vec4_set(x, y, z, w) {
+    return Vec4Utils.set(this, x, y, z, w);
+  };
+  vec4Extension.vec4_copy = function vec4_copy(vector) {
+    return Vec4Utils.copy(vector, this);
+  };
+  vec4Extension.vec4_clone = function vec4_clone(out = Vec4Utils.create()) {
+    return Vec4Utils.clone(this, out);
+  };
+  let quatExtension = {};
+  quatExtension.quat_set = function quat_set(x, y, z, w) {
+    return QuatUtils.set(this, x, y, z, w);
+  };
+  quatExtension.quat_normalize = function quat_normalize(out = QuatUtils.create()) {
+    return QuatUtils.normalize(this, out);
+  };
+  quatExtension.quat_copy = function quat_copy(quat) {
+    return QuatUtils.copy(quat, this);
+  };
+  quatExtension.quat_clone = function quat_clone(out = QuatUtils.create()) {
+    return QuatUtils.clone(this, out);
+  };
+  quatExtension.quat_identity = function quat_identity() {
+    return QuatUtils.identity(this);
+  };
+  quatExtension.quat_length = function quat_length() {
+    return QuatUtils.length(this);
+  };
+  quatExtension.quat_lengthSquared = function quat_lengthSquared() {
+    return QuatUtils.lengthSquared(this);
+  };
+  quatExtension.quat_invert = function quat_invert(out = QuatUtils.create()) {
+    return QuatUtils.invert(this, out);
+  };
+  quatExtension.quat_conjugate = function quat_conjugate(out = QuatUtils.create()) {
+    return QuatUtils.conjugate(this, out);
+  };
+  quatExtension.quat_mul = function quat_mul(rotation, out = QuatUtils.create()) {
+    return QuatUtils.mul(this, rotation, out);
+  };
+  quatExtension.quat_getAxis = function quat_getAxis(out = Vec3Utils.create()) {
+    return QuatUtils.getAxis(this, out);
+  };
+  quatExtension.quat_getAngle = function quat_getAngle() {
+    return QuatUtils.getAngle(this);
+  };
+  quatExtension.quat_getAngleDegrees = function quat_getAngleDegrees() {
+    return QuatUtils.getAngleDegrees(this);
+  };
+  quatExtension.quat_getAngleRadians = function quat_getAngleRadians() {
+    return QuatUtils.getAngleRadians(this);
+  };
+  quatExtension.quat_getAxisScaled = function quat_getAxisScaled(out = Vec3Utils.create()) {
+    return QuatUtils.getAxisScaled(this, out);
+  };
+  quatExtension.quat_getAxisScaledDegrees = function quat_getAxisScaledDegrees(out = Vec3Utils.create()) {
+    return QuatUtils.getAxisScaledDegrees(this, out);
+  };
+  quatExtension.quat_getAxisScaledRadians = function quat_getAxisScaledRadians(out = Vec3Utils.create()) {
+    return QuatUtils.getAxisScaledRadians(this, out);
+  };
+  quatExtension.quat_getAxes = function quat_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
+    return QuatUtils.getAxes(this, out);
+  };
+  quatExtension.quat_getForward = function quat_getForward(out = Vec3Utils.create()) {
+    return QuatUtils.getForward(this, out);
+  };
+  quatExtension.quat_getBackward = function quat_getBackward(out) {
+    return QuatUtils.getBackward(this, out);
+  };
+  quatExtension.quat_getLeft = function quat_getLeft(out = Vec3Utils.create()) {
+    return QuatUtils.getLeft(this, out);
+  };
+  quatExtension.quat_getRight = function quat_getRight(out) {
+    return QuatUtils.getRight(this, out);
+  };
+  quatExtension.quat_getUp = function quat_getUp(out = Vec3Utils.create()) {
+    return QuatUtils.getUp(this, out);
+  };
+  quatExtension.quat_getDown = function quat_getDown(out) {
+    return QuatUtils.getDown(this, out);
+  };
+  quatExtension.quat_setAxes = function quat_setAxes(left, up, forward) {
+    return QuatUtils.setAxes(this, left, up, forward);
+  };
+  quatExtension.quat_setForward = function quat_setForward(forward, up = null, left = null) {
+    return QuatUtils.setForward(this, forward, up, left);
+  };
+  quatExtension.quat_setBackward = function quat_setBackward(backward, up = null, left = null) {
+    return QuatUtils.setBackward(this, backward, up, left);
+  };
+  quatExtension.quat_setUp = function quat_setUp(up, forward = null, left = null) {
+    return QuatUtils.setUp(this, up, forward, left);
+  };
+  quatExtension.quat_setDown = function quat_setDown(down, forward = null, left = null) {
+    return QuatUtils.setDown(this, down, forward, left);
+  };
+  quatExtension.quat_setLeft = function quat_setLeft(left, up = null, forward = null) {
+    return QuatUtils.setLeft(this, left, up, forward);
+  };
+  quatExtension.quat_setRight = function quat_setRight(right, up = null, forward = null) {
+    return QuatUtils.setRight(this, right, up, forward);
+  };
+  quatExtension.quat_toWorld = function quat_toWorld(parentQuat, out = QuatUtils.create()) {
+    return QuatUtils.toWorld(this, parentQuat, out);
+  };
+  quatExtension.quat_toLocal = function quat_toLocal(parentQuat, out = QuatUtils.create()) {
+    return QuatUtils.toLocal(this, parentQuat, out);
+  };
+  quatExtension.quat_fromAxis = function quat_fromAxis(angle2, axis) {
+    return QuatUtils.fromAxis(angle2, axis, this);
+  };
+  quatExtension.quat_fromAxisDegrees = function quat_fromAxisDegrees(angle2, axis) {
+    return QuatUtils.fromAxisDegrees(angle2, axis, this);
+  };
+  quatExtension.quat_fromAxisRadians = function quat_fromAxisRadians(angle2, axis) {
+    return QuatUtils.fromAxisRadians(angle2, axis, this);
+  };
+  quatExtension.quat_fromAxes = function quat_fromAxes(leftAxis, upAxis, forwardAxis) {
+    return QuatUtils.fromAxes(leftAxis, upAxis, forwardAxis, this);
+  };
+  quatExtension.quat_fromRadians = function quat_fromRadians(radiansRotation) {
+    return QuatUtils.fromRadians(radiansRotation, this);
+  };
+  quatExtension.quat_fromDegrees = function quat_fromDegrees(degreesRotation) {
+    return QuatUtils.fromDegrees(degreesRotation, this);
+  };
+  quatExtension.quat_toRadians = function quat_toRadians(out = Vec3Utils.create()) {
+    return QuatUtils.toRadians(this, out);
+  };
+  quatExtension.quat_toDegrees = function quat_toDegrees(out = Vec3Utils.create()) {
+    return QuatUtils.toDegrees(this, out);
+  };
+  quatExtension.quat_isNormalized = function quat_isNormalized(epsilon = MathUtils.EPSILON) {
+    return QuatUtils.isNormalized(this, epsilon);
+  };
+  quatExtension.quat_addRotation = function quat_addRotation(rotation, out) {
+    return QuatUtils.addRotation(this, rotation, out);
+  };
+  quatExtension.quat_addRotationDegrees = function quat_addRotationDegrees(rotation, out) {
+    return QuatUtils.addRotationDegrees(this, rotation, out);
+  };
+  quatExtension.quat_addRotationRadians = function quat_addRotationRadians(rotation, out) {
+    return QuatUtils.addRotationRadians(this, rotation, out);
+  };
+  quatExtension.quat_addRotationQuat = function quat_addRotationQuat(rotation, out = QuatUtils.create()) {
+    return QuatUtils.addRotationQuat(this, rotation, out);
+  };
+  quatExtension.quat_subRotation = function quat_subRotation(rotation, out) {
+    return QuatUtils.subRotation(this, rotation, out);
+  };
+  quatExtension.quat_subRotationDegrees = function quat_subRotationDegrees(rotation, out) {
+    return QuatUtils.subRotationDegrees(this, rotation, out);
+  };
+  quatExtension.quat_subRotationRadians = function quat_subRotationRadians(rotation, out) {
+    return QuatUtils.subRotationRadians(this, rotation, out);
+  };
+  quatExtension.quat_subRotationQuat = function quat_subRotationQuat(rotation, out = QuatUtils.create()) {
+    return QuatUtils.subRotationQuat(this, rotation, out);
+  };
+  quatExtension.quat_rotationTo = function quat_rotationTo(to, out) {
+    return QuatUtils.rotationTo(this, to, out);
+  };
+  quatExtension.quat_rotationToDegrees = function quat_rotationToDegrees(to, out) {
+    return QuatUtils.rotationToDegrees(this, to, out);
+  };
+  quatExtension.quat_rotationToRadians = function quat_rotationToRadians(to, out) {
+    return QuatUtils.rotationToRadians(this, to, out);
+  };
+  quatExtension.quat_rotationToQuat = function quat_rotationToQuat(to, out) {
+    return QuatUtils.rotationToQuat(this, to, out);
+  };
+  quatExtension.quat_rotationAroundAxis = function quat_rotationAroundAxis(axis, out) {
+    return QuatUtils.rotationAroundAxis(this, axis, out);
+  };
+  quatExtension.quat_rotationAroundAxisDegrees = function quat_rotationAroundAxisDegrees(axis, out = Vec3Utils.create()) {
+    return QuatUtils.rotationAroundAxisDegrees(this, axis, out);
+  };
+  quatExtension.quat_rotationAroundAxisRadians = function quat_rotationAroundAxisRadians(axis, out = Vec3Utils.create()) {
+    return QuatUtils.rotationAroundAxisRadians(this, axis, out);
+  };
+  quatExtension.quat_rotationAroundAxisQuat = function quat_rotationAroundAxisQuat(axis, out = QuatUtils.create()) {
+    return QuatUtils.rotationAroundAxisQuat(this, axis, out);
+  };
+  quatExtension.quat_getTwist = function quat_getTwist(axis, out = QuatUtils.create()) {
+    return QuatUtils.getTwist(this, axis, out);
+  };
+  quatExtension.quat_getSwing = function quat_getSwing(axis, out = QuatUtils.create()) {
+    return QuatUtils.getSwing(this, axis, out);
+  };
+  quatExtension.quat_getSwingFromTwist = function quat_getSwingFromTwist(twist, out = QuatUtils.create()) {
+    return QuatUtils.getSwingFromTwist(this, twist, out);
+  };
+  quatExtension.quat_getTwistFromSwing = function quat_getTwistFromSwing(swing, out = QuatUtils.create()) {
+    return QuatUtils.getTwistFromSwing(this, swing, out);
+  };
+  quatExtension.quat_fromTwistSwing = function quat_fromTwistSwing(twist, swing) {
+    return QuatUtils.fromTwistSwing(twist, swing, this);
+  };
+  quatExtension.quat_toMatrix = function quat_toMatrix(out = Mat3Utils.create()) {
+    return QuatUtils.toMatrix(this, out);
+  };
+  quatExtension.quat_rotate = function quat_rotate(rotation, out) {
+    return QuatUtils.rotate(this, rotation, out);
+  };
+  quatExtension.quat_rotateDegrees = function quat_rotateDegrees(rotation, out) {
+    return QuatUtils.rotateDegrees(this, rotation, out);
+  };
+  quatExtension.quat_rotateRadians = function quat_rotateRadians(rotation, out) {
+    return QuatUtils.rotateRadians(this, rotation, out);
+  };
+  quatExtension.quat_rotateQuat = function quat_rotateQuat(rotation, out) {
+    return QuatUtils.rotateQuat(this, rotation, out);
+  };
+  quatExtension.quat_rotateAxis = function quat_rotateAxis(angle2, axis, out) {
+    return QuatUtils.rotateAxis(this, angle2, axis, out);
+  };
+  quatExtension.quat_rotateAxisDegrees = function quat_rotateAxisDegrees(angle2, axis, out) {
+    return QuatUtils.rotateAxisDegrees(this, angle2, axis, out);
+  };
+  quatExtension.quat_rotateAxisRadians = function quat_rotateAxisRadians(angle2, axis, out) {
+    return QuatUtils.rotateAxisRadians(this, angle2, axis, out);
+  };
+  quatExtension.quat_lerp = function quat_lerp(to, interpolationFactor, out = QuatUtils.create()) {
+    return QuatUtils.lerp(this, to, interpolationFactor, out);
+  };
+  quatExtension.quat_interpolate = function quat_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
+    return QuatUtils.interpolate(this, to, interpolationFactor, easingFunction, out);
+  };
+  quatExtension.quat_slerp = function quat_slerp(to, interpolationFactor, out = QuatUtils.create()) {
+    return QuatUtils.slerp(this, to, interpolationFactor, out);
+  };
+  quatExtension.quat_sinterpolate = function quat_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.create()) {
+    return QuatUtils.sinterpolate(this, to, interpolationFactor, easingFunction, out);
+  };
+  let quat2Extension = {};
+  quat2Extension.quat2_set = function quat2_set(x1, y1, z1, w1, x2, y2, z2, w2) {
+    return Quat2Utils.set(this, x1, y1, z1, w1, x2, y2, z2, w2);
+  };
+  quat2Extension.quat2_normalize = function quat2_normalize(out = Quat2Utils.create()) {
+    return Quat2Utils.normalize(this, out);
+  };
+  quat2Extension.quat2_invert = function quat2_invert(out = Quat2Utils.create()) {
+    return Quat2Utils.invert(this, out);
+  };
+  quat2Extension.quat2_conjugate = function quat2_conjugate(out = Quat2Utils.create()) {
+    return Quat2Utils.conjugate(this, out);
+  };
+  quat2Extension.quat2_copy = function quat2_copy(quat) {
+    return Quat2Utils.copy(quat, this);
+  };
+  quat2Extension.quat2_identity = function quat2_identity() {
+    return Quat2Utils.identity(this);
+  };
+  quat2Extension.quat2_getPosition = function quat2_getPosition(out = Vec3Utils.create()) {
+    return Quat2Utils.getPosition(this, out);
+  };
+  quat2Extension.quat2_getRotation = function quat2_getRotation(out) {
+    return Quat2Utils.getRotation(this, out);
+  };
+  quat2Extension.quat2_getRotationDegrees = function quat2_getRotationDegrees(out = Vec3Utils.create()) {
+    return Quat2Utils.getRotationDegrees(this, out);
+  };
+  quat2Extension.quat2_getRotationRadians = function quat2_getRotationRadians(out = Vec3Utils.create()) {
+    return Quat2Utils.getRotationRadians(this, out);
+  };
+  quat2Extension.quat2_getRotationQuat = function quat2_getRotationQuat(out = QuatUtils.create()) {
+    return Quat2Utils.getRotationQuat(this, out);
+  };
+  quat2Extension.quat2_setPosition = function quat2_setPosition(position) {
+    return Quat2Utils.setPosition(this, position);
+  };
+  quat2Extension.quat2_setRotation = function quat2_setRotation(rotation) {
+    return Quat2Utils.setRotation(this, rotation);
+  };
+  quat2Extension.quat2_setRotationDegrees = function quat2_setRotationDegrees(rotation) {
+    return Quat2Utils.setRotationDegrees(this, rotation);
+  };
+  quat2Extension.quat2_setRotationRadians = function quat2_setRotationRadians(rotation) {
+    return Quat2Utils.setRotationRadians(this, rotation);
+  };
+  quat2Extension.quat2_setRotationQuat = function quat2_setRotationQuat(rotation) {
+    return Quat2Utils.setRotationQuat(this, rotation);
+  };
+  quat2Extension.quat2_setPositionRotation = function quat2_setPositionRotation(position, rotation) {
+    return Quat2Utils.setPositionRotation(this, position, rotation);
+  };
+  quat2Extension.quat2_setPositionRotationDegrees = function quat2_setPositionRotationDegrees(position, rotation) {
+    return Quat2Utils.setPositionRotationDegrees(this, position, rotation);
+  };
+  quat2Extension.quat2_setPositionRotationRadians = function quat2_setPositionRotationRadians(position, rotation) {
+    return Quat2Utils.setPositionRotationRadians(this, position, rotation);
+  };
+  quat2Extension.quat2_setPositionRotationQuat = function quat2_setPositionRotationQuat(position, rotation) {
+    return Quat2Utils.setPositionRotationQuat(this, position, rotation);
+  };
+  quat2Extension.quat2_isNormalized = function quat2_isNormalized(epsilon = MathUtils.EPSILON) {
+    return Quat2Utils.isNormalized(this, epsilon);
+  };
+  quat2Extension.quat2_length = function quat2_length() {
+    return Quat2Utils.length(this);
+  };
+  quat2Extension.quat2_lengthSquared = function quat2_lengthSquared() {
+    return Quat2Utils.lengthSquared(this);
+  };
+  quat2Extension.quat2_mul = function quat2_mul(quat, out = Quat2Utils.create()) {
+    return Quat2Utils.mul(this, quat, out);
+  };
+  quat2Extension.quat2_getAxes = function quat2_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
+    return Quat2Utils.getAxes(this, out);
+  };
+  quat2Extension.quat2_getForward = function quat2_getForward(out = Vec3Utils.create()) {
+    return Quat2Utils.getForward(this, out);
+  };
+  quat2Extension.quat2_getBackward = function quat2_getBackward(out) {
+    return Quat2Utils.getBackward(this, out);
+  };
+  quat2Extension.quat2_getLeft = function quat2_getLeft(out = Vec3Utils.create()) {
+    return Quat2Utils.getLeft(this, out);
+  };
+  quat2Extension.quat2_getRight = function quat2_getRight(out) {
+    return Quat2Utils.getRight(this, out);
+  };
+  quat2Extension.quat2_getUp = function quat2_getUp(out = Vec3Utils.create()) {
+    return Quat2Utils.getUp(this, out);
+  };
+  quat2Extension.quat2_getDown = function quat2_getDown(out) {
+    return Quat2Utils.getDown(this, out);
+  };
+  quat2Extension.quat2_toWorld = function quat2_toWorld(parentTransformQuat, out = Quat2Utils.create()) {
+    return Quat2Utils.toWorld(this, parentTransformQuat, out);
+  };
+  quat2Extension.quat2_toLocal = function quat2_toLocal(parentTransformQuat, out = Quat2Utils.create()) {
+    return Quat2Utils.toLocal(this, parentTransformQuat, out);
+  };
+  quat2Extension.quat2_rotateAxis = function quat2_rotateAxis(angle2, axis, out) {
+    return Quat2Utils.rotateAxis(this, angle2, axis, out);
+  };
+  quat2Extension.quat2_rotateAxisDegrees = function quat2_rotateAxisDegrees(angle2, axis, out) {
+    return Quat2Utils.rotateAxisDegrees(this, angle2, axis, out);
+  };
+  quat2Extension.quat2_rotateAxisRadians = function quat2_rotateAxisRadians(angle2, axis, out = Quat2Utils.create()) {
+    return Quat2Utils.rotateAxisRadians(this, angle2, axis, out);
+  };
+  quat2Extension.quat2_toMatrix = function quat2_toMatrix(out = Mat4Utils.create()) {
+    return Quat2Utils.toMatrix(this, out);
+  };
+  quat2Extension.quat2_fromMatrix = function quat2_fromMatrix(matrix) {
+    return Quat2Utils.fromMatrix(matrix, this);
+  };
+  quat2Extension.quat2_lerp = function quat2_lerp(to, interpolationFactor, out = Quat2Utils.create()) {
+    return Quat2Utils.lerp(this, to, interpolationFactor, out);
+  };
+  quat2Extension.quat2_interpolate = function quat2_interpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
+    return Quat2Utils.interpolate(this, to, interpolationFactor, easingFunction, out);
+  };
+  quat2Extension.quat2_slerp = function quat2_slerp(to, interpolationFactor, out = Quat2Utils.create()) {
+    return Quat2Utils.slerp(this, to, interpolationFactor, out);
+  };
+  quat2Extension.quat2_sinterpolate = function quat2_sinterpolate(to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.create()) {
+    return Quat2Utils.sinterpolate(this, to, interpolationFactor, easingFunction, out);
+  };
+  let mat4Extension = {};
+  mat4Extension.mat4_set = function mat4_set(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+    return Mat4Utils.set(this, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+  };
+  mat4Extension.mat4_copy = function mat4_copy(matrix) {
+    return Mat4Utils.copy(matrix, this);
+  };
+  mat4Extension.mat4_identity = function mat4_identity() {
+    return Mat4Utils.identity(this);
+  };
+  mat4Extension.mat4_invert = function mat4_invert(out = Mat4Utils.create()) {
+    return Mat4Utils.invert(this, out);
+  };
+  mat4Extension.mat4_mul = function mat4_mul(matrix, out = Mat4Utils.create()) {
+    return Mat4Utils.mul(this, matrix, out);
+  };
+  mat4Extension.mat4_scale = function mat4_scale(vector, out = Mat4Utils.create()) {
+    return Mat4Utils.scale(this, vector, out);
+  };
+  mat4Extension.mat4_clone = function mat4_clone(out = Mat4Utils.create()) {
+    return Mat4Utils.clone(this, out);
+  };
+  mat4Extension.mat4_getPosition = function mat4_getPosition(out = Vec3Utils.create()) {
+    return Mat4Utils.getPosition(this, out);
+  };
+  mat4Extension.mat4_getRotation = function mat4_getRotation(out = Vec3Utils.create()) {
+    return Mat4Utils.getRotation(this, out);
+  };
+  mat4Extension.mat4_getRotationDegrees = function mat4_getRotationDegrees(out = Vec3Utils.create()) {
+    return Mat4Utils.getRotationDegrees(this, out);
+  };
+  mat4Extension.mat4_getRotationRadians = function mat4_getRotationRadians(out = Vec3Utils.create()) {
+    return Mat4Utils.getRotationRadians(this, out);
+  };
+  mat4Extension.mat4_getRotationQuat = function mat4_getRotationQuat(out = QuatUtils.create()) {
+    return Mat4Utils.getRotationQuat(this, out);
+  };
+  mat4Extension.mat4_getScale = function mat4_getScale(out = Vec3Utils.create()) {
+    return Mat4Utils.getScale(this, out);
+  };
+  mat4Extension.mat4_setPosition = function mat4_setPosition(position) {
+    return Mat4Utils.setPosition(this, position);
+  };
+  mat4Extension.mat4_setRotation = function mat4_setRotation(rotation) {
+    return Mat4Utils.setRotation(this, rotation);
+  };
+  mat4Extension.mat4_setRotationDegrees = function mat4_setRotationDegrees(rotation) {
+    return Mat4Utils.setRotationDegrees(this, rotation);
+  };
+  mat4Extension.mat4_setRotationRadians = function mat4_setRotationRadians(rotation) {
+    return Mat4Utils.setRotationRadians(this, rotation);
+  };
+  mat4Extension.mat4_setRotationQuat = function mat4_setRotationQuat(rotation) {
+    return Mat4Utils.setRotationQuat(this, rotation);
+  };
+  mat4Extension.mat4_setScale = function mat4_setScale(scale4) {
+    return Mat4Utils.setScale(this, scale4);
+  };
+  mat4Extension.mat4_setPositionRotationScale = function mat4_setPositionRotationScale(position, rotation, scale4) {
+    return Mat4Utils.setPositionRotationScale(this, position, rotation, scale4);
+  };
+  mat4Extension.mat4_setPositionRotationDegreesScale = function mat4_setPositionRotationDegreesScale(position, rotation, scale4) {
+    return Mat4Utils.setPositionRotationDegreesScale(this, position, rotation, scale4);
+  };
+  mat4Extension.mat4_setPositionRotationRadiansScale = function mat4_setPositionRotationRadiansScale(position, rotation, scale4) {
+    return Mat4Utils.setPositionRotationRadiansScale(this, position, rotation, scale4);
+  };
+  mat4Extension.mat4_setPositionRotationQuatScale = function mat4_setPositionRotationQuatScale(position, rotation, scale4) {
+    return Mat4Utils.setPositionRotationQuatScale(this, position, rotation, scale4);
+  };
+  mat4Extension.mat4_setPositionRotation = function mat4_setPositionRotation(position, rotation) {
+    return Mat4Utils.setPositionRotation(this, position, rotation);
+  };
+  mat4Extension.mat4_setPositionRotationDegrees = function mat4_setPositionRotationDegrees(position, rotation) {
+    return Mat4Utils.setPositionRotationDegrees(this, position, rotation);
+  };
+  mat4Extension.mat4_setPositionRotationRadians = function mat4_setPositionRotationRadians(position, rotation) {
+    return Mat4Utils.setPositionRotationRadians(this, position, rotation);
+  };
+  mat4Extension.mat4_setPositionRotationQuat = function mat4_setPositionRotationQuat(position, rotation) {
+    return Mat4Utils.setPositionRotationQuat(this, position, rotation);
+  };
+  mat4Extension.mat4_getAxes = function mat4_getAxes(out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
+    return Mat4Utils.getAxes(this, out);
+  };
+  mat4Extension.mat4_getForward = function mat4_getForward(out = Vec3Utils.create()) {
+    return Mat4Utils.getForward(this, out);
+  };
+  mat4Extension.mat4_getBackward = function mat4_getBackward(out) {
+    return Mat4Utils.getBackward(this, out);
+  };
+  mat4Extension.mat4_getLeft = function mat4_getLeft(out = Vec3Utils.create()) {
+    return Mat4Utils.getLeft(this, out);
+  };
+  mat4Extension.mat4_getRight = function mat4_getRight(out) {
+    return Mat4Utils.getRight(this, out);
+  };
+  mat4Extension.mat4_getUp = function mat4_getUp(out = Vec3Utils.create()) {
+    return Mat4Utils.getUp(this, out);
+  };
+  mat4Extension.mat4_getDown = function mat4_getDown(out) {
+    return Mat4Utils.getDown(this, out);
+  };
+  mat4Extension.mat4_toWorld = function mat4_toWorld(parentTransformMatrix, out = Mat4Utils.create()) {
+    return Mat4Utils.toWorld(this, parentTransformMatrix, out);
+  };
+  mat4Extension.mat4_toLocal = function mat4_toLocal(parentTransformMatrix, out = Mat4Utils.create()) {
+    return Mat4Utils.toLocal(this, parentTransformMatrix, out);
+  };
+  mat4Extension.mat4_hasUniformScale = function mat4_hasUniformScale() {
+    return Mat4Utils.hasUniformScale(this);
+  };
+  mat4Extension.mat4_toQuat = function mat4_toQuat(out = Quat2Utils.create()) {
+    return Mat4Utils.toQuat(this, out);
+  };
+  mat4Extension.mat4_fromQuat = function mat4_fromQuat(quat) {
+    return Mat4Utils.fromQuat(quat, this);
+  };
+  let arrayPrototypesToExtend = [
+    Array.prototype,
+    Uint8ClampedArray.prototype,
+    Uint8Array.prototype,
+    Uint16Array.prototype,
+    Uint32Array.prototype,
+    Int8Array.prototype,
+    Int16Array.prototype,
+    Int32Array.prototype,
+    Float32Array.prototype,
+    Float64Array.prototype
+  ];
+  for (let arrayPrototypeToExtend of arrayPrototypesToExtend) {
+    PluginUtils.injectProperties(vec3Extension, arrayPrototypeToExtend, false, true, true);
+    PluginUtils.injectProperties(vec4Extension, arrayPrototypeToExtend, false, true, true);
+    PluginUtils.injectProperties(quatExtension, arrayPrototypeToExtend, false, true, true);
+    PluginUtils.injectProperties(quat2Extension, arrayPrototypeToExtend, false, true, true);
+    PluginUtils.injectProperties(mat4Extension, arrayPrototypeToExtend, false, true, true);
+  }
+}
+
+// dist/plugin/js/extensions/array/mat3_extension.js
+function initMat3Extension() {
+  _initMat3ExtensionProtoype();
+}
+function _initMat3ExtensionProtoype() {
+  const mat3Extension = {};
+  mat3Extension.mat3_set = function mat3_set(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+    return Mat3Utils.set(this, m00, m01, m02, m10, m11, m12, m20, m21, m22);
+  };
+  mat3Extension.mat3_copy = function mat3_copy(vector) {
+    return Mat3Utils.copy(vector, this);
+  };
+  mat3Extension.mat3_clone = function mat3_clone() {
+    return Mat3Utils.clone(this);
+  };
+  mat3Extension.mat3_toDegrees = function mat3_toDegrees(out) {
+    return Mat3Utils.toDegrees(this, out);
+  };
+  mat3Extension.mat3_toRadians = function mat3_toRadians(out) {
+    return Mat3Utils.toRadians(this, out);
+  };
+  mat3Extension.mat3_toQuat = function mat3_toQuat(out) {
+    return Mat3Utils.toQuat(this, out);
+  };
+  mat3Extension.mat3_fromAxes = function mat3_fromAxes(leftAxis, upAxis, forwardAxis) {
+    return Mat3Utils.fromAxes(leftAxis, upAxis, forwardAxis, this);
+  };
+  for (const arrayLikeClassToExtend of ArrayExtensionUtils.ARRAY_LIKE_CLASSES) {
+    PluginUtils.injectProperties(mat3Extension, arrayLikeClassToExtend.prototype, false, true, true);
+  }
+}
+
+// dist/plugin/js/extensions/array/vec2_extension.js
+function initVec2Extension() {
+  _initVec2ExtensionProtoype();
+}
+function _initVec2ExtensionProtoype() {
+  const vec2Extension = {};
+  vec2Extension.vec2_set = function vec2_set(x, y) {
+    return Vec2Utils.set(this, x, y);
+  };
+  vec2Extension.vec2_copy = function vec2_copy(vector) {
+    return Vec2Utils.copy(vector, this);
+  };
+  vec2Extension.vec2_clone = function vec2_clone() {
+    return Vec2Utils.clone(this);
+  };
+  vec2Extension.vec2_length = function vec2_length() {
+    return Vec2Utils.length(this);
+  };
+  vec2Extension.vec2_normalize = function vec2_normalize(out) {
+    return Vec2Utils.normalize(this, out);
+  };
+  vec2Extension.vec2_zero = function vec2_zero() {
+    return Vec2Utils.zero(this);
+  };
+  vec2Extension.vec2_isZero = function vec2_isZero(epsilon) {
+    return Vec2Utils.isZero(this, epsilon);
+  };
+  for (const arrayLikeClassToExtend of ArrayExtensionUtils.ARRAY_LIKE_CLASSES) {
+    PluginUtils.injectProperties(vec2Extension, arrayLikeClassToExtend.prototype, false, true, true);
+  }
+}
+
+// dist/cauldron/utils/array/vec_utils.js
+function clone11(vector) {
+  return vector.slice(0);
+}
+function equals4(vector, other, epsilon = 0) {
+  let equals5 = vector.length == other.length;
+  for (let i = 0; i < vector.length && equals5; i++) {
+    equals5 = equals5 && Math.abs(vector[i] - other[i]) <= epsilon;
+  }
+  return equals5;
+}
+function zero3(vector) {
+  for (let i = 0; i < vector.length; i++) {
+    vector[i] = 0;
+  }
+  return vector;
+}
+function isZero3(vector, epsilon = 0) {
+  let zero4 = true;
+  for (let i = 0; i < vector.length && zero4; i++) {
+    zero4 = zero4 && Math.abs(vector[i]) <= epsilon;
+  }
+  return zero4;
+}
+function scale3(vector, value, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = vector[i] * value;
+  }
+  return out;
+}
+function round(vector, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = Math.round(vector[i]);
+  }
+  return out;
+}
+function floor(vector, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = Math.floor(vector[i]);
+  }
+  return out;
+}
+function ceil(vector, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = Math.ceil(vector[i]);
+  }
+  return out;
+}
+function clamp2(vector, start, end, out = VecUtils.clone(vector)) {
+  const fixedStart = start != null ? start : -Number.MAX_VALUE;
+  const fixedEnd = end != null ? end : Number.MAX_VALUE;
+  const min = Math.min(fixedStart, fixedEnd);
+  const max = Math.max(fixedStart, fixedEnd);
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = MathUtils.clamp(vector[i], min, max);
+  }
+  return out;
+}
+function toString2(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  return message;
+}
+function log2(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  console.log(message);
+  return vector;
+}
+function error2(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  console.error(message);
+  return vector;
+}
+function warn2(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  console.warn(message);
+  return vector;
+}
+var VecUtils = {
+  clone: clone11,
+  equals: equals4,
+  zero: zero3,
+  isZero: isZero3,
+  scale: scale3,
+  round,
+  floor,
+  ceil,
+  clamp: clamp2,
+  toString: toString2,
+  log: log2,
+  error: error2,
+  warn: warn2
+};
+function _buildConsoleMessage(vector, decimalPlaces) {
+  let message = "[";
+  for (let i = 0; i < vector.length; i++) {
+    if (i != 0) {
+      message = message.concat(", ");
+    }
+    if (decimalPlaces != null) {
+      message = message.concat(vector[i].toFixed(decimalPlaces));
+    } else {
+      message = message.concat(vector[i].toString());
+    }
+  }
+  message = message.concat("]");
+  return message;
+}
+
+// dist/plugin/js/extensions/array/vec_extension.js
+function initVecExtension() {
+  _initVecExtensionProtoype();
+}
+function _initVecExtensionProtoype() {
+  const vecExtension = {};
+  vecExtension.vec_clone = function vec_clone() {
+    return VecUtils.clone(this);
+  };
+  vecExtension.vec_equals = function vec_equals(vector, epsilon) {
+    return VecUtils.equals(this, vector, epsilon);
+  };
+  vecExtension.vec_zero = function vec_zero() {
+    return VecUtils.zero(this);
+  };
+  vecExtension.vec_isZero = function vec_isZero(epsilon) {
+    return VecUtils.isZero(this, epsilon);
+  };
+  vecExtension.vec_scale = function vec_scale(value, out) {
+    return VecUtils.scale(this, value, out);
+  };
+  vecExtension.vec_round = function vec_round(out) {
+    return VecUtils.round(this, out);
+  };
+  vecExtension.vec_floor = function vec_floor(out) {
+    return VecUtils.floor(this, out);
+  };
+  vecExtension.vec_ceil = function vec_ceil(out) {
+    return VecUtils.ceil(this, out);
+  };
+  vecExtension.vec_clamp = function vec_clamp(start, end, out) {
+    return VecUtils.clamp(this, start, end, out);
+  };
+  vecExtension.vec_toString = function vec_toString(decimalPlaces) {
+    return VecUtils.toString(this, decimalPlaces);
+  };
+  vecExtension.vec_log = function vec_log(decimalPlaces) {
+    return VecUtils.log(this, decimalPlaces);
+  };
+  vecExtension.vec_error = function vec_error(decimalPlaces) {
+    return VecUtils.error(this, decimalPlaces);
+  };
+  vecExtension.vec_warn = function vec_warn(decimalPlaces) {
+    return VecUtils.warn(this, decimalPlaces);
+  };
+  for (const arrayLikeClassToExtend of ArrayExtensionUtils.ARRAY_LIKE_CLASSES) {
+    PluginUtils.injectProperties(vecExtension, arrayLikeClassToExtend.prototype, false, true, true);
+  }
+}
+
+// dist/plugin/js/extensions/math_extension.js
+function initMathExtension() {
+  _initMathExtensionInstance();
+}
+function _initMathExtensionInstance() {
+  const mathExtension = {};
+  Object.defineProperty(mathExtension, "PP_EPSILON", {
+    get() {
+      return MathUtils.EPSILON;
+    }
+  });
+  Object.defineProperty(mathExtension, "PP_EPSILON_SQUARED", {
+    get() {
+      return MathUtils.EPSILON_SQUARED;
+    }
+  });
+  Object.defineProperty(mathExtension, "PP_EPSILON_DEGREES", {
+    get() {
+      return MathUtils.EPSILON_DEGREES;
+    }
+  });
+  mathExtension.pp_clamp = function pp_clamp(value, start, end) {
+    return MathUtils.clamp(value, start, end);
+  };
+  mathExtension.pp_sign = function pp_sign(value, zeroSign) {
+    return MathUtils.sign(value, zeroSign);
+  };
+  mathExtension.pp_toDegrees = function pp_toDegrees(angle2) {
+    return MathUtils.toDegrees(angle2);
+  };
+  mathExtension.pp_toRadians = function pp_toRadians(angle2) {
+    return MathUtils.toRadians(angle2);
+  };
+  mathExtension.pp_roundDecimal = function pp_roundDecimal(number, decimalPlaces) {
+    return MathUtils.roundDecimal(number, decimalPlaces);
+  };
+  mathExtension.pp_mapToRange = function pp_mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd) {
+    return MathUtils.mapToRange(value, originRangeStart, originRangeEnd, newRangeStart, newRangeEnd);
+  };
+  mathExtension.pp_random = function pp_random(start, end) {
+    return MathUtils.random(start, end);
+  };
+  mathExtension.pp_randomInt = function pp_randomInt(start, end) {
+    return MathUtils.randomInt(start, end);
+  };
+  mathExtension.pp_randomBool = function pp_randomBool() {
+    return MathUtils.randomBool();
+  };
+  mathExtension.pp_randomSign = function pp_randomSign() {
+    return MathUtils.randomSign();
+  };
+  mathExtension.pp_randomPick = function pp_randomPick(...args) {
+    return MathUtils.randomPick(...args);
+  };
+  mathExtension.pp_randomUUID = function pp_randomUUID() {
+    return MathUtils.randomUUID();
+  };
+  mathExtension.pp_lerp = function pp_lerp(from, to, interpolationFactor) {
+    return MathUtils.lerp(from, to, interpolationFactor);
+  };
+  mathExtension.pp_interpolate = function pp_interpolate(from, to, interpolationFactor, easingFunction) {
+    return MathUtils.interpolate(from, to, interpolationFactor, easingFunction);
+  };
+  mathExtension.pp_interpolatePeriodic = function pp_interpolatePeriodic(from, to, interpolationFactor, easingFunction) {
+    return MathUtils.interpolatePeriodic(from, to, interpolationFactor, easingFunction);
+  };
+  mathExtension.pp_angleDistance = function pp_angleDistance(from, to) {
+    return MathUtils.angleDistance(from, to);
+  };
+  mathExtension.pp_angleDistanceDegrees = function pp_angleDistanceDegrees(from, to) {
+    return MathUtils.angleDistanceDegrees(from, to);
+  };
+  mathExtension.pp_angleDistanceRadians = function pp_angleDistanceRadians(from, to) {
+    return MathUtils.angleDistanceRadians(from, to);
+  };
+  mathExtension.pp_angleDistanceSigned = function pp_angleDistanceSigned(from, to) {
+    return MathUtils.angleDistanceSigned(from, to);
+  };
+  mathExtension.pp_angleDistanceSignedDegrees = function pp_angleDistanceSignedDegrees(from, to) {
+    return MathUtils.angleDistanceSignedDegrees(from, to);
+  };
+  mathExtension.pp_angleDistanceSignedRadians = function pp_angleDistanceSignedRadians(from, to) {
+    return MathUtils.angleDistanceSignedRadians(from, to);
+  };
+  mathExtension.pp_angleClamp = function pp_angleClamp(angle2, usePositiveRange) {
+    return MathUtils.angleClamp(angle2, usePositiveRange);
+  };
+  mathExtension.pp_angleClampDegrees = function pp_angleClampDegrees(angle2, usePositiveRange) {
+    return MathUtils.angleClampDegrees(angle2, usePositiveRange);
+  };
+  mathExtension.pp_angleClampRadians = function pp_angleClampRadians(angle2, usePositiveRange) {
+    return MathUtils.angleClampRadians(angle2, usePositiveRange);
+  };
+  mathExtension.pp_isInsideAngleRange = function pp_isInsideAngleRange(angle2, start, end, useShortestAngle) {
+    return MathUtils.isInsideAngleRange(angle2, start, end, useShortestAngle);
+  };
+  mathExtension.pp_isInsideAngleRangeDegrees = function pp_isInsideAngleRangeDegrees(angle2, start, end, useShortestAngle) {
+    return MathUtils.isInsideAngleRangeDegrees(angle2, start, end, useShortestAngle);
+  };
+  mathExtension.pp_isInsideAngleRangeRadians = function pp_isInsideAngleRangeRadians(angle2, start, end, useShortestAngle) {
+    return MathUtils.isInsideAngleRangeRadians(angle2, start, end, useShortestAngle);
+  };
+  PluginUtils.injectProperties(mathExtension, Math, false, true, true);
+}
+
+// dist/plugin/js/extensions/number_extension.js
+function initNumberExtension() {
+  _initNumberExtensionPrototype();
+}
+function _initNumberExtensionPrototype() {
+  const numberExtension = {};
+  numberExtension.get = function get(factor) {
+    return this.valueOf();
+  };
+  PluginUtils.injectProperties(numberExtension, Number.prototype, false, true, true);
+}
+
+// dist/plugin/js/extensions/init_js_extentions.js
+function initJSExtensions() {
+  initMathExtension();
+  initArrayExtension();
+  initVecExtension();
+  initVec2Extension();
+  initMat3Extension();
+  initArrayExtensionLegacy();
+  initNumberExtension();
+}
+
+// dist/plugin/js/init_js_plugins.js
+function initJSPlugins() {
+  initJSExtensions();
+}
+
+// dist/plugin/wl/extensions/cauldron_extensions.js
+import { Physics, RayHit } from "@wonderlandengine/api";
+function initCauldronExtensions() {
+  _initPhysicsExtensionPrototype();
+  _initRayHitExtensionPrototype();
+}
+function _initPhysicsExtensionPrototype() {
+  let extension = {};
+  extension.pp_getEngine = function pp_getEngine() {
+    return this._engine;
+  };
+  PluginUtils.injectProperties(extension, Physics.prototype, false, true, true);
+}
+function _initRayHitExtensionPrototype() {
+  let extension = {};
+  extension.pp_getLocations = function pp_getLocations(out) {
+    if (!out)
+      out = Array.from({ length: this.hitCount }, () => new Float32Array(3));
+    const wasm = this._engine.wasm;
+    const alignedPtr = this._ptr / 4;
+    for (let i = 0; i < this.hitCount; ++i) {
+      const locationPtr = alignedPtr + 3 * i;
+      out[i][0] = wasm.HEAPF32[locationPtr];
+      out[i][1] = wasm.HEAPF32[locationPtr + 1];
+      out[i][2] = wasm.HEAPF32[locationPtr + 2];
+    }
+    return out;
+  };
+  extension.pp_getNormals = function pp_getNormals(out) {
+    if (!out)
+      out = Array.from({ length: this.hitCount }, () => new Float32Array(3));
+    const wasm = this._engine.wasm;
+    const alignedPtr = (this._ptr + 48) / 4;
+    for (let i = 0; i < this.hitCount; ++i) {
+      const normalPtr = alignedPtr + 3 * i;
+      out[i][0] = wasm.HEAPF32[normalPtr];
+      out[i][1] = wasm.HEAPF32[normalPtr + 1];
+      out[i][2] = wasm.HEAPF32[normalPtr + 2];
+    }
+    return out;
+  };
+  extension.pp_getDistances = function pp_getDistances(out = new Float32Array(this.hitCount)) {
+    const wasm = this._engine.wasm;
+    const alignedPtr = (this._ptr + 48 * 2) / 4;
+    for (let i = 0; i < this.hitCount; ++i) {
+      const distancePtr = alignedPtr + i;
+      out[i] = wasm.HEAPF32[distancePtr];
+    }
+    return out;
+  };
+  extension.pp_getObjects = function pp_getObjects(out = new Array(this.hitCount)) {
+    const HEAPU16 = this._engine.wasm.HEAPU16;
+    const alignedPtr = this._ptr + (48 * 2 + 16) >> 1;
+    for (let i = 0; i < this.hitCount; ++i) {
+      const objectPtr = alignedPtr + i;
+      out[i] = this._engine.wrapObject(HEAPU16[objectPtr + i]);
+    }
+    return out;
+  };
+  PluginUtils.injectProperties(extension, RayHit.prototype, false, true, true);
+}
+
+// dist/plugin/wl/extensions/object_extension.js
+import { Object3D } from "@wonderlandengine/api";
+function initObjectExtension() {
+  _initObjectExtensionProtoype();
+}
+function _initObjectExtensionProtoype() {
+  const objectExtension = {};
+  objectExtension.pp_getPosition = function pp_getPosition(outPosition) {
+    return ObjectUtils.getPosition(this, outPosition);
+  };
+  objectExtension.pp_getPositionWorld = function pp_getPositionWorld(outPosition) {
+    return ObjectUtils.getPositionWorld(this, outPosition);
+  };
+  objectExtension.pp_getPositionLocal = function pp_getPositionLocal(outPosition) {
+    return ObjectUtils.getPositionLocal(this, outPosition);
+  };
+  objectExtension.pp_getRotation = function pp_getRotation(outRotation) {
+    return ObjectUtils.getRotation(this, outRotation);
+  };
+  objectExtension.pp_getRotationDegrees = function pp_getRotationDegrees(outRotation) {
+    return ObjectUtils.getRotationDegrees(this, outRotation);
+  };
+  objectExtension.pp_getRotationRadians = function pp_getRotationRadians(outRotation) {
+    return ObjectUtils.getRotationRadians(this, outRotation);
+  };
+  objectExtension.pp_getRotationMatrix = function pp_getRotationMatrix(outRotation) {
+    return ObjectUtils.getRotationMatrix(this, outRotation);
+  };
+  objectExtension.pp_getRotationQuat = function pp_getRotationQuat(outRotation) {
+    return ObjectUtils.getRotationQuat(this, outRotation);
+  };
+  objectExtension.pp_getRotationWorld = function pp_getRotationWorld(outRotation) {
+    return ObjectUtils.getRotationWorld(this, outRotation);
+  };
+  objectExtension.pp_getRotationWorldDegrees = function pp_getRotationWorldDegrees(outRotation) {
+    return ObjectUtils.getRotationWorldDegrees(this, outRotation);
+  };
+  objectExtension.pp_getRotationWorldRadians = function pp_getRotationWorldRadians(outRotation) {
+    return ObjectUtils.getRotationWorldRadians(this, outRotation);
+  };
+  objectExtension.pp_getRotationWorldMatrix = function pp_getRotationWorldMatrix(outRotation) {
+    return ObjectUtils.getRotationWorldMatrix(this, outRotation);
+  };
+  objectExtension.pp_getRotationWorldQuat = function pp_getRotationWorldQuat(outRotation) {
+    return ObjectUtils.getRotationWorldQuat(this, outRotation);
+  };
+  objectExtension.pp_getRotationLocal = function pp_getRotationLocal(outRotation) {
+    return ObjectUtils.getRotationLocal(this, outRotation);
+  };
+  objectExtension.pp_getRotationLocalDegrees = function pp_getRotationLocalDegrees(outRotation) {
+    return ObjectUtils.getRotationLocalDegrees(this, outRotation);
+  };
+  objectExtension.pp_getRotationLocalRadians = function pp_getRotationLocalRadians(outRotation) {
+    return ObjectUtils.getRotationLocalRadians(this, outRotation);
+  };
+  objectExtension.pp_getRotationLocalMatrix = function pp_getRotationLocalMatrix(outRotation) {
+    return ObjectUtils.getRotationLocalMatrix(this, outRotation);
+  };
+  objectExtension.pp_getRotationLocalQuat = function pp_getRotationLocalQuat(outRotation) {
+    return ObjectUtils.getRotationLocalQuat(this, outRotation);
+  };
+  objectExtension.pp_getScale = function pp_getScale(outScale) {
+    return ObjectUtils.getScale(this, outScale);
+  };
+  objectExtension.pp_getScaleWorld = function pp_getScaleWorld(outScale) {
+    return ObjectUtils.getScaleWorld(this, outScale);
+  };
+  objectExtension.pp_getScaleLocal = function pp_getScaleLocal(outScale) {
+    return ObjectUtils.getScaleLocal(this, outScale);
+  };
+  objectExtension.pp_getTransform = function pp_getTransform(outTransform) {
+    return ObjectUtils.getTransform(this, outTransform);
+  };
+  objectExtension.pp_getTransformMatrix = function pp_getTransformMatrix(outTransform) {
+    return ObjectUtils.getTransformMatrix(this, outTransform);
+  };
+  objectExtension.pp_getTransformQuat = function pp_getTransformQuat(outTransform) {
+    return ObjectUtils.getTransformQuat(this, outTransform);
+  };
+  objectExtension.pp_getTransformWorld = function pp_getTransformWorld(outTransform) {
+    return ObjectUtils.getTransformWorld(this, outTransform);
+  };
+  objectExtension.pp_getTransformWorldMatrix = function pp_getTransformWorldMatrix(outTransform) {
+    return ObjectUtils.getTransformWorldMatrix(this, outTransform);
+  };
+  objectExtension.pp_getTransformWorldQuat = function pp_getTransformWorldQuat(outTransform) {
+    return ObjectUtils.getTransformWorldQuat(this, outTransform);
+  };
+  objectExtension.pp_getTransformLocal = function pp_getTransformLocal(outTransform) {
+    return ObjectUtils.getTransformLocal(this, outTransform);
+  };
+  objectExtension.pp_getTransformLocalMatrix = function pp_getTransformLocalMatrix(outTransform) {
+    return ObjectUtils.getTransformLocalMatrix(this, outTransform);
+  };
+  objectExtension.pp_getTransformLocalQuat = function pp_getTransformLocalQuat(outTransform) {
+    return ObjectUtils.getTransformLocalQuat(this, outTransform);
+  };
+  objectExtension.pp_getAxes = function pp_getAxes(outAxes) {
+    return ObjectUtils.getAxes(this, outAxes);
+  };
+  objectExtension.pp_getAxesWorld = function pp_getAxesWorld(outAxes) {
+    return ObjectUtils.getAxesWorld(this, outAxes);
+  };
+  objectExtension.pp_getAxesLocal = function pp_getAxesLocal(outAxes) {
+    return ObjectUtils.getAxesLocal(this, outAxes);
+  };
+  objectExtension.pp_getForward = function pp_getForward(outForward) {
+    return ObjectUtils.getForward(this, outForward);
+  };
+  objectExtension.pp_getForwardWorld = function pp_getForwardWorld(outForward) {
+    return ObjectUtils.getForwardWorld(this, outForward);
+  };
+  objectExtension.pp_getForwardLocal = function pp_getForwardLocal(outForward) {
+    return ObjectUtils.getForwardLocal(this, outForward);
+  };
+  objectExtension.pp_getBackward = function pp_getBackward(outBackward) {
+    return ObjectUtils.getBackward(this, outBackward);
+  };
+  objectExtension.pp_getBackwardWorld = function pp_getBackwardWorld(outBackward) {
+    return ObjectUtils.getBackwardWorld(this, outBackward);
+  };
+  objectExtension.pp_getBackwardLocal = function pp_getBackwardLocal(outBackward) {
+    return ObjectUtils.getBackwardLocal(this, outBackward);
+  };
+  objectExtension.pp_getUp = function pp_getUp(outUp) {
+    return ObjectUtils.getUp(this, outUp);
+  };
+  objectExtension.pp_getUpWorld = function pp_getUpWorld(outUp) {
+    return ObjectUtils.getUpWorld(this, outUp);
+  };
+  objectExtension.pp_getUpLocal = function pp_getUpLocal(outUp) {
+    return ObjectUtils.getUpLocal(this, outUp);
+  };
+  objectExtension.pp_getDown = function pp_getDown(outDown) {
+    return ObjectUtils.getDown(this, outDown);
+  };
+  objectExtension.pp_getDownWorld = function pp_getDownWorld(outDown) {
+    return ObjectUtils.getDownWorld(this, outDown);
+  };
+  objectExtension.pp_getDownLocal = function pp_getDownLocal(outDown) {
+    return ObjectUtils.getDownLocal(this, outDown);
+  };
+  objectExtension.pp_getLeft = function pp_getLeft(outLeft) {
+    return ObjectUtils.getLeft(this, outLeft);
+  };
+  objectExtension.pp_getLeftWorld = function pp_getLeftWorld(outLeft) {
+    return ObjectUtils.getLeftWorld(this, outLeft);
+  };
+  objectExtension.pp_getLeftLocal = function pp_getLeftLocal(outLeft) {
+    return ObjectUtils.getLeftLocal(this, outLeft);
+  };
+  objectExtension.pp_getRight = function pp_getRight(outRight) {
+    return ObjectUtils.getRight(this, outRight);
+  };
+  objectExtension.pp_getRightWorld = function pp_getRightWorld(outRight) {
+    return ObjectUtils.getRightWorld(this, outRight);
+  };
+  objectExtension.pp_getRightLocal = function pp_getRightLocal(outRight) {
+    return ObjectUtils.getRightLocal(this, outRight);
+  };
+  objectExtension.pp_setPosition = function pp_setPosition(position) {
+    return ObjectUtils.setPosition(this, position);
+  };
+  objectExtension.pp_setPositionWorld = function pp_setPositionWorld(position) {
+    return ObjectUtils.setPositionWorld(this, position);
+  };
+  objectExtension.pp_setPositionLocal = function pp_setPositionLocal(position) {
+    return ObjectUtils.setPositionLocal(this, position);
+  };
+  objectExtension.pp_setRotation = function pp_setRotation(rotation) {
+    return ObjectUtils.setRotation(this, rotation);
+  };
+  objectExtension.pp_setRotationDegrees = function pp_setRotationDegrees(rotation) {
+    return ObjectUtils.setRotationDegrees(this, rotation);
+  };
+  objectExtension.pp_setRotationRadians = function pp_setRotationRadians(rotation) {
+    return ObjectUtils.setRotationRadians(this, rotation);
+  };
+  objectExtension.pp_setRotationMatrix = function pp_setRotationMatrix(rotation) {
+    return ObjectUtils.setRotationMatrix(this, rotation);
+  };
+  objectExtension.pp_setRotationQuat = function pp_setRotationQuat(rotation) {
+    return ObjectUtils.setRotationQuat(this, rotation);
+  };
+  objectExtension.pp_setRotationWorld = function pp_setRotationWorld(rotation) {
+    return ObjectUtils.setRotationWorld(this, rotation);
+  };
+  objectExtension.pp_setRotationWorldDegrees = function pp_setRotationWorldDegrees(rotation) {
+    return ObjectUtils.setRotationWorldDegrees(this, rotation);
+  };
+  objectExtension.pp_setRotationWorldRadians = function pp_setRotationWorldRadians(rotation) {
+    return ObjectUtils.setRotationWorldRadians(this, rotation);
+  };
+  objectExtension.pp_setRotationWorldMatrix = function pp_setRotationWorldMatrix(rotation) {
+    return ObjectUtils.setRotationWorldMatrix(this, rotation);
+  };
+  objectExtension.pp_setRotationWorldQuat = function pp_setRotationWorldQuat(rotation) {
+    return ObjectUtils.setRotationWorldQuat(this, rotation);
+  };
+  objectExtension.pp_setRotationLocal = function pp_setRotationLocal(rotation) {
+    return ObjectUtils.setRotationLocal(this, rotation);
+  };
+  objectExtension.pp_setRotationLocalDegrees = function pp_setRotationLocalDegrees(rotation) {
+    return ObjectUtils.setRotationLocalDegrees(this, rotation);
+  };
+  objectExtension.pp_setRotationLocalRadians = function pp_setRotationLocalRadians(rotation) {
+    return ObjectUtils.setRotationLocalRadians(this, rotation);
+  };
+  objectExtension.pp_setRotationLocalMatrix = function pp_setRotationLocalMatrix(rotation) {
+    return ObjectUtils.setRotationLocalMatrix(this, rotation);
+  };
+  objectExtension.pp_setRotationLocalQuat = function pp_setRotationLocalQuat(rotation) {
+    return ObjectUtils.setRotationLocalQuat(this, rotation);
+  };
+  objectExtension.pp_setScale = function pp_setScale(scale4) {
+    return ObjectUtils.setScale(this, scale4);
+  };
+  objectExtension.pp_setScaleWorld = function pp_setScaleWorld(scale4) {
+    return ObjectUtils.setScaleWorld(this, scale4);
+  };
+  objectExtension.pp_setScaleLocal = function pp_setScaleLocal(scale4) {
+    return ObjectUtils.setScaleLocal(this, scale4);
+  };
+  objectExtension.pp_setAxes = function pp_setAxes(left, up, forward) {
+    return ObjectUtils.setAxes(this, left, up, forward);
+  };
+  objectExtension.pp_setAxesWorld = function pp_setAxesWorld(left, up, forward) {
+    return ObjectUtils.setAxesWorld(this, left, up, forward);
+  };
+  objectExtension.pp_setAxesLocal = function pp_setAxesLocal(left, up, forward) {
+    return ObjectUtils.setAxesLocal(this, left, up, forward);
+  };
+  objectExtension.pp_setForward = function pp_setForward(forward, up, left) {
+    return ObjectUtils.setForward(this, forward, up, left);
+  };
+  objectExtension.pp_setForwardWorld = function pp_setForwardWorld(forward, up, left) {
+    return ObjectUtils.setForwardWorld(this, forward, up, left);
+  };
+  objectExtension.pp_setForwardLocal = function pp_setForwardLocal(forward, up, left) {
+    return ObjectUtils.setForwardLocal(this, forward, up, left);
+  };
+  objectExtension.pp_setBackward = function pp_setBackward(backward, up, left) {
+    return ObjectUtils.setBackward(this, backward, up, left);
+  };
+  objectExtension.pp_setBackwardWorld = function pp_setBackwardWorld(backward, up, left) {
+    return ObjectUtils.setBackwardWorld(this, backward, up, left);
+  };
+  objectExtension.pp_setBackwardLocal = function pp_setBackwardLocal(backward, up, left) {
+    return ObjectUtils.setBackwardLocal(this, backward, up, left);
+  };
+  objectExtension.pp_setUp = function pp_setUp(up, forward, left) {
+    return ObjectUtils.setUp(this, up, forward, left);
+  };
+  objectExtension.pp_setUpWorld = function pp_setUpWorld(up, forward, left) {
+    return ObjectUtils.setUpWorld(this, up, forward, left);
+  };
+  objectExtension.pp_setUpLocal = function pp_setUpLocal(up, forward, left) {
+    return ObjectUtils.setUpLocal(this, up, forward, left);
+  };
+  objectExtension.pp_setDown = function pp_setDown(down, forward, left) {
+    return ObjectUtils.setDown(this, down, forward, left);
+  };
+  objectExtension.pp_setDownWorld = function pp_setDownWorld(down, forward, left) {
+    return ObjectUtils.setDownWorld(this, down, forward, left);
+  };
+  objectExtension.pp_setDownLocal = function pp_setDownLocal(down, forward, left) {
+    return ObjectUtils.setDownLocal(this, down, forward, left);
+  };
+  objectExtension.pp_setLeft = function pp_setLeft(left, up, forward) {
+    return ObjectUtils.setLeft(this, left, up, forward);
+  };
+  objectExtension.pp_setLeftWorld = function pp_setLeftWorld(left, up, forward) {
+    return ObjectUtils.setLeftWorld(this, left, up, forward);
+  };
+  objectExtension.pp_setLeftLocal = function pp_setLeftLocal(left, up, forward) {
+    return ObjectUtils.setLeftLocal(this, left, up, forward);
+  };
+  objectExtension.pp_setRight = function pp_setRight(right, up, forward) {
+    return ObjectUtils.setRight(this, right, up, forward);
+  };
+  objectExtension.pp_setRightWorld = function pp_setRightWorld(right, up, forward) {
+    return ObjectUtils.setRightWorld(this, right, up, forward);
+  };
+  objectExtension.pp_setRightLocal = function pp_setRightLocal(right, up, forward) {
+    return ObjectUtils.setRightLocal(this, right, up, forward);
+  };
+  objectExtension.pp_setTransform = function pp_setTransform(transform) {
+    return ObjectUtils.setTransform(this, transform);
+  };
+  objectExtension.pp_setTransformMatrix = function pp_setTransformMatrix(transform) {
+    return ObjectUtils.setTransformMatrix(this, transform);
+  };
+  objectExtension.pp_setTransformQuat = function pp_setTransformQuat(transform) {
+    return ObjectUtils.setTransformQuat(this, transform);
+  };
+  objectExtension.pp_setTransformWorld = function pp_setTransformWorld(transform) {
+    return ObjectUtils.setTransformWorld(this, transform);
+  };
+  objectExtension.pp_setTransformWorldMatrix = function pp_setTransformWorldMatrix(transform) {
+    return ObjectUtils.setTransformWorldMatrix(this, transform);
+  };
+  objectExtension.pp_setTransformWorldQuat = function pp_setTransformWorldQuat(transform) {
+    return ObjectUtils.setTransformWorldQuat(this, transform);
+  };
+  objectExtension.pp_setTransformLocal = function pp_setTransformLocal(transform) {
+    return ObjectUtils.setTransformLocal(this, transform);
+  };
+  objectExtension.pp_setTransformLocalMatrix = function pp_setTransformLocalMatrix(transform) {
+    return ObjectUtils.setTransformLocalMatrix(this, transform);
+  };
+  objectExtension.pp_setTransformLocalQuat = function pp_setTransformLocalQuat(transform) {
+    return ObjectUtils.setTransformLocalQuat(this, transform);
+  };
+  objectExtension.pp_resetPosition = function pp_resetPosition() {
+    return ObjectUtils.resetPosition(this);
+  };
+  objectExtension.pp_resetPositionWorld = function pp_resetPositionWorld() {
+    return ObjectUtils.resetPositionWorld(this);
+  };
+  objectExtension.pp_resetPositionLocal = function pp_resetPositionLocal() {
+    return ObjectUtils.resetPositionLocal(this);
+  };
+  objectExtension.pp_resetRotation = function pp_resetRotation() {
+    return ObjectUtils.resetRotation(this);
+  };
+  objectExtension.pp_resetRotationWorld = function pp_resetRotationWorld() {
+    return ObjectUtils.resetRotationWorld(this);
+  };
+  objectExtension.pp_resetRotationLocal = function pp_resetRotationLocal() {
+    return ObjectUtils.resetRotationLocal(this);
+  };
+  objectExtension.pp_resetScale = function pp_resetScale() {
+    return ObjectUtils.resetScale(this);
+  };
+  objectExtension.pp_resetScaleWorld = function pp_resetScaleWorld() {
+    return ObjectUtils.resetScaleWorld(this);
+  };
+  objectExtension.pp_resetScaleLocal = function pp_resetScaleLocal() {
+    return ObjectUtils.resetScaleLocal(this);
+  };
+  objectExtension.pp_resetTransform = function pp_resetTransform() {
+    return ObjectUtils.resetTransform(this);
+  };
+  objectExtension.pp_resetTransformWorld = function pp_resetTransformWorld() {
+    return ObjectUtils.resetTransformWorld(this);
+  };
+  objectExtension.pp_resetTransformLocal = function pp_resetTransformLocal() {
+    return ObjectUtils.resetTransformLocal(this);
+  };
+  objectExtension.pp_translate = function pp_translate(translation) {
+    return ObjectUtils.translate(this, translation);
+  };
+  objectExtension.pp_translateWorld = function pp_translateWorld(translation) {
+    return ObjectUtils.translateWorld(this, translation);
+  };
+  objectExtension.pp_translateLocal = function pp_translateLocal(translation) {
+    return ObjectUtils.translateLocal(this, translation);
+  };
+  objectExtension.pp_translateObject = function pp_translateObject(translation) {
+    return ObjectUtils.translateObject(this, translation);
+  };
+  objectExtension.pp_translateAxis = function pp_translateAxis(amount, direction) {
+    return ObjectUtils.translateAxis(this, amount, direction);
+  };
+  objectExtension.pp_translateAxisWorld = function pp_translateAxisWorld(amount, direction) {
+    return ObjectUtils.translateAxisWorld(this, amount, direction);
+  };
+  objectExtension.pp_translateAxisLocal = function pp_translateAxisLocal(amount, direction) {
+    return ObjectUtils.translateAxisLocal(this, amount, direction);
+  };
+  objectExtension.pp_translateAxisObject = function pp_translateAxisObject(amount, direction) {
+    return ObjectUtils.translateAxisObject(this, amount, direction);
+  };
+  objectExtension.pp_rotate = function pp_rotate(rotation) {
+    return ObjectUtils.rotate(this, rotation);
+  };
+  objectExtension.pp_rotateDegrees = function pp_rotateDegrees(rotation) {
+    return ObjectUtils.rotateDegrees(this, rotation);
+  };
+  objectExtension.pp_rotateRadians = function pp_rotateRadians(rotation) {
+    return ObjectUtils.rotateRadians(this, rotation);
+  };
+  objectExtension.pp_rotateMatrix = function pp_rotateMatrix(rotation) {
+    return ObjectUtils.rotateMatrix(this, rotation);
+  };
+  objectExtension.pp_rotateQuat = function pp_rotateQuat(rotation) {
+    return ObjectUtils.rotateQuat(this, rotation);
+  };
+  objectExtension.pp_rotateWorld = function pp_rotateWorld(rotation) {
+    return ObjectUtils.rotateWorld(this, rotation);
+  };
+  objectExtension.pp_rotateWorldDegrees = function pp_rotateWorldDegrees(rotation) {
+    return ObjectUtils.rotateWorldDegrees(this, rotation);
+  };
+  objectExtension.pp_rotateWorldRadians = function pp_rotateWorldRadians(rotation) {
+    return ObjectUtils.rotateWorldRadians(this, rotation);
+  };
+  objectExtension.pp_rotateWorldMatrix = function pp_rotateWorldMatrix(rotation) {
+    return ObjectUtils.rotateWorldMatrix(this, rotation);
+  };
+  objectExtension.pp_rotateWorldQuat = function pp_rotateWorldQuat(rotation) {
+    return ObjectUtils.rotateWorldQuat(this, rotation);
+  };
+  objectExtension.pp_rotateLocal = function pp_rotateLocal(rotation) {
+    return ObjectUtils.rotateLocal(this, rotation);
+  };
+  objectExtension.pp_rotateLocalDegrees = function pp_rotateLocalDegrees(rotation) {
+    return ObjectUtils.rotateLocalDegrees(this, rotation);
+  };
+  objectExtension.pp_rotateLocalRadians = function pp_rotateLocalRadians(rotation) {
+    return ObjectUtils.rotateLocalRadians(this, rotation);
+  };
+  objectExtension.pp_rotateLocalMatrix = function pp_rotateLocalMatrix(rotation) {
+    return ObjectUtils.rotateLocalMatrix(this, rotation);
+  };
+  objectExtension.pp_rotateLocalQuat = function pp_rotateLocalQuat(rotation) {
+    return ObjectUtils.rotateLocalQuat(this, rotation);
+  };
+  objectExtension.pp_rotateObject = function pp_rotateObject(rotation) {
+    return ObjectUtils.rotateObject(this, rotation);
+  };
+  objectExtension.pp_rotateObjectDegrees = function pp_rotateObjectDegrees(rotation) {
+    return ObjectUtils.rotateObjectDegrees(this, rotation);
+  };
+  objectExtension.pp_rotateObjectRadians = function pp_rotateObjectRadians(rotation) {
+    return ObjectUtils.rotateObjectRadians(this, rotation);
+  };
+  objectExtension.pp_rotateObjectMatrix = function pp_rotateObjectMatrix(rotation) {
+    return ObjectUtils.rotateObjectMatrix(this, rotation);
+  };
+  objectExtension.pp_rotateObjectQuat = function pp_rotateObjectQuat(rotation) {
+    return ObjectUtils.rotateObjectQuat(this, rotation);
+  };
+  objectExtension.pp_rotateAxis = function pp_rotateAxis(angle2, axis) {
+    return ObjectUtils.rotateAxis(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisDegrees = function pp_rotateAxisDegrees(angle2, axis) {
+    return ObjectUtils.rotateAxisDegrees(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisRadians = function pp_rotateAxisRadians(angle2, axis) {
+    return ObjectUtils.rotateAxisRadians(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisWorld = function pp_rotateAxisWorld(angle2, axis) {
+    return ObjectUtils.rotateAxisWorld(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisWorldDegrees = function pp_rotateAxisWorldDegrees(angle2, axis) {
+    return ObjectUtils.rotateAxisWorldDegrees(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisWorldRadians = function pp_rotateAxisWorldRadians(angle2, axis) {
+    return ObjectUtils.rotateAxisWorldRadians(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisLocal = function pp_rotateAxisLocal(angle2, axis) {
+    return ObjectUtils.rotateAxisLocal(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisLocalDegrees = function pp_rotateAxisLocalDegrees(angle2, axis) {
+    return ObjectUtils.rotateAxisLocalDegrees(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisLocalRadians = function pp_rotateAxisLocalRadians(angle2, axis) {
+    return ObjectUtils.rotateAxisLocalRadians(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisObject = function pp_rotateAxisObject(angle2, axis) {
+    return ObjectUtils.rotateAxisObject(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisObjectDegrees = function pp_rotateAxisObjectDegrees(angle2, axis) {
+    return ObjectUtils.rotateAxisObjectDegrees(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAxisObjectRadians = function pp_rotateAxisObjectRadians(angle2, axis) {
+    return ObjectUtils.rotateAxisObjectRadians(this, angle2, axis);
+  };
+  objectExtension.pp_rotateAround = function pp_rotateAround(rotation, origin) {
+    return ObjectUtils.rotateAround(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundDegrees = function pp_rotateAroundDegrees(rotation, origin) {
+    return ObjectUtils.rotateAroundDegrees(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundRadians = function pp_rotateAroundRadians(rotation, origin) {
+    return ObjectUtils.rotateAroundRadians(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundMatrix = function pp_rotateAroundMatrix(rotation, origin) {
+    return ObjectUtils.rotateAroundMatrix(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundQuat = function pp_rotateAroundQuat(rotation, origin) {
+    return ObjectUtils.rotateAroundQuat(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundWorld = function pp_rotateAroundWorld(rotation, origin) {
+    return ObjectUtils.rotateAroundWorld(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundWorldDegrees = function pp_rotateAroundWorldDegrees(rotation, origin) {
+    return ObjectUtils.rotateAroundWorldDegrees(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundWorldRadians = function pp_rotateAroundWorldRadians(rotation, origin) {
+    return ObjectUtils.rotateAroundWorldRadians(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundWorldMatrix = function pp_rotateAroundWorldMatrix(rotation, origin) {
+    return ObjectUtils.rotateAroundWorldMatrix(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundWorldQuat = function pp_rotateAroundWorldQuat(rotation, origin) {
+    return ObjectUtils.rotateAroundWorldQuat(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundLocal = function pp_rotateAroundLocal(rotation, origin) {
+    return ObjectUtils.rotateAroundLocal(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundLocalDegrees = function pp_rotateAroundLocalDegrees(rotation, origin) {
+    return ObjectUtils.rotateAroundLocalDegrees(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundLocalRadians = function pp_rotateAroundLocalRadians(rotation, origin) {
+    return ObjectUtils.rotateAroundLocalRadians(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundLocalMatrix = function pp_rotateAroundLocalMatrix(rotation, origin) {
+    return ObjectUtils.rotateAroundLocalMatrix(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundLocalQuat = function pp_rotateAroundLocalQuat(rotation, origin) {
+    return ObjectUtils.rotateAroundLocalQuat(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundObject = function pp_rotateAroundObject(rotation, origin) {
+    return ObjectUtils.rotateAroundObject(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundObjectDegrees = function pp_rotateAroundObjectDegrees(rotation, origin) {
+    return ObjectUtils.rotateAroundObjectDegrees(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundObjectRadians = function pp_rotateAroundObjectRadians(rotation, origin) {
+    return ObjectUtils.rotateAroundObjectRadians(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundObjectMatrix = function pp_rotateAroundObjectMatrix(rotation, origin) {
+    return ObjectUtils.rotateAroundObjectMatrix(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundObjectQuat = function pp_rotateAroundObjectQuat(rotation, origin) {
+    return ObjectUtils.rotateAroundObjectQuat(this, rotation, origin);
+  };
+  objectExtension.pp_rotateAroundAxis = function pp_rotateAroundAxis(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxis(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisDegrees = function pp_rotateAroundAxisDegrees(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisDegrees(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisRadians = function pp_rotateAroundAxisRadians(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisRadians(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisWorld = function pp_rotateAroundAxisWorld(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisWorld(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisWorldDegrees = function pp_rotateAroundAxisWorldDegrees(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisWorldDegrees(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisWorldRadians = function pp_rotateAroundAxisWorldRadians(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisWorldRadians(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisLocal = function pp_rotateAroundAxisLocal(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisLocal(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisLocalDegrees = function pp_rotateAroundAxisLocalDegrees(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisLocalDegrees(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisLocalRadians = function pp_rotateAroundAxisLocalRadians(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisLocalRadians(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisObject = function pp_rotateAroundAxisObject(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisObject(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisObjectDegrees = function pp_rotateAroundAxisObjectDegrees(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisObjectDegrees(this, angle2, axis, origin);
+  };
+  objectExtension.pp_rotateAroundAxisObjectRadians = function pp_rotateAroundAxisObjectRadians(angle2, axis, origin) {
+    return ObjectUtils.rotateAroundAxisObjectRadians(this, angle2, axis, origin);
+  };
+  objectExtension.pp_scaleObject = function pp_scaleObject(scale4) {
+    return ObjectUtils.scaleObject(this, scale4);
+  };
+  objectExtension.pp_lookAt = function pp_lookAt(position, up) {
+    return ObjectUtils.lookAt(this, position, up);
+  };
+  objectExtension.pp_lookAtWorld = function pp_lookAtWorld(position, up) {
+    return ObjectUtils.lookAtWorld(this, position, up);
+  };
+  objectExtension.pp_lookAtLocal = function pp_lookAtLocal(position, up) {
+    return ObjectUtils.lookAtLocal(this, position, up);
+  };
+  objectExtension.pp_lookTo = function pp_lookTo(direction, up) {
+    return ObjectUtils.lookTo(this, direction, up);
+  };
+  objectExtension.pp_lookToWorld = function pp_lookToWorld(direction, up) {
+    return ObjectUtils.lookToWorld(this, direction, up);
+  };
+  objectExtension.pp_lookToLocal = function pp_lookToLocal(direction, up) {
+    return ObjectUtils.lookToLocal(this, direction, up);
+  };
+  objectExtension.pp_convertPositionObjectToWorld = function pp_convertPositionObjectToWorld(position, outPosition) {
+    return ObjectUtils.convertPositionObjectToWorld(this, position, outPosition);
+  };
+  objectExtension.pp_convertDirectionObjectToWorld = function pp_convertDirectionObjectToWorld(direction, outDirection) {
+    return ObjectUtils.convertDirectionObjectToWorld(this, direction, outDirection);
+  };
+  objectExtension.pp_convertPositionWorldToObject = function pp_convertPositionWorldToObject(position, outPosition) {
+    return ObjectUtils.convertPositionWorldToObject(this, position, outPosition);
+  };
+  objectExtension.pp_convertDirectionWorldToObject = function pp_convertDirectionWorldToObject(direction, outDirection) {
+    return ObjectUtils.convertDirectionWorldToObject(this, direction, outDirection);
+  };
+  objectExtension.pp_convertPositionLocalToWorld = function pp_convertPositionLocalToWorld(position, outPosition) {
+    return ObjectUtils.convertPositionLocalToWorld(this, position, outPosition);
+  };
+  objectExtension.pp_convertDirectionLocalToWorld = function pp_convertDirectionLocalToWorld(direction, outDirection) {
+    return ObjectUtils.convertDirectionLocalToWorld(this, direction, outDirection);
+  };
+  objectExtension.pp_convertPositionWorldToLocal = function pp_convertPositionWorldToLocal(position, outPosition) {
+    return ObjectUtils.convertPositionWorldToLocal(this, position, outPosition);
+  };
+  objectExtension.pp_convertDirectionWorldToLocal = function pp_convertDirectionWorldToLocal(direction, outDirection) {
+    return ObjectUtils.convertDirectionWorldToLocal(this, direction, outDirection);
+  };
+  objectExtension.pp_convertPositionObjectToLocal = function pp_convertPositionObjectToLocal(position, outPosition) {
+    return ObjectUtils.convertPositionObjectToLocal(this, position, outPosition);
+  };
+  objectExtension.pp_convertDirectionObjectToLocal = function pp_convertDirectionObjectToLocal(direction, outDirection) {
+    return ObjectUtils.convertDirectionObjectToLocal(this, direction, outDirection);
+  };
+  objectExtension.pp_convertPositionLocalToObject = function pp_convertPositionLocalToObject(position, outPosition) {
+    return ObjectUtils.convertPositionLocalToObject(this, position, outPosition);
+  };
+  objectExtension.pp_convertDirectionLocalToObject = function pp_convertDirectionLocalToObject(direction, outDirection) {
+    return ObjectUtils.convertDirectionLocalToObject(this, direction, outDirection);
+  };
+  objectExtension.pp_convertTransformObjectToWorld = function pp_convertTransformObjectToWorld(transform, outTransform) {
+    return ObjectUtils.convertTransformObjectToWorld(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformObjectToWorldMatrix = function pp_convertTransformObjectToWorldMatrix(transform, outTransform) {
+    return ObjectUtils.convertTransformObjectToWorldMatrix(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformObjectToWorldQuat = function pp_convertTransformObjectToWorldQuat(transform, outTransform) {
+    return ObjectUtils.convertTransformObjectToWorldQuat(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformWorldToObject = function pp_convertTransformWorldToObject(transform, outTransform) {
+    return ObjectUtils.convertTransformWorldToObject(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformWorldToObjectMatrix = function pp_convertTransformWorldToObjectMatrix(transform, outTransform) {
+    return ObjectUtils.convertTransformWorldToObjectMatrix(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformWorldToObjectQuat = function pp_convertTransformWorldToObjectQuat(transform, outTransform) {
+    return ObjectUtils.convertTransformWorldToObjectQuat(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformLocalToWorld = function pp_convertTransformLocalToWorld(transform, outTransform) {
+    return ObjectUtils.convertTransformLocalToWorld(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformLocalToWorldMatrix = function pp_convertTransformLocalToWorldMatrix(transform, outTransform) {
+    return ObjectUtils.convertTransformLocalToWorldMatrix(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformLocalToWorldQuat = function pp_convertTransformLocalToWorldQuat(transform, outTransform) {
+    return ObjectUtils.convertTransformLocalToWorldQuat(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformWorldToLocal = function pp_convertTransformWorldToLocal(transform, outTransform) {
+    return ObjectUtils.convertTransformWorldToLocal(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformWorldToLocalMatrix = function pp_convertTransformWorldToLocalMatrix(transform, outTransform) {
+    return ObjectUtils.convertTransformWorldToLocalMatrix(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformWorldToLocalQuat = function pp_convertTransformWorldToLocalQuat(transform, outTransform) {
+    return ObjectUtils.convertTransformWorldToLocalQuat(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformObjectToLocal = function pp_convertTransformObjectToLocal(transform, outTransform) {
+    return ObjectUtils.convertTransformObjectToLocal(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformObjectToLocalMatrix = function pp_convertTransformObjectToLocalMatrix(transform, outTransform) {
+    return ObjectUtils.convertTransformObjectToLocalMatrix(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformObjectToLocalQuat = function pp_convertTransformObjectToLocalQuat(transform, outTransform) {
+    return ObjectUtils.convertTransformObjectToLocalQuat(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformLocalToObject = function pp_convertTransformLocalToObject(transform, outTransform) {
+    return ObjectUtils.convertTransformLocalToObject(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformLocalToObjectMatrix = function pp_convertTransformLocalToObjectMatrix(transform, outTransform) {
+    return ObjectUtils.convertTransformLocalToObjectMatrix(this, transform, outTransform);
+  };
+  objectExtension.pp_convertTransformLocalToObjectQuat = function pp_convertTransformLocalToObjectQuat(transform, outTransform) {
+    return ObjectUtils.convertTransformLocalToObjectQuat(this, transform, outTransform);
+  };
+  objectExtension.pp_setParent = function pp_setParent(newParent, keepTransformWorld) {
+    return ObjectUtils.setParent(this, newParent, keepTransformWorld);
+  };
+  objectExtension.pp_getParent = function pp_getParent() {
+    return ObjectUtils.getParent(this);
+  };
+  objectExtension.pp_addComponent = function pp_addComponent(classOrType, paramsOrActive, active) {
+    return ObjectUtils.addComponent(this, classOrType, paramsOrActive, active);
+  };
+  objectExtension.pp_getComponent = function pp_getComponent(classOrType, index) {
+    return ObjectUtils.getComponent(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentSelf = function pp_getComponentSelf(classOrType, index) {
+    return ObjectUtils.getComponentSelf(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentHierarchy = function pp_getComponentHierarchy(classOrType, index) {
+    return ObjectUtils.getComponentHierarchy(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentHierarchyBreadth = function pp_getComponentHierarchyBreadth(classOrType, index) {
+    return ObjectUtils.getComponentHierarchyBreadth(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentHierarchyDepth = function pp_getComponentHierarchyDepth(classOrType, index) {
+    return ObjectUtils.getComponentHierarchyDepth(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentDescendants = function pp_getComponentDescendants(classOrType, index) {
+    return ObjectUtils.getComponentDescendants(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentDescendantsBreadth = function pp_getComponentDescendantsBreadth(classOrType, index) {
+    return ObjectUtils.getComponentDescendantsBreadth(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentDescendantsDepth = function pp_getComponentDescendantsDepth(classOrType, index) {
+    return ObjectUtils.getComponentDescendantsDepth(this, classOrType, index);
+  };
+  objectExtension.pp_getComponentChildren = function pp_getComponentChildren(classOrType, index) {
+    return ObjectUtils.getComponentChildren(this, classOrType, index);
+  };
+  objectExtension.pp_getComponents = function pp_getComponents(classOrType) {
+    return ObjectUtils.getComponents(this, classOrType);
+  };
+  objectExtension.pp_getComponentsSelf = function pp_getComponentsSelf(classOrType) {
+    return ObjectUtils.getComponentsSelf(this, classOrType);
+  };
+  objectExtension.pp_getComponentsHierarchy = function pp_getComponentsHierarchy(classOrType) {
+    return ObjectUtils.getComponentsHierarchy(this, classOrType);
+  };
+  objectExtension.pp_getComponentsHierarchyBreadth = function pp_getComponentsHierarchyBreadth(classOrType) {
+    return ObjectUtils.getComponentsHierarchyBreadth(this, classOrType);
+  };
+  objectExtension.pp_getComponentsHierarchyDepth = function pp_getComponentsHierarchyDepth(classOrType) {
+    return ObjectUtils.getComponentsHierarchyDepth(this, classOrType);
+  };
+  objectExtension.pp_getComponentsDescendants = function pp_getComponentsDescendants(classOrType) {
+    return ObjectUtils.getComponentsDescendants(this, classOrType);
+  };
+  objectExtension.pp_getComponentsDescendantsBreadth = function pp_getComponentsDescendantsBreadth(classOrType) {
+    return ObjectUtils.getComponentsDescendantsBreadth(this, classOrType);
+  };
+  objectExtension.pp_getComponentsDescendantsDepth = function pp_getComponentsDescendantsDepth(classOrType) {
+    return ObjectUtils.getComponentsDescendantsDepth(this, classOrType);
+  };
+  objectExtension.pp_getComponentsChildren = function pp_getComponentsChildren(classOrType) {
+    return ObjectUtils.getComponentsChildren(this, classOrType);
+  };
+  objectExtension.pp_setActive = function pp_setActive(active) {
+    return ObjectUtils.setActive(this, active);
+  };
+  objectExtension.pp_setActiveSelf = function pp_setActiveSelf(active) {
+    return ObjectUtils.setActiveSelf(this, active);
+  };
+  objectExtension.pp_setActiveHierarchy = function pp_setActiveHierarchy(active) {
+    return ObjectUtils.setActiveHierarchy(this, active);
+  };
+  objectExtension.pp_setActiveHierarchyBreadth = function pp_setActiveHierarchyBreadth(active) {
+    return ObjectUtils.setActiveHierarchyBreadth(this, active);
+  };
+  objectExtension.pp_setActiveHierarchyDepth = function pp_setActiveHierarchyDepth(active) {
+    return ObjectUtils.setActiveHierarchyDepth(this, active);
+  };
+  objectExtension.pp_setActiveDescendants = function pp_setActiveDescendants(active) {
+    return ObjectUtils.setActiveDescendants(this, active);
+  };
+  objectExtension.pp_setActiveDescendantsBreadth = function pp_setActiveDescendantsBreadth(active) {
+    return ObjectUtils.setActiveDescendantsBreadth(this, active);
+  };
+  objectExtension.pp_setActiveDescendantsDepth = function pp_setActiveDescendantsDepth(active) {
+    return ObjectUtils.setActiveDescendantsDepth(this, active);
+  };
+  objectExtension.pp_setActiveChildren = function pp_setActiveChildren(active) {
+    return ObjectUtils.setActiveChildren(this, active);
+  };
+  objectExtension.pp_hasUniformScale = function pp_hasUniformScale() {
+    return ObjectUtils.hasUniformScale(this);
+  };
+  objectExtension.pp_hasUniformScaleWorld = function pp_hasUniformScaleWorld() {
+    return ObjectUtils.hasUniformScaleWorld(this);
+  };
+  objectExtension.pp_hasUniformScaleLocal = function pp_hasUniformScaleLocal() {
+    return ObjectUtils.hasUniformScaleLocal(this);
+  };
+  objectExtension.pp_clone = function pp_clone(cloneParams) {
+    return ObjectUtils.clone(this, cloneParams);
+  };
+  objectExtension.pp_isCloneable = function pp_isCloneable(cloneParams) {
+    return ObjectUtils.isCloneable(this, cloneParams);
+  };
+  objectExtension.pp_toString = function pp_toString() {
+    return ObjectUtils.toString(this);
+  };
+  objectExtension.pp_toStringExtended = function pp_toStringExtended() {
+    return ObjectUtils.toStringExtended(this);
+  };
+  objectExtension.pp_toStringCompact = function pp_toStringCompact() {
+    return ObjectUtils.toStringCompact(this);
+  };
+  objectExtension.pp_getObjectByName = function pp_getObjectByName(name, isRegex, index) {
+    return ObjectUtils.getObjectByName(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameHierarchy = function pp_getObjectByNameHierarchy(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameHierarchy(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameHierarchyBreadth = function pp_getObjectByNameHierarchyBreadth(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameHierarchyBreadth(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameHierarchyDepth = function pp_getObjectByNameHierarchyDepth(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameHierarchyDepth(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameDescendants = function pp_getObjectByNameDescendants(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameDescendants(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameDescendantsBreadth = function pp_getObjectByNameDescendantsBreadth(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameDescendantsBreadth(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameDescendantsDepth = function pp_getObjectByNameDescendantsDepth(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameDescendantsDepth(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectByNameChildren = function pp_getObjectByNameChildren(name, isRegex, index) {
+    return ObjectUtils.getObjectByNameChildren(this, name, isRegex, index);
+  };
+  objectExtension.pp_getObjectsByName = function pp_getObjectsByName(name, isRegex) {
+    return ObjectUtils.getObjectsByName(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameHierarchy = function pp_getObjectsByNameHierarchy(name, isRegex) {
+    return ObjectUtils.getObjectsByNameHierarchy(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameHierarchyBreadth = function pp_getObjectsByNameHierarchyBreadth(name, isRegex) {
+    return ObjectUtils.getObjectsByNameHierarchyBreadth(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameHierarchyDepth = function pp_getObjectsByNameHierarchyDepth(name, isRegex) {
+    return ObjectUtils.getObjectsByNameHierarchyDepth(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameDescendants = function pp_getObjectsByNameDescendants(name, isRegex) {
+    return ObjectUtils.getObjectsByNameDescendants(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameDescendantsBreadth = function pp_getObjectsByNameDescendantsBreadth(name, isRegex) {
+    return ObjectUtils.getObjectsByNameDescendantsBreadth(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameDescendantsDepth = function pp_getObjectsByNameDescendantsDepth(name, isRegex) {
+    return ObjectUtils.getObjectsByNameDescendantsDepth(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectsByNameChildren = function pp_getObjectsByNameChildren(name, isRegex) {
+    return ObjectUtils.getObjectsByNameChildren(this, name, isRegex);
+  };
+  objectExtension.pp_getObjectByID = function pp_getObjectByID(id) {
+    return ObjectUtils.getObjectByID(this, id);
+  };
+  objectExtension.pp_getObjectByIDHierarchy = function pp_getObjectByIDHierarchy(id) {
+    return ObjectUtils.getObjectByIDHierarchy(this, id);
+  };
+  objectExtension.pp_getObjectByIDHierarchyBreadth = function pp_getObjectByIDHierarchyBreadth(id) {
+    return ObjectUtils.getObjectByIDHierarchyBreadth(this, id);
+  };
+  objectExtension.pp_getObjectByIDHierarchyDepth = function pp_getObjectByIDHierarchyDepth(id) {
+    return ObjectUtils.getObjectByIDHierarchyDepth(this, id);
+  };
+  objectExtension.pp_getObjectByIDDescendants = function pp_getObjectByIDDescendants(id) {
+    return ObjectUtils.getObjectByIDDescendants(this, id);
+  };
+  objectExtension.pp_getObjectByIDDescendantsBreadth = function pp_getObjectByIDDescendantsBreadth(id) {
+    return ObjectUtils.getObjectByIDDescendantsBreadth(this, id);
+  };
+  objectExtension.pp_getObjectByIDDescendantsDepth = function pp_getObjectByIDDescendantsDepth(id) {
+    return ObjectUtils.getObjectByIDDescendantsDepth(this, id);
+  };
+  objectExtension.pp_getObjectByIDChildren = function pp_getObjectByIDChildren(id) {
+    return ObjectUtils.getObjectByIDChildren(this, id);
+  };
+  objectExtension.pp_getHierarchyBreadth = function pp_getHierarchyBreadth() {
+    return ObjectUtils.getHierarchyBreadth(this);
+  };
+  objectExtension.pp_getHierarchyDepth = function pp_getHierarchyDepth() {
+    return ObjectUtils.getHierarchyDepth(this);
+  };
+  objectExtension.pp_getDescendants = function pp_getDescendants() {
+    return ObjectUtils.getDescendants(this);
+  };
+  objectExtension.pp_getDescendantsBreadth = function pp_getDescendantsBreadth() {
+    return ObjectUtils.getDescendantsBreadth(this);
+  };
+  objectExtension.pp_getDescendantsDepth = function pp_getDescendantsDepth() {
+    return ObjectUtils.getDescendantsDepth(this);
+  };
+  objectExtension.pp_getChildren = function pp_getChildren() {
+    return ObjectUtils.getChildren(this);
+  };
+  objectExtension.pp_getSelf = function pp_getSelf() {
+    return ObjectUtils.getSelf(this);
+  };
+  objectExtension.pp_addObject = function pp_addObject() {
+    return ObjectUtils.addObject(this);
+  };
+  objectExtension.pp_getName = function pp_getName() {
+    return ObjectUtils.getName(this);
+  };
+  objectExtension.pp_setName = function pp_setName(name) {
+    return ObjectUtils.setName(this, name);
+  };
+  objectExtension.pp_getEngine = function pp_getEngine() {
+    return ObjectUtils.getEngine(this);
+  };
+  objectExtension.pp_getID = function pp_getID() {
+    return ObjectUtils.getID(this);
+  };
+  objectExtension.pp_markDirty = function pp_markDirty() {
+    return ObjectUtils.markDirty(this);
+  };
+  objectExtension.pp_isTransformChanged = function pp_isTransformChanged() {
+    return ObjectUtils.isTransformChanged(this);
+  };
+  objectExtension.pp_equals = function pp_equals(object) {
+    return ObjectUtils.equals(this, object);
+  };
+  objectExtension.pp_destroy = function pp_destroy() {
+    return ObjectUtils.destroy(this);
+  };
+  objectExtension.pp_reserveObjects = function pp_reserveObjects(count) {
+    return ObjectUtils.reserveObjects(this, count);
+  };
+  objectExtension.pp_reserveObjectsSelf = function pp_reserveObjectsSelf(count) {
+    return ObjectUtils.reserveObjectsSelf(this, count);
+  };
+  objectExtension.pp_reserveObjectsHierarchy = function pp_reserveObjectsHierarchy(count) {
+    return ObjectUtils.reserveObjectsHierarchy(this, count);
+  };
+  objectExtension.pp_reserveObjectsDescendants = function pp_reserveObjectsDescendants(count) {
+    return ObjectUtils.reserveObjectsDescendants(this, count);
+  };
+  objectExtension.pp_reserveObjectsChildren = function pp_reserveObjectsChildren(count) {
+    return ObjectUtils.reserveObjectsChildren(this, count);
+  };
+  objectExtension.pp_getComponentsAmountMap = function pp_getComponentsAmountMap(outComponentsAmountMap) {
+    return ObjectUtils.getComponentsAmountMap(this, outComponentsAmountMap);
+  };
+  objectExtension.pp_getComponentsAmountMapSelf = function pp_getComponentsAmountMapSelf(outComponentsAmountMap) {
+    return ObjectUtils.getComponentsAmountMapSelf(this, outComponentsAmountMap);
+  };
+  objectExtension.pp_getComponentsAmountMapHierarchy = function pp_getComponentsAmountMapHierarchy(outComponentsAmountMap) {
+    return ObjectUtils.getComponentsAmountMapHierarchy(this, outComponentsAmountMap);
+  };
+  objectExtension.pp_getComponentsAmountMapDescendants = function pp_getComponentsAmountMapDescendants(outComponentsAmountMap) {
+    return ObjectUtils.getComponentsAmountMapDescendants(this, outComponentsAmountMap);
+  };
+  objectExtension.pp_getComponentsAmountMapChildren = function pp_getComponentsAmountMapChildren(outComponentsAmountMap) {
+    return ObjectUtils.getComponentsAmountMapChildren(this, outComponentsAmountMap);
+  };
+  PluginUtils.injectProperties(objectExtension, Object3D.prototype, false, true, true);
+}
+
+// dist/plugin/wl/extensions/init_wl_extentions.js
+function initWLExtensions() {
+  initObjectExtension();
+  initCauldronExtensions();
+}
+
+// dist/plugin/wl/mods/components/cauldron_mods.js
+import { Emitter as Emitter6 } from "@wonderlandengine/api";
+function initCauldronMods() {
+  _initEmitterModPrototype();
+}
+function _initEmitterModPrototype() {
+  const emitterMod = {};
+  emitterMod._flushTransactions = function _flushTransactions() {
+    const listeners = this._listeners;
+    const _transactions = this._transactions;
+    for (let i = 0; i < _transactions.length; i++) {
+      const transaction = _transactions[i];
+      if (transaction.type == 1) {
+        listeners.push(transaction.data);
+      } else {
+        this.remove(transaction.data);
+      }
+    }
+    _transactions.length = 0;
+  };
+  PluginUtils.injectProperties(emitterMod, Emitter6.prototype, false, true, true);
+}
+
+// dist/plugin/wl/mods/components/cursor_component_mod.js
+import { InputComponent as InputComponent2, ViewComponent as ViewComponent3 } from "@wonderlandengine/api";
+import { Cursor as Cursor3, CursorTarget as CursorTarget3, HitTestLocation as HitTestLocation3 } from "@wonderlandengine/components";
+function initCursorComponentMod() {
+  _initCursorComponentModPrototype();
+}
+function _initCursorComponentModPrototype() {
+  let cursorComponentMod = {};
+  cursorComponentMod.init = function init() {
+    this.maxDistance = 100;
+    this.visible = false;
+    this.globalTarget = this.object.pp_addComponent(CursorTarget3);
+    this.hitTestTarget = this.object.pp_addComponent(CursorTarget3);
+    this.hoveringObject = null;
+    this.hoveringObjectTarget = null;
+    this.cursorPos = vec3_create();
+    this._collisionMask = 1 << this.collisionGroup;
+    this._doubleClickTimer = 0;
+    this._tripleClickTimer = 0;
+    this._multipleClickObject = null;
+    this._multipleClickDelay = 0.3;
+    this._onDestroyCallbacks = [];
+    this._prevHitLocationLocalToTarget = vec3_create();
+    this._pointerID = null;
+    this._updatePointerStyle = false;
+    this._lastClientX = null;
+    this._lastClientY = null;
+    this._lastWidth = null;
+    this._lastHeight = null;
+    this._lastPointerID = null;
+    this._lastOriginalMouseEvent = null;
+    this._lastOriginalGamepadEvent = null;
+    this._pointerLeaveToProcess = false;
+    this._pointerLeaveMouseEvent = null;
+    this._transformQuat = quat2_create();
+    this._origin = vec3_create();
+    this._direction = vec3_create();
+    this._isHovering = false;
+    this._isDown = false;
+    this._lastIsDown = false;
+    this._isRealDown = false;
+    this._isDownForUpWithDown = false;
+    this._isUpWithNoDown = false;
+    this._tempVec = vec3_create();
+    this._viewComponent = null;
+    this._cursorRayOrigin = vec3_create();
+    this._cursorRayScale = vec3_create();
+    this._projectionMatrix = mat4_create();
+    this._hitTestLocation = null;
+    this._hitTestObject = null;
+    this._rayHitLocation = vec3_create();
+    this._hitObjectData = [null, null, null];
+    this._myViewEventListenersRegistered = false;
+  };
+  cursorComponentMod.start = function start() {
+    if (this.handedness == 0) {
+      let inputComp = this.object.pp_getComponent(InputComponent2);
+      if (!inputComp) {
+        console.warn("cursor component on object " + this.object.pp_getName() + ' was configured with handedness "input component", but object has no input component.');
+      } else {
+        this.handedness = inputComp.handedness;
+        this.input = inputComp;
+      }
+    } else {
+      this.handedness = InputUtils.getHandednessByIndex(this.handedness - 1);
+    }
+    this.pp_setViewComponent(this.object.pp_getComponent(ViewComponent3));
+    XRUtils.registerSessionStartEventListener(this, this.setupVREvents.bind(this), true, false, this.engine);
+    this._onDestroyCallbacks.push(() => {
+      XRUtils.unregisterSessionStartEventListener(this, this.engine);
+    });
+    if (this.cursorRayObject) {
+      this.cursorRayObject.pp_setActive(false);
+      this._cursorRayScale.set(this.cursorRayObject.pp_getScaleLocal());
+      this._setCursorRayTransform(null);
+    }
+    this._setCursorVisibility(false);
+    if (this.useWebXRHitTest) {
+      this._hitTestObject = this.object.pp_addObject();
+      this._hitTestLocation = this.hitTestObject.pp_addComponent(HitTestLocation3, { scaleObject: false });
+    }
+  };
+  cursorComponentMod.update = function update(dt) {
+    if (this._doubleClickTimer > 0) {
+      this._doubleClickTimer -= dt;
+    }
+    if (this._tripleClickTimer > 0) {
+      this._tripleClickTimer -= dt;
+    }
+    if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null) {
+      if (this.arTouchDown && this._pp_isAR()) {
+        let axes = XRUtils.getSession(this.engine).inputSources[0].gamepad.axes;
+        this._direction.vec3_set(axes[0], -axes[1], -1);
+        this.updateDirection();
+      } else {
+        this.object.pp_getPosition(this._origin);
+        this.object.pp_getForward(this._direction);
+      }
+      let hitObjectData = this._pp_rayCast();
+      this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalGamepadEvent);
+    } else if (!XRUtils.isSessionActive(this.engine) && this._viewComponent != null) {
+      if (this._lastPointerID != null) {
+        this._pp_updateMousePos(this._lastClientX, this._lastClientY, this._lastWidth, this._lastHeight);
+        let hitObjectData = this._pp_rayCast();
+        this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalMouseEvent);
+        if (this.hoveringObject != null) {
+          this._pointerID = this._lastPointerID;
+        } else {
+          this._pointerID = null;
+        }
+      } else if (this.hoveringObject != null) {
+        this._pp_hoverBehaviour(null, null, null, this._lastOriginalMouseEvent, true);
+      }
+    } else if (this.hoveringObject != null) {
+      this._pp_hoverBehaviour(null, null, null, null, true);
+    }
+    this._pp_processPointerLeave();
+    if (this.hoveringObject != null && (this.cursorPos[0] != 0 || this.cursorPos[1] != 0 || this.cursorPos[2] != 0)) {
+      if (this.cursorObject) {
+        this._setCursorVisibility(true);
+        this.cursorObject.pp_setPosition(this.cursorPos);
+        this.cursorObject.pp_setTransformLocalQuat(this.cursorObject.pp_getTransformLocalQuat(this._transformQuat).quat2_normalize(this._transformQuat));
+      }
+      if (this.cursorRayObject) {
+        this._setCursorRayTransform(this.cursorPos);
+      }
+    } else {
+      if (this.cursorObject) {
+        this._setCursorVisibility(false);
+      }
+      if (this.cursorRayObject) {
+        this._setCursorRayTransform(null);
+      }
+    }
+    if (this.cursorRayObject) {
+      if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null || !XRUtils.isSessionActive(this.engine) && this._viewComponent != null && this.handedness != Handedness.LEFT && this.handedness != Handedness.RIGHT) {
+        this.cursorRayObject.pp_setActive(true);
+      } else {
+        this.cursorRayObject.pp_setActive(false);
+      }
+    }
+    if (this.hoveringObject == null) {
+      this._pointerID = null;
+    }
+    this._updatePointerStyle = false;
+    this._lastOriginalMouseEvent = null;
+    this._lastOriginalGamepadEvent = null;
+  };
+  cursorComponentMod.onActivate = function onActivate() {
+    this._isDown = false;
+    this._lastIsDown = false;
+    this._isDownForUpWithDown = false;
+    this._isUpWithNoDown = false;
+  };
+  cursorComponentMod.onDeactivate = function onDeactivate() {
+    if (this.hoveringObject != null) {
+      this._pp_hoverBehaviour(null, null, null, null, true);
+    }
+    this.hoveringObject = null;
+    this.hoveringObjectTarget = null;
+    this._pp_updateCursorStyle();
+    this._setCursorVisibility(false);
+    if (this.cursorRayObject) {
+      this.cursorRayObject.pp_setActive(false);
+    }
+    this._isDown = false;
+    this._lastIsDown = false;
+    this._isRealDown = false;
+    this._isDownForUpWithDown = false;
+    this._isUpWithNoDown = false;
+    this._pointerID = null;
+    this._lastPointerID = null;
+    this._lastClientX = null;
+    this._lastClientY = null;
+    this._lastWidth = null;
+    this._lastHeight = null;
+    this._lastOriginalMouseEvent = null;
+    this._lastOriginalGamepadEvent = null;
+    this._pointerLeaveToProcess = false;
+    this._pointerLeaveMouseEvent = null;
+  };
+  cursorComponentMod.onDestroy = function onDestroy() {
+    if (this._hitTestObject != null) {
+      this._hitTestObject.pp_destroy();
+    }
+    for (let callback of this._onDestroyCallbacks) {
+      callback();
+    }
+  };
+  cursorComponentMod.updateDirection = function() {
+    let transformWorld = quat2_create();
+    return function updateDirection() {
+      this.object.pp_getPosition(this._origin);
+      this._direction.vec3_transformMat4(this._projectionMatrix, this._direction);
+      this._direction.vec3_normalize(this._direction);
+      this._direction.vec3_transformQuat(this.object.pp_getTransformQuat(transformWorld), this._direction);
+    };
+  }();
+  cursorComponentMod.setupVREvents = function setupVREvents(session) {
+    let onSelect = this.onSelect.bind(this);
+    session.addEventListener("select", onSelect);
+    let onSelectStart = this.onSelectStart.bind(this);
+    session.addEventListener("selectstart", onSelectStart);
+    let onSelectEnd = this.onSelectEnd.bind(this);
+    session.addEventListener("selectend", onSelectEnd);
+    this._onDestroyCallbacks.push(() => {
+      if (!XRUtils.isSessionActive(this.engine))
+        return;
+      let session2 = XRUtils.getSession(this.engine);
+      session2.removeEventListener("select", onSelect);
+      session2.removeEventListener("selectstart", onSelectStart);
+      session2.removeEventListener("selectend", onSelectEnd);
+    });
+    this._onViewportResize();
+  };
+  cursorComponentMod.onSelect = function onSelect(e) {
+  };
+  cursorComponentMod.onSelectStart = function onSelectStart(e) {
+    if (this.active) {
+      if (this._pp_isAR()) {
+        this.arTouchDown = true;
+        this._lastOriginalGamepadEvent = e;
+      } else if (e.inputSource.handedness == this.handedness) {
+        this._isDown = true;
+        this._isRealDown = true;
+        if (!this._lastIsDown) {
+          this._isDownForUpWithDown = true;
+        }
+        this._lastOriginalGamepadEvent = e;
+      }
+    }
+  };
+  cursorComponentMod.onSelectEnd = function onSelectEnd(e) {
+    if (this.active) {
+      if (this._pp_isAR()) {
+        this.arTouchDown = false;
+        this._lastOriginalGamepadEvent = e;
+      } else if (e.inputSource.handedness == this.handedness) {
+        if (!this._isDownForUpWithDown) {
+          this._isUpWithNoDown = true;
+        }
+        this._isDown = false;
+        this._isRealDown = false;
+        this._isDownForUpWithDown = false;
+        this._lastOriginalGamepadEvent = e;
+      }
+    }
+  };
+  cursorComponentMod.onPointerMove = function onPointerMove(e) {
+    if (this.active && !this._pointerLeaveToProcess) {
+      if (this._pointerID != null && this._pointerID != e.pointerId)
+        return;
+      let bounds = document.body.getBoundingClientRect();
+      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+    }
+  };
+  cursorComponentMod.onClick = function onClick(e) {
+  };
+  cursorComponentMod.onPointerDown = function onPointerDown(e) {
+    if (this.active && !this._pointerLeaveToProcess) {
+      if (this._pointerID != null && this._pointerID != e.pointerId || e.button != 0)
+        return;
+      let bounds = document.body.getBoundingClientRect();
+      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+      this._isDown = true;
+      this._isRealDown = true;
+      if (!this._lastIsDown) {
+        this._isDownForUpWithDown = true;
+      }
+    }
+  };
+  cursorComponentMod.onPointerUp = function onPointerUp(e) {
+    if (this.active && !this._pointerLeaveToProcess) {
+      if (this._pointerID != null && this._pointerID != e.pointerId || e.button != 0)
+        return;
+      let bounds = document.body.getBoundingClientRect();
+      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+      if (!this._isDownForUpWithDown) {
+        this._isUpWithNoDown = true;
+      }
+      this._isDown = false;
+      this._isRealDown = false;
+      this._isDownForUpWithDown = false;
+      this._updatePointerStyle = true;
+    }
+  };
+  cursorComponentMod._onViewportResize = function _onViewportResize() {
+    if (!this._viewComponent)
+      return;
+    this._viewComponent.projectionMatrix.mat4_invert(this._projectionMatrix);
+  };
+  cursorComponentMod._setCursorRayTransform = function _setCursorRayTransform(hitPosition) {
+    if (!this.cursorRayObject)
+      return;
+    if (this.cursorRayScalingAxis != 4) {
+      this.cursorRayObject.pp_resetScaleLocal();
+      if (hitPosition != null) {
+        this.cursorRayObject.pp_getPosition(this._cursorRayOrigin);
+        let dist = this._cursorRayOrigin.vec3_distance(hitPosition);
+        this._cursorRayScale[this.cursorRayScalingAxis] = dist;
+        this.cursorRayObject.pp_scaleObject(this._cursorRayScale);
+      }
+    }
+  };
+  cursorComponentMod._setCursorVisibility = function _setCursorVisibility(visible) {
+    this.visible = visible;
+    if (!this.cursorObject)
+      return;
+    this.cursorObject.pp_setActive(visible);
+  };
+  cursorComponentMod._pp_hoverBehaviour = function _pp_hoverBehaviour(hitObject, hitLocation, hitTestResults, originalEvent = null, forceUnhover = false) {
+    if (!forceUnhover && hitObject != null) {
+      let hoveringObjectChanged = false;
+      if (this.hoveringObject == null || !this.hoveringObject.pp_equals(hitObject)) {
+        if (this.hoveringObject != null) {
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
+          }
+        }
+        hoveringObjectChanged = true;
+        this.hoveringObject = hitObject;
+        this.hoveringObjectTarget = this.hoveringObject.pp_getComponent(CursorTarget3);
+        if (!this.hoveringReality) {
+          if (this.hoveringObjectTarget)
+            this.hoveringObjectTarget.onHover.notify(this.hoveringObject, this, originalEvent);
+          this.globalTarget.onHover.notify(this.hoveringObject, this, originalEvent);
+        } else {
+          this.hitTestTarget.onHover.notify(hitTestResults, this, originalEvent);
+        }
+        this._pp_updateCursorStyle();
+        if (!this._pp_isDownToProcess() && this._isRealDown) {
+          this._isDown = true;
+          this._lastIsDown = true;
+          this._isDownForUpWithDown = false;
+          this._isUpWithNoDown = false;
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onDownOnHover.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onDownOnHover.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onDownOnHover.notify(hitTestResults, this, originalEvent);
+          }
+        }
+      }
+      if (this._updatePointerStyle) {
+        this._pp_updateCursorStyle();
+      }
+      if (!hoveringObjectChanged && this._pp_isMoving(hitLocation)) {
+        if (!this.hoveringReality) {
+          if (this.hoveringObjectTarget)
+            this.hoveringObjectTarget.onMove.notify(this.hoveringObject, this, originalEvent);
+          this.globalTarget.onMove.notify(this.hoveringObject, this, originalEvent);
+        } else {
+          this.hitTestTarget.onMove.notify(hitTestResults, this, originalEvent);
+        }
+      }
+      if (this._pp_isDownToProcess()) {
+        if (!this.hoveringReality) {
+          if (this.hoveringObjectTarget)
+            this.hoveringObjectTarget.onDown.notify(this.hoveringObject, this, originalEvent);
+          this.globalTarget.onDown.notify(this.hoveringObject, this, originalEvent);
+        } else {
+          this.hitTestTarget.onDown.notify(hitTestResults, this, originalEvent);
+        }
+        if (!this.hoveringReality) {
+          if (this.hoveringObjectTarget)
+            this.hoveringObjectTarget.onClick.notify(this.hoveringObject, this, originalEvent);
+          this.globalTarget.onClick.notify(this.hoveringObject, this, originalEvent);
+        } else {
+          this.hitTestTarget.onClick.notify(hitTestResults, this, originalEvent);
+        }
+        if (this._tripleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject.pp_equals(this.hoveringObject)) {
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onTripleClick.notify(hitTestResults, this, originalEvent);
+          }
+          this._tripleClickTimer = 0;
+        } else if (this._doubleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject.pp_equals(this.hoveringObject)) {
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onDoubleClick.notify(hitTestResults, this, originalEvent);
+          }
+          this._tripleClickTimer = this._multipleClickDelay;
+          this._doubleClickTimer = 0;
+        } else {
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onSingleClick.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onSingleClick.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onSingleClick.notify(hitTestResults, this, originalEvent);
+          }
+          this._tripleClickTimer = 0;
+          this._doubleClickTimer = this._multipleClickDelay;
+          this._multipleClickObject = this.hoveringObject;
+        }
+      } else {
+        if (!this._isUpWithNoDown && !hoveringObjectChanged && this._pp_isUpToProcess()) {
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onUp.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onUp.notify(this.hoveringObject, this, originalEvent);
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onUpWithDown.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onUpWithDown.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onUp.notify(hitTestResults, this, originalEvent);
+            this.hitTestTarget.onUpWithDown.notify(hitTestResults, this, originalEvent);
+          }
+        } else if (this._isUpWithNoDown || hoveringObjectChanged && this._pp_isUpToProcess()) {
+          if (!this.hoveringReality) {
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onUp.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onUp.notify(this.hoveringObject, this, originalEvent);
+            if (this.hoveringObjectTarget)
+              this.hoveringObjectTarget.onUpWithNoDown.notify(this.hoveringObject, this, originalEvent);
+            this.globalTarget.onUpWithNoDown.notify(this.hoveringObject, this, originalEvent);
+          } else {
+            this.hitTestTarget.onUp.notify(hitTestResults, this, originalEvent);
+            this.hitTestTarget.onUpWithNoDown.notify(hitTestResults, this, originalEvent);
+          }
+        }
+      }
+      this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
+    } else if (this.hoveringObject != null && (forceUnhover || hitObject == null)) {
+      if (!this.hoveringReality) {
+        if (this.hoveringObjectTarget)
+          this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
+        this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
+      } else {
+        this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
+      }
+      this.hoveringObject = null;
+      this.hoveringObjectTarget = null;
+      this._pp_updateCursorStyle();
+    }
+    if (this.hoveringObject != null) {
+      this._lastIsDown = this._isDown;
+    } else {
+      this._isDown = false;
+      this._lastIsDown = false;
+      this._isDownForUpWithDown = false;
+    }
+    this._isUpWithNoDown = false;
+  };
+  cursorComponentMod._pp_rayCast = function _pp_rayCast() {
+    let rayHit = this.rayCastMode == 0 ? Globals.getScene(this.engine).rayCast(this._origin, this._direction, this._collisionMask) : Globals.getPhysics(this.engine).rayCast(this._origin, this._direction, this._collisionMask, this.maxDistance);
+    let rayHitCollisionDistanceValid = true;
+    if (this.rayCastMode == 0 && rayHit.hitCount > 0 && rayHit.distances[0] > this.maxDistance) {
+      rayHitCollisionDistanceValid = false;
+    }
+    this._hitObjectData[0] = null;
+    this._hitObjectData[1] = null;
+    this._hitObjectData[2] = null;
+    let hitTestResultDistance = Infinity;
+    if (this._hitTestLocation != null && this._hitTestLocation.visible) {
+      this._hitTestObject.pp_getPositionWorld(this.cursorPos);
+      this._rayHitLocation.vec3_copy(this.cursorPos);
+      hitTestResultDistance = this.cursorPos.vec3_distance(this.object.pp_getPositionWorld(this._tempVec));
+      this._hitObjectData[0] = this._hitTestObject;
+      this._hitObjectData[1] = this._rayHitLocation;
+    }
+    this.hoveringReality = false;
+    if (rayHit.hitCount > 0 && rayHitCollisionDistanceValid) {
+      let rayHitDistance = rayHit.distances[0];
+      if (rayHitDistance <= hitTestResultDistance) {
+        this.cursorPos.vec3_copy(rayHit.locations[0]);
+        this._rayHitLocation.vec3_copy(this.cursorPos);
+        this._hitObjectData[0] = rayHit.objects[0];
+        this._hitObjectData[1] = this._rayHitLocation;
+      } else {
+        this.hoveringReality = true;
+      }
+    } else if (hitTestResultDistance == Infinity) {
+      this.cursorPos.vec3_zero();
+      this._hitObjectData[0] = null;
+      this._hitObjectData[1] = null;
+    }
+    let xrFrame = XRUtils.getFrame(this.engine);
+    if (this.hoveringReality && xrFrame != null) {
+      this._hitObjectData[2] = this._hitTestLocation.getHitTestResults(xrFrame)[0];
+    }
+    return this._hitObjectData;
+  };
+  cursorComponentMod._pp_updateMouseData = function _pp_updateMouseData(e, clientX, clientY, w, h, pointerID) {
+    this._lastClientX = clientX;
+    this._lastClientY = clientY;
+    this._lastWidth = w;
+    this._lastHeight = h;
+    this._lastPointerID = pointerID;
+    this._lastOriginalMouseEvent = e;
+  };
+  cursorComponentMod._pp_updateMousePos = function _pp_updateMousePos(clientX, clientY, w, h) {
+    let left = clientX / w;
+    let top = clientY / h;
+    this._direction.vec3_set(left * 2 - 1, -top * 2 + 1, -1);
+    this.updateDirection();
+  };
+  cursorComponentMod.pp_setViewComponent = function pp_setViewComponent(viewComponent) {
+    this._viewComponent = viewComponent;
+    if (this._viewComponent != null) {
+      this._viewComponent.projectionMatrix.mat4_invert(this._projectionMatrix);
+      if (!this._myViewEventListenersRegistered) {
+        this._myViewEventListenersRegistered = true;
+        let onClick = this.onClick.bind(this);
+        Globals.getCanvas(this.engine).addEventListener("click", onClick);
+        let onPointerDown = this.onPointerDown.bind(this);
+        Globals.getCanvas(this.engine).addEventListener("pointerdown", onPointerDown);
+        let onPointerMove = this.onPointerMove.bind(this);
+        Globals.getCanvas(this.engine).addEventListener("pointermove", onPointerMove);
+        let onPointerUp = this.onPointerUp.bind(this);
+        Globals.getCanvas(this.engine).addEventListener("pointerup", onPointerUp);
+        let onPointerLeave = this._pp_onPointerLeave.bind(this);
+        Globals.getCanvas(this.engine).addEventListener("pointerleave", onPointerLeave);
+        let onViewportResize = this._onViewportResize.bind(this);
+        this.engine.onResize.add(onViewportResize);
+        this._onDestroyCallbacks.push(() => {
+          Globals.getCanvas(this.engine).removeEventListener("click", onClick);
+          Globals.getCanvas(this.engine).removeEventListener("pointerdown", onPointerDown);
+          Globals.getCanvas(this.engine).removeEventListener("pointermove", onPointerMove);
+          Globals.getCanvas(this.engine).removeEventListener("pointerup", onPointerUp);
+          Globals.getCanvas(this.engine).removeEventListener("pointerleave", onPointerLeave);
+          this.engine.onResize.remove(onViewportResize);
+          this._myViewEventListenersRegistered = false;
+        });
+      }
+    }
+  };
+  cursorComponentMod._pp_onPointerLeave = function _pp_onPointerLeave(e) {
+    if (this._pointerID == null || this._pointerID == e.pointerId) {
+      this._pointerLeaveToProcess = true;
+      this._pointerLeaveMouseEvent = e;
+    }
+  };
+  cursorComponentMod._pp_processPointerLeave = function _pp_processPointerLeave() {
+    if (this._pointerLeaveToProcess) {
+      this._pointerID = null;
+      this._lastPointerID = null;
+      this._lastClientX = null;
+      this._lastClientY = null;
+      this._lastWidth = null;
+      this._lastHeight = null;
+      this._lastOriginalMouseEvent = this._pointerLeaveMouseEvent;
+      this._pointerLeaveToProcess = false;
+      this._pointerLeaveMouseEvent = null;
+      if (this.hoveringObject != null) {
+        this._pp_hoverBehaviour(null, null, null, this._lastOriginalMouseEvent, true);
+      }
+      this._isDown = false;
+      this._lastIsDown = false;
+      this._isRealDown = false;
+      this._isDownForUpWithDown = false;
+      this._isUpWithNoDown = false;
+    }
+  };
+  cursorComponentMod._pp_isDownToProcess = function _pp_isDownToProcess() {
+    return this._isDown != this._lastIsDown && this._isDown;
+  };
+  cursorComponentMod._pp_isUpToProcess = function _pp_isUpToProcess() {
+    return this._isDown != this._lastIsDown && !this._isDown;
+  };
+  cursorComponentMod._pp_isMoving = function() {
+    let hitLocationLocalToTarget = vec3_create();
+    return function _pp_isMoving(hitLocation) {
+      let moving = false;
+      hitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, hitLocationLocalToTarget);
+      if (!hitLocationLocalToTarget.vec_equals(this._prevHitLocationLocalToTarget, 1e-4)) {
+        moving = true;
+      }
+      return moving;
+    };
+  }();
+  cursorComponentMod._pp_isAR = function _pp_isAR() {
+    let firstInputSource = XRUtils.getSession(this.engine).inputSources[0];
+    return this.input != null && firstInputSource.handedness == "none" && firstInputSource.gamepad != null;
+  };
+  cursorComponentMod._pp_updateCursorStyle = function _pp_updateCursorStyle() {
+    if (this.styleCursor) {
+      if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isSurface) {
+        document.body.style.cursor = "pointer";
+      } else if (document.body.style.cursor == "pointer") {
+        document.body.style.cursor = "default";
+      }
+    }
+  };
+  PluginUtils.injectProperties(cursorComponentMod, Cursor3.prototype, false, true, true);
+}
+
+// dist/plugin/wl/mods/components/cursor_target_component_mod.js
+import { Emitter as Emitter7 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget4 } from "@wonderlandengine/components";
+function initCursorTargetComponentMod() {
+  _initCursorTargetComponentModPrototype();
+}
+function _initCursorTargetComponentModPrototype() {
+  const cursorTargetComponentMod = {};
+  cursorTargetComponentMod.init = function init() {
+    this.onSingleClick = new Emitter7();
+    this.onDoubleClick = new Emitter7();
+    this.onTripleClick = new Emitter7();
+    this.onDownOnHover = new Emitter7();
+    this.onUpWithDown = new Emitter7();
+    this.onUpWithNoDown = new Emitter7();
+    this.isSurface = false;
+  };
+  cursorTargetComponentMod.start = function start() {
+  };
+  cursorTargetComponentMod.update = function update(dt) {
+  };
+  cursorTargetComponentMod.onActivate = function onActivate() {
+  };
+  cursorTargetComponentMod.onDeactivate = function onDeactivate() {
+  };
+  cursorTargetComponentMod.onDestroy = function onDestroy() {
+  };
+  PluginUtils.injectProperties(cursorTargetComponentMod, CursorTarget4.prototype, false, true, true);
+}
+
+// dist/plugin/wl/mods/components/mouse_look_component_mod.js
+import { MouseLookComponent as MouseLookComponent3 } from "@wonderlandengine/components";
+function initMouseLookComponentMod() {
+  _initMouseLookComponentModPrototype();
+}
+function _initMouseLookComponentModPrototype() {
+  let mouseLookComponentMod = {};
+  mouseLookComponentMod.init = function init() {
+    this.pointerId = null;
+    this.prevMoveEvent = null;
+    this.resetMovingDelay = 0.15;
+    this.resetMovingTimer = new Timer(this.resetMovingDelay, false);
+    this.isMoving = false;
+    this.mouseDown = false;
+    this.pointerMoveListener = this._onMove.bind(this);
+    this.contextMenuListener = function(event) {
+      if (this.active) {
+        event.preventDefault();
+      }
+    }.bind(this);
+    this.pointerDown = function(event) {
+      if (this.active) {
+        if (this.pointerId != null)
+          return;
+        if (!this.mouseDown) {
+          if (event.button == this.mouseButtonIndex) {
+            this.pointerId = event.pointerId;
+            this.mouseDown = true;
+            if (event.button == 1) {
+              event.preventDefault();
+              return false;
+            }
+          }
+        }
+      }
+    }.bind(this);
+    this.pointerUp = function(event) {
+      if (this.active) {
+        if (event.pointerId != this.pointerId)
+          return;
+        if (this.mouseDown) {
+          if (event.button == this.mouseButtonIndex) {
+            this.mouseDown = false;
+          }
+        }
+      }
+    }.bind(this);
+    this.pointerLeave = function(event) {
+      if (this.active) {
+        if (event.pointerId != this.pointerId)
+          return;
+        this.pointerId = null;
+        this.prevMoveEvent = null;
+        if (this.mouseDown) {
+          this.mouseDown = false;
+        }
+      }
+    }.bind(this);
+    document.body.addEventListener("pointermove", this.pointerMoveListener);
+    if (this.requireMouseDown) {
+      if (this.mouseButtonIndex == 2) {
+        Globals.getCanvas(this.engine).addEventListener("contextmenu", this.contextMenuListener, false);
+      }
+      Globals.getCanvas(this.engine).addEventListener("pointerdown", this.pointerDown);
+      document.body.addEventListener("pointerup", this.pointerUp);
+    }
+    document.body.addEventListener("pointerleave", this.pointerLeave);
+  };
+  mouseLookComponentMod.start = function start() {
+  };
+  mouseLookComponentMod.onActivate = function onActivate() {
+  };
+  mouseLookComponentMod.onDeactivate = function onDeactivate() {
+    if (this.mouseDown) {
+    }
+    this.isMoving = false;
+    this.mouseDown = false;
+    this.pointerId = null;
+    this.prevMoveEvent = null;
+  };
+  mouseLookComponentMod.onDestroy = function onDestroy() {
+    document.body.removeEventListener("pointermove", this.pointerMoveListener);
+    Globals.getCanvas(this.engine).removeEventListener("contextmenu", this.contextMenuListener);
+    Globals.getCanvas(this.engine).removeEventListener("pointerdown", this.pointerDown);
+    document.body.removeEventListener("pointerup", this.pointerUp);
+    document.body.removeEventListener("pointerleave", this.pointerLeave);
+  };
+  mouseLookComponentMod.update = function update(dt) {
+    if (this.resetMovingTimer.isRunning()) {
+      this.resetMovingTimer.update(dt);
+      if (this.resetMovingTimer.isDone()) {
+        this.resetMovingTimer.reset();
+        this.isMoving = false;
+      }
+    }
+    if (!this.isMoving) {
+      if (!this.requireMouseDown || !this.mouseDown) {
+        this.pointerId = null;
+      }
+      this.prevMoveEvent = null;
+    }
+  };
+  mouseLookComponentMod._onMove = function() {
+    let viewForward = vec3_create();
+    let viewUp = vec3_create();
+    let referenceUp = vec3_create();
+    let referenceUpNegate = vec3_create();
+    let referenceRight = vec3_create();
+    let newUp = vec3_create();
+    return function _onMove(event) {
+      if (this.active) {
+        if (this.pointerId != null && event.pointerId != this.pointerId)
+          return;
+        if (this.mouseDown || !this.requireMouseDown) {
+          viewForward = this.object.pp_getBackward(viewForward);
+          viewUp = this.object.pp_getUp(viewUp);
+          referenceUp.vec3_set(0, 1, 0);
+          if (this.object.pp_getParent() != null) {
+            referenceUp = this.object.pp_getParent().pp_getUp(referenceUp);
+          }
+          referenceRight = viewForward.vec3_cross(referenceUp, referenceRight);
+          let minAngle = 1;
+          if (viewForward.vec3_angle(referenceUp) < minAngle) {
+            referenceRight = viewUp.vec3_negate(referenceRight).vec3_cross(referenceUp, referenceRight);
+          } else if (viewForward.vec3_angle(referenceUp.vec3_negate(referenceUpNegate)) < minAngle) {
+            referenceRight = viewUp.vec3_cross(referenceUp, referenceRight);
+          } else if (!viewUp.vec3_isConcordant(referenceUp)) {
+            referenceRight.vec3_negate(referenceRight);
+          }
+          referenceRight.vec3_normalize(referenceRight);
+          let movementX = event.movementX;
+          let movementY = event.movementY;
+          if (movementX == null || movementY == null) {
+            if (this.prevMoveEvent != null) {
+              movementX = event.pageX - this.prevMoveEvent.pageX;
+              movementY = event.pageY - this.prevMoveEvent.pageY;
+            } else {
+              movementX = 0;
+              movementY = 0;
+            }
+          }
+          this.rotationX = -this.sensitity * movementX;
+          this.rotationY = -this.sensitity * movementY;
+          this.object.pp_rotateAxis(this.rotationY, referenceRight);
+          let maxVerticalAngle = 89 - 1e-3;
+          newUp = this.object.pp_getUp(newUp);
+          let angleWithUp = Math.pp_angleClamp(newUp.vec3_angleSigned(referenceUp, referenceRight));
+          if (Math.abs(angleWithUp) > maxVerticalAngle) {
+            let fixAngle = (Math.abs(angleWithUp) - maxVerticalAngle) * Math.pp_sign(angleWithUp);
+            this.object.pp_rotateAxis(fixAngle, referenceRight);
+          }
+          this.object.pp_rotateAxis(this.rotationX, referenceUp);
+          this.prevMoveEvent = event;
+          this.pointerId = event.pointerId;
+          this.resetMovingTimer.start(this.resetMovingDelay);
+          this.isMoving = true;
+        }
+      }
+    };
+  }();
+  PluginUtils.injectProperties(mouseLookComponentMod, MouseLookComponent3.prototype, false, true, true);
+}
+
+// dist/plugin/wl/mods/components/init_component_mods.js
+function initComponentMods() {
+  initCursorComponentMod();
+  initCursorTargetComponentMod();
+  initMouseLookComponentMod();
+  initCauldronMods();
+}
+
+// dist/plugin/wl/mods/init_wl_mods.js
+function initWLMods() {
+  initComponentMods();
+}
+
+// dist/plugin/wl/init_wl_plugins.js
+function initWLPlugins() {
+  initWLExtensions();
+  initWLMods();
+}
+
+// dist/plugin/init_plugins.js
+function initPlugins() {
+  initJSPlugins();
+  initWLPlugins();
+}
+
+// dist/pp/init_pp.js
+function initPP(engine) {
+  Globals.setMainEngine(engine);
+  ComponentUtils.setDefaultWLComponentCloneCallbacks(engine);
+  registerWLComponents(engine);
+  registerPPComponents(engine);
+  initPlugins();
+}
+
 // dist/pp/components/add_pp_to_window_component.js
-import { Component as Component14, Property as Property10 } from "@wonderlandengine/api";
-var AddPPToWindowComponent = class extends Component14 {
+import { Component as Component16, Property as Property12 } from "@wonderlandengine/api";
+var AddPPToWindowComponent = class extends Component16 {
   static TypeName = "pp-add-pp-to-window";
   static Properties = {
-    _myAdd: Property10.bool(true)
+    _myAdd: Property12.bool(true)
   };
   init() {
     if (this._myAdd) {
-      Globals.getWindow(this.engine).PP = {};
+      window.PP = {};
       this._addProperties(dist_exports);
     }
   }
@@ -22133,132 +22301,12 @@ var AddPPToWindowComponent = class extends Component14 {
     let propertyNames = Object.getOwnPropertyNames(object);
     for (let propertyName of propertyNames) {
       if (object[propertyName] != void 0) {
-        Globals.getWindow(this.engine).PP[propertyName] = object[propertyName];
+        window.PP[propertyName] = object[propertyName];
       }
     }
   }
   onDestroy() {
-    Globals.getWindow(this.engine).PP = void 0;
-  }
-};
-
-// dist/pp/components/get_default_resources_component.js
-import { Component as Component15, Property as Property11 } from "@wonderlandengine/api";
-var GetDefaultResourcesComponent = class extends Component15 {
-  static TypeName = "pp-get-default-resources";
-  static Properties = {
-    _myPlane: Property11.mesh(),
-    _myCube: Property11.mesh(),
-    _mySphere: Property11.mesh(),
-    _myCone: Property11.mesh(),
-    _myCylinder: Property11.mesh(),
-    _myCircle: Property11.mesh(),
-    _myFlatOpaque: Property11.material(),
-    _myFlatTransparentNoDepth: Property11.material(),
-    _myPhongOpaque: Property11.material(),
-    _myText: Property11.material()
-  };
-  init() {
-    this._myDefaultResources = null;
-    if (!Globals.hasDefaultResources(this.engine)) {
-      this._myDefaultResources = new DefaultResources();
-      this._myDefaultResources.myMeshes.myPlane = MeshUtils.clone(this._myPlane);
-      this._myDefaultResources.myMeshes.myCube = MeshUtils.clone(this._myCube);
-      this._myDefaultResources.myMeshes.mySphere = MeshUtils.clone(this._mySphere);
-      this._myDefaultResources.myMeshes.myCone = MeshUtils.clone(this._myCone);
-      this._myDefaultResources.myMeshes.myCylinder = MeshUtils.clone(this._myCylinder);
-      this._myDefaultResources.myMeshes.myCircle = MeshUtils.clone(this._myCircle);
-      this._myDefaultResources.myMeshes.myInvertedCube = MeshUtils.invert(this._myCube);
-      this._myDefaultResources.myMeshes.myInvertedSphere = MeshUtils.invert(this._mySphere);
-      this._myDefaultResources.myMeshes.myInvertedCone = MeshUtils.invert(this._myCone);
-      this._myDefaultResources.myMeshes.myInvertedCylinder = MeshUtils.invert(this._myCylinder);
-      this._myDefaultResources.myMeshes.myDoubleSidedPlane = MeshUtils.makeDoubleSided(this._myPlane);
-      this._myDefaultResources.myMeshes.myDoubleSidedCube = MeshUtils.makeDoubleSided(this._myCube);
-      this._myDefaultResources.myMeshes.myDoubleSidedSphere = MeshUtils.makeDoubleSided(this._mySphere);
-      this._myDefaultResources.myMeshes.myDoubleSidedCone = MeshUtils.makeDoubleSided(this._myCone);
-      this._myDefaultResources.myMeshes.myDoubleSidedCylinder = MeshUtils.makeDoubleSided(this._myCylinder);
-      this._myDefaultResources.myMeshes.myDoubleSidedCircle = MeshUtils.makeDoubleSided(this._myCircle);
-      if (this._myFlatOpaque != null) {
-        this._myDefaultResources.myMaterials.myFlatOpaque = this._myFlatOpaque.clone();
-      }
-      if (this._myFlatTransparentNoDepth != null) {
-        this._myDefaultResources.myMaterials.myFlatTransparentNoDepth = this._myFlatTransparentNoDepth.clone();
-      }
-      if (this._myPhongOpaque != null) {
-        this._myDefaultResources.myMaterials.myPhongOpaque = this._myPhongOpaque.clone();
-      }
-      if (this._myText != null) {
-        this._myDefaultResources.myMaterials.myText = this._myText.clone();
-      }
-      Globals.setDefaultResources(this._myDefaultResources, this.engine);
-    }
-  }
-  onDestroy() {
-    if (this._myDefaultResources != null && Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
-      Globals.removeDefaultResources(this.engine);
-    }
-  }
-};
-
-// dist/pp/components/get_scene_objects_component.js
-import { Component as Component16, Property as Property12 } from "@wonderlandengine/api";
-var GetSceneObjectsComponent = class extends Component16 {
-  static TypeName = "pp-get-scene-objects";
-  static Properties = {
-    _myScene: Property12.object(),
-    _myPlayer: Property12.object(),
-    _myReferenceSpace: Property12.object(),
-    // If u don't have a pivot under the player you set this to null, by default will be the same as the player
-    _myCameraNonXR: Property12.object(),
-    _myEyeLeft: Property12.object(),
-    _myEyeRight: Property12.object(),
-    _myHandLeft: Property12.object(),
-    _myHandRight: Property12.object(),
-    _myHead: Property12.object()
-  };
-  init() {
-    this._mySceneObjects = null;
-    if (!Globals.hasSceneObjects(this.engine)) {
-      this._mySceneObjects = new SceneObjects();
-      this._mySceneObjects.myScene = this._myScene;
-      this._mySceneObjects.myPlayerObjects.myPlayer = this._myPlayer;
-      this._mySceneObjects.myPlayerObjects.myReferenceSpace = this._myReferenceSpace;
-      this._mySceneObjects.myPlayerObjects.myCameraNonXR = this._myCameraNonXR;
-      this._mySceneObjects.myPlayerObjects.myEyeLeft = this._myEyeLeft;
-      this._mySceneObjects.myPlayerObjects.myEyeRight = this._myEyeRight;
-      this._mySceneObjects.myPlayerObjects.myHandLeft = this._myHandLeft;
-      this._mySceneObjects.myPlayerObjects.myHandRight = this._myHandRight;
-      this._mySceneObjects.myPlayerObjects.myEyes = [];
-      this._mySceneObjects.myPlayerObjects.myEyes[Handedness.LEFT] = this._myEyeLeft;
-      this._mySceneObjects.myPlayerObjects.myEyes[Handedness.RIGHT] = this._myEyeRight;
-      this._mySceneObjects.myPlayerObjects.myHands = [];
-      this._mySceneObjects.myPlayerObjects.myHands[Handedness.LEFT] = this._myHandLeft;
-      this._mySceneObjects.myPlayerObjects.myHands[Handedness.RIGHT] = this._myHandRight;
-      this._mySceneObjects.myPlayerObjects.myHead = this._myHead;
-      if (this._mySceneObjects.myPlayerObjects.myReferenceSpace == null) {
-        this._mySceneObjects.myPlayerObjects.myReferenceSpace = this._mySceneObjects.myPlayerObjects.myPlayer;
-      }
-      this._mySceneObjects.myCauldron = this._mySceneObjects.myScene.pp_addObject();
-      this._mySceneObjects.myCauldron.pp_setName("Cauldron");
-      this._mySceneObjects.myDynamics = this._mySceneObjects.myScene.pp_addObject();
-      this._mySceneObjects.myDynamics.pp_setName("Dynamics");
-      this._mySceneObjects.myParticles = this._mySceneObjects.myScene.pp_addObject();
-      this._mySceneObjects.myParticles.pp_setName("Particles");
-      this._mySceneObjects.myVisualElements = this._mySceneObjects.myScene.pp_addObject();
-      this._mySceneObjects.myVisualElements.pp_setName("Visual Elements");
-      this._mySceneObjects.myTools = this._mySceneObjects.myScene.pp_addObject();
-      this._mySceneObjects.myTools.pp_setName("Tools");
-      this._mySceneObjects.myPlayerObjects.myCauldron = this._mySceneObjects.myPlayerObjects.myPlayer.pp_addObject();
-      this._mySceneObjects.myPlayerObjects.myCauldron.pp_setName("Cauldron");
-      this._mySceneObjects.myPlayerObjects.myHeadDebugs = this._mySceneObjects.myPlayerObjects.myHead.pp_addObject();
-      this._mySceneObjects.myPlayerObjects.myHeadDebugs.pp_setName("Head Debugs");
-      Globals.setSceneObjects(this._mySceneObjects, this.engine);
-    }
-  }
-  onDestroy() {
-    if (this._mySceneObjects != null && Globals.getSceneObjects(this.engine) == this._mySceneObjects) {
-      Globals.removeSceneObjects(this.engine);
-    }
+    window.PP = void 0;
   }
 };
 
@@ -22282,6 +22330,26 @@ var PPGatewayComponent = class extends Component17 {
     ...GetSceneObjectsComponent.Properties,
     ...GetDefaultResourcesComponent.Properties
   };
+  _myEnableDebug;
+  _myEnableTool;
+  _myAddPPToWindow;
+  _myAddWLToWindow;
+  _myGetDefaultResourcesComponent;
+  _myGetSceneObjectsComponent;
+  _myEnableDebugComponent;
+  _myEnableToolComponent;
+  _myAddPPToWindowComponent;
+  _myAddWLToWindowComponent;
+  _myInitConsoleVRComponent;
+  _myInitEasyTuneVariablesComponent;
+  _myObjectPoolManagerComponent;
+  _myInputManagerComponent;
+  _myAudioManagerComponent;
+  _myVisualManagerComponent;
+  _myCharacterCollisionSystemComponent;
+  _mySaveManagerComponent;
+  _myAnalyticsManagerComponent;
+  _myDebugManagerComponent;
   static onRegister(engine) {
     if (!_myRegisteredEngines.has(engine)) {
       _myRegisteredEngines.set(engine, null);
@@ -22291,19 +22359,15 @@ var PPGatewayComponent = class extends Component17 {
   init() {
     this._myGetDefaultResourcesComponent = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties), false);
     this._myGetSceneObjectsComponent = this.object.pp_addComponent(GetSceneObjectsComponent, this._getProperties(GetSceneObjectsComponent.Properties), false);
-    this._myEnableDebugComponent = null;
     if (this._myEnableDebug) {
       this._myEnableDebugComponent = this.object.pp_addComponent(EnableDebugComponent, false);
     }
-    this._myEnableToolComponent = null;
     if (this._myEnableTool) {
       this._myEnableToolComponent = this.object.pp_addComponent(EnableToolComponent, false);
     }
-    this._myAddPPToWindowComponent = null;
     if (this._myAddPPToWindow) {
       this._myAddPPToWindowComponent = this.object.pp_addComponent(AddPPToWindowComponent, false);
     }
-    this._myAddWLToWindowComponent = null;
     if (this._myAddWLToWindow) {
       this._myAddWLToWindowComponent = this.object.pp_addComponent(AddWLToWindowComponent, false);
     }
@@ -22345,11 +22409,14 @@ var PPGatewayComponent = class extends Component17 {
     this._myDebugManagerComponent.active = true;
   }
   _getProperties(propertiesToGet) {
-    let properties = {};
-    let propertyNames = Object.getOwnPropertyNames(propertiesToGet);
-    for (let propertyName of propertyNames) {
-      if (this[propertyName] != void 0) {
-        properties[propertyName] = this[propertyName];
+    const properties = {};
+    if (propertiesToGet != null) {
+      const propertyNames = Object.getOwnPropertyNames(propertiesToGet);
+      for (const propertyName of propertyNames) {
+        const _this = this;
+        if (_this[propertyName] != void 0) {
+          properties[propertyName] = _this[propertyName];
+        }
       }
     }
     return properties;
@@ -23290,12 +23357,51 @@ var BenchmarkMaxVisibleTrianglesComponent = class extends Component21 {
   }
 };
 
-// dist/cauldron/components/clear_console_on_xr_session_start_component.js
-import { Component as Component22, Property as Property16 } from "@wonderlandengine/api";
-var ClearConsoleOnXRSessionStartComponent = class extends Component22 {
+// dist/cauldron/cauldron/components/adjust_hierarchy_physx_scale_component.js
+import { Component as Component22, PhysXComponent as PhysXComponent4, Property as Property16 } from "@wonderlandengine/api";
+var AdjustHierarchyPhysXScaleComponent = class extends Component22 {
+  static TypeName = "pp-adjust-hierarchy-physx-scale";
+  static Properties = {
+    _myWhen: Property16.enum(["Init", "Start", "First Update"], "Start")
+  };
+  init() {
+    if (this.active && this._myWhen == 0) {
+      this._adjustScale();
+    }
+  }
+  start() {
+    if (this._myWhen == 1) {
+      this._adjustScale();
+    }
+    this._myFirst = true;
+  }
+  update(dt) {
+    if (this._myWhen == 2 && this._myFirst) {
+      this._myFirst = false;
+      this._adjustScale();
+    }
+  }
+  _adjustScale() {
+    let scale4 = this.object.pp_getScale();
+    let physXComponents = this.object.pp_getComponents(PhysXComponent4);
+    for (let physX of physXComponents) {
+      physX.extents[0] = physX.extents[0] * scale4[0];
+      physX.extents[1] = physX.extents[1] * scale4[1];
+      physX.extents[2] = physX.extents[2] * scale4[2];
+      if (physX.active) {
+        physX.active = false;
+        physX.active = true;
+      }
+    }
+  }
+};
+
+// dist/cauldron/cauldron/components/clear_console_on_xr_session_start_component.js
+import { Component as Component23, Property as Property17 } from "@wonderlandengine/api";
+var ClearConsoleOnXRSessionStartComponent = class extends Component23 {
   static TypeName = "pp-clear-console-on-xr-session-start";
   static Properties = {
-    _myFirstTimeOnly: Property16.bool(true)
+    _myFirstTimeOnly: Property17.bool(true)
   };
   start() {
     this._myFirstTime = true;
@@ -23312,14 +23418,14 @@ var ClearConsoleOnXRSessionStartComponent = class extends Component22 {
   }
 };
 
-// dist/cauldron/components/set_active_component.js
-import { Component as Component23, Property as Property17 } from "@wonderlandengine/api";
-var SetActiveComponent = class extends Component23 {
+// dist/cauldron/cauldron/components/set_active_component.js
+import { Component as Component24, Property as Property18 } from "@wonderlandengine/api";
+var SetActiveComponent = class extends Component24 {
   static TypeName = "pp-set-active";
   static Properties = {
-    _myActive: Property17.bool(true),
-    _mySetActiveOn: Property17.enum(["Self", "Children", "Descendants", "Hierarchy"], "Hierarchy"),
-    _mySetActiveWhen: Property17.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
+    _myActive: Property18.bool(true),
+    _mySetActiveOn: Property18.enum(["Self", "Children", "Descendants", "Hierarchy"], "Hierarchy"),
+    _mySetActiveWhen: Property18.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
   };
   init() {
     if (this.active && this._mySetActiveWhen == 0) {
@@ -23374,46 +23480,7 @@ var SetActiveComponent = class extends Component23 {
   }
 };
 
-// dist/cauldron/components/adjust_hierarchy_physx_scale_component.js
-import { Component as Component24, PhysXComponent as PhysXComponent4, Property as Property18 } from "@wonderlandengine/api";
-var AdjustHierarchyPhysXScaleComponent = class extends Component24 {
-  static TypeName = "pp-adjust-hierarchy-physx-scale";
-  static Properties = {
-    _myWhen: Property18.enum(["Init", "Start", "First Update"], "Start")
-  };
-  init() {
-    if (this.active && this._myWhen == 0) {
-      this._adjustScale();
-    }
-  }
-  start() {
-    if (this._myWhen == 1) {
-      this._adjustScale();
-    }
-    this._myFirst = true;
-  }
-  update(dt) {
-    if (this._myWhen == 2 && this._myFirst) {
-      this._myFirst = false;
-      this._adjustScale();
-    }
-  }
-  _adjustScale() {
-    let scale4 = this.object.pp_getScale();
-    let physXComponents = this.object.pp_getComponents(PhysXComponent4);
-    for (let physX of physXComponents) {
-      physX.extents[0] = physX.extents[0] * scale4[0];
-      physX.extents[1] = physX.extents[1] * scale4[1];
-      physX.extents[2] = physX.extents[2] * scale4[2];
-      if (physX.active) {
-        physX.active = false;
-        physX.active = true;
-      }
-    }
-  }
-};
-
-// dist/cauldron/components/show_fps_component.js
+// dist/cauldron/cauldron/components/show_fps_component.js
 import { Alignment as Alignment4, Component as Component25, Justification as Justification4, Property as Property19 } from "@wonderlandengine/api";
 var ShowFPSComponent = class extends Component25 {
   static TypeName = "pp-show-fps";
@@ -23451,6 +23518,169 @@ var ShowFPSComponent = class extends Component25 {
     }
   }
 };
+
+// dist/cauldron/cauldron/components/show_xr_buttons_component.js
+import { Component as Component26 } from "@wonderlandengine/api";
+import { property } from "@wonderlandengine/api/decorators.js";
+var __decorate = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var _ButtonBehaviorWhenNotAvailable;
+(function(_ButtonBehaviorWhenNotAvailable2) {
+  _ButtonBehaviorWhenNotAvailable2["NONE"] = "none";
+  _ButtonBehaviorWhenNotAvailable2["DISABLE"] = "disable";
+  _ButtonBehaviorWhenNotAvailable2["HIDE"] = "hide";
+})(_ButtonBehaviorWhenNotAvailable || (_ButtonBehaviorWhenNotAvailable = {}));
+var ShowXRButtonsComponent = class extends Component26 {
+  static TypeName = "pp-show-xr-buttons";
+  _myShowVRButton;
+  _myVRButtonBehaviorWhenNotAvailable;
+  _myShowARButton;
+  _myARButtonBehaviorWhenNotAvailable;
+  _myXRButtonsContainer = null;
+  _myVRButton = null;
+  _myARButton = null;
+  _myFirstUpdate = false;
+  _myVRButtonVisibilityUpdated = false;
+  _myVRButtonUsabilityUpdated = false;
+  _myVRButtonDisabledOpacityUpdated = false;
+  _myARButtonVisibilityUpdated = false;
+  _myARButtonUsabilityUpdated = false;
+  _myARButtonDisabledOpacityUpdated = false;
+  init() {
+    this._myXRButtonsContainer = document.getElementById("xr-buttons-container");
+    this._myVRButton = document.getElementById("vr-button");
+    this._myARButton = document.getElementById("ar-button");
+  }
+  start() {
+    XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true);
+  }
+  update(dt) {
+    if (!this._myFirstUpdate) {
+      this._myFirstUpdate = true;
+      if (this._myXRButtonsContainer != null) {
+        if (this._myShowVRButton || this._myShowARButton) {
+          this._myXRButtonsContainer.style.setProperty("display", "flex");
+        } else {
+          this._myXRButtonsContainer.style.setProperty("display", "none");
+        }
+      }
+      if (this._myVRButton != null) {
+        if (this._myShowVRButton) {
+          this._myVRButton.style.setProperty("display", "block");
+        } else {
+          this._myVRButton.style.setProperty("display", "none");
+        }
+      }
+      if (this._myARButton != null) {
+        if (this._myShowARButton) {
+          this._myARButton.style.setProperty("display", "block");
+        } else {
+          this._myARButton.style.setProperty("display", "none");
+        }
+      }
+    } else {
+      this._updateXRButtons(dt);
+    }
+  }
+  _updateXRButtons(dt) {
+    if (this._myShowVRButton) {
+      if (!this._myVRButtonUsabilityUpdated) {
+        if (this._myVRButton != null) {
+          if (!this._myVRButtonVisibilityUpdated) {
+            this._myVRButton.style.setProperty("transform", "scale(1)");
+            this._myVRButtonVisibilityUpdated = true;
+          }
+          if (!this._myVRButtonUsabilityUpdated) {
+            if (XRUtils.isVRSupported()) {
+              this._myVRButton.style.setProperty("opacity", "1");
+              this._myVRButton.style.setProperty("pointer-events", "all");
+              this._myVRButtonUsabilityUpdated = true;
+            } else if (!this._myVRButtonDisabledOpacityUpdated) {
+              switch (this._myVRButtonBehaviorWhenNotAvailable) {
+                case 0:
+                  this._myVRButton.style.setProperty("opacity", "1");
+                  this._myVRButton.style.setProperty("pointer-events", "all");
+                  break;
+                case 1:
+                  this._myVRButton.style.setProperty("opacity", "0.5");
+                  break;
+                case 2:
+                  this._myVRButton.style.setProperty("display", "none");
+                  break;
+              }
+              this._myVRButtonDisabledOpacityUpdated = true;
+            }
+          }
+        } else {
+          this._myVRButtonUsabilityUpdated = true;
+        }
+      }
+    }
+    if (this._myShowARButton) {
+      if (!this._myARButtonUsabilityUpdated) {
+        if (this._myARButton != null) {
+          if (!this._myARButtonVisibilityUpdated) {
+            this._myARButton.style.setProperty("transform", "scale(1)");
+            this._myARButtonVisibilityUpdated = true;
+          }
+          if (!this._myARButtonUsabilityUpdated) {
+            if (XRUtils.isARSupported()) {
+              this._myARButton.style.setProperty("opacity", "1");
+              this._myARButton.style.setProperty("pointer-events", "all");
+              this._myARButtonUsabilityUpdated = true;
+            } else if (!this._myARButtonDisabledOpacityUpdated) {
+              switch (this._myARButtonBehaviorWhenNotAvailable) {
+                case 0:
+                  this._myARButton.style.setProperty("opacity", "1");
+                  this._myARButton.style.setProperty("pointer-events", "all");
+                  break;
+                case 1:
+                  this._myARButton.style.setProperty("opacity", "0.5");
+                  break;
+                case 2:
+                  this._myARButton.style.setProperty("display", "none");
+                  break;
+              }
+              this._myARButtonDisabledOpacityUpdated = true;
+            }
+          }
+        } else {
+          this._myARButtonUsabilityUpdated = true;
+        }
+      }
+    }
+  }
+  _onXRSessionStart() {
+    if (this._myXRButtonsContainer != null) {
+      this._myXRButtonsContainer.style.setProperty("display", "none");
+    }
+  }
+  _onXRSessionEnd() {
+    if (this._myXRButtonsContainer != null && (this._myShowVRButton || this._myShowARButton)) {
+      this._myXRButtonsContainer.style.removeProperty("display");
+    }
+  }
+};
+__decorate([
+  property.bool(true)
+], ShowXRButtonsComponent.prototype, "_myShowVRButton", void 0);
+__decorate([
+  property.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
+], ShowXRButtonsComponent.prototype, "_myVRButtonBehaviorWhenNotAvailable", void 0);
+__decorate([
+  property.bool(true)
+], ShowXRButtonsComponent.prototype, "_myShowARButton", void 0);
+__decorate([
+  property.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
+], ShowXRButtonsComponent.prototype, "_myARButtonBehaviorWhenNotAvailable", void 0);
 
 // dist/cauldron/fsm/fsm.js
 import { Emitter as Emitter9 } from "@wonderlandengine/api";
@@ -23512,7 +23742,7 @@ var FSM = class _FSM {
       } else {
         stateObject.update = null;
       }
-      stateObject.clone = function clone10() {
+      stateObject.clone = function clone12() {
         let cloneObject = {};
         cloneObject.update = this.update;
         cloneObject.clone = this.clone;
@@ -23536,7 +23766,7 @@ var FSM = class _FSM {
       } else {
         transitionObject.perform = null;
       }
-      transitionObject.clone = function clone10() {
+      transitionObject.clone = function clone12() {
         let cloneObject = {};
         cloneObject.perform = this.perform;
         cloneObject.clone = this.clone;
@@ -24047,7 +24277,7 @@ function rgbToHSV(rgb) {
   let r = rgb[0];
   let g = rgb[1];
   let b = rgb[2];
-  let max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, h, s = max === 0 ? 0 : d / max, v = max;
+  let max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, h, s = max == 0 ? 0 : d / max, v = max;
   switch (max) {
     case min:
       h = 0;
@@ -24143,93 +24373,6 @@ var ColorUtils = {
   hsvHumanToCode,
   color255To1,
   color1To255
-};
-
-// dist/cauldron/utils/material_utils.js
-import { MeshComponent as MeshComponent8 } from "@wonderlandengine/api";
-var setAlpha = function() {
-  let color = vec4_create();
-  return function setAlpha2(material, alpha) {
-    if (material.color != null) {
-      color.vec4_copy(material.color);
-      color[3] = alpha;
-      material.color = color;
-    }
-    if (material.diffuseColor != null) {
-      color.vec4_copy(material.diffuseColor);
-      color[3] = alpha;
-      material.diffuseColor = color;
-    }
-    if (material.ambientColor != null) {
-      color.vec4_copy(material.ambientColor);
-      color[3] = alpha;
-      material.ambientColor = color;
-    }
-  };
-}();
-function setObjectAlpha(object, alpha) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (meshComponent.material != null) {
-      MaterialUtils.setAlpha(meshComponent.material, alpha);
-    }
-  }
-}
-function setObjectMaterial(object, material, cloneMaterial = false) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (cloneMaterial) {
-      meshComponent.material = material.clone();
-    } else {
-      meshComponent.material = material;
-    }
-  }
-}
-function setObjectClonedMaterials(object) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (meshComponent.material != null) {
-      meshComponent.material = meshComponent.material.clone();
-    }
-  }
-}
-function setObjectSpecularColor(object, color) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (meshComponent.material.specularColor != null) {
-      meshComponent.material.specularColor = color;
-    }
-  }
-}
-function setObjectFogColor(object, color) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (meshComponent.material.fogColor != null) {
-      meshComponent.material.fogColor = color;
-    }
-  }
-}
-var MaterialUtils = {
-  setAlpha,
-  setObjectAlpha,
-  setObjectMaterial,
-  setObjectClonedMaterials,
-  setObjectSpecularColor,
-  setObjectFogColor
-};
-
-// dist/cauldron/utils/text_utils.js
-import { TextComponent as TextComponent5 } from "@wonderlandengine/api";
-function setClonedMaterials(object) {
-  let textComponents = object.pp_getComponents(TextComponent5);
-  for (let textComponent of textComponents) {
-    if (textComponent.material != null) {
-      textComponent.material = textComponent.material.clone();
-    }
-  }
-}
-var TextUtils = {
-  setClonedMaterials
 };
 
 // dist/cauldron/utils/analytics_utils.js
@@ -24353,9 +24496,96 @@ var AnalyticsUtils = {
   isErrorsLogEnabled
 };
 
+// dist/cauldron/wl/utils/material_utils.js
+import { MeshComponent as MeshComponent8 } from "@wonderlandengine/api";
+var setAlpha = function() {
+  let color = vec4_create();
+  return function setAlpha2(material, alpha) {
+    if (material.color != null) {
+      color.vec4_copy(material.color);
+      color[3] = alpha;
+      material.color = color;
+    }
+    if (material.diffuseColor != null) {
+      color.vec4_copy(material.diffuseColor);
+      color[3] = alpha;
+      material.diffuseColor = color;
+    }
+    if (material.ambientColor != null) {
+      color.vec4_copy(material.ambientColor);
+      color[3] = alpha;
+      material.ambientColor = color;
+    }
+  };
+}();
+function setObjectAlpha(object, alpha) {
+  let meshComponents = object.pp_getComponents(MeshComponent8);
+  for (let meshComponent of meshComponents) {
+    if (meshComponent.material != null) {
+      MaterialUtils.setAlpha(meshComponent.material, alpha);
+    }
+  }
+}
+function setObjectMaterial(object, material, cloneMaterial = false) {
+  let meshComponents = object.pp_getComponents(MeshComponent8);
+  for (let meshComponent of meshComponents) {
+    if (cloneMaterial) {
+      meshComponent.material = material.clone();
+    } else {
+      meshComponent.material = material;
+    }
+  }
+}
+function setObjectClonedMaterials(object) {
+  let meshComponents = object.pp_getComponents(MeshComponent8);
+  for (let meshComponent of meshComponents) {
+    if (meshComponent.material != null) {
+      meshComponent.material = meshComponent.material.clone();
+    }
+  }
+}
+function setObjectSpecularColor(object, color) {
+  let meshComponents = object.pp_getComponents(MeshComponent8);
+  for (let meshComponent of meshComponents) {
+    if (meshComponent.material.specularColor != null) {
+      meshComponent.material.specularColor = color;
+    }
+  }
+}
+function setObjectFogColor(object, color) {
+  let meshComponents = object.pp_getComponents(MeshComponent8);
+  for (let meshComponent of meshComponents) {
+    if (meshComponent.material.fogColor != null) {
+      meshComponent.material.fogColor = color;
+    }
+  }
+}
+var MaterialUtils = {
+  setAlpha,
+  setObjectAlpha,
+  setObjectMaterial,
+  setObjectClonedMaterials,
+  setObjectSpecularColor,
+  setObjectFogColor
+};
+
+// dist/cauldron/wl/utils/text_utils.js
+import { TextComponent as TextComponent5 } from "@wonderlandengine/api";
+function setClonedMaterials(object) {
+  let textComponents = object.pp_getComponents(TextComponent5);
+  for (let textComponent of textComponents) {
+    if (textComponent.material != null) {
+      textComponent.material = textComponent.material.clone();
+    }
+  }
+}
+var TextUtils = {
+  setClonedMaterials
+};
+
 // dist/debug/components/debug_transform_component.js
-import { Component as Component26, Property as Property20 } from "@wonderlandengine/api";
-var DebugTransformComponent = class extends Component26 {
+import { Component as Component27, Property as Property20 } from "@wonderlandengine/api";
+var DebugTransformComponent = class extends Component27 {
   static TypeName = "pp-debug-transform";
   static Properties = {
     _myLength: Property20.float(0.1),
@@ -24594,8 +24824,8 @@ var DebugFunctionsOverwriter = class {
       }
       referenceName = JSUtils.getObjectNameFromPath(path);
       referenceNameForFilter = JSUtils.getObjectNameFromPath(referencePath);
-      let reference = JSUtils.getObjectFromPath(path, Globals.getWindow(this._myParams.myEngine));
-      let referenceParent = JSUtils.getObjectParentFromPath(path, Globals.getWindow(this._myParams.myEngine));
+      let reference = JSUtils.getObjectFromPath(path, window);
+      let referenceParent = JSUtils.getObjectParentFromPath(path, window);
       if (reference != null) {
         referenceAndParents.pp_pushUnique([reference, referenceParent, referenceName, referencePath, referenceNameForFilter], equalCallback);
       }
@@ -24802,7 +25032,7 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
       myLastFunctionExecutionTime: 0,
       myOriginalFunctionOverheadExecutionTimes: []
     };
-    this._myTimeOfLastReset = Globals.getWindow(this._myParams.myEngine).performance.now();
+    this._myTimeOfLastReset = window.performance.now();
     this._myMaxTimeElapsedSinceLastReset = 0;
     let originalPush = Array.prototype["push"];
     let originalPop = Array.prototype["pop"];
@@ -24819,7 +25049,7 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
     this.resetMaxResults();
   }
   getTimeElapsedSinceLastReset() {
-    return Globals.getWindow(this._myParams.myEngine).performance.now() - this._myTimeOfLastReset - this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset;
+    return window.performance.now() - this._myTimeOfLastReset - this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset;
   }
   getMaxTimeElapsedSinceLastReset() {
     this._myMaxTimeElapsedSinceLastReset = Math.max(this._myMaxTimeElapsedSinceLastReset, this.getTimeElapsedSinceLastReset());
@@ -24828,16 +25058,16 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   resetResults() {
     this._updateDerivatesResults();
     this._updateMaxResults();
-    for (let property of this._myFunctionPerformanceAnalysisResults.keys()) {
-      this._myFunctionPerformanceAnalysisResults.get(property).reset();
+    for (let property2 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      this._myFunctionPerformanceAnalysisResults.get(property2).reset();
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset = 0;
-    this._myTimeOfLastReset = Globals.getWindow(this._myParams.myEngine).performance.now();
+    this._myTimeOfLastReset = window.performance.now();
   }
   resetMaxResults() {
     this._myMaxTimeElapsedSinceLastReset = 0;
-    for (let property of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
-      this._myFunctionPerformanceAnalysisMaxResults.get(property).reset();
+    for (let property2 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
+      this._myFunctionPerformanceAnalysisMaxResults.get(property2).reset();
     }
   }
   getResults(sortOrder = DebugFunctionsPerformanceAnalyzerSortOrder.NONE) {
@@ -24917,9 +25147,9 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   }
   _updateDerivatesResults() {
     let timeElapsedSinceLastReset = this.getTimeElapsedSinceLastReset();
-    let beforeTime = Globals.getWindow(this._myParams.myEngine).performance.now();
-    for (let property of this._myFunctionPerformanceAnalysisResults.keys()) {
-      let results = this._myFunctionPerformanceAnalysisResults.get(property);
+    let beforeTime = window.performance.now();
+    for (let property2 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      let results = this._myFunctionPerformanceAnalysisResults.get(property2);
       if (timeElapsedSinceLastReset != 0) {
         results.myTotalExecutionTimePercentage = results.myTotalExecutionTime / timeElapsedSinceLastReset;
       } else {
@@ -24936,21 +25166,21 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
       }
       results.myTimeElapsedSinceLastReset = timeElapsedSinceLastReset;
     }
-    this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += Globals.getWindow(this._myParams.myEngine).performance.now() - beforeTime;
+    this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
   }
   _updateMaxResults() {
-    let beforeTime = Globals.getWindow(this._myParams.myEngine).performance.now();
+    let beforeTime = window.performance.now();
     this._myMaxTimeElapsedSinceLastReset = Math.max(this._myMaxTimeElapsedSinceLastReset, this.getTimeElapsedSinceLastReset());
-    for (let property of this._myFunctionPerformanceAnalysisResults.keys()) {
-      if (this._myFunctionPerformanceAnalysisMaxResults.has(property)) {
-        this._myFunctionPerformanceAnalysisMaxResults.get(property).max(this._myFunctionPerformanceAnalysisResults.get(property));
+    for (let property2 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      if (this._myFunctionPerformanceAnalysisMaxResults.has(property2)) {
+        this._myFunctionPerformanceAnalysisMaxResults.get(property2).max(this._myFunctionPerformanceAnalysisResults.get(property2));
       } else {
         let maxResults = new DebugFunctionPerformanceAnalysisResults();
-        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property));
-        this._myFunctionPerformanceAnalysisMaxResults.set(property, maxResults);
+        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property2));
+        this._myFunctionPerformanceAnalysisMaxResults.set(property2, maxResults);
       }
     }
-    this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += Globals.getWindow(this._myParams.myEngine).performance.now() - beforeTime;
+    this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
   }
   _getOverwrittenFunctionInternal(reference, propertyName, referencePath, isClass2, isFunction2, isConstructor) {
     let newFunction = JSUtils.getObjectProperty(reference, propertyName);
@@ -24965,7 +25195,6 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
         analysisResults.myID = referencePath;
         this._myFunctionPerformanceAnalysisResults.set(propertyID, analysisResults);
         try {
-          let window2 = Globals.getWindow(this._myParams.myEngine);
           let functionPerformanceAnalysisResults = this._myFunctionPerformanceAnalysisResults.get(propertyID);
           let executionTimes = this._myExecutionTimes;
           let originalFunction = reference[propertyName];
@@ -24974,7 +25203,7 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
           let executionTimeAnalysisEnabled = this._myParams.myExecutionTimeAnalysisEnabled;
           if (!isConstructor) {
             newFunction = function() {
-              let startTime = window2.performance.now();
+              let startTime = window.performance.now();
               let errorToThrow = null;
               let returnValue = void 0;
               let boundOriginalFunction = null;
@@ -24987,15 +25216,15 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
               let inBetweenOverhead = 0;
               if (executionTimeAnalysisEnabled) {
                 executionTimes.myOriginalFunctionOverheadExecutionTimes.push(0);
-                startOriginalFunctionTime = window2.performance.now();
-                endOriginalFunctionTime = window2.performance.now();
+                startOriginalFunctionTime = window.performance.now();
+                endOriginalFunctionTime = window.performance.now();
                 try {
                   boundOriginalFunction = originalFunction.bind(this);
-                  startOriginalFunctionTime = window2.performance.now();
+                  startOriginalFunctionTime = window.performance.now();
                   returnValue = boundOriginalFunction(...arguments);
-                  endOriginalFunctionTime = window2.performance.now();
+                  endOriginalFunctionTime = window.performance.now();
                 } catch (error3) {
-                  endOriginalFunctionTime = window2.performance.now();
+                  endOriginalFunctionTime = window.performance.now();
                   errorToThrow = error3;
                 }
               } else {
@@ -25021,10 +25250,10 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
                 inBetweenOverhead = beforeOverhead - endOriginalFunctionTime - overheadError;
                 if (executionTimes.myOriginalFunctionOverheadExecutionTimes.length > 0) {
                   executionTimes.myOriginalFunctionOverheadExecutionTimes[executionTimes.myOriginalFunctionOverheadExecutionTimes.length - 1] += inBetweenOverhead + originalFunctionOverheadExecutionTime + overheadError * 2.75;
-                  executionTimes.myOriginalFunctionOverheadExecutionTimes[executionTimes.myOriginalFunctionOverheadExecutionTimes.length - 1] += window2.performance.now();
+                  executionTimes.myOriginalFunctionOverheadExecutionTimes[executionTimes.myOriginalFunctionOverheadExecutionTimes.length - 1] += window.performance.now();
                 }
                 executionTimes.myOverheadExecutionTimeSinceLastReset += inBetweenOverhead;
-                executionTimes.myOverheadExecutionTimeSinceLastReset += window2.performance.now();
+                executionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now();
               }
               if (errorToThrow != null) {
                 throw errorToThrow;
@@ -25033,7 +25262,7 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
             };
           } else {
             newFunction = function() {
-              let startTime = window2.performance.now();
+              let startTime = window.performance.now();
               let errorToThrow = null;
               let returnValue = void 0;
               let startOriginalFunctionTime = 0;
@@ -25045,14 +25274,14 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
               let inBetweenOverhead = 0;
               if (executionTimeAnalysisEnabled) {
                 executionTimes.myOriginalFunctionOverheadExecutionTimes.push(0);
-                startOriginalFunctionTime = window2.performance.now();
-                endOriginalFunctionTime = window2.performance.now();
+                startOriginalFunctionTime = window.performance.now();
+                endOriginalFunctionTime = window.performance.now();
                 try {
-                  startOriginalFunctionTime = window2.performance.now();
+                  startOriginalFunctionTime = window.performance.now();
                   returnValue = new originalFunction(...arguments);
-                  endOriginalFunctionTime = window2.performance.now();
+                  endOriginalFunctionTime = window.performance.now();
                 } catch (error3) {
-                  endOriginalFunctionTime = window2.performance.now();
+                  endOriginalFunctionTime = window.performance.now();
                   errorToThrow = error3;
                 }
               } else {
@@ -25077,10 +25306,10 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
                 inBetweenOverhead = beforeOverhead - endOriginalFunctionTime - overheadError;
                 if (executionTimes.myOriginalFunctionOverheadExecutionTimes.length > 0) {
                   executionTimes.myOriginalFunctionOverheadExecutionTimes[executionTimes.myOriginalFunctionOverheadExecutionTimes.length - 1] += inBetweenOverhead + originalFunctionOverheadExecutionTime + overheadError * 2.75;
-                  executionTimes.myOriginalFunctionOverheadExecutionTimes[executionTimes.myOriginalFunctionOverheadExecutionTimes.length - 1] += window2.performance.now();
+                  executionTimes.myOriginalFunctionOverheadExecutionTimes[executionTimes.myOriginalFunctionOverheadExecutionTimes.length - 1] += window.performance.now();
                 }
                 executionTimes.myOverheadExecutionTimeSinceLastReset += inBetweenOverhead;
-                executionTimes.myOverheadExecutionTimeSinceLastReset += window2.performance.now();
+                executionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now();
               }
               if (errorToThrow != null) {
                 throw errorToThrow;
@@ -25347,8 +25576,8 @@ var DebugFunctionsPerformanceAnalysisResultsLogger = class {
 };
 
 // dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js
-import { Component as Component27, Property as Property21 } from "@wonderlandengine/api";
-var DebugFunctionsPerformanceAnalyzerComponent = class extends Component27 {
+import { Component as Component28, Property as Property21 } from "@wonderlandengine/api";
+var DebugFunctionsPerformanceAnalyzerComponent = class extends Component28 {
   static TypeName = "pp-debug-functions-performance-analyzer";
   static Properties = {
     _myObjectsByPath: Property21.string(""),
@@ -25356,16 +25585,16 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component27 {
     _myFunctionsByPath: Property21.string(""),
     _myDelayStart: Property21.float(0),
     _myLogTitle: Property21.string("Functions Performance Analysis Results"),
-    _myLogFunction: Property21.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+    _myLogFunction: Property21.enum(["Log", "Error", "Warn", "Debug"], "Error"),
     _mySecondsBetweenLogs: Property21.float(1),
     _myLogMaxResults: Property21.bool(false),
-    _myLogSortOrder: Property21.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+    _myLogSortOrder: Property21.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
     _myLogCallsCountResults: Property21.bool(true),
-    _myLogTotalExecutionTimeResults: Property21.bool(true),
-    _myLogTotalExecutionTimePercentageResults: Property21.bool(true),
-    _myLogAverageExecutionTimeResults: Property21.bool(true),
+    _myLogTotalExecutionTimeResults: Property21.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property21.bool(false),
+    _myLogAverageExecutionTimeResults: Property21.bool(false),
     _myLogMaxAmountOfFunctions: Property21.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property21.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property21.int(0),
     _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property21.float(-1),
     _myFunctionPathsToInclude: Property21.string(""),
     _myFunctionPathsToExclude: Property21.string(""),
@@ -25483,21 +25712,21 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component27 {
 };
 
 // dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component.js
-import { Component as Component28, Property as Property22 } from "@wonderlandengine/api";
-var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component28 {
+import { Component as Component29, Property as Property22 } from "@wonderlandengine/api";
+var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component29 {
   static TypeName = "pp-debug-pp-functions-performance-analyzer";
   static Properties = {
     _myDelayStart: Property22.float(0),
-    _myLogFunction: Property22.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+    _myLogFunction: Property22.enum(["Log", "Error", "Warn", "Debug"], "Error"),
     _mySecondsBetweenLogs: Property22.float(1),
     _myLogMaxResults: Property22.bool(false),
-    _myLogSortOrder: Property22.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+    _myLogSortOrder: Property22.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
     _myLogCallsCountResults: Property22.bool(true),
-    _myLogTotalExecutionTimeResults: Property22.bool(true),
-    _myLogTotalExecutionTimePercentageResults: Property22.bool(true),
-    _myLogAverageExecutionTimeResults: Property22.bool(true),
+    _myLogTotalExecutionTimeResults: Property22.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property22.bool(false),
+    _myLogAverageExecutionTimeResults: Property22.bool(false),
     _myLogMaxAmountOfFunctions: Property22.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property22.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property22.int(0),
     _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property22.float(-1),
     _myFunctionPathsToInclude: Property22.string(""),
     _myFunctionPathsToExclude: Property22.string(""),
@@ -25535,23 +25764,23 @@ var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component28 {
 };
 
 // dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component.js
-import { Component as Component29, Property as Property23 } from "@wonderlandengine/api";
-var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component29 {
+import { Component as Component30, Property as Property23 } from "@wonderlandengine/api";
+var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component30 {
   static TypeName = "pp-debug-array-functions-performance-analyzer";
   static Properties = {
     _myIncludeOnlyMainArrayTypes: Property23.bool(true),
     _myIncludeOnlyArrayExtensionFunctions: Property23.bool(false),
     _myDelayStart: Property23.float(0),
-    _myLogFunction: Property23.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+    _myLogFunction: Property23.enum(["Log", "Error", "Warn", "Debug"], "Error"),
     _mySecondsBetweenLogs: Property23.float(1),
     _myLogMaxResults: Property23.bool(false),
-    _myLogSortOrder: Property23.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+    _myLogSortOrder: Property23.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
     _myLogCallsCountResults: Property23.bool(true),
-    _myLogTotalExecutionTimeResults: Property23.bool(true),
-    _myLogTotalExecutionTimePercentageResults: Property23.bool(true),
-    _myLogAverageExecutionTimeResults: Property23.bool(true),
+    _myLogTotalExecutionTimeResults: Property23.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property23.bool(false),
+    _myLogAverageExecutionTimeResults: Property23.bool(false),
     _myLogMaxAmountOfFunctions: Property23.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property23.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property23.int(0),
     _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property23.float(-1),
     _myFunctionPathsToInclude: Property23.string(""),
     _myFunctionPathsToExclude: Property23.string(""),
@@ -25591,21 +25820,21 @@ var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component29 
 };
 
 // dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component.js
-import { Component as Component30, Property as Property24 } from "@wonderlandengine/api";
-var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component30 {
+import { Component as Component31, Property as Property24 } from "@wonderlandengine/api";
+var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component31 {
   static TypeName = "pp-debug-pp-array-creation-performance-analyzer";
   static Properties = {
     _myDelayStart: Property24.float(0),
-    _myLogFunction: Property24.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+    _myLogFunction: Property24.enum(["Log", "Error", "Warn", "Debug"], "Error"),
     _mySecondsBetweenLogs: Property24.float(1),
     _myLogMaxResults: Property24.bool(false),
-    _myLogSortOrder: Property24.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+    _myLogSortOrder: Property24.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
     _myLogCallsCountResults: Property24.bool(true),
-    _myLogTotalExecutionTimeResults: Property24.bool(true),
-    _myLogTotalExecutionTimePercentageResults: Property24.bool(true),
-    _myLogAverageExecutionTimeResults: Property24.bool(true),
+    _myLogTotalExecutionTimeResults: Property24.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property24.bool(false),
+    _myLogAverageExecutionTimeResults: Property24.bool(false),
     _myLogMaxAmountOfFunctions: Property24.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property24.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property24.int(0),
     _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property24.float(-1),
     _myClearConsoleBeforeLog: Property24.bool(false),
     _myResetMaxResultsShortcutEnabled: Property24.bool(false)
@@ -25645,21 +25874,21 @@ var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component30
 };
 
 // dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component.js
-import { Component as Component31, Property as Property25 } from "@wonderlandengine/api";
-var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component31 {
+import { Component as Component32, Property as Property25 } from "@wonderlandengine/api";
+var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component32 {
   static TypeName = "pp-debug-wl-functions-performance-analyzer";
   static Properties = {
     _myDelayStart: Property25.float(0),
-    _myLogFunction: Property25.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+    _myLogFunction: Property25.enum(["Log", "Error", "Warn", "Debug"], "Error"),
     _mySecondsBetweenLogs: Property25.float(1),
     _myLogMaxResults: Property25.bool(false),
-    _myLogSortOrder: Property25.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+    _myLogSortOrder: Property25.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
     _myLogCallsCountResults: Property25.bool(true),
-    _myLogTotalExecutionTimeResults: Property25.bool(true),
-    _myLogTotalExecutionTimePercentageResults: Property25.bool(true),
-    _myLogAverageExecutionTimeResults: Property25.bool(true),
+    _myLogTotalExecutionTimeResults: Property25.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property25.bool(false),
+    _myLogAverageExecutionTimeResults: Property25.bool(false),
     _myLogMaxAmountOfFunctions: Property25.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property25.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property25.int(0),
     _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property25.float(-1),
     _myFunctionPathsToInclude: Property25.string(""),
     _myFunctionPathsToExclude: Property25.string(""),
@@ -25697,24 +25926,24 @@ var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component31 {
 };
 
 // dist/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js
-import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component32, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent5, Property as Property26, TextComponent as TextComponent6, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
-var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component32 {
+import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component33, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent5, Property as Property26, TextComponent as TextComponent6, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
+var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component33 {
   static TypeName = "pp-debug-wl-components-functions-performance-analyzer";
   static Properties = {
     _myAnalyzeComponentTypes: Property26.bool(true),
     _myAnalyzeComponentInstances: Property26.bool(false),
     _myComponentInstanceID: Property26.enum(["Object ID", "Object Name", "Object ID - Object Name"], "Object ID - Object Name"),
     _myDelayStart: Property26.float(0),
-    _myLogFunction: Property26.enum(["Log", "Error", "Warn", "Debug"], "Log"),
+    _myLogFunction: Property26.enum(["Log", "Error", "Warn", "Debug"], "Error"),
     _mySecondsBetweenLogs: Property26.float(1),
     _myLogMaxResults: Property26.bool(false),
-    _myLogSortOrder: Property26.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "None"),
+    _myLogSortOrder: Property26.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
     _myLogCallsCountResults: Property26.bool(true),
-    _myLogTotalExecutionTimeResults: Property26.bool(true),
-    _myLogTotalExecutionTimePercentageResults: Property26.bool(true),
-    _myLogAverageExecutionTimeResults: Property26.bool(true),
+    _myLogTotalExecutionTimeResults: Property26.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property26.bool(false),
+    _myLogAverageExecutionTimeResults: Property26.bool(false),
     _myLogMaxAmountOfFunctions: Property26.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property26.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property26.int(0),
     _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property26.float(-1),
     _myFunctionPathsToInclude: Property26.string(""),
     _myFunctionPathsToExclude: Property26.string(""),
@@ -26059,21 +26288,25 @@ Direction2DTo3DConverter.prototype.convertRotationQuat = function() {
 
 // dist/gameplay/cauldron/cauldron/number_over_factor.js
 var NumberOverFactor = class {
-  constructor(fromNumberOverFactor, toNumberOverFactor = null, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
-    if (toNumberOverFactor == null) {
-      toNumberOverFactor = fromNumberOverFactor;
-    }
-    this._myFromNumber = fromNumberOverFactor;
-    this._myToNumber = toNumberOverFactor;
+  _myFromNumber;
+  _myToNumber;
+  _myFromFactor;
+  _myToFactor;
+  _myEasingFunction;
+  _myRoundingFunction;
+  // Math.round/floor/ceil can be used
+  constructor(fromNumber, toNumber = fromNumber, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
+    this._myFromNumber = fromNumber;
+    this._myToNumber = toNumber;
     this._myFromFactor = fromFactor;
     this._myToFactor = toFactor;
     this._myEasingFunction = easingFunction;
     this._myRoundingFunction = roundingFunction;
   }
   get(factor) {
-    let interpolationFactor = this._myEasingFunction(Math.pp_mapToRange(factor, this._myFromFactor, this._myToFactor, 0, 1));
+    const interpolationFactor = this._myEasingFunction(Math.pp_mapToRange(factor, this._myFromFactor, this._myToFactor, 0, 1));
     let numberOverFactor = Math.pp_lerp(this._myFromNumber, this._myToNumber, interpolationFactor);
-    if (this._myRoundingFunction) {
+    if (this._myRoundingFunction != null) {
       numberOverFactor = this._myRoundingFunction(numberOverFactor, this._myFromNumber, this._myToNumber);
     }
     return numberOverFactor;
@@ -26082,7 +26315,7 @@ var NumberOverFactor = class {
     return this.get(factor);
   }
   getRange(factor) {
-    let numberOverFactor = this.get(factor);
+    const numberOverFactor = this.get(factor);
     return [numberOverFactor, numberOverFactor];
   }
   getMax(factor) {
@@ -26092,31 +26325,31 @@ var NumberOverFactor = class {
     return this.get(factor);
   }
   isInside(number, factor) {
-    let numberOverFactor = this.get(factor);
+    const numberOverFactor = this.get(factor);
     return numberOverFactor == number;
   }
   isInsideAngleRange(number, factor) {
     return this.isInsideAngleRangeDegrees(number, factor);
   }
   isInsideAngleRangeDegrees(number, factor) {
-    let numberOverFactor = this.get(factor);
-    let clampedNumber = Math.pp_angleClampDegrees(number);
-    let clampedNumberOverFactor = Math.pp_angleClampDegrees(numberOverFactor);
+    const numberOverFactor = this.get(factor);
+    const clampedNumber = Math.pp_angleClampDegrees(number);
+    const clampedNumberOverFactor = Math.pp_angleClampDegrees(numberOverFactor);
     return clampedNumber == clampedNumberOverFactor;
   }
   isInsideAngleRangeRadians(number, factor) {
-    let numberOverFactor = this.get(factor);
-    let clampedNumber = Math.pp_angleClampRadians(number);
-    let clampedNumberOverFactor = Math.pp_angleClampRadians(numberOverFactor);
+    const numberOverFactor = this.get(factor);
+    const clampedNumber = Math.pp_angleClampRadians(number);
+    const clampedNumberOverFactor = Math.pp_angleClampRadians(numberOverFactor);
     return clampedNumber == clampedNumberOverFactor;
   }
 };
 var IntOverFactor = class extends NumberOverFactor {
-  constructor(fromNumberOverFactor, toNumberOverFactor, fromFactor, toFactor, easingFunction = EasingFunction.linear, roundingFunction = null) {
+  constructor(fromNumber, toNumber = fromNumber, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
     if (roundingFunction == null) {
-      roundingFunction = function(numberToRound, fromNumberOverFactor2, toNumberOverFactor2) {
+      roundingFunction = function(numberToRound, fromNumber2, toNumber2) {
         let roundedNumber = null;
-        let useFloor = fromNumberOverFactor2 <= toNumberOverFactor2;
+        const useFloor = fromNumber2 <= toNumber2;
         if (useFloor) {
           roundedNumber = Math.floor(numberToRound);
         } else {
@@ -26125,80 +26358,81 @@ var IntOverFactor = class extends NumberOverFactor {
         return roundedNumber;
       };
     }
-    super(fromNumberOverFactor, toNumberOverFactor, fromFactor, toFactor, easingFunction, roundingFunction);
+    super(fromNumber, toNumber, fromFactor, toFactor, easingFunction, roundingFunction);
   }
 };
 var NumberRangeOverFactor = class {
-  constructor(fromRange, toRange = null, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
-    if (toRange == null) {
-      toRange = fromRange;
-    }
+  _myFromNumberOverFactor;
+  _myToNumberOverFactor;
+  _myRoundingFunction;
+  // Math.round/floor/ceil can be used
+  constructor(fromRange, toRange = fromRange, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
     this._myFromNumberOverFactor = new NumberOverFactor(fromRange[0], toRange[0], fromFactor, toFactor, easingFunction, roundingFunction);
     this._myToNumberOverFactor = new NumberOverFactor(fromRange[1], toRange[1], fromFactor, toFactor, easingFunction, roundingFunction);
     this._myRoundingFunction = roundingFunction;
   }
   get(factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
     let randomNumberOverFactor = null;
     if (this._myRoundingFunction) {
-      randomNumberOverFactor = Math.pp_randomInt(fromNumberOverFactor, toNumberOverFactor);
+      randomNumberOverFactor = Math.pp_randomInt(fromNumber, toNumber);
     } else {
-      randomNumberOverFactor = Math.pp_random(fromNumberOverFactor, toNumberOverFactor);
+      randomNumberOverFactor = Math.pp_random(fromNumber, toNumber);
     }
     return randomNumberOverFactor;
   }
   getAverage(factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    let averageNumberOverFactor = (fromNumberOverFactor + toNumberOverFactor) / 2;
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    let averageNumberOverFactor = (fromNumber + toNumber) / 2;
     if (this._myRoundingFunction) {
-      averageNumberOverFactor = this._myRoundingFunction(averageNumberOverFactor, fromNumberOverFactor, toNumberOverFactor);
+      averageNumberOverFactor = this._myRoundingFunction(averageNumberOverFactor, fromNumber, toNumber);
     }
     return averageNumberOverFactor;
   }
   getRange(factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    return [fromNumberOverFactor, toNumberOverFactor];
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    return [fromNumber, toNumber];
   }
   getMax(factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    return Math.max(fromNumberOverFactor, toNumberOverFactor);
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    return Math.max(fromNumber, toNumber);
   }
   getMin(factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    return Math.min(fromNumberOverFactor, toNumberOverFactor);
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    return Math.min(fromNumber, toNumber);
   }
   isInside(number, factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    let min = Math.min(fromNumberOverFactor, toNumberOverFactor);
-    let max = Math.max(fromNumberOverFactor, toNumberOverFactor);
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    const min = Math.min(fromNumber, toNumber);
+    const max = Math.max(fromNumber, toNumber);
     return number >= min && number <= max;
   }
   isInsideAngleRange(number, factor) {
     return this.isInsideAngleRangeDegrees(number, factor);
   }
   isInsideAngleRangeDegrees(number, factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    return Math.pp_isInsideAngleRangeDegrees(number, fromNumberOverFactor, toNumberOverFactor);
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    return Math.pp_isInsideAngleRangeDegrees(number, fromNumber, toNumber);
   }
   isInsideAngleRangeRadians(number, factor) {
-    let fromNumberOverFactor = this._myFromNumberOverFactor.get(factor);
-    let toNumberOverFactor = this._myToNumberOverFactor.get(factor);
-    return Math.pp_isInsideAngleRangeRadians(number, fromNumberOverFactor, toNumberOverFactor);
+    const fromNumber = this._myFromNumberOverFactor.get(factor);
+    const toNumber = this._myToNumberOverFactor.get(factor);
+    return Math.pp_isInsideAngleRangeRadians(number, fromNumber, toNumber);
   }
 };
 var IntRangeOverFactor = class extends NumberRangeOverFactor {
-  constructor(fromRange, toRange, fromFactor, toFactor, easingFunction = EasingFunction.linear, roundingFunction = null) {
+  constructor(fromRange, toRange = fromRange, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
     if (roundingFunction == null) {
-      roundingFunction = function(numberToRound, fromNumberOverFactor, toNumberOverFactor) {
+      roundingFunction = function(numberToRound, fromNumber, toNumber) {
         let roundedNumber = null;
-        let useFloor = fromNumberOverFactor <= toNumberOverFactor;
+        const useFloor = fromNumber <= toNumber;
         if (useFloor) {
           roundedNumber = Math.floor(numberToRound);
         } else {
@@ -26212,8 +26446,8 @@ var IntRangeOverFactor = class extends NumberRangeOverFactor {
 };
 
 // dist/gameplay/grab_throw/grabbable_component.js
-import { Component as Component33, Emitter as Emitter10, PhysXComponent as PhysXComponent6, Property as Property27 } from "@wonderlandengine/api";
-var GrabbableComponent = class extends Component33 {
+import { Component as Component34, Emitter as Emitter10, PhysXComponent as PhysXComponent6, Property as Property27 } from "@wonderlandengine/api";
+var GrabbableComponent = class extends Component34 {
   static TypeName = "pp-grabbable";
   static Properties = {
     _myThrowLinearVelocityMultiplier: Property27.float(1),
@@ -26267,9 +26501,7 @@ var GrabbableComponent = class extends Component33 {
     }
   }
   getLinearVelocity() {
-    let linearVelocity = vec3_create();
-    this._myPhysX.linearVelocity.vec3_clone(linearVelocity);
-    return linearVelocity;
+    return this._myPhysX.linearVelocity.vec3_clone();
   }
   getAngularVelocity() {
     return this.getAngularVelocityDegrees();
@@ -26280,9 +26512,7 @@ var GrabbableComponent = class extends Component33 {
     return angularVelocityDegrees;
   }
   getAngularVelocityRadians() {
-    let angularVelocityRadians = vec3_create();
-    this._myPhysX.angularVelocity.vec3_clone(angularVelocityRadians);
-    return angularVelocityRadians;
+    return this._myPhysX.angularVelocity.vec3_clone();
   }
   isGrabbed() {
     return this._myGrabbed;
@@ -26338,14 +26568,14 @@ var GrabbableComponent = class extends Component33 {
 };
 
 // dist/gameplay/grab_throw/grabber_hand_component.js
-import { Component as Component34, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property28 } from "@wonderlandengine/api";
-var GrabberHandComponent = class extends Component34 {
+import { Component as Component35, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property28 } from "@wonderlandengine/api";
+var GrabberHandComponent = class extends Component35 {
   static TypeName = "pp-grabber-hand";
   static Properties = {
     _myHandedness: Property28.enum(["Left", "Right"], "Left"),
     _myGrabButton: Property28.enum(["Select", "Squeeze", "Both", "Both Exclusive"], "Squeeze"),
     // @"Both Exclusive" means u can use both buttons but you have to use the same button you grabbed with to throw
-    _mySnapOnPivot: Property28.bool(false),
+    _mySnapGrabbableOnOrigin: Property28.bool(false),
     _myMaxNumberOfObjects: Property28.int(1),
     // How many objects you can grab at the same time
     // ADVANCED SETTINGS
@@ -26481,7 +26711,7 @@ var GrabberHandComponent = class extends Component34 {
           this._myGrabbables.push(grabbableData);
           grabbableToGrab.grab(this.object);
           grabbableToGrab.registerReleaseEventListener(this, this._onRelease.bind(this));
-          if (this._mySnapOnPivot) {
+          if (this._mySnapGrabbableOnOrigin) {
             grabbableToGrab.object.pp_resetPositionLocal();
           }
           this._myGrabEmitter.notify(this, grabbableToGrab);
@@ -27066,8 +27296,8 @@ var CADummyServer = class {
 };
 
 // dist/gameplay/integrations/construct_arcade/ca_display_leaderboard_component.js
-import { Component as Component35, Property as Property29, TextComponent as TextComponent7 } from "@wonderlandengine/api";
-var CADisplayLeaderboardComponent = class extends Component35 {
+import { Component as Component36, Property as Property29, TextComponent as TextComponent7 } from "@wonderlandengine/api";
+var CADisplayLeaderboardComponent = class extends Component36 {
   static TypeName = "pp-ca-display-leaderboard";
   static Properties = {
     _myUsernamesTextObject: Property29.object(),
@@ -27363,8 +27593,10 @@ var CharacterColliderSurfaceParams = class {
     this.myOnSurfaceIfBaseInsideCollision = false;
     this.myCollectSurfaceNormalMaxOutsideDistance = 0;
     this.myCollectSurfaceNormalMaxInsideDistance = 0;
-    this.myFindSurfaceDistanceMaxOutsideDistance = 0;
-    this.myFindSurfaceDistanceMaxInsideDistance = 0;
+    this.myCollectSurfaceDistanceOutsideDistance = 0;
+    this.myCollectSurfaceDistanceInsideDistance = 0;
+    this.myCollectSurfaceCollisionHitOutsideDistance = 0;
+    this.myCollectSurfaceCollisionHitInsideDistance = 0;
     this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = false;
     this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = false;
     this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle = null;
@@ -27426,7 +27658,7 @@ var CharacterColliderDebugParams = class {
   copy(other) {
   }
 };
-CharacterColliderSetup.prototype.copy = function copy27(other) {
+CharacterColliderSetup.prototype.copy = function copy28(other) {
   this.myHeight = other.myHeight;
   this.myHorizontalCheckParams.copy(other.myHorizontalCheckParams);
   this.myVerticalCheckParams.copy(other.myVerticalCheckParams);
@@ -27437,7 +27669,7 @@ CharacterColliderSetup.prototype.copy = function copy27(other) {
   this.myAdditionalParams.copy(other.myAdditionalParams);
   this.myDebugParams.copy(other.myDebugParams);
 };
-CharacterColliderHorizontalCheckParams.prototype.copy = function copy28(other) {
+CharacterColliderHorizontalCheckParams.prototype.copy = function copy29(other) {
   this.myHorizontalCheckConeRadius = other.myHorizontalCheckConeRadius;
   this.myHorizontalCheckConeHalfAngle = other.myHorizontalCheckConeHalfAngle;
   this.myHorizontalHeightCheckEnabled = other.myHorizontalHeightCheckEnabled;
@@ -27495,7 +27727,7 @@ CharacterColliderHorizontalCheckParams.prototype.copy = function copy28(other) {
   this.myHorizontalCheckBlockLayerFlags.setMask(other.myHorizontalCheckBlockLayerFlags.getMask());
   this.myHorizontalCheckObjectsToIgnore.pp_copy(other.myHorizontalCheckObjectsToIgnore);
 };
-CharacterColliderVerticalCheckParams.prototype.copy = function copy29(other) {
+CharacterColliderVerticalCheckParams.prototype.copy = function copy30(other) {
   this.myVerticalCheckCircumferenceRadius = other.myVerticalCheckCircumferenceRadius;
   this.myVerticalCheckCircumferenceSlices = other.myVerticalCheckCircumferenceSlices;
   this.myVerticalCheckCircumferenceCentralCheckEnabled = other.myVerticalCheckCircumferenceCentralCheckEnabled;
@@ -27511,7 +27743,7 @@ CharacterColliderVerticalCheckParams.prototype.copy = function copy29(other) {
   this.myVerticalCheckBlockLayerFlags.setMask(other.myVerticalCheckBlockLayerFlags.getMask());
   this.myVerticalCheckObjectsToIgnore.pp_copy(other.myVerticalCheckObjectsToIgnore);
 };
-CharacterColliderWallSlideParams.prototype.copy = function copy30(other) {
+CharacterColliderWallSlideParams.prototype.copy = function copy31(other) {
   this.myWallSlideEnabled = other.myWallSlideEnabled;
   this.myWallSlideMaxAttempts = other.myWallSlideMaxAttempts;
   this.myCheckBothWallSlideDirections = other.myCheckBothWallSlideDirections;
@@ -27520,7 +27752,7 @@ CharacterColliderWallSlideParams.prototype.copy = function copy30(other) {
   this.myWallSlideFlickerPreventionForceCheckCounter = other.myWallSlideFlickerPreventionForceCheckCounter;
   this.my90DegreesWallSlideAdjustDirectionSign = other.my90DegreesWallSlideAdjustDirectionSign;
 };
-CharacterColliderSurfaceParams.prototype.copy = function copy31(other) {
+CharacterColliderSurfaceParams.prototype.copy = function copy32(other) {
   this.mySurfaceSnapEnabled = other.mySurfaceSnapEnabled;
   this.mySurfaceSnapMaxDistance = other.mySurfaceSnapMaxDistance;
   this.mySurfacePopOutEnabled = other.mySurfacePopOutEnabled;
@@ -27537,8 +27769,10 @@ CharacterColliderSurfaceParams.prototype.copy = function copy31(other) {
   this.myOnSurfaceIfBaseInsideCollision = other.myOnSurfaceIfBaseInsideCollision;
   this.myCollectSurfaceNormalMaxOutsideDistance = other.myCollectSurfaceNormalMaxOutsideDistance;
   this.myCollectSurfaceNormalMaxInsideDistance = other.myCollectSurfaceNormalMaxInsideDistance;
-  this.myFindSurfaceDistanceMaxOutsideDistance = other.myFindSurfaceDistanceMaxOutsideDistance;
-  this.myFindSurfaceDistanceMaxInsideDistance = other.myFindSurfaceDistanceMaxInsideDistance;
+  this.myCollectSurfaceDistanceOutsideDistance = other.myCollectSurfaceDistanceOutsideDistance;
+  this.myCollectSurfaceDistanceInsideDistance = other.myCollectSurfaceDistanceInsideDistance;
+  this.myCollectSurfaceCollisionHitOutsideDistance = other.myCollectSurfaceCollisionHitOutsideDistance;
+  this.myCollectSurfaceCollisionHitInsideDistance = other.myCollectSurfaceCollisionHitInsideDistance;
   this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
   this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;
   this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhillMaxSurfaceAngle;
@@ -27560,7 +27794,7 @@ CharacterColliderSurfaceParams.prototype.copy = function copy31(other) {
   this.myRecollectSurfaceInfoOnSurfaceCheckFailed = other.myRecollectSurfaceInfoOnSurfaceCheckFailed;
   this.myHorizontalMovementAllowExitAttemptWhenOnNotIgnorableSurfacePerceivedAngle = other.myHorizontalMovementAllowExitAttemptWhenOnNotIgnorableSurfacePerceivedAngle;
 };
-CharacterColliderSplitMovementParams.prototype.copy = function copy32(other) {
+CharacterColliderSplitMovementParams.prototype.copy = function copy33(other) {
   this.mySplitMovementEnabled = other.mySplitMovementEnabled;
   this.mySplitMovementMaxSteps = other.mySplitMovementMaxSteps;
   this.mySplitMovementMaxStepLength = other.mySplitMovementMaxStepLength;
@@ -27569,11 +27803,11 @@ CharacterColliderSplitMovementParams.prototype.copy = function copy32(other) {
   this.mySplitMovementStopOnVerticalMovementFailed = other.mySplitMovementStopOnVerticalMovementFailed;
   this.mySplitMovementStopReturnPreviousResults = other.mySplitMovementStopReturnPreviousResults;
 };
-CharacterColliderAdditionalParams.prototype.copy = function copy33(other) {
+CharacterColliderAdditionalParams.prototype.copy = function copy34(other) {
   this.myPositionOffsetLocal.vec3_copy(other.myPositionOffsetLocal);
   this.myRotationOffsetLocalQuat.quat_copy(other.myRotationOffsetLocalQuat);
 };
-CharacterColliderDebugParams.prototype.copy = function copy34(other) {
+CharacterColliderDebugParams.prototype.copy = function copy35(other) {
   this.myVisualDebugEnabled = other.myVisualDebugEnabled;
   this.myVisualDebugMovementEnabled = other.myVisualDebugMovementEnabled;
   this.myVisualDebugHorizontalMovementCheckEnabled = other.myVisualDebugHorizontalMovementCheckEnabled;
@@ -27688,6 +27922,10 @@ function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = 
   outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance = 1e-3;
   outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance = simplifiedCreationParams.myRadius > 0.1 ? 0.1 : 0.01;
   outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
+  outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
+  outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance;
+  outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
+  outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance;
   outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = true;
   outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = true;
   if (simplifiedCreationParams.myCanFly) {
@@ -27703,6 +27941,10 @@ function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = 
     outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance;
     outCharacterColliderSetup.myCeilingParams.myCollectSurfaceNormalMaxOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
     outCharacterColliderSetup.myCeilingParams.myCollectSurfaceNormalMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance;
+    outCharacterColliderSetup.myCeilingParams.myCollectSurfaceDistanceOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceOutsideDistance;
+    outCharacterColliderSetup.myCeilingParams.myCollectSurfaceDistanceInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceInsideDistance;
+    outCharacterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitOutsideDistance;
+    outCharacterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitInsideDistance;
     outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
     outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;
   }
@@ -30662,7 +30904,6 @@ var PlayerLocomotionTeleportDetectionVisualizer = class {
     }
   }
   _showTeleportPosition(dt) {
-    this._hideTeleportPosition();
     this._showTeleportParable(dt);
   }
   _hideTeleportPosition() {
@@ -30817,10 +31058,12 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParable = fun
     if (lastParableIndex + 1 > this._myValidVisualLines.length) {
       this._addVisualLines(lastParableIndex + 1, this._myValidVisualLines.length);
     }
+    const usedVisualLines = [];
     for (let i = 0; i <= lastParableIndex; i++) {
       currentPosition = this._myDetectionRuntimeParams.myParable.getPosition(i, currentPosition);
       nextPosition = this._myDetectionRuntimeParams.myParable.getPosition(i + 1, nextPosition);
       let visuaLine = this._myDetectionRuntimeParams.myTeleportPositionValid ? this._myValidVisualLines[i] : this._myInvalidVisualLines[i];
+      usedVisualLines.push(visuaLine);
       let currentVisualLineParams = visuaLine.getParams();
       if (i == lastParableIndex) {
         let stepLength = Math.max(0, showParableDistance - lastParableIndexDistance);
@@ -30835,12 +31078,24 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParable = fun
         Globals.getDebugVisualManager(this._myTeleportParams.myEngine).drawPoint(0, currentPosition, vec4_create(1, 0, 0, 1), 0.01);
       }
     }
+    for (let visualLine of this._myValidVisualLines) {
+      if (usedVisualLines.indexOf(visualLine) == -1) {
+        visualLine.setVisible(false);
+      }
+    }
+    for (let visualLine of this._myInvalidVisualLines) {
+      if (usedVisualLines.indexOf(visualLine) == -1) {
+        visualLine.setVisible(false);
+      }
+    }
     let visualPoint = this._myDetectionRuntimeParams.myTeleportPositionValid ? this._myValidVisualPoint : this._myInvalidVisualPoint;
     let visualPointParams = visualPoint.getParams();
     visualPointParams.myPosition.vec3_copy(nextPosition);
     visualPointParams.myRadius = 0.01;
     visualPoint.paramsUpdated();
     visualPoint.setVisible(true);
+    let unusedVisualPoint = this._myDetectionRuntimeParams.myTeleportPositionValid ? this._myInvalidVisualPoint : this._myValidVisualPoint;
+    unusedVisualPoint.setVisible(false);
     if (this._myDetectionRuntimeParams.myTeleportPositionValid) {
       playerUp = this._myTeleportParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
       upDifference = nextPosition.vec3_sub(this._myTeleportRuntimeParams.myTeleportPosition, upDifference).vec3_componentAlongAxis(playerUp, upDifference);
@@ -30856,9 +31111,17 @@ PlayerLocomotionTeleportDetectionVisualizer.prototype._showTeleportParable = fun
         visualArrowParams.myArrowLength = visualArrowParams.myArrowThickness * 3.5 / 1.5;
         this._myValidVisualVerticalArrow.paramsUpdated();
         this._myValidVisualVerticalArrow.setVisible(true);
+      } else {
+        this._myValidVisualVerticalArrow.setVisible(false);
       }
       this._showTeleportParablePosition(dt);
     } else {
+      this._myValidVisualTeleportPositionTorus.setVisible(false);
+      this._myValidVisualTeleportPositionTorusInner.setVisible(false);
+      this._myValidVisualVerticalArrow.setVisible(false);
+      if (this._myTeleportParams.myVisualizerParams.myTeleportPositionObject != null) {
+        this._myTeleportParams.myVisualizerParams.myTeleportPositionObject.pp_setActive(false);
+      }
       this._myVisualTeleportTransformQuatReset = true;
       this._myVisualTeleportTransformPositionLerping = false;
       this._myVisualTeleportTransformRotationLerping = false;
@@ -33062,8 +33325,8 @@ PlayerLocomotionSmooth.prototype._onXRSessionEnd = function() {
 }();
 
 // dist/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_component.js
-import { Component as Component36, Property as Property30 } from "@wonderlandengine/api";
-var PlayerLocomotionComponent = class extends Component36 {
+import { Component as Component37, Property as Property30 } from "@wonderlandengine/api";
+var PlayerLocomotionComponent = class extends Component37 {
   static TypeName = "pp-player-locomotion";
   static Properties = {
     _myDefaultLocomotionType: Property30.enum(["Smooth", "Teleport"], "Smooth"),
@@ -33292,9 +33555,9 @@ var PlayerLocomotionComponent = class extends Component36 {
 };
 
 // dist/input/cauldron/components/finger_cursor_component.js
-import { Collider, CollisionComponent as CollisionComponent3, Component as Component37, Property as Property31 } from "@wonderlandengine/api";
+import { Collider, CollisionComponent as CollisionComponent3, Component as Component38, Property as Property31 } from "@wonderlandengine/api";
 import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
-var FingerCursorComponent = class extends Component37 {
+var FingerCursorComponent = class extends Component38 {
   static TypeName = "pp-finger-cursor";
   static Properties = {
     _myHandedness: Property31.enum(["Left", "Right"], "Left"),
@@ -33420,8 +33683,8 @@ var FingerCursorComponent = class extends Component37 {
 };
 
 // dist/input/cauldron/components/switch_hand_object_component.js
-import { Component as Component38, Property as Property32 } from "@wonderlandengine/api";
-var SwitchHandObjectComponent = class extends Component38 {
+import { Component as Component39, Property as Property32 } from "@wonderlandengine/api";
+var SwitchHandObjectComponent = class extends Component39 {
   static TypeName = "pp-switch-hand-object";
   static Properties = {
     _myHandedness: Property32.enum(["Left", "Right"], "Left"),
@@ -33482,8 +33745,8 @@ var SwitchHandObjectComponent = class extends Component38 {
 };
 
 // dist/input/cauldron/components/tracked_hand_draw_joint_component.js
-import { Component as Component39, MeshComponent as MeshComponent11, Property as Property33 } from "@wonderlandengine/api";
-var TrackedHandDrawJointComponent = class extends Component39 {
+import { Component as Component40, MeshComponent as MeshComponent11, Property as Property33 } from "@wonderlandengine/api";
+var TrackedHandDrawJointComponent = class extends Component40 {
   static TypeName = "pp-tracked-hand-draw-joint";
   static Properties = {
     _myHandedness: Property33.enum(["Left", "Right"], "Left"),
@@ -33542,8 +33805,8 @@ TrackedHandDrawJointComponent.prototype.update = function() {
 }();
 
 // dist/input/cauldron/components/tracked_hand_draw_all_joints_component.js
-import { Component as Component40, Property as Property34 } from "@wonderlandengine/api";
-var TrackedHandDrawAllJointsComponent = class extends Component40 {
+import { Component as Component41, Property as Property34 } from "@wonderlandengine/api";
+var TrackedHandDrawAllJointsComponent = class extends Component41 {
   static TypeName = "pp-tracked-hand-draw-all-joints";
   static Properties = {
     _myHandedness: Property34.enum(["Left", "Right"], "Left"),
@@ -33574,8 +33837,8 @@ var TrackedHandDrawAllJointsComponent = class extends Component40 {
 };
 
 // dist/input/cauldron/components/tracked_hand_draw_skin_component.js
-import { Component as Component41, Property as Property35 } from "@wonderlandengine/api";
-var TrackedHandDrawSkinComponent = class extends Component41 {
+import { Component as Component42, Property as Property35 } from "@wonderlandengine/api";
+var TrackedHandDrawSkinComponent = class extends Component42 {
   static TypeName = "pp-tracked-hand-draw-skin";
   static Properties = {
     _myHandedness: Property35.enum(["Left", "Right"], "Left"),
@@ -33608,8 +33871,8 @@ TrackedHandDrawSkinComponent.prototype.update = function() {
 }();
 
 // dist/input/gamepad/cauldron/gamepad_mesh_animator_component.js
-import { Component as Component42, Property as Property36 } from "@wonderlandengine/api";
-var GamepadMeshAnimatorComponent = class extends Component42 {
+import { Component as Component43, Property as Property36 } from "@wonderlandengine/api";
+var GamepadMeshAnimatorComponent = class extends Component43 {
   static TypeName = "pp-gamepad-mesh-animator";
   static Properties = {
     _myHandedness: Property36.enum(["Left", "Right"], "Left"),
@@ -33744,8 +34007,8 @@ GamepadMeshAnimatorComponent.prototype._thumbstickPressedStart = function() {
 }();
 
 // dist/input/gamepad/cauldron/gamepad_control_scheme_component.js
-import { Alignment as Alignment5, Component as Component43, Justification as Justification5, MeshComponent as MeshComponent12, Property as Property37, TextComponent as TextComponent8 } from "@wonderlandengine/api";
-var GamepadControlSchemeComponent = class extends Component43 {
+import { Alignment as Alignment5, Component as Component44, Justification as Justification5, MeshComponent as MeshComponent12, Property as Property37, TextComponent as TextComponent8 } from "@wonderlandengine/api";
+var GamepadControlSchemeComponent = class extends Component44 {
   static TypeName = "pp-gamepad-control-scheme";
   static Properties = {
     _myShowOnStart: Property37.bool(true),
@@ -34056,12 +34319,12 @@ var VirtualGamepadIcon = class {
     this._myMouseHoverEnabled = enabled;
   }
   _build(iconElementParent, minSizeMultiplier, scale4) {
-    this._myIconContainerElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+    this._myIconContainerElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this._myIconContainerElement.style.position = "absolute";
     this._myIconContainerElement.style.width = "100%";
     this._myIconContainerElement.style.height = "100%";
     iconElementParent.appendChild(this._myIconContainerElement);
-    this._myBackgroundElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+    this._myBackgroundElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     this._myBackgroundElement.setAttributeNS(null, "cx", "50%");
     this._myBackgroundElement.setAttributeNS(null, "cy", "50%");
     this._myBackgroundElement.setAttributeNS(null, "r", "50%");
@@ -34071,7 +34334,7 @@ var VirtualGamepadIcon = class {
       case VirtualGamepadIconType.NONE:
         break;
       case VirtualGamepadIconType.LABEL:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "text");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
         this._myIconElement.setAttributeNS(null, "x", "50%");
         this._myIconElement.setAttributeNS(null, "y", "50%");
         this._myIconElement.style.textAlign = "center";
@@ -34086,7 +34349,7 @@ var VirtualGamepadIcon = class {
         this._myIconContainerElement.appendChild(this._myIconElement);
         break;
       case VirtualGamepadIconType.IMAGE:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "image");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this._myIconElement.setAttributeNS(null, "x", "0%");
         this._myIconElement.setAttributeNS(null, "y", "0%");
         this._myIconElement.setAttribute("href", this._myParams.myImageURL);
@@ -34096,7 +34359,7 @@ var VirtualGamepadIcon = class {
         this._myIconContainerElement.appendChild(this._myIconElement);
         break;
       case VirtualGamepadIconType.DOT:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         this._myIconElement.setAttributeNS(null, "cx", "50%");
         this._myIconElement.setAttributeNS(null, "cy", "50%");
         this._myIconElement.setAttributeNS(null, "r", "17.5%");
@@ -34104,7 +34367,7 @@ var VirtualGamepadIcon = class {
         this._myIconContainerElement.appendChild(this._myIconElement);
         break;
       case VirtualGamepadIconType.CIRCLE:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         this._myIconElement.setAttributeNS(null, "cx", "50%");
         this._myIconElement.setAttributeNS(null, "cy", "50%");
         this._myIconElement.setAttributeNS(null, "r", "24%");
@@ -34112,7 +34375,7 @@ var VirtualGamepadIcon = class {
         this._myIconContainerElement.appendChild(this._myIconElement);
         break;
       case VirtualGamepadIconType.SQUARE:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "rect");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         this._myIconElement.setAttributeNS(null, "x", "28%");
         this._myIconElement.setAttributeNS(null, "y", "28%");
         this._myIconElement.setAttributeNS(null, "rx", "10%");
@@ -34124,7 +34387,7 @@ var VirtualGamepadIcon = class {
         this._myIconContainerElement.appendChild(this._myIconElement);
         break;
       case VirtualGamepadIconType.RING:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         this._myIconElement.setAttributeNS(null, "cx", "50%");
         this._myIconElement.setAttributeNS(null, "cy", "50%");
         this._myIconElement.setAttributeNS(null, "r", "20%");
@@ -34134,7 +34397,7 @@ var VirtualGamepadIcon = class {
         this._myIconContainerElement.appendChild(this._myIconElement);
         break;
       case VirtualGamepadIconType.FRAME:
-        this._myIconElement = Globals.getDocument(this._myEngine).createElementNS("http://www.w3.org/2000/svg", "rect");
+        this._myIconElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         this._myIconElement.setAttributeNS(null, "x", "31.5%");
         this._myIconElement.setAttributeNS(null, "y", "31.5%");
         this._myIconElement.setAttributeNS(null, "rx", "10%");
@@ -34322,9 +34585,9 @@ var VirtualGamepadVirtualButton = class {
     this._myMouseEnterEventListener = this._onButtonEnter.bind(this);
     this._myMouseLeaveEventListener = this._onButtonLeave.bind(this);
     this._myButtonDetectionElement.addEventListener("pointerdown", this._myPointerDownEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
+    document.body.addEventListener("pointerup", this._myPointerUpEventListener);
     if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
-      Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+      document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
     }
     this._myButtonDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
     this._myButtonDetectionElement.addEventListener("mouseleave", this._myMouseLeaveEventListener);
@@ -34414,7 +34677,7 @@ var VirtualGamepadVirtualButton = class {
       currentAngle = Math.pp_angleClamp(currentAngle, true);
     }
     let counterAngle = 360 - currentAngle;
-    this._myButtonContainer = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+    this._myButtonContainer = document.createElement("div");
     this._myButtonContainer.style.position = "absolute";
     this._myButtonContainer.style.width = this._createSizeValue(buttonSize, minSizeMultiplier);
     this._myButtonContainer.style.height = this._createSizeValue(buttonSize, minSizeMultiplier);
@@ -34429,25 +34692,25 @@ var VirtualGamepadVirtualButton = class {
     }
     this._myButtonContainer.style.transform = "rotate(" + currentAngle + "deg) translateX(" + this._createSizeValue(buttonsRingRadius, minSizeMultiplier) + ")";
     buttonElementParent.appendChild(this._myButtonContainer);
-    this._myButtonElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+    this._myButtonElement = document.createElement("div");
     this._myButtonElement.style.position = "absolute";
     this._myButtonElement.style.width = "100%";
     this._myButtonElement.style.height = "100%";
     this._myButtonElement.style.transform = "rotate(" + counterAngle + "deg)";
     this._myButtonContainer.appendChild(this._myButtonElement);
     this._myButtonIcon = new VirtualGamepadIcon(this._myButtonElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myInterfaceScale, this._myVirtualGamepadParams.myEngine);
-    let buttonElementStill = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+    let buttonElementStill = document.createElement("div");
     buttonElementStill.style.position = "absolute";
     buttonElementStill.style.width = "100%";
     buttonElementStill.style.height = "100%";
     buttonElementStill.style.transform = "rotate(" + counterAngle + "deg)";
     this._myButtonContainer.appendChild(buttonElementStill);
-    let buttonDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+    let buttonDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     buttonDetectionElementSVG.style.position = "absolute";
     buttonDetectionElementSVG.style.width = "100%";
     buttonDetectionElementSVG.style.height = "100%";
     buttonElementStill.appendChild(buttonDetectionElementSVG);
-    let buttonDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+    let buttonDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     buttonDetectionElement.setAttributeNS(null, "cx", "50%");
     buttonDetectionElement.setAttributeNS(null, "cy", "50%");
     buttonDetectionElement.setAttributeNS(null, "r", "50%");
@@ -34461,8 +34724,8 @@ var VirtualGamepadVirtualButton = class {
   destroy() {
     this._myDestroyed = true;
     this._myButtonDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+    document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+    document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
     this._myButtonDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
     this._myButtonDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
     this._myButtonIcon.destroy();
@@ -34496,10 +34759,10 @@ var VirtualGamepadVirtualThumbstick = class {
     this._myMouseEnterEventListener = this._onThumbstickEnter.bind(this);
     this._myMouseLeaveEventListener = this._onThumbstickLeave.bind(this);
     this._myThumbstickDetectionElement.addEventListener("pointerdown", this._myPointerDownEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointermove", this._myPointerMoveEventListener);
+    document.body.addEventListener("pointerup", this._myPointerUpEventListener);
+    document.body.addEventListener("pointermove", this._myPointerMoveEventListener);
     if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
-      Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+      document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
     }
     this._myThumbstickDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
     this._myThumbstickDetectionElement.addEventListener("mouseleave", this._myMouseLeaveEventListener);
@@ -34604,7 +34867,7 @@ var VirtualGamepadVirtualThumbstick = class {
     let marginLeft = this._myVirtualGamepadParams.myMarginLeft * this._myVirtualGamepadParams.myInterfaceScale * this._myVirtualGamepadParams.myMarginScale;
     let marginRight = this._myVirtualGamepadParams.myMarginRight * this._myVirtualGamepadParams.myInterfaceScale * this._myVirtualGamepadParams.myMarginScale;
     let minSizeMultiplier = Math.max(1, this._myVirtualGamepadParams.myMinSizeMultiplier / this._myVirtualGamepadParams.myInterfaceScale);
-    this._myThumbstickContainer = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+    this._myThumbstickContainer = document.createElement("div");
     this._myThumbstickContainer.style.position = "absolute";
     this._myThumbstickContainer.style.width = this._createSizeValue(thumbstickSize, minSizeMultiplier);
     this._myThumbstickContainer.style.height = this._createSizeValue(thumbstickSize, minSizeMultiplier);
@@ -34615,18 +34878,18 @@ var VirtualGamepadVirtualThumbstick = class {
       this._myThumbstickContainer.style.right = this._createSizeValue(marginRight, minSizeMultiplier);
     }
     thumbstickElementParent.appendChild(this._myThumbstickContainer);
-    let thumbstickContainerSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+    let thumbstickContainerSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     thumbstickContainerSVG.style.position = "absolute";
     thumbstickContainerSVG.style.width = "100%";
     thumbstickContainerSVG.style.height = "100%";
     this._myThumbstickContainer.appendChild(thumbstickContainerSVG);
-    this._myThumbstickBackground = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+    this._myThumbstickBackground = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     this._myThumbstickBackground.setAttributeNS(null, "cx", "50%");
     this._myThumbstickBackground.setAttributeNS(null, "cy", "50%");
     this._myThumbstickBackground.setAttributeNS(null, "r", "48%");
     this._myThumbstickBackground.style.fill = this._myParams.myBackgroundColor;
     thumbstickContainerSVG.appendChild(this._myThumbstickBackground);
-    this._myThumbstickElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+    this._myThumbstickElement = document.createElement("div");
     this._myThumbstickElement.style.position = "absolute";
     this._myThumbstickElement.style.width = "34%";
     this._myThumbstickElement.style.height = "34%";
@@ -34635,12 +34898,12 @@ var VirtualGamepadVirtualThumbstick = class {
     this._myThumbstickContainer.appendChild(this._myThumbstickElement);
     this._myThumbstickIcon = new VirtualGamepadIcon(this._myThumbstickElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myScale, this._myVirtualGamepadParams.myEngine);
     if (this._myParams.myIncludeBackgroundToDetection) {
-      let thumbstickBackgroundDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+      let thumbstickBackgroundDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       thumbstickBackgroundDetectionElementSVG.style.position = "absolute";
       thumbstickBackgroundDetectionElementSVG.style.width = "100%";
       thumbstickBackgroundDetectionElementSVG.style.height = "100%";
       this._myThumbstickContainer.appendChild(thumbstickBackgroundDetectionElementSVG);
-      let thumbstickBackgroundDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+      let thumbstickBackgroundDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       thumbstickBackgroundDetectionElement.setAttributeNS(null, "cx", "50%");
       thumbstickBackgroundDetectionElement.setAttributeNS(null, "cy", "50%");
       thumbstickBackgroundDetectionElement.setAttributeNS(null, "r", "48%");
@@ -34648,19 +34911,19 @@ var VirtualGamepadVirtualThumbstick = class {
       thumbstickBackgroundDetectionElementSVG.appendChild(thumbstickBackgroundDetectionElement);
       this._myThumbstickDetectionElement = thumbstickBackgroundDetectionElement;
     } else {
-      let thumbstickElementStill = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+      let thumbstickElementStill = document.createElement("div");
       thumbstickElementStill.style.position = "absolute";
       thumbstickElementStill.style.width = "34%";
       thumbstickElementStill.style.height = "34%";
       thumbstickElementStill.style.top = "33%";
       thumbstickElementStill.style.left = "33%";
       this._myThumbstickContainer.appendChild(thumbstickElementStill);
-      let thumbstickDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+      let thumbstickDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       thumbstickDetectionElementSVG.style.position = "absolute";
       thumbstickDetectionElementSVG.style.width = "100%";
       thumbstickDetectionElementSVG.style.height = "100%";
       thumbstickElementStill.appendChild(thumbstickDetectionElementSVG);
-      let thumbstickDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+      let thumbstickDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       thumbstickDetectionElement.setAttributeNS(null, "cx", "50%");
       thumbstickDetectionElement.setAttributeNS(null, "cy", "50%");
       thumbstickDetectionElement.setAttributeNS(null, "r", "50%");
@@ -34675,9 +34938,9 @@ var VirtualGamepadVirtualThumbstick = class {
   destroy() {
     this._myDestroyed = true;
     this._myThumbstickDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointermove", this._myPointerMoveEventListener);
-    Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+    document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+    document.body.removeEventListener("pointermove", this._myPointerMoveEventListener);
+    document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
     this._myThumbstickDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
     this._myThumbstickDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
     this._myThumbstickIcon.destroy();
@@ -34807,13 +35070,13 @@ var VirtualGamepad = class {
   }
   _buildVirtualGamepad() {
     this._setupDocumentBody();
-    this._myVirtualGamepadContainer = Globals.getDocument(this._myParams.myEngine).createElement("div");
+    this._myVirtualGamepadContainer = document.createElement("div");
     this._myVirtualGamepadContainer.style.display = "block";
     this._myVirtualGamepadContainer.style.opacity = this._myParams.myOpacity.toString();
-    Globals.getBody(this._myParams.myEngine).appendChild(this._myVirtualGamepadContainer);
-    let leftDiv = Globals.getDocument(this._myParams.myEngine).createElement("div");
+    document.body.appendChild(this._myVirtualGamepadContainer);
+    let leftDiv = document.createElement("div");
     this._myVirtualGamepadContainer.appendChild(leftDiv);
-    let rightDiv = Globals.getDocument(this._myParams.myEngine).createElement("div");
+    let rightDiv = document.createElement("div");
     this._myVirtualGamepadContainer.appendChild(rightDiv);
     let buttonsAmount = this._myParams.myButtonsOrder[Handedness.LEFT].length;
     for (let i = 0; i < buttonsAmount; i++) {
@@ -34843,15 +35106,15 @@ var VirtualGamepad = class {
     }
   }
   _setupDocumentBody() {
-    Globals.getBody(this._myParams.myEngine).style.overflow = "hidden";
-    Globals.getBody(this._myParams.myEngine).style.userSelect = "none";
-    Globals.getBody(this._myParams.myEngine).style.webkitUserSelect = "none";
-    Globals.getBody(this._myParams.myEngine).style.webkitTapHighlightColor = "transparent";
-    Globals.getBody(this._myParams.myEngine).style.touchAction = "none";
+    document.body.style.overflow = "hidden";
+    document.body.style.userSelect = "none";
+    document.body.style.webkitUserSelect = "none";
+    document.body.style.webkitTapHighlightColor = "transparent";
+    document.body.style.touchAction = "none";
     this._myGestureStartEventListener = function(e) {
       e.preventDefault();
     };
-    Globals.getDocument(this._myParams.myEngine).addEventListener("gesturestart", this._myGestureStartEventListener);
+    document.addEventListener("gesturestart", this._myGestureStartEventListener);
   }
   _buildButton(buttonElementParent, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
     let virtualGamepadVirtualButton = new VirtualGamepadVirtualButton(buttonElementParent, this._myParams, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID);
@@ -34908,7 +35171,7 @@ var VirtualGamepad = class {
   }
   destroy() {
     this._myDestroyed = true;
-    Globals.getDocument(this._myParams.myEngine).removeEventListener("gesturestart", this._myGestureStartEventListener);
+    document.removeEventListener("gesturestart", this._myGestureStartEventListener);
     for (let handedness in this._myVirtualGamepadVirtualButtons) {
       for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
         let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
@@ -34933,8 +35196,8 @@ var VirtualGamepad = class {
 };
 
 // dist/input/gamepad/virtual_gamepad/virtual_gamepad_component.js
-import { Component as Component44, Property as Property38 } from "@wonderlandengine/api";
-var VirtualGamepadComponent = class extends Component44 {
+import { Component as Component45, Property as Property38 } from "@wonderlandengine/api";
+var VirtualGamepadComponent = class extends Component45 {
   static TypeName = "pp-virtual-gamepad";
   static Properties = {
     _myShowOnDesktop: Property38.bool(false),
@@ -35191,8 +35454,8 @@ var VirtualGamepadComponent = class extends Component44 {
 };
 
 // dist/input/pose/components/set_player_height_component.js
-import { Component as Component45, Property as Property39 } from "@wonderlandengine/api";
-var SetPlayerHeightComponent = class extends Component45 {
+import { Component as Component46, Property as Property39 } from "@wonderlandengine/api";
+var SetPlayerHeightComponent = class extends Component46 {
   static TypeName = "pp-set-player-height";
   static Properties = {
     _myEyesHeight: Property39.float(1.65),
@@ -35224,8 +35487,8 @@ var SetPlayerHeightComponent = class extends Component45 {
 };
 
 // dist/input/pose/components/set_hand_local_transform_component.js
-import { Component as Component46, Property as Property40 } from "@wonderlandengine/api";
-var SetHandLocalTransformComponent = class extends Component46 {
+import { Component as Component47, Property as Property40 } from "@wonderlandengine/api";
+var SetHandLocalTransformComponent = class extends Component47 {
   static TypeName = "pp-set-hand-local-transform";
   static Properties = {
     _myHandedness: Property40.enum(["Left", "Right"], "Left")
@@ -35254,46 +35517,47 @@ SetHandLocalTransformComponent.prototype.onPoseUpdated = function() {
 }();
 
 // dist/input/pose/components/set_head_local_transform_component.js
-import { Component as Component47 } from "@wonderlandengine/api";
-var SetHeadLocalTransformComponent = class extends Component47 {
+import { Component as Component48 } from "@wonderlandengine/api";
+var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component48 {
   static TypeName = "pp-set-head-local-transform";
-  static Properties = {};
   start() {
     Globals.getHeadPose(this.engine).registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
   }
+  static _onPoseUpdatedSV = {
+    cameraNonXRRotation: quat_create(),
+    cameraNonXRUp: vec3_create(),
+    cameraNonXRPosition: vec3_create(),
+    headPoseTransform: quat2_create()
+  };
   onPoseUpdated(dt, pose) {
+    if (this.active) {
+      if (!XRUtils.isSessionActive(this.engine)) {
+        const cameraNonXR = Globals.getPlayerObjects(this.engine).myCameraNonXR;
+        const cameraNonXRRotation = _SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRRotation;
+        cameraNonXR.pp_getRotationLocalQuat(cameraNonXRRotation);
+        if (Globals.isPoseForwardFixed(this.engine)) {
+          const cameraNonXRUp = _SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRUp;
+          cameraNonXRRotation.quat_rotateAxisRadians(Math.PI, cameraNonXRRotation.quat_getUp(cameraNonXRUp), cameraNonXRRotation);
+        }
+        const cameraNonXRPosition = _SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRPosition;
+        this.object.pp_setPositionLocal(cameraNonXR.pp_getPositionLocal(cameraNonXRPosition));
+        this.object.pp_setRotationLocalQuat(cameraNonXRRotation);
+      } else {
+        if (pose.isValid()) {
+          const headPoseTransform = _SetHeadLocalTransformComponent._onPoseUpdatedSV.headPoseTransform;
+          this.object.pp_setTransformLocalQuat(pose.getTransformQuat(headPoseTransform, null));
+        }
+      }
+    }
   }
   onDestroy() {
     Globals.getHeadPose(this.engine)?.unregisterPoseUpdatedEventListener(this);
   }
 };
-SetHeadLocalTransformComponent.prototype.onPoseUpdated = function() {
-  let cameraNonXRRotation = quat_create();
-  let cameraNonXRUp = vec3_create();
-  let cameraNonXRPosition = vec3_create();
-  let headPoseTransform = quat2_create();
-  return function onPoseUpdated(dt, pose) {
-    if (this.active) {
-      if (!XRUtils.isSessionActive(this.engine)) {
-        let cameraNonXR = Globals.getPlayerObjects(this.engine).myCameraNonXR;
-        cameraNonXRRotation = cameraNonXR.pp_getRotationLocalQuat(cameraNonXRRotation);
-        if (Globals.isPoseForwardFixed(this.engine)) {
-          cameraNonXRRotation.quat_rotateAxisRadians(Math.PI, cameraNonXRRotation.quat_getUp(cameraNonXRUp), cameraNonXRRotation);
-        }
-        this.object.pp_setPositionLocal(cameraNonXR.pp_getPositionLocal(cameraNonXRPosition));
-        this.object.pp_setRotationLocalQuat(cameraNonXRRotation);
-      } else {
-        if (pose.isValid()) {
-          this.object.pp_setTransformLocalQuat(pose.getTransformQuat(headPoseTransform, null));
-        }
-      }
-    }
-  };
-}();
 
 // dist/input/pose/components/set_tracked_hand_joint_local_transform_component.js
-import { Component as Component48, Property as Property41 } from "@wonderlandengine/api";
-var SetTrackedHandJointLocalTransformComponent = class extends Component48 {
+import { Component as Component49, Property as Property41 } from "@wonderlandengine/api";
+var SetTrackedHandJointLocalTransformComponent = class extends Component49 {
   static TypeName = "pp-set-tracked-hand-joint-local-transform";
   static Properties = {
     _myHandedness: Property41.enum(["Left", "Right"], "Left"),
@@ -35354,8 +35618,8 @@ SetTrackedHandJointLocalTransformComponent.prototype.onPoseUpdated = function() 
 }();
 
 // dist/input/pose/components/copy_hand_transform_component.js
-import { Component as Component49, Property as Property42 } from "@wonderlandengine/api";
-var CopyHandTransformComponent = class extends Component49 {
+import { Component as Component50, Property as Property42 } from "@wonderlandengine/api";
+var CopyHandTransformComponent = class extends Component50 {
   static TypeName = "pp-copy-hand-transform";
   static Properties = {
     _myHandedness: Property42.enum(["Left", "Right"], "Left")
@@ -35371,8 +35635,8 @@ var CopyHandTransformComponent = class extends Component49 {
 };
 
 // dist/input/pose/components/copy_head_transform_component.js
-import { Component as Component50 } from "@wonderlandengine/api";
-var CopyHeadTransformComponent = class extends Component50 {
+import { Component as Component51 } from "@wonderlandengine/api";
+var CopyHeadTransformComponent = class extends Component51 {
   static TypeName = "pp-copy-head-transform";
   static Properties = {};
   update(dt) {
@@ -35383,8 +35647,8 @@ var CopyHeadTransformComponent = class extends Component50 {
 };
 
 // dist/input/pose/components/copy_player_transform_component.js
-import { Component as Component51 } from "@wonderlandengine/api";
-var CopyPlayerTransformComponent = class extends Component51 {
+import { Component as Component52 } from "@wonderlandengine/api";
+var CopyPlayerTransformComponent = class extends Component52 {
   static TypeName = "pp-copy-player-transform";
   static Properties = {};
   update(dt) {
@@ -35395,8 +35659,8 @@ var CopyPlayerTransformComponent = class extends Component51 {
 };
 
 // dist/input/pose/components/copy_reference_space_transform_component.js
-import { Component as Component52 } from "@wonderlandengine/api";
-var CopyReferenceSpaceTransformComponent = class extends Component52 {
+import { Component as Component53 } from "@wonderlandengine/api";
+var CopyReferenceSpaceTransformComponent = class extends Component53 {
   static TypeName = "pp-copy-reference-space-transform";
   static Properties = {};
   update(dt) {
@@ -35419,9 +35683,9 @@ var ToolInputSourceType = {
 };
 
 // dist/tool/cauldron/components/tool_cursor_component.js
-import { Component as Component53, MeshComponent as MeshComponent13, Property as Property43, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
+import { Component as Component54, MeshComponent as MeshComponent13, Property as Property43, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
 import { Cursor as Cursor4, CursorTarget as CursorTarget6 } from "@wonderlandengine/components";
-var ToolCursorComponent = class extends Component53 {
+var ToolCursorComponent = class extends Component54 {
   static TypeName = "pp-tool-cursor";
   static Properties = {
     _myHandedness: Property43.enum(["Left", "Right"], "Left"),
@@ -36541,8 +36805,8 @@ var ConsoleVRWidget = class {
       this._myUnhandledRejectionEventListener = function(errorEvent) {
         this._consolePrint(ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.WINDOW, "Uncaught (in promise)", errorEvent.reason);
       }.bind(this);
-      Globals.getWindow(this._myEngine).addEventListener("error", this._myErrorEventListener);
-      Globals.getWindow(this._myEngine).addEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+      window.addEventListener("error", this._myErrorEventListener);
+      window.addEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
     }
     this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG] = Globals.getConsoleVR(this._myEngine).log;
     this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ERROR] = Globals.getConsoleVR(this._myEngine).error;
@@ -36702,14 +36966,14 @@ var ConsoleVRWidget = class {
     let stringifiedItem = null;
     if (item instanceof Error) {
       stringifiedItem = item.stack;
-    } else if (typeof item === "object") {
+    } else if (typeof item == "object") {
       let linesBetweenItems = 2;
       try {
         stringifiedItem = JSON.stringify(item, this._jsonReplacer.bind(this), linesBetweenItems);
       } catch (error3) {
         let cache = /* @__PURE__ */ new WeakSet();
         stringifiedItem = JSON.stringify(item, function(key, value) {
-          if (typeof value === "object" && value !== null) {
+          if (value != null && typeof value == "object") {
             if (cache.has(value)) {
               return "<stringify error: object already stringified>";
             }
@@ -37104,8 +37368,8 @@ var ConsoleVRWidget = class {
   }
   destroy() {
     this._myDestroyed = true;
-    Globals.getWindow(this._myEngine).removeEventListener("error", this._myErrorEventListener);
-    Globals.getWindow(this._myEngine).removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+    window.removeEventListener("error", this._myErrorEventListener);
+    window.removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
     this._myUI.destroy();
     this._myWidgetFrame.destroy();
     if (this._myParams.myResetBrowserConsoleOriginalFunctionsOnDestroy) {
@@ -37132,8 +37396,8 @@ var ConsoleVRWidget = class {
 };
 
 // dist/tool/console_vr/components/console_vr_tool_component.js
-import { Component as Component54, Property as Property44 } from "@wonderlandengine/api";
-var ConsoleVRToolComponent = class extends Component54 {
+import { Component as Component55, Property as Property44 } from "@wonderlandengine/api";
+var ConsoleVRToolComponent = class extends Component55 {
   static TypeName = "pp-console-vr-tool";
   static Properties = {
     _myHandedness: Property44.enum(["None", "Left", "Right"], "None"),
@@ -37221,8 +37485,8 @@ function refreshWidget(engine = Globals.getMainEngine()) {
 }
 function importVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, manualImport = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
   if (fileURL == null || fileURL.length == 0) {
-    if (Globals.getNavigator(engine).clipboard) {
-      Globals.getNavigator(engine).clipboard.readText().then(function(clipboard) {
+    if (navigator.clipboard) {
+      navigator.clipboard.readText().then(function(clipboard) {
         Globals.getEasyTuneVariables(engine).fromJSON(clipboard, resetVariablesDefaultValueOnImport, manualImport);
         EasyTuneUtils.refreshWidget(engine);
         if (onSuccessCallback != null) {
@@ -37288,8 +37552,8 @@ function importVariables(fileURL = null, resetVariablesDefaultValueOnImport = fa
 function exportVariables(fileURL = null, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
   let jsonVariables = Globals.getEasyTuneVariables(engine).toJSON();
   if (fileURL == null || fileURL.length == 0) {
-    if (Globals.getNavigator(engine).clipboard) {
-      Globals.getNavigator(engine).clipboard.writeText(jsonVariables).then(function() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(jsonVariables).then(function() {
         if (onSuccessCallback != null) {
           onSuccessCallback();
         }
@@ -37425,7 +37689,7 @@ var _importExportVariablesReplaceFileURLParams = function() {
       params[i] = params[i].replace("{", "");
       params[i] = params[i].replace("}", "");
     }
-    let urlSearchParams = new URL(Globals.getDocument(engine).location).searchParams;
+    let urlSearchParams = new URL(document.location).searchParams;
     let replacedFileURL = fileURL;
     for (let param of params) {
       let searchParamValue = urlSearchParams.get(param);
@@ -37726,7 +37990,7 @@ var EasyTuneTransform = class _EasyTuneTransform extends EasyTuneVariable {
 };
 
 // dist/tool/easy_tune/components/easy_tune_tool_component.js
-import { Component as Component55, Property as Property45 } from "@wonderlandengine/api";
+import { Component as Component56, Property as Property45 } from "@wonderlandengine/api";
 
 // dist/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget.js
 import { Emitter as Emitter15 } from "@wonderlandengine/api";
@@ -37762,7 +38026,7 @@ var EasyTuneBaseWidget = class {
   }
   setEasyTuneVariable(variable, appendToVariableName) {
     this._myVariable = variable;
-    if (typeof appendToVariableName !== "undefined") {
+    if (appendToVariableName != null) {
       this._myAppendToVariableName = appendToVariableName;
     } else {
       this._myAppendToVariableName = "";
@@ -37831,8 +38095,8 @@ var EasyTuneBaseWidget = class {
   }
   start(parentObject, easyTuneParams) {
     this._myConfig.build();
-    this._myResetImportLabelTimer.setDuration(this._myConfig.myImportExportResetLabelSeconds);
-    this._myResetExportLabelTimer.setDuration(this._myConfig.myImportExportResetLabelSeconds);
+    this._myResetImportLabelTimer.reset(this._myConfig.myImportExportResetLabelSeconds);
+    this._myResetExportLabelTimer.reset(this._myConfig.myImportExportResetLabelSeconds);
     this._myUI.build(parentObject, this._myConfig, easyTuneParams);
     this._myUI.setImportExportButtonsVisible(easyTuneParams.myShowVariablesImportExportButtons);
     this._startHook(parentObject, easyTuneParams);
@@ -40690,7 +40954,7 @@ var EasyTuneWidget = class {
 };
 
 // dist/tool/easy_tune/components/easy_tune_tool_component.js
-var EasyTuneToolComponent = class extends Component55 {
+var EasyTuneToolComponent = class extends Component56 {
   static TypeName = "pp-easy-tune-tool";
   static Properties = {
     _myHandedness: Property45.enum(["None", "Left", "Right"], "None"),
@@ -40782,8 +41046,8 @@ var EasyTuneToolComponent = class extends Component55 {
 };
 
 // dist/tool/easy_tune/components/easy_tune_import_variables_component.js
-import { Component as Component56, Property as Property46 } from "@wonderlandengine/api";
-var EasyTuneImportVariablesComponent = class extends Component56 {
+import { Component as Component57, Property as Property46 } from "@wonderlandengine/api";
+var EasyTuneImportVariablesComponent = class extends Component57 {
   static TypeName = "pp-easy-tune-import-variables";
   static Properties = {
     _myVariablesImportURL: Property46.string(""),
@@ -41206,8 +41470,8 @@ var EasyTextColor = class extends EasyObjectTuner {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js
-import { Component as Component57, Property as Property47 } from "@wonderlandengine/api";
-var EasyLightAttenuationComponent = class extends Component57 {
+import { Component as Component58, Property as Property47 } from "@wonderlandengine/api";
+var EasyLightAttenuationComponent = class extends Component58 {
   static TypeName = "pp-easy-light-attenuation";
   static Properties = {
     _myVariableName: Property47.string(""),
@@ -41237,8 +41501,8 @@ var EasyLightAttenuationComponent = class extends Component57 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js
-import { Component as Component58, Property as Property48 } from "@wonderlandengine/api";
-var EasyLightColorComponent = class extends Component58 {
+import { Component as Component59, Property as Property48 } from "@wonderlandengine/api";
+var EasyLightColorComponent = class extends Component59 {
   static TypeName = "pp-easy-light-color";
   static Properties = {
     _myVariableName: Property48.string(""),
@@ -41269,8 +41533,8 @@ var EasyLightColorComponent = class extends Component58 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_mesh_ambient_factor_component.js
-import { Component as Component59, Property as Property49 } from "@wonderlandengine/api";
-var EasyMeshAmbientFactorComponent = class extends Component59 {
+import { Component as Component60, Property as Property49 } from "@wonderlandengine/api";
+var EasyMeshAmbientFactorComponent = class extends Component60 {
   static TypeName = "pp-easy-mesh-ambient-factor";
   static Properties = {
     _myVariableName: Property49.string(""),
@@ -41304,8 +41568,8 @@ var EasyMeshAmbientFactorComponent = class extends Component59 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js
-import { Component as Component60, Property as Property50 } from "@wonderlandengine/api";
-var EasyMeshColorComponent = class extends Component60 {
+import { Component as Component61, Property as Property50 } from "@wonderlandengine/api";
+var EasyMeshColorComponent = class extends Component61 {
   static TypeName = "pp-easy-mesh-color";
   static Properties = {
     _myVariableName: Property50.string(""),
@@ -41341,8 +41605,8 @@ var EasyMeshColorComponent = class extends Component60 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_scale_component.js
-import { Component as Component61, Property as Property51 } from "@wonderlandengine/api";
-var EasyScaleComponent = class extends Component61 {
+import { Component as Component62, Property as Property51 } from "@wonderlandengine/api";
+var EasyScaleComponent = class extends Component62 {
   static TypeName = "pp-easy-scale";
   static Properties = {
     _myVariableName: Property51.string(""),
@@ -41375,8 +41639,8 @@ var EasyScaleComponent = class extends Component61 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js
-import { Component as Component62, Property as Property52 } from "@wonderlandengine/api";
-var EasySetTuneTargetChildNumberComponent = class extends Component62 {
+import { Component as Component63, Property as Property52 } from "@wonderlandengine/api";
+var EasySetTuneTargetChildNumberComponent = class extends Component63 {
   static TypeName = "pp-easy-set-tune-target-child-number";
   static Properties = {
     _myVariableName: Property52.string(""),
@@ -41441,8 +41705,8 @@ var EasySetTuneTargetChildNumberComponent = class extends Component62 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_grab_component.js
-import { Component as Component63 } from "@wonderlandengine/api";
-var EasySetTuneTargeetGrabComponent = class extends Component63 {
+import { Component as Component64 } from "@wonderlandengine/api";
+var EasySetTuneTargeetGrabComponent = class extends Component64 {
   static TypeName = "pp-easy-set-tune-target-grab";
   static Properties = {};
   start() {
@@ -41479,8 +41743,8 @@ var EasySetTuneTargeetGrabComponent = class extends Component63 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_text_color_component.js
-import { Component as Component64, Property as Property53 } from "@wonderlandengine/api";
-var EasyTextColorComponent = class extends Component64 {
+import { Component as Component65, Property as Property53 } from "@wonderlandengine/api";
+var EasyTextColorComponent = class extends Component65 {
   static TypeName = "pp-easy-text-color";
   static Properties = {
     _myVariableName: Property53.string(""),
@@ -41512,8 +41776,8 @@ var EasyTextColorComponent = class extends Component64 {
 };
 
 // dist/tool/easy_tune/easy_object_tuners/components/easy_transform_component.js
-import { Component as Component65, Property as Property54 } from "@wonderlandengine/api";
-var EasyTransformComponent = class extends Component65 {
+import { Component as Component66, Property as Property54 } from "@wonderlandengine/api";
+var EasyTransformComponent = class extends Component66 {
   static TypeName = "pp-easy-transform";
   static Properties = {
     _myVariableName: Property54.string(""),
@@ -41555,6 +41819,7 @@ export {
   AnalyticsManager,
   AnalyticsManagerComponent,
   AnalyticsUtils,
+  ArrayExtensionUtils,
   ArrayUtils,
   AudioEvent,
   AudioManager,
@@ -41817,13 +42082,13 @@ export {
   SaveManagerComponent,
   SaveUtils,
   SceneObjects,
-  SceneUtils,
   SetActiveComponent,
   SetHandLocalTransformComponent,
   SetHeadLocalTransformComponent,
   SetPlayerHeightComponent,
   SetTrackedHandJointLocalTransformComponent,
   ShowFPSComponent,
+  ShowXRButtonsComponent,
   SkipStateFunction,
   SpatialAudioListenerComponent,
   State,
@@ -41888,30 +42153,6 @@ export {
   WidgetParams,
   XRGamepadCore,
   XRUtils,
-  initArrayExtension,
-  initArrayExtensionProtoype,
-  initComponentMods,
-  initCursorComponentMod,
-  initCursorComponentModPrototype,
-  initCursorTargetComponentMod,
-  initCursorTargetComponentModPrototype,
-  initJSExtensions,
-  initJSPlugins,
-  initMathExtension,
-  initMathExtensionStatic,
-  initMouseLookComponentMod,
-  initMouseLookComponentModPrototype,
-  initNumberExtension,
-  initNumberExtensionPrototype,
-  initObjectExtension,
-  initObjectExtensionProtoype,
-  initPP,
-  initPlugins,
-  initSceneExtension,
-  initSceneExtensionPrototype,
-  initWLExtensions,
-  initWLMods,
-  initWLPlugins,
   mat3_create,
   mat4_create,
   quat2_create,
