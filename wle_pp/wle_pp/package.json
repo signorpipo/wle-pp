@@ -1,6 +1,6 @@
 {
     "name": "wle-pp",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "author": "Pipo",
     "description": "A library for the Wonderland Engine",
     "homepage": "https://github.com/signorpipo/wle-pp",
@@ -27,7 +27,7 @@
     "exports": {
         ".": "./dist/pp/index.js",
         "./*": "./dist/pp/*",
-        "./add_type_extensions_to_typescript": "./dist/pp/plugin/add_type_extensions_to_typescript.js"
+        "./add_type_extensions_to_typescript.js": "./dist/pp/plugin/add_type_extensions_to_typescript.js"
     },
     "wonderlandengine": {},
     "peerDependencies": {
