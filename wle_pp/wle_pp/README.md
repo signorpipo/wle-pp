@@ -117,7 +117,7 @@ The setup for the PP library is very simple but requires a few steps:
           - this component takes into consideration the `Fix Forward` flag found on the `pp-gateway` component
   - make type extensions available to typescript, so that using them do not cause type errors
     - u have to add this import somewhere in your code where your `tsconfig.json` can see it (usually inside your `js` or `src` folder)
-      - `import "wle-pp/add_type_extensions_to_typescript";`
+      - `import "wle-pp/add_type_extensions_to_typescript.js";`
     - if the `tsconfig.json` can see the file where this has been imported, it should be available everywhere without the need to import it in every file where u use a type extension
     - u don't actually need to do this if u don't plan to use the type extensions
     - note that these extensions are automatically initialized by the `pp-gateway` component
@@ -135,7 +135,7 @@ The advanced setup basically consists in checking out the `pp-gateway` component
 For example, if you don't need to register all the `WL` and `PP` components, something that the `pp-gateway` component does on register, you can avoid using that component and create a custom gateway component which only calls the functions that u need from `initPP`.  
 
 You can also avoid having a gateway component directly and call the functions u need directly in your `index.js`, right before the scene is loaded.
-For example, if u just wanted to initialize the array extension, you could just call the `initArrayExtension` function before the scene is loaded. Besides, if u import the extension initialization function (or the `initPP` function) directly, u will also automatically import that type extension for typescript too, so there should be no need to also add the `wle-pp/add_type_extensions_to_typescript` import.
+For example, if u just wanted to initialize the array extension, you could just call the `initArrayExtension` function before the scene is loaded. Besides, if u import the extension initialization function (or the `initPP` function) directly, u will also automatically import that type extension for typescript too, so there should be no need to also add the `wle-pp/add_type_extensions_to_typescript.js` import.
 
 A lot of features relies on the proper setup of the library, so it might not be easy to customize it as you would like to, and you will probably need to do some trial and error to figure out what you can actually remove or change to get it working.
 Good luck!
