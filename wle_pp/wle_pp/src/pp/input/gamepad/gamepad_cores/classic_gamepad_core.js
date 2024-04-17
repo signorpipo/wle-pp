@@ -9,7 +9,7 @@ export class ClassicGamepadCore extends GamepadCore {
 
         this._myGamepadIndex = gamepadIndex;    // null means any active gamepad
 
-        this._myCurrentGamepads = window.navigator.getGamepads();
+        this._myCurrentGamepads = navigator.getGamepads();
 
         // Support Variables
         this._myButtonData = this._createButtonData();
@@ -18,7 +18,7 @@ export class ClassicGamepadCore extends GamepadCore {
     }
 
     _preUpdateHook(dt) {
-        this._myCurrentGamepads = window.navigator.getGamepads();
+        this._myCurrentGamepads = navigator.getGamepads();
     }
 
     isGamepadCoreActive() {

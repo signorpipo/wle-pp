@@ -4,14 +4,15 @@ import { XRUtils } from "../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../input/cauldron/input_types.js";
 import { InputUtils } from "../../../../input/cauldron/input_utils.js";
 import { Globals } from "../../../../pp/globals.js";
-import { mat4_create, quat2_create, vec3_create } from "../../../js/extensions/array_extension.js";
+import { mat4_create, quat2_create, vec3_create } from "../../../js/extensions/array/vec_create_extension.js";
 import { PluginUtils } from "../../../utils/plugin_utils.js";
 
 export function initCursorComponentMod() {
-    initCursorComponentModPrototype();
+    _initCursorComponentModPrototype();
 }
 
-export function initCursorComponentModPrototype() {
+function _initCursorComponentModPrototype() {
+
     let cursorComponentMod = {};
 
     // Modified Functions
@@ -342,7 +343,7 @@ export function initCursorComponentModPrototype() {
             // Don't care about secondary pointers 
             if (this._pointerID != null && this._pointerID != e.pointerId) return;
 
-            let bounds = Globals.getBody(this.engine).getBoundingClientRect();
+            let bounds = document.body.getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
         }
     };
@@ -353,9 +354,9 @@ export function initCursorComponentModPrototype() {
     cursorComponentMod.onPointerDown = function onPointerDown(e) {
         if (this.active && !this._pointerLeaveToProcess) {
             // Don't care about secondary pointers or non-left clicks 
-            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button !== 0) return;
+            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button != 0) return;
 
-            let bounds = Globals.getBody(this.engine).getBoundingClientRect();
+            let bounds = document.body.getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
 
             this._isDown = true;
@@ -370,9 +371,9 @@ export function initCursorComponentModPrototype() {
     cursorComponentMod.onPointerUp = function onPointerUp(e) {
         if (this.active && !this._pointerLeaveToProcess) {
             // Don't care about secondary pointers or non-left clicks 
-            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button !== 0) return;
+            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button != 0) return;
 
-            let bounds = Globals.getBody(this.engine).getBoundingClientRect();
+            let bounds = document.body.getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
 
             if (!this._isDownForUpWithDown) {
@@ -742,11 +743,11 @@ export function initCursorComponentModPrototype() {
     };
 
     cursorComponentMod._pp_isDownToProcess = function _pp_isDownToProcess() {
-        return this._isDown !== this._lastIsDown && this._isDown;
+        return this._isDown != this._lastIsDown && this._isDown;
     };
 
     cursorComponentMod._pp_isUpToProcess = function _pp_isUpToProcess() {
-        return this._isDown !== this._lastIsDown && !this._isDown;
+        return this._isDown != this._lastIsDown && !this._isDown;
     };
 
     cursorComponentMod._pp_isMoving = function () {
@@ -766,15 +767,15 @@ export function initCursorComponentModPrototype() {
 
     cursorComponentMod._pp_isAR = function _pp_isAR() {
         let firstInputSource = XRUtils.getSession(this.engine).inputSources[0];
-        return this.input != null && firstInputSource.handedness === "none" && firstInputSource.gamepad != null;
+        return this.input != null && firstInputSource.handedness == "none" && firstInputSource.gamepad != null;
     };
 
     cursorComponentMod._pp_updateCursorStyle = function _pp_updateCursorStyle() {
         if (this.styleCursor) {
             if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isSurface) {
-                Globals.getBody(this.engine).style.cursor = "pointer";
-            } else if (Globals.getBody(this.engine).style.cursor == "pointer") {
-                Globals.getBody(this.engine).style.cursor = "default";
+                document.body.style.cursor = "pointer";
+            } else if (document.body.style.cursor == "pointer") {
+                document.body.style.cursor = "default";
             }
         }
     };

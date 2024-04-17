@@ -1,4 +1,4 @@
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { CollisionCheckSurface } from "./collision_check_surface.js";
 
 export class CollisionCheckHorizontalBase extends CollisionCheckSurface {

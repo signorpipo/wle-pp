@@ -69,11 +69,40 @@ export class Timer {
     }
 
     setDuration(duration) {
-        this._myDuration = Math.max(0, duration);
+        const newDuration = Math.max(0, duration);
+
+        if (this.isRunning()) {
+            const timeElapsed = Math.max(0, this._myDuration - this._myTimeLeft);
+            this._myTimeLeft = Math.max(0, newDuration - timeElapsed);
+        }
+
+        this._myDuration = newDuration;
     }
 
     getTimeLeft() {
         return this._myTimeLeft;
+    }
+
+    setTimeLeft(timeLeft) {
+        if (this.isRunning()) {
+            this._myTimeLeft = Math.max(0, timeLeft);
+
+            if (this._myTimeLeft > this._myDuration) {
+                this._myDuration = this._myTimeLeft;
+            }
+        }
+    }
+
+    getTimeElapsed() {
+        let timeElapsed = 0;
+        if (this.isRunning()) {
+            timeElapsed = this._myDuration - this._myTimeLeft;
+        }
+        return Math.max(0, timeElapsed);
+    }
+
+    setTimeElapsed(timeElapsed) {
+        this.setTimeLeft(this._myDuration - Math.max(0, timeElapsed));
     }
 
     getPercentage() {

@@ -4,7 +4,6 @@ import { CharacterCollisionSystem } from "../character_collision_system.js";
 
 export class CharacterCollisionSystemComponent extends Component {
     static TypeName = "pp-character-collision-system";
-    static Properties = {};
 
     init() {
         this._myCharacterCollisionSystem = null;

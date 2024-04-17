@@ -1,6 +1,6 @@
 import { Emitter } from "@wonderlandengine/api";
 import { XRUtils } from "../../cauldron/utils/xr_utils.js";
-import { mat4_create, quat2_create, quat_create, vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { mat4_create, quat2_create, quat_create, vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 
 export class BasePoseParams {
@@ -120,6 +120,12 @@ export class BasePose {
         // Implemented outside class definition
     }
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} referenceObjectOverride
+     * @return {any}
+     */
     getTransformQuat(out = quat2_create(), referenceObjectOverride = undefined) {
         // Implemented outside class definition
     }

@@ -13,7 +13,7 @@ or
 let visualTorus = new VisualTorus(visualParams);
 */
 
-import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { VisualElementType } from "./visual_element_types.js";
 import { VisualLine, VisualLineParams } from "./visual_line.js";

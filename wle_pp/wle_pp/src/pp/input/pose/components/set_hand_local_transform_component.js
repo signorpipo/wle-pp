@@ -1,6 +1,6 @@
 import { Component, Property } from "@wonderlandengine/api";
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
-import { quat2_create } from "../../../plugin/js/extensions/array_extension.js";
+import { quat2_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { InputUtils } from "../../cauldron/input_utils.js";
 

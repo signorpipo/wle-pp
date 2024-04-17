@@ -1,13 +1,13 @@
 import { Emitter, PhysXComponent } from "@wonderlandengine/api";
 import { FSM } from "../../../../../cauldron/fsm/fsm.js";
-import { EasingFunction } from "../../../../../cauldron/js/utils/math_utils.js";
 import { PhysicsLayerFlags } from "../../../../../cauldron/physics/physics_layer_flags.js";
+import { EasingFunction } from "../../../../../cauldron/utils/math_utils.js";
 import { XRUtils } from "../../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../../input/cauldron/input_types.js";
 import { InputUtils } from "../../../../../input/cauldron/input_utils.js";
 import { GamepadUtils } from "../../../../../input/gamepad/cauldron/gamepad_utils.js";
 import { GamepadButtonID } from "../../../../../input/gamepad/gamepad_buttons.js";
-import { vec3_create } from "../../../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../pp/globals.js";
 import { CharacterColliderSetupSimplifiedCreationParams, CharacterColliderSetupUtils } from "../../../character_controller/collision/character_collider_setup_utils.js";
 import { CollisionCheckBridge } from "../../../character_controller/collision/collision_check_bridge.js";

@@ -1,14 +1,15 @@
 import { MouseLookComponent } from "@wonderlandengine/components";
 import { Timer } from "../../../../cauldron/cauldron/timer.js";
 import { Globals } from "../../../../pp/globals.js";
-import { vec3_create } from "../../../js/extensions/array_extension.js";
+import { vec3_create } from "../../../js/extensions/array/vec_create_extension.js";
 import { PluginUtils } from "../../../utils/plugin_utils.js";
 
 export function initMouseLookComponentMod() {
-    initMouseLookComponentModPrototype();
+    _initMouseLookComponentModPrototype();
 }
 
-export function initMouseLookComponentModPrototype() {
+function _initMouseLookComponentModPrototype() {
+
     let mouseLookComponentMod = {};
 
     // Modified Functions
@@ -40,7 +41,7 @@ export function initMouseLookComponentModPrototype() {
                         this.mouseDown = true;
                         // Commenting cursor style change for now since it messes with Cursor Component cursor style, which is more important to have,
                         // since it provides a more important feedback, while here is mostly just a visual thing
-                        //Globals.getBody(this.engine).style.cursor = "grabbing"; 
+                        //document.body.style.cursor = "grabbing"; 
                         if (event.button == 1) {
                             event.preventDefault(); // Prevent scrolling
                             return false;
@@ -57,7 +58,7 @@ export function initMouseLookComponentModPrototype() {
                 if (this.mouseDown) {
                     if (event.button == this.mouseButtonIndex) {
                         this.mouseDown = false;
-                        //Globals.getBody(this.engine).style.cursor = "default";
+                        //document.body.style.cursor = "default";
                     }
                 }
             }
@@ -72,12 +73,12 @@ export function initMouseLookComponentModPrototype() {
 
                 if (this.mouseDown) {
                     this.mouseDown = false;
-                    //Globals.getBody(this.engine).style.cursor = "default";
+                    //document.body.style.cursor = "default";
                 }
             }
         }.bind(this);
 
-        Globals.getBody(this.engine).addEventListener("pointermove", this.pointerMoveListener);
+        document.body.addEventListener("pointermove", this.pointerMoveListener);
 
         if (this.requireMouseDown) {
             if (this.mouseButtonIndex == 2) {
@@ -86,10 +87,10 @@ export function initMouseLookComponentModPrototype() {
 
             Globals.getCanvas(this.engine).addEventListener("pointerdown", this.pointerDown);
 
-            Globals.getBody(this.engine).addEventListener("pointerup", this.pointerUp);
+            document.body.addEventListener("pointerup", this.pointerUp);
         }
 
-        Globals.getBody(this.engine).addEventListener("pointerleave", this.pointerLeave);
+        document.body.addEventListener("pointerleave", this.pointerLeave);
     };
 
     // New Functions
@@ -99,7 +100,7 @@ export function initMouseLookComponentModPrototype() {
 
     mouseLookComponentMod.onDeactivate = function onDeactivate() {
         if (this.mouseDown) {
-            //Globals.getBody(this.engine).style.cursor = "default";
+            //document.body.style.cursor = "default";
         }
 
         this.isMoving = false;
@@ -110,11 +111,11 @@ export function initMouseLookComponentModPrototype() {
     };
 
     mouseLookComponentMod.onDestroy = function onDestroy() {
-        Globals.getBody(this.engine).removeEventListener("pointermove", this.pointerMoveListener);
+        document.body.removeEventListener("pointermove", this.pointerMoveListener);
         Globals.getCanvas(this.engine).removeEventListener("contextmenu", this.contextMenuListener);
         Globals.getCanvas(this.engine).removeEventListener("pointerdown", this.pointerDown);
-        Globals.getBody(this.engine).removeEventListener("pointerup", this.pointerUp);
-        Globals.getBody(this.engine).removeEventListener("pointerleave", this.pointerLeave);
+        document.body.removeEventListener("pointerup", this.pointerUp);
+        document.body.removeEventListener("pointerleave", this.pointerLeave);
     };
 
     mouseLookComponentMod.update = function update(dt) {

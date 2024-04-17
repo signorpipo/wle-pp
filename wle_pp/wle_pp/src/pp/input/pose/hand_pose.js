@@ -1,5 +1,5 @@
 import { XRUtils } from "../../cauldron/utils/xr_utils.js";
-import { quat_create, vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { quat_create, vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Handedness, InputSourceType } from "../cauldron/input_types.js";
 import { InputUtils } from "../cauldron/input_utils.js";
 import { BasePose, BasePoseParams } from "./base_pose.js";

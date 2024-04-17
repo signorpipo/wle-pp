@@ -86,14 +86,14 @@ export class CustomCloneParams {
     }
 }
 
-export function isWLComponent(typeOrClass) {
-    return ComponentUtils.isWLNativeComponent(typeOrClass) || ComponentUtils.isWLJavascriptComponent(typeOrClass);
+export function isWLComponent(classOrType) {
+    return ComponentUtils.isWLNativeComponent(classOrType) || ComponentUtils.isWLJavascriptComponent(classOrType);
 }
 
-export function isWLNativeComponent(typeOrClass) {
+export function isWLNativeComponent(classOrType) {
     let wlNative = false;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     if (ComponentUtils.getWLNativeComponentTypes().includes(type)) {
         wlNative = true;
@@ -102,10 +102,10 @@ export function isWLNativeComponent(typeOrClass) {
     return wlNative;
 }
 
-export function isWLJavascriptComponent(typeOrClass) {
+export function isWLJavascriptComponent(classOrType) {
     let wlJavascript = false;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     if (ComponentUtils.getWLJavascriptComponentTypes().includes(type)) {
         wlJavascript = true;
@@ -122,12 +122,12 @@ export function getWLJavascriptComponentTypes() {
     return _myWLJavascriptComponentTypes;
 }
 
-export function getTypeFromTypeOrClass(typeOrClass) {
-    if (typeOrClass == null) return;
+export function getTypeFromClassOrType(classOrType) {
+    if (classOrType == null) return;
 
-    let type = typeOrClass;
-    if (typeOrClass.TypeName != null) {
-        type = typeOrClass.TypeName;
+    let type = classOrType;
+    if (classOrType.TypeName != null) {
+        type = classOrType.TypeName;
     }
 
     return type;
@@ -174,8 +174,8 @@ export function getClassFromType(type, engine = Globals.getMainEngine()) {
     return classToReturn;
 }
 
-export function isRegistered(typeOrClass, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function isRegistered(classOrType, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     return ComponentUtils.getClassFromType(type, engine) != null;
 }
 
@@ -191,8 +191,8 @@ export function getJavascriptComponentClassesByIndex(engine = Globals.getMainEng
     return Globals.getWASM(engine)._componentTypes;
 }
 
-export function getJavascriptComponentTypeIndex(typeOrClass, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function getJavascriptComponentTypeIndex(classOrType, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     return ComponentUtils.getJavascriptComponentTypeIndexes(engine)[type];
 }
 
@@ -211,19 +211,19 @@ export function getJavascriptComponentTypeFromIndex(typeIndex, engine = Globals.
     return type;
 }
 
-export function isWLNativeComponentRegistered(typeOrClass, engine = Globals.getMainEngine()) {
+export function isWLNativeComponentRegistered(classOrType, engine = Globals.getMainEngine()) {
     let wasm = Globals.getWASM(engine);
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     return wasm._wl_get_component_manager_index(wasm.tempUTF8(type)) >= 0;
 }
 
-export function isCloneable(typeOrClass, defaultCloneValid = false, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function isCloneable(classOrType, defaultCloneValid = false, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     return defaultCloneValid || ComponentUtils.hasCloneCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clone != null;
 }
 
-export function hasClonePostProcess(typeOrClass, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function hasClonePostProcess(classOrType, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     return ComponentUtils.hasClonePostProcessCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clonePostProcess != null;
 }
 
@@ -267,8 +267,8 @@ export function cloneDefault(componentToClone, targetObject, autoStartIfNotActiv
     return clonedComponent;
 }
 
-export function setCloneCallback(typeOrClass, callback, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function setCloneCallback(classOrType, callback, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     if (!_myCloneCallbacks.has(engine)) {
         _myCloneCallbacks.set(engine, new Map());
@@ -277,18 +277,18 @@ export function setCloneCallback(typeOrClass, callback, engine = Globals.getMain
     _myCloneCallbacks.get(engine).set(type, callback);
 }
 
-export function removeCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function removeCloneCallback(classOrType, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     if (_myCloneCallbacks.has(engine)) {
         _myCloneCallbacks.get(engine).delete(type);
     }
 }
 
-export function getCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
+export function getCloneCallback(classOrType, engine = Globals.getMainEngine()) {
     let callback = null;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     if (_myCloneCallbacks.has(engine)) {
         callback = _myCloneCallbacks.get(engine).get(type);
     }
@@ -296,10 +296,10 @@ export function getCloneCallback(typeOrClass, engine = Globals.getMainEngine()) 
     return callback;
 }
 
-export function hasCloneCallback(typeOrClass, engine = Globals.getMainEngine()) {
+export function hasCloneCallback(classOrType, engine = Globals.getMainEngine()) {
     let hasCallback = false;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     if (_myCloneCallbacks.has(engine)) {
         hasCallback = _myCloneCallbacks.get(engine).has(type);
     }
@@ -307,8 +307,8 @@ export function hasCloneCallback(typeOrClass, engine = Globals.getMainEngine()) 
     return hasCallback;
 }
 
-export function setClonePostProcessCallback(typeOrClass, callback, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function setClonePostProcessCallback(classOrType, callback, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     if (!_myClonePostProcessCallbacks.has(engine)) {
         _myClonePostProcessCallbacks.set(engine, new Map());
@@ -317,18 +317,18 @@ export function setClonePostProcessCallback(typeOrClass, callback, engine = Glob
     _myClonePostProcessCallbacks.get(engine).set(type, callback);
 }
 
-export function removeClonePostProcessCallback(typeOrClass, engine = Globals.getMainEngine()) {
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+export function removeClonePostProcessCallback(classOrType, engine = Globals.getMainEngine()) {
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     if (_myClonePostProcessCallbacks.has(engine)) {
         _myClonePostProcessCallbacks.get(engine).delete(type);
     }
 }
 
-export function getClonePostProcessCallback(typeOrClass, engine = Globals.getMainEngine()) {
+export function getClonePostProcessCallback(classOrType, engine = Globals.getMainEngine()) {
     let callback = null;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     if (_myClonePostProcessCallbacks.has(engine)) {
         callback = _myClonePostProcessCallbacks.get(engine).get(type);
     }
@@ -336,10 +336,10 @@ export function getClonePostProcessCallback(typeOrClass, engine = Globals.getMai
     return callback;
 }
 
-export function hasClonePostProcessCallback(typeOrClass, engine = Globals.getMainEngine()) {
+export function hasClonePostProcessCallback(classOrType, engine = Globals.getMainEngine()) {
     let hasCallback = false;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
     if (_myClonePostProcessCallbacks.has(engine)) {
         hasCallback = _myClonePostProcessCallbacks.get(engine).has(type);
     }
@@ -348,10 +348,10 @@ export function hasClonePostProcessCallback(typeOrClass, engine = Globals.getMai
 }
 
 
-export function getDefaultWLComponentCloneCallback(typeOrClass) {
+export function getDefaultWLComponentCloneCallback(classOrType) {
     let callback = null;
 
-    let type = ComponentUtils.getTypeFromTypeOrClass(typeOrClass);
+    let type = ComponentUtils.getTypeFromClassOrType(classOrType);
 
     switch (type) {
         case MeshComponent.TypeName:
@@ -374,8 +374,8 @@ export function getDefaultWLComponentCloneCallback(typeOrClass) {
 }
 
 
-export function hasDefaultWLComponentCloneCallback(typeOrClass) {
-    return ComponentUtils.getDefaultWLComponentCloneCallback(typeOrClass) != null;
+export function hasDefaultWLComponentCloneCallback(classOrType) {
+    return ComponentUtils.getDefaultWLComponentCloneCallback(classOrType) != null;
 }
 
 
@@ -421,7 +421,7 @@ export let ComponentUtils = {
     isWLJavascriptComponent,
     getWLNativeComponentTypes,
     getWLJavascriptComponentTypes,
-    getTypeFromTypeOrClass,
+    getTypeFromClassOrType,
     getClassFromType,
     isRegistered,
 

@@ -9,7 +9,7 @@ export function rgbToHSV(rgb) {
     let max = Math.max(r, g, b), min = Math.min(r, g, b),
         d = max - min,
         h,
-        s = (max === 0 ? 0 : d / max),
+        s = (max == 0 ? 0 : d / max),
         v = max;
 
     switch (max) {

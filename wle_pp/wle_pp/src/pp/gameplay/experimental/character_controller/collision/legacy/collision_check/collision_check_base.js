@@ -1,6 +1,6 @@
 import { RaycastHit, RaycastParams, RaycastResults } from "../../../../../../cauldron/physics/physics_raycast_params.js";
-import { PhysicsUtils } from "../../../../../../index.js";
-import { quat2_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { PhysicsUtils } from "../../../../../../cauldron/physics/physics_utils.js";
+import { quat2_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { CollisionRuntimeParams } from "./collision_params.js";
 
@@ -168,6 +168,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForMoveCollisionCheckDisabled = fu
 
         collisionRuntimeParams.myRealIsOnGround = true;
         collisionRuntimeParams.myIsOnGround = true;
+        collisionRuntimeParams.myGroundCollisionHit.reset();
         collisionRuntimeParams.myGroundAngle = 0;
         collisionRuntimeParams.myGroundPerceivedAngle = 0;
         collisionRuntimeParams.myGroundNormal.vec3_set(0, 1, 0);
@@ -175,9 +176,11 @@ CollisionCheckBase.prototype._setRuntimeParamsForMoveCollisionCheckDisabled = fu
         collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
         collisionRuntimeParams.myGroundDistance = 0;
         collisionRuntimeParams.myGroundIsBaseInsideCollision = false;
+        collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = false;
 
         collisionRuntimeParams.myRealIsOnCeiling = false;
         collisionRuntimeParams.myIsOnCeiling = false;
+        collisionRuntimeParams.myCeilingCollisionHit.reset();
         collisionRuntimeParams.myCeilingAngle = 0;
         collisionRuntimeParams.myCeilingPerceivedAngle = 0;
         collisionRuntimeParams.myCeilingNormal.vec3_set(0, 1, 0);
@@ -185,6 +188,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForMoveCollisionCheckDisabled = fu
         collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
         collisionRuntimeParams.myCeilingDistance = 0;
         collisionRuntimeParams.myCeilingIsBaseInsideCollision = false;
+        collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = false;
 
         collisionRuntimeParams.mySplitMovementSteps = 1;
         collisionRuntimeParams.mySplitMovementStepsPerformed = 1;
@@ -221,6 +225,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForTeleportCollisionCheckDisabled 
 
         collisionRuntimeParams.myRealIsOnGround = true;
         collisionRuntimeParams.myIsOnGround = true;
+        collisionRuntimeParams.myGroundCollisionHit.reset();
         collisionRuntimeParams.myGroundAngle = 0;
         collisionRuntimeParams.myGroundPerceivedAngle = 0;
         collisionRuntimeParams.myGroundNormal.vec3_set(0, 1, 0);
@@ -228,9 +233,11 @@ CollisionCheckBase.prototype._setRuntimeParamsForTeleportCollisionCheckDisabled 
         collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
         collisionRuntimeParams.myGroundDistance = 0;
         collisionRuntimeParams.myGroundIsBaseInsideCollision = false;
+        collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = false;
 
         collisionRuntimeParams.myRealIsOnCeiling = false;
         collisionRuntimeParams.myIsOnCeiling = false;
+        collisionRuntimeParams.myCeilingCollisionHit.reset();
         collisionRuntimeParams.myCeilingAngle = 0;
         collisionRuntimeParams.myCeilingPerceivedAngle = 0;
         collisionRuntimeParams.myCeilingNormal.vec3_set(0, 1, 0);
@@ -238,6 +245,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForTeleportCollisionCheckDisabled 
         collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
         collisionRuntimeParams.myCeilingDistance = 0;
         collisionRuntimeParams.myCeilingIsBaseInsideCollision = false;
+        collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = false;
 
         collisionRuntimeParams.myOriginalUp = transformQuat.quat2_getUp(collisionRuntimeParams.myOriginalUp);
         collisionRuntimeParams.myOriginalForward = transformQuat.quat2_getForward(collisionRuntimeParams.myOriginalForward);
@@ -285,6 +293,7 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
     return function _setRuntimeParamsForUpdateSurfaceInfoCollisionCheckDisabled(transformQuat, collisionCheckParams, collisionRuntimeParams) {
         collisionRuntimeParams.myRealIsOnGround = true;
         collisionRuntimeParams.myIsOnGround = true;
+        collisionRuntimeParams.myGroundCollisionHit.reset();
         collisionRuntimeParams.myGroundAngle = 0;
         collisionRuntimeParams.myGroundPerceivedAngle = 0;
         collisionRuntimeParams.myGroundNormal.vec3_set(0, 1, 0);
@@ -292,9 +301,11 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
         collisionRuntimeParams.myGroundHitMaxNormal.vec3_copy(collisionRuntimeParams.myGroundNormal);
         collisionRuntimeParams.myGroundDistance = 0;
         collisionRuntimeParams.myGroundIsBaseInsideCollision = false;
+        collisionRuntimeParams.myOnGroundDueToBasePartiallyInsideCollision = false;
 
         collisionRuntimeParams.myRealIsOnCeiling = false;
         collisionRuntimeParams.myIsOnCeiling = false;
+        collisionRuntimeParams.myCeilingCollisionHit.reset();
         collisionRuntimeParams.myCeilingAngle = 0;
         collisionRuntimeParams.myCeilingPerceivedAngle = 0;
         collisionRuntimeParams.myCeilingNormal.vec3_set(0, 1, 0);
@@ -302,5 +313,6 @@ CollisionCheckBase.prototype._setRuntimeParamsForUpdateSurfaceInfoCollisionCheck
         collisionRuntimeParams.myCeilingHitMaxNormal.vec3_copy(collisionRuntimeParams.myCeilingNormal);
         collisionRuntimeParams.myCeilingDistance = 0;
         collisionRuntimeParams.myCeilingIsBaseInsideCollision = false;
+        collisionRuntimeParams.myOnCeilingDueToBasePartiallyInsideCollision = false;
     };
 }();

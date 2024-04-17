@@ -50,7 +50,7 @@ export class EasyTuneBaseWidget {
     setEasyTuneVariable(variable, appendToVariableName) {
         this._myVariable = variable;
 
-        if ((typeof appendToVariableName) !== "undefined") {
+        if (appendToVariableName != null) {
             this._myAppendToVariableName = appendToVariableName;
         } else {
             this._myAppendToVariableName = "";
@@ -138,8 +138,8 @@ export class EasyTuneBaseWidget {
     start(parentObject, easyTuneParams) {
         this._myConfig.build();
 
-        this._myResetImportLabelTimer.setDuration(this._myConfig.myImportExportResetLabelSeconds);
-        this._myResetExportLabelTimer.setDuration(this._myConfig.myImportExportResetLabelSeconds);
+        this._myResetImportLabelTimer.reset(this._myConfig.myImportExportResetLabelSeconds);
+        this._myResetExportLabelTimer.reset(this._myConfig.myImportExportResetLabelSeconds);
 
         this._myUI.build(parentObject, this._myConfig, easyTuneParams);
         this._myUI.setImportExportButtonsVisible(easyTuneParams.myShowVariablesImportExportButtons);

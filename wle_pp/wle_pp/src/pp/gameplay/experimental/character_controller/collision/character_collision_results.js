@@ -1,5 +1,5 @@
 import { RaycastHit } from "../../../../cauldron/physics/physics_raycast_params.js";
-import { quat2_create, vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { quat2_create, vec3_create } from "../../../../plugin/js/extensions/array/vec_create_extension.js";
 
 export class CharacterCollisionResults {
 
@@ -54,6 +54,8 @@ export class CharacterCollisionSurfaceInfo {
     constructor() {
         this.myOnSurface = false;
 
+        this.mySurfaceReferenceCollisionHit = new RaycastHit();
+
         this.mySurfaceAngle = 0;
         this.mySurfacePerceivedAngle = 0;
         this.mySurfaceNormal = vec3_create();
@@ -64,6 +66,7 @@ export class CharacterCollisionSurfaceInfo {
         this.mySurfaceDistance = null;
 
         this.myBaseInsideCollision = false;
+        this.myOnSurfaceDueToBasePartiallyInsideCollision = false;
     }
 
     reset() {
@@ -305,12 +308,15 @@ CharacterCollisionSurfaceInfo.prototype.reset = function reset() {
     this.mySurfacePerceivedAngle = 0;
     this.mySurfaceNormal.vec3_zero();
 
+    this.mySurfaceReferenceCollisionHit.reset();
+
     this.mySurfaceHitMaxAngle = 0;
     this.mySurfaceHitMaxNormal.vec3_zero();
 
     this.mySurfaceDistance = null;
 
     this.myBaseInsideCollision = false;
+    this.myOnSurfaceDueToBasePartiallyInsideCollision = false;
 };
 
 CharacterCollisionSurfaceInfo.prototype.copy = function copy(other) {
@@ -320,12 +326,15 @@ CharacterCollisionSurfaceInfo.prototype.copy = function copy(other) {
     this.mySurfacePerceivedAngle = other.mySurfacePerceivedAngle;
     this.mySurfaceNormal.vec3_copy(other.mySurfaceNormal);
 
+    this.mySurfaceReferenceCollisionHit.copy(other.mySurfaceReferenceCollisionHit);
+
     this.mySurfaceHitMaxAngle = other.mySurfaceHitMaxAngle;
     this.mySurfaceHitMaxNormal.vec3_copy(other.mySurfaceHitMaxNormal);
 
     this.mySurfaceDistance = other.mySurfaceDistance;
 
     this.myBaseInsideCollision = other.myBaseInsideCollision;
+    this.myOnSurfaceDueToBasePartiallyInsideCollision = other.myOnSurfaceDueToBasePartiallyInsideCollision;
 };
 
 CharacterCollisionWallSlideResults.prototype.reset = function reset() {

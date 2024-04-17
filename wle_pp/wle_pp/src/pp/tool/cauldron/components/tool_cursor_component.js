@@ -3,7 +3,7 @@ import { Cursor, CursorTarget } from "@wonderlandengine/components";
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
 import { FingerCursorComponent } from "../../../input/cauldron/components/finger_cursor_component.js";
 import { InputUtils } from "../../../input/cauldron/input_utils.js";
-import { quat2_create, vec3_create, vec4_create } from "../../../plugin/js/extensions/array_extension.js";
+import { quat2_create, vec3_create, vec4_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 
 export class ToolCursorComponent extends Component {

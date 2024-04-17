@@ -1,12 +1,11 @@
 import { Component } from "@wonderlandengine/api";
-import { vec4_create } from "../../../plugin/js/extensions/array_extension.js";
+import { vec4_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { VisualManager } from "../visual_manager.js";
 import { VisualResources } from "../visual_resources.js";
 
 export class VisualManagerComponent extends Component {
     static TypeName = "pp-visual-manager";
-    static Properties = {};
 
     init() {
         this._myVisualManager = null;

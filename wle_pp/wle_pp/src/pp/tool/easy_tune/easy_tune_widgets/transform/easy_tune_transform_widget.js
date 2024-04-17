@@ -1,5 +1,5 @@
 import { GamepadAxesID } from "../../../../input/gamepad/gamepad_buttons.js";
-import { mat4_create, vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { mat4_create, vec3_create } from "../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../pp/globals.js";
 import { EasyTuneBaseWidget } from "../base/easy_tune_base_widget.js";
 import { EasyTuneTransformWidgetConfig } from "./easy_tune_transform_widget_config.js";

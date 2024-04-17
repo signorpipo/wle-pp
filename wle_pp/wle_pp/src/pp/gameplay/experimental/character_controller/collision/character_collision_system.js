@@ -1,4 +1,4 @@
-import { quat2_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { quat2_create } from "../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../pp/globals.js";
 import { CharacterCollisionResults } from "./character_collision_results.js";
 import { CollisionCheckBridge } from "./collision_check_bridge.js";

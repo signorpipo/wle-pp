@@ -1,4 +1,4 @@
-import { vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { EasyTuneBaseWidgetConfig } from "../base/easy_tune_base_widget_config.js";
 
 export class EasyTuneTransformWidgetConfig extends EasyTuneBaseWidgetConfig {

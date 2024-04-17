@@ -4,7 +4,7 @@ import { XRUtils } from "./xr_utils.js";
 export let isMobile = function () {
     let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
     return function isMobile() {
-        let userAgent = window.navigator.userAgent;
+        let userAgent = navigator.userAgent;
         return userAgent != null && userAgent.match(checkMobileRegex) != null;
     };
 }();

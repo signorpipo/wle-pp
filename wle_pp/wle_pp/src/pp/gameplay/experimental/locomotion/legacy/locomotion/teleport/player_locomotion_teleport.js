@@ -3,7 +3,7 @@ import { XRUtils } from "../../../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../../../input/cauldron/input_types.js";
 import { MouseButtonID } from "../../../../../../input/cauldron/mouse.js";
 import { GamepadAxesID } from "../../../../../../input/gamepad/gamepad_buttons.js";
-import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { CollisionCheckBridge } from "../../../../character_controller/collision/collision_check_bridge.js";
 import { PlayerLocomotionMovement } from "../player_locomotion_movement.js";

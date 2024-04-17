@@ -1,5 +1,5 @@
 import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags.js";
-import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array_extension.js";
+import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array/vec_create_extension.js";
 
 export class CharacterColliderSetup {
 
@@ -238,8 +238,11 @@ export class CharacterColliderSurfaceParams {
         this.myCollectSurfaceNormalMaxOutsideDistance = 0;
         this.myCollectSurfaceNormalMaxInsideDistance = 0;
 
-        this.myFindSurfaceDistanceMaxOutsideDistance = 0;
-        this.myFindSurfaceDistanceMaxInsideDistance = 0;
+        this.myCollectSurfaceDistanceOutsideDistance = 0;
+        this.myCollectSurfaceDistanceInsideDistance = 0;
+
+        this.myCollectSurfaceCollisionHitOutsideDistance = 0;
+        this.myCollectSurfaceCollisionHitInsideDistance = 0;
 
         this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = false;
         this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = false;
@@ -518,8 +521,11 @@ CharacterColliderSurfaceParams.prototype.copy = function copy(other) {
     this.myCollectSurfaceNormalMaxOutsideDistance = other.myCollectSurfaceNormalMaxOutsideDistance;
     this.myCollectSurfaceNormalMaxInsideDistance = other.myCollectSurfaceNormalMaxInsideDistance;
 
-    this.myFindSurfaceDistanceMaxOutsideDistance = other.myFindSurfaceDistanceMaxOutsideDistance;
-    this.myFindSurfaceDistanceMaxInsideDistance = other.myFindSurfaceDistanceMaxInsideDistance;
+    this.myCollectSurfaceDistanceOutsideDistance = other.myCollectSurfaceDistanceOutsideDistance;
+    this.myCollectSurfaceDistanceInsideDistance = other.myCollectSurfaceDistanceInsideDistance;
+
+    this.myCollectSurfaceCollisionHitOutsideDistance = other.myCollectSurfaceCollisionHitOutsideDistance;
+    this.myCollectSurfaceCollisionHitInsideDistance = other.myCollectSurfaceCollisionHitInsideDistance;
 
     this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
     this.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = other.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;

@@ -1,5 +1,5 @@
 import { Component, PhysXComponent, Property, Shape } from "@wonderlandengine/api";
-import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { Timer } from "../cauldron/timer.js";
 import { PhysicsCollisionCollector } from "../physics/physics_collision_collector.js";

@@ -2,7 +2,7 @@ import { CollisionComponent, MeshComponent, TextComponent } from "@wonderlandeng
 import { CursorTarget } from "@wonderlandengine/components";
 import { XRUtils } from "../../cauldron/utils/xr_utils.js";
 import { InputUtils } from "../../input/cauldron/input_utils.js";
-import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { ToolHandedness, ToolInputSourceType } from "../cauldron/tool_types.js";
 

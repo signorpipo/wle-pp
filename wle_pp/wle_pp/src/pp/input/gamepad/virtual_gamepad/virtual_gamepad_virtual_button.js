@@ -1,4 +1,3 @@
-import { Globals } from "../../../pp/globals.js";
 import { Handedness } from "../../cauldron/input_types.js";
 import { VirtualGamepadIcon } from "./virtual_gamepad_icon.js";
 
@@ -28,10 +27,10 @@ export class VirtualGamepadVirtualButton {
         this._myMouseLeaveEventListener = this._onButtonLeave.bind(this);
 
         this._myButtonDetectionElement.addEventListener("pointerdown", this._myPointerDownEventListener);
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
+        document.body.addEventListener("pointerup", this._myPointerUpEventListener);
 
         if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
-            Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+            document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
         }
 
         this._myButtonDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
@@ -147,7 +146,7 @@ export class VirtualGamepadVirtualButton {
 
         // Actual button creation
 
-        this._myButtonContainer = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+        this._myButtonContainer = document.createElement("div");
         this._myButtonContainer.style.position = "absolute";
         this._myButtonContainer.style.width = this._createSizeValue(buttonSize, minSizeMultiplier);
         this._myButtonContainer.style.height = this._createSizeValue(buttonSize, minSizeMultiplier);
@@ -167,7 +166,7 @@ export class VirtualGamepadVirtualButton {
         this._myButtonContainer.style.transform = "rotate(" + currentAngle + "deg) translateX(" + this._createSizeValue(buttonsRingRadius, minSizeMultiplier) + ")";
         buttonElementParent.appendChild(this._myButtonContainer);
 
-        this._myButtonElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+        this._myButtonElement = document.createElement("div");
         this._myButtonElement.style.position = "absolute";
         this._myButtonElement.style.width = "100%";
         this._myButtonElement.style.height = "100%";
@@ -176,20 +175,20 @@ export class VirtualGamepadVirtualButton {
 
         this._myButtonIcon = new VirtualGamepadIcon(this._myButtonElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myInterfaceScale, this._myVirtualGamepadParams.myEngine);
 
-        let buttonElementStill = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+        let buttonElementStill = document.createElement("div");
         buttonElementStill.style.position = "absolute";
         buttonElementStill.style.width = "100%";
         buttonElementStill.style.height = "100%";
         buttonElementStill.style.transform = "rotate(" + counterAngle + "deg)";
         this._myButtonContainer.appendChild(buttonElementStill);
 
-        let buttonDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+        let buttonDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         buttonDetectionElementSVG.style.position = "absolute";
         buttonDetectionElementSVG.style.width = "100%";
         buttonDetectionElementSVG.style.height = "100%";
         buttonElementStill.appendChild(buttonDetectionElementSVG);
 
-        let buttonDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+        let buttonDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         buttonDetectionElement.setAttributeNS(null, "cx", "50%");
         buttonDetectionElement.setAttributeNS(null, "cy", "50%");
         buttonDetectionElement.setAttributeNS(null, "r", "50%");
@@ -208,8 +207,8 @@ export class VirtualGamepadVirtualButton {
 
         this._myButtonDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
 
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+        document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+        document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
 
         this._myButtonDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
         this._myButtonDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);

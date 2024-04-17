@@ -2,7 +2,7 @@ import { MeshComponent } from "@wonderlandengine/api";
 import { Timer } from "../../../../../../cauldron/cauldron/timer.js";
 import { FSM } from "../../../../../../cauldron/fsm/fsm.js";
 import { TimerState } from "../../../../../../cauldron/fsm/states/timer_state.js";
-import { vec4_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { vec4_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { NumberOverFactor } from "../../../../../cauldron/cauldron/number_over_factor.js";
 import { PlayerLocomotionTeleportState } from "./player_locomotion_teleport_state.js";

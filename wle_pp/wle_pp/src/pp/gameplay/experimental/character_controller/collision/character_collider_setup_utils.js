@@ -82,6 +82,10 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
 
     outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance = (simplifiedCreationParams.myRadius > 0.1) ? 0.1 : 0.01;
     outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
+    outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
+    outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance;
+    outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
+    outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance;
 
     outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = true;
     outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = true;
@@ -103,6 +107,10 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
 
         outCharacterColliderSetup.myCeilingParams.myCollectSurfaceNormalMaxOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
         outCharacterColliderSetup.myCeilingParams.myCollectSurfaceNormalMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxInsideDistance;
+        outCharacterColliderSetup.myCeilingParams.myCollectSurfaceDistanceOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceOutsideDistance;
+        outCharacterColliderSetup.myCeilingParams.myCollectSurfaceDistanceInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceDistanceInsideDistance;
+        outCharacterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitOutsideDistance;
+        outCharacterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitInsideDistance;
 
         outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
         outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;

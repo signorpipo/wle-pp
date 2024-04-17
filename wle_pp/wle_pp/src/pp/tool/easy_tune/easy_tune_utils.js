@@ -27,8 +27,8 @@ export function refreshWidget(engine = Globals.getMainEngine()) {
 // Those parameters will be replaced with the same one on the current page url, like www.currentpage.com/?param=2
 export function importVariables(fileURL = null, resetVariablesDefaultValueOnImport = false, manualImport = false, onSuccessCallback = null, onFailureCallback = null, engine = Globals.getMainEngine()) {
     if (fileURL == null || fileURL.length == 0) {
-        if (Globals.getNavigator(engine).clipboard) {
-            Globals.getNavigator(engine).clipboard.readText().then(
+        if (navigator.clipboard) {
+            navigator.clipboard.readText().then(
                 function (clipboard) {
                     Globals.getEasyTuneVariables(engine).fromJSON(clipboard, resetVariablesDefaultValueOnImport, manualImport);
 
@@ -120,8 +120,8 @@ export function exportVariables(fileURL = null, onSuccessCallback = null, onFail
     let jsonVariables = Globals.getEasyTuneVariables(engine).toJSON();
 
     if (fileURL == null || fileURL.length == 0) {
-        if (Globals.getNavigator(engine).clipboard) {
-            Globals.getNavigator(engine).clipboard.writeText(jsonVariables).then(
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(jsonVariables).then(
                 function () {
                     if (onSuccessCallback != null) {
                         onSuccessCallback();
@@ -296,7 +296,7 @@ let _importExportVariablesReplaceFileURLParams = function () {
             params[i] = params[i].replace("}", "");
         }
 
-        let urlSearchParams = new URL(Globals.getDocument(engine).location).searchParams;
+        let urlSearchParams = new URL(document.location).searchParams;
 
         let replacedFileURL = fileURL;
 

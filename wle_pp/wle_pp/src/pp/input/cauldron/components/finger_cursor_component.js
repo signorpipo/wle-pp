@@ -1,7 +1,7 @@
 import { Collider, CollisionComponent, Component, Property } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
-import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { InputSourceType, TrackedHandJointID } from "../input_types.js";
 import { InputUtils } from "../input_utils.js";

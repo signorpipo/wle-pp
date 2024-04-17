@@ -38,10 +38,10 @@ export class ObjectPoolManager {
         return null;
     }
 
-    has(poolIDOrObject, object) {
+    has(poolIDOrObject, object = undefined) {
         let hasObject = false;
 
-        if (object === undefined) {
+        if (object == null) {
             for (let pool of this._myPools.values()) {
                 if (pool.has(poolIDOrObject)) {
                     hasObject = true;
@@ -55,10 +55,10 @@ export class ObjectPoolManager {
         return hasObject;
     }
 
-    isBusy(poolIDOrObject, object) {
+    isBusy(poolIDOrObject, object = undefined) {
         let busy = false;
 
-        if (object === undefined) {
+        if (object == null) {
             for (let pool of this._myPools.values()) {
                 if (pool.isBusy(poolIDOrObject)) {
                     busy = true;
@@ -72,10 +72,10 @@ export class ObjectPoolManager {
         return busy;
     }
 
-    isAvailable(poolIDOrObject, object) {
+    isAvailable(poolIDOrObject, object = undefined) {
         let available = false;
 
-        if (object === undefined) {
+        if (object == null) {
             for (let pool of this._myPools.values()) {
                 if (pool.isAvailable(poolIDOrObject)) {
                     available = true;
@@ -89,8 +89,8 @@ export class ObjectPoolManager {
         return available;
     }
 
-    release(poolIDOrObject, object) {
-        if (object === undefined) {
+    release(poolIDOrObject, object = undefined) {
+        if (object == null) {
             for (let pool of this._myPools.values()) {
                 pool.release(poolIDOrObject);
             }
@@ -100,7 +100,7 @@ export class ObjectPoolManager {
     }
 
     releaseAll(poolID = undefined) {
-        if (poolID === undefined) {
+        if (poolID == null) {
             for (let pool of this._myPools.values()) {
                 pool.releaseAll();
             }

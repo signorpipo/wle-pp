@@ -1,10 +1,10 @@
 import { Component, Emitter, PhysXComponent, Property } from "@wonderlandengine/api";
-import { EasingFunction } from "../../cauldron/js/utils/math_utils.js";
 import { PhysicsCollisionCollector } from "../../cauldron/physics/physics_collision_collector.js";
+import { EasingFunction } from "../../cauldron/utils/math_utils.js";
 import { HandednessIndex } from "../../input/cauldron/input_types.js";
 import { InputUtils } from "../../input/cauldron/input_utils.js";
 import { GamepadButtonEvent, GamepadButtonID } from "../../input/gamepad/gamepad_buttons.js";
-import { vec3_create, vec4_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec3_create, vec4_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { GrabbableComponent } from "./grabbable_component.js";
 
@@ -13,7 +13,7 @@ export class GrabberHandComponent extends Component {
     static Properties = {
         _myHandedness: Property.enum(["Left", "Right"], "Left"),
         _myGrabButton: Property.enum(["Select", "Squeeze", "Both", "Both Exclusive"], "Squeeze"), // @"Both Exclusive" means u can use both buttons but you have to use the same button you grabbed with to throw
-        _mySnapOnPivot: Property.bool(false),
+        _mySnapGrabbableOnOrigin: Property.bool(false),
         _myMaxNumberOfObjects: Property.int(1), // How many objects you can grab at the same time
 
         // ADVANCED SETTINGS
@@ -178,7 +178,7 @@ export class GrabberHandComponent extends Component {
                     grabbableToGrab.grab(this.object);
                     grabbableToGrab.registerReleaseEventListener(this, this._onRelease.bind(this));
 
-                    if (this._mySnapOnPivot) {
+                    if (this._mySnapGrabbableOnOrigin) {
                         grabbableToGrab.object.pp_resetPositionLocal();
                     }
 

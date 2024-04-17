@@ -2,11 +2,11 @@
 
 import { Timer } from "../../../../../cauldron/cauldron/timer.js";
 import { FSM } from "../../../../../cauldron/fsm/fsm.js";
-import { EasingFunction } from "../../../../../cauldron/js/utils/math_utils.js";
-import { MaterialUtils } from "../../../../../cauldron/utils/material_utils.js";
+import { EasingFunction } from "../../../../../cauldron/utils/math_utils.js";
 import { XRUtils } from "../../../../../cauldron/utils/xr_utils.js";
 import { VisualMesh, VisualMeshParams } from "../../../../../cauldron/visual/elements/visual_mesh.js";
-import { vec3_create, vec4_create } from "../../../../../plugin/js/extensions/array_extension.js";
+import { MaterialUtils } from "../../../../../cauldron/wl/utils/material_utils.js";
+import { vec3_create, vec4_create } from "../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../pp/globals.js";
 
 // Occlude

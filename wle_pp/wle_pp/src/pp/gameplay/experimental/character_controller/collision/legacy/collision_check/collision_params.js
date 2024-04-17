@@ -1,6 +1,6 @@
 import { PhysicsLayerFlags } from "../../../../../../cauldron/physics/physics_layer_flags.js";
 import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params.js";
-import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 
 export class CollisionCheckParams {
 
@@ -174,6 +174,10 @@ export class CollisionCheckParams {
         this.myFindGroundDistanceMaxInsideDistance = 0;
         this.myFindCeilingDistanceMaxOutsideDistance = 0;
         this.myFindCeilingDistanceMaxInsideDistance = 0;
+        this.myCollectGroundCollisionHitOutsideDistance = 0;
+        this.myCollectGroundCollisionHitInsideDistance = 0;
+        this.myCollectCeilingCollisionHitOutsideDistance = 0;
+        this.myCollectCeilingCollisionHitInsideDistance = 0;
 
         this.myAllowGroundSteepFix = false;
         this.myAllowCeilingSteepFix = false;
@@ -405,6 +409,10 @@ export class CollisionCheckParams {
         this.myFindGroundDistanceMaxInsideDistance = other.myFindGroundDistanceMaxInsideDistance;
         this.myFindCeilingDistanceMaxOutsideDistance = other.myFindCeilingDistanceMaxOutsideDistance;
         this.myFindCeilingDistanceMaxInsideDistance = other.myFindCeilingDistanceMaxInsideDistance;
+        this.myCollectGroundCollisionHitOutsideDistance = other.myCollectGroundCollisionHitOutsideDistance;
+        this.myCollectGroundCollisionHitInsideDistance = other.myCollectGroundCollisionHitInsideDistance;
+        this.myCollectCeilingCollisionHitOutsideDistance = other.myCollectCeilingCollisionHitOutsideDistance;
+        this.myCollectCeilingCollisionHitInsideDistance = other.myCollectCeilingCollisionHitInsideDistance;
 
         this.myAllowGroundSteepFix = other.myAllowGroundSteepFix;
         this.myAllowCeilingSteepFix = other.myAllowCeilingSteepFix;
@@ -494,6 +502,7 @@ export class CollisionRuntimeParams {
         this.myLastValidEndVerticalMovement = vec3_create();
 
         this.myIsOnGround = false;
+        this.myGroundCollisionHit = new RaycastHit();
         this.myGroundAngle = 0;
         this.myGroundPerceivedAngle = 0;
         this.myGroundNormal = vec3_create();
@@ -503,6 +512,7 @@ export class CollisionRuntimeParams {
         this.myGroundIsBaseInsideCollision = false;
 
         this.myIsOnCeiling = false;
+        this.myCeilingCollisionHit = new RaycastHit();
         this.myCeilingAngle = 0;
         this.myCeilingPerceivedAngle = 0;
         this.myCeilingNormal = vec3_create();
@@ -593,6 +603,7 @@ export class CollisionRuntimeParams {
 
 
         this.myIsOnGround = false;
+        this.myGroundCollisionHit.reset();
         this.myGroundAngle = 0;
         this.myGroundPerceivedAngle = 0;
         this.myGroundNormal.vec3_zero();
@@ -602,6 +613,7 @@ export class CollisionRuntimeParams {
         this.myGroundIsBaseInsideCollision = false;
 
         this.myIsOnCeiling = false;
+        this.myCeilingCollisionHit.reset();
         this.myCeilingAngle = 0;
         this.myCeilingPerceivedAngle = 0;
         this.myCeilingNormal.vec3_zero();
@@ -691,6 +703,7 @@ export class CollisionRuntimeParams {
         this.myLastValidEndVerticalMovement.vec3_copy(other.myLastValidEndVerticalMovement);
 
         this.myIsOnGround = other.myIsOnGround;
+        this.myGroundCollisionHit.copy(other.myGroundCollisionHit);
         this.myGroundAngle = other.myGroundAngle;
         this.myGroundPerceivedAngle = other.myGroundPerceivedAngle;
         this.myGroundNormal.vec3_copy(other.myGroundNormal);
@@ -700,6 +713,7 @@ export class CollisionRuntimeParams {
         this.myGroundIsBaseInsideCollision = other.myGroundIsBaseInsideCollision;
 
         this.myIsOnCeiling = other.myIsOnCeiling;
+        this.myCeilingCollisionHit.copy(other.myCeilingCollisionHit);
         this.myCeilingAngle = other.myCeilingAngle;
         this.myCeilingPerceivedAngle = other.myCeilingPerceivedAngle;
         this.myCeilingNormal.vec3_copy(other.myCeilingNormal);

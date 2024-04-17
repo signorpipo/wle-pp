@@ -5,7 +5,7 @@ export class UniversalGamepad extends BaseGamepad {
     constructor(handedness) {
         super(handedness);
 
-        this._myGamepadCores = {}; // #WARN switched to object instead of Map for memory optimization reason since iterating allocates a lot
+        this._myGamepadCores = {}; // Switched to object instead of Map for memory optimization reason since iterating allocates a lot
         this._myGamepadCoresIDs = [];
 
         this._myStarted = false;

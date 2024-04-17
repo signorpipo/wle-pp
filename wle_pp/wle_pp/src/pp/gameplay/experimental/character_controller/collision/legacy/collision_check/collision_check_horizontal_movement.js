@@ -1,4 +1,4 @@
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { CollisionCheckHorizontalPosition } from "./collision_check_horizontal_position.js";
 
 export class CollisionCheckHorizontalMovement extends CollisionCheckHorizontalPosition {

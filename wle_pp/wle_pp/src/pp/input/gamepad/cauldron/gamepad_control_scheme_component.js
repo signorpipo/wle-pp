@@ -1,5 +1,5 @@
 import { Alignment, Component, Justification, MeshComponent, Property, TextComponent } from "@wonderlandengine/api";
-import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { Handedness } from "../../cauldron/input_types.js";
 import { InputUtils } from "../../cauldron/input_utils.js";

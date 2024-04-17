@@ -1,7 +1,7 @@
 import { State } from "../../../../../../cauldron/fsm/state.js";
 import { InputUtils } from "../../../../../../input/cauldron/input_utils.js";
 import { GamepadButtonID } from "../../../../../../input/gamepad/gamepad_buttons.js";
-import { quat2_create, quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { quat2_create, quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { CollisionCheckBridge } from "../../../../character_controller/collision/collision_check_bridge.js";
 import { CollisionRuntimeParams } from "../../../../character_controller/collision/legacy/collision_check/collision_params.js";

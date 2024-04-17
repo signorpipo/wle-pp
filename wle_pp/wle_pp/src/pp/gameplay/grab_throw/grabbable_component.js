@@ -1,6 +1,6 @@
 import { Component, Emitter, PhysXComponent, Property } from "@wonderlandengine/api";
 import { ComponentUtils } from "../../cauldron/wl/utils/component_utils.js";
-import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 
 export class GrabbableComponent extends Component {
@@ -80,11 +80,7 @@ export class GrabbableComponent extends Component {
     }
 
     getLinearVelocity() {
-        let linearVelocity = vec3_create();
-
-        this._myPhysX.linearVelocity.vec3_clone(linearVelocity);
-
-        return linearVelocity;
+        return this._myPhysX.linearVelocity.vec3_clone();
     }
 
     getAngularVelocity() {
@@ -100,11 +96,7 @@ export class GrabbableComponent extends Component {
     }
 
     getAngularVelocityRadians() {
-        let angularVelocityRadians = vec3_create();
-
-        this._myPhysX.angularVelocity.vec3_clone(angularVelocityRadians);
-
-        return angularVelocityRadians;
+        return this._myPhysX.angularVelocity.vec3_clone();
     }
 
     isGrabbed() {

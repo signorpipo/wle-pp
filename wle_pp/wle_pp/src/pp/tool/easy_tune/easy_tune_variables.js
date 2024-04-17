@@ -64,8 +64,9 @@ export class EasyTuneVariables {
 
         for (let variable of this._myVariables.values()) {
             if ((variable.isManualImportEnabled() && manualImport) || (variable.isAutoImportEnabled() && !manualImport)) {
-                let variableValueJSON = objectJSON[variable.getName()];
-                if (variableValueJSON !== undefined) {
+                let variableName = variable.getName();
+                if (Object.hasOwn(objectJSON, variableName)) {
+                    let variableValueJSON = objectJSON[variableName];
                     variable.fromJSON(variableValueJSON, resetDefaultValue);
                 }
             }

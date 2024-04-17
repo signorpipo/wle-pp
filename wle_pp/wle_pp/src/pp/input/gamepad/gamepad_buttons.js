@@ -1,4 +1,4 @@
-import { vec2_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec2_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 
 export let GamepadButtonID = {
     SELECT: 0,          // Trigger

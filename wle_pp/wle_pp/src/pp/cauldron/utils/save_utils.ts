@@ -52,18 +52,38 @@ export function loadBool(id: string, defaultValue: boolean | null = null): boole
     return defaultValue;
 }
 
-export function loadObject(id: string, defaultValue: object | null = null): object | null {
+export function loadObject(id: string, defaultValue: Readonly<object> | null = null): object | null {
     const item = SaveUtils.loadString(id);
 
     if (item != null) {
         try {
-            return JSON.parse(item);
+            const parsedValue = JSON.parse(item);
+            if (parsedValue.constructor == Object) {
+                return parsedValue;
+            }
         } catch (error) {
             // Do nothing
         }
     }
 
     return defaultValue;
+}
+
+export function loadArray<T>(id: string, defaultValue: Readonly<T[]> | null = null): T[] | null {
+    const item = SaveUtils.loadString(id);
+
+    if (item != null) {
+        try {
+            const parsedValue = JSON.parse(item);
+            if (Array.isArray(parsedValue)) {
+                return parsedValue;
+            }
+        } catch (error) {
+            // Do nothing
+        }
+    }
+
+    return defaultValue as T[] | null;
 }
 
 export const SaveUtils = {
@@ -75,5 +95,6 @@ export const SaveUtils = {
     loadString,
     loadNumber,
     loadBool,
-    loadObject
-};
+    loadObject,
+    loadArray
+} as const;

@@ -1,6 +1,6 @@
 import { MeshComponent, TextComponent } from "@wonderlandengine/api";
-import { MeshUtils } from "../../utils/mesh_utils.js";
 import { ComponentUtils, DeepCloneParams } from "./component_utils.js";
+import { MeshUtils } from "./mesh_utils.js";
 
 export function cloneMesh(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, true);

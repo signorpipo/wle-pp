@@ -1,5 +1,5 @@
 import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params.js";
-import { vec3_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { CollisionCheckHorizontal } from "./collision_check_horizontal.js";
 
 export class CollisionCheckVertical extends CollisionCheckHorizontal {

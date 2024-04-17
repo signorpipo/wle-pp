@@ -4,7 +4,6 @@ import { DebugManager } from "../debug_manager.js";
 
 export class DebugManagerComponent extends Component {
     static TypeName = "pp-debug-manager";
-    static Properties = {};
 
     init() {
         this._myDebugManager = null;

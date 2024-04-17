@@ -1,4 +1,4 @@
-import { vec3_create } from "../../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { EasyTuneNumberArray } from "../easy_tune_variable_types.js";
 import { EasyObjectTuner } from "./easy_object_tuner.js";
 

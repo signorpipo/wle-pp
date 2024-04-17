@@ -1,4 +1,4 @@
-import { vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { RaycastHit, RaycastParams, RaycastResults } from "./physics_raycast_params.js";
 
@@ -33,7 +33,7 @@ export function setRaycastVisualDebugEnabled(visualDebugEnabled, physics = Globa
 }
 
 export let raycast = function () {
-    // #WARN These initializations assume that there can't be more than @maxHitCount hits within a single rayCast call
+    // These initializations assume that there can't be more than @maxHitCount hits within a single rayCast call
     // if the hitCount is greater, these arrays will be allocated again
     let maxHitCount = 20;
     let objects = new Array(maxHitCount);

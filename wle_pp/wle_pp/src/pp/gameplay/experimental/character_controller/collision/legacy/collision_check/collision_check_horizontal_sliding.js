@@ -1,4 +1,4 @@
-import { vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { CollisionCheckHorizontalMovement } from "./collision_check_horizontal_movement.js";
 

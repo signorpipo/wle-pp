@@ -3,7 +3,7 @@ import { Timer } from "../../cauldron/cauldron/timer.js";
 import { RaycastResults } from "../../cauldron/physics/physics_raycast_params.js";
 import { PhysicsUtils } from "../../cauldron/physics/physics_utils.js";
 import { XRUtils } from "../../cauldron/utils/xr_utils.js";
-import { mat4_create, quat_create, vec2_create, vec3_create } from "../../plugin/js/extensions/array_extension.js";
+import { mat4_create, quat_create, vec2_create, vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 
 export let MouseButtonID = {
@@ -69,21 +69,21 @@ export class Mouse {
 
     start() {
         this._myPointerMoveEventListener = this._onPointerAction.bind(this, this._onPointerMove.bind(this));
-        Globals.getBody(this._myEngine).addEventListener("pointermove", this._myPointerMoveEventListener);
+        document.body.addEventListener("pointermove", this._myPointerMoveEventListener);
         this._myPointerDownEventListener = this._onPointerAction.bind(this, this._onPointerDown.bind(this));
-        Globals.getBody(this._myEngine).addEventListener("pointerdown", this._myPointerDownEventListener);
+        document.body.addEventListener("pointerdown", this._myPointerDownEventListener);
         this._myPointerUpEventListener = this._onPointerAction.bind(this, this._onPointerUp.bind(this));
-        Globals.getBody(this._myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
+        document.body.addEventListener("pointerup", this._myPointerUpEventListener);
         this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
-        Globals.getBody(this._myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+        document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
         this._myPointerEnterEventListener = this._onPointerEnter.bind(this);
-        Globals.getBody(this._myEngine).addEventListener("pointerenter", this._myPointerEnterEventListener);
+        document.body.addEventListener("pointerenter", this._myPointerEnterEventListener);
 
         // These are needed to being able to detect for example left and right click together, pointer only allow one down at a time
         this._myMouseDownEventListener = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
-        Globals.getBody(this._myEngine).addEventListener("mousedown", this._myMouseDownEventListener);
+        document.body.addEventListener("mousedown", this._myMouseDownEventListener);
         this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
-        Globals.getBody(this._myEngine).addEventListener("mouseup", this._myMouseUpEventListener);
+        document.body.addEventListener("mouseup", this._myMouseUpEventListener);
     }
 
     update(dt) {
@@ -308,9 +308,9 @@ export class Mouse {
     setContextMenuActive(active) {
         if (this._myContextMenuActive != active) {
             if (active) {
-                Globals.getBody(this._myEngine).removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+                document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
             } else {
-                Globals.getBody(this._myEngine).addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
+                document.body.addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
             }
             this._myContextMenuActive = active;
         }
@@ -323,9 +323,9 @@ export class Mouse {
     setMiddleButtonScrollActive(active) {
         if (this._myMiddleButtonScrollActive != active) {
             if (active) {
-                Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+                document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
             } else {
-                Globals.getBody(this._myEngine).addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
+                document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
             }
             this._myMiddleButtonScrollActive = active;
         }
@@ -443,7 +443,7 @@ export class Mouse {
     }
 
     _updateScreenSize() {
-        let bounds = Globals.getBody(this._myEngine).getBoundingClientRect();
+        let bounds = document.body.getBoundingClientRect();
         this._myScreenSize[0] = bounds.width;
         this._myScreenSize[1] = bounds.height;
     }
@@ -488,17 +488,17 @@ export class Mouse {
     destroy() {
         this._myDestroyed = true;
 
-        Globals.getBody(this._myEngine).removeEventListener("pointermove", this._myPointerMoveEventListener);
-        Globals.getBody(this._myEngine).removeEventListener("pointerdown", this._myPointerDownEventListener);
-        Globals.getBody(this._myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
-        Globals.getBody(this._myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
-        Globals.getBody(this._myEngine).removeEventListener("pointerenter", this._myPointerEnterEventListener);
+        document.body.removeEventListener("pointermove", this._myPointerMoveEventListener);
+        document.body.removeEventListener("pointerdown", this._myPointerDownEventListener);
+        document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+        document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+        document.body.removeEventListener("pointerenter", this._myPointerEnterEventListener);
 
-        Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myMouseDownEventListener);
-        Globals.getBody(this._myEngine).removeEventListener("mouseup", this._myMouseUpEventListener);
+        document.body.removeEventListener("mousedown", this._myMouseDownEventListener);
+        document.body.removeEventListener("mouseup", this._myMouseUpEventListener);
 
-        Globals.getBody(this._myEngine).removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
-        Globals.getBody(this._myEngine).removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+        document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+        document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
     }
 
     isDestroyed() {

@@ -1,7 +1,6 @@
 import { BrowserUtils } from "../../../cauldron/utils/browser_utils.js";
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
-import { vec2_create } from "../../../plugin/js/extensions/array_extension.js";
-import { Globals } from "../../../pp/globals.js";
+import { vec2_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Handedness } from "../../cauldron/input_types.js";
 import { GamepadAxesID, GamepadButtonID } from "../gamepad_buttons.js";
 import { VirtualGamepadParams } from "./virtual_gamepad_params.js";
@@ -152,15 +151,15 @@ export class VirtualGamepad {
     _buildVirtualGamepad() {
         this._setupDocumentBody();
 
-        this._myVirtualGamepadContainer = Globals.getDocument(this._myParams.myEngine).createElement("div");
+        this._myVirtualGamepadContainer = document.createElement("div");
         this._myVirtualGamepadContainer.style.display = "block";
         this._myVirtualGamepadContainer.style.opacity = this._myParams.myOpacity.toString();
-        Globals.getBody(this._myParams.myEngine).appendChild(this._myVirtualGamepadContainer);
+        document.body.appendChild(this._myVirtualGamepadContainer);
 
-        let leftDiv = Globals.getDocument(this._myParams.myEngine).createElement("div");
+        let leftDiv = document.createElement("div");
         this._myVirtualGamepadContainer.appendChild(leftDiv);
 
-        let rightDiv = Globals.getDocument(this._myParams.myEngine).createElement("div");
+        let rightDiv = document.createElement("div");
         this._myVirtualGamepadContainer.appendChild(rightDiv);
 
         let buttonsAmount = this._myParams.myButtonsOrder[Handedness.LEFT].length;
@@ -195,16 +194,16 @@ export class VirtualGamepad {
     }
 
     _setupDocumentBody() {
-        Globals.getBody(this._myParams.myEngine).style.overflow = "hidden";
-        Globals.getBody(this._myParams.myEngine).style.userSelect = "none";
-        Globals.getBody(this._myParams.myEngine).style.webkitUserSelect = "none";
-        Globals.getBody(this._myParams.myEngine).style.webkitTapHighlightColor = "transparent";
-        Globals.getBody(this._myParams.myEngine).style.touchAction = "none";
+        document.body.style.overflow = "hidden";
+        document.body.style.userSelect = "none";
+        document.body.style.webkitUserSelect = "none";
+        document.body.style.webkitTapHighlightColor = "transparent";
+        document.body.style.touchAction = "none";
 
         this._myGestureStartEventListener = function (e) {
             e.preventDefault();
         };
-        Globals.getDocument(this._myParams.myEngine).addEventListener("gesturestart", this._myGestureStartEventListener);
+        document.addEventListener("gesturestart", this._myGestureStartEventListener);
     }
 
     _buildButton(buttonElementParent, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
@@ -272,7 +271,7 @@ export class VirtualGamepad {
     destroy() {
         this._myDestroyed = true;
 
-        Globals.getDocument(this._myParams.myEngine).removeEventListener("gesturestart", this._myGestureStartEventListener);
+        document.removeEventListener("gesturestart", this._myGestureStartEventListener);
 
         for (let handedness in this._myVirtualGamepadVirtualButtons) {
             for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {

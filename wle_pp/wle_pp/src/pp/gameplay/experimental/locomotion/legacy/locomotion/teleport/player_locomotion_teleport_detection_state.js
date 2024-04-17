@@ -4,7 +4,7 @@ import { PhysicsUtils } from "../../../../../../cauldron/physics/physics_utils.j
 import { XRUtils } from "../../../../../../cauldron/utils/xr_utils.js";
 import { MouseButtonID } from "../../../../../../input/cauldron/mouse.js";
 import { GamepadAxesID, GamepadButtonID } from "../../../../../../input/gamepad/gamepad_buttons.js";
-import { quat2_create, quat_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array_extension.js";
+import { quat2_create, quat_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { CollisionRuntimeParams } from "../../../../character_controller/collision/legacy/collision_check/collision_params.js";
 import { PlayerLocomotionTeleportDetectionVisualizer } from "./player_locomotion_teleport_detection_visualizer.js";
@@ -606,7 +606,7 @@ PlayerLocomotionTeleportDetectionState.prototype._isTeleportHitValid = function 
         if (hit.isValid() && !hit.myInsideCollision) {
             playerUp = this._myTeleportParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
 
-            // #WARN is hitValidEvenWhenNotConcordant needed or was it a debug that should be removed?
+            // #TODO is hitValidEvenWhenNotConcordant needed or was it a debug that should be removed?
             let hitValidEvenWhenNotConcordant = true;
             if (hit.myNormal.vec3_isConcordant(playerUp) || hitValidEvenWhenNotConcordant) {
                 // #TODO When the flags on the physx will be available just check that the hit object physx has the floor flag

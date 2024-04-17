@@ -1,5 +1,5 @@
 import { GamepadAxesID, GamepadButtonID } from "../../input/gamepad/gamepad_buttons.js";
-import { vec2_create } from "../../plugin/js/extensions/array_extension.js";
+import { vec2_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { ToolHandedness } from "../cauldron/tool_types.js";
 import { WidgetFrame, WidgetParams } from "../widget_frame/widget_frame.js";
@@ -186,8 +186,8 @@ export class ConsoleVRWidget {
                 this._consolePrint(ConsoleVRWidgetConsoleFunction.ERROR, ConsoleVRWidgetSender.WINDOW, "Uncaught (in promise)", errorEvent.reason);
             }.bind(this);
 
-            Globals.getWindow(this._myEngine).addEventListener("error", this._myErrorEventListener);
-            Globals.getWindow(this._myEngine).addEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+            window.addEventListener("error", this._myErrorEventListener);
+            window.addEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
         }
 
         this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG] = Globals.getConsoleVR(this._myEngine).log;
@@ -399,7 +399,7 @@ export class ConsoleVRWidget {
 
         if (item instanceof Error) {
             stringifiedItem = item.stack;
-        } else if (typeof item === "object") {
+        } else if (typeof item == "object") {
             let linesBetweenItems = 2;
 
             try {
@@ -408,7 +408,7 @@ export class ConsoleVRWidget {
                 let cache = new WeakSet();
 
                 stringifiedItem = JSON.stringify(item, function (key, value) {
-                    if (typeof value === "object" && value !== null) {
+                    if (value != null && typeof value == "object") {
                         if (cache.has(value)) {
                             return "<stringify error: object already stringified>"; // Try to avoid circular reference, a repeated object will be caught in this check too sadly
                         }
@@ -900,8 +900,8 @@ export class ConsoleVRWidget {
     destroy() {
         this._myDestroyed = true;
 
-        Globals.getWindow(this._myEngine).removeEventListener("error", this._myErrorEventListener);
-        Globals.getWindow(this._myEngine).removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+        window.removeEventListener("error", this._myErrorEventListener);
+        window.removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
 
         this._myUI.destroy();
         this._myWidgetFrame.destroy();

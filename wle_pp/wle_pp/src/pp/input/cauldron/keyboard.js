@@ -165,13 +165,13 @@ export class Keyboard {
 
     start() {
         this._myOnKeyDownEventListener = this._keyDown.bind(this);
-        Globals.getWindow(this._myEngine).addEventListener("keydown", this._myOnKeyDownEventListener);
+        window.addEventListener("keydown", this._myOnKeyDownEventListener);
         this._myOnKeyUpEventListener = this._keyUp.bind(this);
-        Globals.getWindow(this._myEngine).addEventListener("keyup", this._myOnKeyUpEventListener);
+        window.addEventListener("keyup", this._myOnKeyUpEventListener);
     }
 
     update(dt) {
-        if (!Globals.getDocument(this._myEngine).hasFocus()) {
+        if (!document.hasFocus()) {
 
             for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
                 let id = this._myKeyInfosIDs[i];
@@ -228,8 +228,8 @@ export class Keyboard {
     destroy() {
         this._myDestroyed = true;
 
-        Globals.getWindow(this._myEngine).removeEventListener("keydown", this._myOnKeyDownEventListener);
-        Globals.getWindow(this._myEngine).removeEventListener("keyup", this._myOnKeyUpEventListener);
+        window.removeEventListener("keydown", this._myOnKeyDownEventListener);
+        window.removeEventListener("keyup", this._myOnKeyUpEventListener);
     }
 
     isDestroyed() {

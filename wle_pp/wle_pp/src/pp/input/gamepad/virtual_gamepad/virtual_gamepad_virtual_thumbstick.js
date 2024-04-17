@@ -1,5 +1,4 @@
-import { vec2_create } from "../../../plugin/js/extensions/array_extension.js";
-import { Globals } from "../../../pp/globals.js";
+import { vec2_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Handedness } from "../../cauldron/input_types.js";
 import { VirtualGamepadIcon } from "./virtual_gamepad_icon.js";
 
@@ -34,11 +33,11 @@ export class VirtualGamepadVirtualThumbstick {
         this._myMouseLeaveEventListener = this._onThumbstickLeave.bind(this);
 
         this._myThumbstickDetectionElement.addEventListener("pointerdown", this._myPointerDownEventListener);
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerup", this._myPointerUpEventListener);
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointermove", this._myPointerMoveEventListener);
+        document.body.addEventListener("pointerup", this._myPointerUpEventListener);
+        document.body.addEventListener("pointermove", this._myPointerMoveEventListener);
 
         if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
-            Globals.getBody(this._myVirtualGamepadParams.myEngine).addEventListener("pointerleave", this._myPointerLeaveEventListener);
+            document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
         }
 
         this._myThumbstickDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
@@ -171,7 +170,7 @@ export class VirtualGamepadVirtualThumbstick {
 
         // Actual thumbstick creation
 
-        this._myThumbstickContainer = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+        this._myThumbstickContainer = document.createElement("div");
         this._myThumbstickContainer.style.position = "absolute";
         this._myThumbstickContainer.style.width = this._createSizeValue(thumbstickSize, minSizeMultiplier);
         this._myThumbstickContainer.style.height = this._createSizeValue(thumbstickSize, minSizeMultiplier);
@@ -185,20 +184,20 @@ export class VirtualGamepadVirtualThumbstick {
 
         thumbstickElementParent.appendChild(this._myThumbstickContainer);
 
-        let thumbstickContainerSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+        let thumbstickContainerSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         thumbstickContainerSVG.style.position = "absolute";
         thumbstickContainerSVG.style.width = "100%";
         thumbstickContainerSVG.style.height = "100%";
         this._myThumbstickContainer.appendChild(thumbstickContainerSVG);
 
-        this._myThumbstickBackground = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+        this._myThumbstickBackground = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         this._myThumbstickBackground.setAttributeNS(null, "cx", "50%");
         this._myThumbstickBackground.setAttributeNS(null, "cy", "50%");
         this._myThumbstickBackground.setAttributeNS(null, "r", "48%");
         this._myThumbstickBackground.style.fill = this._myParams.myBackgroundColor;
         thumbstickContainerSVG.appendChild(this._myThumbstickBackground);
 
-        this._myThumbstickElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+        this._myThumbstickElement = document.createElement("div");
         this._myThumbstickElement.style.position = "absolute";
         this._myThumbstickElement.style.width = "34%";
         this._myThumbstickElement.style.height = "34%";
@@ -209,13 +208,13 @@ export class VirtualGamepadVirtualThumbstick {
         this._myThumbstickIcon = new VirtualGamepadIcon(this._myThumbstickElement, this._myParams.myIconParams, minSizeMultiplier, this._myVirtualGamepadParams.myScale, this._myVirtualGamepadParams.myEngine);
 
         if (this._myParams.myIncludeBackgroundToDetection) {
-            let thumbstickBackgroundDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+            let thumbstickBackgroundDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             thumbstickBackgroundDetectionElementSVG.style.position = "absolute";
             thumbstickBackgroundDetectionElementSVG.style.width = "100%";
             thumbstickBackgroundDetectionElementSVG.style.height = "100%";
             this._myThumbstickContainer.appendChild(thumbstickBackgroundDetectionElementSVG);
 
-            let thumbstickBackgroundDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+            let thumbstickBackgroundDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             thumbstickBackgroundDetectionElement.setAttributeNS(null, "cx", "50%");
             thumbstickBackgroundDetectionElement.setAttributeNS(null, "cy", "50%");
             thumbstickBackgroundDetectionElement.setAttributeNS(null, "r", "48%");
@@ -224,7 +223,7 @@ export class VirtualGamepadVirtualThumbstick {
 
             this._myThumbstickDetectionElement = thumbstickBackgroundDetectionElement;
         } else {
-            let thumbstickElementStill = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElement("div");
+            let thumbstickElementStill = document.createElement("div");
             thumbstickElementStill.style.position = "absolute";
             thumbstickElementStill.style.width = "34%";
             thumbstickElementStill.style.height = "34%";
@@ -232,13 +231,13 @@ export class VirtualGamepadVirtualThumbstick {
             thumbstickElementStill.style.left = "33%";
             this._myThumbstickContainer.appendChild(thumbstickElementStill);
 
-            let thumbstickDetectionElementSVG = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "svg");
+            let thumbstickDetectionElementSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             thumbstickDetectionElementSVG.style.position = "absolute";
             thumbstickDetectionElementSVG.style.width = "100%";
             thumbstickDetectionElementSVG.style.height = "100%";
             thumbstickElementStill.appendChild(thumbstickDetectionElementSVG);
 
-            let thumbstickDetectionElement = Globals.getDocument(this._myVirtualGamepadParams.myEngine).createElementNS("http://www.w3.org/2000/svg", "circle");
+            let thumbstickDetectionElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             thumbstickDetectionElement.setAttributeNS(null, "cx", "50%");
             thumbstickDetectionElement.setAttributeNS(null, "cy", "50%");
             thumbstickDetectionElement.setAttributeNS(null, "r", "50%");
@@ -258,9 +257,9 @@ export class VirtualGamepadVirtualThumbstick {
 
         this._myThumbstickDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
 
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerup", this._myPointerUpEventListener);
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointermove", this._myPointerMoveEventListener);
-        Globals.getBody(this._myVirtualGamepadParams.myEngine).removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+        document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+        document.body.removeEventListener("pointermove", this._myPointerMoveEventListener);
+        document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
 
         this._myThumbstickDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
         this._myThumbstickDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);

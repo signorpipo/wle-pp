@@ -28,7 +28,7 @@ export class AudioPlayer {
     constructor(audioSetupOrAudioFilePath, audioInstance = null) {
         if (audioSetupOrAudioFilePath == null) {
             this._myAudioSetup = new AudioSetup();
-        } else if (typeof audioSetupOrAudioFilePath === "string") {
+        } else if (typeof audioSetupOrAudioFilePath == "string") {
             this._myAudioSetup = new AudioSetup(audioSetupOrAudioFilePath);
         } else {
             this._myAudioSetup = audioSetupOrAudioFilePath.clone();

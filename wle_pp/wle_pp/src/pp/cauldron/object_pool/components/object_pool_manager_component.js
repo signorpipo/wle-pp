@@ -4,7 +4,6 @@ import { ObjectPoolManager } from "../object_pool_manager.js";
 
 export class ObjectPoolManagerComponent extends Component {
     static TypeName = "pp-object-pools-manager";
-    static Properties = {};
 
     init() {
         this._myObjectPoolManager = null;
