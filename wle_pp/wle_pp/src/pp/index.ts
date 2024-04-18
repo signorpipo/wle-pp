@@ -1,5 +1,3 @@
-/** PP Version 0.6.0 */
-
 //  PP
 export * from "./pp/register_pp_components.js";
 export { Globals } from "./pp/globals.js";
