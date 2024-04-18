@@ -22275,8 +22275,12 @@ function initPlugins() {
   initWLPlugins();
 }
 
+// dist/pp/pp/pp_version.js
+var PP_VERSION = "0.6.2";
+
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
+  console.log("PP version: " + PP_VERSION);
   Globals.setMainEngine(engine);
   ComponentUtils.setDefaultWLComponentCloneCallbacks(engine);
   registerWLComponents(engine);

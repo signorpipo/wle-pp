@@ -23,7 +23,7 @@
         "webxr"
     ],
     "type": "module",
-    "main": "./bundle/bundle.js",
+    "main": "./bundle/pp/bundle.js",
     "wonderlandengine": {},
     "peerDependencies": {
         "@wonderlandengine/api": "^1.1.3",
