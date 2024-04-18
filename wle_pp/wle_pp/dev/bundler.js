@@ -8,6 +8,6 @@ esbuild.build({
     sourcemap: true,
     minify: false,
     format: "esm",
-    outfile: "build/bundle.js",
+    outfile: "bundle/bundle.js",
     plugins: [nodeExternalsPlugin()]
 });

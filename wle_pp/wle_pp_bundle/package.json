@@ -1,6 +1,6 @@
 {
     "name": "wle-pp-bundle",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "author": "Pipo",
     "description": "A library for the Wonderland Engine - Bundled Version",
     "homepage": "https://github.com/signorpipo/wle-pp",
@@ -10,7 +10,7 @@
     },
     "license": "ISC",
     "files": [
-        "build"
+        "bundle"
     ],
     "keywords": [
         "pp",
@@ -23,7 +23,7 @@
         "webxr"
     ],
     "type": "module",
-    "main": "./build/bundle.js",
+    "main": "./bundle/bundle.js",
     "wonderlandengine": {},
     "peerDependencies": {
         "@wonderlandengine/api": "^1.1.3",
