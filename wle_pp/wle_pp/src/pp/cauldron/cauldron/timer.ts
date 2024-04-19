@@ -1,14 +1,17 @@
 import { Emitter } from "@wonderlandengine/api";
 
 export class Timer {
+    private _myDuration: number = 0;
+    private _myTimeLeft: number = 0;
 
-    constructor(duration, autoStart = true) {
+    private _myDone: boolean = false;
+    private _myJustDone: boolean = false;
+    private _myStarted: boolean = false;
+
+    private _myOnEndEmitter: Emitter = new Emitter();
+
+    constructor(duration: number, autoStart: boolean = true) {
         this._myDuration = duration;
-        this._myOnEndEmitter = new Emitter();     // Signature: listener()
-
-        this._myDone = false;
-        this._myJustDone = false;
-        this._myStarted = false;
 
         if (autoStart) {
             this.start();
@@ -17,16 +20,16 @@ export class Timer {
         }
     }
 
-    start(duration = null) {
+    public start(duration?: number): void {
         this.reset(duration);
         this._myStarted = true;
     }
 
-    end() {
+    public end(): void {
         this._done();
     }
 
-    reset(duration = null) {
+    public reset(duration?: number): void {
         if (duration != null) {
             this._myDuration = Math.max(0, duration);
         }
@@ -37,7 +40,7 @@ export class Timer {
         this._myStarted = false;
     }
 
-    update(dt) {
+    public update(dt: number): void {
         this._myJustDone = false;
 
         if (this.isRunning()) {
@@ -48,27 +51,27 @@ export class Timer {
         }
     }
 
-    isDone() {
+    public isDone(): boolean {
         return this._myDone;
     }
 
-    isJustDone() {
+    public isJustDone(): boolean {
         return this._myJustDone;
     }
 
-    isStarted() {
+    public isStarted(): boolean {
         return this._myStarted;
     }
 
-    isRunning() {
+    public isRunning(): boolean {
         return this.isStarted() && !this.isDone();
     }
 
-    getDuration() {
+    public getDuration(): number {
         return this._myDuration;
     }
 
-    setDuration(duration) {
+    public setDuration(duration: number): void {
         const newDuration = Math.max(0, duration);
 
         if (this.isRunning()) {
@@ -79,11 +82,11 @@ export class Timer {
         this._myDuration = newDuration;
     }
 
-    getTimeLeft() {
+    public getTimeLeft(): number {
         return this._myTimeLeft;
     }
 
-    setTimeLeft(timeLeft) {
+    public setTimeLeft(timeLeft: number): void {
         if (this.isRunning()) {
             this._myTimeLeft = Math.max(0, timeLeft);
 
@@ -93,7 +96,7 @@ export class Timer {
         }
     }
 
-    getTimeElapsed() {
+    public getTimeElapsed(): number {
         let timeElapsed = 0;
         if (this.isRunning()) {
             timeElapsed = this._myDuration - this._myTimeLeft;
@@ -101,11 +104,11 @@ export class Timer {
         return Math.max(0, timeElapsed);
     }
 
-    setTimeElapsed(timeElapsed) {
+    public setTimeElapsed(timeElapsed: number): void {
         this.setTimeLeft(this._myDuration - Math.max(0, timeElapsed));
     }
 
-    getPercentage() {
+    public getPercentage(): number {
         let percentage = 1;
         if (this._myTimeLeft > 0 && this._myDuration > 0) {
             percentage = (this._myDuration - this._myTimeLeft) / this._myDuration;
@@ -113,22 +116,22 @@ export class Timer {
         return Math.pp_clamp(percentage, 0, 1);
     }
 
-    setPercentage(percentage) {
+    public setPercentage(percentage: number): void {
         if (this.isRunning()) {
-            let durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
+            const durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
             this._myTimeLeft = this._myDuration * durationPercentage;
         }
     }
 
-    onEnd(listener, id = null) {
+    public onEnd(listener: () => void, id?: any): void {
         this._myOnEndEmitter.add(listener, { id: id });
     }
 
-    unregisterOnEnd(id = null) {
+    public unregisterOnEnd(id = null): void {
         this._myOnEndEmitter.remove(id);
     }
 
-    _done() {
+    private _done(): void {
         this._myTimeLeft = 0;
         this._myDone = true;
         this._myJustDone = true;

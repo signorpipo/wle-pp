@@ -10,7 +10,7 @@ function _initEmitterModPrototype(): void {
 
     emitterMod._flushTransactions = function _flushTransactions(this: Emitter): void {
         const listeners = this._listeners;
-        const _transactions: any[] = (this as any)._transactions;
+        const _transactions: { type: number, data: any }[] = (this as unknown as { _transactions: { type: number, data: any }[] })._transactions;
 
         for (let i = 0; i < _transactions.length; i++) {
             const transaction = _transactions[i];

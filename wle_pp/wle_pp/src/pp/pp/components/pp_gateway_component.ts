@@ -147,7 +147,7 @@ export class PPGatewayComponent extends Component {
             const propertyNames = Object.getOwnPropertyNames(propertiesToGet);
 
             for (const propertyName of propertyNames) {
-                const _this = (this as any);
+                const _this = (this as Record<string, any>);
                 if (_this[propertyName] != undefined) {
                     properties[propertyName] = _this[propertyName];
                 }

@@ -31,13 +31,18 @@ export interface MathExtension {
 
     pp_mapToRange(value: number, originRangeStart: number, originRangeEnd: number, newRangeStart: number, newRangeEnd: number): number;
 
+
     pp_random(): number;
     pp_random(start: number, end: number): number;
     pp_randomInt(start: number, end: number): number;
     pp_randomBool(): boolean;
     pp_randomSign(): number;
+
+    pp_randomPick<T>(array: T[]): T | null;
     pp_randomPick<T>(...args: T[]): T | null;
+
     pp_randomUUID(): string;
+
 
     pp_lerp(from: number, to: number, interpolationFactor: number): number;
     pp_interpolate(from: number, to: number, interpolationFactor: number, easingFunction?: EasingFunction): number;

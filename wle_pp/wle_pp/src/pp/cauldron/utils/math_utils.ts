@@ -107,6 +107,8 @@ export function randomSign(): number {
 }
 
 /** You give it a list of parameters and returns a random one */
+export function randomPick<T>(array: T[]): T | null;
+export function randomPick<T>(...args: T[]): T | null;
 export function randomPick<T>(...args: T[]): T | null {
     let random: T | null = null;
 
