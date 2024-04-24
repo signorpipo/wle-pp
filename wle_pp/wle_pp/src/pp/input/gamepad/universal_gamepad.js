@@ -1,6 +1,6 @@
-import { BaseGamepad } from "./base_gamepad.js";
+import { Gamepad } from "./gamepad.js";
 
-export class UniversalGamepad extends BaseGamepad {
+export class UniversalGamepad extends Gamepad {
 
     constructor(handedness) {
         super(handedness);

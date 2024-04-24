@@ -1,7 +1,7 @@
 /*
  *  How to use
  * 
- *  Warning: The extension is a WIP so not all the functions are available for all kinds of vector.
+ *  #WARN The extension is a WIP so not all the functions are available for all kinds of vector.
  * 
  *  By default rotations are in Degrees and transforms are Matrix 4 (and not Quat 2)    
  *  For functions that work with rotations, Matrix means Matrix 3 and Quat means Quat

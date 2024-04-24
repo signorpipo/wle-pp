@@ -44,7 +44,7 @@ export function create(meshCreationParams) {
     let mesh = new Mesh(meshCreationParams.myEngine, {
         vertexCount: vertexCount,
         indexData: indexDataUnsignedInt,
-        indexType: MeshIndexType.UnsignedInt,
+        indexType: MeshIndexType.UnsignedInt
     });
 
     let positionAttribute = null;
@@ -111,7 +111,7 @@ export let clone = function () {
         let clonedMesh = new Mesh(mesh.engine, {
             vertexCount: mesh.vertexCount,
             indexData: clonedIndexData,
-            indexType: MeshIndexType.UnsignedInt,
+            indexType: MeshIndexType.UnsignedInt
         });
 
         let positionAttribute = null;
@@ -197,7 +197,7 @@ export let invert = function () {
         let invertedMesh = new Mesh(mesh.engine, {
             vertexCount: mesh.vertexCount,
             indexData: invertedIndexData,
-            indexType: MeshIndexType.UnsignedInt,
+            indexType: MeshIndexType.UnsignedInt
         });
 
         let positionAttribute = null;
@@ -291,7 +291,7 @@ export let makeDoubleSided = function () {
         let doubleSidedMesh = new Mesh(mesh.engine, {
             vertexCount: mesh.vertexCount * 2,
             indexData: doubleSidedIndexData,
-            indexType: MeshIndexType.UnsignedInt,
+            indexType: MeshIndexType.UnsignedInt
         });
 
         let positionAttribute = null;

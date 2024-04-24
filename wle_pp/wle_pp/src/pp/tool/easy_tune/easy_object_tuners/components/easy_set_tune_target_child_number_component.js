@@ -7,7 +7,7 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
     static TypeName = "pp-easy-set-tune-target-child-number";
     static Properties = {
         _myVariableName: Property.string(""),
-        _mySetAsWidgetCurrentVariable: Property.bool(false),
+        _mySetAsWidgetCurrentVariable: Property.bool(false)
     };
 
     start() {

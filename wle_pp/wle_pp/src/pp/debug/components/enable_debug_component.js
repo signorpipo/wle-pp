@@ -4,7 +4,7 @@ import { Globals } from "../../pp/globals.js";
 export class EnableDebugComponent extends Component {
     static TypeName = "pp-enable-debug";
     static Properties = {
-        _myEnable: Property.bool(true),
+        _myEnable: Property.bool(true)
     };
 
     init() {

@@ -8,7 +8,7 @@ export class Timer {
     private _myJustDone: boolean = false;
     private _myStarted: boolean = false;
 
-    private _myOnEndEmitter: Emitter = new Emitter();
+    private readonly _myOnEndEmitter: Emitter = new Emitter();
 
     constructor(duration: number, autoStart: boolean = true) {
         this._myDuration = duration;
@@ -123,11 +123,11 @@ export class Timer {
         }
     }
 
-    public onEnd(listener: () => void, id?: any): void {
+    public onEnd(listener: () => void, id?: Readonly<any>): void {
         this._myOnEndEmitter.add(listener, { id: id });
     }
 
-    public unregisterOnEnd(id = null): void {
+    public unregisterOnEnd(id?: Readonly<any>): void {
         this._myOnEndEmitter.remove(id);
     }
 

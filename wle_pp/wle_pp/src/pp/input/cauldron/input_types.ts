@@ -43,7 +43,7 @@ export enum TrackedHandJointID {
     PINKY_FINGER_PHALANX_PROXIMAL = "pinky-finger-phalanx-proximal",
     PINKY_FINGER_PHALANX_INTERMEDIATE = "pinky-finger-phalanx-intermediate",
     PINKY_FINGER_PHALANX_DISTAL = "pinky-finger-phalanx-distal",
-    PINKY_FINGER_TIP = "pinky-finger-tip",
+    PINKY_FINGER_TIP = "pinky-finger-tip"
 }
 
 export enum TrackedHandJointIDIndex {

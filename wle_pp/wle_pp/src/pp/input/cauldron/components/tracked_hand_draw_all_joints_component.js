@@ -35,7 +35,7 @@ export class TrackedHandDrawAllJointsComponent extends Component {
                         "_myHandedness": this._myHandedness,
                         "_myJointID": TrackedHandJointIDIndex[jointIDKey],
                         "_myJointMesh": this._myJointMesh,
-                        "_myJointMaterial": this._myJointMaterial,
+                        "_myJointMaterial": this._myJointMaterial
                     });
 
             }

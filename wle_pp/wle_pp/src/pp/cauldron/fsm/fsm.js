@@ -69,6 +69,11 @@ export class FSM {
         this._myTransitionIDEmitters = [];               // Signature: listener(fsm, fromStateData, toStateData, transitionData, performMode, ...args)
     }
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} state
+     */
     addState(stateID, state = null) {
         let stateObject = null;
         if (!state || typeof state == "function") {
@@ -93,6 +98,11 @@ export class FSM {
         this._myTransitions.set(stateID, new Map());
     }
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} transition
+     */
     addTransition(fromStateID, toStateID, transitionID, transition = null, skipStateFunction = SkipStateFunction.NONE) {
         let transitionObject = null;
         if (!transition || typeof transition == "function") {

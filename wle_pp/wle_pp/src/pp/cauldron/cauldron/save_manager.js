@@ -49,7 +49,7 @@ export class SaveManager {
                 this._onInterrupt();
             }
         }.bind(this);
-        window.addEventListener('visibilitychange', this._myWindowVisibilityChangeEventListener);
+        window.addEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
 
         this._myDestroyed = false;
     }
@@ -474,7 +474,7 @@ export class SaveManager {
         XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
         XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
 
-        window.removeEventListener('visibilitychange', this._myWindowVisibilityChangeEventListener);
+        window.removeEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
     }
 
     isDestroyed() {

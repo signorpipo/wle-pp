@@ -101,6 +101,7 @@ export * from "./cauldron/wl/getters/scene_objects.js";
 export * from "./cauldron/wl/getters/default_resources.js";
 export * from "./cauldron/wl/getters/components/get_scene_objects_component.js";
 export * from "./cauldron/wl/getters/components/get_default_resources_component.js";
+export * from "./cauldron/wl/type_definitions/material_type_definitions.js";
 
 //	DEBUG
 export * from "./debug/debug_manager.js";
@@ -158,7 +159,7 @@ export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_locom
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_smooth.js";
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_obscure_manager.js";
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_locomotion.js";
-export * from "./gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_component.js";
+export * from "./gameplay/experimental/locomotion/legacy/locomotion/components/player_locomotion_component.js";
 
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_parable.js";
 export * from "./gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_state.js";
@@ -184,7 +185,7 @@ export * from "./input/cauldron/components/tracked_hand_draw_all_joints_componen
 export * from "./input/cauldron/components/tracked_hand_draw_skin_component.js";
 
 export * from "./input/gamepad/gamepad_buttons.js";
-export * from "./input/gamepad/base_gamepad.js";
+export * from "./input/gamepad/gamepad.js";
 export * from "./input/gamepad/universal_gamepad.js";
 export * from "./input/gamepad/cauldron/gamepad_mesh_animator_component.js";
 export * from "./input/gamepad/cauldron/gamepads_manager.js";

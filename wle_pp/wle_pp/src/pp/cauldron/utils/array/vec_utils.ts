@@ -1,5 +1,45 @@
+import { glMatrix } from "gl-matrix";
 import { Vector } from "../../type_definitions/array_type_definitions.js";
 import { MathUtils } from "../math_utils.js";
+
+export function create(length: number): Vector;
+export function create(firstValue: number, ...remainingValues: number[]): Vector;
+export function create(firstValue: number, ...remainingValues: number[]): Vector {
+    let out: Vector | null = null;
+
+    if (remainingValues.length == 0) {
+        const length = firstValue;
+        out = new glMatrix.ARRAY_TYPE(length);
+        for (let i = 0; i < length; i++) {
+            out[i] = 0;
+        }
+    } else {
+        out = new glMatrix.ARRAY_TYPE(remainingValues.length + 1);
+        out[0] = firstValue;
+        for (let i = 0; i < remainingValues.length; i++) {
+            out[i + 1] = remainingValues[i];
+        }
+    }
+
+    return out;
+}
+
+export function set<T extends Vector>(vector: T, uniformValue: number): T;
+export function set<T extends Vector>(vector: T, firstValue: number, ...remainingValues: number[]): T;
+export function set<T extends Vector>(vector: T, firstValue: number, ...remainingValues: number[]): T {
+    if (remainingValues.length == 0) {
+        for (let i = 0; i < vector.length; i++) {
+            vector[i] = firstValue;
+        }
+    } else {
+        vector[0] = firstValue;
+        for (let i = 0; i < remainingValues.length && i < vector.length - 1; i++) {
+            vector[i + 1] = remainingValues[i];
+        }
+    }
+
+    return vector;
+}
 
 /** The overload where `T extends Vector` does also get `array` as `Readonly<T>`, but is not marked as such due to 
  *  Typescript having issues with inferring the proper type of `T` when `Readonly` is used */
@@ -120,6 +160,8 @@ export function warn(vector: Readonly<Vector>, decimalPlaces: number = 4): Vecto
 }
 
 export const VecUtils = {
+    create,
+    set,
     clone,
     equals,
     zero,

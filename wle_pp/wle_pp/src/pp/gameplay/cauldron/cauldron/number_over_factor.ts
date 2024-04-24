@@ -2,18 +2,19 @@ import { EasingFunction } from "../../../cauldron/utils/math_utils.js";
 
 export type RoundingFunction = (numberToRound: number, fromNumber: number, toNumber: number) => number;
 
-// You can just put fromNumber if u want a number that doesn't actually change -> new NumberOverFactor(0)
+/** You can just put `fromNumber` if u want a number that doesn't actually change -> `new NumberOverFactor(0)` */
 export class NumberOverFactor {
 
-    private _myFromNumber: number;
-    private _myToNumber: number;
+    private readonly _myFromNumber: number;
+    private readonly _myToNumber: number;
 
-    private _myFromFactor: number;
-    private _myToFactor: number;
+    private readonly _myFromFactor: number;
+    private readonly _myToFactor: number;
 
-    private _myEasingFunction: EasingFunction;
+    private readonly _myEasingFunction: EasingFunction;
 
-    private _myRoundingFunction: RoundingFunction | null; // Math.round/floor/ceil can be used
+    /** `Math.round` / `Math.floor` / `Math.ceil` can be used */
+    private readonly _myRoundingFunction: RoundingFunction | null;
 
     constructor(fromNumber: number, toNumber: number = fromNumber, fromFactor: number = 0, toFactor: number = 0, easingFunction: EasingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
         this._myFromNumber = fromNumber;
@@ -109,12 +110,12 @@ export class IntOverFactor extends NumberOverFactor {
 // You can just put fromRange if u want a range that doesn't actually change -> new NumberOverFactor([1, 25])
 export class NumberRangeOverFactor {
 
-    private _myFromNumberOverFactor: NumberOverFactor;
-    private _myToNumberOverFactor: NumberOverFactor;
+    private readonly _myFromNumberOverFactor: NumberOverFactor;
+    private readonly _myToNumberOverFactor: NumberOverFactor;
 
-    private _myRoundingFunction: RoundingFunction | null; // Math.round/floor/ceil can be used
+    private readonly _myRoundingFunction: RoundingFunction | null; // Math.round/floor/ceil can be used
 
-    constructor(fromRange: [number, number], toRange: [number, number] = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
+    constructor(fromRange: Readonly<[number, number]>, toRange: Readonly<[number, number]> = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
 
         this._myFromNumberOverFactor = new NumberOverFactor(fromRange[0], toRange[0], fromFactor, toFactor, easingFunction, roundingFunction);
         this._myToNumberOverFactor = new NumberOverFactor(fromRange[1], toRange[1], fromFactor, toFactor, easingFunction, roundingFunction);
@@ -201,7 +202,7 @@ export class NumberRangeOverFactor {
 
 export class IntRangeOverFactor extends NumberRangeOverFactor {
 
-    constructor(fromRange: [number, number], toRange: [number, number] = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
+    constructor(fromRange: Readonly<[number, number]>, toRange: Readonly<[number, number]> = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
         if (roundingFunction == null) {
             roundingFunction = function (numberToRound: number, fromNumber: number, toNumber: number): number {
                 let roundedNumber = null;

@@ -13,6 +13,10 @@ function _initVecExtensionProtoype(): void {
 
     const vecExtension: Record<string, any> = {};
 
+    vecExtension.vec2_set = function vec2_set<T extends Vector>(this: T, firstValue: number, ...remainingValues: number[]): T {
+        return VecUtils.set(this, firstValue, ...remainingValues);
+    };
+
     vecExtension.vec_clone = function vec_clone<T extends Vector>(this: Readonly<T>): T {
         return VecUtils.clone<T>(this);
     };

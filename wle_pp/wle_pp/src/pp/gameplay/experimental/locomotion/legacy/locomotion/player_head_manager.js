@@ -39,8 +39,10 @@ export class PlayerHeadManagerParams {
         this.myDefaultHeightVRWithoutFloor = 0;
         this.myDefaultHeightVRWithFloor = null; // null means just keep the detected one
         this.myForeheadExtraHeight = 0;
-        // Can be used to always add a bit of height, for example to compensate the fact 
+        // Can be used to always add a bit of height, for example to compensate the fact
         // that the default height is actually the eye height and you may want to also add a forehead offset
+
+        this.myFeetRotationKeepUp = true;
 
         this.myEngine = engine;
 

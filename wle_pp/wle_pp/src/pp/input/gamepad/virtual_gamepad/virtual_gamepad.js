@@ -196,6 +196,7 @@ export class VirtualGamepad {
     _setupDocumentBody() {
         document.body.style.overflow = "hidden";
         document.body.style.userSelect = "none";
+        // eslint-disable-next-line deprecation/deprecation
         document.body.style.webkitUserSelect = "none";
         document.body.style.webkitTapHighlightColor = "transparent";
         document.body.style.touchAction = "none";

@@ -8,6 +8,7 @@ export class PlayerLocomotionRotateParams {
 
     constructor(engine = Globals.getMainEngine()) {
         this.myPlayerHeadManager = null;
+        this.myPlayerTransformManager = null;
 
         this.myHorizontalRotationEnabled = true;
         this.myVerticalRotationEnabled = true;
@@ -15,9 +16,10 @@ export class PlayerLocomotionRotateParams {
         this.myMaxRotationSpeed = 0;
         this.myIsSnapTurn = false;
         this.mySnapTurnOnlyVR = false;
+        this.mySnapTurnAngle = 0;
 
-        this.mySmoothSnapEnabled = true;
-        this.mySmoothSnapSpeedDegrees = 240;
+        this.mySmoothSnapEnabled = false;
+        this.mySmoothSnapSpeedDegrees = 0;
 
         this.myRotationMinStickIntensityThreshold = 0;
         this.mySnapTurnActivateThreshold = 0;

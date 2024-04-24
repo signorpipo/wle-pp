@@ -10,7 +10,7 @@ export class EasyMeshColorComponent extends Component {
         _myUseTuneTarget: Property.bool(false),
         _mySetAsWidgetCurrentVariable: Property.bool(false),
         _myColorModel: Property.enum(["RGB", "HSV"], "HSV"),
-        _myColorType: Property.enum(["Color", "Diffuse Color", "Ambient Color", "Specular Color", "Emissive Color", "Fog Color", "Ambient Factor"], "Color"),
+        _myColorType: Property.enum(["Color", "Diffuse Color", "Ambient Color", "Specular Color", "Emissive Color", "Fog Color", "Ambient Factor"], "Color")
     };
 
     init() {

@@ -1,4 +1,4 @@
-import { Vector3 } from "wle-pp/cauldron/type_definitions/array_type_definitions.js";
+import { Vector3 } from "../cauldron/type_definitions/array_type_definitions.js";
 
 export class AudioSetup {
 

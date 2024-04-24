@@ -15,6 +15,7 @@ export class PlayerLocomotionTeleportParams {
 
     constructor(engine = Globals.getMainEngine()) {
         this.myPlayerHeadManager = null;
+        this.myPlayerTransformManager = null;
 
         this.myCollisionCheckParams = null;
 

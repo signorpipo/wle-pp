@@ -216,7 +216,7 @@ export function removeAll<T>(array: T[], callback: (elementToCheck: T, elementIn
     return elementsRemoved;
 }
 
-export function removeAllIndexes<T>(array: T[], indexes: number[]): T[] {
+export function removeAllIndexes<T>(array: T[], indexes: ArrayLike<number>): T[] {
     const elementsRemoved = [];
 
     for (const index of indexes) {

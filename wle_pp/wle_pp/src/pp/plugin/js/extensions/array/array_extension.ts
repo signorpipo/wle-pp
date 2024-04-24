@@ -95,7 +95,7 @@ function _initArrayExtensionProtoype(): void {
         return ArrayUtils.removeAll(this, callback);
     };
 
-    arrayExtension.pp_removeAllIndexes = function pp_removeAllIndexes<T>(this: T[], indexes: number[]): T[] {
+    arrayExtension.pp_removeAllIndexes = function pp_removeAllIndexes<T>(this: T[], indexes: ArrayLike<number>): T[] {
         return ArrayUtils.removeAllIndexes(this, indexes);
     };
 

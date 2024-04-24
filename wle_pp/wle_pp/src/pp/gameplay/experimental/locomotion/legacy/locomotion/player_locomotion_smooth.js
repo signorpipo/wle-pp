@@ -15,8 +15,6 @@ export class PlayerLocomotionSmoothParams {
         this.myPlayerHeadManager = null;
         this.myPlayerTransformManager = null;
 
-        this.myCollisionCheckParams = null;
-
         this.myMaxSpeed = 0;
         this.mySpeedSlowDownPercentageOnWallSlid = 1; // this is the target value for a 90 degrees slid, the more u move toward the wall the slower u go 
 
@@ -34,6 +32,7 @@ export class PlayerLocomotionSmoothParams {
         this.myGravityAcceleration = 0;
         this.myMaxGravitySpeed = 0;
 
+        this.myDirectionInvertForwardWhenUpsideDown = true;
         this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
         this.myVRDirectionReferenceObject = null;
 

@@ -6,7 +6,7 @@ export class SaveManagerComponent extends Component {
     static TypeName = "pp-save-manager";
     static Properties = {
         _mySaveID: Property.string(""),
-        _myAutoLoadSaves: Property.bool(true),
+        _myAutoLoadSaves: Property.bool(true)
     };
 
     init() {
