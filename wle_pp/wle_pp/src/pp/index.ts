@@ -127,8 +127,6 @@ export * from "./debug/debug_functions_overwriter/debug_functions_performance_an
 export * from "./gameplay/cauldron/direction_2D_to_3D_converter.js";
 export { NumberOverFactor, IntOverFactor, NumberRangeOverFactor, IntRangeOverFactor } from "./gameplay/cauldron/number_over_factor.js";
 
-export * from "./gameplay/cauldron/components/cursor_button_component.js";
-
 //    GRAB & THROW
 export * from "./gameplay/grab_throw/grabbable_component.js";
 export * from "./gameplay/grab_throw/grabber_hand_component.js";
