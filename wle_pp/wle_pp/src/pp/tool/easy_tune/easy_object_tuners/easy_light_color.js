@@ -35,9 +35,9 @@ export class EasyLightColor extends EasyObjectTuner {
         let lightColor = this._getLightColor(object);
         if (lightColor) {
             if (this._myColorModel == 0) {
-                color = ColorUtils.rgbCodeToHuman(lightColor);
+                color = ColorUtils.colorNormalizedToInt(lightColor);
             } else {
-                color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHSV(lightColor));
+                color = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(lightColor));
             }
         } else {
             color = this._getDefaultValue();
@@ -54,9 +54,9 @@ export class EasyLightColor extends EasyObjectTuner {
         let color = value;
 
         if (this._myColorModel == 0) {
-            color = ColorUtils.rgbHumanToCode(color);
+            color = ColorUtils.colorIntToNormalized(color);
         } else {
-            color = ColorUtils.hsvToRGB(ColorUtils.hsvHumanToCode(color));
+            color = ColorUtils.hsvToRGB(ColorUtils.colorIntToNormalized(color));
         }
 
         let light = object.pp_getComponent(LightComponent);
@@ -69,8 +69,8 @@ export class EasyLightColor extends EasyObjectTuner {
         if ((Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) ||
             (Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed())) {
 
-            let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHSV(color));
-            let rgbColor = ColorUtils.color1To255(color);
+            let hsvColor = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
+            let rgbColor = ColorUtils.colorNormalizedToInt(color);
 
             console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
         }

@@ -43,9 +43,9 @@ export class EasyMeshColor extends EasyObjectTuner {
                 color = meshMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
 
                 if (this._myColorModel == 0) {
-                    color = ColorUtils.rgbCodeToHuman(color);
+                    color = ColorUtils.colorNormalizedToInt(color);
                 } else {
-                    color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHSV(color));
+                    color = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
                 }
             } else {
                 color = [meshMaterial[this._myColorVariableNames[this._myColorType]]];
@@ -70,9 +70,9 @@ export class EasyMeshColor extends EasyObjectTuner {
 
         if (this._myColorType != 6) {
             if (this._myColorModel == 0) {
-                color = ColorUtils.rgbHumanToCode(color);
+                color = ColorUtils.colorIntToNormalized(color);
             } else {
-                color = ColorUtils.hsvToRGB(ColorUtils.hsvHumanToCode(color));
+                color = ColorUtils.hsvToRGB(ColorUtils.colorIntToNormalized(color));
             }
         }
 
@@ -85,8 +85,8 @@ export class EasyMeshColor extends EasyObjectTuner {
             if ((Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) ||
                 (Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed())) {
 
-                let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHSV(color));
-                let rgbColor = ColorUtils.color1To255(color);
+                let hsvColor = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
+                let rgbColor = ColorUtils.colorNormalizedToInt(color);
 
                 console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
             }

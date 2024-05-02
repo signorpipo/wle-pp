@@ -31,64 +31,64 @@ export interface Matrix3Extension<MatrixType extends Matrix3> {
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    export interface Array<T> extends Matrix3Extension<Array<number>> { }
+    interface Array<T> extends Matrix3Extension<Array<number>> { }
 }
 
 declare global {
-    export interface Uint8ClampedArray extends Matrix3Extension<Uint8ClampedArray> { }
+    interface Uint8ClampedArray extends Matrix3Extension<Uint8ClampedArray> { }
 }
 
 declare global {
-    export interface Uint8Array extends Matrix3Extension<Uint8Array> { }
+    interface Uint8Array extends Matrix3Extension<Uint8Array> { }
 }
 
 declare global {
-    export interface Uint16Array extends Matrix3Extension<Uint16Array> { }
+    interface Uint16Array extends Matrix3Extension<Uint16Array> { }
 }
 
 declare global {
-    export interface Uint32Array extends Matrix3Extension<Uint32Array> { }
+    interface Uint32Array extends Matrix3Extension<Uint32Array> { }
 }
 
 declare global {
-    export interface Int8Array extends Matrix3Extension<Int8Array> { }
+    interface Int8Array extends Matrix3Extension<Int8Array> { }
 }
 
 declare global {
-    export interface Int16Array extends Matrix3Extension<Int16Array> { }
+    interface Int16Array extends Matrix3Extension<Int16Array> { }
 }
 
 declare global {
-    export interface Int32Array extends Matrix3Extension<Int32Array> { }
+    interface Int32Array extends Matrix3Extension<Int32Array> { }
 }
 
 declare global {
-    export interface Float32Array extends Matrix3Extension<Float32Array> { }
+    interface Float32Array extends Matrix3Extension<Float32Array> { }
 }
 
 declare global {
-    export interface Float64Array extends Matrix3Extension<Float64Array> { }
+    interface Float64Array extends Matrix3Extension<Float64Array> { }
 }
 
 declare module "../../../../cauldron/type_definitions/array_type_definitions.js" {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    export interface ArrayLike<T> extends Matrix3Extension<ArrayLike<number>> { }
+    interface ArrayLike<T> extends Matrix3Extension<ArrayLike<number>> { }
 
-    export interface Vector extends Matrix3Extension<Vector> { }
+    interface Vector extends Matrix3Extension<Vector> { }
 
-    export interface Vector2 extends Matrix3Extension<Vector2> { }
+    interface Vector2 extends Matrix3Extension<Vector2> { }
 
-    export interface Vector3 extends Matrix3Extension<Vector3> { }
+    interface Vector3 extends Matrix3Extension<Vector3> { }
 
-    export interface Vector4 extends Matrix3Extension<Vector4> { }
+    interface Vector4 extends Matrix3Extension<Vector4> { }
 
-    export interface Quaternion extends Matrix3Extension<Quaternion> { }
+    interface Quaternion extends Matrix3Extension<Quaternion> { }
 
-    export interface Quaternion2 extends Matrix3Extension<Quaternion2> { }
+    interface Quaternion2 extends Matrix3Extension<Quaternion2> { }
 
-    export interface Matrix2 extends Matrix3Extension<Matrix2> { }
+    interface Matrix2 extends Matrix3Extension<Matrix2> { }
 
-    export interface Matrix3 extends Matrix3Extension<Matrix3> { }
+    interface Matrix3 extends Matrix3Extension<Matrix3> { }
 
-    export interface Matrix4 extends Matrix3Extension<Matrix4> { }
+    interface Matrix4 extends Matrix3Extension<Matrix4> { }
 }

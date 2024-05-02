@@ -5,7 +5,7 @@ import { InputUtils } from "../../../../../input/cauldron/input_utils.js";
 import { GamepadAxesID, GamepadButtonID } from "../../../../../input/gamepad/gamepad_buttons.js";
 import { quat2_create, vec3_create } from "../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../pp/globals.js";
-import { Direction2DTo3DConverter, Direction2DTo3DConverterParams } from "../../../../cauldron/cauldron/direction_2D_to_3D_converter.js";
+import { Direction2DTo3DConverter, Direction2DTo3DConverterParams } from "../../../../cauldron/direction_2D_to_3D_converter.js";
 import { PlayerLocomotionDirectionReferenceType } from "./player_locomotion.js";
 import { PlayerLocomotionMovement } from "./player_locomotion_movement.js";
 

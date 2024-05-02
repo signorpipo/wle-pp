@@ -16,10 +16,11 @@ export interface CursorTargetExtension {
     onUpWithDown: Emitter<[Object3D, Cursor, (EventTypes | undefined)?]>;
     onUpWithNoDown: Emitter<[Object3D, Cursor, (EventTypes | undefined)?]>;
 
-    /** Just a way to specify if this target is just used as a surface between buttons */
+    /** Specify if this cursor target is just used as a surface and should not react to custom button logics 
+        you have implemented, like making the gamepad pulse on hover only for buttons and not surfaces*/
     isSurface: boolean;
 }
 
 declare module "@wonderlandengine/components" {
-    export interface CursorTarget extends CursorTargetExtension { }
+    interface CursorTarget extends CursorTargetExtension { }
 }

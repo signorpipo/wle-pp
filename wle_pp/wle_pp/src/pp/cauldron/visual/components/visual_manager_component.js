@@ -44,14 +44,14 @@ export class VisualManagerComponent extends Component {
             this._myVisualResources.myDefaultMaterials.myHitNormal.color = vec4_create(1, 0, 0, 1);
         }
 
-        if (this.myVisualManager != null) {
-            this.myVisualManager.start();
+        if (this._myVisualManager != null) {
+            this._myVisualManager.start();
         }
     }
 
     update(dt) {
-        if (this.myVisualManager != null) {
-            this.myVisualManager.update(dt);
+        if (this._myVisualManager != null) {
+            this._myVisualManager.update(dt);
         }
     }
 

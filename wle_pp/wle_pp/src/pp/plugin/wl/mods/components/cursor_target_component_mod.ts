@@ -24,7 +24,6 @@ function _initCursorTargetComponentModPrototype(): void {
         this.onUpWithDown = new Emitter();
         this.onUpWithNoDown = new Emitter();
 
-        // Just a way to specify if this target is just used as a surface between buttons 
         this.isSurface = false;
     };
 

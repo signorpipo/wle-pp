@@ -11,12 +11,13 @@ export class SetHeadLocalTransformComponent extends Component {
         Globals.getHeadPose(this.engine)!.registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
     }
 
-    private static readonly _onPoseUpdatedSV = {
-        cameraNonXRRotation: quat_create(),
-        cameraNonXRUp: vec3_create(),
-        cameraNonXRPosition: vec3_create(),
-        headPoseTransform: quat2_create()
-    };
+    private static readonly _onPoseUpdatedSV =
+        {
+            cameraNonXRRotation: quat_create(),
+            cameraNonXRUp: vec3_create(),
+            cameraNonXRPosition: vec3_create(),
+            headPoseTransform: quat2_create()
+        };
     public onPoseUpdated(dt: number, pose: Readonly<BasePose>): void {
         if (this.active) {
             if (!XRUtils.isSessionActive(this.engine)) {

@@ -18,7 +18,6 @@ function _initCursorComponentModPrototype() {
     // Modified Functions
 
     cursorComponentMod.init = function init() {
-        this.maxDistance = 100;
         this.visible = false;
         this.globalTarget = this.object.pp_addComponent(CursorTarget);
         this.hitTestTarget = this.object.pp_addComponent(CursorTarget);

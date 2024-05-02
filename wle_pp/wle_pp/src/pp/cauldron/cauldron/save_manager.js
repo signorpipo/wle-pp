@@ -140,7 +140,7 @@ export class SaveManager {
         return id in this._mySaveObject;
     }
 
-    save(id, value, overrideDelaySavesCommit = null) {
+    save(id, value, delaySavesCommitOverride = null) {
         let sameValue = false;
         if (this.has(id)) {
             sameValue = this._mySaveObject[id] === value;
@@ -149,7 +149,7 @@ export class SaveManager {
         if (!sameValue) {
             this._mySaveObject[id] = value;
 
-            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+            if ((this._myDelaySavesCommit && delaySavesCommitOverride == null) || (delaySavesCommitOverride != null && delaySavesCommitOverride)) {
                 this._myCommitSavesDirty = true;
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
                     this._myCommitSavesDelayTimer.start();
@@ -182,11 +182,11 @@ export class SaveManager {
         }
     }
 
-    delete(id, overrideDelaySavesCommit = null) {
+    delete(id, delaySavesCommitOverride = null) {
         if (this.has(id)) {
             delete this._mySaveObject[id];
 
-            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+            if ((this._myDelaySavesCommit && delaySavesCommitOverride == null) || (delaySavesCommitOverride != null && delaySavesCommitOverride)) {
                 this._myCommitSavesDirty = true;
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
                     this._myCommitSavesDelayTimer.start();
@@ -208,11 +208,11 @@ export class SaveManager {
         }
     }
 
-    clear(overrideDelaySavesCommit = null) {
+    clear(delaySavesCommitOverride = null) {
         if (Object.keys(this._mySaveObject).length > 0) {
             this._mySaveObject = {};
 
-            if ((this._myDelaySavesCommit && overrideDelaySavesCommit == null) || (overrideDelaySavesCommit != null && overrideDelaySavesCommit)) {
+            if ((this._myDelaySavesCommit && delaySavesCommitOverride == null) || (delaySavesCommitOverride != null && delaySavesCommitOverride)) {
                 this._myCommitSavesDirty = true;
                 if (!this._myCommitSavesDelayTimer.isRunning()) {
                     this._myCommitSavesDelayTimer.start();

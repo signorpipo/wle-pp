@@ -104,6 +104,7 @@ export function getJointIDByIndex(index: number): TrackedHandJointID | null {
 }
 
 export const InputUtils = {
+    getHandednessByString,
     getHandednessByIndex,
     getInputSource,
     getInputSourceTypeByHandedness,

@@ -21,7 +21,7 @@ export interface RayHitExtension {
 }
 
 declare module "@wonderlandengine/api" {
-    export interface Physics extends PhysicsExtension { }
+    interface Physics extends PhysicsExtension { }
 
-    export interface RayHit extends RayHitExtension { }
+    interface RayHit extends RayHitExtension { }
 }

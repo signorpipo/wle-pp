@@ -9,5 +9,5 @@ export interface NumberExtension {
 }
 
 declare global {
-    export interface Number extends NumberExtension { }
+    interface Number extends NumberExtension { }
 }

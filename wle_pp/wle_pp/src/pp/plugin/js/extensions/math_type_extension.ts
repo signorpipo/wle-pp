@@ -64,5 +64,5 @@ export interface MathExtension {
 }
 
 declare global {
-    export interface Math extends MathExtension { }
+    interface Math extends MathExtension { }
 }

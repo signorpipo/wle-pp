@@ -211,7 +211,7 @@ export class VirtualGamepadVirtualButton {
         document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
 
         this._myButtonDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
-        this._myButtonDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+        this._myButtonDetectionElement.removeEventListener("mouseleave", this._myMouseLeaveEventListener);
 
         this._myButtonIcon.destroy();
 
