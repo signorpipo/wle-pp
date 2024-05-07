@@ -1,5 +1,6 @@
 import { Component, MeshComponent, Property, ViewComponent } from "@wonderlandengine/api";
 import { Cursor, CursorTarget } from "@wonderlandengine/components";
+import { PhysicsUtils } from "../../../cauldron/physics/physics_utils.js";
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
 import { FingerCursorComponent } from "../../../input/cauldron/components/finger_cursor_component.js";
 import { InputUtils } from "../../../input/cauldron/input_utils.js";
@@ -93,13 +94,28 @@ export class ToolCursorComponent extends Component {
                 fingerCursorMeshObject.pp_setScale(fingerCollisionSize);
             }
 
+            let collisionFlags = "";
+            for (let i = 0; i < PhysicsUtils.getLayerFlagsNames().length; i++) {
+                if (i == this._myCursorTargetCollisionGroup) {
+                    collisionFlags += "1";
+                } else {
+                    collisionFlags += "0";
+                }
+
+                if (i != PhysicsUtils.getLayerFlagsNames().length - 1) {
+                    collisionFlags += ", ";
+                }
+            }
+
             this._myFingerCursorObject = this._myToolCursorObject.pp_addObject();
             this._myFingerCursorComponent = this._myFingerCursorObject.pp_addComponent(FingerCursorComponent, {
                 "_myHandedness": this._myHandedness,
+                "_myDisableDefaultCursorOnTrackedHandDetected": false,
                 "_myMultipleClicksEnabled": true,
-                "_myCollisionGroup": this._myCursorTargetCollisionGroup,
+                "_myCollisionMode": 1,
+                "_myCollisionFlags": collisionFlags,
                 "_myCollisionSize": fingerCollisionSize,
-                "_myCursorObject": fingerCursorMeshObject
+                "_myCursorPointerObject": fingerCursorMeshObject
             });
 
             this._myCursorComponentXR.active = false;

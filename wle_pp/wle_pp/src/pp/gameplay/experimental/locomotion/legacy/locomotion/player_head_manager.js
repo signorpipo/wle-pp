@@ -156,8 +156,8 @@ export class PlayerHeadManager {
         return this.getHead().pp_getRotationQuat(outRotationHeadQuat);
     }
 
-    isSynced() {
-        return this._myIsSyncedDelayCounter == 0 && this._myDelaySessionChangeResyncCounter == 0 && this._myDelayNextEnterSessionSetHeightVRCounter == 0 && this._myDelayBlurEndResyncCounter == 0 && !this._myDelayBlurEndResyncTimer.isRunning() && !this._mySessionBlurred;
+    isSynced(ignoreSessionBlurredState = false) {
+        return this._myIsSyncedDelayCounter == 0 && this._myDelaySessionChangeResyncCounter == 0 && this._myDelayNextEnterSessionSetHeightVRCounter == 0 && this._myDelayBlurEndResyncCounter == 0 && !this._myDelayBlurEndResyncTimer.isRunning() && (ignoreSessionBlurredState || !this._mySessionBlurred);
     }
 
     setHeightHead(height, setOnlyForActiveOne = true) {

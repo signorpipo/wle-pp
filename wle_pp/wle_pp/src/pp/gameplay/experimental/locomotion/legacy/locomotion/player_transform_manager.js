@@ -142,8 +142,11 @@ export class PlayerTransformManagerParams {
         this.myIsHoppingExtraCheckCallback = null;            // Signature: callback(transformManager) -> bool
         this.myIsFarExtraCheckCallback = null;                // Signature: callback(transformManager) -> bool
 
+        this.myAllowUpdateValidToRealWhenBlurred = false;
+
         this.myResetToValidOnEnterSession = false;
         this.myResetToValidOnExitSession = false;
+        this.myResetToValidOnSessionHiddenEnd = false;
 
         this.myAlwaysResetRealPositionNonVR = false;
         this.myAlwaysResetRealRotationNonVR = false;
@@ -176,6 +179,7 @@ export class PlayerTransformManagerParams {
     destroy() {
         this._myDestroyed = true;
 
+        XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
         XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
     }
 
@@ -223,6 +227,15 @@ export class PlayerTransformManager {
         this._myResetRealOnHeadSynced = false;
 
         this._myResetHeadToFeetOnNextUpdateValidToReal = false;
+
+        /**
+         * TS type inference helper
+         * 
+         * @type {any}
+         */
+        this._myVisibilityChangeEventListener = null;
+
+        this._mySessionHasBeenHidden = false;
 
         this._myActive = true;
         this._myDestroyed = false;
@@ -664,6 +677,20 @@ export class PlayerTransformManager {
                 }
             }
         }
+
+        this._myVisibilityChangeEventListener = function (event) {
+            if (event.session.visibilityState == "hidden") {
+                this._mySessionHasBeenHidden = true;
+            } else if (this._mySessionHasBeenHidden) {
+                this._mySessionHasBeenHidden = false;
+
+                if (this._myParams.myResetToValidOnSessionHiddenEnd) {
+                    this._myResetRealOnHeadSynced = true;
+                }
+            }
+        }.bind(this);
+
+        session.addEventListener("visibilitychange", this._myVisibilityChangeEventListener);
     }
 
     _onXRSessionEnd() {
@@ -672,6 +699,8 @@ export class PlayerTransformManager {
                 this._myResetRealOnHeadSynced = true;
             }
         }
+
+        this._myVisibilityChangeEventListener = null;
     }
 
     _updatePositionsValid(dt) {
@@ -827,189 +856,190 @@ PlayerTransformManager.prototype._updateValidToReal = function () {
     let newFeetPosition = vec3_create();
     let floatingTransformQuat = quat2_create();
     return function _updateValidToReal(dt) {
-        // Check if new head is ok and update the data
-        // If head is not synced (blurred or session changing) avoid this and keep last valid
-        if (this.getPlayerHeadManager().isSynced()) {
-            this._updateCollisionHeight();
+        // If the head is not synced, only do the check to see if head is colliding, but do not actually change the valid position
+        const isHeadSynced = this.getPlayerHeadManager().isSynced(this._myParams.myAllowUpdateValidToRealWhenBlurred);
 
-            this._myIsBodyColliding = false;
-            this._myIsHeadColliding = false;
-            this._myIsLeaning = false;
-            this._myIsHopping = false;
-            this._myIsFar = false;
+        this._updateCollisionHeight();
 
-            movementToCheck = this.getPositionReal(positionReal).vec3_sub(this.getPosition(position), movementToCheck);
-            if (movementToCheck.vec3_length() > 0.0001) {
-                this._myLastValidMovementDirection = movementToCheck.vec3_normalize(this._myLastValidMovementDirection);
+        this._myIsBodyColliding = false;
+        this._myIsHeadColliding = false;
+        this._myIsLeaning = false;
+        this._myIsHopping = false;
+        this._myIsFar = false;
+
+        movementToCheck = this.getPositionReal(positionReal).vec3_sub(this.getPosition(position), movementToCheck);
+        if (isHeadSynced && movementToCheck.vec3_length() > 0.0001) {
+            this._myLastValidMovementDirection = movementToCheck.vec3_normalize(this._myLastValidMovementDirection);
+        }
+
+        // Far
+        if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FAR)) {
+            if (this._myParams.myMaxDistanceFromRealToSyncEnabled && movementToCheck.vec3_length() > this._myParams.myMaxDistanceFromRealToSync) {
+                this._myIsFar = true;
+            } else if (this._myParams.myIsFarExtraCheckCallback != null && this._myParams.myIsFarExtraCheckCallback(this)) {
+                this._myIsFar = true;
             }
+        }
 
-            // Far
-            if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FAR)) {
-                if (this._myParams.myMaxDistanceFromRealToSyncEnabled && movementToCheck.vec3_length() > this._myParams.myMaxDistanceFromRealToSync) {
-                    this._myIsFar = true;
-                } else if (this._myParams.myIsFarExtraCheckCallback != null && this._myParams.myIsFarExtraCheckCallback(this)) {
-                    this._myIsFar = true;
-                }
-            }
+        // Body Colliding
+        collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+        collisionRuntimeParams.myIsOnGround = true; // #TODO Temp as long as surface infos are not actually updated
+        transformQuat = this.getTransformQuat(transformQuat);
+        newPosition.vec3_copy(this._myValidPosition);
+        if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.BODY_COLLIDING)) {
+            CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
 
-            // Body Colliding
-            collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-            collisionRuntimeParams.myIsOnGround = true; // #TODO Temp as long as surface infos are not actually updated
-            transformQuat = this.getTransformQuat(transformQuat);
-            newPosition.vec3_copy(this._myValidPosition);
-            if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.BODY_COLLIDING)) {
-                CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
-
-                if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
-                    if (Math.pp_clamp(this._myRealMovementCollisionCheckParams.myHeight, this._myParams.myIsBodyCollidingWhenHeightBelowValue,
-                        this._myParams.myIsBodyCollidingWhenHeightAboveValue) != this._myRealMovementCollisionCheckParams.myHeight) {
+            if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
+                if (Math.pp_clamp(this._myRealMovementCollisionCheckParams.myHeight, this._myParams.myIsBodyCollidingWhenHeightBelowValue,
+                    this._myParams.myIsBodyCollidingWhenHeightAboveValue) != this._myRealMovementCollisionCheckParams.myHeight) {
+                    this._myIsBodyColliding = true;
+                } else {
+                    if (this._myParams.myIsBodyCollidingExtraCheckCallback != null && this._myParams.myIsBodyCollidingExtraCheckCallback(this)) {
                         this._myIsBodyColliding = true;
                     } else {
-                        if (this._myParams.myIsBodyCollidingExtraCheckCallback != null && this._myParams.myIsBodyCollidingExtraCheckCallback(this)) {
-                            this._myIsBodyColliding = true;
+                        this._myIsBodyColliding = false;
+                        newPosition.vec3_copy(collisionRuntimeParams.myNewPosition);
+                    }
+                }
+            } else {
+                this._myIsBodyColliding = true;
+            }
+        }
+
+        if (this._myParams.myAlwaysSyncPositionWithReal) {
+            newPosition.vec3_copy(positionReal);
+        }
+
+        // Floating 
+        if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FLOATING)) {
+
+            if (!this._myIsBodyColliding) {
+                movementToCheck = newPosition.vec3_sub(position, movementToCheck);
+            } else {
+                movementToCheck = positionReal.vec3_sub(position, movementToCheck);
+            }
+
+            collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+            floatingTransformQuat.quat2_setPositionRotationQuat(this._myValidPosition, this._myValidRotationQuat);
+            CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
+            // #TODO Utilizzare on ground del body gia calcolato, ma ora non c'è quindi va bene così
+
+            if (collisionRuntimeParams.myIsOnGround) {
+                transformUp = transformQuat.quat2_getUp(transformUp);
+                verticalMovement = movementToCheck.vec3_componentAlongAxis(transformUp, verticalMovement);
+                let isVertical = !verticalMovement.vec3_isZero(0.00001);
+                if (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovement) {
+                    let movementStepAmount = 1;
+                    movementStep.vec3_copy(movementToCheck);
+                    if (!movementToCheck.vec3_isZero(0.00001) && this._myParams.myFloatingSplitCheckEnabled) {
+                        let minLength = this._myParams.myFloatingSplitCheckMinLength;
+                        let maxLength = this._myParams.myFloatingSplitCheckMaxLength;
+                        let maxSteps = this._myParams.myFloatingSplitCheckMaxSteps != null ? this._myParams.myFloatingSplitCheckMaxSteps : 1;
+
+                        let movementLength = movementToCheck.vec3_length();
+                        let equalStepLength = movementLength / maxSteps;
+
+                        let stepLength = Math.pp_clamp(equalStepLength, minLength, maxLength);
+                        if (stepLength != equalStepLength) {
+                            movementStepAmount = Math.ceil(movementLength / stepLength);
+                            movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(stepLength, movementStep);
+
+                            if (this._myParams.myFloatingSplitCheckMaxSteps != null) {
+                                movementStepAmount = Math.min(movementStepAmount, maxSteps);
+                            }
                         } else {
-                            this._myIsBodyColliding = false;
-                            newPosition.vec3_copy(collisionRuntimeParams.myNewPosition);
+                            movementStepAmount = maxSteps;
+                            movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(equalStepLength, movementStep);
+                        }
+
+                        movementStepAmount = Math.max(1, movementStepAmount);
+
+                        if (movementStepAmount == 1) {
+                            movementStep.vec3_copy(movementToCheck);
                         }
                     }
-                } else {
-                    this._myIsBodyColliding = true;
-                }
-            }
 
-            if (this._myParams.myAlwaysSyncPositionWithReal) {
-                newPosition.vec3_copy(positionReal);
-            }
+                    let isOnValidGroundAngle = collisionRuntimeParams.myGroundAngle <= this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 0.0001;
 
-            // Floating 
-            if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FLOATING)) {
+                    movementChecked.vec3_zero();
+                    newFeetPosition.vec3_copy(this._myValidPosition);
+                    collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
 
-                if (!this._myIsBodyColliding) {
-                    movementToCheck = newPosition.vec3_sub(position, movementToCheck);
-                } else {
-                    movementToCheck = positionReal.vec3_sub(position, movementToCheck);
-                }
+                    let atLeastOneNotOnGround = false;
+                    let isOneOnGroundBetweenNoGround = false;
+                    let isLastOnGround = false;
+                    let isOneOnSteepGround = false;
 
-                collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-                floatingTransformQuat.quat2_setPositionRotationQuat(this._myValidPosition, this._myValidRotationQuat);
-                CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
-                // #TODO Utilizzare on ground del body gia calcolato, ma ora non c'è quindi va bene così
-
-                if (collisionRuntimeParams.myIsOnGround) {
-                    transformUp = transformQuat.quat2_getUp(transformUp);
-                    verticalMovement = movementToCheck.vec3_componentAlongAxis(transformUp, verticalMovement);
-                    let isVertical = !verticalMovement.vec3_isZero(0.00001);
-                    if (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovement) {
-                        let movementStepAmount = 1;
-                        movementStep.vec3_copy(movementToCheck);
-                        if (!movementToCheck.vec3_isZero(0.00001) && this._myParams.myFloatingSplitCheckEnabled) {
-                            let minLength = this._myParams.myFloatingSplitCheckMinLength;
-                            let maxLength = this._myParams.myFloatingSplitCheckMaxLength;
-                            let maxSteps = this._myParams.myFloatingSplitCheckMaxSteps != null ? this._myParams.myFloatingSplitCheckMaxSteps : 1;
-
-                            let movementLength = movementToCheck.vec3_length();
-                            let equalStepLength = movementLength / maxSteps;
-
-                            let stepLength = Math.pp_clamp(equalStepLength, minLength, maxLength);
-                            if (stepLength != equalStepLength) {
-                                movementStepAmount = Math.ceil(movementLength / stepLength);
-                                movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(stepLength, movementStep);
-
-                                if (this._myParams.myFloatingSplitCheckMaxSteps != null) {
-                                    movementStepAmount = Math.min(movementStepAmount, maxSteps);
-                                }
-                            } else {
-                                movementStepAmount = maxSteps;
-                                movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(equalStepLength, movementStep);
-                            }
-
-                            movementStepAmount = Math.max(1, movementStepAmount);
-
-                            if (movementStepAmount == 1) {
-                                movementStep.vec3_copy(movementToCheck);
-                            }
-                        }
-
-                        let isOnValidGroundAngle = collisionRuntimeParams.myGroundAngle <= this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 0.0001;
-
-                        movementChecked.vec3_zero();
-                        newFeetPosition.vec3_copy(this._myValidPosition);
-                        collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-
-                        let atLeastOneNotOnGround = false;
-                        let isOneOnGroundBetweenNoGround = false;
-                        let isLastOnGround = false;
-                        let isOneOnSteepGround = false;
-
-                        for (let i = 0; i < movementStepAmount; i++) {
-                            if (movementStepAmount == 1 || i != movementStepAmount - 1) {
-                                currentMovementStep.vec3_copy(movementStep);
-                            } else {
-                                currentMovementStep = movementToCheck.vec3_sub(movementChecked, currentMovementStep);
-                            }
-
-                            newFeetPosition = newFeetPosition.vec3_add(currentMovementStep, newFeetPosition);
-                            floatingTransformQuat.quat2_setPositionRotationQuat(newFeetPosition, this._myValidRotationQuat);
-                            collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-                            CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
-                            movementChecked = movementChecked.vec3_add(currentMovementStep, movementChecked);
-
-                            if (!collisionRuntimeParams.myIsOnGround) {
-                                atLeastOneNotOnGround = true;
-                            } else {
-                                if (collisionRuntimeParams.myGroundAngle > this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 0.0001) {
-                                    isOneOnSteepGround = true;
-                                }
-
-                                if (atLeastOneNotOnGround) {
-                                    isOneOnGroundBetweenNoGround = true;
-                                }
-
-                                if (i == movementStepAmount - 1) {
-                                    isLastOnGround = true;
-                                }
-                            }
-                        }
-
-                        let isFloatingOnSteepGroundFail = isOneOnSteepGround && isOnValidGroundAngle &&
-                            !this._myParams.myIsFloatingValidIfSteepGround && (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovementAndSteepGround);
-                        if (atLeastOneNotOnGround || isFloatingOnSteepGroundFail) {
-                            if (isOneOnGroundBetweenNoGround) {
-                                this._myIsHopping = true;
-                            } else {
-                                this._myIsLeaning = true;
-                            }
+                    for (let i = 0; i < movementStepAmount; i++) {
+                        if (movementStepAmount == 1 || i != movementStepAmount - 1) {
+                            currentMovementStep.vec3_copy(movementStep);
                         } else {
+                            currentMovementStep = movementToCheck.vec3_sub(movementChecked, currentMovementStep);
+                        }
+
+                        newFeetPosition = newFeetPosition.vec3_add(currentMovementStep, newFeetPosition);
+                        floatingTransformQuat.quat2_setPositionRotationQuat(newFeetPosition, this._myValidRotationQuat);
+                        collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+                        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
+                        movementChecked = movementChecked.vec3_add(currentMovementStep, movementChecked);
+
+                        if (!collisionRuntimeParams.myIsOnGround) {
+                            atLeastOneNotOnGround = true;
+                        } else {
+                            if (collisionRuntimeParams.myGroundAngle > this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 0.0001) {
+                                isOneOnSteepGround = true;
+                            }
+
+                            if (atLeastOneNotOnGround) {
+                                isOneOnGroundBetweenNoGround = true;
+                            }
+
+                            if (i == movementStepAmount - 1) {
+                                isLastOnGround = true;
+                            }
+                        }
+                    }
+
+                    let isFloatingOnSteepGroundFail = isOneOnSteepGround && isOnValidGroundAngle &&
+                        !this._myParams.myIsFloatingValidIfSteepGround && (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovementAndSteepGround);
+                    if (atLeastOneNotOnGround || isFloatingOnSteepGroundFail) {
+                        if (isOneOnGroundBetweenNoGround) {
+                            this._myIsHopping = true;
+                        } else {
+                            this._myIsLeaning = true;
+                        }
+                    } else {
+                        this._myIsLeaning = false;
+                        this._myIsHopping = false;
+
+                        if (this._myParams.myIsLeaningExtraCheckCallback != null && this._myParams.myIsLeaningExtraCheckCallback(this)) {
+                            this._myIsLeaning = true;
+                        } else if (this._myParams.myIsHoppingExtraCheckCallback != null && this._myParams.myIsHoppingExtraCheckCallback(this)) {
+                            this._myIsHopping = true;
+                        }
+                    }
+
+                    if (this._myIsLeaning) {
+                        let distance = movementToCheck.vec3_length();
+                        if (this._myParams.myIsLeaningValidAboveDistance && distance > this._myParams.myLeaningValidDistance) {
+                            this._myIsLeaning = false;
+                        }
+                    }
+
+                    if (this._myIsLeaning || this._myIsHopping) {
+                        if (isLastOnGround && this._myParams.myIsFloatingValidIfRealOnGround) {
                             this._myIsLeaning = false;
                             this._myIsHopping = false;
-
-                            if (this._myParams.myIsLeaningExtraCheckCallback != null && this._myParams.myIsLeaningExtraCheckCallback(this)) {
-                                this._myIsLeaning = true;
-                            } else if (this._myParams.myIsHoppingExtraCheckCallback != null && this._myParams.myIsHoppingExtraCheckCallback(this)) {
-                                this._myIsHopping = true;
-                            }
-                        }
-
-                        if (this._myIsLeaning) {
-                            let distance = movementToCheck.vec3_length();
-                            if (this._myParams.myIsLeaningValidAboveDistance && distance > this._myParams.myLeaningValidDistance) {
-                                this._myIsLeaning = false;
-                            }
-                        }
-
-                        if (this._myIsLeaning || this._myIsHopping) {
-                            if (isLastOnGround && this._myParams.myIsFloatingValidIfRealOnGround) {
-                                this._myIsLeaning = false;
-                                this._myIsHopping = false;
-                            } else if (isLastOnGround && isVertical && this._myParams.myIsFloatingValidIfVerticalMovementAndRealOnGround) {
-                                this._myIsLeaning = false;
-                                this._myIsHopping = false;
-                            }
+                        } else if (isLastOnGround && isVertical && this._myParams.myIsFloatingValidIfVerticalMovementAndRealOnGround) {
+                            this._myIsLeaning = false;
+                            this._myIsHopping = false;
                         }
                     }
                 }
             }
+        }
 
+        if (isHeadSynced) {
             if ((this.isSynced(this._myParams.mySyncPositionFlagMap) || this._myParams.myAlwaysSyncPositionWithReal) && !this._myParams.mySyncPositionDisabled) {
                 this._myValidPosition.vec3_copy(newPosition);
                 // Reset real position since the new position might be influenced by the snap?
@@ -1023,9 +1053,9 @@ PlayerTransformManager.prototype._updateValidToReal = function () {
                 this._myValidHeight = this._myRealMovementCollisionCheckParams.myHeight;
                 this._updateCollisionHeight();
             }
-
-            this._updateValidHeadToRealHead(dt);
         }
+
+        this._updateValidHeadToRealHead(dt);
     };
 }();
 
@@ -1041,93 +1071,70 @@ PlayerTransformManager.prototype._updateValidHeadToRealHead = function () {
     let backupHorizontalBlockLayerFlags = new PhysicsLayerFlags();
     let backupVerticalBlockLayerFlags = new PhysicsLayerFlags();
     return function _updateValidHeadToRealHead(dt) {
-        if (this.getPlayerHeadManager().isSynced()) {
-            this._myIsHeadColliding = false;
+        // If the head is not synced, only do the check to see if head is colliding, but do not actually change the valid position
+        const isHeadSynced = this.getPlayerHeadManager().isSynced(this._myParams.myAllowUpdateValidToRealWhenBlurred);
 
-            backupHorizontalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags);
-            backupVerticalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags);
+        this._myIsHeadColliding = false;
 
-            let backupVerticalMovementReduceEnabled = this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled;
+        backupHorizontalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags);
+        backupVerticalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags);
 
-            let backupGroundAngleToIgnore = this._myHeadCollisionCheckParams.myGroundAngleToIgnore;
-            let backupGroundAngleToIgnoreWithPerceivedAngle = this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
-            let backupHorizontalMovementGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
-            let backupHorizontalPositionGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
-            let backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
+        let backupVerticalMovementReduceEnabled = this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled;
 
-            let headReducedVerticalMovementFeetAdjustment = false;
+        let backupGroundAngleToIgnore = this._myHeadCollisionCheckParams.myGroundAngleToIgnore;
+        let backupGroundAngleToIgnoreWithPerceivedAngle = this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
+        let backupHorizontalMovementGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
+        let backupHorizontalPositionGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
+        let backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
 
-            // Head Colliding
-            let firstHeadCollidingCheckDone = false;
-            do {
+        let headReducedVerticalMovementFeetAdjustment = false;
+
+        // Head Colliding
+        let firstHeadCollidingCheckDone = false;
+        do {
+            if (isHeadSynced) {
                 if (firstHeadCollidingCheckDone && this._myResetHeadToFeetOnNextUpdateValidToReal) {
                     this._myResetHeadToFeetOnNextUpdateValidToReal = false;
                     this.resetHeadToFeet();
                 }
+            }
 
-                if (this._myResetHeadToFeetOnNextUpdateValidToReal) {
-                    this._myValidPositionHead.vec3_copy(this._myValidPositionHeadBackupForResetToFeet);
+            let resetHeadToFeetDirty = this._myResetHeadToFeetDirty;
+
+            if (this._myResetHeadToFeetOnNextUpdateValidToReal) {
+                this._myValidPositionHead.vec3_copy(this._myValidPositionHeadBackupForResetToFeet);
+
+                if (isHeadSynced) {
                     this._myResetHeadToFeetDirty = false;
                 }
 
-                if (this._myResetHeadToFeetDirty) {
-                    if (this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet != null) {
-                        this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
-                        this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
-                    }
+                resetHeadToFeetDirty = false;
+            }
 
-                    if (this._myParams.myResetHeadToFeetMoveTowardReal) {
-                        this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = true;
-                    }
+            if (resetHeadToFeetDirty) {
+                if (this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet != null) {
+                    this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
+                    this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
+                }
 
-                    if (this._myParams.myResetHeadToFeetGroudnAngleIgnoreEnabled) {
-                        this._myHeadCollisionCheckParams.myGroundAngleToIgnore = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnore;
-                        this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
+                if (this._myParams.myResetHeadToFeetMoveTowardReal) {
+                    this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = true;
+                }
 
-                        this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
-                        this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
+                if (this._myParams.myResetHeadToFeetGroudnAngleIgnoreEnabled) {
+                    this._myHeadCollisionCheckParams.myGroundAngleToIgnore = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnore;
+                    this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
 
-                        this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
-                    }
+                    this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
+                    this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
 
+                    this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
+                }
+
+                if (isHeadSynced) {
                     this._myResetHeadToFeetDirty = false;
-                } else {
-                    this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(backupHorizontalBlockLayerFlags);
-                    this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(backupVerticalBlockLayerFlags);
-                    this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = backupVerticalMovementReduceEnabled;
-
-                    this._myHeadCollisionCheckParams.myGroundAngleToIgnore = backupGroundAngleToIgnore;
-                    this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = backupGroundAngleToIgnoreWithPerceivedAngle;
-                    this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = backupHorizontalMovementGroundAngleIgnoreHeight;
-                    this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = backupHorizontalPositionGroundAngleIgnoreHeight;
-                    this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
                 }
-
-                movementToCheck = this.getPositionHeadReal(positionReal).vec3_sub(this.getPositionHead(position), movementToCheck);
-                collisionRuntimeParams.reset();
-                transformQuat = this.getTransformHeadQuat(transformQuat); // Get eyes transform
-                newPositionHead.vec3_copy(this._myValidPositionHead);
-                if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.HEAD_COLLIDING)) {
-                    CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat, this._myHeadCollisionCheckParams, collisionRuntimeParams);
-
-                    if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
-                        if (!backupVerticalMovementReduceEnabled && collisionRuntimeParams.myHasReducedVerticalMovement) {
-                            this._myIsHeadColliding = true;
-                            headReducedVerticalMovementFeetAdjustment = true;
-                        } else {
-                            this._myIsHeadColliding = false;
-                        }
-
-                        newPositionHead.vec3_copy(collisionRuntimeParams.myNewPosition);
-                    } else {
-                        this._myIsHeadColliding = true;
-                    }
-                }
-
-                firstHeadCollidingCheckDone = true;
-            } while (this._myIsHeadColliding && this._myResetHeadToFeetOnNextUpdateValidToReal);
-
-            {
+            } else {
                 this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(backupHorizontalBlockLayerFlags);
                 this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(backupVerticalBlockLayerFlags);
                 this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = backupVerticalMovementReduceEnabled;
@@ -1139,29 +1146,68 @@ PlayerTransformManager.prototype._updateValidHeadToRealHead = function () {
                 this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
             }
 
+            movementToCheck = this.getPositionHeadReal(positionReal).vec3_sub(this.getPositionHead(position), movementToCheck);
+            collisionRuntimeParams.reset();
+            transformQuat = this.getTransformHeadQuat(transformQuat); // Get eyes transform
+            newPositionHead.vec3_copy(this._myValidPositionHead);
+            if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.HEAD_COLLIDING)) {
+                CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat, this._myHeadCollisionCheckParams, collisionRuntimeParams);
+
+                if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
+                    if (!backupVerticalMovementReduceEnabled && collisionRuntimeParams.myHasReducedVerticalMovement) {
+                        this._myIsHeadColliding = true;
+                        headReducedVerticalMovementFeetAdjustment = true;
+                    } else {
+                        this._myIsHeadColliding = false;
+                    }
+
+                    newPositionHead.vec3_copy(collisionRuntimeParams.myNewPosition);
+                } else {
+                    this._myIsHeadColliding = true;
+                }
+            }
+
+            firstHeadCollidingCheckDone = true;
+        } while (this._myIsHeadColliding && isHeadSynced && this._myResetHeadToFeetOnNextUpdateValidToReal);
+
+        {
+            this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(backupHorizontalBlockLayerFlags);
+            this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(backupVerticalBlockLayerFlags);
+            this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = backupVerticalMovementReduceEnabled;
+
+            this._myHeadCollisionCheckParams.myGroundAngleToIgnore = backupGroundAngleToIgnore;
+            this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = backupGroundAngleToIgnoreWithPerceivedAngle;
+            this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = backupHorizontalMovementGroundAngleIgnoreHeight;
+            this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = backupHorizontalPositionGroundAngleIgnoreHeight;
+            this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
+        }
+
+        if (isHeadSynced) {
             this._myResetHeadToFeetOnNextUpdateValidToReal = false;
             this._myResetHeadToFeetDirty = false;
+        }
 
-            if (this._myParams.myAlwaysSyncHeadPositionWithReal) {
-                newPositionHead.vec3_copy(positionReal);
-            }
+        if (this._myParams.myAlwaysSyncHeadPositionWithReal) {
+            newPositionHead.vec3_copy(positionReal);
+        }
 
-            let backupIsHeadColliding = this._myIsHeadColliding;
-            if (headReducedVerticalMovementFeetAdjustment) {
-                // This is to allow the sync of the head if this is the only think preventing it
-                this._myIsHeadColliding = false;
-            }
+        let backupIsHeadColliding = this._myIsHeadColliding;
+        if (headReducedVerticalMovementFeetAdjustment) {
+            // This is to allow the sync of the head if this is the only think preventing it
+            this._myIsHeadColliding = false;
+        }
 
+        if (isHeadSynced) {
             if (this.isSynced(this._myParams.mySyncPositionHeadFlagMap) || this._myParams.myAlwaysSyncHeadPositionWithReal
                 || (this.isSynced(this._myParams.mySyncPositionFlagMap) && this._myParams.myAlwaysSyncPositionWithReal)) {
                 this._myValidPositionHead.vec3_copy(newPositionHead);
                 this._myValidPositionHeadBackupForResetToFeet.vec3_copy(this._myValidPositionHead);
             }
+        }
 
-            if (headReducedVerticalMovementFeetAdjustment) {
-                // Restoring it to colliding after
-                this._myIsHeadColliding = backupIsHeadColliding;
-            }
+        if (headReducedVerticalMovementFeetAdjustment) {
+            // Restoring it to colliding after
+            this._myIsHeadColliding = backupIsHeadColliding;
         }
     };
 }();

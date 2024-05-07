@@ -38,7 +38,7 @@ export class SwitchHandObjectComponent extends Component {
             }
         } else {
             let inputSourceType = InputUtils.getInputSourceTypeByHandedness(this._myHandednessType, this.engine);
-            if (inputSourceType != null && this._myCurrentInputSourceType != inputSourceType) {
+            if (this._myCurrentInputSourceType != inputSourceType) {
                 this._myCurrentInputSourceType = inputSourceType;
 
                 if (inputSourceType == InputSourceType.TRACKED_HAND) {
@@ -55,6 +55,9 @@ export class SwitchHandObjectComponent extends Component {
                     if (this._myGamepad != null) {
                         this._myGamepad.pp_setActive(true);
                     }
+                } else if (inputSourceType == null) {
+                    this._myGamepad.pp_setActive(false);
+                    this._myTrackedHand.pp_setActive(false);
                 }
             }
         }

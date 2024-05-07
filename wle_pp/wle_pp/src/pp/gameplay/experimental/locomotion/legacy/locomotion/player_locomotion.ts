@@ -220,7 +220,7 @@ export class PlayerLocomotion {
             params.mySessionChangeResyncEnabled = true;
 
             params.myBlurEndResyncEnabled = true;
-            params.myBlurEndResyncRotation = true;
+            params.myBlurEndResyncRotation = false;
 
             params.myEnterSessionResyncHeight = false;
             params.myExitSessionResyncHeight = this._myParams.mySyncNonVRHeightWithVROnExitSession;
@@ -296,6 +296,7 @@ export class PlayerLocomotion {
 
             params.myResetToValidOnEnterSession = true;
             params.myResetToValidOnExitSession = true;
+            params.myResetToValidOnSessionHiddenEnd = true;
 
             params.myAlwaysResetRealPositionNonVR = true;
             params.myAlwaysResetRealRotationNonVR = true;
@@ -452,7 +453,7 @@ export class PlayerLocomotion {
                 params.myObscureMaterial = null;
                 params.myObscureRadius = 0.5;
 
-                params.myObscureFadeOutSeconds = 0;
+                params.myObscureFadeOutSeconds = 0.1;
                 params.myObscureFadeInSeconds = 0.25;
 
                 params.myObscureFadeEasingFunction = EasingFunction.linear;

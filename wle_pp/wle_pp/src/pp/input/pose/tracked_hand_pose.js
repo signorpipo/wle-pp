@@ -13,7 +13,7 @@ export class TrackedHandPoseParams extends BasePoseParams {
 
         if (addAllJointIDs) {
             for (let key in TrackedHandJointID) {
-                this.myTrackedHandJointIDList.push([TrackedHandJointID[key]]);
+                this.myTrackedHandJointIDList.push(TrackedHandJointID[key]);
             }
         }
     }

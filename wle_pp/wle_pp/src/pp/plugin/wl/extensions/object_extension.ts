@@ -1301,6 +1301,10 @@ function _initObjectExtensionProtoype(): void {
 
     // Get Hierarchy
 
+    objectExtension.pp_getHierarchy = function pp_getHierarchy(this: Readonly<Object3D>): Object3D[] {
+        return ObjectUtils.getHierarchy(this);
+    };
+
     objectExtension.pp_getHierarchyBreadth = function pp_getHierarchyBreadth(this: Readonly<Object3D>): Object3D[] {
         return ObjectUtils.getHierarchyBreadth(this);
     };

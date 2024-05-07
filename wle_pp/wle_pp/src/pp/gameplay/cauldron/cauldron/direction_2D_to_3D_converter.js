@@ -1,4 +1,4 @@
-import { quat_create, vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
+import { quat_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 
 export class Direction2DTo3DConverterParams {
 

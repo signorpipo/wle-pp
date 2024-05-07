@@ -436,6 +436,7 @@ export interface Object3DExtension {
     pp_getObjectByIDDescendantsDepth(this: Readonly<Object3D>, id: number): Object3D | null;
     pp_getObjectByIDChildren(this: Readonly<Object3D>, id: number): Object3D | null;
 
+    pp_getHierarchy(this: Readonly<Object3D>): Object3D[];
     pp_getHierarchyBreadth(this: Readonly<Object3D>): Object3D[];
     pp_getHierarchyDepth(this: Readonly<Object3D>): Object3D[];
     pp_getDescendants(this: Readonly<Object3D>): Object3D[];
