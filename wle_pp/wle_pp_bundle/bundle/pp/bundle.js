@@ -13,6 +13,8 @@ __export(pp_exports, {
   AnalyticsManager: () => AnalyticsManager,
   AnalyticsManagerComponent: () => AnalyticsManagerComponent,
   AnalyticsUtils: () => AnalyticsUtils,
+  AnimatedNumber: () => AnimatedNumber,
+  AnimatedNumberParams: () => AnimatedNumberParams,
   ArrayExtensionUtils: () => ArrayExtensionUtils,
   ArrayUtils: () => ArrayUtils,
   AudioEvent: () => AudioEvent,
@@ -21,7 +23,6 @@ __export(pp_exports, {
   AudioPlayer: () => AudioPlayer,
   AudioSetup: () => AudioSetup,
   AudioUtils: () => AudioUtils,
-  BaseGamepad: () => BaseGamepad,
   BasePose: () => BasePose,
   BasePoseParams: () => BasePoseParams,
   BenchmarkMaxPhysXComponent: () => BenchmarkMaxPhysXComponent,
@@ -85,6 +86,7 @@ __export(pp_exports, {
   CopyHeadTransformComponent: () => CopyHeadTransformComponent,
   CopyPlayerTransformComponent: () => CopyPlayerTransformComponent,
   CopyReferenceSpaceTransformComponent: () => CopyReferenceSpaceTransformComponent,
+  CursorButtonComponent: () => CursorButtonComponent,
   CustomCloneParams: () => CustomCloneParams,
   DebugArrayFunctionsPerformanceAnalyzerComponent: () => DebugArrayFunctionsPerformanceAnalyzerComponent,
   DebugFunctionPerformanceAnalysisResults: () => DebugFunctionPerformanceAnalysisResults,
@@ -171,6 +173,7 @@ __export(pp_exports, {
   EnableToolComponent: () => EnableToolComponent,
   FSM: () => FSM,
   FingerCursorComponent: () => FingerCursorComponent,
+  Gamepad: () => Gamepad,
   GamepadAxesEvent: () => GamepadAxesEvent,
   GamepadAxesID: () => GamepadAxesID,
   GamepadAxesInfo: () => GamepadAxesInfo,
@@ -272,9 +275,11 @@ __export(pp_exports, {
   RaycastHit: () => RaycastHit,
   RaycastParams: () => RaycastParams,
   RaycastResults: () => RaycastResults,
+  ResetLocalTransformComponent: () => ResetLocalTransformComponent,
   SaveManager: () => SaveManager,
   SaveManagerComponent: () => SaveManagerComponent,
   SaveUtils: () => SaveUtils,
+  ScaleOnSpawnComponent: () => ScaleOnSpawnComponent,
   SceneObjects: () => SceneObjects,
   SetActiveComponent: () => SetActiveComponent,
   SetHandLocalTransformComponent: () => SetHandLocalTransformComponent,
@@ -355,12 +360,13 @@ __export(pp_exports, {
   registerWLComponents: () => registerWLComponents,
   vec2_create: () => vec2_create,
   vec3_create: () => vec3_create,
-  vec4_create: () => vec4_create
+  vec4_create: () => vec4_create,
+  vec_create: () => vec_create
 });
 
 // dist/pp/pp/register_pp_components.js
 function registerPPComponents(engine) {
-  engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleOnXRSessionStartComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshAmbientFactorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, SetActiveComponent, SetHandLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, ShowXRButtonsComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
+  engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleOnXRSessionStartComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshAmbientFactorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, ScaleOnSpawnComponent, SetActiveComponent, SetHandLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, ShowXRButtonsComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
 }
 
 // dist/pp/audio/audio_globals.js
@@ -373,16 +379,23 @@ __export(audio_globals_exports, {
 });
 var _myAudioManagers = /* @__PURE__ */ new WeakMap();
 function getAudioManager(engine = Globals.getMainEngine()) {
-  return _myAudioManagers.get(engine);
+  if (engine == null)
+    return null;
+  const audioManager = _myAudioManagers.get(engine);
+  return audioManager != null ? audioManager : null;
 }
 function setAudioManager(audioManager, engine = Globals.getMainEngine()) {
-  _myAudioManagers.set(engine, audioManager);
+  if (engine != null) {
+    _myAudioManagers.set(engine, audioManager);
+  }
 }
 function removeAudioManager(engine = Globals.getMainEngine()) {
-  _myAudioManagers.delete(engine);
+  if (engine != null) {
+    _myAudioManagers.delete(engine);
+  }
 }
 function hasAudioManager(engine = Globals.getMainEngine()) {
-  return _myAudioManagers.has(engine);
+  return engine != null ? _myAudioManagers.has(engine) : false;
 }
 
 // dist/pp/cauldron/cauldron/analytics_globals.js
@@ -395,16 +408,23 @@ __export(analytics_globals_exports, {
 });
 var _myAnalyticsManagers = /* @__PURE__ */ new WeakMap();
 function getAnalyticsManager(engine = Globals.getMainEngine()) {
-  return _myAnalyticsManagers.get(engine);
+  if (engine == null)
+    return null;
+  const analyticsManager = _myAnalyticsManagers.get(engine);
+  return analyticsManager != null ? analyticsManager : null;
 }
 function setAnalyticsManager(analyticsManager, engine = Globals.getMainEngine()) {
-  _myAnalyticsManagers.set(engine, analyticsManager);
+  if (engine != null) {
+    _myAnalyticsManagers.set(engine, analyticsManager);
+  }
 }
 function removeAnalyticsManager(engine = Globals.getMainEngine()) {
-  _myAnalyticsManagers.delete(engine);
+  if (engine != null) {
+    _myAnalyticsManagers.delete(engine);
+  }
 }
 function hasAnalyticsManager(engine = Globals.getMainEngine()) {
-  return _myAnalyticsManagers.has(engine);
+  return engine != null ? _myAnalyticsManagers.has(engine) : false;
 }
 
 // dist/pp/cauldron/cauldron/save_globals.js
@@ -417,16 +437,23 @@ __export(save_globals_exports, {
 });
 var _mySaveManagers = /* @__PURE__ */ new WeakMap();
 function getSaveManager(engine = Globals.getMainEngine()) {
-  return _mySaveManagers.get(engine);
+  if (engine == null)
+    return null;
+  const saveManager = _mySaveManagers.get(engine);
+  return saveManager != null ? saveManager : null;
 }
 function setSaveManager(saveManager, engine = Globals.getMainEngine()) {
-  _mySaveManagers.set(engine, saveManager);
+  if (engine != null) {
+    _mySaveManagers.set(engine, saveManager);
+  }
 }
 function removeSaveManager(engine = Globals.getMainEngine()) {
-  _mySaveManagers.delete(engine);
+  if (engine != null) {
+    _mySaveManagers.delete(engine);
+  }
 }
 function hasSaveManager(engine = Globals.getMainEngine()) {
-  return _mySaveManagers.has(engine);
+  return engine != null ? _mySaveManagers.has(engine) : false;
 }
 
 // dist/pp/cauldron/object_pool/object_pool_globals.js
@@ -439,16 +466,23 @@ __export(object_pool_globals_exports, {
 });
 var _myObjectPoolManagers = /* @__PURE__ */ new WeakMap();
 function getObjectPoolManager(engine = Globals.getMainEngine()) {
-  return _myObjectPoolManagers.get(engine);
+  if (engine == null)
+    return null;
+  const objectPoolManager = _myObjectPoolManagers.get(engine);
+  return objectPoolManager != null ? objectPoolManager : null;
 }
 function setObjectPoolManager(objectPoolManager, engine = Globals.getMainEngine()) {
-  _myObjectPoolManagers.set(engine, objectPoolManager);
+  if (engine != null) {
+    _myObjectPoolManagers.set(engine, objectPoolManager);
+  }
 }
 function removeObjectPoolManager(engine = Globals.getMainEngine()) {
-  _myObjectPoolManagers.delete(engine);
+  if (engine != null) {
+    _myObjectPoolManagers.delete(engine);
+  }
 }
 function hasObjectPoolManager(engine = Globals.getMainEngine()) {
-  return _myObjectPoolManagers.has(engine);
+  return engine != null ? _myObjectPoolManagers.has(engine) : false;
 }
 
 // dist/pp/cauldron/visual/visual_globals.js
@@ -463,31 +497,45 @@ __export(visual_globals_exports, {
   setVisualManager: () => setVisualManager,
   setVisualResources: () => setVisualResources
 });
-var _myVisualResourcesContainer = /* @__PURE__ */ new WeakMap();
 var _myVisualManagers = /* @__PURE__ */ new WeakMap();
-function getVisualResources(engine = Globals.getMainEngineinEngine()) {
-  return _myVisualResourcesContainer.get(engine);
-}
-function setVisualResources(visualResources, engine = Globals.getMainEngine()) {
-  _myVisualResourcesContainer.set(engine, visualResources);
-}
-function removeVisualResources(engine = Globals.getMainEngine()) {
-  _myVisualResourcesContainer.delete(engine);
-}
-function hasVisualResources(engine = Globals.getMainEngine()) {
-  return _myVisualResourcesContainer.has(engine);
-}
+var _myVisualResourcesMap = /* @__PURE__ */ new WeakMap();
 function getVisualManager(engine = Globals.getMainEngine()) {
-  return _myVisualManagers.get(engine);
+  if (engine == null)
+    return null;
+  const visualManager = _myVisualManagers.get(engine);
+  return visualManager != null ? visualManager : null;
 }
 function setVisualManager(visualManager, engine = Globals.getMainEngine()) {
-  _myVisualManagers.set(engine, visualManager);
+  if (engine != null) {
+    _myVisualManagers.set(engine, visualManager);
+  }
 }
 function removeVisualManager(engine = Globals.getMainEngine()) {
-  _myVisualManagers.delete(engine);
+  if (engine != null) {
+    _myVisualManagers.delete(engine);
+  }
 }
 function hasVisualManager(engine = Globals.getMainEngine()) {
-  return _myVisualManagers.has(engine);
+  return engine != null ? _myVisualManagers.has(engine) : false;
+}
+function getVisualResources(engine = Globals.getMainEngine()) {
+  if (engine == null)
+    return null;
+  const visualResources = _myVisualResourcesMap.get(engine);
+  return visualResources != null ? visualResources : null;
+}
+function setVisualResources(visualResources, engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myVisualResourcesMap.set(engine, visualResources);
+  }
+}
+function removeVisualResources(engine = Globals.getMainEngine()) {
+  if (engine != null) {
+    _myVisualResourcesMap.delete(engine);
+  }
+}
+function hasVisualResources(engine = Globals.getMainEngine()) {
+  return engine != null ? _myVisualResourcesMap.has(engine) : false;
 }
 
 // dist/pp/cauldron/wl/engine_globals.js
@@ -623,9 +671,10 @@ function getDefaultMaterials(engine = Globals.getMainEngine()) {
 // dist/pp/cauldron/wl/getters/scene_objects_globals.js
 var scene_objects_globals_exports = {};
 __export(scene_objects_globals_exports, {
-  getHeadObject: () => getHeadObject,
+  getPlayerHeadObject: () => getPlayerHeadObject,
   getPlayerObject: () => getPlayerObject,
   getPlayerObjects: () => getPlayerObjects,
+  getPlayerReferenceSpaceObject: () => getPlayerReferenceSpaceObject,
   getRootObject: () => getRootObject,
   getSceneObject: () => getSceneObject,
   getSceneObjects: () => getSceneObjects,
@@ -681,7 +730,14 @@ function getPlayerObject(engine = Globals.getMainEngine()) {
   }
   return null;
 }
-function getHeadObject(engine = Globals.getMainEngine()) {
+function getPlayerReferenceSpaceObject(engine = Globals.getMainEngine()) {
+  const sceneObjects = getSceneObjects(engine);
+  if (sceneObjects != null) {
+    return sceneObjects.myPlayerObjects.myReferenceSpace;
+  }
+  return null;
+}
+function getPlayerHeadObject(engine = Globals.getMainEngine()) {
   const sceneObjects = getSceneObjects(engine);
   if (sceneObjects != null) {
     return sceneObjects.myPlayerObjects.myHead;
@@ -757,16 +813,23 @@ __export(character_collision_system_globals_exports, {
 });
 var _myCharacterCollisionSystems = /* @__PURE__ */ new WeakMap();
 function getCharacterCollisionSystem(engine = Globals.getMainEngine()) {
-  return _myCharacterCollisionSystems.get(engine);
+  if (engine == null)
+    return null;
+  const characterCollisionSystem = _myCharacterCollisionSystems.get(engine);
+  return characterCollisionSystem != null ? characterCollisionSystem : null;
 }
 function setCharacterCollisionSystem(characterCollisionSystem, engine = Globals.getMainEngine()) {
-  _myCharacterCollisionSystems.set(engine, characterCollisionSystem);
+  if (engine != null) {
+    _myCharacterCollisionSystems.set(engine, characterCollisionSystem);
+  }
 }
 function removeCharacterCollisionSystem(engine = Globals.getMainEngine()) {
-  _myCharacterCollisionSystems.delete(engine);
+  if (engine != null) {
+    _myCharacterCollisionSystems.delete(engine);
+  }
 }
 function hasCharacterCollisionSystem(engine = Globals.getMainEngine()) {
-  return _myCharacterCollisionSystems.has(engine);
+  return engine != null ? _myCharacterCollisionSystems.has(engine) : false;
 }
 
 // dist/pp/input/cauldron/input_globals.js
@@ -957,16 +1020,23 @@ __export(tool_globals_exports, {
 });
 var _myToolEnableds = /* @__PURE__ */ new WeakMap();
 function isToolEnabled(engine = Globals.getMainEngine()) {
-  return _myToolEnableds.get(engine);
+  if (engine == null)
+    return null;
+  const toolEnabled = _myToolEnableds.get(engine);
+  return toolEnabled != null ? toolEnabled : null;
 }
 function setToolEnabled(toolEnabled, engine = Globals.getMainEngine()) {
-  _myToolEnableds.set(engine, toolEnabled);
+  if (engine != null) {
+    _myToolEnableds.set(engine, toolEnabled);
+  }
 }
 function removeToolEnabled(engine = Globals.getMainEngine()) {
-  _myToolEnableds.delete(engine);
+  if (engine != null) {
+    _myToolEnableds.delete(engine);
+  }
 }
 function hasToolEnabled(engine = Globals.getMainEngine()) {
-  return _myToolEnableds.has(engine);
+  return engine != null ? _myToolEnableds.has(engine) : false;
 }
 
 // dist/pp/tool/console_vr/console_vr_globals.js
@@ -979,16 +1049,23 @@ __export(console_vr_globals_exports, {
 });
 var _myConsoleVRs = /* @__PURE__ */ new WeakMap();
 function getConsoleVR(engine = Globals.getMainEngine()) {
-  return _myConsoleVRs.get(engine);
+  if (engine == null)
+    return null;
+  const consoleVR = _myConsoleVRs.get(engine);
+  return consoleVR != null ? consoleVR : null;
 }
 function setConsoleVR(consoleVR, engine = Globals.getMainEngine()) {
-  _myConsoleVRs.set(engine, consoleVR);
+  if (engine != null) {
+    _myConsoleVRs.set(engine, consoleVR);
+  }
 }
 function removeConsoleVR(engine = Globals.getMainEngine()) {
-  _myConsoleVRs.delete(engine);
+  if (engine != null) {
+    _myConsoleVRs.delete(engine);
+  }
 }
 function hasConsoleVR(engine = Globals.getMainEngine()) {
-  return _myConsoleVRs.has(engine);
+  return engine != null ? _myConsoleVRs.has(engine) : false;
 }
 
 // dist/pp/tool/easy_tune/easy_tune_globals.js
@@ -1077,21 +1154,28 @@ import { Howl, Howler } from "howler";
 
 // dist/pp/audio/audio_setup.js
 var AudioSetup = class _AudioSetup {
-  constructor(audioFilePath = null) {
-    this.myAudioFilePath = audioFilePath;
-    this.myLoop = false;
-    this.myAutoPlay = false;
-    this.myVolume = 1;
-    this._myRate = 1;
-    this.myPool = 5;
-    this.myPreload = true;
-    this.myPreventPlayWhenAudioContextNotRunning = false;
-    this.myPosition = null;
-    this.mySpatial = true;
-    this.myReferenceDistance = Number.MAX_VALUE;
+  myAudioFilePath = null;
+  myLoop = false;
+  myAutoPlay = false;
+  myVolume = 1;
+  /** From `0.5` to `4.0` */
+  _myRate = 1;
+  myPool = 5;
+  myPreload = true;
+  myPreventPlayWhenAudioContextNotRunning = false;
+  // Spatial Params
+  myPosition = null;
+  mySpatial = true;
+  /** At this distance (and closer) the volume is not reduced */
+  myReferenceDistance = Number.MAX_VALUE;
+  // End Spatial Params
+  constructor(audioFilePath) {
+    if (audioFilePath != null) {
+      this.myAudioFilePath = audioFilePath;
+    }
   }
   clone() {
-    let audioSetup = new _AudioSetup();
+    const audioSetup = new _AudioSetup();
     audioSetup.myAudioFilePath = this.myAudioFilePath;
     audioSetup.myLoop = this.myLoop;
     audioSetup.myAutoPlay = this.myAutoPlay;
@@ -1814,7 +1898,7 @@ function save(id, value) {
   }
 }
 function has(id) {
-  return SaveUtils.loadString(id, null) != null;
+  return SaveUtils.loadString(id) != null;
 }
 function remove(id) {
   return localStorage.removeItem(id);
@@ -1834,7 +1918,7 @@ function loadString(id, defaultValue = null) {
 }
 function loadNumber(id, defaultValue = null) {
   const item = SaveUtils.loadString(id);
-  if (item != null) {
+  if (item != null && item.trim() != "" && (item == "NaN" || !isNaN(Number(item)))) {
     return Number(item);
   }
   return defaultValue;
@@ -1852,9 +1936,9 @@ function loadObject(id, defaultValue = null) {
   const item = SaveUtils.loadString(id);
   if (item != null) {
     try {
-      const parsedValue = JSON.parse(item);
-      if (parsedValue.constructor == Object) {
-        return parsedValue;
+      const parsedObject = JSON.parse(item);
+      if (parsedObject.constructor == Object) {
+        return parsedObject;
       }
     } catch (error3) {
     }
@@ -1865,9 +1949,31 @@ function loadArray(id, defaultValue = null) {
   const item = SaveUtils.loadString(id);
   if (item != null) {
     try {
-      const parsedValue = JSON.parse(item);
-      if (Array.isArray(parsedValue)) {
-        return parsedValue;
+      const parsedArray = JSON.parse(item);
+      if (Array.isArray(parsedArray)) {
+        return parsedArray;
+      }
+    } catch (error3) {
+    }
+  }
+  return defaultValue;
+}
+function loadVector(id, defaultValue = null) {
+  const item = SaveUtils.loadString(id);
+  if (item != null) {
+    try {
+      const parsedVector = JSON.parse(item);
+      if (Array.isArray(parsedVector)) {
+        let areAllNumbers = true;
+        for (const value of parsedVector) {
+          if (typeof value != "number") {
+            areAllNumbers = false;
+            break;
+          }
+        }
+        if (areAllNumbers) {
+          return parsedVector;
+        }
       }
     } catch (error3) {
     }
@@ -1884,32 +1990,35 @@ var SaveUtils = {
   loadNumber,
   loadBool,
   loadObject,
-  loadArray
+  loadArray,
+  loadVector
 };
 
 // dist/pp/cauldron/cauldron/timer.js
 import { Emitter } from "@wonderlandengine/api";
 var Timer = class {
+  _myDuration = 0;
+  _myTimeLeft = 0;
+  _myDone = false;
+  _myJustDone = false;
+  _myStarted = false;
+  _myOnEndEmitter = new Emitter();
   constructor(duration, autoStart = true) {
     this._myDuration = duration;
-    this._myOnEndEmitter = new Emitter();
-    this._myDone = false;
-    this._myJustDone = false;
-    this._myStarted = false;
     if (autoStart) {
       this.start();
     } else {
       this.reset();
     }
   }
-  start(duration = null) {
+  start(duration) {
     this.reset(duration);
     this._myStarted = true;
   }
   end() {
     this._done();
   }
-  reset(duration = null) {
+  reset(duration) {
     if (duration != null) {
       this._myDuration = Math.max(0, duration);
     }
@@ -1980,14 +2089,14 @@ var Timer = class {
   }
   setPercentage(percentage) {
     if (this.isRunning()) {
-      let durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
+      const durationPercentage = Math.pp_clamp(1 - percentage, 0, 1);
       this._myTimeLeft = this._myDuration * durationPercentage;
     }
   }
-  onEnd(listener, id = null) {
+  onEnd(listener, id) {
     this._myOnEndEmitter.add(listener, { id });
   }
-  unregisterOnEnd(id = null) {
+  unregisterOnEnd(id) {
     this._myOnEndEmitter.remove(id);
   }
   _done() {
@@ -2107,14 +2216,14 @@ var SaveManager = class {
   has(id) {
     return id in this._mySaveObject;
   }
-  save(id, value, overrideDelaySavesCommit = null) {
+  save(id, value, delaySavesCommitOverride = null) {
     let sameValue = false;
     if (this.has(id)) {
       sameValue = this._mySaveObject[id] === value;
     }
     if (!sameValue) {
       this._mySaveObject[id] = value;
-      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
+      if (this._myDelaySavesCommit && delaySavesCommitOverride == null || delaySavesCommitOverride != null && delaySavesCommitOverride) {
         this._myCommitSavesDirty = true;
         if (!this._myCommitSavesDelayTimer.isRunning()) {
           this._myCommitSavesDelayTimer.start();
@@ -2141,10 +2250,10 @@ var SaveManager = class {
       }
     }
   }
-  delete(id, overrideDelaySavesCommit = null) {
+  delete(id, delaySavesCommitOverride = null) {
     if (this.has(id)) {
       delete this._mySaveObject[id];
-      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
+      if (this._myDelaySavesCommit && delaySavesCommitOverride == null || delaySavesCommitOverride != null && delaySavesCommitOverride) {
         this._myCommitSavesDirty = true;
         if (!this._myCommitSavesDelayTimer.isRunning()) {
           this._myCommitSavesDelayTimer.start();
@@ -2162,10 +2271,10 @@ var SaveManager = class {
       }
     }
   }
-  clear(overrideDelaySavesCommit = null) {
+  clear(delaySavesCommitOverride = null) {
     if (Object.keys(this._mySaveObject).length > 0) {
       this._mySaveObject = {};
-      if (this._myDelaySavesCommit && overrideDelaySavesCommit == null || overrideDelaySavesCommit != null && overrideDelaySavesCommit) {
+      if (this._myDelaySavesCommit && delaySavesCommitOverride == null || delaySavesCommitOverride != null && delaySavesCommitOverride) {
         this._myCommitSavesDirty = true;
         if (!this._myCommitSavesDelayTimer.isRunning()) {
           this._myCommitSavesDelayTimer.start();
@@ -5328,7 +5437,151 @@ var Vec4Utils = {
   clone: clone7
 };
 
+// dist/pp/cauldron/utils/array/vec_utils.js
+import { glMatrix } from "gl-matrix";
+function create8(firstValue, ...remainingValues) {
+  let out = null;
+  if (remainingValues.length == 0) {
+    const length5 = firstValue;
+    out = new glMatrix.ARRAY_TYPE(length5);
+    for (let i = 0; i < length5; i++) {
+      out[i] = 0;
+    }
+  } else {
+    out = new glMatrix.ARRAY_TYPE(remainingValues.length + 1);
+    out[0] = firstValue;
+    for (let i = 0; i < remainingValues.length; i++) {
+      out[i + 1] = remainingValues[i];
+    }
+  }
+  return out;
+}
+function set8(vector, firstValue, ...remainingValues) {
+  if (remainingValues.length == 0) {
+    for (let i = 0; i < vector.length; i++) {
+      vector[i] = firstValue;
+    }
+  } else {
+    vector[0] = firstValue;
+    for (let i = 0; i < remainingValues.length && i < vector.length - 1; i++) {
+      vector[i + 1] = remainingValues[i];
+    }
+  }
+  return vector;
+}
+function clone8(vector) {
+  return vector.slice(0);
+}
+function equals3(vector, other, epsilon = 0) {
+  let equals5 = vector.length == other.length;
+  for (let i = 0; i < vector.length && equals5; i++) {
+    equals5 = equals5 && Math.abs(vector[i] - other[i]) <= epsilon;
+  }
+  return equals5;
+}
+function zero3(vector) {
+  for (let i = 0; i < vector.length; i++) {
+    vector[i] = 0;
+  }
+  return vector;
+}
+function isZero3(vector, epsilon = 0) {
+  let zero4 = true;
+  for (let i = 0; i < vector.length && zero4; i++) {
+    zero4 = zero4 && Math.abs(vector[i]) <= epsilon;
+  }
+  return zero4;
+}
+function scale3(vector, value, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = vector[i] * value;
+  }
+  return out;
+}
+function round(vector, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = Math.round(vector[i]);
+  }
+  return out;
+}
+function floor(vector, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = Math.floor(vector[i]);
+  }
+  return out;
+}
+function ceil(vector, out = VecUtils.clone(vector)) {
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = Math.ceil(vector[i]);
+  }
+  return out;
+}
+function clamp2(vector, start, end, out = VecUtils.clone(vector)) {
+  const fixedStart = start != null ? start : -Number.MAX_VALUE;
+  const fixedEnd = end != null ? end : Number.MAX_VALUE;
+  const min = Math.min(fixedStart, fixedEnd);
+  const max = Math.max(fixedStart, fixedEnd);
+  for (let i = 0; i < vector.length; i++) {
+    out[i] = MathUtils.clamp(vector[i], min, max);
+  }
+  return out;
+}
+function toString(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  return message;
+}
+function log(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  console.log(message);
+  return vector;
+}
+function error(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  console.error(message);
+  return vector;
+}
+function warn(vector, decimalPlaces = 4) {
+  const message = _buildConsoleMessage(vector, decimalPlaces);
+  console.warn(message);
+  return vector;
+}
+var VecUtils = {
+  create: create8,
+  set: set8,
+  clone: clone8,
+  equals: equals3,
+  zero: zero3,
+  isZero: isZero3,
+  scale: scale3,
+  round,
+  floor,
+  ceil,
+  clamp: clamp2,
+  toString,
+  log,
+  error,
+  warn
+};
+function _buildConsoleMessage(vector, decimalPlaces) {
+  let message = "[";
+  for (let i = 0; i < vector.length; i++) {
+    if (i != 0) {
+      message = message.concat(", ");
+    }
+    if (decimalPlaces != null) {
+      message = message.concat(vector[i].toFixed(decimalPlaces));
+    } else {
+      message = message.concat(vector[i].toString());
+    }
+  }
+  message = message.concat("]");
+  return message;
+}
+
 // dist/pp/plugin/js/extensions/array/vec_create_extension.js
+function vec_create(firstValue, ...remainingValues) {
+  return VecUtils.create(firstValue, ...remainingValues);
+}
 function vec2_create(x, y) {
   return Vec2Utils.create(x, y);
 }
@@ -7619,13 +7872,13 @@ var VisualManagerComponent = class extends Component5 {
       this._myVisualResources.myDefaultMaterials.myHitNormal = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
       this._myVisualResources.myDefaultMaterials.myHitNormal.color = vec4_create(1, 0, 0, 1);
     }
-    if (this.myVisualManager != null) {
-      this.myVisualManager.start();
+    if (this._myVisualManager != null) {
+      this._myVisualManager.start();
     }
   }
   update(dt) {
-    if (this.myVisualManager != null) {
-      this.myVisualManager.update(dt);
+    if (this._myVisualManager != null) {
+      this._myVisualManager.update(dt);
     }
   }
   onDestroy() {
@@ -7693,7 +7946,7 @@ var MeshCreationParams = class {
     this.myEngine = engine;
   }
 };
-function create8(meshCreationParams) {
+function create9(meshCreationParams) {
   let indexData = [];
   for (let triangle of meshCreationParams.myTriangles) {
     indexData.push(triangle.myIndexes[0]);
@@ -7749,7 +8002,7 @@ function create8(meshCreationParams) {
   }
   return mesh;
 }
-var clone8 = function() {
+var clone9 = function() {
   let position = vec3_create();
   let textureCoordinates = vec2_create();
   let normal = vec3_create();
@@ -8006,8 +8259,8 @@ function createPlane(engine = Globals.getMainEngine()) {
   return mesh;
 }
 var MeshUtils = {
-  create: create8,
-  clone: clone8,
+  create: create9,
+  clone: clone9,
   invert: invert4,
   makeDoubleSided,
   createPlane
@@ -13801,9 +14054,9 @@ var XRGamepadCore = class extends GamepadCore {
 // dist/pp/input/cauldron/input_manager.js
 import { Emitter as Emitter5 } from "@wonderlandengine/api";
 
-// dist/pp/input/gamepad/base_gamepad.js
+// dist/pp/input/gamepad/gamepad.js
 import { Emitter as Emitter3 } from "@wonderlandengine/api";
-var BaseGamepad = class {
+var Gamepad = class {
   constructor(handedness) {
     this._myHandedness = handedness;
     this._myButtonInfos = {};
@@ -14153,7 +14406,7 @@ var BaseGamepad = class {
 };
 
 // dist/pp/input/gamepad/universal_gamepad.js
-var UniversalGamepad = class extends BaseGamepad {
+var UniversalGamepad = class extends Gamepad {
   constructor(handedness) {
     super(handedness);
     this._myGamepadCores = {};
@@ -14285,20 +14538,25 @@ var UniversalGamepad = class extends BaseGamepad {
 
 // dist/pp/input/gamepad/cauldron/gamepads_manager.js
 var GamepadsManager = class {
+  _myGamepads;
+  _myDestroyed = false;
   constructor() {
-    this._myGamepads = [];
-    this._myGamepads[Handedness.LEFT] = new UniversalGamepad(Handedness.LEFT);
-    this._myGamepads[Handedness.RIGHT] = new UniversalGamepad(Handedness.RIGHT);
+    this._myGamepads = {
+      [Handedness.LEFT]: new UniversalGamepad(Handedness.LEFT),
+      [Handedness.RIGHT]: new UniversalGamepad(Handedness.RIGHT)
+    };
     this._myDestroyed = false;
   }
   start() {
-    for (let key in this._myGamepads) {
-      this._myGamepads[key].start();
+    for (const rawHandedness in this._myGamepads) {
+      const handedness = rawHandedness;
+      this._myGamepads[handedness].start();
     }
   }
   update(dt) {
-    for (let key in this._myGamepads) {
-      this._myGamepads[key].update(dt);
+    for (const rawHandedness in this._myGamepads) {
+      const handedness = rawHandedness;
+      this._myGamepads[handedness].update(dt);
     }
   }
   getLeftGamepad() {
@@ -14315,8 +14573,9 @@ var GamepadsManager = class {
   }
   destroy() {
     this._myDestroyed = true;
-    for (let key in this._myGamepads) {
-      this._myGamepads[key].destroy();
+    for (const rawHandedness in this._myGamepads) {
+      const handedness = rawHandedness;
+      this._myGamepads[handedness].destroy();
     }
   }
   isDestroyed() {
@@ -14688,6 +14947,18 @@ BasePose.prototype._computeEmulatedAngularVelocity = function() {
 }();
 
 // dist/pp/input/cauldron/input_utils.js
+function getHandednessByString(string) {
+  let handedness = null;
+  switch (string) {
+    case Handedness.LEFT:
+      handedness = Handedness.LEFT;
+      break;
+    case Handedness.RIGHT:
+      handedness = Handedness.RIGHT;
+      break;
+  }
+  return handedness;
+}
 function getHandednessByIndex(index) {
   let handedness = null;
   switch (index) {
@@ -14702,11 +14973,11 @@ function getHandednessByIndex(index) {
 }
 function getInputSource(handedness, inputSourceType = null, engine = Globals.getMainEngine()) {
   let inputSource = null;
-  let xrSession = XRUtils.getSession(engine);
+  const xrSession = XRUtils.getSession(engine);
   if (xrSession != null && xrSession.inputSources != null) {
     for (let i = 0; i < xrSession.inputSources.length; i++) {
-      let input = xrSession.inputSources[i];
-      let correctType = !inputSourceType || inputSourceType == InputSourceType.GAMEPAD && !input.hand || inputSourceType == InputSourceType.TRACKED_HAND && input.hand;
+      const input = xrSession.inputSources[i];
+      const correctType = inputSourceType == null || inputSourceType == InputSourceType.GAMEPAD && !input.hand || inputSourceType == InputSourceType.TRACKED_HAND && input.hand;
       if (correctType && input.handedness == handedness) {
         inputSource = input;
         break;
@@ -14715,18 +14986,16 @@ function getInputSource(handedness, inputSourceType = null, engine = Globals.get
   }
   return inputSource;
 }
-function getInputSourceTypeByHandedness(handedness, engine) {
-  let inputSource = InputUtils.getInputSource(handedness, void 0, engine);
-  return InputUtils.getInputSourceType(inputSource);
+function getInputSourceTypeByHandedness(handedness, engine = Globals.getMainEngine()) {
+  const inputSource = InputUtils.getInputSource(handedness, void 0, engine);
+  return inputSource != null ? InputUtils.getInputSourceType(inputSource) : null;
 }
 function getInputSourceType(inputSource) {
   let inputSourceType = null;
-  if (inputSource) {
-    if (inputSource.hand) {
-      inputSourceType = InputSourceType.TRACKED_HAND;
-    } else {
-      inputSourceType = InputSourceType.GAMEPAD;
-    }
+  if (inputSource.hand) {
+    inputSourceType = InputSourceType.TRACKED_HAND;
+  } else {
+    inputSourceType = InputSourceType.GAMEPAD;
   }
   return inputSourceType;
 }
@@ -14745,7 +15014,7 @@ function getOppositeHandedness(handedness) {
 function getJointIDByIndex(index) {
   let jointID = null;
   let jointIDKey = null;
-  for (let jointIDIndexKey in TrackedHandJointIDIndex) {
+  for (const jointIDIndexKey in TrackedHandJointIDIndex) {
     if (TrackedHandJointIDIndex[jointIDIndexKey] == index) {
       jointIDKey = jointIDIndexKey;
       break;
@@ -14757,6 +15026,7 @@ function getJointIDByIndex(index) {
   return jointID;
 }
 var InputUtils = {
+  getHandednessByString,
   getHandednessByIndex,
   getInputSource,
   getInputSourceTypeByHandedness,
@@ -14928,7 +15198,7 @@ var TrackedHandPoseParams = class extends BasePoseParams {
     this.myTrackedHandJointIDList = [];
     if (addAllJointIDs) {
       for (let key in TrackedHandJointID) {
-        this.myTrackedHandJointIDList.push([TrackedHandJointID[key]]);
+        this.myTrackedHandJointIDList.push(TrackedHandJointID[key]);
       }
     }
   }
@@ -15436,6 +15706,19 @@ var Mouse = class {
 
 // dist/pp/input/cauldron/input_manager.js
 var InputManager = class {
+  _myMouse;
+  _myKeyboard;
+  _myHeadPose;
+  _myHandPoses;
+  _myTrackedHandPoses;
+  _myGamepadsManager = new GamepadsManager();
+  _myStarted = false;
+  _myTrackedHandPosesEnabled = true;
+  _myTrackedHandPosesStarted = false;
+  _myPreUpdateEmitter = new Emitter5();
+  _myPostUpdateEmitter = new Emitter5();
+  _myEngine;
+  _myDestroyed = false;
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
     this._myMouse = new Mouse(this._myEngine);
@@ -15443,27 +15726,22 @@ var InputManager = class {
     this._myHeadPose = new HeadPose(new BasePoseParams(this._myEngine));
     this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myHeadPose.setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-    this._myHandPoses = [];
-    this._myHandPoses[Handedness.LEFT] = new HandPose(Handedness.LEFT, new HandPoseParams(this._myEngine));
-    this._myHandPoses[Handedness.RIGHT] = new HandPose(Handedness.RIGHT, new HandPoseParams(this._myEngine));
+    this._myHandPoses = {
+      [Handedness.LEFT]: new HandPose(Handedness.LEFT, new HandPoseParams(this._myEngine)),
+      [Handedness.RIGHT]: new HandPose(Handedness.RIGHT, new HandPoseParams(this._myEngine))
+    };
     this._myHandPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myHandPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     this._myHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-    this._myTrackedHandPoses = [];
-    this._myTrackedHandPoses[Handedness.LEFT] = new TrackedHandPose(Handedness.LEFT, new TrackedHandPoseParams(true, this._myEngine));
-    this._myTrackedHandPoses[Handedness.RIGHT] = new TrackedHandPose(Handedness.RIGHT, new TrackedHandPoseParams(true, this._myEngine));
+    this._myTrackedHandPoses = {
+      [Handedness.LEFT]: new TrackedHandPose(Handedness.LEFT, new TrackedHandPoseParams(true, this._myEngine)),
+      [Handedness.RIGHT]: new TrackedHandPose(Handedness.RIGHT, new TrackedHandPoseParams(true, this._myEngine))
+    };
     this._myTrackedHandPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myTrackedHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myTrackedHandPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     this._myTrackedHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-    this._myGamepadsManager = new GamepadsManager(this._myEngine);
-    this._myStarted = false;
-    this._myTrackedHandPosesEnabled = true;
-    this._myTrackedHandPosesStarted = false;
-    this._myPreUpdateEmitter = new Emitter5();
-    this._myPostUpdateEmitter = new Emitter5();
-    this._myDestroyed = false;
   }
   start() {
     this._myMouse.start();
@@ -15471,10 +15749,11 @@ var InputManager = class {
     this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myHeadPose.setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     this._myHeadPose.start();
-    for (let key in this._myHandPoses) {
-      this._myHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
-      this._myHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-      this._myHandPoses[key].start();
+    for (const rawHandedness in this._myHandPoses) {
+      const handedness = rawHandedness;
+      this._myHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+      this._myHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+      this._myHandPoses[handedness].start();
     }
     if (this._myTrackedHandPosesEnabled) {
       this._startTrackedHandPoses();
@@ -15489,12 +15768,13 @@ var InputManager = class {
     this._myHeadPose.setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myHeadPose.setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     this._myHeadPose.update(dt);
-    for (let key in this._myHandPoses) {
-      this._myHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
-      this._myHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-      this._myHandPoses[key].update(dt);
+    for (const rawHandedness in this._myHandPoses) {
+      const handedness = rawHandedness;
+      this._myHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+      this._myHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+      this._myHandPoses[handedness].update(dt);
     }
-    this._updateTrackedHandPoses();
+    this._updateTrackedHandPoses(dt);
     this._myGamepadsManager.update(dt);
     this._myPostUpdateEmitter.notify(dt, this);
   }
@@ -15557,20 +15837,22 @@ var InputManager = class {
   }
   _startTrackedHandPoses() {
     if (!this._myTrackedHandPosesStarted) {
-      for (let key in this._myTrackedHandPoses) {
-        this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
-        this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-        this._myTrackedHandPoses[key].start();
+      for (const rawHandedness in this._myTrackedHandPoses) {
+        const handedness = rawHandedness;
+        this._myTrackedHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+        this._myTrackedHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+        this._myTrackedHandPoses[handedness].start();
       }
       this._myTrackedHandPosesStarted = true;
     }
   }
   _updateTrackedHandPoses(dt) {
     if (this._myTrackedHandPosesEnabled && this._myTrackedHandPosesStarted) {
-      for (let key in this._myTrackedHandPoses) {
-        this._myTrackedHandPoses[key].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
-        this._myTrackedHandPoses[key].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
-        this._myTrackedHandPoses[key].update(dt);
+      for (const rawHandedness in this._myTrackedHandPoses) {
+        const handedness = rawHandedness;
+        this._myTrackedHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+        this._myTrackedHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+        this._myTrackedHandPoses[handedness].update(dt);
       }
     }
   }
@@ -15579,11 +15861,13 @@ var InputManager = class {
     this._myMouse.destroy();
     this._myKeyboard.destroy();
     this._myHeadPose.destroy();
-    for (let key in this._myHandPoses) {
-      this._myHandPoses[key].destroy();
+    for (const rawHandedness in this._myHandPoses) {
+      const handedness = rawHandedness;
+      this._myHandPoses[handedness].destroy();
     }
-    for (let key in this._myTrackedHandPoses) {
-      this._myTrackedHandPoses[key].destroy();
+    for (const rawHandedness in this._myTrackedHandPoses) {
+      const handedness = rawHandedness;
+      this._myTrackedHandPoses[handedness].destroy();
     }
     this._myGamepadsManager.destroy();
   }
@@ -15693,13 +15977,13 @@ var _myConsoleOriginalInfo = console.info;
 var _myConsoleOriginalDebug = console.debug;
 var _myConsoleOriginalAssert = console.assert;
 var _myConsoleOriginalClear = console.clear;
-function log(engine = Globals.getMainEngine(), ...args) {
+function log2(engine = Globals.getMainEngine(), ...args) {
   return ConsoleOriginalFunctions.getLog(engine).apply(console, args);
 }
-function error(engine = Globals.getMainEngine(), ...args) {
+function error2(engine = Globals.getMainEngine(), ...args) {
   return ConsoleOriginalFunctions.getError(engine).apply(console, args);
 }
-function warn(engine = Globals.getMainEngine(), ...args) {
+function warn2(engine = Globals.getMainEngine(), ...args) {
   return ConsoleOriginalFunctions.getWarn(engine).apply(console, args);
 }
 function info(engine = Globals.getMainEngine(), ...args) {
@@ -15736,9 +16020,9 @@ function getClear(engine = Globals.getMainEngine()) {
   return _myConsoleOriginalClear;
 }
 var ConsoleOriginalFunctions = {
-  log,
-  error,
-  warn,
+  log: log2,
+  error: error2,
+  warn: warn2,
   info,
   debug,
   assert,
@@ -17475,7 +17759,7 @@ var hasUniformScaleLocal = function() {
     return Math.abs(scale4[0] - scale4[1]) < MathUtils.EPSILON && Math.abs(scale4[1] - scale4[2]) < MathUtils.EPSILON && Math.abs(scale4[0] - scale4[2]) < MathUtils.EPSILON;
   };
 }();
-var clone9 = function() {
+var clone10 = function() {
   const scale4 = Vec3Utils.create();
   const transformQuat2 = Quat2Utils.create();
   return function clone12(object, cloneParams = new CloneParams()) {
@@ -17632,7 +17916,7 @@ function isCloneable(object, cloneParams = new CloneParams()) {
   }
   return cloneable;
 }
-function toString(object) {
+function toString2(object) {
   return ObjectUtils.toStringCompact(object);
 }
 var toStringExtended = function() {
@@ -17909,7 +18193,7 @@ function markDirty(object) {
 function isTransformChanged(object) {
   return object.changed;
 }
-function equals3(first2, second) {
+function equals4(first2, second) {
   return first2.equals(second);
 }
 function destroy(object) {
@@ -18319,9 +18603,9 @@ var ObjectUtils = {
   hasUniformScale: hasUniformScale2,
   hasUniformScaleWorld,
   hasUniformScaleLocal,
-  clone: clone9,
+  clone: clone10,
   isCloneable,
-  toString,
+  toString: toString2,
   toStringExtended,
   toStringCompact,
   getObjectByName,
@@ -18363,7 +18647,7 @@ var ObjectUtils = {
   getID,
   markDirty,
   isTransformChanged,
-  equals: equals3,
+  equals: equals4,
   destroy,
   reserveObjects,
   reserveObjectsSelf,
@@ -18573,7 +18857,7 @@ function hasClonePostProcess(classOrType, engine = Globals.getMainEngine()) {
   let type = ComponentUtils.getTypeFromClassOrType(classOrType);
   return ComponentUtils.hasClonePostProcessCallback(type, engine) || ComponentUtils.getClassFromType(type, engine)?.prototype.pp_clonePostProcess != null;
 }
-function clone10(componentToClone, targetObject, deeCloneParams, customCloneParams, useDefaultCloneAsFallback = false, defaultCloneAutoStartIfNotActive = true) {
+function clone11(componentToClone, targetObject, deeCloneParams, customCloneParams, useDefaultCloneAsFallback = false, defaultCloneAutoStartIfNotActive = true) {
   let clonedComponent = null;
   let cloneCallback = ComponentUtils.getCloneCallback(componentToClone.type, ObjectUtils.getEngine(componentToClone.object));
   if (cloneCallback != null) {
@@ -18734,7 +19018,7 @@ var ComponentUtils = {
   isWLNativeComponentRegistered,
   isCloneable: isCloneable2,
   hasClonePostProcess,
-  clone: clone10,
+  clone: clone11,
   clonePostProcess,
   cloneDefault,
   setCloneCallback,
@@ -18832,16 +19116,16 @@ function getObjectPropertyDescriptor(object, propertyName) {
   return propertyDescriptor;
 }
 function getObjectProperty(object, propertyName) {
-  let property2 = void 0;
+  let property5 = void 0;
   let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
   if (propertyDescriptor != null) {
     if (propertyDescriptor.get != null) {
-      property2 = propertyDescriptor.get.bind(object)();
+      property5 = propertyDescriptor.get.bind(object)();
     } else {
-      property2 = propertyDescriptor.value;
+      property5 = propertyDescriptor.value;
     }
   }
-  return property2;
+  return property5;
 }
 function setObjectProperty(valueToSet, object, propertyName) {
   let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
@@ -19022,17 +19306,17 @@ function isObjectByName(objectParent, objectName) {
   }
   return isObjectResult;
 }
-function isFunction(property2) {
-  return typeof property2 == "function" && !JSUtils.isClass(property2);
+function isFunction(property5) {
+  return typeof property5 == "function" && !JSUtils.isClass(property5);
 }
 var isClass = function() {
   let checkClassRegex = new RegExp("^class");
-  return function isClass2(property2) {
-    return typeof property2 == "function" && property2.prototype != null && typeof property2.prototype.constructor == "function" && property2.toString != null && typeof property2.toString == "function" && property2.toString()?.match(checkClassRegex) != null;
+  return function isClass2(property5) {
+    return typeof property5 == "function" && property5.prototype != null && typeof property5.prototype.constructor == "function" && property5.toString != null && typeof property5.toString == "function" && property5.toString()?.match(checkClassRegex) != null;
   };
 }();
-function isObject(property2) {
-  return typeof property2 == "object";
+function isObject(property5) {
+  return typeof property5 == "object";
 }
 var JSUtils = {
   getObjectPrototypes,
@@ -20134,120 +20418,15 @@ function _initVec2ExtensionProtoype() {
   }
 }
 
-// dist/pp/cauldron/utils/array/vec_utils.js
-function clone11(vector) {
-  return vector.slice(0);
-}
-function equals4(vector, other, epsilon = 0) {
-  let equals5 = vector.length == other.length;
-  for (let i = 0; i < vector.length && equals5; i++) {
-    equals5 = equals5 && Math.abs(vector[i] - other[i]) <= epsilon;
-  }
-  return equals5;
-}
-function zero3(vector) {
-  for (let i = 0; i < vector.length; i++) {
-    vector[i] = 0;
-  }
-  return vector;
-}
-function isZero3(vector, epsilon = 0) {
-  let zero4 = true;
-  for (let i = 0; i < vector.length && zero4; i++) {
-    zero4 = zero4 && Math.abs(vector[i]) <= epsilon;
-  }
-  return zero4;
-}
-function scale3(vector, value, out = VecUtils.clone(vector)) {
-  for (let i = 0; i < vector.length; i++) {
-    out[i] = vector[i] * value;
-  }
-  return out;
-}
-function round(vector, out = VecUtils.clone(vector)) {
-  for (let i = 0; i < vector.length; i++) {
-    out[i] = Math.round(vector[i]);
-  }
-  return out;
-}
-function floor(vector, out = VecUtils.clone(vector)) {
-  for (let i = 0; i < vector.length; i++) {
-    out[i] = Math.floor(vector[i]);
-  }
-  return out;
-}
-function ceil(vector, out = VecUtils.clone(vector)) {
-  for (let i = 0; i < vector.length; i++) {
-    out[i] = Math.ceil(vector[i]);
-  }
-  return out;
-}
-function clamp2(vector, start, end, out = VecUtils.clone(vector)) {
-  const fixedStart = start != null ? start : -Number.MAX_VALUE;
-  const fixedEnd = end != null ? end : Number.MAX_VALUE;
-  const min = Math.min(fixedStart, fixedEnd);
-  const max = Math.max(fixedStart, fixedEnd);
-  for (let i = 0; i < vector.length; i++) {
-    out[i] = MathUtils.clamp(vector[i], min, max);
-  }
-  return out;
-}
-function toString2(vector, decimalPlaces = 4) {
-  const message = _buildConsoleMessage(vector, decimalPlaces);
-  return message;
-}
-function log2(vector, decimalPlaces = 4) {
-  const message = _buildConsoleMessage(vector, decimalPlaces);
-  console.log(message);
-  return vector;
-}
-function error2(vector, decimalPlaces = 4) {
-  const message = _buildConsoleMessage(vector, decimalPlaces);
-  console.error(message);
-  return vector;
-}
-function warn2(vector, decimalPlaces = 4) {
-  const message = _buildConsoleMessage(vector, decimalPlaces);
-  console.warn(message);
-  return vector;
-}
-var VecUtils = {
-  clone: clone11,
-  equals: equals4,
-  zero: zero3,
-  isZero: isZero3,
-  scale: scale3,
-  round,
-  floor,
-  ceil,
-  clamp: clamp2,
-  toString: toString2,
-  log: log2,
-  error: error2,
-  warn: warn2
-};
-function _buildConsoleMessage(vector, decimalPlaces) {
-  let message = "[";
-  for (let i = 0; i < vector.length; i++) {
-    if (i != 0) {
-      message = message.concat(", ");
-    }
-    if (decimalPlaces != null) {
-      message = message.concat(vector[i].toFixed(decimalPlaces));
-    } else {
-      message = message.concat(vector[i].toString());
-    }
-  }
-  message = message.concat("]");
-  return message;
-}
-
 // dist/pp/plugin/js/extensions/array/vec_extension.js
 function initVecExtension() {
   _initVecExtensionProtoype();
 }
 function _initVecExtensionProtoype() {
   const vecExtension = {};
+  vecExtension.vec2_set = function vec2_set(firstValue, ...remainingValues) {
+    return VecUtils.set(this, firstValue, ...remainingValues);
+  };
   vecExtension.vec_clone = function vec_clone() {
     return VecUtils.clone(this);
   };
@@ -20432,19 +20611,21 @@ function initCauldronExtensions() {
   _initRayHitExtensionPrototype();
 }
 function _initPhysicsExtensionPrototype() {
-  let extension = {};
-  extension.pp_getEngine = function pp_getEngine() {
+  const physicsExtension = {};
+  physicsExtension.pp_getEngine = function pp_getEngine() {
     return this._engine;
   };
-  PluginUtils.injectProperties(extension, Physics.prototype, false, true, true);
+  PluginUtils.injectProperties(physicsExtension, Physics.prototype, false, true, true);
 }
 function _initRayHitExtensionPrototype() {
-  let extension = {};
-  extension.pp_getLocations = function pp_getLocations(out) {
-    if (!out)
-      out = Array.from({ length: this.hitCount }, () => new Float32Array(3));
-    const wasm = this._engine.wasm;
-    const alignedPtr = this._ptr / 4;
+  const rayHitExtension = {};
+  rayHitExtension.pp_getEngine = function pp_getEngine() {
+    return this._engine;
+  };
+  rayHitExtension.pp_getLocations = function pp_getLocations(out = _createGetLocationsOut(this.hitCount)) {
+    const wasm = this.pp_getEngine().wasm;
+    const ptr = this._ptr;
+    const alignedPtr = ptr / 4;
     for (let i = 0; i < this.hitCount; ++i) {
       const locationPtr = alignedPtr + 3 * i;
       out[i][0] = wasm.HEAPF32[locationPtr];
@@ -20453,11 +20634,10 @@ function _initRayHitExtensionPrototype() {
     }
     return out;
   };
-  extension.pp_getNormals = function pp_getNormals(out) {
-    if (!out)
-      out = Array.from({ length: this.hitCount }, () => new Float32Array(3));
-    const wasm = this._engine.wasm;
-    const alignedPtr = (this._ptr + 48) / 4;
+  rayHitExtension.pp_getNormals = function pp_getNormals(out = _createGetNormalsOut(this.hitCount)) {
+    const wasm = this.pp_getEngine().wasm;
+    const ptr = this._ptr;
+    const alignedPtr = (ptr + 48) / 4;
     for (let i = 0; i < this.hitCount; ++i) {
       const normalPtr = alignedPtr + 3 * i;
       out[i][0] = wasm.HEAPF32[normalPtr];
@@ -20466,25 +20646,40 @@ function _initRayHitExtensionPrototype() {
     }
     return out;
   };
-  extension.pp_getDistances = function pp_getDistances(out = new Float32Array(this.hitCount)) {
-    const wasm = this._engine.wasm;
-    const alignedPtr = (this._ptr + 48 * 2) / 4;
+  rayHitExtension.pp_getDistances = function pp_getDistances(out = VecUtils.create(this.hitCount)) {
+    const wasm = this.pp_getEngine().wasm;
+    const ptr = this._ptr;
+    const alignedPtr = (ptr + 48 * 2) / 4;
     for (let i = 0; i < this.hitCount; ++i) {
       const distancePtr = alignedPtr + i;
       out[i] = wasm.HEAPF32[distancePtr];
     }
     return out;
   };
-  extension.pp_getObjects = function pp_getObjects(out = new Array(this.hitCount)) {
-    const HEAPU16 = this._engine.wasm.HEAPU16;
-    const alignedPtr = this._ptr + (48 * 2 + 16) >> 1;
+  rayHitExtension.pp_getObjects = function pp_getObjects(out = new Array(this.hitCount)) {
+    const HEAPU16 = this.pp_getEngine().wasm.HEAPU16;
+    const ptr = this._ptr;
+    const alignedPtr = ptr + (48 * 2 + 16) >> 1;
     for (let i = 0; i < this.hitCount; ++i) {
       const objectPtr = alignedPtr + i;
-      out[i] = this._engine.wrapObject(HEAPU16[objectPtr + i]);
+      out[i] = this.pp_getEngine().wrapObject(HEAPU16[objectPtr + i]);
     }
     return out;
   };
-  PluginUtils.injectProperties(extension, RayHit.prototype, false, true, true);
+  PluginUtils.injectProperties(rayHitExtension, RayHit.prototype, false, true, true);
+}
+function _createGetLocationsOut(hitCount) {
+  return Array.from({ length: hitCount }, () => Vec3Utils.create());
+}
+function _createGetNormalsOut(hitCount) {
+  return Array.from({ length: hitCount }, () => Vec3Utils.create());
+}
+
+// dist/pp/plugin/wl/extensions/number_array_extension.js
+function initNumberArrayExtension() {
+  _initNumberArrayExtensionPrototype();
+}
+function _initNumberArrayExtensionPrototype() {
 }
 
 // dist/pp/plugin/wl/extensions/object_extension.js
@@ -21349,6 +21544,9 @@ function _initObjectExtensionProtoype() {
   objectExtension.pp_getObjectByIDChildren = function pp_getObjectByIDChildren(id) {
     return ObjectUtils.getObjectByIDChildren(this, id);
   };
+  objectExtension.pp_getHierarchy = function pp_getHierarchy() {
+    return ObjectUtils.getHierarchy(this);
+  };
   objectExtension.pp_getHierarchyBreadth = function pp_getHierarchyBreadth() {
     return ObjectUtils.getHierarchyBreadth(this);
   };
@@ -21433,6 +21631,7 @@ function _initObjectExtensionProtoype() {
 // dist/pp/plugin/wl/extensions/init_wl_extentions.js
 function initWLExtensions() {
   initObjectExtension();
+  initNumberArrayExtension();
   initCauldronExtensions();
 }
 
@@ -21468,7 +21667,6 @@ function initCursorComponentMod() {
 function _initCursorComponentModPrototype() {
   let cursorComponentMod = {};
   cursorComponentMod.init = function init() {
-    this.maxDistance = 100;
     this.visible = false;
     this.globalTarget = this.object.pp_addComponent(CursorTarget3);
     this.hitTestTarget = this.object.pp_addComponent(CursorTarget3);
@@ -22276,7 +22474,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.6.2";
+var PP_VERSION = "0.6.6";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -22515,37 +22713,46 @@ import { Component as Component20, PhysXComponent as PhysXComponent3, Property a
 
 // dist/pp/cauldron/physics/physics_collision_collector.js
 import { CollisionEventType, Emitter as Emitter8, PhysXComponent as PhysXComponent2 } from "@wonderlandengine/api";
-var PhysicsCollisionCollector = class {
-  constructor(physXComponent, trigger = false) {
-    this._myPhysX = physXComponent;
-    this._myTrigger = trigger;
-    this._myCollisions = [];
-    this._myCollisionsStart = [];
-    this._myCollisionsEnd = [];
-    this._myUpdateActive = false;
-    this._myCollisionsStartToProcess = [];
-    this._myCollisionsEndToProcess = [];
-    this._myCollisionCallbackID = null;
-    this._myActive = false;
+var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
+  _myPhysXComponent;
+  _myIsTrigger;
+  _myActive = false;
+  _myCollisionCallbackID = null;
+  _myCollisionEmitter = new Emitter8();
+  _myCollisionStartEmitter = new Emitter8();
+  _myCollisionEndEmitter = new Emitter8();
+  _myCollisions = [];
+  _myCollisionsStarted = [];
+  _myCollisionsEnded = [];
+  _myCollisionsStartedToProcess = [];
+  _myCollisionsEndedToProcess = [];
+  // This separation is needed so it's possible to return the physx component list without having to build it every time
+  // Beside, this is only needed due to trigger not detecting a collision end if the physX component they are colliding with goes inactive or is destroyed
+  _myCollisionObjects = [];
+  _myCollisionObjectsStarted = [];
+  _myCollisionObjectsEnded = [];
+  _myCollisionObjectsStartedToProcess = [];
+  _myCollisionObjectsEndedToProcess = [];
+  _myUpdateActive = false;
+  _myTriggerDesyncFixDelay = new Timer(0.1);
+  _myLogEnabled = false;
+  _myDestroyed = false;
+  constructor(physXComponent, isTrigger = false) {
+    this._myPhysXComponent = physXComponent;
+    this._myIsTrigger = isTrigger;
     this.setActive(true);
-    this._myLogEnabled = false;
-    this._myTriggerDesyncFixDelay = new Timer(0.1);
-    this._myCollisionEmitter = new Emitter8();
-    this._myCollisionStartEmitter = new Emitter8();
-    this._myCollisionEndEmitter = new Emitter8();
-    this._myDestroyed = false;
   }
-  getPhysX() {
-    return this._myPhysX;
+  getPhysXComponent() {
+    return this._myPhysXComponent;
   }
   getCollisions() {
     return this._myCollisions;
   }
-  getCollisionsStart() {
-    return this._myCollisionsStart;
+  getCollisionsStarted() {
+    return this._myCollisionsStarted;
   }
-  getCollisionsEnd() {
-    return this._myCollisionsEnd;
+  getCollisionsEnded() {
+    return this._myCollisionsEnded;
   }
   isActive() {
     return this._myActive;
@@ -22554,15 +22761,20 @@ var PhysicsCollisionCollector = class {
     if (this._myActive != active) {
       this._myActive = active;
       this._myCollisions.pp_clear();
-      this._myCollisionsStart.pp_clear();
-      this._myCollisionsEnd.pp_clear();
+      this._myCollisionObjects.pp_clear();
+      this._myCollisionsStarted.pp_clear();
+      this._myCollisionObjectsStarted.pp_clear();
+      this._myCollisionsEnded.pp_clear();
+      this._myCollisionObjectsEnded.pp_clear();
       this._myUpdateActive = false;
-      this._myCollisionsStartToProcess.pp_clear();
-      this._myCollisionsEndToProcess.pp_clear();
+      this._myCollisionsStartedToProcess.pp_clear();
+      this._myCollisionObjectsStartedToProcess.pp_clear();
+      this._myCollisionsEndedToProcess.pp_clear();
+      this._myCollisionObjectsEndedToProcess.pp_clear();
       if (this._myActive) {
-        this._myCollisionCallbackID = this._myPhysX.onCollision(this._onCollision.bind(this));
+        this._myCollisionCallbackID = this._myPhysXComponent.onCollision(this._onCollision.bind(this));
       } else if (this._myCollisionCallbackID != null) {
-        this._myPhysX.removeCollisionCallback(this._myCollisionCallbackID);
+        this._myPhysXComponent.removeCollisionCallback(this._myCollisionCallbackID);
         this._myCollisionCallbackID = null;
       }
     }
@@ -22577,15 +22789,23 @@ var PhysicsCollisionCollector = class {
       return;
     }
     this._myUpdateActive = true;
-    let prevCollisionsStartToProcess = this._myCollisionsStartToProcess;
-    this._myCollisionsStartToProcess = this._myCollisionsStart;
-    this._myCollisionsStartToProcess.pp_clear();
-    this._myCollisionsStart = prevCollisionsStartToProcess;
-    let prevCollisionsEndToProcess = this._myCollisionsEndToProcess;
-    this._myCollisionsEndToProcess = this._myCollisionsEnd;
-    this._myCollisionsEndToProcess.pp_clear();
-    this._myCollisionsEnd = prevCollisionsEndToProcess;
-    if (this._myTrigger) {
+    const prevCollisionsStartToProcess = this._myCollisionsStartedToProcess;
+    this._myCollisionsStartedToProcess = this._myCollisionsStarted;
+    this._myCollisionsStartedToProcess.pp_clear();
+    this._myCollisionsStarted = prevCollisionsStartToProcess;
+    const prevCollisionObjectsStartToProcess = this._myCollisionObjectsStartedToProcess;
+    this._myCollisionObjectsStartedToProcess = this._myCollisionObjectsStarted;
+    this._myCollisionObjectsStartedToProcess.pp_clear();
+    this._myCollisionObjectsStarted = prevCollisionObjectsStartToProcess;
+    const prevCollisionsEndToProcess = this._myCollisionsEndedToProcess;
+    this._myCollisionsEndedToProcess = this._myCollisionsEnded;
+    this._myCollisionsEndedToProcess.pp_clear();
+    this._myCollisionsEnded = prevCollisionsEndToProcess;
+    const prevCollisionObjectsEndToProcess = this._myCollisionObjectsEndedToProcess;
+    this._myCollisionObjectsEndedToProcess = this._myCollisionObjectsEnded;
+    this._myCollisionObjectsEndedToProcess.pp_clear();
+    this._myCollisionObjectsEnded = prevCollisionObjectsEndToProcess;
+    if (this._myIsTrigger) {
       this._triggerDesyncFix(dt);
     }
   }
@@ -22619,66 +22839,105 @@ var PhysicsCollisionCollector = class {
     } else if (type == CollisionEventType.TouchLost || type == CollisionEventType.TriggerTouchLost) {
       this._onCollisionEnd(type, physXComponent);
     }
-    this._myCollisionEmitter.notify(this._myPhysX, physXComponent, type);
+    this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponent, type);
   }
   _onCollisionStart(type, physXComponent) {
     if (this._myLogEnabled) {
-      let objectFound = false;
-      for (let object of this._myCollisions) {
-        if (object.pp_equals(physXComponent.object)) {
-          objectFound = true;
+      let componentFound = false;
+      for (const physXComponentToCheck of this._myCollisions) {
+        if (physXComponentToCheck.equals(physXComponent)) {
+          componentFound = true;
           break;
         }
       }
-      if (objectFound) {
-        console.error("Collision Start on object already collected");
+      if (componentFound) {
+        console.error("Collision Start on PhysX component already collected");
       }
     }
-    this._myCollisions.push(physXComponent.object);
+    this._myCollisions.push(physXComponent);
+    this._myCollisionObjects.push(physXComponent.object);
     if (this._myUpdateActive) {
-      this._myCollisionsStartToProcess.push(physXComponent.object);
-      this._myCollisionsEndToProcess.pp_removeAll(function(element) {
-        return element.pp_equals(physXComponent.object);
+      this._myCollisionsStartedToProcess.push(physXComponent);
+      this._myCollisionObjectsStartedToProcess.push(physXComponent.object);
+      const indexesToRemove = this._myCollisionsEndedToProcess.pp_findAllIndexes(function(physXComponentToCheck) {
+        return physXComponentToCheck.equals(physXComponent);
       });
+      for (let i = indexesToRemove.length - 1; i >= 0; i--) {
+        this._myCollisionsEndedToProcess.pp_removeIndex(indexesToRemove[i]);
+        this._myCollisionObjectsEndedToProcess.pp_removeIndex(indexesToRemove[i]);
+      }
     }
     if (this._myLogEnabled) {
-      console.log("Collision Start -", this._myCollisions.length);
+      console.log("Collision Start - Object ID: " + physXComponent.object.pp_getID());
     }
-    this._myCollisionStartEmitter.notify(this._myPhysX, physXComponent, type);
+    this._myCollisionStartEmitter.notify(this._myPhysXComponent, physXComponent, type);
   }
   _onCollisionEnd(type, physXComponent) {
     if (this._myLogEnabled) {
-      let objectFound = false;
-      for (let object of this._myCollisions) {
-        if (object.pp_equals(physXComponent.object)) {
-          objectFound = true;
+      let componentFound = false;
+      for (const physXComponentToCheck of this._myCollisions) {
+        if (physXComponentToCheck.equals(physXComponent)) {
+          componentFound = true;
           break;
         }
       }
-      if (!objectFound) {
-        console.error("Collision End on object not collected");
+      if (!componentFound) {
+        console.error("Collision End on physX component not collected - Object ID: " + physXComponent.object.pp_getID());
       }
     }
-    this._myCollisions.pp_removeAll(function(element) {
-      return element.pp_equals(physXComponent.object);
+    const indexesToRemove = this._myCollisions.pp_findAllIndexes(function(physXComponentToCheck) {
+      return physXComponentToCheck.equals(physXComponent);
     });
+    for (let i = indexesToRemove.length - 1; i >= 0; i--) {
+      this._myCollisions.pp_removeIndex(indexesToRemove[i]);
+      this._myCollisionObjects.pp_removeIndex(indexesToRemove[i]);
+    }
     if (this._myUpdateActive) {
-      this._myCollisionsEndToProcess.push(physXComponent.object);
-      this._myCollisionsStartToProcess.pp_removeAll(function(element) {
-        return element.pp_equals(physXComponent.object);
+      this._myCollisionsEndedToProcess.push(physXComponent);
+      this._myCollisionObjectsEndedToProcess.push(physXComponent.object);
+      const indexesToRemove2 = this._myCollisionsStartedToProcess.pp_findAllIndexes(function(physXComponentToCheck) {
+        return physXComponentToCheck.equals(physXComponent);
       });
+      for (let i = indexesToRemove2.length - 1; i >= 0; i--) {
+        this._myCollisionsStartedToProcess.pp_removeIndex(indexesToRemove2[i]);
+        this._myCollisionObjectsStartedToProcess.pp_removeIndex(indexesToRemove2[i]);
+      }
     }
     if (this._myLogEnabled) {
-      console.log("Collision End -", this._myCollisions.length);
+      console.log("Collision End - Object ID: " + physXComponent.object.pp_getID());
     }
-    this._myCollisionEndEmitter.notify(this._myPhysX, physXComponent, type);
+    this._myCollisionEndEmitter.notify(this._myPhysXComponent, physXComponent, type);
   }
+  static _triggerDesyncFixSV = {
+    findAllCallback: function(object) {
+      const physXComponent = object.pp_getComponentSelf(PhysXComponent2);
+      return physXComponent == null || !physXComponent.active;
+    }
+  };
   _triggerDesyncFix(dt) {
+    this._myTriggerDesyncFixDelay.update(dt);
+    if (this._myTriggerDesyncFixDelay.isDone()) {
+      this._myTriggerDesyncFixDelay.start();
+      const findAllCallback = _PhysicsCollisionCollector._triggerDesyncFixSV.findAllCallback;
+      const collisionsToEndIndexes = this._myCollisionObjects.pp_findAllIndexes(findAllCallback);
+      if (collisionsToEndIndexes.length > 0) {
+        const physXComponentsToEnd = [];
+        for (let i = 0; i < collisionsToEndIndexes.length; i++) {
+          physXComponentsToEnd.push(this._myCollisions[collisionsToEndIndexes[i]]);
+        }
+        for (const physXComponentToEnd of physXComponentsToEnd) {
+          if (this._myLogEnabled) {
+            console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd.object.pp_getID());
+          }
+          this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd);
+        }
+      }
+    }
   }
   destroy() {
     this._myDestroyed = true;
     if (this._myCollisionCallbackID != null) {
-      this._myPhysX.removeCollisionCallback(this._myCollisionCallbackID);
+      this._myPhysXComponent.removeCollisionCallback(this._myCollisionCallbackID);
       this._myCollisionCallbackID = null;
     }
   }
@@ -22686,30 +22945,6 @@ var PhysicsCollisionCollector = class {
     return this._myDestroyed;
   }
 };
-PhysicsCollisionCollector.prototype._triggerDesyncFix = function() {
-  let findAllCallback = function(element) {
-    let physX = element.pp_getComponentSelf(PhysXComponent2);
-    return physX == null || !physX.active;
-  };
-  return function _triggerDesyncFix(dt) {
-    this._myTriggerDesyncFixDelay.update(dt);
-    if (this._myTriggerDesyncFixDelay.isDone()) {
-      this._myTriggerDesyncFixDelay.start();
-      let collisionsToEnd = this._myCollisions.pp_findAll(findAllCallback);
-      if (collisionsToEnd.length > 0) {
-        for (let i = 0; i < collisionsToEnd.length; i++) {
-          let collision = collisionsToEnd[i];
-          let physX = collision.pp_getComponentSelf(PhysXComponent2);
-          if (physX) {
-            this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physX);
-          } else {
-            console.error("NO PHYSX, HOW?");
-          }
-        }
-      }
-    }
-  };
-}();
 
 // dist/pp/cauldron/benchmarks/benchmark_max_physx_component.js
 var BenchmarkMaxPhysXComponent = class extends Component20 {
@@ -23422,9 +23657,93 @@ var ClearConsoleOnXRSessionStartComponent = class extends Component23 {
   }
 };
 
+// dist/pp/cauldron/cauldron/components/reset_local_transform_component.js
+import { Component as Component24 } from "@wonderlandengine/api";
+import { property } from "@wonderlandengine/api/decorators.js";
+var __decorate = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var ResetLocalTransformComponent = class extends Component24 {
+  static TypeName = "pp-reset-local-transform";
+  _myReset;
+  _myResetLocalTransformOn;
+  _myResetLocalTransformWhen;
+  _myFirstUpdate = true;
+  _myFirstXRStart = true;
+  _myFirstXREnd = true;
+  init() {
+    if (this.active && this._myResetLocalTransformWhen == 0) {
+      this._resetLocalTransform();
+    }
+  }
+  start() {
+    if (this._myResetLocalTransformWhen == 1) {
+      this._resetLocalTransform();
+    }
+    if (this._myResetLocalTransformWhen == 3 || this._myResetLocalTransformWhen == 5) {
+      XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, true, this.engine);
+    }
+    if (this._myResetLocalTransformWhen == 4 || this._myResetLocalTransformWhen == 6) {
+      XRUtils.registerSessionEndEventListener(this, this._onXRSessionEnd.bind(this), this.engine);
+    }
+  }
+  update(dt) {
+    if (this._myResetLocalTransformWhen == 2 && this._myFirstUpdate) {
+      this._resetLocalTransform();
+    }
+    this._myFirstUpdate = false;
+  }
+  _onXRSessionStart() {
+    if (this._myResetLocalTransformWhen == 3 || this._myResetLocalTransformWhen == 5 && this._myFirstXRStart) {
+      this._resetLocalTransform();
+    }
+    this._myFirstXRStart = false;
+  }
+  _onXRSessionEnd() {
+    if (this._myResetLocalTransformWhen == 4 || this._myResetLocalTransformWhen == 6 && this._myFirstXREnd) {
+      this._resetLocalTransform();
+    }
+    this._myFirstXREnd = false;
+  }
+  _resetLocalTransform() {
+    let objects = [];
+    if (this._myResetLocalTransformOn == 0) {
+      objects = [this.object.pp_getSelf()];
+    } else if (this._myResetLocalTransformOn == 1) {
+      objects = this.object.pp_getChildren();
+    } else if (this._myResetLocalTransformOn == 2) {
+      objects = this.object.pp_getDescendants();
+    } else {
+      objects = this.object.pp_getHierarchy();
+    }
+    for (const object of objects) {
+      object.pp_resetTransformLocal();
+    }
+  }
+  onDestroy() {
+    XRUtils.unregisterSessionStartEndEventListeners(this, this.engine);
+  }
+};
+__decorate([
+  property.bool(true)
+], ResetLocalTransformComponent.prototype, "_myReset", void 0);
+__decorate([
+  property.enum(["Self", "Children", "Descendants", "Hierarchy"], "Self")
+], ResetLocalTransformComponent.prototype, "_myResetLocalTransformOn", void 0);
+__decorate([
+  property.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
+], ResetLocalTransformComponent.prototype, "_myResetLocalTransformWhen", void 0);
+
 // dist/pp/cauldron/cauldron/components/set_active_component.js
-import { Component as Component24, Property as Property18 } from "@wonderlandengine/api";
-var SetActiveComponent = class extends Component24 {
+import { Component as Component25, Property as Property18 } from "@wonderlandengine/api";
+var SetActiveComponent = class extends Component25 {
   static TypeName = "pp-set-active";
   static Properties = {
     _myActive: Property18.bool(true),
@@ -23485,8 +23804,8 @@ var SetActiveComponent = class extends Component24 {
 };
 
 // dist/pp/cauldron/cauldron/components/show_fps_component.js
-import { Alignment as Alignment4, Component as Component25, Justification as Justification4, Property as Property19 } from "@wonderlandengine/api";
-var ShowFPSComponent = class extends Component25 {
+import { Alignment as Alignment4, Component as Component26, Justification as Justification4, Property as Property19 } from "@wonderlandengine/api";
+var ShowFPSComponent = class extends Component26 {
   static TypeName = "pp-show-fps";
   static Properties = {
     _myRefreshSeconds: Property19.float(0.25),
@@ -23524,9 +23843,9 @@ var ShowFPSComponent = class extends Component25 {
 };
 
 // dist/pp/cauldron/cauldron/components/show_xr_buttons_component.js
-import { Component as Component26 } from "@wonderlandengine/api";
-import { property } from "@wonderlandengine/api/decorators.js";
-var __decorate = function(decorators, target, key, desc) {
+import { Component as Component27 } from "@wonderlandengine/api";
+import { property as property2 } from "@wonderlandengine/api/decorators.js";
+var __decorate2 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -23542,7 +23861,7 @@ var _ButtonBehaviorWhenNotAvailable;
   _ButtonBehaviorWhenNotAvailable2["DISABLE"] = "disable";
   _ButtonBehaviorWhenNotAvailable2["HIDE"] = "hide";
 })(_ButtonBehaviorWhenNotAvailable || (_ButtonBehaviorWhenNotAvailable = {}));
-var ShowXRButtonsComponent = class extends Component26 {
+var ShowXRButtonsComponent = class extends Component27 {
   static TypeName = "pp-show-xr-buttons";
   _myShowVRButton;
   _myVRButtonBehaviorWhenNotAvailable;
@@ -23669,21 +23988,21 @@ var ShowXRButtonsComponent = class extends Component26 {
   }
   _onXRSessionEnd() {
     if (this._myXRButtonsContainer != null && (this._myShowVRButton || this._myShowARButton)) {
-      this._myXRButtonsContainer.style.removeProperty("display");
+      this._myXRButtonsContainer.style.setProperty("display", "flex");
     }
   }
 };
-__decorate([
-  property.bool(true)
+__decorate2([
+  property2.bool(true)
 ], ShowXRButtonsComponent.prototype, "_myShowVRButton", void 0);
-__decorate([
-  property.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
+__decorate2([
+  property2.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
 ], ShowXRButtonsComponent.prototype, "_myVRButtonBehaviorWhenNotAvailable", void 0);
-__decorate([
-  property.bool(true)
+__decorate2([
+  property2.bool(true)
 ], ShowXRButtonsComponent.prototype, "_myShowARButton", void 0);
-__decorate([
-  property.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
+__decorate2([
+  property2.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
 ], ShowXRButtonsComponent.prototype, "_myARButtonBehaviorWhenNotAvailable", void 0);
 
 // dist/pp/cauldron/fsm/fsm.js
@@ -23735,6 +24054,11 @@ var FSM = class _FSM {
     this._myTransitionEmitter = new Emitter9();
     this._myTransitionIDEmitters = [];
   }
+  /**
+   * TS type inference helper
+   *
+   * @param {any} state
+   */
   addState(stateID, state = null) {
     let stateObject = null;
     if (!state || typeof state == "function") {
@@ -23759,6 +24083,11 @@ var FSM = class _FSM {
     this._myStates.set(stateID, stateData);
     this._myTransitions.set(stateID, /* @__PURE__ */ new Map());
   }
+  /**
+   * TS type inference helper
+   *
+   * @param {any} transition
+   */
   addTransition(fromStateID, toStateID, transitionID, transition = null, skipStateFunction = SkipStateFunction.NONE) {
     let transitionObject = null;
     if (!transition || typeof transition == "function") {
@@ -24276,12 +24605,16 @@ var TimerState = class extends State {
 };
 
 // dist/pp/cauldron/utils/color_utils.js
-function rgbToHSV(rgb) {
-  let hsv = rgb.pp_clone();
-  let r = rgb[0];
-  let g = rgb[1];
-  let b = rgb[2];
-  let max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, h, s = max == 0 ? 0 : d / max, v = max;
+function rgbToHSV(rgb, out = Vec4Utils.clone(rgb)) {
+  const r = rgb[0];
+  const g = rgb[1];
+  const b = rgb[2];
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  const s = max == 0 ? 0 : d / max;
+  const v = max;
   switch (max) {
     case min:
       h = 0;
@@ -24299,84 +24632,81 @@ function rgbToHSV(rgb) {
       h /= 6 * d;
       break;
   }
-  hsv[0] = h;
-  hsv[1] = s;
-  hsv[2] = v;
-  return hsv;
+  out[0] = h;
+  out[1] = s;
+  out[2] = v;
+  out[3] = rgb[3];
+  return out;
 }
-function hsvToRGB(hsv) {
-  let rgb = hsv.pp_clone();
-  let h = hsv[0];
-  let s = hsv[1];
-  let v = hsv[2];
-  let r, g, b, i, f, p, q, t;
-  i = Math.floor(h * 6);
-  f = h * 6 - i;
-  p = v * (1 - s);
-  q = v * (1 - f * s);
-  t = v * (1 - (1 - f) * s);
+function hsvToRGB(hsv, out = Vec4Utils.clone(hsv)) {
+  const h = hsv[0];
+  const s = hsv[1];
+  const v = hsv[2];
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  let r = 0;
+  let g = 0;
+  let b = 0;
   switch (i % 6) {
     case 0:
-      r = v, g = t, b = p;
+      r = v;
+      g = t;
+      b = p;
       break;
     case 1:
-      r = q, g = v, b = p;
+      r = q;
+      g = v;
+      b = p;
       break;
     case 2:
-      r = p, g = v, b = t;
+      r = p;
+      g = v;
+      b = t;
       break;
     case 3:
-      r = p, g = q, b = v;
+      r = p;
+      g = q;
+      b = v;
       break;
     case 4:
-      r = t, g = p, b = v;
+      r = t;
+      g = p;
+      b = v;
       break;
     case 5:
-      r = v, g = p, b = q;
+      r = v;
+      g = p;
+      b = q;
       break;
   }
-  rgb[0] = r;
-  rgb[1] = g;
-  rgb[2] = b;
-  return rgb;
+  out[0] = r;
+  out[1] = g;
+  out[2] = b;
+  out[3] = hsv[3];
+  return out;
 }
-function rgbCodeToHuman(rgb) {
-  return ColorUtils.color1To255(rgb);
-}
-function rgbHumanToCode(rgb) {
-  return ColorUtils.color255To1(rgb);
-}
-function hsvCodeToHuman(hsv) {
-  return ColorUtils.color1To255(hsv);
-}
-function hsvHumanToCode(hsv) {
-  return ColorUtils.color255To1(hsv);
-}
-function color255To1(color) {
-  let result = color.pp_clone();
-  for (let i = 0; i < result.length; i++) {
-    result[i] /= 255;
-    result[i] = Math.pp_clamp(result[i], 0, 1);
+function colorNormalizedToInt(color, out = Vec4Utils.clone(color)) {
+  for (let i = 0; i < out.length; i++) {
+    out[i] = Math.round(color[i] * 255);
+    out[i] = Math.pp_clamp(out[i], 0, 255);
   }
-  return result;
+  return out;
 }
-function color1To255(color) {
-  let result = color.pp_clone();
-  for (let i = 0; i < result.length; i++) {
-    result[i] = Math.round(result[i] * 255);
-    result[i] = Math.pp_clamp(result[i], 0, 255);
+function colorIntToNormalized(color, out = Vec4Utils.clone(color)) {
+  for (let i = 0; i < out.length; i++) {
+    out[i] = color[i] / 255;
+    out[i] = Math.pp_clamp(out[i], 0, 1);
   }
-  return result;
+  return out;
 }
 var ColorUtils = {
   rgbToHSV,
   hsvToRGB,
-  rgbCodeToHuman,
-  rgbHumanToCode,
-  hsvCodeToHuman,
-  hsvHumanToCode,
-  color255To1,
-  color1To255
+  colorNormalizedToInt,
+  colorIntToNormalized
 };
 
 // dist/pp/cauldron/utils/analytics_utils.js
@@ -24501,66 +24831,112 @@ var AnalyticsUtils = {
 };
 
 // dist/pp/cauldron/wl/utils/material_utils.js
-import { MeshComponent as MeshComponent8 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent8, TextComponent as TextComponent5 } from "@wonderlandengine/api";
 var setAlpha = function() {
-  let color = vec4_create();
+  const color = vec4_create();
   return function setAlpha2(material, alpha) {
-    if (material.color != null) {
-      color.vec4_copy(material.color);
+    const flatMaterial = material;
+    if (flatMaterial.color != null) {
+      color.vec4_copy(flatMaterial.color);
       color[3] = alpha;
-      material.color = color;
+      flatMaterial.color = color;
     }
-    if (material.diffuseColor != null) {
-      color.vec4_copy(material.diffuseColor);
+    const phongMaterial = material;
+    if (phongMaterial.diffuseColor != null) {
+      color.vec4_copy(phongMaterial.diffuseColor);
       color[3] = alpha;
-      material.diffuseColor = color;
+      phongMaterial.diffuseColor = color;
     }
-    if (material.ambientColor != null) {
-      color.vec4_copy(material.ambientColor);
+    if (phongMaterial.ambientColor != null) {
+      color.vec4_copy(phongMaterial.ambientColor);
       color[3] = alpha;
-      material.ambientColor = color;
+      phongMaterial.ambientColor = color;
     }
   };
 }();
 function setObjectAlpha(object, alpha) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
+  const meshComponents = object.pp_getComponents(MeshComponent8);
+  for (const meshComponent of meshComponents) {
     if (meshComponent.material != null) {
       MaterialUtils.setAlpha(meshComponent.material, alpha);
     }
   }
+  const textComponents = object.pp_getComponents(TextComponent5);
+  for (const textComponent of textComponents) {
+    if (textComponent.material != null) {
+      MaterialUtils.setAlpha(textComponent.material, alpha);
+    }
+  }
 }
 function setObjectMaterial(object, material, cloneMaterial = false) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
+  const meshComponents = object.pp_getComponents(MeshComponent8);
+  for (const meshComponent of meshComponents) {
     if (cloneMaterial) {
       meshComponent.material = material.clone();
     } else {
       meshComponent.material = material;
     }
   }
+  const textComponents = object.pp_getComponents(TextComponent5);
+  for (const textComponent of textComponents) {
+    if (cloneMaterial) {
+      textComponent.material = material.clone();
+    } else {
+      textComponent.material = material;
+    }
+  }
 }
 function setObjectClonedMaterials(object) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
+  const meshComponents = object.pp_getComponents(MeshComponent8);
+  for (const meshComponent of meshComponents) {
     if (meshComponent.material != null) {
       meshComponent.material = meshComponent.material.clone();
     }
   }
+  const textComponents = object.pp_getComponents(TextComponent5);
+  for (const textComponent of textComponents) {
+    if (textComponent.material != null) {
+      textComponent.material = textComponent.material.clone();
+    }
+  }
 }
 function setObjectSpecularColor(object, color) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (meshComponent.material.specularColor != null) {
-      meshComponent.material.specularColor = color;
+  const meshComponents = object.pp_getComponents(MeshComponent8);
+  for (const meshComponent of meshComponents) {
+    if (meshComponent.material != null) {
+      const phongMaterial = meshComponent.material;
+      if (phongMaterial.specularColor != null) {
+        phongMaterial.specularColor = color;
+      }
+    }
+  }
+  const textComponents = object.pp_getComponents(TextComponent5);
+  for (const textComponent of textComponents) {
+    if (textComponent.material != null) {
+      const phongMaterial = textComponent.material;
+      if (phongMaterial.specularColor != null) {
+        phongMaterial.specularColor = color;
+      }
     }
   }
 }
 function setObjectFogColor(object, color) {
-  let meshComponents = object.pp_getComponents(MeshComponent8);
-  for (let meshComponent of meshComponents) {
-    if (meshComponent.material.fogColor != null) {
-      meshComponent.material.fogColor = color;
+  const meshComponents = object.pp_getComponents(MeshComponent8);
+  for (const meshComponent of meshComponents) {
+    if (meshComponent.material != null) {
+      const phongMaterial = meshComponent.material;
+      if (phongMaterial.fogColor != null) {
+        phongMaterial.fogColor = color;
+      }
+    }
+  }
+  const textComponents = object.pp_getComponents(TextComponent5);
+  for (const textComponent of textComponents) {
+    if (textComponent.material != null) {
+      const phongMaterial = textComponent.material;
+      if (phongMaterial.fogColor != null) {
+        phongMaterial.fogColor = color;
+      }
     }
   }
 }
@@ -24574,9 +24950,9 @@ var MaterialUtils = {
 };
 
 // dist/pp/cauldron/wl/utils/text_utils.js
-import { TextComponent as TextComponent5 } from "@wonderlandengine/api";
+import { TextComponent as TextComponent6 } from "@wonderlandengine/api";
 function setClonedMaterials(object) {
-  let textComponents = object.pp_getComponents(TextComponent5);
+  let textComponents = object.pp_getComponents(TextComponent6);
   for (let textComponent of textComponents) {
     if (textComponent.material != null) {
       textComponent.material = textComponent.material.clone();
@@ -24588,8 +24964,8 @@ var TextUtils = {
 };
 
 // dist/pp/debug/components/debug_transform_component.js
-import { Component as Component27, Property as Property20 } from "@wonderlandengine/api";
-var DebugTransformComponent = class extends Component27 {
+import { Component as Component28, Property as Property20 } from "@wonderlandengine/api";
+var DebugTransformComponent = class extends Component28 {
   static TypeName = "pp-debug-transform";
   static Properties = {
     _myLength: Property20.float(0.1),
@@ -25062,16 +25438,16 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   resetResults() {
     this._updateDerivatesResults();
     this._updateMaxResults();
-    for (let property2 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      this._myFunctionPerformanceAnalysisResults.get(property2).reset();
+    for (let property5 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      this._myFunctionPerformanceAnalysisResults.get(property5).reset();
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset = 0;
     this._myTimeOfLastReset = window.performance.now();
   }
   resetMaxResults() {
     this._myMaxTimeElapsedSinceLastReset = 0;
-    for (let property2 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
-      this._myFunctionPerformanceAnalysisMaxResults.get(property2).reset();
+    for (let property5 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
+      this._myFunctionPerformanceAnalysisMaxResults.get(property5).reset();
     }
   }
   getResults(sortOrder = DebugFunctionsPerformanceAnalyzerSortOrder.NONE) {
@@ -25152,8 +25528,8 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   _updateDerivatesResults() {
     let timeElapsedSinceLastReset = this.getTimeElapsedSinceLastReset();
     let beforeTime = window.performance.now();
-    for (let property2 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      let results = this._myFunctionPerformanceAnalysisResults.get(property2);
+    for (let property5 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      let results = this._myFunctionPerformanceAnalysisResults.get(property5);
       if (timeElapsedSinceLastReset != 0) {
         results.myTotalExecutionTimePercentage = results.myTotalExecutionTime / timeElapsedSinceLastReset;
       } else {
@@ -25175,13 +25551,13 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   _updateMaxResults() {
     let beforeTime = window.performance.now();
     this._myMaxTimeElapsedSinceLastReset = Math.max(this._myMaxTimeElapsedSinceLastReset, this.getTimeElapsedSinceLastReset());
-    for (let property2 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      if (this._myFunctionPerformanceAnalysisMaxResults.has(property2)) {
-        this._myFunctionPerformanceAnalysisMaxResults.get(property2).max(this._myFunctionPerformanceAnalysisResults.get(property2));
+    for (let property5 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      if (this._myFunctionPerformanceAnalysisMaxResults.has(property5)) {
+        this._myFunctionPerformanceAnalysisMaxResults.get(property5).max(this._myFunctionPerformanceAnalysisResults.get(property5));
       } else {
         let maxResults = new DebugFunctionPerformanceAnalysisResults();
-        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property2));
-        this._myFunctionPerformanceAnalysisMaxResults.set(property2, maxResults);
+        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property5));
+        this._myFunctionPerformanceAnalysisMaxResults.set(property5, maxResults);
       }
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
@@ -25580,8 +25956,8 @@ var DebugFunctionsPerformanceAnalysisResultsLogger = class {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js
-import { Component as Component28, Property as Property21 } from "@wonderlandengine/api";
-var DebugFunctionsPerformanceAnalyzerComponent = class extends Component28 {
+import { Component as Component29, Property as Property21 } from "@wonderlandengine/api";
+var DebugFunctionsPerformanceAnalyzerComponent = class extends Component29 {
   static TypeName = "pp-debug-functions-performance-analyzer";
   static Properties = {
     _myObjectsByPath: Property21.string(""),
@@ -25716,8 +26092,8 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component28 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component.js
-import { Component as Component29, Property as Property22 } from "@wonderlandengine/api";
-var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component29 {
+import { Component as Component30, Property as Property22 } from "@wonderlandengine/api";
+var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component30 {
   static TypeName = "pp-debug-pp-functions-performance-analyzer";
   static Properties = {
     _myDelayStart: Property22.float(0),
@@ -25768,8 +26144,8 @@ var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component29 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component.js
-import { Component as Component30, Property as Property23 } from "@wonderlandengine/api";
-var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component30 {
+import { Component as Component31, Property as Property23 } from "@wonderlandengine/api";
+var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component31 {
   static TypeName = "pp-debug-array-functions-performance-analyzer";
   static Properties = {
     _myIncludeOnlyMainArrayTypes: Property23.bool(true),
@@ -25824,8 +26200,8 @@ var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component30 
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component.js
-import { Component as Component31, Property as Property24 } from "@wonderlandengine/api";
-var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component31 {
+import { Component as Component32, Property as Property24 } from "@wonderlandengine/api";
+var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component32 {
   static TypeName = "pp-debug-pp-array-creation-performance-analyzer";
   static Properties = {
     _myDelayStart: Property24.float(0),
@@ -25878,8 +26254,8 @@ var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component31
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component.js
-import { Component as Component32, Property as Property25 } from "@wonderlandengine/api";
-var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component32 {
+import { Component as Component33, Property as Property25 } from "@wonderlandengine/api";
+var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component33 {
   static TypeName = "pp-debug-wl-functions-performance-analyzer";
   static Properties = {
     _myDelayStart: Property25.float(0),
@@ -25930,8 +26306,8 @@ var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component32 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js
-import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component33, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent5, Property as Property26, TextComponent as TextComponent6, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
-var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component33 {
+import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component34, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent5, Property as Property26, TextComponent as TextComponent7, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
+var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component34 {
   static TypeName = "pp-debug-wl-components-functions-performance-analyzer";
   static Properties = {
     _myAnalyzeComponentTypes: Property26.bool(true),
@@ -26013,7 +26389,7 @@ var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Compo
       LightComponent2,
       MeshComponent9,
       PhysXComponent5,
-      TextComponent6,
+      TextComponent7,
       ViewComponent4
     ];
     for (let nativeComponentClass of nativeComponentClasses) {
@@ -26292,16 +26668,16 @@ Direction2DTo3DConverter.prototype.convertRotationQuat = function() {
 
 // dist/pp/gameplay/cauldron/cauldron/number_over_factor.js
 var NumberOverFactor = class {
-  _myFromNumber;
-  _myToNumber;
+  _myFromValue;
+  _myToValue;
   _myFromFactor;
   _myToFactor;
   _myEasingFunction;
+  /** `Math.round` / `Math.floor` / `Math.ceil` can be used */
   _myRoundingFunction;
-  // Math.round/floor/ceil can be used
-  constructor(fromNumber, toNumber = fromNumber, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
-    this._myFromNumber = fromNumber;
-    this._myToNumber = toNumber;
+  constructor(fromValue, toValue = fromValue, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
+    this._myFromValue = fromValue;
+    this._myToValue = toValue;
     this._myFromFactor = fromFactor;
     this._myToFactor = toFactor;
     this._myEasingFunction = easingFunction;
@@ -26309,18 +26685,18 @@ var NumberOverFactor = class {
   }
   get(factor) {
     const interpolationFactor = this._myEasingFunction(Math.pp_mapToRange(factor, this._myFromFactor, this._myToFactor, 0, 1));
-    let numberOverFactor = Math.pp_lerp(this._myFromNumber, this._myToNumber, interpolationFactor);
+    let currentValue = Math.pp_lerp(this._myFromValue, this._myToValue, interpolationFactor);
     if (this._myRoundingFunction != null) {
-      numberOverFactor = this._myRoundingFunction(numberOverFactor, this._myFromNumber, this._myToNumber);
+      currentValue = this._myRoundingFunction(currentValue, this._myFromValue, this._myToValue);
     }
-    return numberOverFactor;
+    return currentValue;
   }
   getAverage(factor) {
     return this.get(factor);
   }
   getRange(factor) {
-    const numberOverFactor = this.get(factor);
-    return [numberOverFactor, numberOverFactor];
+    const currentValue = this.get(factor);
+    return [currentValue, currentValue];
   }
   getMax(factor) {
     return this.get(factor);
@@ -26328,136 +26704,554 @@ var NumberOverFactor = class {
   getMin(factor) {
     return this.get(factor);
   }
-  isInside(number, factor) {
-    const numberOverFactor = this.get(factor);
-    return numberOverFactor == number;
+  isInside(value, factor) {
+    const currentValue = this.get(factor);
+    return currentValue == value;
   }
-  isInsideAngleRange(number, factor) {
-    return this.isInsideAngleRangeDegrees(number, factor);
+  isInsideAngleRange(value, factor) {
+    return this.isInsideAngleRangeDegrees(value, factor);
   }
-  isInsideAngleRangeDegrees(number, factor) {
-    const numberOverFactor = this.get(factor);
-    const clampedNumber = Math.pp_angleClampDegrees(number);
-    const clampedNumberOverFactor = Math.pp_angleClampDegrees(numberOverFactor);
-    return clampedNumber == clampedNumberOverFactor;
+  isInsideAngleRangeDegrees(value, factor) {
+    const currentValue = this.get(factor);
+    const clampedValue = Math.pp_angleClampDegrees(value);
+    const clampedCurrentValue = Math.pp_angleClampDegrees(currentValue);
+    return clampedValue == clampedCurrentValue;
   }
-  isInsideAngleRangeRadians(number, factor) {
-    const numberOverFactor = this.get(factor);
-    const clampedNumber = Math.pp_angleClampRadians(number);
-    const clampedNumberOverFactor = Math.pp_angleClampRadians(numberOverFactor);
-    return clampedNumber == clampedNumberOverFactor;
+  isInsideAngleRangeRadians(value, factor) {
+    const currentValue = this.get(factor);
+    const clampedValue = Math.pp_angleClampRadians(value);
+    const clampedCurrentValue = Math.pp_angleClampRadians(currentValue);
+    return clampedValue == clampedCurrentValue;
   }
 };
 var IntOverFactor = class extends NumberOverFactor {
-  constructor(fromNumber, toNumber = fromNumber, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
+  constructor(fromValue, toValue = fromValue, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
     if (roundingFunction == null) {
-      roundingFunction = function(numberToRound, fromNumber2, toNumber2) {
-        let roundedNumber = null;
-        const useFloor = fromNumber2 <= toNumber2;
+      roundingFunction = function(valueToRound, fromValue2, toValue2) {
+        let roundedValue = null;
+        const useFloor = fromValue2 <= toValue2;
         if (useFloor) {
-          roundedNumber = Math.floor(numberToRound);
+          roundedValue = Math.floor(valueToRound);
         } else {
-          roundedNumber = Math.ceil(numberToRound);
+          roundedValue = Math.ceil(valueToRound);
         }
-        return roundedNumber;
+        return roundedValue;
       };
     }
-    super(fromNumber, toNumber, fromFactor, toFactor, easingFunction, roundingFunction);
+    super(fromValue, toValue, fromFactor, toFactor, easingFunction, roundingFunction);
   }
 };
 var NumberRangeOverFactor = class {
-  _myFromNumberOverFactor;
-  _myToNumberOverFactor;
+  _myRangeStartOverFactor;
+  _myRangeEndOverFactor;
   _myRoundingFunction;
   // Math.round/floor/ceil can be used
   constructor(fromRange, toRange = fromRange, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
-    this._myFromNumberOverFactor = new NumberOverFactor(fromRange[0], toRange[0], fromFactor, toFactor, easingFunction, roundingFunction);
-    this._myToNumberOverFactor = new NumberOverFactor(fromRange[1], toRange[1], fromFactor, toFactor, easingFunction, roundingFunction);
+    this._myRangeStartOverFactor = new NumberOverFactor(fromRange[0], toRange[0], fromFactor, toFactor, easingFunction, roundingFunction);
+    this._myRangeEndOverFactor = new NumberOverFactor(fromRange[1], toRange[1], fromFactor, toFactor, easingFunction, roundingFunction);
     this._myRoundingFunction = roundingFunction;
   }
   get(factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    let randomNumberOverFactor = null;
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    let randomValue = null;
     if (this._myRoundingFunction) {
-      randomNumberOverFactor = Math.pp_randomInt(fromNumber, toNumber);
+      randomValue = Math.pp_randomInt(rangeStart, rangeEnd);
     } else {
-      randomNumberOverFactor = Math.pp_random(fromNumber, toNumber);
+      randomValue = Math.pp_random(rangeStart, rangeEnd);
     }
-    return randomNumberOverFactor;
+    return randomValue;
   }
   getAverage(factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    let averageNumberOverFactor = (fromNumber + toNumber) / 2;
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    let averageValue = (rangeStart + rangeEnd) / 2;
     if (this._myRoundingFunction) {
-      averageNumberOverFactor = this._myRoundingFunction(averageNumberOverFactor, fromNumber, toNumber);
+      averageValue = this._myRoundingFunction(averageValue, rangeStart, rangeEnd);
     }
-    return averageNumberOverFactor;
+    return averageValue;
   }
   getRange(factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    return [fromNumber, toNumber];
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    return [rangeStart, rangeEnd];
   }
   getMax(factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    return Math.max(fromNumber, toNumber);
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    return Math.max(rangeStart, rangeEnd);
   }
   getMin(factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    return Math.min(fromNumber, toNumber);
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    return Math.min(rangeStart, rangeEnd);
   }
-  isInside(number, factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    const min = Math.min(fromNumber, toNumber);
-    const max = Math.max(fromNumber, toNumber);
-    return number >= min && number <= max;
+  isInside(value, factor) {
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    const min = Math.min(rangeStart, rangeEnd);
+    const max = Math.max(rangeStart, rangeEnd);
+    return value >= min && value <= max;
   }
-  isInsideAngleRange(number, factor) {
-    return this.isInsideAngleRangeDegrees(number, factor);
+  isInsideAngleRange(value, factor) {
+    return this.isInsideAngleRangeDegrees(value, factor);
   }
-  isInsideAngleRangeDegrees(number, factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    return Math.pp_isInsideAngleRangeDegrees(number, fromNumber, toNumber);
+  isInsideAngleRangeDegrees(value, factor) {
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    return Math.pp_isInsideAngleRangeDegrees(value, rangeStart, rangeEnd);
   }
-  isInsideAngleRangeRadians(number, factor) {
-    const fromNumber = this._myFromNumberOverFactor.get(factor);
-    const toNumber = this._myToNumberOverFactor.get(factor);
-    return Math.pp_isInsideAngleRangeRadians(number, fromNumber, toNumber);
+  isInsideAngleRangeRadians(value, factor) {
+    const rangeStart = this._myRangeStartOverFactor.get(factor);
+    const rangeEnd = this._myRangeEndOverFactor.get(factor);
+    return Math.pp_isInsideAngleRangeRadians(value, rangeStart, rangeEnd);
   }
 };
 var IntRangeOverFactor = class extends NumberRangeOverFactor {
   constructor(fromRange, toRange = fromRange, fromFactor = 0, toFactor = 0, easingFunction = EasingFunction.linear, roundingFunction = null) {
     if (roundingFunction == null) {
-      roundingFunction = function(numberToRound, fromNumber, toNumber) {
-        let roundedNumber = null;
-        const useFloor = fromNumber <= toNumber;
+      roundingFunction = function(valueToRound, fromValue, toValue) {
+        let roundedValue = null;
+        const useFloor = fromValue <= toValue;
         if (useFloor) {
-          roundedNumber = Math.floor(numberToRound);
+          roundedValue = Math.floor(valueToRound);
         } else {
-          roundedNumber = Math.ceil(numberToRound);
+          roundedValue = Math.ceil(valueToRound);
         }
-        return roundedNumber;
+        return roundedValue;
       };
     }
     super(fromRange, toRange, fromFactor, toFactor, easingFunction, roundingFunction);
   }
 };
 
+// dist/pp/gameplay/cauldron/cauldron/animated_number.js
+var AnimatedNumberParams = class {
+  myInitialValue = 0;
+  myAnimationSeconds = 0;
+  myAnimationEasingFunction = EasingFunction.easeInOut;
+  /**
+   * If this value is not `null` it will be used as reference for the `myAnimationSeconds` time, which
+   * will then be considered as the time to reach `myReferenceTargetValue` from `myInitialValue`
+   *
+   * This means that when a new target value is specified, the time to reach it will automatically be computed
+   * based on this value, while if this value is `null` it will always take the same time (specified with `myAnimationSeconds`)
+   * no matter how far or close the target value is from the current value
+  */
+  myReferenceTargetValue = null;
+  /** `Math.round` / `Math.floor` / `Math.ceil` can be used */
+  myRoundingFunction = null;
+};
+var AnimatedNumber = class {
+  _myParams;
+  _myCurrentValue = 0;
+  _myStartValue = 0;
+  _myTargetValue = 0;
+  _myAnimationTimer = new Timer(0, false);
+  constructor(params) {
+    this._myParams = params;
+    this._myCurrentValue = this._myParams.myInitialValue;
+    this._myStartValue = this._myParams.myInitialValue;
+    this._myTargetValue = this._myParams.myInitialValue;
+    this._myAnimationTimer.reset(this._myParams.myAnimationSeconds);
+  }
+  update(dt) {
+    if (this._myAnimationTimer.isRunning()) {
+      this._myAnimationTimer.update(dt);
+      const animationPercentage = this._myAnimationTimer.getPercentage();
+      this._myCurrentValue = MathUtils.interpolate(this._myStartValue, this._myTargetValue, animationPercentage, this._myParams.myAnimationEasingFunction);
+    }
+  }
+  getCurrentValue() {
+    return this._myCurrentValue;
+  }
+  updateTargetValue(targetValue) {
+    this._myTargetValue = targetValue;
+    if (this._myParams.myReferenceTargetValue == null) {
+      this._myStartValue = this._myCurrentValue;
+      this._myAnimationTimer.start();
+    } else {
+      const distanceFromInitialToReference = Math.abs(this._myParams.myReferenceTargetValue - this._myParams.myInitialValue);
+      const distanceFromCurrentToTarget = Math.abs(this._myTargetValue - this._myCurrentValue);
+      const secondsToReachTarget = distanceFromCurrentToTarget / distanceFromInitialToReference * this._myParams.myAnimationSeconds;
+      this._myStartValue = this._myCurrentValue;
+      this._myAnimationTimer.start(secondsToReachTarget);
+    }
+  }
+  isDone() {
+    return this._myAnimationTimer.isDone();
+  }
+};
+
+// dist/pp/gameplay/cauldron/cauldron/components/cursor_button_component.js
+import { Component as Component35, MeshComponent as MeshComponent10, TextComponent as TextComponent8 } from "@wonderlandengine/api";
+import { property as property3 } from "@wonderlandengine/api/decorators.js";
+import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
+var __decorate3 = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
+  static TypeName = "pp-cursor-button";
+  /** This can be either a name of a component that is found on the same object of the cursor button,
+      or the name of an handler added through `CursorButtonComponent.addButtonActionHandler` */
+  _myButtonActionsHandlerNames;
+  _myScaleOffsetOnHover;
+  _myScaleOffsetOnDown;
+  _myScaleOffsetOnUp;
+  _myPulseIntensityOnHover;
+  _myPulseIntensityOnDown;
+  _myPulseIntensityOnUp;
+  _myPulseIntensityOnUnhover;
+  _myColorBrigthnessOffsetOnHover;
+  _myColorBrigthnessOffsetOnDown;
+  _myColorBrigthnessOffsetOnUp;
+  _myUseSpatialAudio;
+  _mySFXOnHover;
+  _mySFXOnDown;
+  _mySFXOnUp;
+  _mySFXOnUnhover;
+  _myCursorButtonComponentID = "cursor_button_component" + MathUtils.randomUUID();
+  _myCursorTarget;
+  _myButtonActionsHandlers = [];
+  _myOriginalScaleLocal = vec3_create();
+  _myAnimatedScale;
+  _myAnimatedColorBrightnessOffset;
+  _myFlatMaterialOriginalColors = [];
+  _myPhongMaterialOriginalColors = [];
+  _myOnHoverAudioPlayer = null;
+  _myOnDownAudioPlayer = null;
+  _myOnUpAudioPlayer = null;
+  _myOnUnhoverAudioPlayer = null;
+  static _myCursorButtonActionHandlers = /* @__PURE__ */ new Map();
+  static addButtonActionHandler(id, buttonActionHandler) {
+    _CursorButtonComponent._myCursorButtonActionHandlers.set(id, buttonActionHandler);
+  }
+  static removeButtonActionHandler(id) {
+    _CursorButtonComponent._myCursorButtonActionHandlers.delete(id);
+  }
+  static getButtonActionHandler(id) {
+    const buttonActionHandler = _CursorButtonComponent._myCursorButtonActionHandlers.get(id);
+    return buttonActionHandler != null ? buttonActionHandler : null;
+  }
+  start() {
+    this._myCursorTarget = this.object.pp_getComponent(CursorTarget5);
+    this._myCursorTarget.onHover.add(this._onHover.bind(this));
+    this._myCursorTarget.onDown.add(this._onDown.bind(this));
+    this._myCursorTarget.onUpWithDown.add(this.onUpWithDown.bind(this));
+    this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this));
+    const buttonActionsHandlerNames = [...this._myButtonActionsHandlerNames.split(",")];
+    for (let i = 0; i < buttonActionsHandlerNames.length; i++) {
+      buttonActionsHandlerNames[i] = buttonActionsHandlerNames[i].trim();
+    }
+    for (const buttonActionsHandlerName of buttonActionsHandlerNames) {
+      const buttonActionHandlerComponent = this.object.pp_getComponent(buttonActionsHandlerName);
+      if (buttonActionHandlerComponent != null) {
+        this._myButtonActionsHandlers.push(buttonActionHandlerComponent);
+      } else {
+        const buttonActionHandlerStatic = _CursorButtonComponent.getButtonActionHandler(buttonActionsHandlerName);
+        if (buttonActionHandlerStatic != null) {
+          this._myButtonActionsHandlers.push(buttonActionHandlerStatic);
+        }
+      }
+    }
+    this._setupVisualsAndSFXs();
+  }
+  static _updateSV = {
+    buttonScale: vec3_create(),
+    hsvColor: vec4_create(),
+    rgbColor: vec4_create()
+  };
+  update(dt) {
+    if (!this._myAnimatedScale.isDone()) {
+      this._myAnimatedScale.update(dt);
+      const buttonScale = _CursorButtonComponent._updateSV.buttonScale;
+      this.object.pp_setScaleLocal(this._myOriginalScaleLocal.vec3_scale(this._myAnimatedScale.getCurrentValue(), buttonScale));
+    }
+    if (!this._myAnimatedColorBrightnessOffset.isDone()) {
+      this._myAnimatedColorBrightnessOffset.update(dt);
+      const colorBrightnessOffsetCurrentValue = this._myAnimatedColorBrightnessOffset.getCurrentValue();
+      const hsvColor = _CursorButtonComponent._updateSV.hsvColor;
+      const rgbColor = _CursorButtonComponent._updateSV.rgbColor;
+      for (const [material, originalColor] of this._myPhongMaterialOriginalColors) {
+        ColorUtils.rgbToHSV(originalColor, hsvColor);
+        hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
+        material.diffuseColor = ColorUtils.hsvToRGB(hsvColor, rgbColor);
+      }
+      for (const [material, originalColor] of this._myFlatMaterialOriginalColors) {
+        ColorUtils.rgbToHSV(originalColor, hsvColor);
+        hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
+        material.color = ColorUtils.hsvToRGB(hsvColor, rgbColor);
+      }
+    }
+  }
+  _onHover(targetObject, cursorComponent) {
+    let skipDefault = false;
+    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+      if (buttonActionsHandler.onHover != null) {
+        skipDefault ||= buttonActionsHandler.onHover(this, cursorComponent);
+      }
+    }
+    if (skipDefault) {
+      return;
+    }
+    if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+      this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnHover);
+    }
+    if (this._myPulseIntensityOnHover != 0) {
+      const handedness = InputUtils.getHandednessByString(cursorComponent.handedness);
+      if (handedness != null) {
+        Globals.getGamepads()[handedness].pulse(this._myPulseIntensityOnHover, 0.085);
+      }
+    }
+    if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+      this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnHover);
+    }
+    if (this._myOnHoverAudioPlayer != null) {
+      this._myOnHoverAudioPlayer.setPosition(this.object.pp_getPosition());
+      this._myOnHoverAudioPlayer.play();
+    }
+  }
+  _onDown(targetObject, cursorComponent) {
+    let skipDefault = false;
+    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+      if (buttonActionsHandler.onDown != null) {
+        skipDefault ||= buttonActionsHandler.onDown(this, cursorComponent);
+      }
+    }
+    if (skipDefault) {
+      return;
+    }
+    if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+      this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnDown);
+    }
+    if (this._myPulseIntensityOnDown != 0) {
+      const handedness = InputUtils.getHandednessByString(cursorComponent.handedness);
+      if (handedness != null) {
+        Globals.getGamepads()[handedness].pulse(this._myPulseIntensityOnDown, 0.085);
+      }
+    }
+    if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+      this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnDown);
+    }
+    if (this._myOnDownAudioPlayer != null) {
+      this._myOnDownAudioPlayer.setPosition(this.object.pp_getPosition());
+      this._myOnDownAudioPlayer.play();
+    }
+  }
+  onUpWithDown(targetObject, cursorComponent) {
+    let skipDefault = false;
+    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+      if (buttonActionsHandler.onUp != null) {
+        skipDefault ||= buttonActionsHandler.onUp(this, cursorComponent);
+      }
+    }
+    if (skipDefault) {
+      return;
+    }
+    if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+      this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnUp);
+    }
+    if (this._myPulseIntensityOnUp != 0) {
+      const handedness = InputUtils.getHandednessByString(cursorComponent.handedness);
+      if (handedness != null) {
+        Globals.getGamepads()[handedness].pulse(this._myPulseIntensityOnUp, 0.085);
+      }
+    }
+    if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+      this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnUp);
+    }
+    if (this._myOnUpAudioPlayer != null) {
+      this._myOnUpAudioPlayer.setPosition(this.object.pp_getPosition());
+      this._myOnUpAudioPlayer.play();
+    }
+  }
+  _onUnhover(targetObject, cursorComponent) {
+    let skipDefault = false;
+    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+      if (buttonActionsHandler.onUnhover != null) {
+        skipDefault ||= buttonActionsHandler.onUnhover(this, cursorComponent);
+      }
+    }
+    if (skipDefault) {
+      return;
+    }
+    if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+      this._myAnimatedScale.updateTargetValue(1);
+    }
+    if (this._myPulseIntensityOnUnhover != 0) {
+      const handedness = InputUtils.getHandednessByString(cursorComponent.handedness);
+      if (handedness != null) {
+        Globals.getGamepads()[handedness].pulse(this._myPulseIntensityOnUnhover, 0.085);
+      }
+    }
+    if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+      this._myAnimatedColorBrightnessOffset.updateTargetValue(0);
+    }
+    if (this._myOnUnhoverAudioPlayer != null) {
+      this._myOnUnhoverAudioPlayer.setPosition(this.object.pp_getPosition());
+      this._myOnUnhoverAudioPlayer.play();
+    }
+  }
+  _setupVisualsAndSFXs() {
+    this.object.pp_getScaleLocal(this._myOriginalScaleLocal);
+    const animatedScaleParams = new AnimatedNumberParams();
+    animatedScaleParams.myInitialValue = this._myOriginalScaleLocal[0];
+    animatedScaleParams.myAnimationSeconds = 0.25;
+    this._myAnimatedScale = new AnimatedNumber(animatedScaleParams);
+    const animatedColorBrightnessOffsetParams = new AnimatedNumberParams();
+    animatedColorBrightnessOffsetParams.myInitialValue = 0;
+    animatedColorBrightnessOffsetParams.myAnimationSeconds = 0.25;
+    this._myAnimatedColorBrightnessOffset = new AnimatedNumber(animatedColorBrightnessOffsetParams);
+    const meshComponents = this.object.pp_getComponents(MeshComponent10);
+    for (const meshComponent of meshComponents) {
+      meshComponent.material = meshComponent.material?.clone();
+      const phongMaterial = meshComponent.material;
+      if (phongMaterial.diffuseColor != null) {
+        this._myPhongMaterialOriginalColors.push([phongMaterial, phongMaterial.diffuseColor.vec4_clone()]);
+      } else {
+        const flatMaterial = meshComponent.material;
+        if (flatMaterial.color != null) {
+          this._myFlatMaterialOriginalColors.push([flatMaterial, flatMaterial.color.vec4_clone()]);
+        }
+      }
+    }
+    const textComponents = this.object.pp_getComponents(TextComponent8);
+    for (const textComponent of textComponents) {
+      textComponent.material = textComponent.material?.clone();
+      const flatMaterial = textComponent.material;
+      if (flatMaterial.color != null) {
+        this._myFlatMaterialOriginalColors.push([flatMaterial, flatMaterial.color.vec4_clone()]);
+      }
+    }
+    const audioManager = Globals.getAudioManager(this.engine);
+    if (this._mySFXOnHover.length > 0) {
+      const audioSetup = new AudioSetup(this._mySFXOnHover);
+      audioSetup.mySpatial = this._myUseSpatialAudio;
+      const audioID = this._myCursorButtonComponentID + "_on_hover";
+      audioManager.addAudioSetup(audioID, audioSetup);
+      this._myOnHoverAudioPlayer = audioManager.createAudioPlayer(audioID);
+    }
+    if (this._mySFXOnDown.length > 0) {
+      const audioSetup = new AudioSetup(this._mySFXOnDown);
+      audioSetup.mySpatial = this._myUseSpatialAudio;
+      const audioID = this._myCursorButtonComponentID + "_on_down";
+      audioManager.addAudioSetup(audioID, audioSetup);
+      this._myOnDownAudioPlayer = audioManager.createAudioPlayer(audioID);
+    }
+    if (this._mySFXOnUp.length > 0) {
+      const audioSetup = new AudioSetup(this._mySFXOnUp);
+      audioSetup.mySpatial = this._myUseSpatialAudio;
+      const audioID = this._myCursorButtonComponentID + "_on_up";
+      audioManager.addAudioSetup(audioID, audioSetup);
+      this._myOnUpAudioPlayer = audioManager.createAudioPlayer(audioID);
+    }
+    if (this._mySFXOnUnhover.length > 0) {
+      const audioSetup = new AudioSetup(this._mySFXOnUnhover);
+      audioSetup.mySpatial = this._myUseSpatialAudio;
+      const audioID = this._myCursorButtonComponentID + "_on_unhover";
+      audioManager.addAudioSetup(audioID, audioSetup);
+      this._myOnUnhoverAudioPlayer = audioManager.createAudioPlayer(audioID);
+    }
+  }
+};
+__decorate3([
+  property3.string("")
+], CursorButtonComponent.prototype, "_myButtonActionsHandlerNames", void 0);
+__decorate3([
+  property3.float(0.075)
+], CursorButtonComponent.prototype, "_myScaleOffsetOnHover", void 0);
+__decorate3([
+  property3.float(-0.075)
+], CursorButtonComponent.prototype, "_myScaleOffsetOnDown", void 0);
+__decorate3([
+  property3.float(0.075)
+], CursorButtonComponent.prototype, "_myScaleOffsetOnUp", void 0);
+__decorate3([
+  property3.float(0.1)
+], CursorButtonComponent.prototype, "_myPulseIntensityOnHover", void 0);
+__decorate3([
+  property3.float(0)
+], CursorButtonComponent.prototype, "_myPulseIntensityOnDown", void 0);
+__decorate3([
+  property3.float(0.1)
+], CursorButtonComponent.prototype, "_myPulseIntensityOnUp", void 0);
+__decorate3([
+  property3.float(0)
+], CursorButtonComponent.prototype, "_myPulseIntensityOnUnhover", void 0);
+__decorate3([
+  property3.float(-0.1)
+], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnHover", void 0);
+__decorate3([
+  property3.float(0)
+], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnDown", void 0);
+__decorate3([
+  property3.float(-0.1)
+], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnUp", void 0);
+__decorate3([
+  property3.bool(true)
+], CursorButtonComponent.prototype, "_myUseSpatialAudio", void 0);
+__decorate3([
+  property3.string("")
+], CursorButtonComponent.prototype, "_mySFXOnHover", void 0);
+__decorate3([
+  property3.string("")
+], CursorButtonComponent.prototype, "_mySFXOnDown", void 0);
+__decorate3([
+  property3.string("")
+], CursorButtonComponent.prototype, "_mySFXOnUp", void 0);
+__decorate3([
+  property3.string("")
+], CursorButtonComponent.prototype, "_mySFXOnUnhover", void 0);
+
+// dist/pp/gameplay/cauldron/rough/components/scale_on_spawn_component.js
+import { Component as Component36, Property as Property27 } from "@wonderlandengine/api";
+var ScaleOnSpawnComponent = class extends Component36 {
+  static TypeName = "pp-scale-on-spawn";
+  static Properties = {
+    _myStartDelay: Property27.float(0),
+    _myScaleDuration: Property27.float(0)
+  };
+  init() {
+    this._myTargetScale = vec3_create(1, 1, 1);
+  }
+  start() {
+    this.object.pp_setScale(MathUtils.EPSILON);
+    this._myDelayTimer = new Timer(this._myStartDelay);
+    this._myScaleDurationTimer = new Timer(this._myScaleDuration);
+  }
+  update(dt) {
+    if (this._myDelayTimer.isRunning()) {
+      this._myDelayTimer.update(dt);
+    } else if (this._myScaleDurationTimer.isRunning()) {
+      this._myScaleDurationTimer.update(dt);
+      this.object.pp_setScale(this._myTargetScale.vec3_scale(EasingFunction.easeOut(this._myScaleDurationTimer.getPercentage())));
+    }
+  }
+  onActivate() {
+    this.start();
+  }
+  pp_clone(targetObject) {
+    let clonedComponent = ComponentUtils.cloneDefault(this, targetObject);
+    return clonedComponent;
+  }
+};
+
 // dist/pp/gameplay/grab_throw/grabbable_component.js
-import { Component as Component34, Emitter as Emitter10, PhysXComponent as PhysXComponent6, Property as Property27 } from "@wonderlandengine/api";
-var GrabbableComponent = class extends Component34 {
+import { Component as Component37, Emitter as Emitter10, PhysXComponent as PhysXComponent6, Property as Property28 } from "@wonderlandengine/api";
+var GrabbableComponent = class extends Component37 {
   static TypeName = "pp-grabbable";
   static Properties = {
-    _myThrowLinearVelocityMultiplier: Property27.float(1),
-    _myThrowAngularVelocityMultiplier: Property27.float(1),
-    _myKinematicValueOnRelease: Property27.enum(["True", "False", "Own"], "False"),
-    _myParentOnRelease: Property27.enum(["Scene", "Own"], "Own")
+    _myThrowLinearVelocityMultiplier: Property28.float(1),
+    _myThrowAngularVelocityMultiplier: Property28.float(1),
+    _myKinematicValueOnRelease: Property28.enum(["True", "False", "Own"], "False"),
+    _myParentOnRelease: Property28.enum(["Scene", "Own"], "Own")
   };
   init() {
     this._myGrabbed = false;
@@ -26572,35 +27366,36 @@ var GrabbableComponent = class extends Component34 {
 };
 
 // dist/pp/gameplay/grab_throw/grabber_hand_component.js
-import { Component as Component35, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property28 } from "@wonderlandengine/api";
-var GrabberHandComponent = class extends Component35 {
+import { Component as Component38, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property29 } from "@wonderlandengine/api";
+var GrabberHandComponent = class extends Component38 {
   static TypeName = "pp-grabber-hand";
   static Properties = {
-    _myHandedness: Property28.enum(["Left", "Right"], "Left"),
-    _myGrabButton: Property28.enum(["Select", "Squeeze", "Both", "Both Exclusive"], "Squeeze"),
+    _myHandedness: Property29.enum(["Left", "Right"], "Left"),
+    _myGrabButton: Property29.enum(["Select", "Squeeze", "Both", "Both Exclusive"], "Squeeze"),
     // @"Both Exclusive" means u can use both buttons but you have to use the same button you grabbed with to throw
-    _mySnapGrabbableOnOrigin: Property28.bool(false),
-    _myMaxNumberOfObjects: Property28.int(1),
+    _mySnapGrabbableToOrigin: Property29.bool(false),
+    _myMaxNumberOfObjects: Property29.int(1),
     // How many objects you can grab at the same time
     // ADVANCED SETTINGS
-    _myThrowVelocitySource: Property28.enum(["Hand", "Grabbable"], "Hand"),
-    _myThrowLinearVelocityMultiplier: Property28.float(1),
+    _myThrowVelocitySource: Property29.enum(["Hand", "Grabbable"], "Hand"),
+    _myThrowLinearVelocityMultiplier: Property29.float(1),
     // Multiply the overall throw speed, so slow throws will be multiplied too
-    _myThrowMaxLinearSpeed: Property28.float(15),
-    _myThrowAngularVelocityMultiplier: Property28.float(0.5),
-    _myThrowMaxAngularSpeed: Property28.float(1080),
+    _myThrowMaxLinearSpeed: Property29.float(15),
+    _myThrowAngularVelocityMultiplier: Property29.float(0.5),
+    _myThrowMaxAngularSpeed: Property29.float(1080),
     // @Degrees
-    _myThrowLinearVelocityBoost: Property28.float(1.75),
+    _myThrowLinearVelocityBoost: Property29.float(1.75),
     // This boost is applied from 0% to 100% based on how fast you throw, so slow throws are not affected
-    _myThrowLinearVelocityBoostMinSpeedThreshold: Property28.float(0.6),
+    _myThrowLinearVelocityBoostMinSpeedThreshold: Property29.float(0.6),
     // 0% boost is applied if plain throw speed is under this value
-    _myThrowLinearVelocityBoostMaxSpeedThreshold: Property28.float(2.5)
+    _myThrowLinearVelocityBoostMaxSpeedThreshold: Property29.float(2.5)
     // 100% boost is applied if plain throw speed is over this value
   };
   init() {
     this._myGrabbables = [];
     this._myGamepad = null;
     this._myActiveGrabButton = null;
+    this._myPrevInputSourceType = null;
     this._myLinearVelocityHistorySize = 5;
     this._myLinearVelocityHistorySpeedAverageSamplesFromStart = 1;
     this._myLinearVelocityHistoryDirectionAverageSamplesFromStart = 3;
@@ -26626,6 +27421,29 @@ var GrabberHandComponent = class extends Component35 {
   }
   update(dt) {
     this._myCollisionsCollector.update(dt);
+    const currentInputSource = this._myGamepad.getHandPose().getInputSource();
+    let currentInputSourceType = null;
+    if (currentInputSource != null) {
+      currentInputSourceType = InputUtils.getInputSourceType(currentInputSource);
+    }
+    if (this._myPrevInputSourceType != currentInputSourceType) {
+      this.throw();
+    }
+    this._myPrevInputSourceType = currentInputSourceType;
+    if (this._myGrabButton != 1 || currentInputSourceType == InputSourceType.TRACKED_HAND) {
+      if (this._myGamepad.getButtonInfo(GamepadButtonID.SELECT).isPressStart()) {
+        this._grab(this, GamepadButtonID.SELECT);
+      } else if (this._myGamepad.getButtonInfo(GamepadButtonID.SELECT).isPressEnd()) {
+        this._throw(this, GamepadButtonID.SELECT);
+      }
+    }
+    if (this._myGrabButton != 0) {
+      if (this._myGamepad.getButtonInfo(GamepadButtonID.SQUEEZE).isPressStart()) {
+        this._grab(this, GamepadButtonID.SQUEEZE);
+      } else if (this._myGamepad.getButtonInfo(GamepadButtonID.SQUEEZE).isPressEnd()) {
+        this._throw(this, GamepadButtonID.SQUEEZE);
+      }
+    }
     if (this._myGrabbables.length > 0) {
       this._updateLinearVelocityHistory();
       this._updateAngularVelocityHistory();
@@ -26655,38 +27473,8 @@ var GrabberHandComponent = class extends Component35 {
   unregisterThrowEventListener(id) {
     this._myThrowEmitter.remove(id);
   }
-  onActivate() {
-    if (this._myGamepad != null) {
-      if (this._myGrabButton == 0) {
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SELECT));
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SELECT));
-      } else if (this._myGrabButton == 1) {
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SQUEEZE));
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SQUEEZE));
-      } else {
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SQUEEZE));
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SQUEEZE));
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this, this._grab.bind(this, GamepadButtonID.SELECT));
-        this._myGamepad.registerButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this, this._throw.bind(this, GamepadButtonID.SELECT));
-      }
-    }
-  }
   onDeactivate() {
     this.throw();
-    if (this._myGamepad != null) {
-      if (this._myGrabButton == 0) {
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this);
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this);
-      } else if (this._myGrabButton == 1) {
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this);
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this);
-      } else {
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_START, this);
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.PRESS_END, this);
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_START, this);
-        this._myGamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.PRESS_END, this);
-      }
-    }
   }
   _grab(grabButton) {
     if (this._myGrabbables.length >= this._myMaxNumberOfObjects) {
@@ -26696,7 +27484,7 @@ var GrabberHandComponent = class extends Component35 {
       let grabbablesToGrab = [];
       let collisions = this._myCollisionsCollector.getCollisions();
       for (let i = 0; i < collisions.length; i++) {
-        let grabbable = collisions[i].pp_getComponent(GrabbableComponent);
+        let grabbable = collisions[i].object.pp_getComponent(GrabbableComponent);
         if (grabbable && grabbable.active) {
           grabbablesToGrab.push(grabbable);
         }
@@ -26715,7 +27503,7 @@ var GrabberHandComponent = class extends Component35 {
           this._myGrabbables.push(grabbableData);
           grabbableToGrab.grab(this.object);
           grabbableToGrab.registerReleaseEventListener(this, this._onRelease.bind(this));
-          if (this._mySnapGrabbableOnOrigin) {
+          if (this._mySnapGrabbableToOrigin) {
             grabbableToGrab.object.pp_resetPositionLocal();
           }
           this._myGrabEmitter.notify(this, grabbableToGrab);
@@ -27300,20 +28088,20 @@ var CADummyServer = class {
 };
 
 // dist/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard_component.js
-import { Component as Component36, Property as Property29, TextComponent as TextComponent7 } from "@wonderlandengine/api";
-var CADisplayLeaderboardComponent = class extends Component36 {
+import { Component as Component39, Property as Property30, TextComponent as TextComponent9 } from "@wonderlandengine/api";
+var CADisplayLeaderboardComponent = class extends Component39 {
   static TypeName = "pp-ca-display-leaderboard";
   static Properties = {
-    _myUsernamesTextObject: Property29.object(),
-    _myScoresTextObject: Property29.object(),
-    _myLeaderboardID: Property29.string(""),
-    _myLocal: Property29.bool(false),
-    _myAscending: Property29.bool(false),
-    _myScoresAmount: Property29.int(10),
-    _myScoreFormat: Property29.enum(["Value", "Hours:Minutes:Seconds", "Minutes:Seconds", "Seconds", "Hours:Minutes", "Minutes"], "Value"),
-    _myPositionAndUsernameSeparator: Property29.string(" - "),
-    _myNumberOfLinesBetweenScores: Property29.int(1),
-    _myAddDefaultCADummyServer: Property29.bool(false)
+    _myUsernamesTextObject: Property30.object(),
+    _myScoresTextObject: Property30.object(),
+    _myLeaderboardID: Property30.string(""),
+    _myLocal: Property30.bool(false),
+    _myAscending: Property30.bool(false),
+    _myScoresAmount: Property30.int(10),
+    _myScoreFormat: Property30.enum(["Value", "Hours:Minutes:Seconds", "Minutes:Seconds", "Seconds", "Hours:Minutes", "Minutes"], "Value"),
+    _myPositionAndUsernameSeparator: Property30.string(" - "),
+    _myNumberOfLinesBetweenScores: Property30.int(1),
+    _myAddDefaultCADummyServer: Property30.bool(false)
   };
   init() {
     this._myUsernamesTextComponent = null;
@@ -27332,10 +28120,10 @@ var CADisplayLeaderboardComponent = class extends Component36 {
     if (!this._myStarted) {
       this._myStarted = true;
       if (this._myUsernamesTextObject != null) {
-        this._myUsernamesTextComponent = this._myUsernamesTextObject.pp_getComponent(TextComponent7);
+        this._myUsernamesTextComponent = this._myUsernamesTextObject.pp_getComponent(TextComponent9);
       }
       if (this._myScoresTextObject != null) {
-        this._myScoresTextComponent = this._myScoresTextObject.pp_getComponent(TextComponent7);
+        this._myScoresTextComponent = this._myScoresTextObject.pp_getComponent(TextComponent9);
       }
       this.updateLeaderboard();
     }
@@ -28113,6 +28901,7 @@ var PlayerHeadManagerParams = class {
     this.myDefaultHeightVRWithoutFloor = 0;
     this.myDefaultHeightVRWithFloor = null;
     this.myForeheadExtraHeight = 0;
+    this.myFeetRotationKeepUp = true;
     this.myEngine = engine;
     this.myDebugEnabled = false;
   }
@@ -28188,8 +28977,8 @@ var PlayerHeadManager = class {
   getRotationHeadQuat(outRotationHeadQuat = quat_create()) {
     return this.getHead().pp_getRotationQuat(outRotationHeadQuat);
   }
-  isSynced() {
-    return this._myIsSyncedDelayCounter == 0 && this._myDelaySessionChangeResyncCounter == 0 && this._myDelayNextEnterSessionSetHeightVRCounter == 0 && this._myDelayBlurEndResyncCounter == 0 && !this._myDelayBlurEndResyncTimer.isRunning() && !this._mySessionBlurred;
+  isSynced(ignoreSessionBlurredState = false) {
+    return this._myIsSyncedDelayCounter == 0 && this._myDelaySessionChangeResyncCounter == 0 && this._myDelayNextEnterSessionSetHeightVRCounter == 0 && this._myDelayBlurEndResyncCounter == 0 && !this._myDelayBlurEndResyncTimer.isRunning() && (ignoreSessionBlurredState || !this._mySessionBlurred);
   }
   setHeightHead(height, setOnlyForActiveOne = true) {
     this._setHeightHead(height, height, height, setOnlyForActiveOne);
@@ -29065,8 +29854,10 @@ var PlayerTransformManagerParams = class {
     this.myIsLeaningExtraCheckCallback = null;
     this.myIsHoppingExtraCheckCallback = null;
     this.myIsFarExtraCheckCallback = null;
+    this.myAllowUpdateValidToRealWhenBlurred = false;
     this.myResetToValidOnEnterSession = false;
     this.myResetToValidOnExitSession = false;
+    this.myResetToValidOnSessionHiddenEnd = false;
     this.myAlwaysResetRealPositionNonVR = false;
     this.myAlwaysResetRealRotationNonVR = false;
     this.myAlwaysResetRealHeightNonVR = false;
@@ -29088,6 +29879,7 @@ var PlayerTransformManagerParams = class {
   }
   destroy() {
     this._myDestroyed = true;
+    XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
     XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
   }
   isDestroyed() {
@@ -29123,6 +29915,8 @@ var PlayerTransformManager = class {
     this._myIsRealHeadositionValid = false;
     this._myResetRealOnHeadSynced = false;
     this._myResetHeadToFeetOnNextUpdateValidToReal = false;
+    this._myVisibilityChangeEventListener = null;
+    this._mySessionHasBeenHidden = false;
     this._myActive = true;
     this._myDestroyed = false;
   }
@@ -29443,6 +30237,17 @@ var PlayerTransformManager = class {
         }
       }
     }
+    this._myVisibilityChangeEventListener = function(event) {
+      if (event.session.visibilityState == "hidden") {
+        this._mySessionHasBeenHidden = true;
+      } else if (this._mySessionHasBeenHidden) {
+        this._mySessionHasBeenHidden = false;
+        if (this._myParams.myResetToValidOnSessionHiddenEnd) {
+          this._myResetRealOnHeadSynced = true;
+        }
+      }
+    }.bind(this);
+    session.addEventListener("visibilitychange", this._myVisibilityChangeEventListener);
   }
   _onXRSessionEnd() {
     if (this._myActive) {
@@ -29450,6 +30255,7 @@ var PlayerTransformManager = class {
         this._myResetRealOnHeadSynced = true;
       }
     }
+    this._myVisibilityChangeEventListener = null;
   }
   _updatePositionsValid(dt) {
   }
@@ -29563,153 +30369,154 @@ PlayerTransformManager.prototype._updateValidToReal = function() {
   let newFeetPosition = vec3_create();
   let floatingTransformQuat = quat2_create();
   return function _updateValidToReal(dt) {
-    if (this.getPlayerHeadManager().isSynced()) {
-      this._updateCollisionHeight();
-      this._myIsBodyColliding = false;
-      this._myIsHeadColliding = false;
-      this._myIsLeaning = false;
-      this._myIsHopping = false;
-      this._myIsFar = false;
-      movementToCheck = this.getPositionReal(positionReal).vec3_sub(this.getPosition(position), movementToCheck);
-      if (movementToCheck.vec3_length() > 1e-4) {
-        this._myLastValidMovementDirection = movementToCheck.vec3_normalize(this._myLastValidMovementDirection);
+    const isHeadSynced = this.getPlayerHeadManager().isSynced(this._myParams.myAllowUpdateValidToRealWhenBlurred);
+    this._updateCollisionHeight();
+    this._myIsBodyColliding = false;
+    this._myIsHeadColliding = false;
+    this._myIsLeaning = false;
+    this._myIsHopping = false;
+    this._myIsFar = false;
+    movementToCheck = this.getPositionReal(positionReal).vec3_sub(this.getPosition(position), movementToCheck);
+    if (isHeadSynced && movementToCheck.vec3_length() > 1e-4) {
+      this._myLastValidMovementDirection = movementToCheck.vec3_normalize(this._myLastValidMovementDirection);
+    }
+    if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FAR)) {
+      if (this._myParams.myMaxDistanceFromRealToSyncEnabled && movementToCheck.vec3_length() > this._myParams.myMaxDistanceFromRealToSync) {
+        this._myIsFar = true;
+      } else if (this._myParams.myIsFarExtraCheckCallback != null && this._myParams.myIsFarExtraCheckCallback(this)) {
+        this._myIsFar = true;
       }
-      if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FAR)) {
-        if (this._myParams.myMaxDistanceFromRealToSyncEnabled && movementToCheck.vec3_length() > this._myParams.myMaxDistanceFromRealToSync) {
-          this._myIsFar = true;
-        } else if (this._myParams.myIsFarExtraCheckCallback != null && this._myParams.myIsFarExtraCheckCallback(this)) {
-          this._myIsFar = true;
-        }
-      }
-      collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-      collisionRuntimeParams.myIsOnGround = true;
-      transformQuat2 = this.getTransformQuat(transformQuat2);
-      newPosition.vec3_copy(this._myValidPosition);
-      if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.BODY_COLLIDING)) {
-        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat2, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
-        if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
-          if (Math.pp_clamp(this._myRealMovementCollisionCheckParams.myHeight, this._myParams.myIsBodyCollidingWhenHeightBelowValue, this._myParams.myIsBodyCollidingWhenHeightAboveValue) != this._myRealMovementCollisionCheckParams.myHeight) {
+    }
+    collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+    collisionRuntimeParams.myIsOnGround = true;
+    transformQuat2 = this.getTransformQuat(transformQuat2);
+    newPosition.vec3_copy(this._myValidPosition);
+    if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.BODY_COLLIDING)) {
+      CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat2, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
+      if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
+        if (Math.pp_clamp(this._myRealMovementCollisionCheckParams.myHeight, this._myParams.myIsBodyCollidingWhenHeightBelowValue, this._myParams.myIsBodyCollidingWhenHeightAboveValue) != this._myRealMovementCollisionCheckParams.myHeight) {
+          this._myIsBodyColliding = true;
+        } else {
+          if (this._myParams.myIsBodyCollidingExtraCheckCallback != null && this._myParams.myIsBodyCollidingExtraCheckCallback(this)) {
             this._myIsBodyColliding = true;
           } else {
-            if (this._myParams.myIsBodyCollidingExtraCheckCallback != null && this._myParams.myIsBodyCollidingExtraCheckCallback(this)) {
-              this._myIsBodyColliding = true;
+            this._myIsBodyColliding = false;
+            newPosition.vec3_copy(collisionRuntimeParams.myNewPosition);
+          }
+        }
+      } else {
+        this._myIsBodyColliding = true;
+      }
+    }
+    if (this._myParams.myAlwaysSyncPositionWithReal) {
+      newPosition.vec3_copy(positionReal);
+    }
+    if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FLOATING)) {
+      if (!this._myIsBodyColliding) {
+        movementToCheck = newPosition.vec3_sub(position, movementToCheck);
+      } else {
+        movementToCheck = positionReal.vec3_sub(position, movementToCheck);
+      }
+      collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+      floatingTransformQuat.quat2_setPositionRotationQuat(this._myValidPosition, this._myValidRotationQuat);
+      CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
+      if (collisionRuntimeParams.myIsOnGround) {
+        transformUp = transformQuat2.quat2_getUp(transformUp);
+        verticalMovement = movementToCheck.vec3_componentAlongAxis(transformUp, verticalMovement);
+        let isVertical = !verticalMovement.vec3_isZero(1e-5);
+        if (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovement) {
+          let movementStepAmount = 1;
+          movementStep.vec3_copy(movementToCheck);
+          if (!movementToCheck.vec3_isZero(1e-5) && this._myParams.myFloatingSplitCheckEnabled) {
+            let minLength = this._myParams.myFloatingSplitCheckMinLength;
+            let maxLength = this._myParams.myFloatingSplitCheckMaxLength;
+            let maxSteps = this._myParams.myFloatingSplitCheckMaxSteps != null ? this._myParams.myFloatingSplitCheckMaxSteps : 1;
+            let movementLength = movementToCheck.vec3_length();
+            let equalStepLength = movementLength / maxSteps;
+            let stepLength = Math.pp_clamp(equalStepLength, minLength, maxLength);
+            if (stepLength != equalStepLength) {
+              movementStepAmount = Math.ceil(movementLength / stepLength);
+              movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(stepLength, movementStep);
+              if (this._myParams.myFloatingSplitCheckMaxSteps != null) {
+                movementStepAmount = Math.min(movementStepAmount, maxSteps);
+              }
             } else {
-              this._myIsBodyColliding = false;
-              newPosition.vec3_copy(collisionRuntimeParams.myNewPosition);
+              movementStepAmount = maxSteps;
+              movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(equalStepLength, movementStep);
+            }
+            movementStepAmount = Math.max(1, movementStepAmount);
+            if (movementStepAmount == 1) {
+              movementStep.vec3_copy(movementToCheck);
             }
           }
-        } else {
-          this._myIsBodyColliding = true;
-        }
-      }
-      if (this._myParams.myAlwaysSyncPositionWithReal) {
-        newPosition.vec3_copy(positionReal);
-      }
-      if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.FLOATING)) {
-        if (!this._myIsBodyColliding) {
-          movementToCheck = newPosition.vec3_sub(position, movementToCheck);
-        } else {
-          movementToCheck = positionReal.vec3_sub(position, movementToCheck);
-        }
-        collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-        floatingTransformQuat.quat2_setPositionRotationQuat(this._myValidPosition, this._myValidRotationQuat);
-        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
-        if (collisionRuntimeParams.myIsOnGround) {
-          transformUp = transformQuat2.quat2_getUp(transformUp);
-          verticalMovement = movementToCheck.vec3_componentAlongAxis(transformUp, verticalMovement);
-          let isVertical = !verticalMovement.vec3_isZero(1e-5);
-          if (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovement) {
-            let movementStepAmount = 1;
-            movementStep.vec3_copy(movementToCheck);
-            if (!movementToCheck.vec3_isZero(1e-5) && this._myParams.myFloatingSplitCheckEnabled) {
-              let minLength = this._myParams.myFloatingSplitCheckMinLength;
-              let maxLength = this._myParams.myFloatingSplitCheckMaxLength;
-              let maxSteps = this._myParams.myFloatingSplitCheckMaxSteps != null ? this._myParams.myFloatingSplitCheckMaxSteps : 1;
-              let movementLength = movementToCheck.vec3_length();
-              let equalStepLength = movementLength / maxSteps;
-              let stepLength = Math.pp_clamp(equalStepLength, minLength, maxLength);
-              if (stepLength != equalStepLength) {
-                movementStepAmount = Math.ceil(movementLength / stepLength);
-                movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(stepLength, movementStep);
-                if (this._myParams.myFloatingSplitCheckMaxSteps != null) {
-                  movementStepAmount = Math.min(movementStepAmount, maxSteps);
-                }
-              } else {
-                movementStepAmount = maxSteps;
-                movementStep = movementStep.vec3_normalize(movementStep).vec3_scale(equalStepLength, movementStep);
-              }
-              movementStepAmount = Math.max(1, movementStepAmount);
-              if (movementStepAmount == 1) {
-                movementStep.vec3_copy(movementToCheck);
-              }
-            }
-            let isOnValidGroundAngle = collisionRuntimeParams.myGroundAngle <= this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 1e-4;
-            movementChecked.vec3_zero();
-            newFeetPosition.vec3_copy(this._myValidPosition);
-            collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-            let atLeastOneNotOnGround = false;
-            let isOneOnGroundBetweenNoGround = false;
-            let isLastOnGround = false;
-            let isOneOnSteepGround = false;
-            for (let i = 0; i < movementStepAmount; i++) {
-              if (movementStepAmount == 1 || i != movementStepAmount - 1) {
-                currentMovementStep.vec3_copy(movementStep);
-              } else {
-                currentMovementStep = movementToCheck.vec3_sub(movementChecked, currentMovementStep);
-              }
-              newFeetPosition = newFeetPosition.vec3_add(currentMovementStep, newFeetPosition);
-              floatingTransformQuat.quat2_setPositionRotationQuat(newFeetPosition, this._myValidRotationQuat);
-              collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
-              CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
-              movementChecked = movementChecked.vec3_add(currentMovementStep, movementChecked);
-              if (!collisionRuntimeParams.myIsOnGround) {
-                atLeastOneNotOnGround = true;
-              } else {
-                if (collisionRuntimeParams.myGroundAngle > this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 1e-4) {
-                  isOneOnSteepGround = true;
-                }
-                if (atLeastOneNotOnGround) {
-                  isOneOnGroundBetweenNoGround = true;
-                }
-                if (i == movementStepAmount - 1) {
-                  isLastOnGround = true;
-                }
-              }
-            }
-            let isFloatingOnSteepGroundFail = isOneOnSteepGround && isOnValidGroundAngle && !this._myParams.myIsFloatingValidIfSteepGround && (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovementAndSteepGround);
-            if (atLeastOneNotOnGround || isFloatingOnSteepGroundFail) {
-              if (isOneOnGroundBetweenNoGround) {
-                this._myIsHopping = true;
-              } else {
-                this._myIsLeaning = true;
-              }
+          let isOnValidGroundAngle = collisionRuntimeParams.myGroundAngle <= this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 1e-4;
+          movementChecked.vec3_zero();
+          newFeetPosition.vec3_copy(this._myValidPosition);
+          collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+          let atLeastOneNotOnGround = false;
+          let isOneOnGroundBetweenNoGround = false;
+          let isLastOnGround = false;
+          let isOneOnSteepGround = false;
+          for (let i = 0; i < movementStepAmount; i++) {
+            if (movementStepAmount == 1 || i != movementStepAmount - 1) {
+              currentMovementStep.vec3_copy(movementStep);
             } else {
+              currentMovementStep = movementToCheck.vec3_sub(movementChecked, currentMovementStep);
+            }
+            newFeetPosition = newFeetPosition.vec3_add(currentMovementStep, newFeetPosition);
+            floatingTransformQuat.quat2_setPositionRotationQuat(newFeetPosition, this._myValidRotationQuat);
+            collisionRuntimeParams.copy(this._myCollisionRuntimeParams);
+            CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).updateSurfaceInfo(floatingTransformQuat, this._myRealMovementCollisionCheckParams, collisionRuntimeParams);
+            movementChecked = movementChecked.vec3_add(currentMovementStep, movementChecked);
+            if (!collisionRuntimeParams.myIsOnGround) {
+              atLeastOneNotOnGround = true;
+            } else {
+              if (collisionRuntimeParams.myGroundAngle > this._myRealMovementCollisionCheckParams.myGroundAngleToIgnore + 1e-4) {
+                isOneOnSteepGround = true;
+              }
+              if (atLeastOneNotOnGround) {
+                isOneOnGroundBetweenNoGround = true;
+              }
+              if (i == movementStepAmount - 1) {
+                isLastOnGround = true;
+              }
+            }
+          }
+          let isFloatingOnSteepGroundFail = isOneOnSteepGround && isOnValidGroundAngle && !this._myParams.myIsFloatingValidIfSteepGround && (!isVertical || !this._myParams.myIsFloatingValidIfVerticalMovementAndSteepGround);
+          if (atLeastOneNotOnGround || isFloatingOnSteepGroundFail) {
+            if (isOneOnGroundBetweenNoGround) {
+              this._myIsHopping = true;
+            } else {
+              this._myIsLeaning = true;
+            }
+          } else {
+            this._myIsLeaning = false;
+            this._myIsHopping = false;
+            if (this._myParams.myIsLeaningExtraCheckCallback != null && this._myParams.myIsLeaningExtraCheckCallback(this)) {
+              this._myIsLeaning = true;
+            } else if (this._myParams.myIsHoppingExtraCheckCallback != null && this._myParams.myIsHoppingExtraCheckCallback(this)) {
+              this._myIsHopping = true;
+            }
+          }
+          if (this._myIsLeaning) {
+            let distance2 = movementToCheck.vec3_length();
+            if (this._myParams.myIsLeaningValidAboveDistance && distance2 > this._myParams.myLeaningValidDistance) {
+              this._myIsLeaning = false;
+            }
+          }
+          if (this._myIsLeaning || this._myIsHopping) {
+            if (isLastOnGround && this._myParams.myIsFloatingValidIfRealOnGround) {
               this._myIsLeaning = false;
               this._myIsHopping = false;
-              if (this._myParams.myIsLeaningExtraCheckCallback != null && this._myParams.myIsLeaningExtraCheckCallback(this)) {
-                this._myIsLeaning = true;
-              } else if (this._myParams.myIsHoppingExtraCheckCallback != null && this._myParams.myIsHoppingExtraCheckCallback(this)) {
-                this._myIsHopping = true;
-              }
-            }
-            if (this._myIsLeaning) {
-              let distance2 = movementToCheck.vec3_length();
-              if (this._myParams.myIsLeaningValidAboveDistance && distance2 > this._myParams.myLeaningValidDistance) {
-                this._myIsLeaning = false;
-              }
-            }
-            if (this._myIsLeaning || this._myIsHopping) {
-              if (isLastOnGround && this._myParams.myIsFloatingValidIfRealOnGround) {
-                this._myIsLeaning = false;
-                this._myIsHopping = false;
-              } else if (isLastOnGround && isVertical && this._myParams.myIsFloatingValidIfVerticalMovementAndRealOnGround) {
-                this._myIsLeaning = false;
-                this._myIsHopping = false;
-              }
+            } else if (isLastOnGround && isVertical && this._myParams.myIsFloatingValidIfVerticalMovementAndRealOnGround) {
+              this._myIsLeaning = false;
+              this._myIsHopping = false;
             }
           }
         }
       }
+    }
+    if (isHeadSynced) {
       if ((this.isSynced(this._myParams.mySyncPositionFlagMap) || this._myParams.myAlwaysSyncPositionWithReal) && !this._myParams.mySyncPositionDisabled) {
         this._myValidPosition.vec3_copy(newPosition);
       }
@@ -29720,8 +30527,8 @@ PlayerTransformManager.prototype._updateValidToReal = function() {
         this._myValidHeight = this._myRealMovementCollisionCheckParams.myHeight;
         this._updateCollisionHeight();
       }
-      this._updateValidHeadToRealHead(dt);
     }
+    this._updateValidHeadToRealHead(dt);
   };
 }();
 PlayerTransformManager.prototype._updateValidHeadToRealHead = function() {
@@ -29734,74 +30541,52 @@ PlayerTransformManager.prototype._updateValidHeadToRealHead = function() {
   let backupHorizontalBlockLayerFlags = new PhysicsLayerFlags();
   let backupVerticalBlockLayerFlags = new PhysicsLayerFlags();
   return function _updateValidHeadToRealHead(dt) {
-    if (this.getPlayerHeadManager().isSynced()) {
-      this._myIsHeadColliding = false;
-      backupHorizontalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags);
-      backupVerticalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags);
-      let backupVerticalMovementReduceEnabled = this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled;
-      let backupGroundAngleToIgnore = this._myHeadCollisionCheckParams.myGroundAngleToIgnore;
-      let backupGroundAngleToIgnoreWithPerceivedAngle = this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
-      let backupHorizontalMovementGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
-      let backupHorizontalPositionGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
-      let backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
-      let headReducedVerticalMovementFeetAdjustment = false;
-      let firstHeadCollidingCheckDone = false;
-      do {
+    const isHeadSynced = this.getPlayerHeadManager().isSynced(this._myParams.myAllowUpdateValidToRealWhenBlurred);
+    this._myIsHeadColliding = false;
+    backupHorizontalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags);
+    backupVerticalBlockLayerFlags.copy(this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags);
+    let backupVerticalMovementReduceEnabled = this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled;
+    let backupGroundAngleToIgnore = this._myHeadCollisionCheckParams.myGroundAngleToIgnore;
+    let backupGroundAngleToIgnoreWithPerceivedAngle = this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
+    let backupHorizontalMovementGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
+    let backupHorizontalPositionGroundAngleIgnoreHeight = this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
+    let backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
+    let headReducedVerticalMovementFeetAdjustment = false;
+    let firstHeadCollidingCheckDone = false;
+    do {
+      if (isHeadSynced) {
         if (firstHeadCollidingCheckDone && this._myResetHeadToFeetOnNextUpdateValidToReal) {
           this._myResetHeadToFeetOnNextUpdateValidToReal = false;
           this.resetHeadToFeet();
         }
-        if (this._myResetHeadToFeetOnNextUpdateValidToReal) {
-          this._myValidPositionHead.vec3_copy(this._myValidPositionHeadBackupForResetToFeet);
+      }
+      let resetHeadToFeetDirty = this._myResetHeadToFeetDirty;
+      if (this._myResetHeadToFeetOnNextUpdateValidToReal) {
+        this._myValidPositionHead.vec3_copy(this._myValidPositionHeadBackupForResetToFeet);
+        if (isHeadSynced) {
           this._myResetHeadToFeetDirty = false;
         }
-        if (this._myResetHeadToFeetDirty) {
-          if (this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet != null) {
-            this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
-            this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
-          }
-          if (this._myParams.myResetHeadToFeetMoveTowardReal) {
-            this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = true;
-          }
-          if (this._myParams.myResetHeadToFeetGroudnAngleIgnoreEnabled) {
-            this._myHeadCollisionCheckParams.myGroundAngleToIgnore = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnore;
-            this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
-            this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
-            this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
-            this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
-          }
+        resetHeadToFeetDirty = false;
+      }
+      if (resetHeadToFeetDirty) {
+        if (this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet != null) {
+          this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
+          this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(this._myParams.myHeadCollisionBlockLayerFlagsForResetToFeet);
+        }
+        if (this._myParams.myResetHeadToFeetMoveTowardReal) {
+          this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = true;
+        }
+        if (this._myParams.myResetHeadToFeetGroudnAngleIgnoreEnabled) {
+          this._myHeadCollisionCheckParams.myGroundAngleToIgnore = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnore;
+          this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = this._myParams.myMovementCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle;
+          this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight;
+          this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = this._myParams.myMovementCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight;
+          this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = this._myParams.myMovementCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
+        }
+        if (isHeadSynced) {
           this._myResetHeadToFeetDirty = false;
-        } else {
-          this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(backupHorizontalBlockLayerFlags);
-          this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(backupVerticalBlockLayerFlags);
-          this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = backupVerticalMovementReduceEnabled;
-          this._myHeadCollisionCheckParams.myGroundAngleToIgnore = backupGroundAngleToIgnore;
-          this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = backupGroundAngleToIgnoreWithPerceivedAngle;
-          this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = backupHorizontalMovementGroundAngleIgnoreHeight;
-          this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = backupHorizontalPositionGroundAngleIgnoreHeight;
-          this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
         }
-        movementToCheck = this.getPositionHeadReal(positionReal).vec3_sub(this.getPositionHead(position), movementToCheck);
-        collisionRuntimeParams.reset();
-        transformQuat2 = this.getTransformHeadQuat(transformQuat2);
-        newPositionHead.vec3_copy(this._myValidPositionHead);
-        if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.HEAD_COLLIDING)) {
-          CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat2, this._myHeadCollisionCheckParams, collisionRuntimeParams);
-          if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
-            if (!backupVerticalMovementReduceEnabled && collisionRuntimeParams.myHasReducedVerticalMovement) {
-              this._myIsHeadColliding = true;
-              headReducedVerticalMovementFeetAdjustment = true;
-            } else {
-              this._myIsHeadColliding = false;
-            }
-            newPositionHead.vec3_copy(collisionRuntimeParams.myNewPosition);
-          } else {
-            this._myIsHeadColliding = true;
-          }
-        }
-        firstHeadCollidingCheckDone = true;
-      } while (this._myIsHeadColliding && this._myResetHeadToFeetOnNextUpdateValidToReal);
-      {
+      } else {
         this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(backupHorizontalBlockLayerFlags);
         this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(backupVerticalBlockLayerFlags);
         this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = backupVerticalMovementReduceEnabled;
@@ -29811,22 +30596,55 @@ PlayerTransformManager.prototype._updateValidHeadToRealHead = function() {
         this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = backupHorizontalPositionGroundAngleIgnoreHeight;
         this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
       }
+      movementToCheck = this.getPositionHeadReal(positionReal).vec3_sub(this.getPositionHead(position), movementToCheck);
+      collisionRuntimeParams.reset();
+      transformQuat2 = this.getTransformHeadQuat(transformQuat2);
+      newPositionHead.vec3_copy(this._myValidPositionHead);
+      if (this._myParams.mySyncEnabledFlagMap.get(PlayerTransformManagerSyncFlag.HEAD_COLLIDING)) {
+        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movementToCheck, transformQuat2, this._myHeadCollisionCheckParams, collisionRuntimeParams);
+        if (!collisionRuntimeParams.myHorizontalMovementCanceled && !collisionRuntimeParams.myVerticalMovementCanceled) {
+          if (!backupVerticalMovementReduceEnabled && collisionRuntimeParams.myHasReducedVerticalMovement) {
+            this._myIsHeadColliding = true;
+            headReducedVerticalMovementFeetAdjustment = true;
+          } else {
+            this._myIsHeadColliding = false;
+          }
+          newPositionHead.vec3_copy(collisionRuntimeParams.myNewPosition);
+        } else {
+          this._myIsHeadColliding = true;
+        }
+      }
+      firstHeadCollidingCheckDone = true;
+    } while (this._myIsHeadColliding && isHeadSynced && this._myResetHeadToFeetOnNextUpdateValidToReal);
+    {
+      this._myHeadCollisionCheckParams.myHorizontalBlockLayerFlags.copy(backupHorizontalBlockLayerFlags);
+      this._myHeadCollisionCheckParams.myVerticalBlockLayerFlags.copy(backupVerticalBlockLayerFlags);
+      this._myHeadCollisionCheckParams.myVerticalMovementReduceEnabled = backupVerticalMovementReduceEnabled;
+      this._myHeadCollisionCheckParams.myGroundAngleToIgnore = backupGroundAngleToIgnore;
+      this._myHeadCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = backupGroundAngleToIgnoreWithPerceivedAngle;
+      this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreHeight = backupHorizontalMovementGroundAngleIgnoreHeight;
+      this._myHeadCollisionCheckParams.myHorizontalPositionGroundAngleIgnoreHeight = backupHorizontalPositionGroundAngleIgnoreHeight;
+      this._myHeadCollisionCheckParams.myHorizontalMovementGroundAngleIgnoreMaxMovementLeft = backupHorizontalMovementGroundAngleIgnoreMaxMovementLeft;
+    }
+    if (isHeadSynced) {
       this._myResetHeadToFeetOnNextUpdateValidToReal = false;
       this._myResetHeadToFeetDirty = false;
-      if (this._myParams.myAlwaysSyncHeadPositionWithReal) {
-        newPositionHead.vec3_copy(positionReal);
-      }
-      let backupIsHeadColliding = this._myIsHeadColliding;
-      if (headReducedVerticalMovementFeetAdjustment) {
-        this._myIsHeadColliding = false;
-      }
+    }
+    if (this._myParams.myAlwaysSyncHeadPositionWithReal) {
+      newPositionHead.vec3_copy(positionReal);
+    }
+    let backupIsHeadColliding = this._myIsHeadColliding;
+    if (headReducedVerticalMovementFeetAdjustment) {
+      this._myIsHeadColliding = false;
+    }
+    if (isHeadSynced) {
       if (this.isSynced(this._myParams.mySyncPositionHeadFlagMap) || this._myParams.myAlwaysSyncHeadPositionWithReal || this.isSynced(this._myParams.mySyncPositionFlagMap) && this._myParams.myAlwaysSyncPositionWithReal) {
         this._myValidPositionHead.vec3_copy(newPositionHead);
         this._myValidPositionHeadBackupForResetToFeet.vec3_copy(this._myValidPositionHead);
       }
-      if (headReducedVerticalMovementFeetAdjustment) {
-        this._myIsHeadColliding = backupIsHeadColliding;
-      }
+    }
+    if (headReducedVerticalMovementFeetAdjustment) {
+      this._myIsHeadColliding = backupIsHeadColliding;
     }
   };
 }();
@@ -30030,13 +30848,15 @@ PlayerTransformManager.prototype.resetHeadToFeet = function() {
 var PlayerLocomotionRotateParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerHeadManager = null;
+    this.myPlayerTransformManager = null;
     this.myHorizontalRotationEnabled = true;
     this.myVerticalRotationEnabled = true;
     this.myMaxRotationSpeed = 0;
     this.myIsSnapTurn = false;
     this.mySnapTurnOnlyVR = false;
-    this.mySmoothSnapEnabled = true;
-    this.mySmoothSnapSpeedDegrees = 240;
+    this.mySnapTurnAngle = 0;
+    this.mySmoothSnapEnabled = false;
+    this.mySmoothSnapSpeedDegrees = 0;
     this.myRotationMinStickIntensityThreshold = 0;
     this.mySnapTurnActivateThreshold = 0;
     this.mySnapTurnResetThreshold = 0;
@@ -32122,12 +32942,12 @@ PlayerLocomotionTeleportDetectionState.prototype._getVisibilityCheckPositions = 
 }();
 
 // dist/pp/gameplay/experimental/locomotion/legacy/locomotion/teleport/player_locomotion_teleport_teleport_blink_state.js
-import { MeshComponent as MeshComponent10 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent11 } from "@wonderlandengine/api";
 var PlayerLocomotionTeleportTeleportBlinkState = class extends PlayerLocomotionTeleportState {
   constructor(teleportParams, teleportRuntimeParams, locomotionRuntimeParams) {
     super(teleportParams, teleportRuntimeParams, locomotionRuntimeParams);
     this._myBlinkSphere = Globals.getPlayerObjects(this._myTeleportParams.myEngine).myCauldron.pp_addObject();
-    this._myBlinkSphereMeshComponent = this._myBlinkSphere.pp_addComponent(MeshComponent10);
+    this._myBlinkSphereMeshComponent = this._myBlinkSphere.pp_addComponent(MeshComponent11);
     this._myBlinkSphereMeshComponent.mesh = Globals.getDefaultMeshes(this._myTeleportParams.myEngine).myInvertedSphere;
     this._myBlinkSphereMeshComponent.material = Globals.getDefaultMaterials(this._myTeleportParams.myEngine).myFlatTransparentNoDepth.clone();
     this._myBlinkSphereMaterialColor = vec4_create(this._myTeleportParams.myTeleportParams.myBlinkSphereColor[0] / 255, this._myTeleportParams.myTeleportParams.myBlinkSphereColor[1] / 255, this._myTeleportParams.myTeleportParams.myBlinkSphereColor[2] / 255, 0);
@@ -32407,6 +33227,7 @@ var PlayerLocomotionTeleportTeleportState = class extends PlayerLocomotionTelepo
 var PlayerLocomotionTeleportParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerHeadManager = null;
+    this.myPlayerTransformManager = null;
     this.myCollisionCheckParams = null;
     this.myDetectionParams = new PlayerLocomotionTeleportDetectionParams();
     this.myVisualizerParams = new PlayerLocomotionTeleportDetectionVisualizerParams();
@@ -32546,99 +33367,140 @@ PlayerLocomotionTeleport.prototype._applyGravity = function() {
 }();
 
 // dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion.js
-var PlayerLocomotionDirectionReferenceType = {
-  HEAD: 0,
-  HAND: 1,
-  CUSTOM_OBJECT: 2
-};
-var PlayerLocomotionType = {
-  SMOOTH: 0,
-  TELEPORT: 1
-};
+var PlayerLocomotionDirectionReferenceType;
+(function(PlayerLocomotionDirectionReferenceType2) {
+  PlayerLocomotionDirectionReferenceType2[PlayerLocomotionDirectionReferenceType2["HEAD"] = 0] = "HEAD";
+  PlayerLocomotionDirectionReferenceType2[PlayerLocomotionDirectionReferenceType2["HAND"] = 1] = "HAND";
+  PlayerLocomotionDirectionReferenceType2[PlayerLocomotionDirectionReferenceType2["CUSTOM_OBJECT"] = 2] = "CUSTOM_OBJECT";
+})(PlayerLocomotionDirectionReferenceType || (PlayerLocomotionDirectionReferenceType = {}));
+var PlayerLocomotionType;
+(function(PlayerLocomotionType2) {
+  PlayerLocomotionType2[PlayerLocomotionType2["SMOOTH"] = 0] = "SMOOTH";
+  PlayerLocomotionType2[PlayerLocomotionType2["TELEPORT"] = 1] = "TELEPORT";
+})(PlayerLocomotionType || (PlayerLocomotionType = {}));
 var PlayerLocomotionParams = class {
+  myDefaultLocomotionType = PlayerLocomotionType.SMOOTH;
+  myAlwaysSmoothForNonVR = true;
+  /** Double press main hand thumbstick (default: left) to switch */
+  mySwitchLocomotionTypeShortcutEnabled = true;
+  myPhysicsBlockLayerFlags = new PhysicsLayerFlags();
+  myDefaultHeight = 0;
+  myCharacterRadius = 0;
+  myForeheadExtraHeight = 0;
+  myMaxSpeed = 0;
+  myMaxRotationSpeed = 0;
+  mySpeedSlowDownPercentageOnWallSlid = 1;
+  myGravityAcceleration = 0;
+  myMaxGravitySpeed = 0;
+  myIsSnapTurn = false;
+  mySnapTurnOnlyVR = false;
+  mySnapTurnAngle = 0;
+  mySnapTurnSpeedDegrees = 0;
+  myFlyEnabled = false;
+  myStartFlying = false;
+  myFlyWithButtonsEnabled = false;
+  myFlyWithViewAngleEnabled = false;
+  myMinAngleToFlyUpNonVR = 0;
+  myMinAngleToFlyDownNonVR = 0;
+  myMinAngleToFlyUpVR = 0;
+  myMinAngleToFlyDownVR = 0;
+  myMinAngleToFlyRight = 0;
+  myMainHand = Handedness.LEFT;
+  myDirectionInvertForwardWhenUpsideDown = true;
+  myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
+  myVRDirectionReferenceObject = null;
+  myTeleportType = PlayerLocomotionTeleportTeleportType.INSTANT;
+  myTeleportMaxDistance = 0;
+  myTeleportMaxHeightDifference = 0;
+  myTeleportRotationOnUpEnabled = false;
+  myTeleportValidMaterial = null;
+  myTeleportInvalidMaterial = null;
+  myTeleportPositionObject = null;
+  myTeleportPositionObjectRotateWithHead = false;
+  myTeleportParableStartReferenceObject = null;
+  myResetRealOnStart = true;
+  /**
+   * #WARN With `_myResetRealOnStartFramesAmount` at `1` it can happen that you enter the session like 1 frame before the game load
+   * and the head pose might have not been properly initialized yet in the WebXR API, so the reset real will not happen has expected
+   * Since this is a sort of edge case (either u enter after the load, or you were already in for more than 2-3 frames), and that
+   * setting this to more than `1` can cause a visible (even if very short) stutter after the load (due to resetting the head multiple times),
+   * it's better to keep this value at `1`
+   * A possible effect of the edge case is the view being obscured on start because it thinks you are colliding
+   *
+   * A value of `3` will make u sure that the head pose will be initialized and the reset real will happen as expected in any case
+   * For example, if u have a total fade at start and nothing can be seen aside the clear color for at least, let's say, 10 frames,
+   * you can set this to `3` safely, since there will be no visible stutter to be seen (beside the clear color)
+   */
+  myResetRealOnStartFramesAmount = 1;
+  /** Can fix some head through floor issues, when you can move your head completely to the other side of the floor
+      If the floors are thick enough that this can't happen, you can leave this to false  */
+  myResetHeadToFeetInsteadOfReal = false;
+  myResetHeadToRealMinDistance = 0;
+  /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space.
+      Works 100% properly only if it has the same value as `_myViewOcclusionInsideWallsEnabled` (both true or false)  */
+  mySyncWithRealWorldPositionOnlyIfValid = true;
+  /** Works 100% properly only if it has the same value as `_mySyncWithRealWorldPositionOnlyIfValid` (both true or false)  */
+  myViewOcclusionInsideWallsEnabled = true;
+  mySyncNonVRHeightWithVROnExitSession = false;
+  mySyncNonVRVerticalAngleWithVROnExitSession = false;
+  mySyncHeadWithRealAfterLocomotionUpdateIfNeeded = false;
+  myColliderAccuracy = CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW;
+  myColliderCheckOnlyFeet = false;
+  myColliderSlideAlongWall = false;
+  myColliderMaxWalkableGroundAngle = 0;
+  myColliderSnapOnGround = false;
+  myColliderMaxDistanceToSnapOnGround = 0;
+  myColliderMaxWalkableGroundStepHeight = 0;
+  myColliderPreventFallingFromEdges = false;
+  /** Main hand (default: left) select + thumbstick press, auto switch to smooth */
+  myDebugFlyShortcutEnabled = false;
+  myDebugFlyMaxSpeedMultiplier = 5;
+  /** Main hand (default: left) thumbstick pressed while moving */
+  myMoveThroughCollisionShortcutEnabled = false;
+  /** Not main hand (default: right) thumbstick pressed while moving */
+  myMoveHeadShortcutEnabled = false;
+  /** Main hand (default: left) select pressed while moving */
+  myTripleSpeedShortcutEnabled = false;
+  myDebugHorizontalEnabled = false;
+  myDebugVerticalEnabled = false;
+  myCollisionCheckDisabled = false;
+  myEngine;
   constructor(engine = Globals.getMainEngine()) {
-    this.myDefaultLocomotionType = PlayerLocomotionType.SMOOTH;
-    this.myAlwaysSmoothForNonVR = true;
-    this.mySwitchLocomotionTypeShortcutEnabled = true;
-    this.myDefaultHeight = 0;
-    this.myMaxSpeed = 0;
-    this.myMaxRotationSpeed = 0;
-    this.myGravityAcceleration = 0;
-    this.myMaxGravitySpeed = 0;
-    this.myCharacterRadius = 0;
-    this.mySpeedSlowDownPercentageOnWallSlid = 1;
-    this.myIsSnapTurn = false;
-    this.mySnapTurnOnlyVR = false;
-    this.mySnapTurnAngle = 0;
-    this.mySnapTurnSpeedDegrees = 0;
-    this.myFlyEnabled = false;
-    this.myStartFlying = false;
-    this.myFlyWithButtonsEnabled = false;
-    this.myFlyWithViewAngleEnabled = false;
-    this.myMinAngleToFlyUpNonVR = 0;
-    this.myMinAngleToFlyDownNonVR = 0;
-    this.myMinAngleToFlyUpVR = 0;
-    this.myMinAngleToFlyDownVR = 0;
-    this.myMinAngleToFlyRight = 0;
-    this.myMainHand = Handedness.LEFT;
-    this.myDirectionInvertForwardWhenUpsideDown = true;
-    this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
-    this.myVRDirectionReferenceObject = null;
-    this.myForeheadExtraHeight = 0;
-    this.myTeleportType = PlayerLocomotionTeleportTeleportType.INSTANT;
-    this.myTeleportMaxDistance = 0;
-    this.myTeleportMaxHeightDifference = 0;
-    this.myTeleportRotationOnUpEnabled = null;
-    this.myTeleportValidMaterial = null;
-    this.myTeleportInvalidMaterial = null;
-    this.myTeleportPositionObject = null;
-    this.myTeleportPositionObjectRotateWithHead = null;
-    this.myTeleportParableStartReferenceObject = null;
-    this.myResetRealOnStart = true;
-    this.myResetRealOnStartFramesAmount = 1;
-    this.myResetHeadToFeetInsteadOfReal = false;
-    this.myResetHeadToRealMinDistance = 0;
-    this.mySyncWithRealWorldPositionOnlyIfValid = true;
-    this.myViewOcclusionInsideWallsEnabled = true;
-    this.mySyncNonVRHeightWithVROnExitSession = false;
-    this.mySyncNonVRVerticalAngleWithVROnExitSession = false;
-    this.mySyncHeadWithRealAfterLocomotionUpdateIfNeeded = false;
-    this.myColliderAccuracy = null;
-    this.myColliderCheckOnlyFeet = false;
-    this.myColliderSlideAlongWall = false;
-    this.myColliderMaxWalkableGroundAngle = 0;
-    this.myColliderSnapOnGround = false;
-    this.myColliderMaxDistanceToSnapOnGround = 0;
-    this.myColliderMaxWalkableGroundStepHeight = 0;
-    this.myColliderPreventFallingFromEdges = false;
-    this.myDebugFlyShortcutEnabled = false;
-    this.myDebugFlyMaxSpeedMultiplier = 5;
-    this.myMoveThroughCollisionShortcutEnabled = false;
-    this.myMoveHeadShortcutEnabled = false;
-    this.myTripleSpeedShortcutEnabled = false;
-    this.myDebugHorizontalEnabled = false;
-    this.myDebugVerticalEnabled = false;
-    this.myCollisionCheckDisabled = false;
-    this.myPhysicsBlockLayerFlags = new PhysicsLayerFlags();
     this.myEngine = engine;
   }
 };
 var PlayerLocomotion = class {
+  _myParams;
+  _myCollisionCheckParamsMovement = new CollisionCheckParams();
+  _myCollisionCheckParamsTeleport = new CollisionCheckParams();
+  _myCollisionRuntimeParams = new CollisionRuntimeParams();
+  _myMovementRuntimeParams = new PlayerLocomotionMovementRuntimeParams();
+  _myPlayerHeadManager;
+  _myPlayerTransformManager;
+  _myPlayerLocomotionRotate;
+  _myPlayerLocomotionSmooth;
+  _myPlayerLocomotionTeleport;
+  _myPlayerObscureManager;
+  _myLocomotionMovementFSM = new FSM();
+  _mySwitchToTeleportOnEnterSession = false;
+  _myActive = false;
+  _myStarted = false;
+  _myIdle = false;
+  _myResetRealOnStartCounter = 0;
+  _myPreUpdateEmitter = new Emitter12();
+  _myPostUpdateEmitter = new Emitter12();
+  _myDestroyed = false;
   constructor(params) {
     this._myParams = params;
-    this._myCollisionCheckParamsMovement = new CollisionCheckParams();
     this._setupCollisionCheckParamsMovement();
-    this._myCollisionCheckParamsTeleport = null;
     this._setupCollisionCheckParamsTeleport();
-    this._myCollisionRuntimeParams = new CollisionRuntimeParams();
-    this._myMovementRuntimeParams = new PlayerLocomotionMovementRuntimeParams();
     this._myMovementRuntimeParams.myIsFlying = this._myParams.myStartFlying;
     this._myMovementRuntimeParams.myCollisionRuntimeParams = this._myCollisionRuntimeParams;
     {
-      let params2 = new PlayerHeadManagerParams(this._myParams.myEngine);
+      const params2 = new PlayerHeadManagerParams(this._myParams.myEngine);
       params2.mySessionChangeResyncEnabled = true;
       params2.myBlurEndResyncEnabled = true;
-      params2.myBlurEndResyncRotation = true;
+      params2.myBlurEndResyncRotation = false;
       params2.myEnterSessionResyncHeight = false;
       params2.myExitSessionResyncHeight = this._myParams.mySyncNonVRHeightWithVROnExitSession;
       params2.myExitSessionResyncVerticalAngle = this._myParams.mySyncNonVRVerticalAngleWithVROnExitSession;
@@ -32654,7 +33516,7 @@ var PlayerLocomotion = class {
       this._myPlayerHeadManager = new PlayerHeadManager(params2);
     }
     {
-      let params2 = new PlayerTransformManagerParams(this._myParams.myEngine);
+      const params2 = new PlayerTransformManagerParams(this._myParams.myEngine);
       params2.myPlayerHeadManager = this._myPlayerHeadManager;
       params2.myMovementCollisionCheckParams = this._myCollisionCheckParamsMovement;
       params2.myTeleportCollisionCheckParams = null;
@@ -32663,11 +33525,10 @@ var PlayerLocomotion = class {
       params2.myHeadCollisionBlockLayerFlags.copy(params2.myMovementCollisionCheckParams.myHorizontalBlockLayerFlags);
       params2.myHeadCollisionBlockLayerFlags.add(params2.myMovementCollisionCheckParams.myVerticalBlockLayerFlags);
       params2.myHeadCollisionObjectsToIgnore.pp_copy(params2.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore);
-      let objectsEqualCallback = (first2, second) => first2.pp_equals(second);
-      for (let objectToIgnore of params2.myMovementCollisionCheckParams.myVerticalObjectsToIgnore) {
+      const objectsEqualCallback = (first2, second) => first2.pp_equals(second);
+      for (const objectToIgnore of params2.myMovementCollisionCheckParams.myVerticalObjectsToIgnore) {
         params2.myHeadCollisionObjectsToIgnore.pp_pushUnique(objectToIgnore, objectsEqualCallback);
       }
-      params2.myCollisionRuntimeParams = this._myCollisionRuntimeParams;
       params2.myHeadRadius = 0.2;
       params2.myAlwaysSyncPositionWithReal = !this._myParams.mySyncWithRealWorldPositionOnlyIfValid;
       params2.myAlwaysSyncHeadPositionWithReal = false;
@@ -32696,6 +33557,7 @@ var PlayerLocomotion = class {
       params2.myIsBodyCollidingWhenHeightAboveValue = null;
       params2.myResetToValidOnEnterSession = true;
       params2.myResetToValidOnExitSession = true;
+      params2.myResetToValidOnSessionHiddenEnd = true;
       params2.myAlwaysResetRealPositionNonVR = true;
       params2.myAlwaysResetRealRotationNonVR = true;
       params2.myAlwaysResetRealHeightNonVR = true;
@@ -32715,14 +33577,14 @@ var PlayerLocomotion = class {
       this._myPlayerTransformManager = new PlayerTransformManager(params2);
     }
     {
-      let params2 = new PlayerLocomotionRotateParams(this._myParams.myEngine);
+      const params2 = new PlayerLocomotionRotateParams(this._myParams.myEngine);
       params2.myPlayerHeadManager = this._myPlayerHeadManager;
       params2.myPlayerTransformManager = this._myPlayerTransformManager;
       params2.myMaxRotationSpeed = this._myParams.myMaxRotationSpeed;
       params2.myIsSnapTurn = this._myParams.myIsSnapTurn;
       params2.mySnapTurnOnlyVR = this._myParams.mySnapTurnOnlyVR;
       params2.mySnapTurnAngle = this._myParams.mySnapTurnAngle;
-      if (this._myParams.mySnapTurnSpeedDegrees > Math.PP_EPSILON) {
+      if (this._myParams.mySnapTurnSpeedDegrees > MathUtils.EPSILON) {
         params2.mySmoothSnapEnabled = true;
         params2.mySmoothSnapSpeedDegrees = this._myParams.mySnapTurnSpeedDegrees;
       } else {
@@ -32733,15 +33595,14 @@ var PlayerLocomotion = class {
       params2.mySnapTurnResetThreshold = 0.4;
       params2.myClampVerticalAngle = true;
       params2.myMaxVerticalAngle = 89;
-      this._myPlayerLocomotionRotate = new PlayerLocomotionRotate(params2);
       params2.myHandedness = InputUtils.getOppositeHandedness(this._myParams.myMainHand);
+      this._myPlayerLocomotionRotate = new PlayerLocomotionRotate(params2);
     }
     {
       {
-        let params2 = new PlayerLocomotionSmoothParams(this._myParams.myEngine);
+        const params2 = new PlayerLocomotionSmoothParams(this._myParams.myEngine);
         params2.myPlayerHeadManager = this._myPlayerHeadManager;
         params2.myPlayerTransformManager = this._myPlayerTransformManager;
-        params2.myCollisionCheckParams = this._myCollisionCheckParamsMovement;
         params2.myHandedness = this._myParams.myMainHand;
         params2.myMaxSpeed = this._myParams.myMaxSpeed;
         params2.mySpeedSlowDownPercentageOnWallSlid = this._myParams.mySpeedSlowDownPercentageOnWallSlid;
@@ -32766,7 +33627,7 @@ var PlayerLocomotion = class {
         this._myPlayerLocomotionSmooth = new PlayerLocomotionSmooth(params2, this._myMovementRuntimeParams);
       }
       {
-        let params2 = new PlayerLocomotionTeleportParams(this._myParams.myEngine);
+        const params2 = new PlayerLocomotionTeleportParams(this._myParams.myEngine);
         params2.myPlayerHeadManager = this._myPlayerHeadManager;
         params2.myPlayerTransformManager = this._myPlayerTransformManager;
         params2.myCollisionCheckParams = this._myCollisionCheckParamsTeleport;
@@ -32800,14 +33661,14 @@ var PlayerLocomotion = class {
         this._myPlayerLocomotionTeleport = new PlayerLocomotionTeleport(params2, this._myMovementRuntimeParams);
       }
       {
-        let params2 = new PlayerObscureManagerParams(this._myParams.myEngine);
+        const params2 = new PlayerObscureManagerParams(this._myParams.myEngine);
         params2.myPlayerTransformManager = this._myPlayerTransformManager;
         params2.myPlayerLocomotionTeleport = this._myPlayerLocomotionTeleport;
         params2.myEnabled = this._myParams.myViewOcclusionInsideWallsEnabled;
         params2.myObscureObject = null;
         params2.myObscureMaterial = null;
         params2.myObscureRadius = 0.5;
-        params2.myObscureFadeOutSeconds = 0;
+        params2.myObscureFadeOutSeconds = 0.1;
         params2.myObscureFadeInSeconds = 0.25;
         params2.myObscureFadeEasingFunction = EasingFunction.linear;
         params2.myObscureLevelRelativeDistanceEasingFunction = EasingFunction.linear;
@@ -32823,14 +33684,7 @@ var PlayerLocomotion = class {
       }
     }
     this._setupLocomotionMovementFSM();
-    this._mySwitchToTeleportOnEnterSession = false;
-    this._myIdle = false;
-    this._myActive = true;
-    this._myStarted = false;
     this._myResetRealOnStartCounter = this._myParams.myResetRealOnStartFramesAmount;
-    this._myPreUpdateEmitter = new Emitter12();
-    this._myPostUpdateEmitter = new Emitter12();
-    this._myDestroyed = false;
   }
   start() {
     this._fixAlmostUp();
@@ -32844,12 +33698,12 @@ var PlayerLocomotion = class {
       this._myLocomotionMovementFSM.perform("startTeleport");
     }
     this._myStarted = true;
-    let currentActive = this._myActive;
+    const currentActive = this._myActive;
     this._myActive = !this._myActive;
     this.setActive(currentActive);
   }
-  // #WARN Only a few params are actually used by this class after the setup phase, like @myCollisionCheckDisabled
-  // Params like @myMaxSpeed must be edited directly on the PlayerLocomotionSmooth object
+  /** #WARN Only a few params are actually used by this class after the setup phase, like @myCollisionCheckDisabled
+      Params like @myMaxSpeed must be edited directly on the PlayerLocomotionSmooth object*/
   getParams() {
     return this._myParams;
   }
@@ -33000,7 +33854,7 @@ var PlayerLocomotion = class {
     this._myCollisionCheckParamsTeleport.myHeight = this._myCollisionCheckParamsMovement.myHeight;
   }
   _setupCollisionCheckParamsMovement() {
-    let simplifiedParams = new CharacterColliderSetupSimplifiedCreationParams();
+    const simplifiedParams = new CharacterColliderSetupSimplifiedCreationParams();
     simplifiedParams.myHeight = this._myParams.myDefaultHeight;
     simplifiedParams.myRadius = this._myParams.myCharacterRadius;
     simplifiedParams.myAccuracyLevel = this._myParams.myColliderAccuracy;
@@ -33016,38 +33870,37 @@ var PlayerLocomotion = class {
     simplifiedParams.myMaxWalkableGroundStepHeight = this._myParams.myColliderMaxWalkableGroundStepHeight;
     simplifiedParams.myShouldNotFallFromEdges = this._myParams.myColliderPreventFallingFromEdges;
     simplifiedParams.myHorizontalCheckBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
-    let physXComponents = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getComponents(PhysXComponent8);
-    for (let physXComponent of physXComponents) {
+    const physXComponents = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getComponents(PhysXComponent8);
+    for (const physXComponent of physXComponents) {
       simplifiedParams.myHorizontalCheckObjectsToIgnore.pp_pushUnique(physXComponent.object, (first2, second) => first2.pp_equals(second));
     }
     simplifiedParams.myVerticalCheckBlockLayerFlags.copy(simplifiedParams.myHorizontalCheckBlockLayerFlags);
     simplifiedParams.myVerticalCheckObjectsToIgnore.pp_copy(simplifiedParams.myHorizontalCheckObjectsToIgnore);
     simplifiedParams.myHorizontalCheckDebugEnabled = this._myParams.myDebugHorizontalEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
     simplifiedParams.myVerticalCheckDebugEnabled = this._myParams.myDebugVerticalEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
-    let colliderSetup = CharacterColliderSetupUtils.createSimplified(simplifiedParams);
-    this._myCollisionCheckParamsMovement = CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(colliderSetup, this._myCollisionCheckParamsMovement, this._myParams.myEngine);
+    const colliderSetup = CharacterColliderSetupUtils.createSimplified(simplifiedParams);
+    CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(colliderSetup, this._myCollisionCheckParamsMovement);
   }
   _setupCollisionCheckParamsTeleport() {
-    this._myCollisionCheckParamsTeleport = CollisionCheckUtils.generate360TeleportParamsFromMovementParams(this._myCollisionCheckParamsMovement);
+    CollisionCheckUtils.generate360TeleportParamsFromMovementParams(this._myCollisionCheckParamsMovement, this._myCollisionCheckParamsTeleport);
     this._myCollisionCheckParamsTeleport.myGroundAngleToIgnore = 61;
     this._myCollisionCheckParamsTeleport.myTeleportMustBeOnIgnorableGroundAngle = true;
     this._myCollisionCheckParamsTeleport.myTeleportMustBeOnGround = true;
   }
   _fixAlmostUp() {
-    let defaultUp = vec3_create(0, 1, 0);
-    let angleWithDefaultUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp().vec3_angle(defaultUp);
+    const defaultUp = vec3_create(0, 1, 0);
+    const angleWithDefaultUp = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getUp().vec3_angle(defaultUp);
     if (angleWithDefaultUp < 1) {
-      let forward = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getForward();
-      let flatForward = forward.vec3_clone();
+      const forward = Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_getForward();
+      const flatForward = forward.vec3_clone();
       flatForward[1] = 0;
-      let defaultForward = vec3_create(0, 0, 1);
-      let angleWithDefaultForward = defaultForward.vec3_angleSigned(flatForward, defaultUp);
+      const defaultForward = vec3_create(0, 0, 1);
+      const angleWithDefaultForward = defaultForward.vec3_angleSigned(flatForward, defaultUp);
       Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_resetRotation();
       Globals.getPlayerObjects(this._myParams.myEngine).myPlayer.pp_rotateAxis(angleWithDefaultForward, defaultUp);
     }
   }
   _setupLocomotionMovementFSM() {
-    this._myLocomotionMovementFSM = new FSM();
     this._myLocomotionMovementFSM.addState("init");
     this._myLocomotionMovementFSM.addState("smooth", (dt) => this._myPlayerLocomotionSmooth.update(dt));
     this._myLocomotionMovementFSM.addState("teleport", (dt) => this._myPlayerLocomotionTeleport.update(dt));
@@ -33102,7 +33955,6 @@ var PlayerLocomotionSmoothParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerHeadManager = null;
     this.myPlayerTransformManager = null;
-    this.myCollisionCheckParams = null;
     this.myMaxSpeed = 0;
     this.mySpeedSlowDownPercentageOnWallSlid = 1;
     this.myMovementMinStickIntensityThreshold = 0;
@@ -33116,6 +33968,7 @@ var PlayerLocomotionSmoothParams = class {
     this.myMinAngleToFlyRight = 0;
     this.myGravityAcceleration = 0;
     this.myMaxGravitySpeed = 0;
+    this.myDirectionInvertForwardWhenUpsideDown = true;
     this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
     this.myVRDirectionReferenceObject = null;
     this.myHandedness = Handedness.LEFT;
@@ -33328,98 +34181,115 @@ PlayerLocomotionSmooth.prototype._onXRSessionEnd = function() {
   };
 }();
 
-// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/player_locomotion_component.js
-import { Component as Component37, Property as Property30 } from "@wonderlandengine/api";
-var PlayerLocomotionComponent = class extends Component37 {
+// dist/pp/gameplay/experimental/locomotion/legacy/locomotion/components/player_locomotion_component.js
+import { Component as Component40 } from "@wonderlandengine/api";
+import { property as property4 } from "@wonderlandengine/api/decorators.js";
+var __decorate4 = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var PlayerLocomotionComponent = class extends Component40 {
   static TypeName = "pp-player-locomotion";
-  static Properties = {
-    _myDefaultLocomotionType: Property30.enum(["Smooth", "Teleport"], "Smooth"),
-    _myAlwaysSmoothForNonVR: Property30.bool(true),
-    _mySwitchLocomotionTypeShortcutEnabled: Property30.bool(true),
-    // Double press main hand (default left) thumbstick to switch
-    _myPhysicsBlockLayerFlags: Property30.string("0, 0, 0, 0, 0, 0, 0, 0"),
-    _myDefaultHeight: Property30.float(1.7),
-    _myCharacterRadius: Property30.float(0.3),
-    _myMaxSpeed: Property30.float(2),
-    _myMaxRotationSpeed: Property30.float(100),
-    _myGravityAcceleration: Property30.float(-20),
-    _myMaxGravitySpeed: Property30.float(-15),
-    _mySpeedSlowDownPercentageOnWallSlid: Property30.float(1),
-    _myIsSnapTurn: Property30.bool(true),
-    _mySnapTurnOnlyVR: Property30.bool(true),
-    _mySnapTurnAngle: Property30.float(30),
-    _mySnapTurnSpeedDegrees: Property30.float(0),
-    _myFlyEnabled: Property30.bool(false),
-    _myStartFlying: Property30.bool(false),
-    _myFlyWithButtonsEnabled: Property30.bool(true),
-    _myFlyWithViewAngleEnabled: Property30.bool(true),
-    _myMinAngleToFlyUpNonVR: Property30.float(30),
-    _myMinAngleToFlyDownNonVR: Property30.float(50),
-    _myMinAngleToFlyUpVR: Property30.float(60),
-    _myMinAngleToFlyDownVR: Property30.float(1),
-    _myMinAngleToFlyRight: Property30.float(60),
-    _myMainHand: Property30.enum(["Left", "Right"], "Left"),
-    _myDirectionInvertForwardWhenUpsideDown: Property30.bool(true),
-    _myVRDirectionReferenceType: Property30.enum(["Head", "Hand", "Custom Object"], "Head"),
-    _myVRDirectionReferenceObject: Property30.object(),
-    _myTeleportType: Property30.enum(["Instant", "Blink", "Shift"], "Shift"),
-    _myTeleportMaxDistance: Property30.float(3),
-    _myTeleportMaxHeightDifference: Property30.float(1.25),
-    _myTeleportRotationOnUpEnabled: Property30.bool(false),
-    _myTeleportValidMaterial: Property30.material(),
-    _myTeleportInvalidMaterial: Property30.material(),
-    _myTeleportPositionObject: Property30.object(),
-    _myTeleportPositionObjectRotateWithHead: Property30.bool(true),
-    _myTeleportParableStartReferenceObject: Property30.object(),
-    _myResetRealOnStart: Property30.bool(true),
-    // #WARN With @myResetRealOnStartFramesAmount at 1 it can happen that you enter the session like 1 frame before the game load
-    // and the head pose might have not been properly initialized yet in the WebXR API, so the reset real will not happen has expected
-    // Since this is a sort of edge case (either u enter after the load, or you were already in for more than 2-3 frames), and that
-    // setting this to more than 1 can cause a visible (even if very short) stutter after the load (due to resetting the head multiple times),
-    // it's better to keep this value at 1
-    // A possible effect of the edge case is the view being obscured on start because it thinks you are colliding
-    //
-    // A value of 3 will make u sure that the head pose will be initialized and the reset real will happen as expected in any case
-    // For example, if u have a total fade at start and nothing can be seen aside the clear color for at least, let's say, 10 frames, 
-    // you can set this to 3 safely, since there will be no visible stutter to be seen (beside the clear color)
-    _myResetRealOnStartFramesAmount: Property30.int(1),
-    // Can fix some head through floor issues, when you can move your head completely to the other side of the floor
-    // If the floors are thick enough that this can't happen, you can leave this to false
-    _myResetHeadToFeetInsteadOfReal: Property30.bool(true),
-    _myResetHeadToRealMinDistance: Property30.float(0.25),
-    // these 2 flags works 100% properly only if both true or false
-    _mySyncWithRealWorldPositionOnlyIfValid: Property30.bool(true),
-    // valid means the real player has not moved inside walls
-    _myViewOcclusionInsideWallsEnabled: Property30.bool(true),
-    _mySyncNonVRHeightWithVROnExitSession: Property30.bool(false),
-    _mySyncNonVRVerticalAngleWithVROnExitSession: Property30.bool(false),
-    _mySyncHeadWithRealAfterLocomotionUpdateIfNeeded: Property30.bool(true),
-    _myColliderAccuracy: Property30.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High"),
-    _myColliderCheckOnlyFeet: Property30.bool(false),
-    _myColliderSlideAlongWall: Property30.bool(true),
-    _myColliderMaxWalkableGroundAngle: Property30.float(30),
-    _myColliderSnapOnGround: Property30.bool(true),
-    _myColliderMaxDistanceToSnapOnGround: Property30.float(0.1),
-    _myColliderMaxWalkableGroundStepHeight: Property30.float(0.1),
-    _myColliderPreventFallingFromEdges: Property30.bool(false),
-    _myDebugFlyShortcutEnabled: Property30.bool(false),
-    // main hand (default left) select + thumbstick press, auto switch to smooth
-    _myDebugFlyMaxSpeedMultiplier: Property30.float(5),
-    _myMoveThroughCollisionShortcutEnabled: Property30.bool(false),
-    // main hand (default left) thumbstick pressed while moving
-    _myMoveHeadShortcutEnabled: Property30.bool(false),
-    // non main hand (default right) thumbstick pressed while moving
-    _myTripleSpeedShortcutEnabled: Property30.bool(false),
-    // main hand (default left) select pressed while moving
-    _myDebugHorizontalEnabled: Property30.bool(false),
-    _myDebugVerticalEnabled: Property30.bool(false),
-    _myCollisionCheckDisabled: Property30.bool(false),
-    _myRaycastCountLogEnabled: Property30.bool(false),
-    _myRaycastVisualDebugEnabled: Property30.bool(false),
-    _myPerformanceLogEnabled: Property30.bool(false)
-  };
+  _myDefaultLocomotionType;
+  _myAlwaysSmoothForNonVR;
+  /** Double press main hand thumbstick (default: left) to switch */
+  _mySwitchLocomotionTypeShortcutEnabled;
+  _myPhysicsBlockLayerFlags;
+  _myDefaultHeight;
+  _myCharacterRadius;
+  _myMaxSpeed;
+  _myMaxRotationSpeed;
+  _mySpeedSlowDownPercentageOnWallSlid;
+  _myGravityAcceleration;
+  _myMaxGravitySpeed;
+  _myIsSnapTurn;
+  _mySnapTurnOnlyVR;
+  _mySnapTurnAngle;
+  _mySnapTurnSpeedDegrees;
+  _myFlyEnabled;
+  _myStartFlying;
+  _myFlyWithButtonsEnabled;
+  _myFlyWithViewAngleEnabled;
+  _myMinAngleToFlyUpNonVR;
+  _myMinAngleToFlyDownNonVR;
+  _myMinAngleToFlyUpVR;
+  _myMinAngleToFlyDownVR;
+  _myMinAngleToFlyRight;
+  _myMainHand;
+  _myDirectionInvertForwardWhenUpsideDown;
+  _myVRDirectionReferenceType;
+  _myVRDirectionReferenceObject;
+  _myTeleportType;
+  _myTeleportMaxDistance;
+  _myTeleportMaxHeightDifference;
+  _myTeleportRotationOnUpEnabled;
+  _myTeleportValidMaterial;
+  _myTeleportInvalidMaterial;
+  _myTeleportPositionObject;
+  _myTeleportPositionObjectRotateWithHead;
+  _myTeleportParableStartReferenceObject;
+  _myResetRealOnStart;
+  /**
+   * #WARN With `_myResetRealOnStartFramesAmount` at `1` it can happen that you enter the session like 1 frame before the game load
+   * and the head pose might have not been properly initialized yet in the WebXR API, so the reset real will not happen has expected
+   * Since this is a sort of edge case (either u enter after the load, or you were already in for more than 2-3 frames), and that
+   * setting this to more than `1` can cause a visible (even if very short) stutter after the load (due to resetting the head multiple times),
+   * it's better to keep this value at `1`
+   * A possible effect of the edge case is the view being obscured on start because it thinks you are colliding
+   *
+   * A value of `3` will make u sure that the head pose will be initialized and the reset real will happen as expected in any case
+   * For example, if u have a total fade at start and nothing can be seen aside the clear color for at least, let's say, 10 frames,
+   * you can set this to `3` safely, since there will be no visible stutter to be seen (beside the clear color)
+   */
+  _myResetRealOnStartFramesAmount;
+  /** Can fix some head through floor issues, when you can move your head completely to the other side of the floor
+      If the floors are thick enough that this can't happen, you can leave this to false  */
+  _myResetHeadToFeetInsteadOfReal;
+  _myResetHeadToRealMinDistance;
+  /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space.
+      Works 100% properly only if it has the same value as `_myViewOcclusionInsideWallsEnabled` (both true or false)  */
+  _mySyncWithRealWorldPositionOnlyIfValid;
+  /** Works 100% properly only if it has the same value as `_mySyncWithRealWorldPositionOnlyIfValid` (both true or false)  */
+  _myViewOcclusionInsideWallsEnabled;
+  _mySyncNonVRHeightWithVROnExitSession;
+  _mySyncNonVRVerticalAngleWithVROnExitSession;
+  _mySyncHeadWithRealAfterLocomotionUpdateIfNeeded;
+  _myColliderAccuracy;
+  _myColliderCheckOnlyFeet;
+  _myColliderSlideAlongWall;
+  _myColliderMaxWalkableGroundAngle;
+  _myColliderSnapOnGround;
+  _myColliderMaxDistanceToSnapOnGround;
+  _myColliderMaxWalkableGroundStepHeight;
+  _myColliderPreventFallingFromEdges;
+  /** Main hand (default: left) select + thumbstick press, auto switch to smooth */
+  _myDebugFlyShortcutEnabled;
+  _myDebugFlyMaxSpeedMultiplier;
+  /** Main hand (default: left) thumbstick pressed while moving */
+  _myMoveThroughCollisionShortcutEnabled;
+  /** Not main hand (default: right) thumbstick pressed while moving */
+  _myMoveHeadShortcutEnabled;
+  /** Main hand (default: left) select pressed while moving */
+  _myTripleSpeedShortcutEnabled;
+  _myDebugHorizontalEnabled;
+  _myDebugVerticalEnabled;
+  _myCollisionCheckDisabled;
+  _myRaycastCountLogEnabled;
+  _myRaycastVisualDebugEnabled;
+  _myPerformanceLogEnabled;
+  _myPlayerLocomotion;
+  _myLocomotionStarted = false;
+  _myDebugPerformanceLogTimer = new Timer(0.5);
+  _myDebugPerformanceLogTotalTime = 0;
+  _myDebugPerformanceLogFrameCount = 0;
   start() {
-    let params = new PlayerLocomotionParams(this.engine);
+    const params = new PlayerLocomotionParams(this.engine);
     params.myDefaultLocomotionType = this._myDefaultLocomotionType;
     params.myAlwaysSmoothForNonVR = this._myAlwaysSmoothForNonVR;
     params.mySwitchLocomotionTypeShortcutEnabled = this._mySwitchLocomotionTypeShortcutEnabled;
@@ -33484,11 +34354,6 @@ var PlayerLocomotionComponent = class extends Component37 {
     params.myCollisionCheckDisabled = this._myCollisionCheckDisabled;
     params.myPhysicsBlockLayerFlags.copy(this._getPhysicsBlockLayersFlags());
     this._myPlayerLocomotion = new PlayerLocomotion(params);
-    this._myLocomotionStarted = false;
-    this._myResetReal = true;
-    this._myDebugPerformanceLogTimer = new Timer(0.5);
-    this._myDebugPerformanceLogTotalTime = 0;
-    this._myDebugPerformanceLogFrameCount = 0;
     Globals.getHeadPose(this.engine).registerPostPoseUpdatedEventEventListener(this, this.onPostPoseUpdatedEvent.bind(this));
   }
   onPostPoseUpdatedEvent(dt, pose, manualUpdate) {
@@ -33512,13 +34377,13 @@ var PlayerLocomotionComponent = class extends Component37 {
     }
     this._myPlayerLocomotion.update(dt);
     if (this._myPerformanceLogEnabled && Globals.isDebugEnabled(this.engine)) {
-      let endTime = window.performance.now();
+      const endTime = window.performance.now();
       this._myDebugPerformanceLogTotalTime += endTime - startTime;
       this._myDebugPerformanceLogFrameCount++;
       this._myDebugPerformanceLogTimer.update(dt);
       if (this._myDebugPerformanceLogTimer.isDone()) {
         this._myDebugPerformanceLogTimer.start();
-        let averageTime = this._myDebugPerformanceLogTotalTime / this._myDebugPerformanceLogFrameCount;
+        const averageTime = this._myDebugPerformanceLogTotalTime / this._myDebugPerformanceLogFrameCount;
         console.log("Locomotion ms: " + averageTime.toFixed(3));
         this._myDebugPerformanceLogTotalTime = 0;
         this._myDebugPerformanceLogFrameCount = 0;
@@ -33546,8 +34411,8 @@ var PlayerLocomotionComponent = class extends Component37 {
     }
   }
   _getPhysicsBlockLayersFlags() {
-    let physicsFlags = new PhysicsLayerFlags();
-    let flags = [...this._myPhysicsBlockLayerFlags.split(",")];
+    const physicsFlags = new PhysicsLayerFlags();
+    const flags = [...this._myPhysicsBlockLayerFlags.split(",")];
     for (let i = 0; i < flags.length; i++) {
       physicsFlags.setFlagActive(i, flags[i].trim() == "1");
     }
@@ -33557,18 +34422,216 @@ var PlayerLocomotionComponent = class extends Component37 {
     this._myPlayerLocomotion?.destroy();
   }
 };
+__decorate4([
+  property4.enum(["Smooth", "Teleport"], "Smooth")
+], PlayerLocomotionComponent.prototype, "_myDefaultLocomotionType", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myAlwaysSmoothForNonVR", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_mySwitchLocomotionTypeShortcutEnabled", void 0);
+__decorate4([
+  property4.string("0, 0, 0, 0, 0, 0, 0, 0")
+], PlayerLocomotionComponent.prototype, "_myPhysicsBlockLayerFlags", void 0);
+__decorate4([
+  property4.float(1.7)
+], PlayerLocomotionComponent.prototype, "_myDefaultHeight", void 0);
+__decorate4([
+  property4.float(0.3)
+], PlayerLocomotionComponent.prototype, "_myCharacterRadius", void 0);
+__decorate4([
+  property4.float(2)
+], PlayerLocomotionComponent.prototype, "_myMaxSpeed", void 0);
+__decorate4([
+  property4.float(100)
+], PlayerLocomotionComponent.prototype, "_myMaxRotationSpeed", void 0);
+__decorate4([
+  property4.float(1)
+], PlayerLocomotionComponent.prototype, "_mySpeedSlowDownPercentageOnWallSlid", void 0);
+__decorate4([
+  property4.float(-20)
+], PlayerLocomotionComponent.prototype, "_myGravityAcceleration", void 0);
+__decorate4([
+  property4.float(-15)
+], PlayerLocomotionComponent.prototype, "_myMaxGravitySpeed", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myIsSnapTurn", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_mySnapTurnOnlyVR", void 0);
+__decorate4([
+  property4.float(30)
+], PlayerLocomotionComponent.prototype, "_mySnapTurnAngle", void 0);
+__decorate4([
+  property4.float(0)
+], PlayerLocomotionComponent.prototype, "_mySnapTurnSpeedDegrees", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myFlyEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myStartFlying", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myFlyWithButtonsEnabled", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myFlyWithViewAngleEnabled", void 0);
+__decorate4([
+  property4.float(30)
+], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyUpNonVR", void 0);
+__decorate4([
+  property4.float(50)
+], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyDownNonVR", void 0);
+__decorate4([
+  property4.float(60)
+], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyUpVR", void 0);
+__decorate4([
+  property4.float(1)
+], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyDownVR", void 0);
+__decorate4([
+  property4.float(60)
+], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyRight", void 0);
+__decorate4([
+  property4.enum(["Left", "Right"], "Left")
+], PlayerLocomotionComponent.prototype, "_myMainHand", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myDirectionInvertForwardWhenUpsideDown", void 0);
+__decorate4([
+  property4.enum(["Head", "Hand", "Custom Object"], "Head")
+], PlayerLocomotionComponent.prototype, "_myVRDirectionReferenceType", void 0);
+__decorate4([
+  property4.object()
+], PlayerLocomotionComponent.prototype, "_myVRDirectionReferenceObject", void 0);
+__decorate4([
+  property4.enum(["Instant", "Blink", "Shift"], "Shift")
+], PlayerLocomotionComponent.prototype, "_myTeleportType", void 0);
+__decorate4([
+  property4.float(3)
+], PlayerLocomotionComponent.prototype, "_myTeleportMaxDistance", void 0);
+__decorate4([
+  property4.float(1.25)
+], PlayerLocomotionComponent.prototype, "_myTeleportMaxHeightDifference", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myTeleportRotationOnUpEnabled", void 0);
+__decorate4([
+  property4.material()
+], PlayerLocomotionComponent.prototype, "_myTeleportValidMaterial", void 0);
+__decorate4([
+  property4.material()
+], PlayerLocomotionComponent.prototype, "_myTeleportInvalidMaterial", void 0);
+__decorate4([
+  property4.object()
+], PlayerLocomotionComponent.prototype, "_myTeleportPositionObject", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myTeleportPositionObjectRotateWithHead", void 0);
+__decorate4([
+  property4.object()
+], PlayerLocomotionComponent.prototype, "_myTeleportParableStartReferenceObject", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myResetRealOnStart", void 0);
+__decorate4([
+  property4.int(1)
+], PlayerLocomotionComponent.prototype, "_myResetRealOnStartFramesAmount", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myResetHeadToFeetInsteadOfReal", void 0);
+__decorate4([
+  property4.float(0.25)
+], PlayerLocomotionComponent.prototype, "_myResetHeadToRealMinDistance", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_mySyncWithRealWorldPositionOnlyIfValid", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myViewOcclusionInsideWallsEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_mySyncNonVRHeightWithVROnExitSession", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_mySyncNonVRVerticalAngleWithVROnExitSession", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_mySyncHeadWithRealAfterLocomotionUpdateIfNeeded", void 0);
+__decorate4([
+  property4.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High")
+], PlayerLocomotionComponent.prototype, "_myColliderAccuracy", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myColliderCheckOnlyFeet", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myColliderSlideAlongWall", void 0);
+__decorate4([
+  property4.float(30)
+], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableGroundAngle", void 0);
+__decorate4([
+  property4.bool(true)
+], PlayerLocomotionComponent.prototype, "_myColliderSnapOnGround", void 0);
+__decorate4([
+  property4.float(0.1)
+], PlayerLocomotionComponent.prototype, "_myColliderMaxDistanceToSnapOnGround", void 0);
+__decorate4([
+  property4.float(0.1)
+], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableGroundStepHeight", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myColliderPreventFallingFromEdges", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myDebugFlyShortcutEnabled", void 0);
+__decorate4([
+  property4.float(5)
+], PlayerLocomotionComponent.prototype, "_myDebugFlyMaxSpeedMultiplier", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myMoveThroughCollisionShortcutEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myMoveHeadShortcutEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myTripleSpeedShortcutEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myDebugHorizontalEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myDebugVerticalEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myCollisionCheckDisabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myRaycastCountLogEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myRaycastVisualDebugEnabled", void 0);
+__decorate4([
+  property4.bool(false)
+], PlayerLocomotionComponent.prototype, "_myPerformanceLogEnabled", void 0);
 
 // dist/pp/input/cauldron/components/finger_cursor_component.js
-import { Collider, CollisionComponent as CollisionComponent3, Component as Component38, Property as Property31 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
-var FingerCursorComponent = class extends Component38 {
+import { Collider, CollisionComponent as CollisionComponent3, Component as Component41, PhysXComponent as PhysXComponent9, Property as Property31, Shape as Shape2 } from "@wonderlandengine/api";
+import { Cursor as Cursor4, CursorTarget as CursorTarget6 } from "@wonderlandengine/components";
+var FingerCursorComponent = class extends Component41 {
   static TypeName = "pp-finger-cursor";
   static Properties = {
     _myHandedness: Property31.enum(["Left", "Right"], "Left"),
     _myMultipleClicksEnabled: Property31.bool(true),
-    _myCollisionGroup: Property31.int(1),
+    _myCollisionMode: Property31.enum(["PhysX", "Collision"], "PhysX"),
+    _myCollisionFlags: Property31.string("0, 0, 0, 0, 0, 0, 0, 0"),
     _myCollisionSize: Property31.float(0.0125),
-    _myCursorObject: Property31.object(null)
+    _myCursorPointerObject: Property31.object(null),
+    _myDisableDefaultCursorOnTrackedHandDetected: Property31.bool(true),
+    _myDefaultCursorObject: Property31.object()
   };
   init() {
     this._myLastTarget = null;
@@ -33581,15 +34644,37 @@ var FingerCursorComponent = class extends Component38 {
   }
   start() {
     this._myCursorParentObject = this.object.pp_addObject();
-    if (this._myCursorObject == null) {
-      this._myCursorObject = this._myCursorParentObject.pp_addObject();
+    if (this._myCursorPointerObject == null) {
+      this._myCursorPointerObject = this._myCursorParentObject.pp_addObject();
     } else {
-      this._myCursorObject.pp_setParent(this._myCursorParentObject);
+      this._myCursorPointerObject.pp_setParent(this._myCursorParentObject);
     }
-    this._myCollisionComponent = this._myCursorObject.pp_addComponent(CollisionComponent3);
-    this._myCollisionComponent.collider = Collider.Sphere;
-    this._myCollisionComponent.group = 1 << this._myCollisionGroup;
-    this._myCollisionComponent.extents = vec3_create(this._myCollisionSize, this._myCollisionSize, this._myCollisionSize);
+    const physicsFlags = new PhysicsLayerFlags();
+    const flags = [...this._myCollisionFlags.split(",")];
+    for (let i = 0; i < flags.length; i++) {
+      physicsFlags.setFlagActive(i, flags[i].trim() == "1");
+    }
+    if (this._myCollisionMode == 0) {
+      this._myCollisionComponent = this._myCursorPointerObject.pp_addComponent(PhysXComponent9, {
+        "shape": Shape2.Sphere,
+        "extents": vec3_create(this._myCollisionSize, this._myCollisionSize, this._myCollisionSize),
+        "kinematic": true,
+        "groupsMask": physicsFlags.getMask()
+      });
+      this._myPhysicsCollisionCollector = new PhysicsCollisionCollector(this._myCollisionComponent, true);
+    } else if (this._myCollisionMode == 1) {
+      this._myCollisionComponent = this._myCursorPointerObject.pp_addComponent(CollisionComponent3);
+      this._myCollisionComponent.collider = Collider.Sphere;
+      this._myCollisionComponent.extents = vec3_create(this._myCollisionSize, this._myCollisionSize, this._myCollisionSize);
+      this._myCollisionComponent.group = physicsFlags.getMask();
+    }
+    if (this._myDisableDefaultCursorOnTrackedHandDetected) {
+      let defaultCursorObject = this.object;
+      if (this._myDefaultCursorObject != null) {
+        defaultCursorObject = this._myDefaultCursorObject;
+      }
+      this._myDefaultCursorComponent = defaultCursorObject.pp_getComponent(Cursor4);
+    }
   }
   update(dt) {
     if (this._myDoubleClickTimer > 0) {
@@ -33600,28 +34685,49 @@ var FingerCursorComponent = class extends Component38 {
     }
     this._myCursorParentObject.pp_setTransformQuat(Globals.getPlayerObjects(this.engine).myReferenceSpace.pp_getTransformQuat());
     this._updateHand();
-    if (this._myHandInputSource) {
-      let overlaps = this._myCollisionComponent.queryOverlaps();
-      let overlapTarget = null;
-      for (let i = 0; i < overlaps.length; ++i) {
-        let collision = overlaps[i];
-        if (collision.group & this._myCollisionComponent.group) {
-          let object = collision.object;
-          let target = object.pp_getComponent(CursorTarget5);
-          if (target && (overlapTarget == null || !target.isSurface)) {
-            overlapTarget = target;
+    if (this._myHandInputSource != null) {
+      if (this._myCollisionMode == 1) {
+        const collisions = this._myCollisionComponent.queryOverlaps();
+        let collisionTarget = null;
+        for (let i = 0; i < collisions.length; ++i) {
+          const collision = collisions[i];
+          if (collision.group & this._myCollisionComponent.group) {
+            const object = collision.object;
+            const target = object.pp_getComponent(CursorTarget6);
+            if (target && (collisionTarget == null || !target.isSurface)) {
+              collisionTarget = target;
+              if (!target.isSurface) {
+                break;
+              }
+            }
+          }
+        }
+        if (collisionTarget == null) {
+          this._targetTouchEnd();
+        } else if (!collisionTarget.equals(this._myLastTarget)) {
+          this._targetTouchEnd();
+          this._myLastTarget = collisionTarget;
+          this._targetTouchStart();
+        }
+      } else {
+        const collisions = this._myPhysicsCollisionCollector.getCollisions();
+        let collisionTarget = null;
+        for (const collision of collisions) {
+          const target = collision.object.pp_getComponent(CursorTarget6);
+          if (target && (collisionTarget == null || !target.isSurface)) {
+            collisionTarget = target;
             if (!target.isSurface) {
               break;
             }
           }
         }
-      }
-      if (!overlapTarget) {
-        this._targetTouchEnd();
-      } else if (!overlapTarget.equals(this._myLastTarget)) {
-        this._targetTouchEnd();
-        this._myLastTarget = overlapTarget;
-        this._targetTouchStart();
+        if (collisionTarget == null) {
+          this._targetTouchEnd();
+        } else if (!collisionTarget.equals(this._myLastTarget)) {
+          this._targetTouchEnd();
+          this._myLastTarget = collisionTarget;
+          this._targetTouchStart();
+        }
       }
     } else {
       this._targetTouchEnd();
@@ -33632,7 +34738,7 @@ var FingerCursorComponent = class extends Component38 {
     this._myLastTarget.onDown.notify(this._myLastTarget.object, this);
   }
   _targetTouchEnd() {
-    if (this._myLastTarget) {
+    if (this._myLastTarget != null) {
       this._myLastTarget.onClick.notify(this._myLastTarget.object, this);
       if (this._myMultipleClicksEnabled && this._myTripleClickTimer > 0 && this._myMultipleClickObject && this._myMultipleClickObject.pp_equals(this._myLastTarget.object)) {
         this._myLastTarget.onTripleClick.notify(this._myLastTarget.object, this);
@@ -33657,26 +34763,40 @@ var FingerCursorComponent = class extends Component38 {
     this._myCursorParentObject.pp_setActive(true);
   }
   onDeactivate() {
+    this._targetTouchEnd();
     if (this._myCursorParentObject != null) {
       this._myCursorParentObject.pp_setActive(false);
     }
   }
   _updateHand() {
-    this._myHandInputSource = InputUtils.getInputSource(this._myHandednessType, InputSourceType.TRACKED_HAND, this.engine);
-    if (this._myHandInputSource) {
+    const newHandInputSource = InputUtils.getInputSource(this._myHandednessType, InputSourceType.TRACKED_HAND, this.engine);
+    if (newHandInputSource != null && this._myHandInputSource == null) {
+      if (this._myDefaultCursorComponent != null) {
+        this._myDefaultCursorComponent.active = false;
+        this._myCursorParentObject.pp_setActive(true);
+      }
+    } else if (newHandInputSource == null && this._myHandInputSource != null) {
+      if (this._myDefaultCursorComponent != null) {
+        this._targetTouchEnd();
+        this._myCursorParentObject.pp_setActive(false);
+        this._myDefaultCursorComponent.active = true;
+      }
+    }
+    this._myHandInputSource = newHandInputSource;
+    if (this._myHandInputSource != null) {
       let tip = null;
       try {
         tip = XRUtils.getFrame(this.engine).getJointPose(this._myHandInputSource.hand.get(TrackedHandJointID.INDEX_FINGER_TIP), XRUtils.getReferenceSpace(this.engine));
       } catch (error3) {
       }
       if (tip) {
-        this._myCursorObject.pp_setRotationLocalQuat([
+        this._myCursorPointerObject.pp_setRotationLocalQuat([
           tip.transform.orientation.x,
           tip.transform.orientation.y,
           tip.transform.orientation.z,
           tip.transform.orientation.w
         ]);
-        this._myCursorObject.pp_setPositionLocal([
+        this._myCursorPointerObject.pp_setPositionLocal([
           tip.transform.position.x,
           tip.transform.position.y,
           tip.transform.position.z
@@ -33687,8 +34807,8 @@ var FingerCursorComponent = class extends Component38 {
 };
 
 // dist/pp/input/cauldron/components/switch_hand_object_component.js
-import { Component as Component39, Property as Property32 } from "@wonderlandengine/api";
-var SwitchHandObjectComponent = class extends Component39 {
+import { Component as Component42, Property as Property32 } from "@wonderlandengine/api";
+var SwitchHandObjectComponent = class extends Component42 {
   static TypeName = "pp-switch-hand-object";
   static Properties = {
     _myHandedness: Property32.enum(["Left", "Right"], "Left"),
@@ -33717,7 +34837,7 @@ var SwitchHandObjectComponent = class extends Component39 {
       }
     } else {
       let inputSourceType = InputUtils.getInputSourceTypeByHandedness(this._myHandednessType, this.engine);
-      if (inputSourceType != null && this._myCurrentInputSourceType != inputSourceType) {
+      if (this._myCurrentInputSourceType != inputSourceType) {
         this._myCurrentInputSourceType = inputSourceType;
         if (inputSourceType == InputSourceType.TRACKED_HAND) {
           if (this._myGamepad != null) {
@@ -33733,6 +34853,9 @@ var SwitchHandObjectComponent = class extends Component39 {
           if (this._myGamepad != null) {
             this._myGamepad.pp_setActive(true);
           }
+        } else if (inputSourceType == null) {
+          this._myGamepad.pp_setActive(false);
+          this._myTrackedHand.pp_setActive(false);
         }
       }
     }
@@ -33749,8 +34872,8 @@ var SwitchHandObjectComponent = class extends Component39 {
 };
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_joint_component.js
-import { Component as Component40, MeshComponent as MeshComponent11, Property as Property33 } from "@wonderlandengine/api";
-var TrackedHandDrawJointComponent = class extends Component40 {
+import { Component as Component43, MeshComponent as MeshComponent12, Property as Property33 } from "@wonderlandengine/api";
+var TrackedHandDrawJointComponent = class extends Component43 {
   static TypeName = "pp-tracked-hand-draw-joint";
   static Properties = {
     _myHandedness: Property33.enum(["Left", "Right"], "Left"),
@@ -33793,7 +34916,7 @@ var TrackedHandDrawJointComponent = class extends Component40 {
   }
   _buildTrackedHandHierarchy() {
     this._myJointMeshObject = this.object.pp_addObject();
-    let mesh = this._myJointMeshObject.pp_addComponent(MeshComponent11);
+    let mesh = this._myJointMeshObject.pp_addComponent(MeshComponent12);
     mesh.mesh = this._myJointMesh;
     mesh.material = this._myJointMaterial;
     this._myJointMeshObject.pp_setScaleLocal(0);
@@ -33809,8 +34932,8 @@ TrackedHandDrawJointComponent.prototype.update = function() {
 }();
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_all_joints_component.js
-import { Component as Component41, Property as Property34 } from "@wonderlandengine/api";
-var TrackedHandDrawAllJointsComponent = class extends Component41 {
+import { Component as Component44, Property as Property34 } from "@wonderlandengine/api";
+var TrackedHandDrawAllJointsComponent = class extends Component44 {
   static TypeName = "pp-tracked-hand-draw-all-joints";
   static Properties = {
     _myHandedness: Property34.enum(["Left", "Right"], "Left"),
@@ -33841,8 +34964,8 @@ var TrackedHandDrawAllJointsComponent = class extends Component41 {
 };
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_skin_component.js
-import { Component as Component42, Property as Property35 } from "@wonderlandengine/api";
-var TrackedHandDrawSkinComponent = class extends Component42 {
+import { Component as Component45, Property as Property35 } from "@wonderlandengine/api";
+var TrackedHandDrawSkinComponent = class extends Component45 {
   static TypeName = "pp-tracked-hand-draw-skin";
   static Properties = {
     _myHandedness: Property35.enum(["Left", "Right"], "Left"),
@@ -33875,8 +34998,8 @@ TrackedHandDrawSkinComponent.prototype.update = function() {
 }();
 
 // dist/pp/input/gamepad/cauldron/gamepad_mesh_animator_component.js
-import { Component as Component43, Property as Property36 } from "@wonderlandengine/api";
-var GamepadMeshAnimatorComponent = class extends Component43 {
+import { Component as Component46, Property as Property36 } from "@wonderlandengine/api";
+var GamepadMeshAnimatorComponent = class extends Component46 {
   static TypeName = "pp-gamepad-mesh-animator";
   static Properties = {
     _myHandedness: Property36.enum(["Left", "Right"], "Left"),
@@ -34011,8 +35134,8 @@ GamepadMeshAnimatorComponent.prototype._thumbstickPressedStart = function() {
 }();
 
 // dist/pp/input/gamepad/cauldron/gamepad_control_scheme_component.js
-import { Alignment as Alignment5, Component as Component44, Justification as Justification5, MeshComponent as MeshComponent12, Property as Property37, TextComponent as TextComponent8 } from "@wonderlandengine/api";
-var GamepadControlSchemeComponent = class extends Component44 {
+import { Alignment as Alignment5, Component as Component47, Justification as Justification5, MeshComponent as MeshComponent13, Property as Property37, TextComponent as TextComponent10 } from "@wonderlandengine/api";
+var GamepadControlSchemeComponent = class extends Component47 {
   static TypeName = "pp-gamepad-control-scheme";
   static Properties = {
     _myShowOnStart: Property37.bool(true),
@@ -34155,7 +35278,7 @@ var GamepadControlSchemeComponent = class extends Component44 {
     lineDirection.vec3_normalize(lineDirection);
     let lineParentObject = parentObject.pp_addObject();
     let lineObject = lineParentObject.pp_addObject();
-    let lineMesh = lineObject.pp_addComponent(MeshComponent12);
+    let lineMesh = lineObject.pp_addComponent(MeshComponent13);
     lineMesh.mesh = Globals.getDefaultMeshes(this.engine).myCylinder;
     lineMesh.material = this._myLineMaterialFinal;
     lineParentObject.pp_setPositionLocal(start);
@@ -34169,7 +35292,7 @@ var GamepadControlSchemeComponent = class extends Component44 {
     textObject.pp_setPositionLocal(position);
     textObject.pp_lookToLocal(up, forward);
     textObject.pp_scaleObject(0.0935 * this._myTextScaleMultiplier);
-    let textComponent = textObject.pp_addComponent(TextComponent8);
+    let textComponent = textObject.pp_addComponent(TextComponent10);
     textComponent.alignment = Alignment5.Center;
     textComponent.justification = Justification5.Top;
     textComponent.material = this._myTextMaterialFinal;
@@ -34731,7 +35854,7 @@ var VirtualGamepadVirtualButton = class {
     document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
     document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
     this._myButtonDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
-    this._myButtonDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+    this._myButtonDetectionElement.removeEventListener("mouseleave", this._myMouseLeaveEventListener);
     this._myButtonIcon.destroy();
     this._myButtonContainer.remove();
   }
@@ -35200,8 +36323,8 @@ var VirtualGamepad = class {
 };
 
 // dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_component.js
-import { Component as Component45, Property as Property38 } from "@wonderlandengine/api";
-var VirtualGamepadComponent = class extends Component45 {
+import { Component as Component48, Property as Property38 } from "@wonderlandengine/api";
+var VirtualGamepadComponent = class extends Component48 {
   static TypeName = "pp-virtual-gamepad";
   static Properties = {
     _myShowOnDesktop: Property38.bool(false),
@@ -35458,8 +36581,8 @@ var VirtualGamepadComponent = class extends Component45 {
 };
 
 // dist/pp/input/pose/components/set_player_height_component.js
-import { Component as Component46, Property as Property39 } from "@wonderlandengine/api";
-var SetPlayerHeightComponent = class extends Component46 {
+import { Component as Component49, Property as Property39 } from "@wonderlandengine/api";
+var SetPlayerHeightComponent = class extends Component49 {
   static TypeName = "pp-set-player-height";
   static Properties = {
     _myEyesHeight: Property39.float(1.65),
@@ -35491,8 +36614,8 @@ var SetPlayerHeightComponent = class extends Component46 {
 };
 
 // dist/pp/input/pose/components/set_hand_local_transform_component.js
-import { Component as Component47, Property as Property40 } from "@wonderlandengine/api";
-var SetHandLocalTransformComponent = class extends Component47 {
+import { Component as Component50, Property as Property40 } from "@wonderlandengine/api";
+var SetHandLocalTransformComponent = class extends Component50 {
   static TypeName = "pp-set-hand-local-transform";
   static Properties = {
     _myHandedness: Property40.enum(["Left", "Right"], "Left")
@@ -35521,8 +36644,8 @@ SetHandLocalTransformComponent.prototype.onPoseUpdated = function() {
 }();
 
 // dist/pp/input/pose/components/set_head_local_transform_component.js
-import { Component as Component48 } from "@wonderlandengine/api";
-var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component48 {
+import { Component as Component51 } from "@wonderlandengine/api";
+var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component51 {
   static TypeName = "pp-set-head-local-transform";
   start() {
     Globals.getHeadPose(this.engine).registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
@@ -35560,8 +36683,8 @@ var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent exten
 };
 
 // dist/pp/input/pose/components/set_tracked_hand_joint_local_transform_component.js
-import { Component as Component49, Property as Property41 } from "@wonderlandengine/api";
-var SetTrackedHandJointLocalTransformComponent = class extends Component49 {
+import { Component as Component52, Property as Property41 } from "@wonderlandengine/api";
+var SetTrackedHandJointLocalTransformComponent = class extends Component52 {
   static TypeName = "pp-set-tracked-hand-joint-local-transform";
   static Properties = {
     _myHandedness: Property41.enum(["Left", "Right"], "Left"),
@@ -35622,8 +36745,8 @@ SetTrackedHandJointLocalTransformComponent.prototype.onPoseUpdated = function() 
 }();
 
 // dist/pp/input/pose/components/copy_hand_transform_component.js
-import { Component as Component50, Property as Property42 } from "@wonderlandengine/api";
-var CopyHandTransformComponent = class extends Component50 {
+import { Component as Component53, Property as Property42 } from "@wonderlandengine/api";
+var CopyHandTransformComponent = class extends Component53 {
   static TypeName = "pp-copy-hand-transform";
   static Properties = {
     _myHandedness: Property42.enum(["Left", "Right"], "Left")
@@ -35639,8 +36762,8 @@ var CopyHandTransformComponent = class extends Component50 {
 };
 
 // dist/pp/input/pose/components/copy_head_transform_component.js
-import { Component as Component51 } from "@wonderlandengine/api";
-var CopyHeadTransformComponent = class extends Component51 {
+import { Component as Component54 } from "@wonderlandengine/api";
+var CopyHeadTransformComponent = class extends Component54 {
   static TypeName = "pp-copy-head-transform";
   static Properties = {};
   update(dt) {
@@ -35651,8 +36774,8 @@ var CopyHeadTransformComponent = class extends Component51 {
 };
 
 // dist/pp/input/pose/components/copy_player_transform_component.js
-import { Component as Component52 } from "@wonderlandengine/api";
-var CopyPlayerTransformComponent = class extends Component52 {
+import { Component as Component55 } from "@wonderlandengine/api";
+var CopyPlayerTransformComponent = class extends Component55 {
   static TypeName = "pp-copy-player-transform";
   static Properties = {};
   update(dt) {
@@ -35663,8 +36786,8 @@ var CopyPlayerTransformComponent = class extends Component52 {
 };
 
 // dist/pp/input/pose/components/copy_reference_space_transform_component.js
-import { Component as Component53 } from "@wonderlandengine/api";
-var CopyReferenceSpaceTransformComponent = class extends Component53 {
+import { Component as Component56 } from "@wonderlandengine/api";
+var CopyReferenceSpaceTransformComponent = class extends Component56 {
   static TypeName = "pp-copy-reference-space-transform";
   static Properties = {};
   update(dt) {
@@ -35687,9 +36810,9 @@ var ToolInputSourceType = {
 };
 
 // dist/pp/tool/cauldron/components/tool_cursor_component.js
-import { Component as Component54, MeshComponent as MeshComponent13, Property as Property43, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
-import { Cursor as Cursor4, CursorTarget as CursorTarget6 } from "@wonderlandengine/components";
-var ToolCursorComponent = class extends Component54 {
+import { Component as Component57, MeshComponent as MeshComponent14, Property as Property43, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
+import { Cursor as Cursor5, CursorTarget as CursorTarget7 } from "@wonderlandengine/components";
+var ToolCursorComponent = class extends Component57 {
   static TypeName = "pp-tool-cursor";
   static Properties = {
     _myHandedness: Property43.enum(["Left", "Right"], "Left"),
@@ -35718,11 +36841,11 @@ var ToolCursorComponent = class extends Component54 {
       {
         this._myCursorMeshobject = this._myCursorObjectXR.pp_addObject();
         this._myCursorMeshobject.pp_setScale(this._myCursorMeshScale);
-        let cursorMeshComponent = this._myCursorMeshobject.pp_addComponent(MeshComponent13);
+        let cursorMeshComponent = this._myCursorMeshobject.pp_addComponent(MeshComponent14);
         cursorMeshComponent.mesh = Globals.getDefaultMeshes(this.engine).mySphere;
         cursorMeshComponent.material = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
         cursorMeshComponent.material.color = this._myCursorColor;
-        this._myCursorComponentXR = this._myCursorObjectXR.pp_addComponent(Cursor4, {
+        this._myCursorComponentXR = this._myCursorObjectXR.pp_addComponent(Cursor5, {
           "collisionGroup": this._myCursorTargetCollisionGroup,
           "handedness": this._myHandedness + 1,
           "cursorObject": this._myCursorMeshobject,
@@ -35735,7 +36858,7 @@ var ToolCursorComponent = class extends Component54 {
       }
       this._myCursorObjectNonXR = this._myToolCursorObject.pp_addObject();
       {
-        this._myCursorComponentNonXR = this._myCursorObjectNonXR.pp_addComponent(Cursor4, {
+        this._myCursorComponentNonXR = this._myCursorObjectNonXR.pp_addComponent(Cursor5, {
           "collisionGroup": this._myCursorTargetCollisionGroup,
           "handedness": this._myHandedness + 1,
           "styleCursor": this._myUpdatePointerCursorStyle
@@ -35750,19 +36873,32 @@ var ToolCursorComponent = class extends Component54 {
       let fingerCollisionSize = 0.0125;
       if (this._myShowFingerCursor) {
         fingerCursorMeshObject = this._myToolCursorObject.pp_addObject();
-        let meshComponent = fingerCursorMeshObject.pp_addComponent(MeshComponent13);
+        let meshComponent = fingerCursorMeshObject.pp_addComponent(MeshComponent14);
         meshComponent.mesh = Globals.getDefaultMeshes(this.engine).mySphere;
         meshComponent.material = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
         meshComponent.material.color = this._myCursorColor;
         fingerCursorMeshObject.pp_setScale(fingerCollisionSize);
       }
+      let collisionFlags = "";
+      for (let i = 0; i < PhysicsUtils.getLayerFlagsNames().length; i++) {
+        if (i == this._myCursorTargetCollisionGroup) {
+          collisionFlags += "1";
+        } else {
+          collisionFlags += "0";
+        }
+        if (i != PhysicsUtils.getLayerFlagsNames().length - 1) {
+          collisionFlags += ", ";
+        }
+      }
       this._myFingerCursorObject = this._myToolCursorObject.pp_addObject();
       this._myFingerCursorComponent = this._myFingerCursorObject.pp_addComponent(FingerCursorComponent, {
         "_myHandedness": this._myHandedness,
+        "_myDisableDefaultCursorOnTrackedHandDetected": false,
         "_myMultipleClicksEnabled": true,
-        "_myCollisionGroup": this._myCursorTargetCollisionGroup,
+        "_myCollisionMode": 1,
+        "_myCollisionFlags": collisionFlags,
         "_myCollisionSize": fingerCollisionSize,
-        "_myCursorObject": fingerCursorMeshObject
+        "_myCursorPointerObject": fingerCursorMeshObject
       });
       this._myCursorComponentXR.active = false;
       this._myCursorComponentNonXR.active = false;
@@ -35786,7 +36922,7 @@ var ToolCursorComponent = class extends Component54 {
     return usingHand;
   }
   _pulseOnHover(object) {
-    let targetComponent = object.pp_getComponent(CursorTarget6);
+    let targetComponent = object.pp_getComponent(CursorTarget7);
     if (targetComponent && !targetComponent.isSurface) {
       if (this._myHandedness == 0) {
         if (Globals.getLeftGamepad(this.engine) != null) {
@@ -36000,8 +37136,8 @@ var ConsoleVRWidgetConfig = class {
 };
 
 // dist/pp/tool/console_vr/console_vr_widget_ui.js
-import { CollisionComponent as CollisionComponent4, MeshComponent as MeshComponent14, TextComponent as TextComponent9 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget7 } from "@wonderlandengine/components";
+import { CollisionComponent as CollisionComponent4, MeshComponent as MeshComponent15, TextComponent as TextComponent11 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
 var ConsoleVRWidgetUI = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -36128,13 +37264,13 @@ var ConsoleVRWidgetUI = class {
     this._addPointerComponents();
   }
   _addMessagesComponents() {
-    let messagesBackgroundMeshComp = this.myMessagesBackground.pp_addComponent(MeshComponent14);
+    let messagesBackgroundMeshComp = this.myMessagesBackground.pp_addComponent(MeshComponent15);
     messagesBackgroundMeshComp.mesh = this._myPlaneMesh;
     messagesBackgroundMeshComp.material = this._myParams.myPlaneMaterial.clone();
     messagesBackgroundMeshComp.material.color = this._myConfig.myBackgroundColor;
     this.myMessagesTextComponents = [];
     for (let key in ConsoleVRWidgetMessageType) {
-      let textComp = this.myMessagesTexts[ConsoleVRWidgetMessageType[key]].pp_addComponent(TextComponent9);
+      let textComp = this.myMessagesTexts[ConsoleVRWidgetMessageType[key]].pp_addComponent(TextComponent11);
       textComp.alignment = this._myConfig.myMessagesTextAlignment;
       textComp.justification = this._myConfig.myMessagesTextJustification;
       textComp.material = this._myParams.myTextMaterial.clone();
@@ -36143,11 +37279,11 @@ var ConsoleVRWidgetUI = class {
       textComp.text = this._myConfig.myMessagesTextStartString;
       this.myMessagesTextComponents[ConsoleVRWidgetMessageType[key]] = textComp;
     }
-    this.myNotifyIconBackgroundComponent = this.myNotifyIconBackground.pp_addComponent(MeshComponent14);
+    this.myNotifyIconBackgroundComponent = this.myNotifyIconBackground.pp_addComponent(MeshComponent15);
     this.myNotifyIconBackgroundComponent.mesh = this._myPlaneMesh;
     this.myNotifyIconBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myNotifyIconBackgroundComponent.material.color = this._myConfig.myNotifyIconColor;
-    this.myNotifyIconCursorTargetComponent = this.myNotifyIconCursorTarget.pp_addComponent(CursorTarget7);
+    this.myNotifyIconCursorTargetComponent = this.myNotifyIconCursorTarget.pp_addComponent(CursorTarget8);
     this.myNotifyIconCollisionComponent = this.myNotifyIconCursorTarget.pp_addComponent(CollisionComponent4);
     this.myNotifyIconCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myNotifyIconCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -36159,15 +37295,15 @@ var ConsoleVRWidgetUI = class {
     this.myFilterButtonsCursorTargetComponents = [];
     this.myFilterButtonsCollisionComponents = [];
     for (let key in ConsoleVRWidgetMessageType) {
-      let buttonBackgroundMeshComp = this.myFilterButtonsBackgrounds[ConsoleVRWidgetMessageType[key]].pp_addComponent(MeshComponent14);
+      let buttonBackgroundMeshComp = this.myFilterButtonsBackgrounds[ConsoleVRWidgetMessageType[key]].pp_addComponent(MeshComponent15);
       buttonBackgroundMeshComp.mesh = this._myPlaneMesh;
       buttonBackgroundMeshComp.material = this._myParams.myPlaneMaterial.clone();
       buttonBackgroundMeshComp.material.color = this._myConfig.myBackgroundColor;
-      let buttonTextComp = this.myFilterButtonsTexts[ConsoleVRWidgetMessageType[key]].pp_addComponent(TextComponent9);
+      let buttonTextComp = this.myFilterButtonsTexts[ConsoleVRWidgetMessageType[key]].pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.material.color = this._myConfig.myFilterButtonsTextColors[ConsoleVRWidgetMessageType[key]];
       buttonTextComp.text = this._myConfig.myFilterButtonsTextLabel[ConsoleVRWidgetMessageType[key]];
-      let buttonCursorTargetComp = this.myFilterButtonsCursorTargets[ConsoleVRWidgetMessageType[key]].pp_addComponent(CursorTarget7);
+      let buttonCursorTargetComp = this.myFilterButtonsCursorTargets[ConsoleVRWidgetMessageType[key]].pp_addComponent(CursorTarget8);
       let buttonCollisionComp = this.myFilterButtonsCursorTargets[ConsoleVRWidgetMessageType[key]].pp_addComponent(CollisionComponent4);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -36178,14 +37314,14 @@ var ConsoleVRWidgetUI = class {
       this.myFilterButtonsCollisionComponents[ConsoleVRWidgetMessageType[key]] = buttonCollisionComp;
     }
     {
-      let buttonBackgroundMeshComp = this.myClearButtonBackground.pp_addComponent(MeshComponent14);
+      let buttonBackgroundMeshComp = this.myClearButtonBackground.pp_addComponent(MeshComponent15);
       buttonBackgroundMeshComp.mesh = this._myPlaneMesh;
       buttonBackgroundMeshComp.material = this._myParams.myPlaneMaterial.clone();
       buttonBackgroundMeshComp.material.color = this._myConfig.myBackgroundColor;
-      let buttonTextComp = this.myClearButtonText.pp_addComponent(TextComponent9);
+      let buttonTextComp = this.myClearButtonText.pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.text = this._myConfig.myClearButtonTextLabel;
-      let buttonCursorTargetComp = this.myClearButtonCursorTarget.pp_addComponent(CursorTarget7);
+      let buttonCursorTargetComp = this.myClearButtonCursorTarget.pp_addComponent(CursorTarget8);
       let buttonCollisionComp = this.myClearButtonCursorTarget.pp_addComponent(CollisionComponent4);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -36196,14 +37332,14 @@ var ConsoleVRWidgetUI = class {
       this.myClearButtonCollisionComponent = buttonCollisionComp;
     }
     {
-      let buttonBackgroundMeshComp = this.myUpButtonBackground.pp_addComponent(MeshComponent14);
+      let buttonBackgroundMeshComp = this.myUpButtonBackground.pp_addComponent(MeshComponent15);
       buttonBackgroundMeshComp.mesh = this._myPlaneMesh;
       buttonBackgroundMeshComp.material = this._myParams.myPlaneMaterial.clone();
       buttonBackgroundMeshComp.material.color = this._myConfig.myBackgroundColor;
-      let buttonTextComp = this.myUpButtonText.pp_addComponent(TextComponent9);
+      let buttonTextComp = this.myUpButtonText.pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.text = this._myConfig.myUpButtonTextLabel;
-      let buttonCursorTargetComp = this.myUpButtonCursorTarget.pp_addComponent(CursorTarget7);
+      let buttonCursorTargetComp = this.myUpButtonCursorTarget.pp_addComponent(CursorTarget8);
       let buttonCollisionComp = this.myUpButtonCursorTarget.pp_addComponent(CollisionComponent4);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -36214,14 +37350,14 @@ var ConsoleVRWidgetUI = class {
       this.myUpButtonCollisionComponent = buttonCollisionComp;
     }
     {
-      let buttonBackgroundMeshComp = this.myDownButtonBackground.pp_addComponent(MeshComponent14);
+      let buttonBackgroundMeshComp = this.myDownButtonBackground.pp_addComponent(MeshComponent15);
       buttonBackgroundMeshComp.mesh = this._myPlaneMesh;
       buttonBackgroundMeshComp.material = this._myParams.myPlaneMaterial.clone();
       buttonBackgroundMeshComp.material.color = this._myConfig.myBackgroundColor;
-      let buttonTextComp = this.myDownButtonText.pp_addComponent(TextComponent9);
+      let buttonTextComp = this.myDownButtonText.pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.text = this._myConfig.myDownButtonTextLabel;
-      let buttonCursorTargetComp = this.myDownButtonCursorTarget.pp_addComponent(CursorTarget7);
+      let buttonCursorTargetComp = this.myDownButtonCursorTarget.pp_addComponent(CursorTarget8);
       let buttonCollisionComp = this.myDownButtonCursorTarget.pp_addComponent(CollisionComponent4);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -36233,7 +37369,7 @@ var ConsoleVRWidgetUI = class {
     }
   }
   _addPointerComponents() {
-    this.myPointerCursorTargetComponent = this.myPointerCursorTarget.pp_addComponent(CursorTarget7);
+    this.myPointerCursorTargetComponent = this.myPointerCursorTarget.pp_addComponent(CursorTarget8);
     this.myPointerCursorTargetComponent.isSurface = true;
     let collisionComp = this.myPointerCursorTarget.pp_addComponent(CollisionComponent4);
     collisionComp.collider = this._myConfig.myPointerCollisionCollider;
@@ -36368,8 +37504,8 @@ var WidgetFrameConfig = class {
 };
 
 // dist/pp/tool/widget_frame/widget_frame_ui.js
-import { CollisionComponent as CollisionComponent5, MeshComponent as MeshComponent15, TextComponent as TextComponent10 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
+import { CollisionComponent as CollisionComponent5, MeshComponent as MeshComponent16, TextComponent as TextComponent12 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget9 } from "@wonderlandengine/components";
 var WidgetFrameUI = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myInputSourceType = null;
@@ -36476,27 +37612,27 @@ var WidgetFrameUI = class {
   }
   // Components
   _addComponents() {
-    this.myVisibilityButtonBackgroundComponent = this.myVisibilityButtonBackground.pp_addComponent(MeshComponent15);
+    this.myVisibilityButtonBackgroundComponent = this.myVisibilityButtonBackground.pp_addComponent(MeshComponent16);
     this.myVisibilityButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myVisibilityButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myVisibilityButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myVisibilityButtonTextComponent = this.myVisibilityButtonText.pp_addComponent(TextComponent10);
+    this.myVisibilityButtonTextComponent = this.myVisibilityButtonText.pp_addComponent(TextComponent12);
     this._setupButtonTextComponent(this.myVisibilityButtonTextComponent);
     this.myVisibilityButtonTextComponent.text = this._myConfig.myVisibilityButtonText;
-    this.myVisibilityButtonCursorTargetComponent = this.myVisibilityButtonCursorTarget.pp_addComponent(CursorTarget8);
+    this.myVisibilityButtonCursorTargetComponent = this.myVisibilityButtonCursorTarget.pp_addComponent(CursorTarget9);
     this.myVisibilityButtonCollisionComponent = this.myVisibilityButtonCursorTarget.pp_addComponent(CollisionComponent5);
     this.myVisibilityButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myVisibilityButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myVisibilityButtonCollisionComponent.extents = this._myConfig.myVisibilityButtonCollisionExtents;
-    this.myPinButtonBackgroundComponent = this.myPinButtonBackground.pp_addComponent(MeshComponent15);
+    this.myPinButtonBackgroundComponent = this.myPinButtonBackground.pp_addComponent(MeshComponent16);
     this.myPinButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myPinButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myPinButtonBackgroundComponent.material.color = this._myConfig.myButtonDisabledBackgroundColor;
-    this.myPinButtonTextComponent = this.myPinButtonText.pp_addComponent(TextComponent10);
+    this.myPinButtonTextComponent = this.myPinButtonText.pp_addComponent(TextComponent12);
     this._setupButtonTextComponent(this.myPinButtonTextComponent);
     this.myPinButtonTextComponent.material.color = this._myConfig.myButtonDisabledTextColor;
     this.myPinButtonTextComponent.text = this._myConfig.myPinButtonText;
-    this.myPinButtonCursorTargetComponent = this.myPinButtonCursorTarget.pp_addComponent(CursorTarget8);
+    this.myPinButtonCursorTargetComponent = this.myPinButtonCursorTarget.pp_addComponent(CursorTarget9);
     this.myPinButtonCollisionComponent = this.myPinButtonCursorTarget.pp_addComponent(CollisionComponent5);
     this.myPinButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPinButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -37400,8 +38536,8 @@ var ConsoleVRWidget = class {
 };
 
 // dist/pp/tool/console_vr/components/console_vr_tool_component.js
-import { Component as Component55, Property as Property44 } from "@wonderlandengine/api";
-var ConsoleVRToolComponent = class extends Component55 {
+import { Component as Component58, Property as Property44 } from "@wonderlandengine/api";
+var ConsoleVRToolComponent = class extends Component58 {
   static TypeName = "pp-console-vr-tool";
   static Properties = {
     _myHandedness: Property44.enum(["None", "Left", "Right"], "None"),
@@ -37994,7 +39130,7 @@ var EasyTuneTransform = class _EasyTuneTransform extends EasyTuneVariable {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
-import { Component as Component56, Property as Property45 } from "@wonderlandengine/api";
+import { Component as Component59, Property as Property45 } from "@wonderlandengine/api";
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget.js
 import { Emitter as Emitter15 } from "@wonderlandengine/api";
@@ -38537,12 +39673,12 @@ var EasyTuneBoolArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 };
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui.js
-import { CollisionComponent as CollisionComponent7, MeshComponent as MeshComponent17, TextComponent as TextComponent12 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget10 } from "@wonderlandengine/components";
+import { CollisionComponent as CollisionComponent7, MeshComponent as MeshComponent18, TextComponent as TextComponent14 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget11 } from "@wonderlandengine/components";
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_ui.js
-import { CollisionComponent as CollisionComponent6, MeshComponent as MeshComponent16, TextComponent as TextComponent11 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget9 } from "@wonderlandengine/components";
+import { CollisionComponent as CollisionComponent6, MeshComponent as MeshComponent17, TextComponent as TextComponent13 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget10 } from "@wonderlandengine/components";
 var EasyTuneBaseWidgetUI = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -38648,62 +39784,62 @@ var EasyTuneBaseWidgetUI = class {
   }
   // Components
   _addComponents() {
-    this.myBackBackgroundComponent = this.myBackBackground.pp_addComponent(MeshComponent16);
+    this.myBackBackgroundComponent = this.myBackBackground.pp_addComponent(MeshComponent17);
     this.myBackBackgroundComponent.mesh = this._myPlaneMesh;
     this.myBackBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myBackBackgroundComponent.material.color = this._myConfig.myBackBackgroundColor;
-    this.myVariableLabelTextComponent = this.myVariableLabelText.pp_addComponent(TextComponent11);
+    this.myVariableLabelTextComponent = this.myVariableLabelText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myVariableLabelTextComponent);
     this.myVariableLabelTextComponent.text = " ";
-    this.myVariableLabelCursorTargetComponent = this.myVariableLabelCursorTarget.pp_addComponent(CursorTarget9);
+    this.myVariableLabelCursorTargetComponent = this.myVariableLabelCursorTarget.pp_addComponent(CursorTarget10);
     this.myVariableLabelCollisionComponent = this.myVariableLabelCursorTarget.pp_addComponent(CollisionComponent6);
     this.myVariableLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myVariableLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myVariableLabelCollisionComponent.extents = this._myConfig.myVariableLabelCollisionExtents;
-    this.myNextButtonBackgroundComponent = this.myNextButtonBackground.pp_addComponent(MeshComponent16);
+    this.myNextButtonBackgroundComponent = this.myNextButtonBackground.pp_addComponent(MeshComponent17);
     this.myNextButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myNextButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myNextButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myNextButtonTextComponent = this.myNextButtonText.pp_addComponent(TextComponent11);
+    this.myNextButtonTextComponent = this.myNextButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myNextButtonTextComponent);
     this.myNextButtonTextComponent.text = this._myConfig.myNextButtonText;
-    this.myNextButtonCursorTargetComponent = this.myNextButtonCursorTarget.pp_addComponent(CursorTarget9);
+    this.myNextButtonCursorTargetComponent = this.myNextButtonCursorTarget.pp_addComponent(CursorTarget10);
     this.myNextButtonCollisionComponent = this.myNextButtonCursorTarget.pp_addComponent(CollisionComponent6);
     this.myNextButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myNextButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myNextButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myPreviousButtonBackgroundComponent = this.myPreviousButtonBackground.pp_addComponent(MeshComponent16);
+    this.myPreviousButtonBackgroundComponent = this.myPreviousButtonBackground.pp_addComponent(MeshComponent17);
     this.myPreviousButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myPreviousButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myPreviousButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myPreviousButtonTextComponent = this.myPreviousButtonText.pp_addComponent(TextComponent11);
+    this.myPreviousButtonTextComponent = this.myPreviousButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myPreviousButtonTextComponent);
     this.myPreviousButtonTextComponent.text = this._myConfig.myPreviousButtonText;
-    this.myPreviousButtonCursorTargetComponent = this.myPreviousButtonCursorTarget.pp_addComponent(CursorTarget9);
+    this.myPreviousButtonCursorTargetComponent = this.myPreviousButtonCursorTarget.pp_addComponent(CursorTarget10);
     this.myPreviousButtonCollisionComponent = this.myPreviousButtonCursorTarget.pp_addComponent(CollisionComponent6);
     this.myPreviousButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPreviousButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPreviousButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myImportButtonBackgroundComponent = this.myImportButtonBackground.pp_addComponent(MeshComponent16);
+    this.myImportButtonBackgroundComponent = this.myImportButtonBackground.pp_addComponent(MeshComponent17);
     this.myImportButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myImportButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myImportButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myImportButtonTextComponent = this.myImportButtonText.pp_addComponent(TextComponent11);
+    this.myImportButtonTextComponent = this.myImportButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myImportButtonTextComponent);
     this.myImportButtonTextComponent.text = this._myConfig.myImportButtonText;
-    this.myImportButtonCursorTargetComponent = this.myImportButtonCursorTarget.pp_addComponent(CursorTarget9);
+    this.myImportButtonCursorTargetComponent = this.myImportButtonCursorTarget.pp_addComponent(CursorTarget10);
     this.myImportButtonCollisionComponent = this.myImportButtonCursorTarget.pp_addComponent(CollisionComponent6);
     this.myImportButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myImportButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myImportButtonCollisionComponent.extents = this._myConfig.myImportExportButtonCollisionExtents;
-    this.myExportButtonBackgroundComponent = this.myExportButtonBackground.pp_addComponent(MeshComponent16);
+    this.myExportButtonBackgroundComponent = this.myExportButtonBackground.pp_addComponent(MeshComponent17);
     this.myExportButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myExportButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myExportButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myExportButtonTextComponent = this.myExportButtonText.pp_addComponent(TextComponent11);
+    this.myExportButtonTextComponent = this.myExportButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myExportButtonTextComponent);
     this.myExportButtonTextComponent.text = this._myConfig.myExportButtonText;
-    this.myExportButtonCursorTargetComponent = this.myExportButtonCursorTarget.pp_addComponent(CursorTarget9);
+    this.myExportButtonCursorTargetComponent = this.myExportButtonCursorTarget.pp_addComponent(CursorTarget10);
     this.myExportButtonCollisionComponent = this.myExportButtonCursorTarget.pp_addComponent(CollisionComponent6);
     this.myExportButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myExportButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -38815,34 +39951,34 @@ var EasyTuneBoolArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myValueDecreaseButtonCursorTargetComponents = [];
     this.myValueDecreaseButtonCollisionComponents = [];
     for (let i = 0; i < this._myConfig.myArraySize; i++) {
-      this.myValueTextComponents[i] = this.myValueTexts[i].pp_addComponent(TextComponent12);
+      this.myValueTextComponents[i] = this.myValueTexts[i].pp_addComponent(TextComponent14);
       this._setupTextComponent(this.myValueTextComponents[i]);
       this.myValueTextComponents[i].text = " ";
-      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget10);
+      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget11);
       this.myValueCollisionComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CollisionComponent7);
       this.myValueCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myValueCollisionComponents[i].extents = this._myConfig.myValueCollisionExtents;
-      this.myValueIncreaseButtonBackgroundComponents[i] = this.myValueIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent17);
+      this.myValueIncreaseButtonBackgroundComponents[i] = this.myValueIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent18);
       this.myValueIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myValueIncreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myValueIncreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myValueIncreaseButtonTextComponents[i] = this.myValueIncreaseButtonTexts[i].pp_addComponent(TextComponent12);
+      this.myValueIncreaseButtonTextComponents[i] = this.myValueIncreaseButtonTexts[i].pp_addComponent(TextComponent14);
       this._setupTextComponent(this.myValueIncreaseButtonTextComponents[i]);
       this.myValueIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget10);
+      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget11);
       this.myValueIncreaseButtonCollisionComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent7);
       this.myValueIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myValueIncreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
-      this.myValueDecreaseButtonBackgroundComponents[i] = this.myValueDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent17);
+      this.myValueDecreaseButtonBackgroundComponents[i] = this.myValueDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent18);
       this.myValueDecreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myValueDecreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myValueDecreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myValueDecreaseButtonTextComponents[i] = this.myValueDecreaseButtonTexts[i].pp_addComponent(TextComponent12);
+      this.myValueDecreaseButtonTextComponents[i] = this.myValueDecreaseButtonTexts[i].pp_addComponent(TextComponent14);
       this._setupTextComponent(this.myValueDecreaseButtonTextComponents[i]);
       this.myValueDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget10);
+      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget11);
       this.myValueDecreaseButtonCollisionComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent7);
       this.myValueDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -39036,7 +40172,7 @@ var EasyTuneNoneWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 };
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/none/easy_tune_none_widget_ui.js
-import { TextComponent as TextComponent13 } from "@wonderlandengine/api";
+import { TextComponent as TextComponent15 } from "@wonderlandengine/api";
 var EasyTuneNoneWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
     super(engine);
@@ -39051,7 +40187,7 @@ var EasyTuneNoneWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myTypeNotSupportedText.pp_scaleObject(this._myConfig.myTypeNotSupportedTextScale);
   }
   _addComponentsHook() {
-    this.myTypeNotSupportedTextComponent = this.myTypeNotSupportedText.pp_addComponent(TextComponent13);
+    this.myTypeNotSupportedTextComponent = this.myTypeNotSupportedText.pp_addComponent(TextComponent15);
     this._setupTextComponent(this.myTypeNotSupportedTextComponent);
     this.myTypeNotSupportedTextComponent.text = this._myConfig.myTypeNotSupportedText;
   }
@@ -39113,8 +40249,8 @@ var EasyTuneNumberArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 };
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_ui.js
-import { CollisionComponent as CollisionComponent8, MeshComponent as MeshComponent18, TextComponent as TextComponent14 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget11 } from "@wonderlandengine/components";
+import { CollisionComponent as CollisionComponent8, MeshComponent as MeshComponent19, TextComponent as TextComponent16 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget12 } from "@wonderlandengine/components";
 var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
     super(engine);
@@ -39213,67 +40349,67 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myValueDecreaseButtonCursorTargetComponents = [];
     this.myValueDecreaseButtonCollisionComponents = [];
     for (let i = 0; i < this._myConfig.myArraySize; i++) {
-      this.myValueTextComponents[i] = this.myValueTexts[i].pp_addComponent(TextComponent14);
+      this.myValueTextComponents[i] = this.myValueTexts[i].pp_addComponent(TextComponent16);
       this._setupTextComponent(this.myValueTextComponents[i]);
       this.myValueTextComponents[i].text = " ";
-      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget11);
+      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget12);
       this.myValueCollisionComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CollisionComponent8);
       this.myValueCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myValueCollisionComponents[i].extents = this._myConfig.myValueCollisionExtents;
-      this.myValueIncreaseButtonBackgroundComponents[i] = this.myValueIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent18);
+      this.myValueIncreaseButtonBackgroundComponents[i] = this.myValueIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
       this.myValueIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myValueIncreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myValueIncreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myValueIncreaseButtonTextComponents[i] = this.myValueIncreaseButtonTexts[i].pp_addComponent(TextComponent14);
+      this.myValueIncreaseButtonTextComponents[i] = this.myValueIncreaseButtonTexts[i].pp_addComponent(TextComponent16);
       this._setupTextComponent(this.myValueIncreaseButtonTextComponents[i]);
       this.myValueIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget11);
+      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
       this.myValueIncreaseButtonCollisionComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent8);
       this.myValueIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myValueIncreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
-      this.myValueDecreaseButtonBackgroundComponents[i] = this.myValueDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent18);
+      this.myValueDecreaseButtonBackgroundComponents[i] = this.myValueDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
       this.myValueDecreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myValueDecreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myValueDecreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myValueDecreaseButtonTextComponents[i] = this.myValueDecreaseButtonTexts[i].pp_addComponent(TextComponent14);
+      this.myValueDecreaseButtonTextComponents[i] = this.myValueDecreaseButtonTexts[i].pp_addComponent(TextComponent16);
       this._setupTextComponent(this.myValueDecreaseButtonTextComponents[i]);
       this.myValueDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget11);
+      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
       this.myValueDecreaseButtonCollisionComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent8);
       this.myValueDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myValueDecreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
     }
-    this.myStepTextComponent = this.myStepText.pp_addComponent(TextComponent14);
+    this.myStepTextComponent = this.myStepText.pp_addComponent(TextComponent16);
     this._setupTextComponent(this.myStepTextComponent);
     this.myStepTextComponent.text = " ";
-    this.myStepCursorTargetComponent = this.myStepCursorTarget.pp_addComponent(CursorTarget11);
+    this.myStepCursorTargetComponent = this.myStepCursorTarget.pp_addComponent(CursorTarget12);
     this.myStepCollisionComponent = this.myStepCursorTarget.pp_addComponent(CollisionComponent8);
     this.myStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myStepIncreaseButtonBackgroundComponent = this.myStepIncreaseButtonBackground.pp_addComponent(MeshComponent18);
+    this.myStepIncreaseButtonBackgroundComponent = this.myStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
     this.myStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myStepIncreaseButtonTextComponent = this.myStepIncreaseButtonText.pp_addComponent(TextComponent14);
+    this.myStepIncreaseButtonTextComponent = this.myStepIncreaseButtonText.pp_addComponent(TextComponent16);
     this._setupTextComponent(this.myStepIncreaseButtonTextComponent);
     this.myStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myStepIncreaseButtonCursorTargetComponent = this.myStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget11);
+    this.myStepIncreaseButtonCursorTargetComponent = this.myStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
     this.myStepIncreaseButtonCollisionComponent = this.myStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent8);
     this.myStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myStepDecreaseButtonBackgroundComponent = this.myStepDecreaseButtonBackground.pp_addComponent(MeshComponent18);
+    this.myStepDecreaseButtonBackgroundComponent = this.myStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
     this.myStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myStepDecreaseButtonTextComponent = this.myStepDecreaseButtonText.pp_addComponent(TextComponent14);
+    this.myStepDecreaseButtonTextComponent = this.myStepDecreaseButtonText.pp_addComponent(TextComponent16);
     this._setupTextComponent(this.myStepDecreaseButtonTextComponent);
     this.myStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myStepDecreaseButtonCursorTargetComponent = this.myStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget11);
+    this.myStepDecreaseButtonCursorTargetComponent = this.myStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
     this.myStepDecreaseButtonCollisionComponent = this.myStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent8);
     this.myStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -39621,8 +40757,8 @@ var EasyTuneTransformWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 };
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_ui.js
-import { CollisionComponent as CollisionComponent9, MeshComponent as MeshComponent19, TextComponent as TextComponent15 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget12 } from "@wonderlandengine/components";
+import { CollisionComponent as CollisionComponent9, MeshComponent as MeshComponent20, TextComponent as TextComponent17 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget13 } from "@wonderlandengine/components";
 var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
     super(engine);
@@ -39863,10 +40999,10 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepDecreaseButtonCursorTarget.pp_setPositionLocal(this._myConfig.mySideButtonCursorTargetPosition);
   }
   _addComponentsHook() {
-    this.myPositionLabelTextComponent = this.myPositionLabelText.pp_addComponent(TextComponent15);
+    this.myPositionLabelTextComponent = this.myPositionLabelText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionLabelTextComponent);
     this.myPositionLabelTextComponent.text = this._myConfig.myPositionText;
-    this.myPositionLabelCursorTargetComponent = this.myPositionLabelCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionLabelCursorTargetComponent = this.myPositionLabelCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionLabelCollisionComponent = this.myPositionLabelCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -39883,43 +41019,43 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionDecreaseButtonCursorTargetComponents = [];
     this.myPositionDecreaseButtonCollisionComponents = [];
     for (let i = 0; i < 3; i++) {
-      this.myPositionTextComponents[i] = this.myPositionTexts[i].pp_addComponent(TextComponent15);
+      this.myPositionTextComponents[i] = this.myPositionTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myPositionTextComponents[i]);
       this.myPositionTextComponents[i].text = " ";
-      this.myPositionCursorTargetComponents[i] = this.myPositionCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myPositionCursorTargetComponents[i] = this.myPositionCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myPositionCollisionComponents[i] = this.myPositionCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myPositionCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myPositionCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myPositionCollisionComponents[i].extents = this._myConfig.myValueCollisionExtents;
-      this.myPositionIncreaseButtonBackgroundComponents[i] = this.myPositionIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
+      this.myPositionIncreaseButtonBackgroundComponents[i] = this.myPositionIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent20);
       this.myPositionIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myPositionIncreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myPositionIncreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myPositionIncreaseButtonTextComponents[i] = this.myPositionIncreaseButtonTexts[i].pp_addComponent(TextComponent15);
+      this.myPositionIncreaseButtonTextComponents[i] = this.myPositionIncreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myPositionIncreaseButtonTextComponents[i]);
       this.myPositionIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myPositionIncreaseButtonCursorTargetComponents[i] = this.myPositionIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myPositionIncreaseButtonCursorTargetComponents[i] = this.myPositionIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myPositionIncreaseButtonCollisionComponents[i] = this.myPositionIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myPositionIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myPositionIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myPositionIncreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
-      this.myPositionDecreaseButtonBackgroundComponents[i] = this.myPositionDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
+      this.myPositionDecreaseButtonBackgroundComponents[i] = this.myPositionDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent20);
       this.myPositionDecreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myPositionDecreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myPositionDecreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myPositionDecreaseButtonTextComponents[i] = this.myPositionDecreaseButtonTexts[i].pp_addComponent(TextComponent15);
+      this.myPositionDecreaseButtonTextComponents[i] = this.myPositionDecreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myPositionDecreaseButtonTextComponents[i]);
       this.myPositionDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myPositionDecreaseButtonCursorTargetComponents[i] = this.myPositionDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myPositionDecreaseButtonCursorTargetComponents[i] = this.myPositionDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myPositionDecreaseButtonCollisionComponents[i] = this.myPositionDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myPositionDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myPositionDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myPositionDecreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
     }
-    this.myRotationLabelTextComponent = this.myRotationLabelText.pp_addComponent(TextComponent15);
+    this.myRotationLabelTextComponent = this.myRotationLabelText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationLabelTextComponent);
     this.myRotationLabelTextComponent.text = this._myConfig.myRotationText;
-    this.myRotationLabelCursorTargetComponent = this.myRotationLabelCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationLabelCursorTargetComponent = this.myRotationLabelCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationLabelCollisionComponent = this.myRotationLabelCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -39936,43 +41072,43 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationDecreaseButtonCursorTargetComponents = [];
     this.myRotationDecreaseButtonCollisionComponents = [];
     for (let i = 0; i < 3; i++) {
-      this.myRotationTextComponents[i] = this.myRotationTexts[i].pp_addComponent(TextComponent15);
+      this.myRotationTextComponents[i] = this.myRotationTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myRotationTextComponents[i]);
       this.myRotationTextComponents[i].text = " ";
-      this.myRotationCursorTargetComponents[i] = this.myRotationCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myRotationCursorTargetComponents[i] = this.myRotationCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myRotationCollisionComponents[i] = this.myRotationCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myRotationCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myRotationCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myRotationCollisionComponents[i].extents = this._myConfig.myValueCollisionExtents;
-      this.myRotationIncreaseButtonBackgroundComponents[i] = this.myRotationIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
+      this.myRotationIncreaseButtonBackgroundComponents[i] = this.myRotationIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent20);
       this.myRotationIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myRotationIncreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myRotationIncreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myRotationIncreaseButtonTextComponents[i] = this.myRotationIncreaseButtonTexts[i].pp_addComponent(TextComponent15);
+      this.myRotationIncreaseButtonTextComponents[i] = this.myRotationIncreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myRotationIncreaseButtonTextComponents[i]);
       this.myRotationIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myRotationIncreaseButtonCursorTargetComponents[i] = this.myRotationIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myRotationIncreaseButtonCursorTargetComponents[i] = this.myRotationIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myRotationIncreaseButtonCollisionComponents[i] = this.myRotationIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myRotationIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myRotationIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myRotationIncreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
-      this.myRotationDecreaseButtonBackgroundComponents[i] = this.myRotationDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
+      this.myRotationDecreaseButtonBackgroundComponents[i] = this.myRotationDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent20);
       this.myRotationDecreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myRotationDecreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myRotationDecreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myRotationDecreaseButtonTextComponents[i] = this.myRotationDecreaseButtonTexts[i].pp_addComponent(TextComponent15);
+      this.myRotationDecreaseButtonTextComponents[i] = this.myRotationDecreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myRotationDecreaseButtonTextComponents[i]);
       this.myRotationDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myRotationDecreaseButtonCursorTargetComponents[i] = this.myRotationDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myRotationDecreaseButtonCursorTargetComponents[i] = this.myRotationDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myRotationDecreaseButtonCollisionComponents[i] = this.myRotationDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myRotationDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myRotationDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myRotationDecreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
     }
-    this.myScaleLabelTextComponent = this.myScaleLabelText.pp_addComponent(TextComponent15);
+    this.myScaleLabelTextComponent = this.myScaleLabelText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleLabelTextComponent);
     this.myScaleLabelTextComponent.text = this._myConfig.myScaleText;
-    this.myScaleLabelCursorTargetComponent = this.myScaleLabelCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleLabelCursorTargetComponent = this.myScaleLabelCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleLabelCollisionComponent = this.myScaleLabelCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -39989,229 +41125,229 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleDecreaseButtonCursorTargetComponents = [];
     this.myScaleDecreaseButtonCollisionComponents = [];
     for (let i = 0; i < 3; i++) {
-      this.myScaleTextComponents[i] = this.myScaleTexts[i].pp_addComponent(TextComponent15);
+      this.myScaleTextComponents[i] = this.myScaleTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myScaleTextComponents[i]);
       this.myScaleTextComponents[i].text = " ";
-      this.myScaleCursorTargetComponents[i] = this.myScaleCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myScaleCursorTargetComponents[i] = this.myScaleCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myScaleCollisionComponents[i] = this.myScaleCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myScaleCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myScaleCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myScaleCollisionComponents[i].extents = this._myConfig.myValueCollisionExtents;
-      this.myScaleIncreaseButtonBackgroundComponents[i] = this.myScaleIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
+      this.myScaleIncreaseButtonBackgroundComponents[i] = this.myScaleIncreaseButtonBackgrounds[i].pp_addComponent(MeshComponent20);
       this.myScaleIncreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myScaleIncreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myScaleIncreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myScaleIncreaseButtonTextComponents[i] = this.myScaleIncreaseButtonTexts[i].pp_addComponent(TextComponent15);
+      this.myScaleIncreaseButtonTextComponents[i] = this.myScaleIncreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myScaleIncreaseButtonTextComponents[i]);
       this.myScaleIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myScaleIncreaseButtonCursorTargetComponents[i] = this.myScaleIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myScaleIncreaseButtonCursorTargetComponents[i] = this.myScaleIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myScaleIncreaseButtonCollisionComponents[i] = this.myScaleIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myScaleIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myScaleIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myScaleIncreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
-      this.myScaleDecreaseButtonBackgroundComponents[i] = this.myScaleDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent19);
+      this.myScaleDecreaseButtonBackgroundComponents[i] = this.myScaleDecreaseButtonBackgrounds[i].pp_addComponent(MeshComponent20);
       this.myScaleDecreaseButtonBackgroundComponents[i].mesh = this._myPlaneMesh;
       this.myScaleDecreaseButtonBackgroundComponents[i].material = this._myParams.myPlaneMaterial.clone();
       this.myScaleDecreaseButtonBackgroundComponents[i].material.color = this._myConfig.myBackgroundColor;
-      this.myScaleDecreaseButtonTextComponents[i] = this.myScaleDecreaseButtonTexts[i].pp_addComponent(TextComponent15);
+      this.myScaleDecreaseButtonTextComponents[i] = this.myScaleDecreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myScaleDecreaseButtonTextComponents[i]);
       this.myScaleDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myScaleDecreaseButtonCursorTargetComponents[i] = this.myScaleDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myScaleDecreaseButtonCursorTargetComponents[i] = this.myScaleDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myScaleDecreaseButtonCollisionComponents[i] = this.myScaleDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myScaleDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myScaleDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
       this.myScaleDecreaseButtonCollisionComponents[i].extents = this._myConfig.mySideButtonCollisionExtents;
     }
-    this.myPositionStepTextComponent = this.myPositionStepText.pp_addComponent(TextComponent15);
+    this.myPositionStepTextComponent = this.myPositionStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepTextComponent);
     this.myPositionStepTextComponent.text = " ";
-    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionStepCollisionComponent = this.myPositionStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPositionStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myPositionStepIncreaseButtonBackgroundComponent = this.myPositionStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myPositionStepIncreaseButtonBackgroundComponent = this.myPositionStepIncreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myPositionStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myPositionStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myPositionStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.pp_addComponent(TextComponent15);
+    this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepIncreaseButtonTextComponent);
     this.myPositionStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionStepIncreaseButtonCollisionComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPositionStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myPositionStepDecreaseButtonBackgroundComponent = this.myPositionStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myPositionStepDecreaseButtonBackgroundComponent = this.myPositionStepDecreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myPositionStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myPositionStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myPositionStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.pp_addComponent(TextComponent15);
+    this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepDecreaseButtonTextComponent);
     this.myPositionStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionStepDecreaseButtonCollisionComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPositionStepDecreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myRotationStepTextComponent = this.myRotationStepText.pp_addComponent(TextComponent15);
+    this.myRotationStepTextComponent = this.myRotationStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepTextComponent);
     this.myRotationStepTextComponent.text = " ";
-    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationStepCollisionComponent = this.myRotationStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myRotationStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myRotationStepIncreaseButtonBackgroundComponent = this.myRotationStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myRotationStepIncreaseButtonBackgroundComponent = this.myRotationStepIncreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myRotationStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myRotationStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myRotationStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.pp_addComponent(TextComponent15);
+    this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepIncreaseButtonTextComponent);
     this.myRotationStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationStepIncreaseButtonCollisionComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myRotationStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myRotationStepDecreaseButtonBackgroundComponent = this.myRotationStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myRotationStepDecreaseButtonBackgroundComponent = this.myRotationStepDecreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myRotationStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myRotationStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myRotationStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.pp_addComponent(TextComponent15);
+    this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepDecreaseButtonTextComponent);
     this.myRotationStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationStepDecreaseButtonCollisionComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myRotationStepDecreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myScaleStepTextComponent = this.myScaleStepText.pp_addComponent(TextComponent15);
+    this.myScaleStepTextComponent = this.myScaleStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepTextComponent);
     this.myScaleStepTextComponent.text = " ";
-    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleStepCollisionComponent = this.myScaleStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myScaleStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myScaleStepIncreaseButtonBackgroundComponent = this.myScaleStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myScaleStepIncreaseButtonBackgroundComponent = this.myScaleStepIncreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myScaleStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myScaleStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myScaleStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.pp_addComponent(TextComponent15);
+    this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepIncreaseButtonTextComponent);
     this.myScaleStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleStepIncreaseButtonCollisionComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myScaleStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myScaleStepDecreaseButtonBackgroundComponent = this.myScaleStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myScaleStepDecreaseButtonBackgroundComponent = this.myScaleStepDecreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myScaleStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myScaleStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myScaleStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.pp_addComponent(TextComponent15);
+    this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepDecreaseButtonTextComponent);
     this.myScaleStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleStepDecreaseButtonCollisionComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myScaleStepDecreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
   }
   _addStepComponents() {
-    this.myPositionStepTextComponent = this.myPositionStepText.pp_addComponent(TextComponent15);
+    this.myPositionStepTextComponent = this.myPositionStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepTextComponent);
     this.myPositionStepTextComponent.text = " ";
-    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionStepCollisionComponent = this.myPositionStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPositionStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myPositionStepIncreaseButtonBackgroundComponent = this.myPositionStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myPositionStepIncreaseButtonBackgroundComponent = this.myPositionStepIncreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myPositionStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myPositionStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myPositionStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.pp_addComponent(TextComponent15);
+    this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepIncreaseButtonTextComponent);
     this.myPositionStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionStepIncreaseButtonCollisionComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPositionStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myPositionStepDecreaseButtonBackgroundComponent = this.myPositionStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myPositionStepDecreaseButtonBackgroundComponent = this.myPositionStepDecreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myPositionStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myPositionStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myPositionStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.pp_addComponent(TextComponent15);
+    this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepDecreaseButtonTextComponent);
     this.myPositionStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myPositionStepDecreaseButtonCollisionComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myPositionStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myPositionStepDecreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myRotationStepTextComponent = this.myRotationStepText.pp_addComponent(TextComponent15);
+    this.myRotationStepTextComponent = this.myRotationStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepTextComponent);
     this.myRotationStepTextComponent.text = " ";
-    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationStepCollisionComponent = this.myRotationStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myRotationStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myRotationStepIncreaseButtonBackgroundComponent = this.myRotationStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myRotationStepIncreaseButtonBackgroundComponent = this.myRotationStepIncreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myRotationStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myRotationStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myRotationStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.pp_addComponent(TextComponent15);
+    this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepIncreaseButtonTextComponent);
     this.myRotationStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationStepIncreaseButtonCollisionComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myRotationStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myRotationStepDecreaseButtonBackgroundComponent = this.myRotationStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myRotationStepDecreaseButtonBackgroundComponent = this.myRotationStepDecreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myRotationStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myRotationStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myRotationStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.pp_addComponent(TextComponent15);
+    this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepDecreaseButtonTextComponent);
     this.myRotationStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myRotationStepDecreaseButtonCollisionComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myRotationStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myRotationStepDecreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myScaleStepTextComponent = this.myScaleStepText.pp_addComponent(TextComponent15);
+    this.myScaleStepTextComponent = this.myScaleStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepTextComponent);
     this.myScaleStepTextComponent.text = " ";
-    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleStepCollisionComponent = this.myScaleStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myScaleStepCollisionComponent.extents = this._myConfig.myStepCollisionExtents;
-    this.myScaleStepIncreaseButtonBackgroundComponent = this.myScaleStepIncreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myScaleStepIncreaseButtonBackgroundComponent = this.myScaleStepIncreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myScaleStepIncreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myScaleStepIncreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myScaleStepIncreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.pp_addComponent(TextComponent15);
+    this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepIncreaseButtonTextComponent);
     this.myScaleStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleStepIncreaseButtonCollisionComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myScaleStepIncreaseButtonCollisionComponent.extents = this._myConfig.mySideButtonCollisionExtents;
-    this.myScaleStepDecreaseButtonBackgroundComponent = this.myScaleStepDecreaseButtonBackground.pp_addComponent(MeshComponent19);
+    this.myScaleStepDecreaseButtonBackgroundComponent = this.myScaleStepDecreaseButtonBackground.pp_addComponent(MeshComponent20);
     this.myScaleStepDecreaseButtonBackgroundComponent.mesh = this._myPlaneMesh;
     this.myScaleStepDecreaseButtonBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myScaleStepDecreaseButtonBackgroundComponent.material.color = this._myConfig.myBackgroundColor;
-    this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.pp_addComponent(TextComponent15);
+    this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepDecreaseButtonTextComponent);
     this.myScaleStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myScaleStepDecreaseButtonCollisionComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myScaleStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -40958,7 +42094,7 @@ var EasyTuneWidget = class {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
-var EasyTuneToolComponent = class extends Component56 {
+var EasyTuneToolComponent = class extends Component59 {
   static TypeName = "pp-easy-tune-tool";
   static Properties = {
     _myHandedness: Property45.enum(["None", "Left", "Right"], "None"),
@@ -41050,8 +42186,8 @@ var EasyTuneToolComponent = class extends Component56 {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_import_variables_component.js
-import { Component as Component57, Property as Property46 } from "@wonderlandengine/api";
-var EasyTuneImportVariablesComponent = class extends Component57 {
+import { Component as Component60, Property as Property46 } from "@wonderlandengine/api";
+var EasyTuneImportVariablesComponent = class extends Component60 {
   static TypeName = "pp-easy-tune-import-variables";
   static Properties = {
     _myVariablesImportURL: Property46.string(""),
@@ -41182,9 +42318,9 @@ var EasyLightColor = class extends EasyObjectTuner {
     let lightColor = this._getLightColor(object);
     if (lightColor) {
       if (this._myColorModel == 0) {
-        color = ColorUtils.rgbCodeToHuman(lightColor);
+        color = ColorUtils.colorNormalizedToInt(lightColor);
       } else {
-        color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHSV(lightColor));
+        color = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(lightColor));
       }
     } else {
       color = this._getDefaultValue();
@@ -41197,9 +42333,9 @@ var EasyLightColor = class extends EasyObjectTuner {
   _updateObjectValue(object, value) {
     let color = value;
     if (this._myColorModel == 0) {
-      color = ColorUtils.rgbHumanToCode(color);
+      color = ColorUtils.colorIntToNormalized(color);
     } else {
-      color = ColorUtils.hsvToRGB(ColorUtils.hsvHumanToCode(color));
+      color = ColorUtils.hsvToRGB(ColorUtils.colorIntToNormalized(color));
     }
     let light = object.pp_getComponent(LightComponent4);
     if (light != null) {
@@ -41208,8 +42344,8 @@ var EasyLightColor = class extends EasyObjectTuner {
       light.color[2] = color[2];
     }
     if (Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed() || Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
-      let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHSV(color));
-      let rgbColor = ColorUtils.color1To255(color);
+      let hsvColor = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
+      let rgbColor = ColorUtils.colorNormalizedToInt(color);
       console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
     }
   }
@@ -41224,7 +42360,7 @@ var EasyLightColor = class extends EasyObjectTuner {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/easy_mesh_color.js
-import { MeshComponent as MeshComponent20 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent21 } from "@wonderlandengine/api";
 var EasyMeshColor = class extends EasyObjectTuner {
   constructor(colorModel, colorType, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
     super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
@@ -41254,9 +42390,9 @@ var EasyMeshColor = class extends EasyObjectTuner {
       if (this._myColorType != 6) {
         color = meshMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
         if (this._myColorModel == 0) {
-          color = ColorUtils.rgbCodeToHuman(color);
+          color = ColorUtils.colorNormalizedToInt(color);
         } else {
-          color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHSV(color));
+          color = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
         }
       } else {
         color = [meshMaterial[this._myColorVariableNames[this._myColorType]]];
@@ -41276,9 +42412,9 @@ var EasyMeshColor = class extends EasyObjectTuner {
     let color = value;
     if (this._myColorType != 6) {
       if (this._myColorModel == 0) {
-        color = ColorUtils.rgbHumanToCode(color);
+        color = ColorUtils.colorIntToNormalized(color);
       } else {
-        color = ColorUtils.hsvToRGB(ColorUtils.hsvHumanToCode(color));
+        color = ColorUtils.hsvToRGB(ColorUtils.colorIntToNormalized(color));
       }
     }
     let meshMaterial = this._getMeshMaterial(object);
@@ -41287,15 +42423,15 @@ var EasyMeshColor = class extends EasyObjectTuner {
     }
     if (this._myColorType != 6) {
       if (Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed() || Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
-        let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHSV(color));
-        let rgbColor = ColorUtils.color1To255(color);
+        let hsvColor = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
+        let rgbColor = ColorUtils.colorNormalizedToInt(color);
         console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
       }
     }
   }
   _getMeshMaterial(object) {
     let material = null;
-    let mesh = object.pp_getComponent(MeshComponent20);
+    let mesh = object.pp_getComponent(MeshComponent21);
     if (mesh) {
       material = mesh.material;
     }
@@ -41342,7 +42478,7 @@ var EasyTransform = class extends EasyObjectTuner {
     return "Transform ";
   }
   _createEasyTuneVariable(variableName) {
-    return new EasyTuneTransform(variableName, this._getDefaultValue(), null, true, this._myScaleAsOne, 3, void 0, this._myEngine);
+    return new EasyTuneTransform(variableName, this._getDefaultValue(), null, true, this._myScaleAsOne, 3, void 0, void 0, void 0, void 0, this._myEngine);
   }
   _getObjectValue(object) {
     return this._myLocal ? object.pp_getTransformLocal() : object.pp_getTransform();
@@ -41360,7 +42496,7 @@ var EasyTransform = class extends EasyObjectTuner {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/easy_mesh_ambient_factor.js
-import { MeshComponent as MeshComponent21 } from "@wonderlandengine/api";
+import { MeshComponent as MeshComponent22 } from "@wonderlandengine/api";
 var EasyMeshAmbientFactor = class extends EasyObjectTuner {
   constructor(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
     super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
@@ -41399,7 +42535,7 @@ var EasyMeshAmbientFactor = class extends EasyObjectTuner {
   }
   _getMeshMaterial(object) {
     let material = null;
-    let mesh = object.pp_getComponent(MeshComponent21);
+    let mesh = object.pp_getComponent(MeshComponent22);
     if (mesh) {
       material = mesh.material;
     }
@@ -41408,7 +42544,7 @@ var EasyMeshAmbientFactor = class extends EasyObjectTuner {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/easy_text_color.js
-import { TextComponent as TextComponent16 } from "@wonderlandengine/api";
+import { TextComponent as TextComponent18 } from "@wonderlandengine/api";
 var EasyTextColor = class extends EasyObjectTuner {
   constructor(colorModel, colorType, object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine) {
     super(object, variableName, setAsWidgetCurrentVariable, useTuneTarget, engine);
@@ -41434,9 +42570,9 @@ var EasyTextColor = class extends EasyObjectTuner {
     if (textMaterial) {
       color = textMaterial[this._myColorVariableNames[this._myColorType]].pp_clone();
       if (this._myColorModel == 0) {
-        color = ColorUtils.rgbCodeToHuman(color);
+        color = ColorUtils.colorNormalizedToInt(color);
       } else {
-        color = ColorUtils.hsvCodeToHuman(ColorUtils.rgbToHSV(color));
+        color = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
       }
     } else {
       color = this._getDefaultValue();
@@ -41449,23 +42585,23 @@ var EasyTextColor = class extends EasyObjectTuner {
   _updateObjectValue(object, value) {
     let color = value;
     if (this._myColorModel == 0) {
-      color = ColorUtils.rgbHumanToCode(color);
+      color = ColorUtils.colorIntToNormalized(color);
     } else {
-      color = ColorUtils.hsvToRGB(ColorUtils.hsvHumanToCode(color));
+      color = ColorUtils.hsvToRGB(ColorUtils.colorIntToNormalized(color));
     }
     let textMaterial = this._getTextMaterial(object);
     if (textMaterial) {
       textMaterial[this._myColorVariableNames[this._myColorType]] = color;
     }
     if (Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed() || Globals.getLeftGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressStart() && Globals.getRightGamepad(this._myEngine).getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
-      let hsvColor = ColorUtils.color1To255(ColorUtils.rgbToHSV(color));
-      let rgbColor = ColorUtils.color1To255(color);
+      let hsvColor = ColorUtils.colorNormalizedToInt(ColorUtils.rgbToHSV(color));
+      let rgbColor = ColorUtils.colorNormalizedToInt(color);
       console.log("RGB:", rgbColor.vec_toString(0), "- HSV:", hsvColor.vec_toString(0));
     }
   }
   _getTextMaterial(object) {
     let material = null;
-    let text = object.pp_getComponent(TextComponent16);
+    let text = object.pp_getComponent(TextComponent18);
     if (text) {
       material = text.material;
     }
@@ -41474,8 +42610,8 @@ var EasyTextColor = class extends EasyObjectTuner {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js
-import { Component as Component58, Property as Property47 } from "@wonderlandengine/api";
-var EasyLightAttenuationComponent = class extends Component58 {
+import { Component as Component61, Property as Property47 } from "@wonderlandengine/api";
+var EasyLightAttenuationComponent = class extends Component61 {
   static TypeName = "pp-easy-light-attenuation";
   static Properties = {
     _myVariableName: Property47.string(""),
@@ -41505,8 +42641,8 @@ var EasyLightAttenuationComponent = class extends Component58 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js
-import { Component as Component59, Property as Property48 } from "@wonderlandengine/api";
-var EasyLightColorComponent = class extends Component59 {
+import { Component as Component62, Property as Property48 } from "@wonderlandengine/api";
+var EasyLightColorComponent = class extends Component62 {
   static TypeName = "pp-easy-light-color";
   static Properties = {
     _myVariableName: Property48.string(""),
@@ -41537,8 +42673,8 @@ var EasyLightColorComponent = class extends Component59 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_mesh_ambient_factor_component.js
-import { Component as Component60, Property as Property49 } from "@wonderlandengine/api";
-var EasyMeshAmbientFactorComponent = class extends Component60 {
+import { Component as Component63, Property as Property49 } from "@wonderlandengine/api";
+var EasyMeshAmbientFactorComponent = class extends Component63 {
   static TypeName = "pp-easy-mesh-ambient-factor";
   static Properties = {
     _myVariableName: Property49.string(""),
@@ -41572,8 +42708,8 @@ var EasyMeshAmbientFactorComponent = class extends Component60 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js
-import { Component as Component61, Property as Property50 } from "@wonderlandengine/api";
-var EasyMeshColorComponent = class extends Component61 {
+import { Component as Component64, Property as Property50 } from "@wonderlandengine/api";
+var EasyMeshColorComponent = class extends Component64 {
   static TypeName = "pp-easy-mesh-color";
   static Properties = {
     _myVariableName: Property50.string(""),
@@ -41609,8 +42745,8 @@ var EasyMeshColorComponent = class extends Component61 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_scale_component.js
-import { Component as Component62, Property as Property51 } from "@wonderlandengine/api";
-var EasyScaleComponent = class extends Component62 {
+import { Component as Component65, Property as Property51 } from "@wonderlandengine/api";
+var EasyScaleComponent = class extends Component65 {
   static TypeName = "pp-easy-scale";
   static Properties = {
     _myVariableName: Property51.string(""),
@@ -41643,8 +42779,8 @@ var EasyScaleComponent = class extends Component62 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js
-import { Component as Component63, Property as Property52 } from "@wonderlandengine/api";
-var EasySetTuneTargetChildNumberComponent = class extends Component63 {
+import { Component as Component66, Property as Property52 } from "@wonderlandengine/api";
+var EasySetTuneTargetChildNumberComponent = class extends Component66 {
   static TypeName = "pp-easy-set-tune-target-child-number";
   static Properties = {
     _myVariableName: Property52.string(""),
@@ -41709,8 +42845,8 @@ var EasySetTuneTargetChildNumberComponent = class extends Component63 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_grab_component.js
-import { Component as Component64 } from "@wonderlandengine/api";
-var EasySetTuneTargeetGrabComponent = class extends Component64 {
+import { Component as Component67 } from "@wonderlandengine/api";
+var EasySetTuneTargeetGrabComponent = class extends Component67 {
   static TypeName = "pp-easy-set-tune-target-grab";
   static Properties = {};
   start() {
@@ -41747,8 +42883,8 @@ var EasySetTuneTargeetGrabComponent = class extends Component64 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_text_color_component.js
-import { Component as Component65, Property as Property53 } from "@wonderlandengine/api";
-var EasyTextColorComponent = class extends Component65 {
+import { Component as Component68, Property as Property53 } from "@wonderlandengine/api";
+var EasyTextColorComponent = class extends Component68 {
   static TypeName = "pp-easy-text-color";
   static Properties = {
     _myVariableName: Property53.string(""),
@@ -41780,8 +42916,8 @@ var EasyTextColorComponent = class extends Component65 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_transform_component.js
-import { Component as Component66, Property as Property54 } from "@wonderlandengine/api";
-var EasyTransformComponent = class extends Component66 {
+import { Component as Component69, Property as Property54 } from "@wonderlandengine/api";
+var EasyTransformComponent = class extends Component69 {
   static TypeName = "pp-easy-transform";
   static Properties = {
     _myVariableName: Property54.string(""),
@@ -41823,6 +42959,8 @@ export {
   AnalyticsManager,
   AnalyticsManagerComponent,
   AnalyticsUtils,
+  AnimatedNumber,
+  AnimatedNumberParams,
   ArrayExtensionUtils,
   ArrayUtils,
   AudioEvent,
@@ -41831,7 +42969,6 @@ export {
   AudioPlayer,
   AudioSetup,
   AudioUtils,
-  BaseGamepad,
   BasePose,
   BasePoseParams,
   BenchmarkMaxPhysXComponent,
@@ -41895,6 +43032,7 @@ export {
   CopyHeadTransformComponent,
   CopyPlayerTransformComponent,
   CopyReferenceSpaceTransformComponent,
+  CursorButtonComponent,
   CustomCloneParams,
   DebugArrayFunctionsPerformanceAnalyzerComponent,
   DebugFunctionPerformanceAnalysisResults,
@@ -41981,6 +43119,7 @@ export {
   EnableToolComponent,
   FSM,
   FingerCursorComponent,
+  Gamepad,
   GamepadAxesEvent,
   GamepadAxesID,
   GamepadAxesInfo,
@@ -42082,9 +43221,11 @@ export {
   RaycastHit,
   RaycastParams,
   RaycastResults,
+  ResetLocalTransformComponent,
   SaveManager,
   SaveManagerComponent,
   SaveUtils,
+  ScaleOnSpawnComponent,
   SceneObjects,
   SetActiveComponent,
   SetHandLocalTransformComponent,
@@ -42165,6 +43306,7 @@ export {
   registerWLComponents,
   vec2_create,
   vec3_create,
-  vec4_create
+  vec4_create,
+  vec_create
 };
 //# sourceMappingURL=bundle.js.map
