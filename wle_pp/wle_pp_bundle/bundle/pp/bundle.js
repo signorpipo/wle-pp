@@ -22474,7 +22474,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.6.6";
+var PP_VERSION = "0.6.7";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -26919,7 +26919,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   _mySFXOnUnhover;
   _myCursorButtonComponentID = "cursor_button_component" + MathUtils.randomUUID();
   _myCursorTarget;
-  _myButtonActionsHandlers = [];
+  _myButtonActionsHandlers = /* @__PURE__ */ new Map();
   _myOriginalScaleLocal = vec3_create();
   _myAnimatedScale;
   _myAnimatedColorBrightnessOffset;
@@ -26930,6 +26930,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   _myOnUpAudioPlayer = null;
   _myOnUnhoverAudioPlayer = null;
   static _myCursorButtonActionHandlers = /* @__PURE__ */ new Map();
+  /** Used to add handlers for every cursor buttons that can be indexes with a string */
   static addButtonActionHandler(id, buttonActionHandler) {
     _CursorButtonComponent._myCursorButtonActionHandlers.set(id, buttonActionHandler);
   }
@@ -26938,6 +26939,17 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   }
   static getButtonActionHandler(id) {
     const buttonActionHandler = _CursorButtonComponent._myCursorButtonActionHandlers.get(id);
+    return buttonActionHandler != null ? buttonActionHandler : null;
+  }
+  /** Used to add handlers for this specific instance of cursor button */
+  addButtonActionHandler(id, buttonActionHandler) {
+    this._myButtonActionsHandlers.set(id, buttonActionHandler);
+  }
+  removeButtonActionHandler(id) {
+    this._myButtonActionsHandlers.delete(id);
+  }
+  getButtonActionHandler(id) {
+    const buttonActionHandler = this._myButtonActionsHandlers.get(id);
     return buttonActionHandler != null ? buttonActionHandler : null;
   }
   start() {
@@ -26953,11 +26965,11 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
     for (const buttonActionsHandlerName of buttonActionsHandlerNames) {
       const buttonActionHandlerComponent = this.object.pp_getComponent(buttonActionsHandlerName);
       if (buttonActionHandlerComponent != null) {
-        this._myButtonActionsHandlers.push(buttonActionHandlerComponent);
+        this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerComponent);
       } else {
         const buttonActionHandlerStatic = _CursorButtonComponent.getButtonActionHandler(buttonActionsHandlerName);
         if (buttonActionHandlerStatic != null) {
-          this._myButtonActionsHandlers.push(buttonActionHandlerStatic);
+          this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerStatic);
         }
       }
     }
@@ -26993,7 +27005,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   }
   _onHover(targetObject, cursorComponent) {
     let skipDefault = false;
-    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+    for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
       if (buttonActionsHandler.onHover != null) {
         skipDefault ||= buttonActionsHandler.onHover(this, cursorComponent);
       }
@@ -27020,7 +27032,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   }
   _onDown(targetObject, cursorComponent) {
     let skipDefault = false;
-    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+    for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
       if (buttonActionsHandler.onDown != null) {
         skipDefault ||= buttonActionsHandler.onDown(this, cursorComponent);
       }
@@ -27047,7 +27059,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   }
   onUpWithDown(targetObject, cursorComponent) {
     let skipDefault = false;
-    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+    for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
       if (buttonActionsHandler.onUp != null) {
         skipDefault ||= buttonActionsHandler.onUp(this, cursorComponent);
       }
@@ -27074,7 +27086,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
   }
   _onUnhover(targetObject, cursorComponent) {
     let skipDefault = false;
-    for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+    for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
       if (buttonActionsHandler.onUnhover != null) {
         skipDefault ||= buttonActionsHandler.onUnhover(this, cursorComponent);
       }
@@ -29950,7 +29962,7 @@ var PlayerTransformManager = class {
   // Quick way to force teleport to a position and reset the real to this
   forceTeleportAndReset(position, rotationQuat) {
     this.teleportPositionRotationQuat(position, rotationQuat, null, true);
-    this._myPlayerTransformManager.resetReal(true, true, void 0, void 0, void 0, true);
+    this.resetReal(true, true, void 0, void 0, void 0, true);
   }
   rotateQuat(rotationQuat) {
   }
