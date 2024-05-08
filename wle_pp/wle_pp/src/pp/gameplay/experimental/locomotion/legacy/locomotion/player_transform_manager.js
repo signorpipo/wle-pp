@@ -302,7 +302,7 @@ export class PlayerTransformManager {
     forceTeleportAndReset(position, rotationQuat) {
         this.teleportPositionRotationQuat(position, rotationQuat, null, true);
 
-        this._myPlayerTransformManager.resetReal(true, true, undefined, undefined, undefined, true);
+        this.resetReal(true, true, undefined, undefined, undefined, true);
     }
 
     rotateQuat(rotationQuat) {

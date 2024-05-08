@@ -77,7 +77,7 @@ export class CursorButtonComponent extends Component {
 
     private readonly _myCursorTarget!: CursorTarget;
 
-    private readonly _myButtonActionsHandlers: CursorButtonActionsHandler[] = [];
+    private readonly _myButtonActionsHandlers: Map<any, CursorButtonActionsHandler> = new Map();
 
     private readonly _myOriginalScaleLocal: Vector3 = vec3_create();
     private readonly _myAnimatedScale!: AnimatedNumber;
@@ -94,6 +94,7 @@ export class CursorButtonComponent extends Component {
 
     private static _myCursorButtonActionHandlers: Map<string, CursorButtonActionsHandler> = new Map();
 
+    /** Used to add handlers for every cursor buttons that can be indexes with a string */
     public static addButtonActionHandler(id: string, buttonActionHandler: Readonly<CursorButtonActionsHandler>): void {
         CursorButtonComponent._myCursorButtonActionHandlers.set(id, buttonActionHandler);
     }
@@ -104,6 +105,20 @@ export class CursorButtonComponent extends Component {
 
     public static getButtonActionHandler(id: string): CursorButtonActionsHandler | null {
         const buttonActionHandler = CursorButtonComponent._myCursorButtonActionHandlers.get(id);
+        return buttonActionHandler != null ? buttonActionHandler : null;
+    }
+
+    /** Used to add handlers for this specific instance of cursor button */
+    public addButtonActionHandler(id: any, buttonActionHandler: Readonly<CursorButtonActionsHandler>): void {
+        this._myButtonActionsHandlers.set(id, buttonActionHandler);
+    }
+
+    public removeButtonActionHandler(id: any): void {
+        this._myButtonActionsHandlers.delete(id);
+    }
+
+    public getButtonActionHandler(id: any): CursorButtonActionsHandler | null {
+        const buttonActionHandler = this._myButtonActionsHandlers.get(id);
         return buttonActionHandler != null ? buttonActionHandler : null;
     }
 
@@ -123,11 +138,11 @@ export class CursorButtonComponent extends Component {
         for (const buttonActionsHandlerName of buttonActionsHandlerNames) {
             const buttonActionHandlerComponent = this.object.pp_getComponent(buttonActionsHandlerName) as unknown as CursorButtonActionsHandler;
             if (buttonActionHandlerComponent != null) {
-                this._myButtonActionsHandlers.push(buttonActionHandlerComponent);
+                this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerComponent);
             } else {
                 const buttonActionHandlerStatic = CursorButtonComponent.getButtonActionHandler(buttonActionsHandlerName);
                 if (buttonActionHandlerStatic != null) {
-                    this._myButtonActionsHandlers.push(buttonActionHandlerStatic);
+                    this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerStatic);
                 }
             }
         }
@@ -173,7 +188,7 @@ export class CursorButtonComponent extends Component {
 
     private _onHover(targetObject: Object3D, cursorComponent: Cursor): void {
         let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
             if (buttonActionsHandler.onHover != null) {
                 skipDefault ||= buttonActionsHandler.onHover(this, cursorComponent);
             }
@@ -206,7 +221,7 @@ export class CursorButtonComponent extends Component {
 
     private _onDown(targetObject: Object3D, cursorComponent: Cursor): void {
         let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
             if (buttonActionsHandler.onDown != null) {
                 skipDefault ||= buttonActionsHandler.onDown(this, cursorComponent);
             }
@@ -239,7 +254,7 @@ export class CursorButtonComponent extends Component {
 
     private onUpWithDown(targetObject: Object3D, cursorComponent: Cursor): void {
         let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
             if (buttonActionsHandler.onUp != null) {
                 skipDefault ||= buttonActionsHandler.onUp(this, cursorComponent);
             }
@@ -272,7 +287,7 @@ export class CursorButtonComponent extends Component {
 
     private _onUnhover(targetObject: Object3D, cursorComponent: Cursor): void {
         let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers) {
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
             if (buttonActionsHandler.onUnhover != null) {
                 skipDefault ||= buttonActionsHandler.onUnhover(this, cursorComponent);
             }
