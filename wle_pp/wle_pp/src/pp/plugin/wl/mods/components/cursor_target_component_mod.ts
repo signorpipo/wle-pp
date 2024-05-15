@@ -10,30 +10,31 @@ export function initCursorTargetComponentMod(): void {
 
 function _initCursorTargetComponentModPrototype(): void {
 
-    const cursorTargetComponentMod: Record<string, any> = {};
+    const cursorTargetComponentMod: Record<string, unknown> = {
 
-    // New Functions 
+        // New Functions 
 
-    cursorTargetComponentMod.init = function init(this: CursorTarget): void {
-        this.onSingleClick = new Emitter();
-        this.onDoubleClick = new Emitter();
-        this.onTripleClick = new Emitter();
+        init: function init(this: CursorTarget): void {
+            this.onSingleClick = new Emitter();
+            this.onDoubleClick = new Emitter();
+            this.onTripleClick = new Emitter();
 
-        this.onDownOnHover = new Emitter();
+            this.onDownOnHover = new Emitter();
 
-        this.onUpWithDown = new Emitter();
-        this.onUpWithNoDown = new Emitter();
+            this.onUpWithDown = new Emitter();
+            this.onUpWithNoDown = new Emitter();
 
-        this.isSurface = false;
+            this.isSurface = false;
+        },
+
+        start: function start(): void { },
+        update: function update(dt: number): void { },
+        onActivate: function onActivate(): void { },
+        onDeactivate: function onDeactivate(): void { },
+        onDestroy: function onDestroy(): void { },
     };
 
-    cursorTargetComponentMod.start = function start(): void { };
-    cursorTargetComponentMod.update = function update(dt: number): void { };
-    cursorTargetComponentMod.onActivate = function onActivate(): void { };
-    cursorTargetComponentMod.onDeactivate = function onDeactivate(): void { };
-    cursorTargetComponentMod.onDestroy = function onDestroy(): void { };
 
 
-
-    PluginUtils.injectProperties(cursorTargetComponentMod, CursorTarget.prototype, false, true, true);
+    PluginUtils.injectOwnProperties(cursorTargetComponentMod, CursorTarget.prototype, false, true, true);
 }

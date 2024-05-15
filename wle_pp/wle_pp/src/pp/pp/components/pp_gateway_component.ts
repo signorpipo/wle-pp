@@ -141,14 +141,14 @@ export class PPGatewayComponent extends Component {
         this._myDebugManagerComponent.active = true;
     }
 
-    private _getProperties(propertiesToGet: Readonly<Record<string, ComponentProperty>>): Record<string, any> {
-        const properties: Record<string, any> = {};
+    private _getProperties(propertiesToGet: Readonly<Record<string, ComponentProperty>>): Record<string, unknown> {
+        const properties: Record<string, unknown> = {};
 
         if (propertiesToGet != null) {
             const propertyNames = Object.getOwnPropertyNames(propertiesToGet);
 
             for (const propertyName of propertyNames) {
-                const _this = (this as Record<string, any>);
+                const _this = (this as Record<string, unknown>);
                 if (_this[propertyName] != undefined) {
                     properties[propertyName] = _this[propertyName];
                 }

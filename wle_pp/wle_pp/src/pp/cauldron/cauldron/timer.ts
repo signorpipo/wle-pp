@@ -123,11 +123,11 @@ export class Timer {
         }
     }
 
-    public onEnd(listener: () => void, id?: Readonly<any>): void {
+    public onEnd(listener: () => void, id?: unknown): void {
         this._myOnEndEmitter.add(listener, { id: id });
     }
 
-    public unregisterOnEnd(id?: Readonly<any>): void {
+    public unregisterOnEnd(id?: unknown): void {
         this._myOnEndEmitter.remove(id);
     }
 

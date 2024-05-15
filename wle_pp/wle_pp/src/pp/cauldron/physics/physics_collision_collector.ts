@@ -138,27 +138,27 @@ export class PhysicsCollisionCollector {
         this._myLogEnabled = enabled;
     }
 
-    public registerCollisionEventListener(id: Readonly<any>, listener: (currentPhysX: PhysXComponent, otherPhysX: PhysXComponent, collisionType: CollisionEventType) => void): void {
+    public registerCollisionEventListener(id: unknown, listener: (currentPhysX: PhysXComponent, otherPhysX: PhysXComponent, collisionType: CollisionEventType) => void): void {
         this._myCollisionEmitter.add(listener, { id: id });
     }
 
-    public unregisterCollisionEventListener(id: Readonly<any>): void {
+    public unregisterCollisionEventListener(id: unknown): void {
         this._myCollisionEmitter.remove(id);
     }
 
-    public registerCollisionStartEventListener(id: Readonly<any>, listener: (currentPhysX: PhysXComponent, otherPhysX: PhysXComponent, collisionType: CollisionEventType) => void): void {
+    public registerCollisionStartEventListener(id: unknown, listener: (currentPhysX: PhysXComponent, otherPhysX: PhysXComponent, collisionType: CollisionEventType) => void): void {
         this._myCollisionStartEmitter.add(listener, { id: id });
     }
 
-    public unregisterCollisionStartEventListener(id: Readonly<any>): void {
+    public unregisterCollisionStartEventListener(id: unknown): void {
         this._myCollisionStartEmitter.remove(id);
     }
 
-    public registerCollisionEndEventListener(id: Readonly<any>, listener: (currentPhysX: PhysXComponent, otherPhysX: PhysXComponent, collisionType: CollisionEventType) => void): void {
+    public registerCollisionEndEventListener(id: unknown, listener: (currentPhysX: PhysXComponent, otherPhysX: PhysXComponent, collisionType: CollisionEventType) => void): void {
         this._myCollisionEndEmitter.add(listener, { id: id });
     }
 
-    public unregisterCollisionEndEventListener(id: Readonly<any>): void {
+    public unregisterCollisionEndEventListener(id: unknown): void {
         this._myCollisionEndEmitter.remove(id);
     }
 

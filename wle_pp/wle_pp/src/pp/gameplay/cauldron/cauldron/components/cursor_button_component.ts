@@ -77,7 +77,7 @@ export class CursorButtonComponent extends Component {
 
     private readonly _myCursorTarget!: CursorTarget;
 
-    private readonly _myButtonActionsHandlers: Map<any, CursorButtonActionsHandler> = new Map();
+    private readonly _myButtonActionsHandlers: Map<unknown, CursorButtonActionsHandler> = new Map();
 
     private readonly _myOriginalScaleLocal: Vector3 = vec3_create();
     private readonly _myAnimatedScale!: AnimatedNumber;
@@ -109,15 +109,15 @@ export class CursorButtonComponent extends Component {
     }
 
     /** Used to add handlers for this specific instance of cursor button */
-    public addButtonActionHandler(id: any, buttonActionHandler: Readonly<CursorButtonActionsHandler>): void {
+    public addButtonActionHandler(id: unknown, buttonActionHandler: Readonly<CursorButtonActionsHandler>): void {
         this._myButtonActionsHandlers.set(id, buttonActionHandler);
     }
 
-    public removeButtonActionHandler(id: any): void {
+    public removeButtonActionHandler(id: unknown): void {
         this._myButtonActionsHandlers.delete(id);
     }
 
-    public getButtonActionHandler(id: any): CursorButtonActionsHandler | null {
+    public getButtonActionHandler(id: unknown): CursorButtonActionsHandler | null {
         const buttonActionHandler = this._myButtonActionsHandlers.get(id);
         return buttonActionHandler != null ? buttonActionHandler : null;
     }

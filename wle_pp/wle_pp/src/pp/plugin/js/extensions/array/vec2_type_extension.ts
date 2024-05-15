@@ -15,7 +15,7 @@ export interface Vector2Extension<VectorType extends Vector2> {
     vec2_length<T extends VectorType>(this: Readonly<T>): number;
 
     vec2_normalize<T extends VectorType>(this: Readonly<T>): T;
-    vec2_normalize<T extends VectorType, S extends Vector2>(this: Readonly<T>, out: S): S;
+    vec2_normalize<T extends VectorType, U extends Vector2>(this: Readonly<T>, out: U): U;
 
     vec2_zero<T extends VectorType>(this: T): this;
     vec2_isZero<T extends VectorType>(this: Readonly<T>, epsilon?: number): boolean;

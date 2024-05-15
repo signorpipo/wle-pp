@@ -1,7 +1,5 @@
 import { EasingFunction } from "../../../cauldron/utils/math_utils.js";
 
-export type RoundingFunction = (valueToRound: number, fromValue: number, toValue: number) => number;
-
 /** You can just put `fromValue` if u want a value that doesn't actually change -> `new NumberOverFactor(0)` */
 export class NumberOverFactor {
 
@@ -14,9 +12,9 @@ export class NumberOverFactor {
     private readonly _myEasingFunction: EasingFunction;
 
     /** `Math.round` / `Math.floor` / `Math.ceil` can be used */
-    private readonly _myRoundingFunction: RoundingFunction | null;
+    private readonly _myRoundingFunction: ((valueToRound: number, fromValue: number, toValue: number) => number) | null;
 
-    constructor(fromValue: number, toValue: number = fromValue, fromFactor: number = 0, toFactor: number = 0, easingFunction: EasingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
+    constructor(fromValue: number, toValue: number = fromValue, fromFactor: number = 0, toFactor: number = 0, easingFunction: EasingFunction = EasingFunction.linear, roundingFunction: ((valueToRound: number, fromValue: number, toValue: number) => number) | null = null) {
         this._myFromValue = fromValue;
         this._myToValue = toValue;
 
@@ -87,7 +85,7 @@ export class NumberOverFactor {
 
 export class IntOverFactor extends NumberOverFactor {
 
-    constructor(fromValue: number, toValue: number = fromValue, fromFactor: number = 0, toFactor: number = 0, easingFunction: EasingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
+    constructor(fromValue: number, toValue: number = fromValue, fromFactor: number = 0, toFactor: number = 0, easingFunction: EasingFunction = EasingFunction.linear, roundingFunction: ((valueToRound: number, fromValue: number, toValue: number) => number) | null = null) {
         if (roundingFunction == null) {
             roundingFunction = function (valueToRound: number, fromValue: number, toValue: number): number {
                 let roundedValue = null;
@@ -113,9 +111,9 @@ export class NumberRangeOverFactor {
     private readonly _myRangeStartOverFactor: NumberOverFactor;
     private readonly _myRangeEndOverFactor: NumberOverFactor;
 
-    private readonly _myRoundingFunction: RoundingFunction | null; // Math.round/floor/ceil can be used
+    private readonly _myRoundingFunction: ((valueToRound: number, fromValue: number, toValue: number) => number) | null; // Math.round/floor/ceil can be used
 
-    constructor(fromRange: Readonly<[number, number]>, toRange: Readonly<[number, number]> = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
+    constructor(fromRange: Readonly<[number, number]>, toRange: Readonly<[number, number]> = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: ((valueToRound: number, fromValue: number, toValue: number) => number) | null = null) {
 
         this._myRangeStartOverFactor = new NumberOverFactor(fromRange[0], toRange[0], fromFactor, toFactor, easingFunction, roundingFunction);
         this._myRangeEndOverFactor = new NumberOverFactor(fromRange[1], toRange[1], fromFactor, toFactor, easingFunction, roundingFunction);
@@ -202,7 +200,7 @@ export class NumberRangeOverFactor {
 
 export class IntRangeOverFactor extends NumberRangeOverFactor {
 
-    constructor(fromRange: Readonly<[number, number]>, toRange: Readonly<[number, number]> = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: RoundingFunction | null = null) {
+    constructor(fromRange: Readonly<[number, number]>, toRange: Readonly<[number, number]> = fromRange, fromFactor: number = 0, toFactor: number = 0, easingFunction = EasingFunction.linear, roundingFunction: ((valueToRound: number, fromValue: number, toValue: number) => number) | null = null) {
         if (roundingFunction == null) {
             roundingFunction = function (valueToRound: number, fromValue: number, toValue: number): number {
                 let roundedValue = null;

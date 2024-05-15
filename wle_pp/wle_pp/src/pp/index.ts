@@ -47,7 +47,10 @@ export * from "./cauldron/cauldron/components/show_xr_buttons_component.js";
 export * from "./cauldron/fsm/fsm.js";
 export * from "./cauldron/fsm/state.js";
 export * from "./cauldron/fsm/transition.js";
-export * from "./cauldron/fsm/states/timer_state.js";
+export * from "./cauldron/fsm/states/condition_states/base_condition_state.js";
+export * from "./cauldron/fsm/states/condition_states/condition_state.js";
+export * from "./cauldron/fsm/states/condition_states/timer_state.js";
+export * from "./cauldron/fsm/states/cauldron/branch_state.js";
 
 //    OBJECT POOL
 export * from "./cauldron/object_pool/object_pool.js";
@@ -136,7 +139,7 @@ export * from "./debug/debug_functions_overwriter/debug_functions_performance_an
 
 //    CAULDRON
 export * from "./gameplay/cauldron/cauldron/direction_2D_to_3D_converter.js";
-export { NumberOverFactor, IntOverFactor, NumberRangeOverFactor, IntRangeOverFactor } from "./gameplay/cauldron/cauldron/number_over_factor.js";
+export * from "./gameplay/cauldron/cauldron/number_over_factor.js";
 export * from "./gameplay/cauldron/cauldron/animated_number.js";
 
 export * from "./gameplay/cauldron/cauldron/components/cursor_button_component.js";

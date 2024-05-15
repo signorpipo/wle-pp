@@ -1,5 +1,6 @@
 import { InputComponent, ViewComponent } from "@wonderlandengine/api";
 import { Cursor, CursorTarget, HitTestLocation } from "@wonderlandengine/components";
+import { BrowserUtils } from "wle-pp/cauldron/utils/browser_utils.js";
 import { XRUtils } from "../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../input/cauldron/input_types.js";
 import { InputUtils } from "../../../../input/cauldron/input_utils.js";
@@ -118,6 +119,12 @@ function _initCursorComponentModPrototype() {
             this._hitTestObject = this.object.pp_addObject();
             this._hitTestLocation = this.hitTestObject.pp_addComponent(HitTestLocation, { scaleObject: false, });
         }
+
+        // #TODO Remove this work around when the pointerId will be fixed on the Meta Quest since now onPointerMove is always 1
+        //       but for the onPointerDown and onPointerUp is always different
+        //       As long as this work around is needed, the cursor might not behave perfectly
+        //       For example, a onUnhover will be trigger every time the pointer is released since it always trigger onPointerLeave
+        this.isHeadset = BrowserUtils.isDesktop() && XRUtils.isVRSupported(this.engine);
     };
 
     cursorComponentMod.update = function update(dt) {
@@ -340,7 +347,7 @@ function _initCursorComponentModPrototype() {
     cursorComponentMod.onPointerMove = function onPointerMove(e) {
         if (this.active && !this._pointerLeaveToProcess) {
             // Don't care about secondary pointers 
-            if (this._pointerID != null && this._pointerID != e.pointerId) return;
+            if (this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset) return;
 
             let bounds = document.body.getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
@@ -353,7 +360,7 @@ function _initCursorComponentModPrototype() {
     cursorComponentMod.onPointerDown = function onPointerDown(e) {
         if (this.active && !this._pointerLeaveToProcess) {
             // Don't care about secondary pointers or non-left clicks 
-            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button != 0) return;
+            if ((this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset) || e.button != 0) return;
 
             let bounds = document.body.getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
@@ -370,7 +377,7 @@ function _initCursorComponentModPrototype() {
     cursorComponentMod.onPointerUp = function onPointerUp(e) {
         if (this.active && !this._pointerLeaveToProcess) {
             // Don't care about secondary pointers or non-left clicks 
-            if ((this._pointerID != null && this._pointerID != e.pointerId) || e.button != 0) return;
+            if ((this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset) || e.button != 0) return;
 
             let bounds = document.body.getBoundingClientRect();
             this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
@@ -706,7 +713,7 @@ function _initCursorComponentModPrototype() {
     };
 
     cursorComponentMod._pp_onPointerLeave = function _pp_onPointerLeave(e) {
-        if (this._pointerID == null || this._pointerID == e.pointerId) {
+        if (this._pointerID == null || this._pointerID == e.pointerId || this.isHeadset) {
             this._pointerLeaveToProcess = true;
             this._pointerLeaveMouseEvent = e;
         }
@@ -781,5 +788,5 @@ function _initCursorComponentModPrototype() {
 
 
 
-    PluginUtils.injectProperties(cursorComponentMod, Cursor.prototype, false, true, true);
+    PluginUtils.injectOwnProperties(cursorComponentMod, Cursor.prototype, false, true, true);
 }

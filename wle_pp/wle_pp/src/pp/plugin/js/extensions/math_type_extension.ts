@@ -4,14 +4,14 @@
  */
 
 /**
- *  How to use
+ * How to use
  * 
- *  By default the rotations are in Degrees
+ * By default the rotations are in Degrees
  * 
- *  For rotations u can add a suffix like Degrees/Radians to use a specific version, example:  
- *      - pp_angleDistanceSignedDegrees  
- *      - pp_isInsideAngleRangeRadians
-*/
+ * For rotations u can add a suffix like Degrees/Radians to use a specific version, example:  
+ *     - pp_angleDistanceSignedDegrees  
+ *     - pp_isInsideAngleRangeRadians
+ */
 
 import { EasingFunction } from "../../../cauldron/utils/math_utils.js";
 

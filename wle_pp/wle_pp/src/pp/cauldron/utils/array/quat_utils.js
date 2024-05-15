@@ -201,6 +201,7 @@ export let setForward = function () {
      * TS type inference helper
      * 
      * @param {any} up
+     * @param {any} left
      */
     return function setForward(quat, forward, up = null, left = null) {
         axes[0] = left;
@@ -302,6 +303,12 @@ export let setRight = function () {
 
     let axes = [null, null, null];
     let priority = [0, 1, 2];
+
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} up
+     */
     return function setRight(quat, right, up = null, forward = null) {
         Vec3Utils.negate(right, left);
 

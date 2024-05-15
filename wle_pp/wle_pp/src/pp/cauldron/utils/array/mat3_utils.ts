@@ -14,7 +14,7 @@ export function create(
     const out = gl_mat3.create() as unknown as Matrix3;
 
     if (m00 != null) {
-        set(out,
+        Mat3Utils.set(out,
             m00, m01!, m02!,
             m10!, m11!, m12!,
             m20!, m21!, m22!);
@@ -51,7 +51,7 @@ export function copy<T extends Matrix3>(from: Readonly<Matrix3>, to: T): T {
 }
 
 /** The overload where `T extends Vector2` does also get `array` as `Readonly<T>`, but is not marked as such due to 
- *  Typescript having issues with inferring the proper type of `T` when `Readonly` is used */
+    Typescript having issues with inferring the proper type of `T` when `Readonly` is used */
 export function clone<T extends Matrix3>(matrix: Readonly<T>): T;
 export function clone(matrix: Readonly<number[]>): number[];
 export function clone<T extends Matrix3>(matrix: T): T;

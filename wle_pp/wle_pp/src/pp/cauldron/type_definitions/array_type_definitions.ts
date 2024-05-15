@@ -173,10 +173,12 @@ export interface BaseArrayLike<T> {
     reduceRight<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: BaseArrayLike<T>) => U, initialValue: U): U;
 }
 
-/** This is basically an intersection between `Array` and `Float32Array`, so that it's possible to create methods that work with both more easily
+/** 
+ * This is basically an intersection between `Array` and `Float32Array`, so that it's possible to create methods that work with both more easily
  * 
- *  The reason why a child class is created from `BaseArrayLike` instead of using it directly is to be able to create a type extension
- *  of the `ArrayLike` class without also affecting the child classes like `Vector`*/
+ * The reason why a child class is created from `BaseArrayLike` instead of using it directly is to be able to create a type extension
+ * of the `ArrayLike` class without also affecting the child classes like `Vector`
+ */
 export interface ArrayLike<T> extends BaseArrayLike<T> { }
 
 export interface Vector extends BaseArrayLike<number> { }

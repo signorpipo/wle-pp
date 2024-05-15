@@ -17,13 +17,13 @@ export interface Matrix3Extension<MatrixType extends Matrix3> {
 
 
     mat3_toDegrees<T extends MatrixType>(this: Readonly<T>): Vector3;
-    mat3_toDegrees<T extends MatrixType, S extends Vector3>(this: Readonly<T>, out: S): S;
+    mat3_toDegrees<T extends MatrixType, U extends Vector3>(this: Readonly<T>, out: U): U;
 
     mat3_toRadians<T extends MatrixType>(this: Readonly<T>): Vector3;
-    mat3_toRadians<T extends MatrixType, S extends Vector3>(this: Readonly<T>, out: S): S;
+    mat3_toRadians<T extends MatrixType, U extends Vector3>(this: Readonly<T>, out: U): U;
 
     mat3_toQuat<T extends MatrixType>(this: Readonly<T>): Quaternion;
-    mat3_toQuat<T extends MatrixType, S extends Quaternion>(this: Readonly<T>, out: S): S;
+    mat3_toQuat<T extends MatrixType, U extends Quaternion>(this: Readonly<T>, out: U): U;
 
 
     mat3_fromAxes<T extends MatrixType>(this: T, leftAxis: Readonly<Vector3>, upAxis: Readonly<Vector3>, forwardAxis: Readonly<Vector3>): this;

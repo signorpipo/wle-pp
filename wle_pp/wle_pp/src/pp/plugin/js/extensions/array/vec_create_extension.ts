@@ -32,7 +32,7 @@ export function vec4_create(): Vector4;
 export function vec4_create(x: number, y: number, z: number, w: number): Vector4;
 export function vec4_create(uniformValue: number): Vector4;
 export function vec4_create(x?: number, y?: number, z?: number, w?: number): Vector4 {
-    return Vec4Utils.create(x, y, z, w);
+    return Vec4Utils.create(x!, y!, z!, w!);
 }
 
 export function quat_create(): Quaternion;
@@ -79,9 +79,9 @@ export function mat4_create(
     m20?: number, m21?: number, m22?: number, m23?: number,
     m30?: number, m31?: number, m32?: number, m33?: number): Matrix4 {
     return Mat4Utils.create(
-        m00, m01, m02, m03,
-        m10, m11, m12, m13,
-        m20, m21, m22, m23,
-        m30, m31, m32, m33
+        m00!, m01!, m02!, m03!,
+        m10!, m11!, m12!, m13!,
+        m20!, m21!, m22!, m23!,
+        m30!, m31!, m32!, m33!
     );
 }

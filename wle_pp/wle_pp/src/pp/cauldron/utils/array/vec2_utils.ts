@@ -8,7 +8,7 @@ export function create(x?: number, y?: number): Vector2 {
     const out = gl_vec2.create() as unknown as Vector2;
 
     if (x != null) {
-        set(out, x, y!);
+        Vec2Utils.set(out, x, y!);
     }
 
     return out;
@@ -32,7 +32,7 @@ export function copy<T extends Vector2>(from: Readonly<Vector2>, to: T): T {
 }
 
 /** The overload where `T extends Vector2` does also get `array` as `Readonly<T>`, but is not marked as such due to 
- *  Typescript having issues with inferring the proper type of `T` when `Readonly` is used */
+    Typescript having issues with inferring the proper type of `T` when `Readonly` is used */
 export function clone<T extends Vector2>(vector: Readonly<T>): T;
 export function clone(vector: Readonly<number[]>): number[];
 export function clone<T extends Vector2>(vector: T): T;
@@ -45,8 +45,8 @@ export function length(vector: Readonly<Vector2>): number {
 }
 
 export function normalize<T extends Vector2>(vector: Readonly<T>): T;
-export function normalize<T extends Vector2, S extends Vector2>(vector: Readonly<T>, out: S): S;
-export function normalize<T extends Vector2, S extends Vector2>(vector: Readonly<T>, out: T | S = Vec2Utils.clone<T>(vector)): T | S {
+export function normalize<T extends Vector2>(vector: Readonly<Vector2>, out: T): T;
+export function normalize<T extends Vector2, U extends Vector2>(vector: Readonly<T>, out: T | U = Vec2Utils.clone(vector)): T | U {
     gl_vec2.normalize(out as unknown as gl_vec2_type, vector as unknown as gl_vec2_type);
     return out;
 }

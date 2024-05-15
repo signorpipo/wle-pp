@@ -171,19 +171,19 @@ export class InputManager {
         }
     }
 
-    public registerPreUpdateCallback(id: any, callback: (dt: number, inputManager: InputManager) => void): void {
+    public registerPreUpdateCallback(id: unknown, callback: (dt: number, inputManager: InputManager) => void): void {
         this._myPreUpdateEmitter.add(callback, { id: id });
     }
 
-    public unregisterPreUpdateCallback(id: any): void {
+    public unregisterPreUpdateCallback(id: unknown): void {
         this._myPreUpdateEmitter.remove(id);
     }
 
-    public registerPostUpdateCallback(id: any, callback: (dt: number, inputManager: InputManager) => void): void {
+    public registerPostUpdateCallback(id: unknown, callback: (dt: number, inputManager: InputManager) => void): void {
         this._myPostUpdateEmitter.add(callback, { id: id });
     }
 
-    public unregisterPostUpdateCallback(id: any): void {
+    public unregisterPostUpdateCallback(id: unknown): void {
         this._myPostUpdateEmitter.remove(id);
     }
 

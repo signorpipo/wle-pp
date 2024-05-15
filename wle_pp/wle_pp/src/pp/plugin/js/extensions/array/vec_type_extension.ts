@@ -17,20 +17,20 @@ export interface VectorExtension<VectorType extends Vector> {
     vec_isZero<T extends VectorType>(this: Readonly<T>, epsilon?: number): boolean;
 
     vec_scale<T extends VectorType>(this: Readonly<T>, value: number): T;
-    vec_scale<T extends VectorType, S extends Vector>(this: Readonly<T>, value: number, out: S): S;
+    vec_scale<T extends VectorType, U extends Vector>(this: Readonly<T>, value: number, out: U): U;
 
 
     vec_round<T extends VectorType>(this: Readonly<T>): T;
-    vec_round<T extends VectorType, S extends Vector>(this: Readonly<T>, out: S): S;
+    vec_round<T extends VectorType, U extends Vector>(this: Readonly<T>, out: U): U;
 
     vec_floor<T extends VectorType>(this: Readonly<T>): T;
-    vec_floor<T extends VectorType, S extends Vector>(this: Readonly<T>, out: S): S;
+    vec_floor<T extends VectorType, U extends Vector>(this: Readonly<T>, out: U): U;
 
     vec_ceil<T extends VectorType>(this: Readonly<T>): T;
-    vec_ceil<T extends VectorType, S extends Vector>(this: Readonly<T>, out: S): S;
+    vec_ceil<T extends VectorType, U extends Vector>(this: Readonly<T>, out: U): U;
 
     vec_clamp<T extends VectorType>(this: Readonly<T>, start: number, end: number): T;
-    vec_clamp<T extends VectorType, S extends Vector>(this: Readonly<T>, start: number, end: number, out: S): S;
+    vec_clamp<T extends VectorType, U extends Vector>(this: Readonly<T>, start: number, end: number, out: U): U;
 
 
     vec_toString<T extends VectorType>(this: Readonly<T>, decimalPlaces?: number): string;
