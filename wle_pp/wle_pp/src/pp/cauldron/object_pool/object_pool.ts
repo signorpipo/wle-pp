@@ -1,12 +1,12 @@
 export interface PoolObject<PoolObjectType, PoolObjectCloneParamsType = unknown> {
-    setActive(active: boolean): void;
-    equals(object: PoolObjectType): boolean;
-    cloneObject(cloneParams?: Readonly<PoolObjectCloneParamsType>): PoolObjectType | null;
-    reserveObjects(size: number): void;
-    destroy(): void;
+    setActive?(active: boolean): void;
+    equals?(object: PoolObjectType): boolean;
+    cloneObject?(cloneParams?: Readonly<PoolObjectCloneParamsType>): PoolObjectType | null;
+    reserveObjects?(size: number): void;
+    destroy?(): void;
 }
 
-export class ObjectPoolParams<PoolObjectType extends (Partial<PoolObject<PoolObjectType, PoolObjectCloneParamsType>> & object), PoolObjectCloneParamsType = unknown> {
+export class ObjectPoolParams<PoolObjectType extends (PoolObject<PoolObjectType, PoolObjectCloneParamsType> & object), PoolObjectCloneParamsType = unknown> {
 
     public myInitialPoolSize: number = 0;
 
@@ -62,7 +62,7 @@ export interface BaseObjectPool {
 }
 
 /** If the `Object3D` is extended with the `Object3DExtension`, the pool will use the `PP` methods over the `PoolObject` ones, like `pp_clone` or `pp_setActive`*/
-export class ObjectPool<PoolObjectType extends (Partial<PoolObject<PoolObjectType, PoolObjectCloneParamsType>> & object), PoolObjectCloneParamsType = unknown> implements BaseObjectPool {
+export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolObjectCloneParamsType> & object), PoolObjectCloneParamsType = unknown> implements BaseObjectPool {
 
     private readonly _myObjectPrototype: Readonly<PoolObjectType>;
     private readonly _myObjectPoolParams: Readonly<ObjectPoolParams<PoolObjectType, PoolObjectCloneParamsType>>;
@@ -179,6 +179,8 @@ export class ObjectPool<PoolObjectType extends (Partial<PoolObject<PoolObjectTyp
                 (this._myObjectPrototype as unknown as { pp_reserveObjects(size: number): void; }).pp_reserveObjects(size);
             } else if (this._myObjectPrototype.reserveObjects != null) {
                 this._myObjectPrototype.reserveObjects(size);
+            } else {
+                console.error("No way have been provided to optimize the objects allocation");
             }
         }
 
@@ -204,6 +206,8 @@ export class ObjectPool<PoolObjectType extends (Partial<PoolObject<PoolObjectTyp
             clone = (object as unknown as { pp_clone(cloneParams?: PoolObjectCloneParamsType): PoolObjectType | null }).pp_clone(cloneParams);
         } else if (object.cloneObject != null) {
             clone = object.cloneObject(cloneParams);
+        } else {
+            console.error("No way have been provided to clone the object");
         }
 
         if (clone != null) {
@@ -220,6 +224,8 @@ export class ObjectPool<PoolObjectType extends (Partial<PoolObject<PoolObjectTyp
             (object as unknown as { pp_setActive(active: boolean): void; }).pp_setActive(active);
         } else if (object.setActive != null) {
             object.setActive(active);
+        } else {
+            console.error("No way have been provided to set the active state of the object");
         }
     }
 
@@ -264,6 +270,8 @@ export class ObjectPool<PoolObjectType extends (Partial<PoolObject<PoolObjectTyp
             (object as unknown as { pp_destroy(): void; }).pp_destroy();
         } else if (object.destroy != null) {
             object.destroy();
+        } else {
+            console.error("No way have been provided to destroy the object");
         }
     }
 }

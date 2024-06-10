@@ -59,7 +59,7 @@ export class VisualManager {
     }
 
     /** `lifetimeSeconds` can be `null`, in that case the element will be drawn until cleared */
-    public draw(visualElementParams: VisualElementParams, lifetimeSeconds: number = 0, idToReuse?: unknown): unknown | null {
+    public draw(visualElementParams: VisualElementParams, lifetimeSeconds: number | null = 0, idToReuse?: unknown): unknown | null {
         if (!this._myActive) {
             return null;
         }
@@ -97,14 +97,16 @@ export class VisualManager {
             elementID = this._myVisualElementLastID + 1;
             this._myVisualElementLastID = elementID;
 
-            visualElements.set(elementID, [visualElement, new Timer(lifetimeSeconds, lifetimeSeconds != null)]);
+            visualElements.set(elementID, [visualElement, new Timer(lifetimeSeconds != null ? lifetimeSeconds : 0, lifetimeSeconds != null)]);
         } else {
             elementID = idToReuse;
             const visualElementPair = visualElements.get(elementID)!;
             visualElementPair[0] = visualElement;
-            visualElementPair[1].reset(lifetimeSeconds);
             if (lifetimeSeconds != null) {
+                visualElementPair[1].reset(lifetimeSeconds);
                 visualElementPair[1].start();
+            } else {
+                visualElementPair[1].reset();
             }
         }
 
@@ -242,8 +244,15 @@ export class VisualManager {
         objectPoolParams.myInitialPoolSize = 10;
         objectPoolParams.myAmountToAddWhenEmpty = 0;
         objectPoolParams.myPercentageToAddWhenEmpty = 0.5;
+        objectPoolParams.myOptimizeObjectsAllocation = false;
+        objectPoolParams.myCloneCallback = function (visualElement: VisualElement): VisualElement {
+            return visualElement.clone();
+        };
         objectPoolParams.mySetActiveCallback = function (visualElement: VisualElement, active: boolean): void {
             visualElement.setVisible(active);
+        };
+        objectPoolParams.myDestroyCallback = function (visualElement: VisualElement): void {
+            visualElement.destroy();
         };
 
         let visualElementPrototype = null;

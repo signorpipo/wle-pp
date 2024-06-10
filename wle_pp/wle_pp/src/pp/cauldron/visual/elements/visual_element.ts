@@ -63,6 +63,10 @@ export interface VisualElement {
     copyParamsGeneric(params: VisualElementParams): void;
 
     paramsUpdated(): void;
+
+    clone(): VisualElement;
+
+    destroy(): void;
 }
 
 export abstract class AbstractVisualElement<VisualElementType extends AbstractVisualElement<VisualElementType, VisualElementParamsType>, VisualElementParamsType extends AbstractVisualElementParams<VisualElementParamsType>> implements VisualElement {
