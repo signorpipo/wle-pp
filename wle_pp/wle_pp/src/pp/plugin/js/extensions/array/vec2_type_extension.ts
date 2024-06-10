@@ -1,10 +1,9 @@
+import { Vector2 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
+
 /**
  * #WARN this type extension is actually added at runtime only if you call `initVec2Extension`  
  * The `initPP` function, which is automatically called by the `pp-gateway` component, does this for you
  */
-
-import { Vector2 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
-
 export interface Vector2Extension<VectorType extends Vector2> {
     vec2_set<T extends VectorType>(this: T, x: number, y: number): this;
     vec2_set<T extends VectorType>(this: T, uniformValue: number): this;
@@ -65,6 +64,9 @@ declare global {
 declare module "../../../../cauldron/type_definitions/array_type_definitions.js" {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface ArrayLike<T> extends Vector2Extension<ArrayLike<number>> { }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface DynamicArrayLike<T> extends Vector2Extension<DynamicArrayLike<number>> { }
 
     interface Vector extends Vector2Extension<Vector> { }
 

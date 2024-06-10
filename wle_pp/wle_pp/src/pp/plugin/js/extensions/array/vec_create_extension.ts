@@ -25,7 +25,7 @@ export function vec3_create(): Vector3;
 export function vec3_create(x: number, y: number, z: number): Vector3;
 export function vec3_create(uniformValue: number): Vector3;
 export function vec3_create(x?: number, y?: number, z?: number): Vector3 {
-    return Vec3Utils.create(x, y, z);
+    return Vec3Utils.create(x!, y!, z!);
 }
 
 export function vec4_create(): Vector4;
@@ -39,14 +39,14 @@ export function quat_create(): Quaternion;
 export function quat_create(x: number, y: number, z: number, w: number): Quaternion;
 export function quat_create(uniformValue: number): Quaternion;
 export function quat_create(x?: number, y?: number, z?: number, w?: number): Quaternion {
-    return QuatUtils.create(x, y, z, w);
+    return QuatUtils.create(x!, y!, z!, w!);
 }
 
 export function quat2_create(): Quaternion2;
 export function quat2_create(x1: number, y1: number, z1: number, w1: number, x2: number, y2: number, z2: number, w2: number): Quaternion2;
 export function quat2_create(uniformValue: number): Quaternion2;
 export function quat2_create(x1?: number, y1?: number, z1?: number, w1?: number, x2?: number, y2?: number, z2?: number, w2?: number): Quaternion2 {
-    return Quat2Utils.create(x1, y1, z1, w1, x2, y2, z2, w2);
+    return Quat2Utils.create(x1!, y1!, z1!, w1!, x2!, y2!, z2!, w2!);
 }
 
 export function mat3_create(): Matrix3;

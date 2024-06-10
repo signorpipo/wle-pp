@@ -8,20 +8,20 @@ export const setAlpha = function () {
     return function setAlpha(material: Material, alpha: number): void {
         const flatMaterial = material as FlatMaterial;
         if (flatMaterial.color != null) {
-            (color as any).vec4_copy(flatMaterial.color);
+            color.vec4_copy(flatMaterial.color);
             color[3] = alpha;
             flatMaterial.color = color;
         }
 
         const phongMaterial = material as PhongMaterial;
         if (phongMaterial.diffuseColor != null) {
-            (color as any).vec4_copy(phongMaterial.diffuseColor);
+            color.vec4_copy(phongMaterial.diffuseColor);
             color[3] = alpha;
             phongMaterial.diffuseColor = color;
         }
 
         if (phongMaterial.ambientColor != null) {
-            (color as any).vec4_copy(phongMaterial.ambientColor);
+            color.vec4_copy(phongMaterial.ambientColor);
             color[3] = alpha;
             phongMaterial.ambientColor = color;
         }

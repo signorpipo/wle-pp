@@ -1,10 +1,9 @@
+import { Matrix3, Quaternion, Vector3 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
+
 /**
  * #WARN this type extension is actually added at runtime only if you call `initMat3Extension`  
  * The `initPP` function, which is automatically called by the `pp-gateway` component, does this for you
  */
-
-import { Matrix3, Quaternion, Vector3 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
-
 export interface Matrix3Extension<MatrixType extends Matrix3> {
     mat3_set<T extends MatrixType>(this: T,
         m00: number, m01: number, m02: number,
@@ -26,7 +25,7 @@ export interface Matrix3Extension<MatrixType extends Matrix3> {
     mat3_toQuat<T extends MatrixType, U extends Quaternion>(this: Readonly<T>, out: U): U;
 
 
-    mat3_fromAxes<T extends MatrixType>(this: T, leftAxis: Readonly<Vector3>, upAxis: Readonly<Vector3>, forwardAxis: Readonly<Vector3>): this;
+    mat3_fromAxes<T extends MatrixType>(this: T, left: Readonly<Vector3>, up: Readonly<Vector3>, forward: Readonly<Vector3>): this;
 }
 
 declare global {
@@ -73,6 +72,9 @@ declare global {
 declare module "../../../../cauldron/type_definitions/array_type_definitions.js" {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface ArrayLike<T> extends Matrix3Extension<ArrayLike<number>> { }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface DynamicArrayLike<T> extends Matrix3Extension<DynamicArrayLike<number>> { }
 
     interface Vector extends Matrix3Extension<Vector> { }
 

@@ -1,21 +1,19 @@
-/*
-let visualParams = new VisualRaycastParams();
-visualParams.myRaycastResults = raycastResults;
-Globals.getVisualManager().draw(visualParams);
-
-or
-
-let visualRaycast = new VisualRaycast(visualParams);
-*/
-
 import { Globals } from "../../../pp/globals.js";
 import { RaycastResults } from "../../physics/physics_raycast_params.js";
 import { VisualArrow, VisualArrowParams } from "./visual_arrow.js";
-import { VisualElementType } from "./visual_element_types.js";
+import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
+import { VisualElementDefaultType } from "./visual_element_types.js";
 
-export class VisualRaycastParams {
+export class VisualRaycastParams extends AbstractVisualElementParams {
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} engine
+     */
     constructor(engine = Globals.getMainEngine()) {
+        super(engine);
+
         this._myRaycastResults = new RaycastResults();
 
         this.myHitNormalLength = 0.2;
@@ -26,10 +24,9 @@ export class VisualRaycastParams {
         this.myRayMaterial = null;
         this.myHitNormalMaterial = null;
 
-        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
 
-        this.myType = VisualElementType.RAYCAST;
+        this.myType = VisualElementDefaultType.RAYCAST;
     }
 
     get myRaycastResults() {
@@ -40,20 +37,32 @@ export class VisualRaycastParams {
         this._myRaycastResults.copy(result);
     }
 
-    copy(other) {
+    _copyHook(other) {
         // Implemented outside class definition
+    }
+
+    _new() {
+        return new VisualRaycastParams();
     }
 }
 
-export class VisualRaycast {
+/**
+ * Example:
+ * 
+ * ```js  
+ * const visualParams = new VisualRaycastParams();
+ * visualParams.myRaycastResults = raycastResults;
+ * const visualRaycast = new VisualRaycast(visualParams);
+ * 
+ * // OR
+ * 
+ * Globals.getVisualManager().draw(visualParams);
+ * ```
+*/
+export class VisualRaycast extends AbstractVisualElement {
 
     constructor(params = new VisualRaycastParams()) {
-        this._myParams = params;
-
-        this._myVisible = false;
-        this._myAutoRefresh = true;
-
-        this._myDirty = false;
+        super(params);
 
         this._myVisualRaycast = new VisualArrow(new VisualArrowParams(this._myParams.myParent.pp_getEngine()));
 
@@ -61,93 +70,43 @@ export class VisualRaycast {
 
         this._myVisualRaycastHitList = [];
 
-        this._myDestroyed = false;
-
         this._addVisualRaycastHit();
 
-        this.forceRefresh();
-
-        this.setVisible(true);
+        this._prepare();
     }
 
-    setVisible(visible) {
-        if (this._myVisible != visible) {
-            this._myVisible = visible;
-
-            if (this._myVisible) {
-                if (this._myParams.myRaycastResults.myRaycastParams != null) {
-                    this._myVisualRaycast.setVisible(true);
-                }
-
-                if (this._myParams.myRaycastResults.myHits.length > 0) {
-                    let hitsToShow = Math.min(this._myParams.myRaycastResults.myHits.length, this._myVisualRaycastHitList.length);
-
-                    for (let i = 0; i < hitsToShow; i++) {
-                        let visualRaycastHit = this._myVisualRaycastHitList[i];
-                        visualRaycastHit.setVisible(true);
-                    }
-                }
-            } else {
-                this._myVisualRaycast.setVisible(false);
-
-                for (let visualRaycastHit of this._myVisualRaycastHitList) {
-                    visualRaycastHit.setVisible(false);
-                }
-            }
-        }
-    }
-
-    setAutoRefresh(autoRefresh) {
-        this._myAutoRefresh = autoRefresh;
-    }
-
-    getParams() {
-        return this._myParams;
-    }
-
-    setParams(params) {
-        this._myParams = params;
-        this._markDirty();
-    }
-
-    copyParams(params) {
-        this._myParams.copy(params);
-        this._markDirty();
-    }
-
-    paramsUpdated() {
-        this._markDirty();
-    }
-
-    refresh() {
-        this.update(0);
-    }
-
-    forceRefresh() {
-        this._refresh();
-
-        this._myVisualRaycast.forceRefresh();
-
-        if (this._myParams.myRaycastResults.myHits.length > 0) {
-            let hitsToRefresh = Math.min(this._myParams.myRaycastResults.myHits.length, this._myVisualRaycastHitList.length);
-
-            for (let i = 0; i < hitsToRefresh; i++) {
-                let visualRaycastHit = this._myVisualRaycastHitList[i];
-                visualRaycastHit.forceRefresh();
-            }
-        }
-    }
-
-    update(dt) {
-        if (this._myDirty) {
-            this._refresh();
-            this._myDirty = false;
-        }
-
+    _updateHook(dt) {
         this._myVisualRaycast.update(dt);
         for (let visualRaycastHit of this._myVisualRaycastHitList) {
             visualRaycastHit.update(dt);
         }
+    }
+
+    _visibleChanged() {
+        if (this._myVisible) {
+            if (this._myParams.myRaycastResults.myRaycastParams != null) {
+                this._myVisualRaycast.setVisible(true);
+            }
+
+            if (this._myParams.myRaycastResults.myHits.length > 0) {
+                let hitsToShow = Math.min(this._myParams.myRaycastResults.myHits.length, this._myVisualRaycastHitList.length);
+
+                for (let i = 0; i < hitsToShow; i++) {
+                    let visualRaycastHit = this._myVisualRaycastHitList[i];
+                    visualRaycastHit.setVisible(true);
+                }
+            }
+        } else {
+            this._myVisualRaycast.setVisible(false);
+
+            for (let visualRaycastHit of this._myVisualRaycastHitList) {
+                visualRaycastHit.setVisible(false);
+            }
+        }
+    }
+
+    _build() {
+
     }
 
     _refresh() {
@@ -237,24 +196,22 @@ export class VisualRaycast {
         }
     }
 
-    _markDirty() {
-        this._myDirty = true;
 
-        if (this._myAutoRefresh) {
-            this.update(0);
+    _forceRefreshHook() {
+        this._myVisualRaycast.forceRefresh();
+
+        if (this._myParams.myRaycastResults.myHits.length > 0) {
+            let hitsToRefresh = Math.min(this._myParams.myRaycastResults.myHits.length, this._myVisualRaycastHitList.length);
+
+            for (let i = 0; i < hitsToRefresh; i++) {
+                let visualRaycastHit = this._myVisualRaycastHitList[i];
+                visualRaycastHit.forceRefresh();
+            }
         }
     }
 
-    clone() {
-        let clonedParams = new VisualRaycastParams(this._myParams.myParent.pp_getEngine());
-        clonedParams.copy(this._myParams);
-
-        let clone = new VisualRaycast(clonedParams);
-        clone.setAutoRefresh(this._myAutoRefresh);
-        clone.setVisible(this._myVisible);
-        clone._myDirty = this._myDirty;
-
-        return clone;
+    _new(params) {
+        return new VisualRaycast(params);
     }
 
     _addVisualRaycastHit() {
@@ -266,17 +223,11 @@ export class VisualRaycast {
         this._myVisualRaycastHitList.push(visualRaycastHit);
     }
 
-    destroy() {
-        this._myDestroyed = true;
-
+    _destroyHook() {
         this._myVisualRaycast.destroy();
         for (let visualRaycastHit of this._myVisualRaycastHitList) {
             visualRaycastHit.destroy();
         }
-    }
-
-    isDestroyed() {
-        return this._myDestroyed;
     }
 }
 
@@ -284,7 +235,7 @@ export class VisualRaycast {
 
 // IMPLEMENTATION
 
-VisualRaycastParams.prototype.copy = function copy(other) {
+VisualRaycastParams.prototype._copyHook = function _copyHook(other) {
     this.myRaycastResults = other.myRaycastResults;
     this.myHitNormalLength = other.myHitNormalLength;
     this.myThickness = other.myThickness;

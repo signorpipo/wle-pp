@@ -1,6 +1,7 @@
 
 
 export type EasingFunction = (valueToEase: number) => number;
+
 /** #CREDITS https://easings.net */
 export const EasingFunction = {
     linear: (valueToEase: number): number => valueToEase,
@@ -85,8 +86,11 @@ export function mapToRange(value: number, originRangeStart: number, originRangeE
     return clampedNewValue;
 }
 
+/** Range is `[0, 1)` */
+export function random(): number;
 /** Range is `[start, end)` */
-export function random(start = 0, end = 1): number {
+export function random(start: number, end: number): number;
+export function random(start: number = 0, end: number = 1): number {
     return Math.random() * (end - start) + start;
 }
 
@@ -209,7 +213,7 @@ export function angleDistanceSignedRadians(from: number, to: number): number {
 
 /** Clamp the angle to `-180 / +180`, so that, for example, `270` will be `-90`  
     If `usePositiveRange` is `true`, the angle will be clamped to `0 / 360` */
-export function angleClamp(angle: number, usePositiveRange = false): number {
+export function angleClamp(angle: number, usePositiveRange: boolean = false): number {
     return MathUtils.angleClampDegrees(angle, usePositiveRange);
 }
 
@@ -274,6 +278,15 @@ export function isInsideAngleRangeRadians(angle: number, start: number, end: num
     return MathUtils.isInsideAngleRangeDegrees(MathUtils.toDegrees(angle), MathUtils.toDegrees(start), MathUtils.toDegrees(end), useShortestAngle);
 }
 
+/**
+ * How to use
+ * 
+ * By default the rotations are in `Degrees`
+ * 
+ * For rotations u can add a suffix like `Degrees`/`Radians` to use a specific version, example:  
+ *     - `angleDistanceSignedDegrees`  
+ *     - `isInsideAngleRangeRadians`
+ */
 export const MathUtils = {
     EPSILON,
     EPSILON_SQUARED,

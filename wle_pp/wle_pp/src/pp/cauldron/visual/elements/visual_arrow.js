@@ -1,26 +1,20 @@
-/*
-let visualParams = new VisualArrowParams();
-visualParams.myStart.vec3_copy(start);
-visualParams.myDirection.vec3_copy(direction);
-visualParams.myLength = 0.2;
-visualParams.myMaterial = myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-Globals.getVisualManager().draw(visualParams);
-
-or
-
-let visualArrow = new VisualArrow(visualParams);
-*/
-
 import { MeshComponent } from "@wonderlandengine/api";
 import { vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
-import { VisualElementType } from "./visual_element_types.js";
+import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
+import { VisualElementDefaultType } from "./visual_element_types.js";
 import { VisualLine, VisualLineParams } from "./visual_line.js";
 
-export class VisualArrowParams {
+export class VisualArrowParams extends AbstractVisualElementParams {
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} engine
+     */
     constructor(engine = Globals.getMainEngine()) {
+        super(engine);
+
         this.myStart = vec3_create();
         this.myDirection = vec3_create(0, 0, 1);
         this.myLength = 0;
@@ -38,10 +32,9 @@ export class VisualArrowParams {
         this.myMaterial = null;     // null means it will default on myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // If this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
 
-        this.myType = VisualElementType.ARROW;
+        this.myType = VisualElementDefaultType.ARROW;
     }
 
     setStartEnd(start, end) {
@@ -53,20 +46,37 @@ export class VisualArrowParams {
         return this;
     }
 
-    copy(other) {
+    _copyHook(other) {
         // Implemented outside class definition
+    }
+
+    _new() {
+        return new VisualArrowParams();
     }
 }
 
-export class VisualArrow {
+/**
+ * Example:
+ * 
+ * ```js  
+ * const visualParams = new VisualArrowParams();
+ * visualParams.myStart.vec3_copy(start);
+ * visualParams.myDirection.vec3_copy(direction);
+ * visualParams.myLength = 0.2;
+ * visualParams.myMaterial = Globals.getDefaultMaterials().myFlatOpaque.clone();
+ * visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
+ * const visualArrow = new VisualArrow(visualParams);
+ * Globals.getVisualManager().draw(visualParams);
+ * 
+ * // OR
+ * 
+ * Globals.getVisualManager().draw(visualParams);
+ * ```
+*/
+export class VisualArrow extends AbstractVisualElement {
 
     constructor(params = new VisualArrowParams()) {
-        this._myParams = params;
-
-        this._myVisible = false;
-        this._myAutoRefresh = true;
-
-        this._myDirty = false;
+        super(params);
 
         this._myVisualLine = new VisualLine(new VisualLineParams(this._myParams.myParent.pp_getEngine()));
         this._myVisualLine.setAutoRefresh(false);
@@ -77,60 +87,15 @@ export class VisualArrow {
 
         this._myFlatOpaqueMaterial = null;
 
-        this._myDestroyed = false;
-
-        this._build();
-        this.forceRefresh();
-
-        this.setVisible(true);
+        this._prepare();
     }
 
-    setVisible(visible) {
-        if (this._myVisible != visible) {
-            this._myVisible = visible;
-            this._myVisualLine.setVisible(visible);
-            this._myArrowParentObject.pp_setActive(visible);
-        }
+    _visibleChanged() {
+        this._myVisualLine.setVisible(this._myVisible);
+        this._myArrowParentObject.pp_setActive(this._myVisible);
     }
 
-    setAutoRefresh(autoRefresh) {
-        this._myAutoRefresh = autoRefresh;
-    }
-
-    getParams() {
-        return this._myParams;
-    }
-
-    setParams(params) {
-        this._myParams = params;
-        this._markDirty();
-    }
-
-    copyParams(params) {
-        this._myParams.copy(params);
-        this._markDirty();
-    }
-
-    paramsUpdated() {
-        this._markDirty();
-    }
-
-    refresh() {
-        this.update(0);
-    }
-
-    forceRefresh() {
-        this._refresh();
-
-        this._myVisualLine.forceRefresh();
-    }
-
-    update(dt) {
-        if (this._myDirty) {
-            this._refresh();
-            this._myDirty = false;
-        }
-
+    _updateHook(dt) {
         this._myVisualLine.update(dt);
     }
 
@@ -141,39 +106,17 @@ export class VisualArrow {
         this._myArrowMeshComponent = this._myArrowObject.pp_addComponent(MeshComponent);
     }
 
-    _markDirty() {
-        this._myDirty = true;
-
-        if (this._myAutoRefresh) {
-            this.update(0);
-        }
-    }
-
-    clone() {
-        let clonedParams = new VisualArrowParams(this._myParams.myParent.pp_getEngine());
-        clonedParams.copy(this._myParams);
-
-        let clone = new VisualArrow(clonedParams);
-        clone.setAutoRefresh(this._myAutoRefresh);
-        clone.setVisible(this._myVisible);
-        clone._myDirty = this._myDirty;
-
-        return clone;
-    }
-
     _refresh() {
         // Implemented outside class definition
     }
 
-    destroy() {
-        this._myDestroyed = true;
-
-        this._myVisualLine.destroy();
-        this._myArrowParentObject.pp_destroy();
+    _new(params) {
+        return new VisualArrow(params);
     }
 
-    isDestroyed() {
-        return this._myDestroyed;
+    _destroyHook() {
+        this._myVisualLine.destroy();
+        this._myArrowParentObject.pp_destroy();
     }
 }
 
@@ -259,7 +202,7 @@ VisualArrow.prototype._refresh = function () {
     };
 }();
 
-VisualArrowParams.prototype.copy = function copy(other) {
+VisualArrowParams.prototype._copyHook = function _copyHook(other) {
     this.myStart.vec3_copy(other.myStart);
     this.myDirection.vec3_copy(other.myDirection);
     this.myLength = other.myLength;
@@ -289,8 +232,5 @@ VisualArrowParams.prototype.copy = function copy(other) {
         this.myColor = null;
     }
 
-    this.myParent = other.myParent;
     this.myLocal = other.myLocal;
-
-    this.myType = other.myType;
 };

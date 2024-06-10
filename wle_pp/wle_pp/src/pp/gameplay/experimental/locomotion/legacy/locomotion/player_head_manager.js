@@ -33,8 +33,6 @@ export class PlayerHeadManagerParams {
 
         this.myNonVRFloorBasedMode = NonVRReferenceSpaceMode.FLOOR_THEN_KEEP_VR;
 
-        this.myRotateFeetKeepUp = false;
-
         this.myDefaultHeightNonVR = 0;
         this.myDefaultHeightVRWithoutFloor = 0;
         this.myDefaultHeightVRWithFloor = null; // null means just keep the detected one

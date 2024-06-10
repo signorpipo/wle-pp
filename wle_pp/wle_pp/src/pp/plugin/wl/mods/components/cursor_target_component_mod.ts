@@ -14,7 +14,7 @@ function _initCursorTargetComponentModPrototype(): void {
 
         // New Functions 
 
-        init: function init(this: CursorTarget): void {
+        init(this: CursorTarget): void {
             this.onSingleClick = new Emitter();
             this.onDoubleClick = new Emitter();
             this.onTripleClick = new Emitter();
@@ -27,11 +27,11 @@ function _initCursorTargetComponentModPrototype(): void {
             this.isSurface = false;
         },
 
-        start: function start(): void { },
-        update: function update(dt: number): void { },
-        onActivate: function onActivate(): void { },
-        onDeactivate: function onDeactivate(): void { },
-        onDestroy: function onDestroy(): void { },
+        start(): void { },
+        update(dt: number): void { },
+        onActivate(): void { },
+        onDeactivate(): void { },
+        onDestroy(): void { },
     };
 
 

@@ -1,6 +1,6 @@
 
 import { mat4 as gl_mat4, type mat4 as gl_mat4_type, type vec3 as gl_vec3_type } from "gl-matrix";
-import { Matrix4, Quaternion, Vector3, Vector4 } from "../../type_definitions/array_type_definitions.js";
+import { Matrix4, Quaternion, Quaternion2, Vector3 } from "../../type_definitions/array_type_definitions.js";
 import { MathUtils } from "../math_utils.js";
 import { Quat2Utils } from "./quat2_utils.js";
 import { QuatUtils, create as quat_utils_create } from "./quat_utils.js";
@@ -18,7 +18,7 @@ export function create(
     m10?: number, m11?: number, m12?: number, m13?: number,
     m20?: number, m21?: number, m22?: number, m23?: number,
     m30?: number, m31?: number, m32?: number, m33?: number): Matrix4 {
-    const out = gl_mat4.create() as unknown as Vector4;
+    const out = gl_mat4.create() as unknown as Matrix4;
 
     if (m00 != null) {
         Mat4Utils.set(
@@ -109,8 +109,8 @@ export function getPosition<T extends Vector3>(matrix: Readonly<Matrix4>, out: V
 
 export function getRotation(matrix: Readonly<Matrix4>): Vector3;
 export function getRotation<T extends Vector3>(matrix: Readonly<Matrix4>, out: T): T;
-export function getRotation<T extends Vector3>(matrix: Readonly<Matrix4>, out: Vector3 | T = Vec3Utils.create()): Vector3 | T {
-    return Mat4Utils.getRotationDegrees(matrix, out);
+export function getRotation<T extends Vector3>(matrix: Readonly<Matrix4>, out?: Vector3 | T): Vector3 | T {
+    return Mat4Utils.getRotationDegrees(matrix, out!);
 }
 
 export const getRotationDegrees = function () {
@@ -327,6 +327,14 @@ export function getDown<T extends Vector3>(matrix: Readonly<Matrix4>, out?: Vect
     return out;
 }
 
+export const hasUniformScale = function () {
+    const scale = vec3_utils_create();
+    return function hasUniformScale(matrix: Readonly<Matrix4>): boolean {
+        Mat4Utils.getScale(matrix, scale);
+        return Math.abs(scale[0] - scale[1]) < MathUtils.EPSILON && Math.abs(scale[1] - scale[2]) < MathUtils.EPSILON && Math.abs(scale[0] - scale[2]) < MathUtils.EPSILON;
+    };
+}();
+
 export const toWorld = function () {
     const convertTransform = create();
     const position = vec3_utils_create();
@@ -399,21 +407,13 @@ export const toLocal = function () {
     return toLocal;
 }();
 
-export const hasUniformScale = function () {
-    const scale = vec3_utils_create();
-    return function hasUniformScale(matrix: Readonly<Matrix4>): boolean {
-        Mat4Utils.getScale(matrix, scale);
-        return Math.abs(scale[0] - scale[1]) < MathUtils.EPSILON && Math.abs(scale[1] - scale[2]) < MathUtils.EPSILON && Math.abs(scale[0] - scale[2]) < MathUtils.EPSILON;
-    };
-}();
-
 export const toQuat = function () {
     const position = vec3_utils_create();
     const rotation = quat_utils_create();
 
-    function toQuat(matrix: Readonly<Matrix4>): Quaternion;
-    function toQuat<T extends Quaternion>(matrix: Readonly<Matrix4>, out: T): T;
-    function toQuat<T extends Quaternion>(matrix: Readonly<Matrix4>, out: Quaternion | T = Quat2Utils.create()): Quaternion | T {
+    function toQuat(matrix: Readonly<Matrix4>): Quaternion2;
+    function toQuat<T extends Quaternion2>(matrix: Readonly<Matrix4>, out: T): T;
+    function toQuat<T extends Quaternion2>(matrix: Readonly<Matrix4>, out: Quaternion2 | T = Quat2Utils.create()): Quaternion2 | T {
         Mat4Utils.getPosition(matrix, position);
         Mat4Utils.getRotationQuat(matrix, rotation);
         Quat2Utils.setPositionRotationQuat(out, position, rotation);
@@ -423,13 +423,29 @@ export const toQuat = function () {
     return toQuat;
 }();
 
-export function fromQuat(quat: Readonly<Quaternion>): Matrix4;
-export function fromQuat<T extends Matrix4>(quat: Readonly<Quaternion>, out: T): T;
-export function fromQuat<T extends Matrix4>(quat: Readonly<Quaternion>, out: Matrix4 | T = Mat4Utils.create()): Matrix4 | T {
+export function fromQuat(quat: Readonly<Quaternion2>): Matrix4;
+export function fromQuat<T extends Matrix4>(quat: Readonly<Quaternion2>, out: T): T;
+export function fromQuat<T extends Matrix4>(quat: Readonly<Quaternion2>, out: Matrix4 | T = Mat4Utils.create()): Matrix4 | T {
     Quat2Utils.toMatrix(quat, out);
     return out;
 }
 
+/**
+ * How to use
+ * 
+ * By default rotations are in `Degrees` and transforms are `Matrix4` (and not `Quat2`)  
+ * For functions that work with rotations, `Matrix` means `Matrix3` and `Quat` means `Quat`  
+ * For functions that work with transforms, `Matrix` means `Matrix4` and `Quat` means `Quat2`
+ * 
+ * For rotations u can add a suffix like `Degrees`/`Radians`/`Quat`/`Matrix` to use a specific version, example:  
+ *     - `getRotationRadians`  
+ *     - `setRotationQuat`
+ * 
+ * The functions leave u the choice of forwarding an out parameter or just get the return value, example:  
+ *     - `let position = Mat4Utils.getPosition(matrix)`  
+ *     - `Mat4Utils.getPosition(matrix, position)`  
+ *     - the out parameter is always the last one
+ */
 export const Mat4Utils = {
     create,
     set,
@@ -466,9 +482,9 @@ export const Mat4Utils = {
     getRight,
     getUp,
     getDown,
+    hasUniformScale,
     toWorld,
     toLocal,
-    hasUniformScale,
     toQuat,
     fromQuat
 } as const;

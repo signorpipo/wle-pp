@@ -1,22 +1,19 @@
-/*
-let visualParams = new VisualTransformParams();
-visualParams.myTransform.mat4_copy(transform);
-visualParams.myLength = 0.2;
-Globals.getVisualManager().draw(visualParams);
-
-or
-
-let visualTransform = new VisualTransform(visualParams);
-*/
-
 import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { VisualArrow, VisualArrowParams } from "./visual_arrow.js";
-import { VisualElementType } from "./visual_element_types.js";
+import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
+import { VisualElementDefaultType } from "./visual_element_types.js";
 
-export class VisualTransformParams {
+export class VisualTransformParams extends AbstractVisualElementParams {
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} engine
+     */
     constructor(engine = Globals.getMainEngine()) {
+        super(engine);
+
         this.myTransform = mat4_create();
         this.myLength = 0.2;
         this.myThickness = 0.005;
@@ -25,26 +22,38 @@ export class VisualTransformParams {
         this.myUpMaterial = null;
         this.myRightMaterial = null;
 
-        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
 
-        this.myType = VisualElementType.TRANSFORM;
+        this.myType = VisualElementDefaultType.TRANSFORM;
     }
 
-    copy(other) {
+    _copyHook(other) {
         // Implemented outside class definition
+    }
+
+    _new() {
+        return new VisualTransformParams();
     }
 }
 
-export class VisualTransform {
+/**
+ * Example:
+ * 
+ * ```js  
+ * const visualParams = new VisualTransformParams();
+ * visualParams.myTransform.mat4_copy(transform);
+ * visualParams.myLength = 0.2;
+ * const visualTransform = new VisualTransform(visualParams);
+ * 
+ * // OR
+ * 
+ * Globals.getVisualManager().draw(visualParams);
+ * ```
+*/
+export class VisualTransform extends AbstractVisualElement {
 
     constructor(params = new VisualTransformParams()) {
-        this._myParams = params;
-
-        this._myVisible = false;
-        this._myAutoRefresh = true;
-
-        this._myDirty = false;
+        super(params);
 
         this._myVisualRight = new VisualArrow(new VisualArrowParams(this._myParams.myParent.pp_getEngine()));
         this._myVisualUp = new VisualArrow(new VisualArrowParams(this._myParams.myParent.pp_getEngine()));
@@ -54,102 +63,43 @@ export class VisualTransform {
         this._myVisualUp.setAutoRefresh(false);
         this._myVisualForward.setAutoRefresh(false);
 
-        this._myDestroyed = false;
-
-        this.forceRefresh();
-
-        this.setVisible(true);
+        this._prepare();
     }
 
-    setVisible(visible) {
-        if (this._myVisible != visible) {
-            this._myVisible = visible;
-            this._myVisualRight.setVisible(visible);
-            this._myVisualUp.setVisible(visible);
-            this._myVisualForward.setVisible(visible);
-        }
-    }
-
-    setAutoRefresh(autoRefresh) {
-        this._myAutoRefresh = autoRefresh;
-    }
-
-    getParams() {
-        return this._myParams;
-    }
-
-    setParams(params) {
-        this._myParams = params;
-        this._markDirty();
-    }
-
-    copyParams(params) {
-        this._myParams.copy(params);
-        this._markDirty();
-    }
-
-    paramsUpdated() {
-        this._markDirty();
-    }
-
-    refresh() {
-        this.update(0);
-    }
-
-    forceRefresh() {
-        this._refresh();
-
-        this._myVisualRight.forceRefresh();
-        this._myVisualUp.forceRefresh();
-        this._myVisualForward.forceRefresh();
-    }
-
-    update(dt) {
-        if (this._myDirty) {
-            this._refresh();
-
-            this._myDirty = false;
-        }
-
+    _updateHook(dt) {
         this._myVisualRight.update(dt);
         this._myVisualUp.update(dt);
         this._myVisualForward.update(dt);
     }
 
-    _markDirty() {
-        this._myDirty = true;
-
-        if (this._myAutoRefresh) {
-            this.update(0);
-        }
+    _visibleChanged() {
+        this._myVisualRight.setVisible(this._myVisible);
+        this._myVisualUp.setVisible(this._myVisible);
+        this._myVisualForward.setVisible(this._myVisible);
     }
 
-    clone() {
-        let clonedParams = new VisualTransformParams(this._myParams.myParent.pp_getEngine());
-        clonedParams.copy(this._myParams);
+    _build() {
 
-        let clone = new VisualTransform(clonedParams);
-        clone.setAutoRefresh(this._myAutoRefresh);
-        clone.setVisible(this._myVisible);
-        clone._myDirty = this._myDirty;
-
-        return clone;
     }
 
     _refresh() {
         // Implemented outside class definition
     }
 
-    destroy() {
-        this._myDestroyed = true;
+    _forceRefreshHook() {
+        this._myVisualRight.forceRefresh();
+        this._myVisualUp.forceRefresh();
+        this._myVisualForward.forceRefresh();
+    }
 
+    _new(params) {
+        return new VisualTransform(params);
+    }
+
+    _destroyHook() {
         this._myVisualRight.destroy();
         this._myVisualUp.destroy();
         this._myVisualForward.destroy();
-    }
-
-    isDestroyed() {
-        return this._myDestroyed;
     }
 }
 
@@ -240,7 +190,7 @@ VisualTransform.prototype._refresh = function () {
     };
 }();
 
-VisualTransformParams.prototype.copy = function copy(other) {
+VisualTransformParams.prototype._copyHook = function _copyHook(other) {
     this.myTransform.mat4_copy(other.myTransform);
     this.myLength = other.myLength;
     this.myThickness = other.myThickness;
@@ -263,8 +213,5 @@ VisualTransformParams.prototype.copy = function copy(other) {
         this.myForwardMaterial = null;
     }
 
-    this.myParent = other.myParent;
     this.myLocal = other.myLocal;
-
-    this.myType = other.myType;
 };

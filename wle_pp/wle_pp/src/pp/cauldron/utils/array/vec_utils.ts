@@ -68,7 +68,7 @@ export function zero<T extends Vector>(vector: T): T {
     return vector;
 }
 
-export function isZero(vector: Readonly<Vector>, epsilon = 0): boolean {
+export function isZero(vector: Readonly<Vector>, epsilon: number = 0): boolean {
     let zero = true;
 
     for (let i = 0; i < vector.length && zero; i++) {

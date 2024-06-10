@@ -1,24 +1,19 @@
-/*
-let visualParams = new VisualPointParams();
-visualParams.myPosition.vec3_copy(position);
-visualParams.myRadius = 0.005;
-visualParams.myMaterial = myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-Globals.getVisualManager().draw(visualParams);
-
-or
-
-let visualPoint = new VisualPoint(visualParams);
-*/
-
 import { MeshComponent } from "@wonderlandengine/api";
 import { vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
-import { VisualElementType } from "./visual_element_types.js";
+import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
+import { VisualElementDefaultType } from "./visual_element_types.js";
 
-export class VisualPointParams {
+export class VisualPointParams extends AbstractVisualElementParams {
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} engine
+     */
     constructor(engine = Globals.getMainEngine()) {
+        super(engine);
+
         this.myPosition = vec3_create();
         this.myRadius = 0.005;
 
@@ -27,83 +22,51 @@ export class VisualPointParams {
         this.myMaterial = null;     // null means it will default on myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // If this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
 
-        this.myType = VisualElementType.POINT;
+        this.myType = VisualElementDefaultType.POINT;
     }
 
-    copy(other) {
+    _copyHook(other) {
         // Implemented outside class definition
+    }
+
+    _new() {
+        return new VisualPointParams();
     }
 }
 
-export class VisualPoint {
+/**
+ * Example:
+ * 
+ * ```js  
+ * const visualParams = new VisualPointParams();
+ * visualParams.myPosition.vec3_copy(position);
+ * visualParams.myRadius = 0.005;
+ * visualParams.myMaterial = Globals.getDefaultMaterials().myFlatOpaque.clone();
+ * visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
+ * const visualPoint = new VisualPoint(visualParams);
+ * 
+ * // OR
+ * 
+ * Globals.getVisualManager().draw(visualParams);
+ * ```
+*/
+export class VisualPoint extends AbstractVisualElement {
 
     constructor(params = new VisualPointParams()) {
-        this._myParams = params;
-
-        this._myVisible = false;
-        this._myAutoRefresh = true;
-
-        this._myDirty = false;
+        super(params);
 
         this._myPointObject = null;
         this._myPointMeshComponent = null;
 
         this._myFlatOpaqueMaterial = null;
 
-        this._myDestroyed = false;
-
-        this._build();
-        this.forceRefresh();
-
-        this.setVisible(true);
+        this._prepare();
     }
 
-    setVisible(visible) {
-        if (this._myVisible != visible) {
-            this._myVisible = visible;
-            this._myPointObject.pp_setActive(visible);
-        }
-    }
-
-    setAutoRefresh(autoRefresh) {
-        this._myAutoRefresh = autoRefresh;
-    }
-
-    getParams() {
-        return this._myParams;
-    }
-
-    setParams(params) {
-        this._myParams = params;
-        this._markDirty();
-    }
-
-    copyParams(params) {
-        this._myParams.copy(params);
-        this._markDirty();
-    }
-
-    paramsUpdated() {
-        this._markDirty();
-    }
-
-    refresh() {
-        this.update(0);
-    }
-
-    forceRefresh() {
-        this._refresh();
-    }
-
-    update(dt) {
-        if (this._myDirty) {
-            this._refresh();
-
-            this._myDirty = false;
-        }
+    _visibleChanged() {
+        this._myPointObject.pp_setActive(this._myVisible);
     }
 
     _build() {
@@ -112,38 +75,16 @@ export class VisualPoint {
         this._myPointMeshComponent = this._myPointObject.pp_addComponent(MeshComponent);
     }
 
-    _markDirty() {
-        this._myDirty = true;
-
-        if (this._myAutoRefresh) {
-            this.update(0);
-        }
-    }
-
-    clone() {
-        let clonedParams = new VisualPointParams(this._myParams.myParent.pp_getEngine());
-        clonedParams.copy(this._myParams);
-
-        let clone = new VisualPoint(clonedParams);
-        clone.setAutoRefresh(this._myAutoRefresh);
-        clone.setVisible(this._myVisible);
-        clone._myDirty = this._myDirty;
-
-        return clone;
-    }
-
     _refresh() {
         // Implemented outside class definition
     }
 
-    destroy() {
-        this._myDestroyed = true;
-
-        this._myPointObject.pp_destroy();
+    _new(params) {
+        return new VisualPoint(params);
     }
 
-    isDestroyed() {
-        return this._myDestroyed;
+    _destroyHook() {
+        this._myPointObject.pp_destroy();
     }
 }
 
@@ -188,7 +129,7 @@ VisualPoint.prototype._refresh = function () {
     };
 }();
 
-VisualPointParams.prototype.copy = function copy(other) {
+VisualPointParams.prototype._copyHook = function _copyHook(other) {
     this.myPosition.vec3_copy(other.myPosition);
     this.myRadius = other.myRadius;
 
@@ -210,8 +151,5 @@ VisualPointParams.prototype.copy = function copy(other) {
         this.myColor = null;
     }
 
-    this.myParent = other.myParent;
     this.myLocal = other.myLocal;
-
-    this.myType = other.myType;
 };

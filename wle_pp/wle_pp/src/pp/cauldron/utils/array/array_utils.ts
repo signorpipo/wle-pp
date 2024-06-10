@@ -1,4 +1,4 @@
-import { ArrayLike } from "../../type_definitions/array_type_definitions.js";
+import { ArrayLike, DynamicArrayLike } from "../../type_definitions/array_type_definitions.js";
 
 export function copy<ArrayType extends ArrayLike<T>, T>(from: Readonly<ArrayLike<T>>, to: ArrayType, copyCallback?: (fromElement: T, toElement: T) => T): ArrayType {
     const _to = to as (ArrayType & { pop: () => T | undefined });
@@ -178,7 +178,7 @@ export function findAllIndexesEqual<T>(array: Readonly<ArrayLike<T>>, elementToF
     return indexesFound;
 }
 
-export function remove<T>(array: T[], callback: (elementToCheck: T, elementIndex: number) => boolean): T | undefined {
+export function remove<T>(array: DynamicArrayLike<T>, callback: (elementToCheck: T, elementIndex: number) => boolean): T | undefined {
     let elementRemoved = undefined;
 
     const index = array.findIndex(callback);
@@ -189,7 +189,7 @@ export function remove<T>(array: T[], callback: (elementToCheck: T, elementIndex
     return elementRemoved;
 }
 
-export function removeIndex<T>(array: T[], index: number): T | undefined {
+export function removeIndex<T>(array: DynamicArrayLike<T>, index: number): T | undefined {
     let elementRemoved = undefined;
 
     if (index >= 0 && index < array.length) {
@@ -202,7 +202,7 @@ export function removeIndex<T>(array: T[], index: number): T | undefined {
     return elementRemoved;
 }
 
-export function removeAll<T>(array: T[], callback: (elementToCheck: T, elementIndex: number) => boolean): T[] {
+export function removeAll<T>(array: DynamicArrayLike<T>, callback: (elementToCheck: T, elementIndex: number) => boolean): T[] {
     const elementsRemoved = [];
 
     let currentElement = undefined;
@@ -216,7 +216,7 @@ export function removeAll<T>(array: T[], callback: (elementToCheck: T, elementIn
     return elementsRemoved;
 }
 
-export function removeAllIndexes<T>(array: T[], indexes: ArrayLike<number>): T[] {
+export function removeAllIndexes<T>(array: DynamicArrayLike<T>, indexes: ArrayLike<number>): T[] {
     const elementsRemoved = [];
 
     for (const index of indexes) {
@@ -229,21 +229,21 @@ export function removeAllIndexes<T>(array: T[], indexes: ArrayLike<number>): T[]
     return elementsRemoved;
 }
 
-export function removeEqual<T>(array: T[], elementToRemove: T, elementsEqualCallback?: (elementToCheck: T, elementToRemove: T) => boolean): T | undefined {
+export function removeEqual<T>(array: DynamicArrayLike<T>, elementToRemove: T, elementsEqualCallback?: (elementToCheck: T, elementToRemove: T) => boolean): T | undefined {
     return ArrayUtils.removeIndex(array, ArrayUtils.findIndexEqual(array, elementToRemove, elementsEqualCallback));
 }
 
-export function removeAllEqual<T>(array: T[], elementToRemove: T, elementsEqualCallback?: (elementToCheck: T, elementToRemove: T) => boolean): T[] {
+export function removeAllEqual<T>(array: DynamicArrayLike<T>, elementToRemove: T, elementsEqualCallback?: (elementToCheck: T, elementToRemove: T) => boolean): T[] {
     return ArrayUtils.removeAllIndexes(array, ArrayUtils.findAllIndexesEqual(array, elementToRemove, elementsEqualCallback));
 }
 
-export function clear<T>(array: T[]): T[] {
+export function clear<ArrayType extends DynamicArrayLike<T>, T>(array: ArrayType): ArrayType {
     array.length = 0;
 
     return array;
 }
 
-export function pushUnique<T>(array: T[], elementToAdd: T, elementsEqualCallback?: (elementToCheck: T, elementToAdd: T) => boolean): number {
+export function pushUnique<T>(array: DynamicArrayLike<T>, elementToAdd: T, elementsEqualCallback?: (elementToCheck: T, elementToAdd: T) => boolean): number {
     let length = array.length;
 
     const hasElement = ArrayUtils.hasEqual(array, elementToAdd, elementsEqualCallback);
@@ -255,7 +255,7 @@ export function pushUnique<T>(array: T[], elementToAdd: T, elementsEqualCallback
     return length;
 }
 
-export function unshiftUnique<T>(array: T[], elementToAdd: T, elementsEqualCallback?: (elementToCheck: T, elementToAdd: T) => boolean): number {
+export function unshiftUnique<T>(array: DynamicArrayLike<T>, elementToAdd: T, elementsEqualCallback?: (elementToCheck: T, elementToAdd: T) => boolean): number {
     let length = array.length;
 
     const hasElement = ArrayUtils.hasEqual(array, elementToAdd, elementsEqualCallback);

@@ -10,12 +10,10 @@ export function initNumberExtension(): void {
 function _initNumberExtensionPrototype(): void {
 
     const numberExtension: NumberExtension = {
-        get: function get(this: number, factor?: number): number {
+        get(this: number, factor?: number): number {
             return this.valueOf();
         }
     };
-
-
 
     PluginUtils.injectOwnProperties(numberExtension, Number.prototype, false, true, true);
 }

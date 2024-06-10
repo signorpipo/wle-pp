@@ -5,7 +5,7 @@ import { Timer } from "../cauldron/timer.js";
 import { ObjectPool, ObjectPoolParams } from "../object_pool/object_pool.js";
 import { XRUtils } from "../utils/xr_utils.js";
 import { MeshCreationParams, MeshCreationTriangleParams, MeshCreationVertexParams, MeshUtils } from "../wl/utils/mesh_utils.js";
-import { CloneParams } from "../wl/utils/object_utils.js";
+import { ObjectCloneParams } from "../wl/utils/object_utils.js";
 
 export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     static TypeName = "pp-benchmark-max-visible-triangles";
@@ -307,7 +307,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         }
         poolParams.myPercentageToAddWhenEmpty = 0;
         poolParams.myAmountToAddWhenEmpty = 10000;
-        poolParams.myCloneParams = new CloneParams();
+        poolParams.myCloneParams = new ObjectCloneParams();
         poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "material", this._myCloneMaterial);
         poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "mesh", this._myCloneMesh);
 
@@ -422,7 +422,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     _computeAverageFrameRate(firstCompute) {
         let frameRate = 0;
 
-        this._myDTHistory.sort();
+        this._myDTHistory.sort((a, b) => a - b);
         let elementsToRemove = Math.floor(this._myDTHistory.length * Math.min(0.9, this._myDTHistoryToIgnorePercentage * (firstCompute ? 2 : 1)));
         for (let i = 0; i < elementsToRemove && this._myDTHistory.length > 1; i++) {
             this._myDTHistory.pop();

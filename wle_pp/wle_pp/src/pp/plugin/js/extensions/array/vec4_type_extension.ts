@@ -1,10 +1,9 @@
+import { Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
+
 /**
  * #WARN this type extension is actually added at runtime only if you call `initVec4Extension`  
  * The `initPP` function, which is automatically called by the `pp-gateway` component, does this for you
  */
-
-import { Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
-
 export interface Vector4Extension<VectorType extends Vector4> {
     vec4_set<T extends VectorType>(this: T, x: number, y: number, z: number, w: number): this;
     vec4_set<T extends VectorType>(this: T, uniformValue: number): this;
@@ -57,6 +56,9 @@ declare global {
 declare module "../../../../cauldron/type_definitions/array_type_definitions.js" {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface ArrayLike<T> extends Vector4Extension<ArrayLike<number>> { }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface DynamicArrayLike<T> extends Vector4Extension<DynamicArrayLike<number>> { }
 
     interface Vector extends Vector4Extension<Vector> { }
 

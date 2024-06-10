@@ -105,9 +105,9 @@ export * from "./cauldron/visual/components/visual_manager_component.js";
 //    WL
 export * from "./cauldron/wl/register_wl_components.js";
 export * from "./cauldron/wl/components/add_wl_to_window_component.js";
-export { ObjectUtils, CloneParams } from "./cauldron/wl/utils/object_utils.js";
-export { ComponentUtils, DeepCloneParams, CustomCloneParams } from "./cauldron/wl/utils/component_utils.js";
-export { DefaultWLComponentCloneCallbacks } from "./cauldron/wl/utils/default_wl_component_clone_callbacks.js";
+export { ObjectUtils, ObjectCloneParams } from "./cauldron/wl/utils/object_utils.js";
+export { ComponentUtils, ComponentDeepCloneParams, ComponentCustomCloneParams } from "./cauldron/wl/utils/component_utils.js";
+export { WLComponentDefaultCloneCallbacks } from "./cauldron/wl/utils/wl_component_default_clone_callbacks.js";
 export { MaterialUtils } from "./cauldron/wl/utils/material_utils.js";
 export { MeshUtils, MeshCreationVertexParams, MeshCreationTriangleParams, MeshCreationParams } from "./cauldron/wl/utils/mesh_utils.js";
 export { TextUtils } from "./cauldron/wl/utils/text_utils.js";

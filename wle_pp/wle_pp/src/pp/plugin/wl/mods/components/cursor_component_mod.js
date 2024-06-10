@@ -1,6 +1,6 @@
 import { InputComponent, ViewComponent } from "@wonderlandengine/api";
 import { Cursor, CursorTarget, HitTestLocation } from "@wonderlandengine/components";
-import { BrowserUtils } from "wle-pp/cauldron/utils/browser_utils.js";
+import { BrowserUtils } from "../../../../cauldron/utils/browser_utils.js";
 import { XRUtils } from "../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../input/cauldron/input_types.js";
 import { InputUtils } from "../../../../input/cauldron/input_utils.js";

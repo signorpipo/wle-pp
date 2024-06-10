@@ -15,7 +15,7 @@ export function initCauldronExtensions(): void {
 function _initPhysicsExtensionPrototype(): void {
 
     const physicsExtension: PhysicsExtension = {
-        pp_getEngine: function pp_getEngine(this: Readonly<Physics>): WonderlandEngine {
+        pp_getEngine(this: Readonly<Physics>): WonderlandEngine {
             return (this as unknown as { _engine: WonderlandEngine })._engine;
         }
     };
@@ -27,11 +27,11 @@ function _initRayHitExtensionPrototype(): void {
 
     const rayHitExtension: RayHitExtension = {
 
-        pp_getEngine: function pp_getEngine(this: Readonly<RayHit>): WonderlandEngine {
+        pp_getEngine(this: Readonly<RayHit>): WonderlandEngine {
             return (this as unknown as { _engine: WonderlandEngine })._engine;
         },
 
-        pp_getLocations: function pp_getLocations<T extends Vector3>(this: Readonly<RayHit>, out: Vector3[] | T[] = _createGetLocationsOut(this.hitCount)): Vector3[] | T[] {
+        pp_getLocations<T extends Vector3>(this: Readonly<RayHit>, out: Vector3[] | T[] = _createGetLocationsOut(this.hitCount)): Vector3[] | T[] {
             const wasm = this.pp_getEngine().wasm;
             const ptr = (this as unknown as { _ptr: number })._ptr;
             const alignedPtr = ptr / 4; // Align F32
@@ -46,7 +46,7 @@ function _initRayHitExtensionPrototype(): void {
             return out;
         },
 
-        pp_getNormals: function pp_getNormals<T extends Vector3>(this: Readonly<RayHit>, out: Vector3[] | T[] = _createGetNormalsOut(this.hitCount)): Vector3[] | T[] {
+        pp_getNormals<T extends Vector3>(this: Readonly<RayHit>, out: Vector3[] | T[] = _createGetNormalsOut(this.hitCount)): Vector3[] | T[] {
             const wasm = this.pp_getEngine().wasm;
             const ptr = (this as unknown as { _ptr: number })._ptr;
             const alignedPtr = (ptr + 48) / 4; // Align F32
@@ -61,7 +61,7 @@ function _initRayHitExtensionPrototype(): void {
             return out;
         },
 
-        pp_getDistances: function pp_getDistances<T extends Vector>(this: Readonly<RayHit>, out: Vector | T = VecUtils.create(this.hitCount)): Vector | T {
+        pp_getDistances<T extends Vector>(this: Readonly<RayHit>, out: Vector | T = VecUtils.create(this.hitCount)): Vector | T {
             const wasm = this.pp_getEngine().wasm;
             const ptr = (this as unknown as { _ptr: number })._ptr;
             const alignedPtr = (ptr + 48 * 2) / 4; // Align F32
@@ -74,7 +74,7 @@ function _initRayHitExtensionPrototype(): void {
             return out;
         },
 
-        pp_getObjects: function pp_getObjects(this: Readonly<RayHit>, out: Object3D[] = new Array(this.hitCount)): Object3D[] {
+        pp_getObjects(this: Readonly<RayHit>, out: Object3D[] = new Array(this.hitCount)): Object3D[] {
             const HEAPU16 = this.pp_getEngine().wasm.HEAPU16;
             const ptr = (this as unknown as { _ptr: number })._ptr;
             const alignedPtr = (ptr + (48 * 2 + 16)) >> 1;

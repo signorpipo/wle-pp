@@ -28,7 +28,7 @@ export class SetHeadLocalTransformComponent extends Component {
 
                 if (Globals.isPoseForwardFixed(this.engine)) {
                     const cameraNonXRUp = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRUp;
-                    (cameraNonXRRotation as any).quat_rotateAxisRadians(Math.PI, (cameraNonXRRotation as any).quat_getUp(cameraNonXRUp), cameraNonXRRotation);
+                    cameraNonXRRotation.quat_rotateAxisRadians(Math.PI, cameraNonXRRotation.quat_getUp(cameraNonXRUp), cameraNonXRRotation);
                 }
 
                 const cameraNonXRPosition = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRPosition;

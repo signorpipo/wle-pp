@@ -258,7 +258,7 @@ export class PhysicsCollisionCollector {
 
     private static readonly _triggerDesyncFixSV =
         {
-            findAllCallback: function (object: Readonly<Object3D>) {
+            findAllCallback(object: Readonly<Object3D>) {
                 const physXComponent = object.pp_getComponentSelf(PhysXComponent);
                 return physXComponent == null || !physXComponent.active;
             }

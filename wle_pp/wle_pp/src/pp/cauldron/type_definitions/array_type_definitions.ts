@@ -1,4 +1,9 @@
-/** This is basically an intersection between `Array` and `Float32Array`, so that it's possible to create methods that work with both more easily */
+/** 
+ * This is basically an intersection between `Array` and `Float32Array`, so that it's possible to create methods that work with both more easily
+ *  
+ * The return type `this`, usually used when the same object is returned, is used here sometimes when a new array is returned instead,  
+ * since there was no other easy way to get the same return type instead of the generic `BaseArrayLike<T>
+ */
 export interface BaseArrayLike<T> {
 
     [n: number]: T;
@@ -52,7 +57,7 @@ export interface BaseArrayLike<T> {
      * Reverses the elements in an array in place.
      * This method mutates the array and returns a reference to the same array.
      */
-    reverse(): BaseArrayLike<T>;
+    reverse(): this;
 
     /**
      * Returns a copy of a section of an array.
@@ -63,7 +68,7 @@ export interface BaseArrayLike<T> {
      * @param end The end index of the specified portion of the array. This is exclusive of the element at the index 'end'.
      * If end is undefined, then the slice extends to the end of the array.
      */
-    slice(start?: number, end?: number): BaseArrayLike<T>;
+    slice(start?: number, end?: number): this;
 
     /**
      * Sorts an array in place.
@@ -119,18 +124,11 @@ export interface BaseArrayLike<T> {
     forEach(callbackfn: (value: T, index: number, array: BaseArrayLike<T>) => void, thisArg?: any): void;
 
     /**
-     * Calls a defined callback function on each element of an array, and returns an array that contains the results.
-     * @param callbackfn A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
-     * @param thisArg An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
-     */
-    map(callbackfn: (value: T, index: number, array: BaseArrayLike<T>) => T, thisArg?: any): BaseArrayLike<T>;
-
-    /**
      * Returns the elements of an array that meet the condition specified in a callback function.
      * @param predicate A function that accepts up to three arguments. The filter method calls the predicate function one time for each element in the array.
      * @param thisArg An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value.
      */
-    filter(predicate: (value: T, index: number, array: BaseArrayLike<T>) => unknown, thisArg?: any): BaseArrayLike<T>;
+    filter(predicate: (value: T, index: number, array: BaseArrayLike<T>) => unknown, thisArg?: any): this;
 
     /**
      * Returns the value of the first element in the array where predicate is true, and undefined
@@ -171,6 +169,72 @@ export interface BaseArrayLike<T> {
     reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: BaseArrayLike<T>) => T): T;
     reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: BaseArrayLike<T>) => T, initialValue: T): T;
     reduceRight<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: BaseArrayLike<T>) => U, initialValue: U): U;
+
+    /**
+     * Changes all array elements from `start` to `end` index to a static `value` and returns the modified array
+     * @param value value to fill array section with
+     * @param start index to start filling the array at. If start is negative, it is treated as
+     * length+start where length is the length of the array.
+     * @param end index to stop filling the array at. If end is negative, it is treated as
+     * length+end.
+     */
+    fill(value: T, start?: number, end?: number): this;
+
+    /**
+     * Returns the this object after copying a section of the array identified by start and end
+     * to the same array starting at position target
+     * @param target If target is negative, it is treated as length+target where length is the
+     * length of the array.
+     * @param start If start is negative, it is treated as length+start. If end is negative, it
+     * is treated as length+end.
+     * @param end If not specified, length of the this object is used as its default value.
+     */
+    copyWithin(target: number, start: number, end?: number): this;
+}
+
+/** This is basically the `Array` class, but this way it's possible to use this instead and feel more generic */
+export interface BaseDynamicArrayLike<T> extends BaseArrayLike<T> {
+
+    /**
+     * Removes the last element from an array and returns it.
+     * If the array is empty, undefined is returned and the array is not modified.
+     */
+    pop(): T | undefined;
+
+    /**
+     * Appends new elements to the end of an array, and returns the new length of the array.
+     * @param items New elements to add to the array.
+     */
+    push(...items: T[]): number;
+
+    /**
+     * Combines two or more arrays.
+     * This method returns a new array without modifying any existing arrays.
+     * @param items Additional arrays and/or items to add to the end of the array.
+     */
+    concat(...items: ConcatArray<T>[]): this;
+    concat(...items: (T | ConcatArray<T>)[]): this;
+
+    /**
+     * Removes the first element from an array and returns it.
+     * If the array is empty, undefined is returned and the array is not modified.
+     */
+    shift(): T | undefined;
+
+    /**
+     * Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
+     * @param start The zero-based location in the array from which to start removing elements.
+     * @param deleteCount The number of elements to remove.
+     * @returns An array containing the elements that were deleted.
+     */
+    splice(start: number, deleteCount?: number): this;
+    splice(start: number, deleteCount: number, ...items: T[]): this;
+
+    /**
+     * Inserts new elements at the start of an array, and returns the new length of the array.
+     * @param items Elements to insert at the start of the array.
+     */
+    unshift(...items: T[]): number;
 }
 
 /** 
@@ -180,6 +244,14 @@ export interface BaseArrayLike<T> {
  * of the `ArrayLike` class without also affecting the child classes like `Vector`
  */
 export interface ArrayLike<T> extends BaseArrayLike<T> { }
+
+/** 
+ * This is basically the `Array` class
+ * 
+ * The reason why a child class is created from `BaseDynamicArrayLike` instead of using it directly is to be able to create a type extension
+ * of the `DynamicArrayLike` class without also affecting the child classes (even though there is none for now)
+ */
+export interface DynamicArrayLike<T> extends BaseDynamicArrayLike<T> { }
 
 export interface Vector extends BaseArrayLike<number> { }
 

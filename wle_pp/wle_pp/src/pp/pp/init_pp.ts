@@ -18,7 +18,7 @@ export function initPP(engine: WonderlandEngine): void {
 
     Globals.setMainEngine(engine);
 
-    ComponentUtils.setDefaultWLComponentCloneCallbacks(engine);
+    ComponentUtils.setWLComponentDefaultCloneCallbacks(engine);
 
     registerWLComponents(engine);
     registerPPComponents(engine);

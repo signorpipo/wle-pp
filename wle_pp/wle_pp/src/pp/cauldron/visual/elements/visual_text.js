@@ -1,24 +1,19 @@
-/*
-let visualParams = new VisualTextParams();
-visualParams.myText = text;
-visualParams.myTransform.mat4_copy(transform);
-visualParams.myMaterial = myDefaultResources.myMaterials.myText.clone();
-visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-Globals.getVisualManager().draw(visualParams);
-
-or
-
-let visualText = new VisualText(visualParams);
-*/
-
 import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
 import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
-import { VisualElementType } from "./visual_element_types.js";
+import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
+import { VisualElementDefaultType } from "./visual_element_types.js";
 
-export class VisualTextParams {
+export class VisualTextParams extends AbstractVisualElementParams {
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} engine
+     */
     constructor(engine = Globals.getMainEngine()) {
+        super(engine);
+
         this.myText = "";
         this.myAlignment = Alignment.Center;
         this.myJustification = Justification.Middle;
@@ -29,89 +24,53 @@ export class VisualTextParams {
 
         this.myColor = null;        // If this is set and material is null, it will use the default text material with this color
 
-        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
 
         this.myLookAtObject = null;
 
-        this.myType = VisualElementType.TEXT;
+        this.myType = VisualElementDefaultType.TEXT;
     }
 
-    copy(other) {
+    _copyHook(other) {
         // Implemented outside class definition
+    }
+
+    _new() {
+        return new VisualTextParams();
     }
 }
 
-export class VisualText {
+/**
+ * Example:
+ * 
+ * ```js  
+ * const visualParams = new VisualTextParams();
+ * visualParams.myText = text;
+ * visualParams.myTransform.mat4_copy(transform);
+ * visualParams.myMaterial = myDefaultResources.myMaterials.myText.clone();
+ * visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
+ * const visualText = new VisualText(visualParams);
+ * 
+ * // OR
+ * 
+ * Globals.getVisualManager().draw(visualParams);
+ * ```
+*/
+export class VisualText extends AbstractVisualElement {
 
     constructor(params = new VisualTextParams()) {
-        this._myParams = params;
-
-        this._myVisible = false;
-        this._myAutoRefresh = true;
-
-        this._myDirty = false;
+        super(params);
 
         this._myTextObject = null;
         this._myTextComponent = null;
 
         this._myTextMaterial = null;
 
-        this._myDestroyed = false;
-
-        this._build();
-        this.forceRefresh();
-
-        this.setVisible(true);
+        this._prepare();
     }
 
-    setVisible(visible) {
-        if (this._myVisible != visible) {
-            this._myVisible = visible;
-            this._myTextObject.pp_setActive(visible);
-        }
-    }
-
-    setAutoRefresh(autoRefresh) {
-        this._myAutoRefresh = autoRefresh;
-    }
-
-    getParams() {
-        return this._myParams;
-    }
-
-    setParams(params) {
-        this._myParams = params;
-        this._markDirty();
-    }
-
-    copyParams(params) {
-        this._myParams.copy(params);
-        this._markDirty();
-    }
-
-    paramsUpdated() {
-        this._markDirty();
-    }
-
-    refresh() {
-        this.update(0);
-    }
-
-    forceRefresh() {
-        this._refresh();
-    }
-
-    update(dt) {
-        if (this._myDirty || this._myParams.myLookAtObject != null) {
-            this._refresh();
-
-            this._myDirty = false;
-        }
-    }
-
-    _refresh() {
-        // Implemented outside class definition
+    _visibleChanged() {
+        this._myTextObject.pp_setActive(this._myVisible);
     }
 
     _build() {
@@ -119,34 +78,16 @@ export class VisualText {
         this._myTextComponent = this._myTextObject.pp_addComponent(TextComponent);
     }
 
-    _markDirty() {
-        this._myDirty = true;
-
-        if (this._myAutoRefresh) {
-            this.update(0);
-        }
+    _refresh() {
+        // Implemented outside class definition
     }
 
-    clone() {
-        let clonedParams = new VisualTextParams(this._myParams.myParent.pp_getEngine());
-        clonedParams.copy(this._myParams);
-
-        let clone = new VisualText(clonedParams);
-        clone.setAutoRefresh(this._myAutoRefresh);
-        clone.setVisible(this._myVisible);
-        clone._myDirty = this._myDirty;
-
-        return clone;
+    _new(params) {
+        return new VisualText(params);
     }
 
-    destroy() {
-        this._myDestroyed = true;
-
+    _destroyHook() {
         this._myTextObject.pp_destroy();
-    }
-
-    isDestroyed() {
-        return this._myDestroyed;
     }
 }
 
@@ -154,7 +95,7 @@ export class VisualText {
 
 // IMPLEMENTATION
 
-VisualTextParams.prototype.copy = function copy(other) {
+VisualTextParams.prototype._copyHook = function _copyHook(other) {
     this.myText = other.myText;
     this.myAlignment = other.myAlignment;
     this.myJustification = other.myJustification;
@@ -177,12 +118,9 @@ VisualTextParams.prototype.copy = function copy(other) {
         this.myColor = null;
     }
 
-    this.myParent = other.myParent;
     this.myLocal = other.myLocal;
 
     this.myLookAtObject = other.myLookAtObject;
-
-    this.myType = other.myType;
 };
 
 VisualText.prototype._refresh = function () {

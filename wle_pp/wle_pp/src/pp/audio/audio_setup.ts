@@ -53,7 +53,7 @@ export class AudioSetup {
         // Spatial
 
         if (this.myPosition != null) {
-            audioSetup.myPosition = (this.myPosition as any).vec3_clone();
+            audioSetup.myPosition = this.myPosition.vec3_clone();
         } else {
             audioSetup.myPosition = null;
         }

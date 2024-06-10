@@ -136,7 +136,7 @@ export class CursorButtonComponent extends Component {
         }
 
         for (const buttonActionsHandlerName of buttonActionsHandlerNames) {
-            const buttonActionHandlerComponent = this.object.pp_getComponent(buttonActionsHandlerName) as unknown as CursorButtonActionsHandler;
+            const buttonActionHandlerComponent = this.object.pp_getComponent(buttonActionsHandlerName) as CursorButtonActionsHandler;
             if (buttonActionHandlerComponent != null) {
                 this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerComponent);
             } else {
@@ -161,7 +161,7 @@ export class CursorButtonComponent extends Component {
             this._myAnimatedScale.update(dt);
 
             const buttonScale = CursorButtonComponent._updateSV.buttonScale;
-            this.object.pp_setScaleLocal((this._myOriginalScaleLocal as any).vec3_scale(this._myAnimatedScale.getCurrentValue(), buttonScale));
+            this.object.pp_setScaleLocal(this._myOriginalScaleLocal.vec3_scale(this._myAnimatedScale.getCurrentValue(), buttonScale));
         }
 
         if (!this._myAnimatedColorBrightnessOffset.isDone()) {
@@ -337,11 +337,11 @@ export class CursorButtonComponent extends Component {
 
             const phongMaterial = meshComponent.material as PhongMaterial;
             if (phongMaterial.diffuseColor != null) {
-                this._myPhongMaterialOriginalColors.push([phongMaterial, (phongMaterial.diffuseColor as any).vec4_clone()]);
+                this._myPhongMaterialOriginalColors.push([phongMaterial, phongMaterial.diffuseColor.vec4_clone()]);
             } else {
                 const flatMaterial = meshComponent.material as FlatMaterial;
                 if (flatMaterial.color != null) {
-                    this._myFlatMaterialOriginalColors.push([flatMaterial, (flatMaterial.color as any).vec4_clone()]);
+                    this._myFlatMaterialOriginalColors.push([flatMaterial, flatMaterial.color.vec4_clone()]);
                 }
             }
         }
@@ -352,7 +352,7 @@ export class CursorButtonComponent extends Component {
 
             const flatMaterial = textComponent.material as FlatMaterial;
             if (flatMaterial.color != null) {
-                this._myFlatMaterialOriginalColors.push([flatMaterial, (flatMaterial.color as any).vec4_clone()]);
+                this._myFlatMaterialOriginalColors.push([flatMaterial, flatMaterial.color.vec4_clone()]);
             }
         }
 

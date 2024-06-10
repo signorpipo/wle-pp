@@ -1,8 +1,8 @@
 import { MeshComponent, TextComponent } from "@wonderlandengine/api";
-import { ComponentUtils, DeepCloneParams } from "./component_utils.js";
+import { ComponentDeepCloneParams, ComponentUtils } from "./component_utils.js";
 import { MeshUtils } from "./mesh_utils.js";
 
-export function cloneMesh(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+export function cloneMesh(componentToClone, targetObject, deepCloneParams = new ComponentDeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject, true);
 
     if (deepCloneParams.isDeepCloneComponentVariable(MeshComponent.TypeName, "material")) {
@@ -18,13 +18,13 @@ export function cloneMesh(componentToClone, targetObject, deepCloneParams = new 
     return clonedComponent;
 }
 
-export function cloneCollision(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+export function cloneCollision(componentToClone, targetObject, deepCloneParams = new ComponentDeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
 
     return clonedComponent;
 }
 
-export function cloneText(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+export function cloneText(componentToClone, targetObject, deepCloneParams = new ComponentDeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
 
     if (deepCloneParams.isDeepCloneComponentVariable(TextComponent.TypeName, "material")) {
@@ -36,13 +36,13 @@ export function cloneText(componentToClone, targetObject, deepCloneParams = new 
     return clonedComponent;
 }
 
-export function clonePhysX(componentToClone, targetObject, deepCloneParams = new DeepCloneParams(), customCloneParams = null) {
+export function clonePhysX(componentToClone, targetObject, deepCloneParams = new ComponentDeepCloneParams(), customCloneParams = null) {
     let clonedComponent = ComponentUtils.cloneDefault(componentToClone, targetObject);
 
     return clonedComponent;
 }
 
-export let DefaultWLComponentCloneCallbacks = {
+export let WLComponentDefaultCloneCallbacks = {
     cloneMesh,
     cloneCollision,
     cloneText,

@@ -1,26 +1,19 @@
-/*
-let visualParams = new VisualTorusParams();
-visualParams.myRadius = 1;
-visualParams.mySegmentsAmount = 12;
-visualParams.mySegmentThickness = 0.05;
-visualParams.myTransform.mat4_copy(transform);
-visualParams.myMaterial = myDefaultResources.myMaterials.myFlatOpaque.clone();
-visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
-Globals.getVisualManager().draw(visualParams);
-
-or
-
-let visualTorus = new VisualTorus(visualParams);
-*/
-
 import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
-import { VisualElementType } from "./visual_element_types.js";
+import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
+import { VisualElementDefaultType } from "./visual_element_types.js";
 import { VisualLine, VisualLineParams } from "./visual_line.js";
 
-export class VisualTorusParams {
+export class VisualTorusParams extends AbstractVisualElementParams {
 
+    /**
+     * TS type inference helper
+     * 
+     * @param {any} engine
+     */
     constructor(engine = Globals.getMainEngine()) {
+        super(engine);
+
         this.myTransform = mat4_create();
         this.myRadius = 0;
 
@@ -32,26 +25,42 @@ export class VisualTorusParams {
         this.myMaterial = null;     // null means it will default on myDefaultResources.myMaterials.myFlatOpaque
         this.myColor = null;        // If this is set and material is null, it will use the default flat opaque material with this color
 
-        this.myParent = Globals.getSceneObjects(engine).myVisualElements;
         this.myLocal = false;
 
-        this.myType = VisualElementType.TORUS;
+        this.myType = VisualElementDefaultType.TORUS;
     }
 
-    copy(other) {
+    _copyHook(other) {
         // Implemented outside class definition
+    }
+
+    _new() {
+        return new VisualTorusParams();
     }
 }
 
-export class VisualTorus {
+/**
+ * Example:
+ * 
+ * ```js  
+ * const visualParams = new VisualTorusParams();
+ * visualParams.myRadius = 1;
+ * visualParams.mySegmentsAmount = 12;
+ * visualParams.mySegmentThickness = 0.05;
+ * visualParams.myTransform.mat4_copy(transform);
+ * visualParams.myMaterial = Globals.getDefaultMaterials().myFlatOpaque.clone();
+ * visualParams.myMaterial.color = vec4_create(1, 1, 1, 1);
+ * const visualTorus = new VisualTorus(visualParams);
+ * 
+ * // OR
+ * 
+ * Globals.getVisualManager().draw(visualParams);
+ * ```
+*/
+export class VisualTorus extends AbstractVisualElement {
 
     constructor(params = new VisualTorusParams()) {
-        this._myParams = params;
-
-        this._myVisible = false;
-        this._myAutoRefresh = true;
-
-        this._myDirty = false;
+        super(params);
 
         this._myTorusParentObject = null;
 
@@ -59,77 +68,25 @@ export class VisualTorus {
 
         this._myFlatOpaqueMaterial = null;
 
-        this._myDestroyed = false;
-
-        this._build();
-        this.forceRefresh();
-
-        this.setVisible(true);
+        this._prepare();
     }
 
-    setVisible(visible) {
-        if (this._myVisible != visible) {
-            this._myVisible = visible;
+    _visibleChanged() {
+        if (this._myVisible) {
+            let segmentToShow = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
 
-            if (this._myVisible) {
-                let segmentToShow = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
-
-                for (let i = 0; i < segmentToShow; i++) {
-                    let visualSegment = this._myVisualSegmentList[i];
-                    visualSegment.setVisible(true);
-                }
-            } else {
-                for (let visualSegment of this._myVisualSegmentList) {
-                    visualSegment.setVisible(false);
-                }
+            for (let i = 0; i < segmentToShow; i++) {
+                let visualSegment = this._myVisualSegmentList[i];
+                visualSegment.setVisible(true);
+            }
+        } else {
+            for (let visualSegment of this._myVisualSegmentList) {
+                visualSegment.setVisible(false);
             }
         }
     }
 
-    setAutoRefresh(autoRefresh) {
-        this._myAutoRefresh = autoRefresh;
-    }
-
-    getParams() {
-        return this._myParams;
-    }
-
-    setParams(params) {
-        this._myParams = params;
-        this._markDirty();
-    }
-
-    copyParams(params) {
-        this._myParams.copy(params);
-        this._markDirty();
-    }
-
-    paramsUpdated() {
-        this._markDirty();
-    }
-
-    refresh() {
-        this.update(0);
-    }
-
-    forceRefresh() {
-        this._refresh();
-
-        let segmentToRefresh = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
-
-        for (let i = 0; i < segmentToRefresh; i++) {
-            let visualSegment = this._myVisualSegmentList[i];
-            visualSegment.forceRefresh();
-        }
-    }
-
-    update(dt) {
-        if (this._myDirty) {
-            this._refresh();
-
-            this._myDirty = false;
-        }
-
+    _updateHook(dt) {
         for (let visualSegment of this._myVisualSegmentList) {
             visualSegment.update(dt);
         }
@@ -139,14 +96,6 @@ export class VisualTorus {
         this._myTorusParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
 
         this._fillSegmentList();
-    }
-
-    _markDirty() {
-        this._myDirty = true;
-
-        if (this._myAutoRefresh) {
-            this.update(0);
-        }
     }
 
     _fillSegmentList() {
@@ -163,33 +112,28 @@ export class VisualTorus {
         }
     }
 
-    clone() {
-        let clonedParams = new VisualTorusParams(this._myParams.myParent.pp_getEngine());
-        clonedParams.copy(this._myParams);
-
-        let clone = new VisualTorus(clonedParams);
-        clone.setAutoRefresh(this._myAutoRefresh);
-        clone.setVisible(this._myVisible);
-        clone._myDirty = this._myDirty;
-
-        return clone;
-    }
-
     _refresh() {
         // Implemented outside class definition
     }
 
-    destroy() {
-        this._myDestroyed = true;
+    _forceRefreshHook() {
+        let segmentToRefresh = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
 
+        for (let i = 0; i < segmentToRefresh; i++) {
+            let visualSegment = this._myVisualSegmentList[i];
+            visualSegment.forceRefresh();
+        }
+    }
+
+    _new(params) {
+        return new VisualTorus(params);
+    }
+
+    _destroyHook() {
         for (let visualSegment of this._myVisualSegmentList) {
             visualSegment.destroy();
         }
         this._myTorusParentObject.pp_destroy();
-    }
-
-    isDestroyed() {
-        return this._myDestroyed;
     }
 }
 
@@ -265,7 +209,7 @@ VisualTorus.prototype._refresh = function () {
     };
 }();
 
-VisualTorusParams.prototype.copy = function copy(other) {
+VisualTorusParams.prototype._copyHook = function _copyHook(other) {
     this.myRadius = other.myRadius;
     this.mySegmentsAmount = other.mySegmentsAmount;
     this.mySegmentThickness = other.mySegmentThickness;
@@ -290,8 +234,5 @@ VisualTorusParams.prototype.copy = function copy(other) {
         this.myColor = null;
     }
 
-    this.myParent = other.myParent;
     this.myLocal = other.myLocal;
-
-    this.myType = other.myType;
 };

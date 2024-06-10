@@ -14,15 +14,15 @@ function _initVec4ExtensionProtoype(): void {
 
     const vec4Extension: Vector4Extension<Vector4> = {
 
-        vec4_set: function vec4_set<T extends Vector4>(this: T, x: number, y?: number, z?: number, w?: number): T {
+        vec4_set<T extends Vector4>(this: T, x: number, y?: number, z?: number, w?: number): T {
             return Vec4Utils.set(this, x, y!, z!, w!);
         },
 
-        vec4_copy: function vec4_copy<T extends Vector4>(this: T, vector: Readonly<Vector4>): T {
+        vec4_copy<T extends Vector4>(this: T, vector: Readonly<Vector4>): T {
             return Vec4Utils.copy(vector, this);
         },
 
-        vec4_clone: function vec4_clone<T extends Vector4>(this: Readonly<T>): T {
+        vec4_clone<T extends Vector4>(this: Readonly<T>): T {
             return Vec4Utils.clone(this);
         }
     };

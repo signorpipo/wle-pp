@@ -94,13 +94,13 @@ export function toQuat<T extends Quaternion>(matrix: Readonly<Matrix3>, out: Qua
     return out;
 }
 
-export function fromAxes(leftAxis: Readonly<Vector3>, upAxis: Readonly<Vector3>, forwardAxis: Readonly<Vector3>): Matrix3;
-export function fromAxes<T extends Matrix3>(leftAxis: Readonly<Vector3>, upAxis: Readonly<Vector3>, forwardAxis: Readonly<Vector3>, out: T): T;
-export function fromAxes<T extends Matrix3>(leftAxis: Readonly<Vector3>, upAxis: Readonly<Vector3>, forwardAxis: Readonly<Vector3>, out: Matrix3 | T = Mat3Utils.create()): Matrix3 | T {
+export function fromAxes(left: Readonly<Vector3>, up: Readonly<Vector3>, forward: Readonly<Vector3>): Matrix3;
+export function fromAxes<T extends Matrix3>(left: Readonly<Vector3>, up: Readonly<Vector3>, forward: Readonly<Vector3>, out: T): T;
+export function fromAxes<T extends Matrix3>(left: Readonly<Vector3>, up: Readonly<Vector3>, forward: Readonly<Vector3>, out: Matrix3 | T = Mat3Utils.create()): Matrix3 | T {
     Mat3Utils.set(out,
-        leftAxis[0], leftAxis[1], leftAxis[2],
-        upAxis[0], upAxis[1], upAxis[2],
-        forwardAxis[0], forwardAxis[1], forwardAxis[2]);
+        left[0], left[1], left[2],
+        up[0], up[1], up[2],
+        forward[0], forward[1], forward[2]);
     return out;
 }
 
