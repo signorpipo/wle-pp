@@ -243,7 +243,7 @@ export class PlayerLocomotion {
         }
 
         {
-            const params = new PlayerTransformManagerParams(this._myParams.myEngine as any);
+            const params = new PlayerTransformManagerParams(this._myParams.myEngine);
 
             params.myPlayerHeadManager = this._myPlayerHeadManager;
 
@@ -254,8 +254,8 @@ export class PlayerLocomotion {
 
             params.myHeadCollisionBlockLayerFlags.copy(params.myMovementCollisionCheckParams.myHorizontalBlockLayerFlags);
             params.myHeadCollisionBlockLayerFlags.add(params.myMovementCollisionCheckParams.myVerticalBlockLayerFlags);
-            params.myHeadCollisionObjectsToIgnore.pp_copy(params.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore);
-            const objectsEqualCallback = (first: Object3D, second: Object3D): boolean => first.pp_equals(second);
+            params.myHeadCollisionObjectsToIgnore.pp_copy(params.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore as any);
+            const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first.pp_equals(second);
             for (const objectToIgnore of params.myMovementCollisionCheckParams.myVerticalObjectsToIgnore) {
                 params.myHeadCollisionObjectsToIgnore.pp_pushUnique(objectToIgnore, objectsEqualCallback);
             }
@@ -781,14 +781,14 @@ export class PlayerLocomotion {
         // Get rotation on y and adjust if it's slightly tilted when it's almsot 0,1,0
 
         const defaultUp = vec3_create(0, 1, 0);
-        const angleWithDefaultUp = (Globals.getPlayerObjects(this._myParams.myEngine)!.myPlayer!.pp_getUp() as any).vec3_angle(defaultUp);
+        const angleWithDefaultUp = (Globals.getPlayerObjects(this._myParams.myEngine)!.myPlayer!.pp_getUp()).vec3_angle(defaultUp);
         if (angleWithDefaultUp < 1) {
             const forward = Globals.getPlayerObjects(this._myParams.myEngine)!.myPlayer!.pp_getForward();
-            const flatForward = (forward as any).vec3_clone();
+            const flatForward = forward.vec3_clone();
             flatForward[1] = 0;
 
             const defaultForward = vec3_create(0, 0, 1);
-            const angleWithDefaultForward = (defaultForward as any).vec3_angleSigned(flatForward, defaultUp);
+            const angleWithDefaultForward = defaultForward.vec3_angleSigned(flatForward, defaultUp);
 
             Globals.getPlayerObjects(this._myParams.myEngine)!.myPlayer!.pp_resetRotation();
             Globals.getPlayerObjects(this._myParams.myEngine)!.myPlayer!.pp_rotateAxis(angleWithDefaultForward, defaultUp);

@@ -78,7 +78,7 @@ export { Mat3Utils } from "./cauldron/utils/array/mat3_utils.js";
 export { Mat4Utils } from "./cauldron/utils/array/mat4_utils.js";
 
 export { JSUtils } from "./cauldron/utils/js_utils.js";
-export { MathUtils, EasingFunction, EasingSupportFunction } from "./cauldron/utils/math_utils.js";
+export { MathUtils, EasingFunction, EasingFunctionName, WaveFunction } from "./cauldron/utils/math_utils.js";
 
 //    PHYSICS
 export { PhysicsUtils } from "./cauldron/physics/physics_utils.js";
@@ -197,6 +197,7 @@ export * from "./input/cauldron/keyboard.js";
 export * from "./input/cauldron/mouse.js";
 export * from "./input/cauldron/input_manager.js";
 
+export * from "./input/cauldron/components/overlap_cursor_component.js";
 export * from "./input/cauldron/components/finger_cursor_component.js";
 export * from "./input/cauldron/components/input_manager_component.js";
 export * from "./input/cauldron/components/switch_hand_object_component.js";
@@ -205,7 +206,7 @@ export * from "./input/cauldron/components/tracked_hand_draw_all_joints_componen
 export * from "./input/cauldron/components/tracked_hand_draw_skin_component.js";
 
 export * from "./input/gamepad/gamepad_buttons.js";
-export * from "./input/gamepad/gamepad.js";
+export { Gamepad } from "./input/gamepad/gamepad.js";
 export * from "./input/gamepad/universal_gamepad.js";
 export * from "./input/gamepad/cauldron/gamepad_mesh_animator_component.js";
 export * from "./input/gamepad/cauldron/gamepads_manager.js";

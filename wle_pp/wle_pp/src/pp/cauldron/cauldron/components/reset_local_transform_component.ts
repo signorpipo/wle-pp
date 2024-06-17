@@ -5,9 +5,6 @@ import { XRUtils } from "../../utils/xr_utils.js";
 export class ResetLocalTransformComponent extends Component {
     public static override TypeName = "pp-reset-local-transform";
 
-    @property.bool(true)
-    private _myReset!: boolean;
-
     @property.enum(["Self", "Children", "Descendants", "Hierarchy"], "Self")
     private _myResetLocalTransformOn!: number;
 

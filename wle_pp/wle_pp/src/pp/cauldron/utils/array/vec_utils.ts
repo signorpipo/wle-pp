@@ -1,6 +1,6 @@
 import { glMatrix } from "gl-matrix";
 import { Vector } from "../../type_definitions/array_type_definitions.js";
-import { MathUtils } from "../math_utils.js";
+import { EasingFunction, MathUtils } from "../math_utils.js";
 
 export function create(length: number): Vector;
 export function create(firstValue: number, ...remainingValues: number[]): Vector;
@@ -39,6 +39,14 @@ export function set<T extends Vector>(vector: T, firstValue: number, ...remainin
     }
 
     return vector;
+}
+
+export function copy<T extends Vector>(from: Readonly<Vector>, to: T): T {
+    const minLength = Math.min(from.length, to.length);
+    for (let i = 0; i < minLength; i++) {
+        to[i] = from[i];
+    }
+    return to;
 }
 
 /** The overload where `T extends Vector` does also get `array` as `Readonly<T>`, but is not marked as such due to 
@@ -133,6 +141,35 @@ export function clamp<T extends Vector, U extends Vector>(vector: Readonly<T>, s
     return out;
 }
 
+export function lerp<T extends Vector>(from: Readonly<T>, to: Readonly<Vector>, interpolationFactor: number): T;
+export function lerp<T extends Vector>(from: Readonly<Vector>, to: Readonly<Vector>, interpolationFactor: number, out: T): T;
+export function lerp<T extends Vector, U extends Vector>(from: Readonly<T>, to: Readonly<Vector>, interpolationFactor: number, out: T | U = VecUtils.clone(from)): T | U {
+    if (interpolationFactor <= 0) {
+        VecUtils.copy(from, out);
+        return out;
+    } else if (interpolationFactor >= 1) {
+        VecUtils.copy(to, out);
+        return out;
+    }
+
+    const minLength = Math.min(from.length, to.length, out.length);
+    for (let i = 0; i < minLength; i++) {
+        const fromCurrentValue = from[i];
+        const toCurrentValue = to[i];
+
+        out[i] = fromCurrentValue + interpolationFactor * (toCurrentValue - fromCurrentValue);
+    }
+
+    return out;
+}
+
+export function interpolate<T extends Vector>(from: Readonly<T>, to: Readonly<Vector>, interpolationFactor: number, easingFunction?: EasingFunction): T;
+export function interpolate<T extends Vector>(from: Readonly<Vector>, to: Readonly<Vector>, interpolationFactor: number, easingFunction: EasingFunction, out: T): T;
+export function interpolate<T extends Vector, U extends Vector>(from: Readonly<T>, to: Readonly<Vector>, interpolationFactor: number, easingFunction: EasingFunction = EasingFunction.linear, out: T | U = VecUtils.clone(from)): T | U {
+    const lerpFactor = easingFunction(interpolationFactor);
+    return VecUtils.lerp(from, to, lerpFactor, out);
+}
+
 export function toString(vector: Readonly<Vector>, decimalPlaces: number = 4): string {
     const message = _buildConsoleMessage(vector, decimalPlaces);
     return message;
@@ -162,6 +199,7 @@ export function warn(vector: Readonly<Vector>, decimalPlaces: number = 4): Vecto
 export const VecUtils = {
     create,
     set,
+    copy,
     clone,
     equals,
     zero,
@@ -171,6 +209,8 @@ export const VecUtils = {
     floor,
     ceil,
     clamp,
+    lerp,
+    interpolate,
     toString,
     log,
     error,

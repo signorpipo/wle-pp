@@ -1,4 +1,4 @@
-import { EasingFunction, MathUtils } from "../../../cauldron/utils/math_utils.js";
+import { EasingFunction, EasingFunctionName, MathUtils } from "../../../cauldron/utils/math_utils.js";
 import { PluginUtils } from "../../utils/plugin_utils.js";
 import { MathExtension } from "./math_type_extension.js";
 
@@ -24,7 +24,7 @@ function _initMathExtensionInstance(): void {
             return MathUtils.EPSILON_DEGREES;
         },
 
-        pp_clamp(value: number, start: number, end: number): number {
+        pp_clamp(value: number, start: number | null, end: number | null): number {
             return MathUtils.clamp(value, start, end);
         },
 
@@ -84,6 +84,14 @@ function _initMathExtensionInstance(): void {
             return MathUtils.interpolatePeriodic(from, to, interpolationFactor, easingFunction);
         },
 
+        pp_getEasingFunctionByName(easingFunctionName: EasingFunctionName): EasingFunction {
+            return MathUtils.getEasingFunctionByName(easingFunctionName);
+        },
+
+        pp_getEasingFunctionNameByIndex(index: number): EasingFunctionName | null {
+            return MathUtils.getEasingFunctionNameByIndex(index);
+        },
+
         pp_angleDistance(from: number, to: number): number {
             return MathUtils.angleDistance(from, to);
         },
@@ -132,8 +140,6 @@ function _initMathExtensionInstance(): void {
             return MathUtils.isInsideAngleRangeRadians(angle, start, end, useShortestAngle);
         }
     };
-
-
 
     PluginUtils.injectOwnProperties(mathExtension, Math, false, true, true);
 }

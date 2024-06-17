@@ -273,6 +273,10 @@ export class PlayerLocomotionComponent extends Component {
 
 
 
+    public override init(): void {
+        Globals.setPlayerLocomotionComponent(this, this.engine);
+    }
+
     public override start(): void {
         const params = new PlayerLocomotionParams(this.engine);
 
@@ -446,5 +450,9 @@ export class PlayerLocomotionComponent extends Component {
 
     public override onDestroy(): void {
         this._myPlayerLocomotion?.destroy();
+
+        if (Globals.getPlayerLocomotionComponent(this.engine) == this) {
+            Globals.removePlayerLocomotionComponent(this.engine);
+        }
     }
 }

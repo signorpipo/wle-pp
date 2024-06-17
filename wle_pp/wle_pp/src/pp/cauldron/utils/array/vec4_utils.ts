@@ -1,5 +1,6 @@
 import { vec4 as gl_vec4, type vec4 as gl_vec4_type } from "gl-matrix";
 import { Vector4 } from "../../type_definitions/array_type_definitions.js";
+import { EasingFunction } from "../math_utils.js";
 
 export function create(): Vector4;
 export function create(x: number, y: number, z: number, w: number): Vector4;
@@ -40,9 +41,33 @@ export function clone<T extends Vector4>(vector: Readonly<T>): T {
     return vector.slice(0) as T;
 }
 
+export function lerp<T extends Vector4>(from: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number): T;
+export function lerp<T extends Vector4>(from: Readonly<Vector4>, to: Readonly<Vector4>, interpolationFactor: number, out: T): T;
+export function lerp<T extends Vector4, U extends Vector4>(from: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, out: T | U = Vec4Utils.clone(from)): T | U {
+    if (interpolationFactor <= 0) {
+        Vec4Utils.copy(from, out);
+        return out;
+    } else if (interpolationFactor >= 1) {
+        Vec4Utils.copy(to, out);
+        return out;
+    }
+
+    gl_vec4.lerp(out as unknown as gl_vec4_type, from as unknown as gl_vec4_type, to as unknown as gl_vec4_type, interpolationFactor);
+    return out;
+}
+
+export function interpolate<T extends Vector4>(from: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, easingFunction?: EasingFunction): T;
+export function interpolate<T extends Vector4>(from: Readonly<Vector4>, to: Readonly<Vector4>, interpolationFactor: number, easingFunction: EasingFunction, out: T): T;
+export function interpolate<T extends Vector4, U extends Vector4>(from: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, easingFunction: EasingFunction = EasingFunction.linear, out: T | U = Vec4Utils.clone(from)): T | U {
+    const lerpFactor = easingFunction(interpolationFactor);
+    return Vec4Utils.lerp(from, to, lerpFactor, out);
+}
+
 export const Vec4Utils = {
     create,
     set,
     copy,
-    clone
+    clone,
+    lerp,
+    interpolate
 } as const;

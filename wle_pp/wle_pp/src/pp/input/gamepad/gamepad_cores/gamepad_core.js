@@ -1,4 +1,4 @@
-import { vec2_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
+import { GamepadRawAxesData, GamepadRawButtonData } from "../gamepad.js";
 
 export class GamepadCore {
 
@@ -55,13 +55,11 @@ export class GamepadCore {
     }
 
     getButtonData(buttonID) {
-        let buttonData = this._createButtonData();
-        return buttonData;
+        return new GamepadRawButtonData();
     }
 
     getAxesData(axesID) {
-        let axesData = this._createAxesData();
-        return axesData;
+        return new GamepadRawAxesData();
     }
 
     getHapticActuators() {
@@ -88,14 +86,6 @@ export class GamepadCore {
     }
 
     // Hooks end
-
-    _createButtonData() {
-        return { myPressed: false, myTouched: false, myValue: 0 };
-    }
-
-    _createAxesData() {
-        return vec2_create(0, 0);
-    }
 
     destroy() {
         this._myDestroyed = true;

@@ -1,5 +1,6 @@
 import { Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
 import { Vec4Utils } from "../../../../cauldron/utils/array/vec4_utils.js";
+import { EasingFunction } from "../../../../cauldron/utils/math_utils.js";
 import { PluginUtils } from "../../../utils/plugin_utils.js";
 import { ArrayExtensionUtils } from "./array_extension_utils.js";
 import { Vector4Extension } from "./vec4_type_extension.js";
@@ -24,6 +25,14 @@ function _initVec4ExtensionProtoype(): void {
 
         vec4_clone<T extends Vector4>(this: Readonly<T>): T {
             return Vec4Utils.clone(this);
+        },
+
+        vec4_lerp<T extends Vector4, U extends Vector4>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, out?: T | U): T | U {
+            return Vec4Utils.lerp(this, to, interpolationFactor, out!);
+        },
+
+        vec4_interpolate<T extends Vector4, U extends Vector4>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, easingFunction?: EasingFunction, out?: T | U): T | U {
+            return Vec4Utils.interpolate(this, to, interpolationFactor, easingFunction!, out!);
         }
     };
 

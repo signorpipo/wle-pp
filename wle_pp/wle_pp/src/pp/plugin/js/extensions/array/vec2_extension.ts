@@ -1,5 +1,6 @@
 import { Vector2 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
 import { Vec2Utils } from "../../../../cauldron/utils/array/vec2_utils.js";
+import { EasingFunction } from "../../../../cauldron/utils/math_utils.js";
 import { PluginUtils } from "../../../utils/plugin_utils.js";
 import { ArrayExtensionUtils } from "./array_extension_utils.js";
 import { Vector2Extension } from "./vec2_type_extension.js";
@@ -40,6 +41,14 @@ function _initVec2ExtensionProtoype(): void {
 
         vec2_isZero(this: Readonly<Vector2>, epsilon?: number): boolean {
             return Vec2Utils.isZero(this, epsilon);
+        },
+
+        vec2_lerp<T extends Vector2, U extends Vector2>(this: Readonly<T>, to: Readonly<Vector2>, interpolationFactor: number, out?: T | U): T | U {
+            return Vec2Utils.lerp(this, to, interpolationFactor, out!);
+        },
+
+        vec2_interpolate<T extends Vector2, U extends Vector2>(this: Readonly<T>, to: Readonly<Vector2>, interpolationFactor: number, easingFunction?: EasingFunction, out?: T | U): T | U {
+            return Vec2Utils.interpolate(this, to, interpolationFactor, easingFunction!, out!);
         }
     };
 

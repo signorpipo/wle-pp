@@ -244,7 +244,6 @@ export class VisualManager {
         objectPoolParams.myInitialPoolSize = 10;
         objectPoolParams.myAmountToAddWhenEmpty = 0;
         objectPoolParams.myPercentageToAddWhenEmpty = 0.5;
-        objectPoolParams.myOptimizeObjectsAllocation = false;
         objectPoolParams.myCloneCallback = function (visualElement: VisualElement): VisualElement {
             return visualElement.clone();
         };

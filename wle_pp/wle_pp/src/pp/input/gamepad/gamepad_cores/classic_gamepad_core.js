@@ -1,4 +1,5 @@
 import { Handedness } from "../../cauldron/input_types.js";
+import { GamepadRawAxesData, GamepadRawButtonData } from "../gamepad.js";
 import { GamepadButtonID } from "../gamepad_buttons.js";
 import { GamepadCore } from "./gamepad_core.js";
 
@@ -12,8 +13,8 @@ export class ClassicGamepadCore extends GamepadCore {
         this._myCurrentGamepads = navigator.getGamepads();
 
         // Support Variables
-        this._myButtonData = this._createButtonData();
-        this._myAxesData = this._createAxesData();
+        this._myButtonData = new GamepadRawButtonData();
+        this._myAxesData = new GamepadRawAxesData();
         this._myHapticActuators = [];
     }
 
@@ -27,9 +28,7 @@ export class ClassicGamepadCore extends GamepadCore {
     }
 
     getButtonData(buttonID) {
-        this._myButtonData.myPressed = false;
-        this._myButtonData.myTouched = false;
-        this._myButtonData.myValue = 0;
+        this._myButtonData.reset();
 
         let classicGamepad = this._getClassicGamepad();
         if (classicGamepad != null && this.isGamepadCoreActive()) {
@@ -95,20 +94,20 @@ export class ClassicGamepadCore extends GamepadCore {
     }
 
     getAxesData(axesID) {
-        this._myAxesData.vec2_zero();
+        this._myAxesData.reset();
 
         let classicGamepad = this._getClassicGamepad();
         if (classicGamepad != null && this.isGamepadCoreActive()) {
             if (this.getHandedness() == Handedness.LEFT) {
-                this._myAxesData[0] = classicGamepad.axes[0];
-                this._myAxesData[1] = classicGamepad.axes[1];
+                this._myAxesData.myAxes[0] = classicGamepad.axes[0];
+                this._myAxesData.myAxes[1] = classicGamepad.axes[1];
             } else {
-                this._myAxesData[0] = classicGamepad.axes[2];
-                this._myAxesData[1] = classicGamepad.axes[3];
+                this._myAxesData.myAxes[0] = classicGamepad.axes[2];
+                this._myAxesData.myAxes[1] = classicGamepad.axes[3];
             }
 
             // Y axis is recorded negative when thumbstick is pressed forward for weird reasons
-            this._myAxesData[1] = -this._myAxesData[1];
+            this._myAxesData.myAxes[1] = -this._myAxesData.myAxes[1];
         }
 
         return this._myAxesData;

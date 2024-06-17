@@ -1,4 +1,5 @@
 import { Vector2 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
+import { EasingFunction } from "../../../../cauldron/utils/math_utils.js";
 
 /**
  * #WARN this type extension is actually added at runtime only if you call `initVec2Extension`  
@@ -18,6 +19,12 @@ export interface Vector2Extension<VectorType extends Vector2> {
 
     vec2_zero<T extends VectorType>(this: T): this;
     vec2_isZero<T extends VectorType>(this: Readonly<T>, epsilon?: number): boolean;
+
+    vec2_lerp<T extends VectorType>(this: Readonly<T>, to: Readonly<Vector2>, interpolationFactor: number): T;
+    vec2_lerp<T extends VectorType, U extends Vector2>(this: Readonly<T>, to: Readonly<Vector2>, interpolationFactor: number, out: U): U;
+
+    vec2_interpolate<T extends VectorType>(this: Readonly<T>, to: Readonly<Vector2>, interpolationFactor: number, easingFunction?: EasingFunction): T;
+    vec2_interpolate<T extends VectorType, U extends Vector2>(this: Readonly<T>, to: Readonly<Vector2>, interpolationFactor: number, easingFunction: EasingFunction, out: U): U;
 }
 
 declare global {

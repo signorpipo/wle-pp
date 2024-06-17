@@ -1,3 +1,4 @@
+import { GamepadRawAxesData, GamepadRawButtonData } from "../gamepad.js";
 import { GamepadCore } from "./gamepad_core.js";
 
 export class VirtualGamepadGamepadCore extends GamepadCore {
@@ -8,8 +9,8 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
         this._myVirtualGamepad = virtualGamepad;
 
         // Support Variables
-        this._myButtonData = this._createButtonData();
-        this._myAxesData = this._createAxesData();
+        this._myButtonData = new GamepadRawButtonData();
+        this._myAxesData = new GamepadRawAxesData();
         this._myHapticActuators = [];
     }
 
@@ -18,9 +19,7 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
     }
 
     getButtonData(buttonID) {
-        this._myButtonData.myPressed = false;
-        this._myButtonData.myTouched = false;
-        this._myButtonData.myValue = 0;
+        this._myButtonData.reset();
 
         if (this.isGamepadCoreActive()) {
             if (this._myVirtualGamepad.isButtonPressed(this.getHandedness(), buttonID)) {
@@ -34,10 +33,10 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
     }
 
     getAxesData(axesID) {
-        this._myAxesData.vec2_zero();
+        this._myAxesData.reset();
 
         if (this.isGamepadCoreActive()) {
-            this._myVirtualGamepad.getAxes(this.getHandedness(), axesID, this._myAxesData);
+            this._myVirtualGamepad.getAxes(this.getHandedness(), axesID, this._myAxesData.myAxes);
         }
 
         return this._myAxesData;

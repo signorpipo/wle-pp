@@ -8,6 +8,7 @@ import * as DefaultResourcesGlobals from "../cauldron/wl/getters/default_resourc
 import * as SceneObjectsGlobals from "../cauldron/wl/getters/scene_objects_globals.js";
 import * as DebugGlobals from "../debug/debug_globals.js";
 import * as CharacterCollisionSystemGlobals from "../gameplay/experimental/character_controller/collision/character_collision_system_globals.js";
+import * as PlayerLocomotionGlobals from "../gameplay/experimental/locomotion/player_locomotion_globals.js";
 import * as InputGlobals from "../input/cauldron/input_globals.js";
 import * as ToolGlobals from "../tool/cauldron/tool_globals.js";
 import * as ConsoleVRGlobals from "../tool/console_vr/console_vr_globals.js";
@@ -22,6 +23,7 @@ export const Globals = {
     ...DebugGlobals,
     ...ObjectPoolManagerGlobals,
     ...CharacterCollisionSystemGlobals,
+    ...PlayerLocomotionGlobals,
     ...InputGlobals,
     ...SaveGlobals,
     ...AnalyticsGlobals,

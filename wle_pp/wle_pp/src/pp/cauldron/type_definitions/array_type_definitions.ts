@@ -11,7 +11,7 @@ export interface BaseArrayLike<T> {
     /**
      * Gets or sets the length of the array. This is a number one higher than the highest index in the array.
      */
-    length: number;
+    readonly length: number;
 
     /** Iterator */
     [Symbol.iterator](): IterableIterator<T>;
@@ -194,6 +194,8 @@ export interface BaseArrayLike<T> {
 
 /** This is basically the `Array` class, but this way it's possible to use this instead and feel more generic */
 export interface BaseDynamicArrayLike<T> extends BaseArrayLike<T> {
+
+    length: number;
 
     /**
      * Removes the last element from an array and returns it.

@@ -1,158 +1,197 @@
 import { Emitter } from "@wonderlandengine/api";
+import { Vector2 } from "../../cauldron/type_definitions/array_type_definitions.js";
 import { vec2_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
+import { Handedness } from "../cauldron/input_types.js";
+import { HandPose } from "../pose/hand_pose.js";
 import { GamepadAxesEvent, GamepadAxesID, GamepadAxesInfo, GamepadButtonEvent, GamepadButtonID, GamepadButtonInfo, GamepadPulseInfo } from "./gamepad_buttons.js";
 
-export class Gamepad {
+export class GamepadRawButtonData {
+    public myValue: number = 0;
 
-    constructor(handedness) {
+    public myPressed: boolean = false;
+    public myTouched: boolean = false;
+
+    public reset(): void {
+        this.myValue = 0;
+
+        this.myPressed = false;
+        this.myTouched = false;
+    }
+}
+
+export class GamepadRawAxesData {
+    public myAxes: Vector2 = vec2_create(0);
+
+    public reset(): void {
+        this.myAxes.vec2_zero();
+    }
+}
+
+export abstract class Gamepad {
+
+    private readonly _myHandedness: Handedness;
+
+    // Switched to `object` instead of `Map` for memory optimization reasons since iterating allocates a lot
+    private readonly _myButtonInfos: Partial<Record<GamepadButtonID, GamepadButtonInfo>> = {};
+    private readonly _myButtonInfosIDs: GamepadButtonID[] = [];
+
+    private readonly _myAxesInfos: Partial<Record<GamepadAxesID, GamepadAxesInfo>> = {};
+    private readonly _myAxesInfosIDs: GamepadAxesID[] = [];
+
+    private readonly _myButtonEmitters: Partial<Record<GamepadButtonID, Partial<Record<GamepadButtonEvent, Emitter<[GamepadButtonInfo, Gamepad]>>>>> = {};
+
+    private readonly _myAxesEmitters: Partial<Record<GamepadAxesID, Partial<Record<GamepadAxesEvent, Emitter<[GamepadAxesInfo, Gamepad]>>>>> = {};
+
+    private readonly _myPulseInfo: GamepadPulseInfo = new GamepadPulseInfo();
+
+    // Config
+    private _myMultiplePressMaxDelay: number = 0.4;
+    private _myMultipleTouchMaxDelay: number = 0.4;
+
+    private _myDestroyed: boolean = false;
+
+    constructor(handedness: Handedness) {
         this._myHandedness = handedness;
 
         this._myButtonInfos = {};
         this._myButtonInfosIDs = [];
-        for (let key in GamepadButtonID) {
-            this._myButtonInfos[GamepadButtonID[key]] = new GamepadButtonInfo(GamepadButtonID[key], this._myHandedness);
-            this._myButtonInfosIDs.push(GamepadButtonID[key]);
+        for (const key in GamepadButtonID) {
+            const gamepadButtonID = GamepadButtonID[key as keyof typeof GamepadButtonID];
+            this._myButtonInfos[gamepadButtonID] = new GamepadButtonInfo(gamepadButtonID, this._myHandedness);
+            this._myButtonInfosIDs.push(gamepadButtonID);
         }
 
         this._myAxesInfos = {};
         this._myAxesInfosIDs = [];
-        for (let key in GamepadAxesID) {
-            this._myAxesInfos[GamepadAxesID[key]] = new GamepadAxesInfo(GamepadAxesID[key], this._myHandedness);
-            this._myAxesInfosIDs.push(GamepadAxesID[key]);
+        for (const key in GamepadAxesID) {
+            const gamepadAxesID = GamepadAxesID[key as keyof typeof GamepadAxesID];
+            this._myAxesInfos[gamepadAxesID] = new GamepadAxesInfo(gamepadAxesID, this._myHandedness);
+            this._myAxesInfosIDs.push(gamepadAxesID);
         }
 
-        this._myButtonEmitters = [];    // Signature: listener(ButtonInfo, Gamepad)
-        for (let key in GamepadButtonID) {
-            this._myButtonEmitters[GamepadButtonID[key]] = [];
-            for (let eventKey in GamepadButtonEvent) {
-                this._myButtonEmitters[GamepadButtonID[key]][GamepadButtonEvent[eventKey]] = new Emitter();
+        for (const key in GamepadButtonID) {
+            const gamepadButtonID = GamepadButtonID[key as keyof typeof GamepadButtonID];
+            this._myButtonEmitters[gamepadButtonID] = {};
+            for (const eventKey in GamepadButtonEvent) {
+                const gamepadButtonEvent = GamepadButtonEvent[eventKey as keyof typeof GamepadButtonEvent];
+                this._myButtonEmitters[gamepadButtonID]![gamepadButtonEvent] = new Emitter();
             }
         }
 
-        this._myAxesEmitters = [];      // Signature: listener(AxesInfo, Gamepad)
-        for (let key in GamepadAxesID) {
-            this._myAxesEmitters[GamepadAxesID[key]] = [];
-            for (let eventKey in GamepadAxesEvent) {
-                this._myAxesEmitters[GamepadAxesID[key]][GamepadAxesEvent[eventKey]] = new Emitter();
+        for (const key in GamepadAxesID) {
+            const gamepadAxesID = GamepadAxesID[key as keyof typeof GamepadAxesID];
+            this._myAxesEmitters[gamepadAxesID] = {};
+            for (const eventKey in GamepadAxesEvent) {
+                const gamepadAxesEvent = GamepadAxesEvent[eventKey as keyof typeof GamepadAxesEvent];
+                this._myAxesEmitters[gamepadAxesID]![gamepadAxesEvent] = new Emitter();
             }
         }
-
-        this._myPulseInfo = new GamepadPulseInfo();
-
-        this._myDestroyed = false;
-
-        // Config
-
-        this._myMultiplePressMaxDelay = 0.4;
-        this._myMultipleTouchMaxDelay = 0.4;
     }
 
-    getHandedness() {
+    public getHandedness(): Handedness {
         return this._myHandedness;
     }
 
-    getButtonInfo(buttonID) {
-        return this._myButtonInfos[buttonID];
+    public getButtonInfo(buttonID: GamepadButtonID): Readonly<GamepadButtonInfo> {
+        return this._myButtonInfos[buttonID]!;
     }
 
-    registerButtonEventListener(buttonID, buttonEvent, id, listener) {
-        this._myButtonEmitters[buttonID][buttonEvent].add(listener, { id: id });
+    public registerButtonEventListener(buttonID: GamepadButtonID, buttonEvent: GamepadButtonEvent, id: unknown, listener: (buttonInfo: Readonly<GamepadButtonInfo>, gamepad: Gamepad) => void): void {
+        this._myButtonEmitters[buttonID]![buttonEvent]!.add(listener, { id: id });
     }
 
-    unregisterButtonEventListener(buttonID, buttonEvent, id) {
-        this._myButtonEmitters[buttonID][buttonEvent].remove(id);
+    public unregisterButtonEventListener(buttonID: GamepadButtonID, buttonEvent: GamepadButtonEvent, id: unknown): void {
+        this._myButtonEmitters[buttonID]![buttonEvent]!.remove(id);
     }
 
-    getAxesInfo(axesID) {
-        return this._myAxesInfos[axesID];
+    public getAxesInfo(axesID: GamepadAxesID): Readonly<GamepadAxesInfo> {
+        return this._myAxesInfos[axesID]!;
     }
 
-    registerAxesEventListener(axesID, axesEvent, id, listener) {
-        this._myAxesEmitters[axesID][axesEvent].add(listener, { id: id });
+    public registerAxesEventListener(axesID: GamepadAxesID, axesEvent: GamepadAxesEvent, id: unknown, listener: (axesInfo: Readonly<GamepadAxesInfo>, gamepad: Gamepad) => void): void {
+        this._myAxesEmitters[axesID]![axesEvent]!.add(listener, { id: id });
     }
 
-    unregisterAxesEventListener(axesID, axesEvent, id) {
-        this._myAxesEmitters[axesID][axesEvent].remove(id);
+    public unregisterAxesEventListener(axesID: GamepadAxesID, axesEvent: GamepadAxesEvent, id: unknown): void {
+        this._myAxesEmitters[axesID]![axesEvent]!.remove(id);
     }
 
-    pulse(intensity, duration = 0) {
+    public pulse(intensity: number, duration: number = 0): void {
         this._myPulseInfo.myIntensity = Math.pp_clamp(intensity, 0, 1);
         this._myPulseInfo.myDuration = Math.max(duration, 0);
     }
 
-    stopPulse() {
+    public stopPulse(): void {
         this._myPulseInfo.myIntensity = 0;
         this._myPulseInfo.myDuration = 0;
     }
 
-    isPulsing() {
+    public isPulsing(): boolean {
         return this._myPulseInfo.myIntensity > 0 || this._myPulseInfo.myDuration > 0;
     }
 
-    getPulseInfo() {
+    public getPulseInfo(): Readonly<GamepadPulseInfo> {
         return this._myPulseInfo;
     }
 
-    getMultiplePressMaxDelay() {
+    public getMultiplePressMaxDelay(): number {
         return this._myMultiplePressMaxDelay;
     }
 
-    setMultiplePressMaxDelay(maxDelay) {
+    public setMultiplePressMaxDelay(maxDelay: number): void {
         this._myMultiplePressMaxDelay = maxDelay;
     }
 
-    getMultipleTouchMaxDelay() {
+    public getMultipleTouchMaxDelay(): number {
         return this._myMultipleTouchMaxDelay;
     }
 
-    setMultipleTouchMaxDelay(maxDelay) {
+    public setMultipleTouchMaxDelay(maxDelay: number): void {
         this._myMultipleTouchMaxDelay = maxDelay;
     }
 
     // Hooks
 
-    getHandPose() {
+    public getHandPose(): HandPose | null {
         return null;
     }
 
-    _startHook() {
+    protected _startHook(): void {
 
     }
 
-    _preUpdate(dt) {
+    protected _preUpdate(dt: number): void {
 
     }
 
-    _postUpdate(dt) {
+    protected _postUpdate(dt: number): void {
 
     }
 
-    _getButtonData(buttonID) {
-        let buttonData = this._createButtonData();
-        return buttonData;
+    protected _getButtonData(buttonID: GamepadButtonID): Readonly<GamepadRawButtonData> {
+        return new GamepadRawButtonData();
     }
 
-    _getAxesData(axesID) {
-        let axesData = this._createAxesData();
-        return axesData;
+    protected _getAxesData(axesID: GamepadAxesID): Readonly<GamepadRawAxesData> {
+        return new GamepadRawAxesData();
     }
 
-    _getHapticActuators() {
-        let hapticActuator = [];
+    protected _getHapticActuators(): GamepadHapticActuator[] {
+        const hapticActuator: GamepadHapticActuator[] = [];
         return hapticActuator;
     }
 
-    _destroyHook() {
+    protected _destroyHook(): void {
 
     }
 
     // Hooks End
 
-    start() {
+    public start(): void {
         this._startHook();
     }
 
-    update(dt) {
+    public update(dt: number): void {
         this._preUpdate(dt);
 
         this._preUpdateButtonInfos();
@@ -168,17 +207,17 @@ export class Gamepad {
         this._postUpdate(dt);
     }
 
-    _preUpdateButtonInfos() {
+    private _preUpdateButtonInfos(): void {
         for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
-            let id = this._myButtonInfosIDs[i];
-            let info = this._myButtonInfos[id];
+            const id = this._myButtonInfosIDs[i];
+            const info = this._myButtonInfos[id]!;
             info.myPrevIsPressed = info.myPressed;
             info.myPrevIsTouched = info.myTouched;
             info.myPrevValue = info.myValue;
         }
     }
 
-    _updateButtonInfos() {
+    private _updateButtonInfos(): void {
         this._updateSingleButtonInfo(GamepadButtonID.SELECT);
         this._updateSingleButtonInfo(GamepadButtonID.SQUEEZE);
         this._updateSingleButtonInfo(GamepadButtonID.TOUCHPAD);
@@ -188,9 +227,9 @@ export class Gamepad {
         this._updateSingleButtonInfo(GamepadButtonID.THUMB_REST);
     }
 
-    _updateSingleButtonInfo(buttonID) {
-        let buttonInfo = this._myButtonInfos[buttonID];
-        let buttonData = this._getButtonData(buttonID);
+    private _updateSingleButtonInfo(buttonID: GamepadButtonID): void {
+        const buttonInfo = this._myButtonInfos[buttonID]!;
+        const buttonData = this._getButtonData(buttonID);
 
         buttonInfo.myPressed = buttonData.myPressed;
         buttonInfo.myTouched = buttonData.myTouched;
@@ -205,10 +244,10 @@ export class Gamepad {
         }
     }
 
-    _postUpdateButtonInfos(dt) {
+    private _postUpdateButtonInfos(dt: number): void {
         for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
-            let id = this._myButtonInfosIDs[i];
-            let info = this._myButtonInfos[id];
+            const id = this._myButtonInfosIDs[i];
+            const info = this._myButtonInfos[id]!;
             if (info.myPressed) {
                 info.myTimePressed += dt;
                 if (!info.myPrevIsPressed) {
@@ -287,130 +326,132 @@ export class Gamepad {
         }
 
         for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
-            let id = this._myButtonInfosIDs[i];
-            let buttonInfo = this._myButtonInfos[id];
-            let buttonEventEmitters = this._myButtonEmitters[id];
+            const id = this._myButtonInfosIDs[i];
+            const buttonInfo = this._myButtonInfos[id]!;
+            const buttonEventEmitters = this._myButtonEmitters[id]!;
 
             // PRESSED
             if (buttonInfo.myPressed && !buttonInfo.myPrevIsPressed) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.PRESS_START];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.PRESS_START]!;
                 emitter.notify(buttonInfo, this);
             }
 
             if (!buttonInfo.myPressed && buttonInfo.myPrevIsPressed) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.PRESS_END];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.PRESS_END]!;
                 emitter.notify(buttonInfo, this);
             }
 
             if (buttonInfo.myPressed) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.PRESSED];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.PRESSED]!;
                 emitter.notify(buttonInfo, this);
             } else {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.NOT_PRESSED];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.NOT_PRESSED]!;
                 emitter.notify(buttonInfo, this);
             }
 
             // TOUCHED
             if (buttonInfo.myTouched && !buttonInfo.myPrevIsTouched) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.TOUCH_START];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.TOUCH_START]!;
                 emitter.notify(buttonInfo, this);
             }
 
             if (!buttonInfo.myTouched && buttonInfo.myPrevIsTouched) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.TOUCH_END];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.TOUCH_END]!;
                 emitter.notify(buttonInfo, this);
             }
 
             if (buttonInfo.myTouched) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.TOUCHED];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.TOUCHED]!;
                 emitter.notify(buttonInfo, this);
             } else {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.NOT_TOUCHED];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.NOT_TOUCHED]!;
                 emitter.notify(buttonInfo, this);
             }
 
             // VALUE
             if (buttonInfo.myValue != buttonInfo.myPrevValue) {
-                let emitter = buttonEventEmitters[GamepadButtonEvent.VALUE_CHANGED];
+                const emitter = buttonEventEmitters[GamepadButtonEvent.VALUE_CHANGED]!;
                 emitter.notify(buttonInfo, this);
             }
 
             // ALWAYS
-            let emitter = buttonEventEmitters[GamepadButtonEvent.ALWAYS];
+            const emitter = buttonEventEmitters[GamepadButtonEvent.ALWAYS]!;
             emitter.notify(buttonInfo, this);
         }
-
-        this._mySelectStart = false;
-        this._mySelectEnd = false;
-        this._mySqueezeStart = false;
-        this._mySqueezeEnd = false;
     }
 
-    _preUpdateAxesInfos() {
+    private _preUpdateAxesInfos(): void {
         for (let i = 0; i < this._myAxesInfosIDs.length; i++) {
-            let id = this._myAxesInfosIDs[i];
-            let info = this._myAxesInfos[id];
+            const id = this._myAxesInfosIDs[i];
+            const info = this._myAxesInfos[id]!;
             info.myPrevAxes[0] = info.myAxes[0];
             info.myPrevAxes[1] = info.myAxes[1];
         }
     }
 
-    _updateAxesInfos() {
+    private _updateAxesInfos(): void {
         this._updateSingleAxesInfo(GamepadAxesID.THUMBSTICK);
     }
 
-    _updateSingleAxesInfo(axesID) {
-        let axesInfo = this._myAxesInfos[axesID];
-        let axesData = this._getAxesData(axesID);
+    private _updateSingleAxesInfo(axesID: GamepadAxesID): void {
+        const axesInfo = this._myAxesInfos[axesID]!;
+        const axesData = this._getAxesData(axesID);
 
-        axesInfo.myAxes[0] = axesData[0];
-        axesInfo.myAxes[1] = axesData[1];
+        axesInfo.myAxes[0] = axesData.myAxes[0];
+        axesInfo.myAxes[1] = axesData.myAxes[1];
     }
 
-    _postUpdateAxesInfos() {
-        for (let key in GamepadAxesID) {
-            let axesInfo = this._myAxesInfos[GamepadAxesID[key]];
-            let axesEventEmitters = this._myAxesEmitters[GamepadAxesID[key]];
+    private _postUpdateAxesInfos(): void {
+        for (const key in GamepadAxesID) {
+            const gamepadAxesID = GamepadAxesID[key as keyof typeof GamepadAxesID];
+            const axesInfo = this._myAxesInfos[gamepadAxesID]!;
+            const axesEventEmitters = this._myAxesEmitters[gamepadAxesID]!;
 
             // X CHANGED
             if (axesInfo.myAxes[0] != axesInfo.myPrevAxes[0]) {
-                let emitter = axesEventEmitters[GamepadAxesEvent.X_CHANGED];
+                const emitter = axesEventEmitters[GamepadAxesEvent.X_CHANGED]!;
                 emitter.notify(axesInfo, this);
             }
 
             // Y CHANGED
             if (axesInfo.myAxes[1] != axesInfo.myPrevAxes[1]) {
-                let emitter = axesEventEmitters[GamepadAxesEvent.Y_CHANGED];
+                const emitter = axesEventEmitters[GamepadAxesEvent.Y_CHANGED]!;
                 emitter.notify(axesInfo, this);
             }
 
             // AXES CHANGED
             if (axesInfo.myAxes[0] != axesInfo.myPrevAxes[0] ||
                 axesInfo.myAxes[1] != axesInfo.myPrevAxes[1]) {
-                let emitter = axesEventEmitters[GamepadAxesEvent.AXES_CHANGED];
+                const emitter = axesEventEmitters[GamepadAxesEvent.AXES_CHANGED]!;
                 emitter.notify(axesInfo, this);
             }
 
             // ALWAYS        
-            let emitter = axesEventEmitters[GamepadAxesEvent.ALWAYS];
+            const emitter = axesEventEmitters[GamepadAxesEvent.ALWAYS]!;
             emitter.notify(axesInfo, this);
         }
     }
 
-    _updatePulse(dt) {
+    private _updatePulse(dt: number): void {
         if (this._myPulseInfo.myDevicePulsing || this._myPulseInfo.myIntensity > 0) {
-            let hapticActuators = this._getHapticActuators();
+            const hapticActuators = this._getHapticActuators();
             if (hapticActuators.length > 0) {
                 if (this._myPulseInfo.myIntensity > 0) {
                     for (let i = 0; i < hapticActuators.length; i++) {
-                        let hapticActuator = hapticActuators[i];
-                        hapticActuator.pulse(this._myPulseInfo.myIntensity, Math.max(250, this._myPulseInfo.myDuration * 1000)); // Duration is managed by this class
+                        const hapticActuator = hapticActuators[i];
+
+                        // Duration is managed by this class
+                        hapticActuator.playEffect("dual-rumble", {
+                            startDelay: 0,
+                            duration: Math.max(250, this._myPulseInfo.myDuration * 1000),
+                            weakMagnitude: this._myPulseInfo.myIntensity,
+                            strongMagnitude: this._myPulseInfo.myIntensity
+                        });
                     }
                     this._myPulseInfo.myDevicePulsing = true;
                 } else if (this._myPulseInfo.myDevicePulsing) {
                     for (let i = 0; i < hapticActuators.length; i++) {
-                        let hapticActuator = hapticActuators[i];
-                        hapticActuator.pulse(0, 1);
+                        const hapticActuator = hapticActuators[i];
 
                         try {
                             if (hapticActuator.reset != null) {
@@ -435,21 +476,13 @@ export class Gamepad {
         }
     }
 
-    _createButtonData() {
-        return { myPressed: false, myTouched: false, myValue: 0 };
-    }
-
-    _createAxesData() {
-        return vec2_create(0, 0);
-    }
-
-    destroy() {
+    public destroy(): void {
         this._myDestroyed = true;
 
         this._destroyHook();
     }
 
-    isDestroyed() {
+    public isDestroyed(): boolean {
         return this._myDestroyed;
     }
 }

@@ -1,12 +1,8 @@
-export interface PoolObject<PoolObjectType, PoolObjectCloneParamsType = unknown> {
-    setActive?(active: boolean): void;
-    equals?(object: PoolObjectType): boolean;
-    cloneObject?(cloneParams?: Readonly<PoolObjectCloneParamsType>): PoolObjectType | null;
-    reserveObjects?(size: number): void;
-    destroy?(): void;
-}
+import { Object3D } from "@wonderlandengine/api";
+import { ObjectCloneParams, ObjectUtils } from "../wl/utils/object_utils.js";
 
-export class ObjectPoolParams<PoolObjectType extends (PoolObject<PoolObjectType, PoolObjectCloneParamsType> & object), PoolObjectCloneParamsType = unknown> {
+/** For the Wonderland Engine `Object3D` you can omit the callbacks (like `myCloneCallback`), since they are already handled directly as a speciale case */
+export class ObjectPoolParams<PoolObjectType, PoolObjectCloneParamsType = unknown> {
 
     public myInitialPoolSize: number = 0;
 
@@ -19,16 +15,20 @@ export class ObjectPoolParams<PoolObjectType extends (PoolObject<PoolObjectType,
 
     public myCloneParams: Readonly<PoolObjectCloneParamsType> | null = null;
 
-    /** If true it will pre-allocate the memory before adding new objects to the pool */
-    public myOptimizeObjectsAllocation = true;
 
-
-    /** These extra functions can be used if u want to use the pool with objects that are not from WL (WL Object) */
-
+    /** For the Wonderland Engine `Object3D` you can omit this, since it's already handled directly as a speciale case */
     public myCloneCallback: ((object: Readonly<PoolObjectType>, cloneParams?: Readonly<PoolObjectCloneParamsType>) => PoolObjectType) | null = null;
+
+    /** For the Wonderland Engine `Object3D` you can omit this, since it's already handled directly as a speciale case */
     public mySetActiveCallback: ((object: PoolObjectType, active: boolean) => void) | null = null;
+
+    /** For the Wonderland Engine `Object3D` you can omit this, since it's already handled directly as a speciale case */
     public myEqualCallback: ((first: Readonly<PoolObjectType>, second: Readonly<PoolObjectType>) => boolean) | null = null;
+
+    /** For the Wonderland Engine `Object3D` you can omit this, since it's already handled directly as a speciale case */
     public myDestroyCallback: ((object: PoolObjectType) => void) | null = null;
+
+    /** For the Wonderland Engine `Object3D` you can omit this, since it's already handled directly as a speciale case */
     public myOptimizeObjectsAllocationCallback: ((object: Readonly<PoolObjectType>, numberOfObjectsToAllocate: number) => void) | null = null;
 
 
@@ -61,8 +61,7 @@ export interface BaseObjectPool {
     destroy(): void;
 }
 
-/** If the `Object3D` is extended with the `Object3DExtension`, the pool will use the `PP` methods over the `PoolObject` ones, like `pp_clone` or `pp_setActive`*/
-export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolObjectCloneParamsType> & object), PoolObjectCloneParamsType = unknown> implements BaseObjectPool {
+export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> implements BaseObjectPool {
 
     private readonly _myObjectPrototype: Readonly<PoolObjectType>;
     private readonly _myObjectPoolParams: Readonly<ObjectPoolParams<PoolObjectType, PoolObjectCloneParamsType>>;
@@ -72,9 +71,20 @@ export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolO
 
     private _myDestroyed: boolean = false;
 
+    private _myIsObject3D = false;
+    private _myIsObject3DCloneParams = false;
+
     constructor(objectPrototype: Readonly<PoolObjectType>, objectPoolParams: Readonly<ObjectPoolParams<PoolObjectType, PoolObjectCloneParamsType>>) {
         this._myObjectPrototype = objectPrototype;
         this._myObjectPoolParams = objectPoolParams;
+
+        if (objectPrototype instanceof Object3D) {
+            this._myIsObject3D = true;
+
+            if (this._myObjectPoolParams.myCloneParams == null || objectPrototype instanceof ObjectCloneParams) {
+                this._myIsObject3DCloneParams = true;
+            }
+        }
 
         this._addToPool(objectPoolParams.myInitialPoolSize, false);
     }
@@ -172,16 +182,11 @@ export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolO
             return;
         }
 
-        if (this._myObjectPoolParams.myOptimizeObjectsAllocation) {
-            if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback != null) {
-                this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myObjectPrototype, size);
-            } else if ((this._myObjectPrototype as unknown as { pp_reserveObjects(size: number): void; }).pp_reserveObjects != null) {
-                (this._myObjectPrototype as unknown as { pp_reserveObjects(size: number): void; }).pp_reserveObjects(size);
-            } else if (this._myObjectPrototype.reserveObjects != null) {
-                this._myObjectPrototype.reserveObjects(size);
-            } else {
-                console.error("No way have been provided to optimize the objects allocation");
-            }
+        if (this._myObjectPoolParams.myOptimizeObjectsAllocationCallback != null) {
+            this._myObjectPoolParams.myOptimizeObjectsAllocationCallback(this._myObjectPrototype, size);
+        } else if (this._myIsObject3D) {
+            const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
+            ObjectUtils.reserveObjects(object3DPrototype, size);
         }
 
         for (let i = 0; i < size; i++) {
@@ -202,10 +207,9 @@ export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolO
         const cloneParams = this._myObjectPoolParams.myCloneParams != null ? this._myObjectPoolParams.myCloneParams! : undefined;
         if (this._myObjectPoolParams.myCloneCallback != null) {
             clone = this._myObjectPoolParams.myCloneCallback(object, cloneParams);
-        } else if ((object as unknown as { pp_clone(cloneParams?: PoolObjectCloneParamsType): PoolObjectType | null }).pp_clone != null) {
-            clone = (object as unknown as { pp_clone(cloneParams?: PoolObjectCloneParamsType): PoolObjectType | null }).pp_clone(cloneParams);
-        } else if (object.cloneObject != null) {
-            clone = object.cloneObject(cloneParams);
+        } else if (this._myIsObject3D && this._myIsObject3DCloneParams) {
+            const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
+            clone = ObjectUtils.clone(object3DPrototype, cloneParams as unknown as ObjectCloneParams) as PoolObjectType;
         } else {
             console.error("No way have been provided to clone the object");
         }
@@ -220,10 +224,9 @@ export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolO
     private _setActive(object: PoolObjectType, active: boolean): void {
         if (this._myObjectPoolParams.mySetActiveCallback != null) {
             this._myObjectPoolParams.mySetActiveCallback(object, active);
-        } else if ((object as unknown as { pp_setActive(active: boolean): void; }).pp_setActive != null) {
-            (object as unknown as { pp_setActive(active: boolean): void; }).pp_setActive(active);
-        } else if (object.setActive != null) {
-            object.setActive(active);
+        } else if (this._myIsObject3D) {
+            const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
+            ObjectUtils.setActive(object3DPrototype, active);
         } else {
             console.error("No way have been provided to set the active state of the object");
         }
@@ -234,10 +237,10 @@ export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolO
 
         if (this._myObjectPoolParams.myEqualCallback != null) {
             equals = this._myObjectPoolParams.myEqualCallback(first, second);
-        } else if ((first as unknown as { pp_equals(object: Readonly<PoolObjectType>): boolean; }).pp_equals != null) {
-            equals = (first as unknown as { pp_equals(object: Readonly<PoolObjectType>): boolean; }).pp_equals(second);
-        } else if (first.equals != null) {
-            equals = first.equals(second);
+        } else if (this._myIsObject3D) {
+            const firstObject3D = this._myObjectPrototype as unknown as Object3D;
+            const secondObject3D = this._myObjectPrototype as unknown as Object3D;
+            equals = ObjectUtils.equals(firstObject3D, secondObject3D);
         } else {
             equals = first == second;
         }
@@ -266,10 +269,9 @@ export class ObjectPool<PoolObjectType extends (PoolObject<PoolObjectType, PoolO
     private _destroyObject(object: PoolObjectType): void {
         if (this._myObjectPoolParams.myDestroyCallback != null) {
             this._myObjectPoolParams.myDestroyCallback(object);
-        } else if ((object as unknown as { pp_destroy(): void; }).pp_destroy != null) {
-            (object as unknown as { pp_destroy(): void; }).pp_destroy();
-        } else if (object.destroy != null) {
-            object.destroy();
+        } else if (this._myIsObject3D) {
+            const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
+            ObjectUtils.destroy(object3DPrototype);
         } else {
             console.error("No way have been provided to destroy the object");
         }

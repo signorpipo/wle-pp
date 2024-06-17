@@ -1,6 +1,7 @@
 // xr-standard mapping is assumed
 
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
+import { GamepadRawAxesData, GamepadRawButtonData } from "../gamepad.js";
 import { GamepadButtonID } from "../gamepad_buttons.js";
 import { GamepadCore } from "./gamepad_core.js";
 
@@ -21,10 +22,9 @@ export class XRGamepadCore extends GamepadCore {
         this._mySqueezeStartEventListener = null;
         this._mySqueezeEndEventListener = null;
 
-
         // Support Variables
-        this._myButtonData = this._createButtonData();
-        this._myAxesData = this._createAxesData();
+        this._myButtonData = new GamepadRawButtonData();
+        this._myAxesData = new GamepadRawAxesData();
         this._myHapticActuators = [];
     }
 
@@ -54,9 +54,7 @@ export class XRGamepadCore extends GamepadCore {
     }
 
     getButtonData(buttonID) {
-        this._myButtonData.myPressed = false;
-        this._myButtonData.myTouched = false;
-        this._myButtonData.myValue = 0;
+        this._myButtonData.reset();
 
         if (this.isGamepadCoreActive()) {
             if (buttonID < this._myGamepad.buttons.length) {
@@ -84,7 +82,7 @@ export class XRGamepadCore extends GamepadCore {
     }
 
     getAxesData(axesID) {
-        this._myAxesData.vec2_zero();
+        this._myAxesData.reset();
 
         if (this.isGamepadCoreActive()) {
             let internalAxes = this._myGamepad.axes;
@@ -94,25 +92,25 @@ export class XRGamepadCore extends GamepadCore {
 
                 // X
                 if (Math.abs(internalAxes[0]) > Math.abs(internalAxes[2])) {
-                    this._myAxesData[0] = internalAxes[0];
+                    this._myAxesData.myAxes[0] = internalAxes[0];
                 } else {
-                    this._myAxesData[0] = internalAxes[2];
+                    this._myAxesData.myAxes[0] = internalAxes[2];
                 }
 
                 // Y
                 if (Math.abs(internalAxes[1]) > Math.abs(internalAxes[3])) {
-                    this._myAxesData[1] = internalAxes[1];
+                    this._myAxesData.myAxes[1] = internalAxes[1];
                 } else {
-                    this._myAxesData[1] = internalAxes[3];
+                    this._myAxesData.myAxes[1] = internalAxes[3];
                 }
 
             } else if (internalAxes.length == 2) {
-                this._myAxesData[0] = internalAxes[0];
-                this._myAxesData[1] = internalAxes[1];
+                this._myAxesData.myAxes[0] = internalAxes[0];
+                this._myAxesData.myAxes[1] = internalAxes[1];
             }
 
             // Y axis is recorded negative when thumbstick is pressed forward for weird reasons
-            this._myAxesData[1] = -this._myAxesData[1];
+            this._myAxesData.myAxes[1] = -this._myAxesData.myAxes[1];
         }
 
         return this._myAxesData;

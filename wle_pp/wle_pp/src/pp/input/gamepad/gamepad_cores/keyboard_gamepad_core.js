@@ -1,6 +1,7 @@
 import { Globals } from "../../../pp/globals.js";
 import { Handedness } from "../../cauldron/input_types.js";
 import { KeyID } from "../../cauldron/keyboard.js";
+import { GamepadRawAxesData, GamepadRawButtonData } from "../gamepad.js";
 import { GamepadButtonID } from "../gamepad_buttons.js";
 import { GamepadCore } from "./gamepad_core.js";
 
@@ -10,8 +11,8 @@ export class KeyboardGamepadCore extends GamepadCore {
         super(handPose);
 
         // Support Variables
-        this._myButtonData = this._createButtonData();
-        this._myAxesData = this._createAxesData();
+        this._myButtonData = new GamepadRawButtonData();
+        this._myAxesData = new GamepadRawAxesData();
         this._myHapticActuators = [];
     }
 
@@ -20,9 +21,7 @@ export class KeyboardGamepadCore extends GamepadCore {
     }
 
     getButtonData(buttonID) {
-        this._myButtonData.myPressed = false;
-        this._myButtonData.myTouched = false;
-        this._myButtonData.myValue = 0;
+        this._myButtonData.reset();
 
         let keyboard = Globals.getKeyboard(this.getEngine());
 
@@ -87,21 +86,21 @@ export class KeyboardGamepadCore extends GamepadCore {
     }
 
     getAxesData(axesID) {
-        this._myAxesData.vec2_zero();
+        this._myAxesData.reset();
 
         let keyboard = Globals.getKeyboard(this.getEngine());
 
         if (this.isGamepadCoreActive()) {
             if (this.getHandedness() == Handedness.LEFT) {
-                if (keyboard.isKeyPressed(KeyID.KeyW)) this._myAxesData[1] += 1.0;
-                if (keyboard.isKeyPressed(KeyID.KeyS)) this._myAxesData[1] += -1.0;
-                if (keyboard.isKeyPressed(KeyID.KeyD)) this._myAxesData[0] += 1.0;
-                if (keyboard.isKeyPressed(KeyID.KeyA)) this._myAxesData[0] += -1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyW)) this._myAxesData.myAxes[1] += 1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyS)) this._myAxesData.myAxes[1] += -1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyD)) this._myAxesData.myAxes[0] += 1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyA)) this._myAxesData.myAxes[0] += -1.0;
             } else {
-                if (keyboard.isKeyPressed(KeyID.KeyI) || keyboard.isKeyPressed(KeyID.UP)) this._myAxesData[1] += 1.0;
-                if (keyboard.isKeyPressed(KeyID.KeyK) || keyboard.isKeyPressed(KeyID.DOWN)) this._myAxesData[1] += -1.0;
-                if (keyboard.isKeyPressed(KeyID.KeyL) || keyboard.isKeyPressed(KeyID.RIGHT)) this._myAxesData[0] += 1.0;
-                if (keyboard.isKeyPressed(KeyID.KeyJ) || keyboard.isKeyPressed(KeyID.LEFT)) this._myAxesData[0] += -1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyI) || keyboard.isKeyPressed(KeyID.UP)) this._myAxesData.myAxes[1] += 1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyK) || keyboard.isKeyPressed(KeyID.DOWN)) this._myAxesData.myAxes[1] += -1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyL) || keyboard.isKeyPressed(KeyID.RIGHT)) this._myAxesData.myAxes[0] += 1.0;
+                if (keyboard.isKeyPressed(KeyID.KeyJ) || keyboard.isKeyPressed(KeyID.LEFT)) this._myAxesData.myAxes[0] += -1.0;
             }
         }
 

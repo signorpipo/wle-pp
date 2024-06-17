@@ -1,4 +1,5 @@
 import { Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
+import { EasingFunction } from "../../../../cauldron/utils/math_utils.js";
 
 /**
  * #WARN this type extension is actually added at runtime only if you call `initVec4Extension`  
@@ -10,6 +11,12 @@ export interface Vector4Extension<VectorType extends Vector4> {
 
     vec4_copy<T extends VectorType>(this: T, vector: Readonly<Vector4>): this;
     vec4_clone<T extends VectorType>(this: Readonly<T>): T;
+
+    vec4_lerp<T extends VectorType>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number): T;
+    vec4_lerp<T extends VectorType, U extends Vector4>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, out: U): U;
+
+    vec4_interpolate<T extends VectorType>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, easingFunction?: EasingFunction): T;
+    vec4_interpolate<T extends VectorType, U extends Vector4>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, easingFunction: EasingFunction, out: U): U;
 }
 
 declare global {

@@ -26,52 +26,52 @@ export class CursorButtonComponent extends Component {
     /** This can be either a name of a component that is found on the same object of the cursor button,  
         or the name of an handler added through `CursorButtonComponent.addButtonActionHandler` */
     @property.string("")
-    private _myButtonActionsHandlerNames!: string;
+    private readonly _myButtonActionsHandlerNames!: string;
 
     @property.float(0.075)
-    private _myScaleOffsetOnHover!: number;
+    private readonly _myScaleOffsetOnHover!: number;
 
     @property.float(-0.075)
-    private _myScaleOffsetOnDown!: number;
+    private readonly _myScaleOffsetOnDown!: number;
 
     @property.float(0.075)
-    private _myScaleOffsetOnUp!: number;
+    private readonly _myScaleOffsetOnUp!: number;
 
     @property.float(0.1)
-    private _myPulseIntensityOnHover!: number;
+    private readonly _myPulseIntensityOnHover!: number;
 
     @property.float(0)
-    private _myPulseIntensityOnDown!: number;
+    private readonly _myPulseIntensityOnDown!: number;
 
     @property.float(0.1)
-    private _myPulseIntensityOnUp!: number;
+    private readonly _myPulseIntensityOnUp!: number;
 
     @property.float(0)
-    private _myPulseIntensityOnUnhover!: number;
+    private readonly _myPulseIntensityOnUnhover!: number;
 
     @property.float(-0.1)
-    private _myColorBrigthnessOffsetOnHover!: number;
+    private readonly _myColorBrigthnessOffsetOnHover!: number;
 
     @property.float(0)
-    private _myColorBrigthnessOffsetOnDown!: number;
+    private readonly _myColorBrigthnessOffsetOnDown!: number;
 
     @property.float(-0.1)
-    private _myColorBrigthnessOffsetOnUp!: number;
+    private readonly _myColorBrigthnessOffsetOnUp!: number;
 
     @property.bool(true)
-    private _myUseSpatialAudio!: boolean;
+    private readonly _myUseSpatialAudio!: boolean;
 
     @property.string("")
-    private _mySFXOnHover!: string;
+    private readonly _mySFXOnHover!: string;
 
     @property.string("")
-    private _mySFXOnDown!: string;
+    private readonly _mySFXOnDown!: string;
 
     @property.string("")
-    private _mySFXOnUp!: string;
+    private readonly _mySFXOnUp!: string;
 
     @property.string("")
-    private _mySFXOnUnhover!: string;
+    private readonly _mySFXOnUnhover!: string;
 
     private readonly _myCursorButtonComponentID: string = "cursor_button_component" + MathUtils.randomUUID();
 

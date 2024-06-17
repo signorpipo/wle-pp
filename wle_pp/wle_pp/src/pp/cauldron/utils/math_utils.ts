@@ -1,5 +1,3 @@
-
-
 export type EasingFunction = (valueToEase: number) => number;
 
 /** #CREDITS https://easings.net */
@@ -25,8 +23,30 @@ export const EasingFunction = {
     easeInOutVeryStrong: (valueToEase: number): number => valueToEase < 0.5 ? 16 * Math.pow(valueToEase, 5) : 1 - Math.pow(-2 * valueToEase + 2, 5) / 2
 } as const;
 
-export type EasingSupportFunction = (inputValue: number) => number;
-export const EasingSupportFunction = {
+export enum EasingFunctionName {
+    LINEAR = "Linear",
+
+    EASE_IN_VERY_WEAK = "Ease In Very Weak",
+    EASE_IN_WEAK = "Ease In Weak",
+    EASE_IN = "Ease In",
+    EASE_IN_STRONG = "Ease In Strong",
+    EASE_IN_VERY_STRONG = "Ease In Very Strong",
+
+    EASE_OUT_VERY_WEAK = "Ease Out Very Weak",
+    EASE_OUT_WEAK = "Ease Out Weak",
+    EASE_OUT = "Ease Out",
+    EASE_OUT_STRONG = "Ease Out Strong",
+    EASE_OUT_VERY_STRONG = "Ease Out Very Strong",
+
+    EASE_IN_OUT_VERY_WEAK = "Ease In/Out Very Weak",
+    EASE_IN_OUT_WEAK = "Ease In/Out Weak",
+    EASE_IN_OUT = "Ease In/Out",
+    EASE_IN_OUT_STRONG = "Ease In/Out Strong",
+    EASE_IN_OUT_VERY_STRONG = "Ease In/Out Very Strong",
+}
+
+export type WaveFunction = (inputValue: number) => number;
+export const WaveFunction = {
     triangleWave: (inputValue: number): number => (2 / Math.PI) * Math.asin(Math.sin((Math.PI / 2) * inputValue)),
     positiveTriangleWave: (inputValue: number): number => 1 - Math.abs((Math.abs(inputValue) % 2) - 1)
 } as const;
@@ -35,7 +55,7 @@ export const EPSILON: number = 0.000001;
 export const EPSILON_SQUARED: number = EPSILON * EPSILON;
 export const EPSILON_DEGREES: number = 0.00001;
 
-export function clamp(value: number, start: number, end: number): number {
+export function clamp(value: number, start: number | null, end: number | null): number {
     const fixedStart = (start != null) ? start : -Number.MAX_VALUE;
     const fixedEnd = (end != null) ? end : Number.MAX_VALUE;
 
@@ -173,8 +193,128 @@ export function interpolate(from: number, to: number, interpolationFactor: numbe
 /** `[from, to]` range is mapped to an `interpolationFactor` in the range `[0, 1]`  
     `interpolationFactor` can go outside the `[0, 1]` range, periodically repeating the interpolation in the given range */
 export function interpolatePeriodic(from: number, to: number, interpolationFactor: number, easingFunction: EasingFunction = EasingFunction.linear): number {
-    const adjustedInterpolationFactor = EasingSupportFunction.positiveTriangleWave(interpolationFactor);
+    const adjustedInterpolationFactor = WaveFunction.positiveTriangleWave(interpolationFactor);
     return MathUtils.interpolate(from, to, adjustedInterpolationFactor, easingFunction);
+}
+
+export function getEasingFunctionByName(easingFunctionName: EasingFunctionName): EasingFunction {
+    let easingFunction = EasingFunction.linear;
+
+    switch (easingFunctionName) {
+        case EasingFunctionName.LINEAR:
+            easingFunction = EasingFunction.linear;
+            break;
+
+        case EasingFunctionName.EASE_IN_VERY_WEAK:
+            easingFunction = EasingFunction.easeInVeryWeak;
+            break;
+        case EasingFunctionName.EASE_IN_WEAK:
+            easingFunction = EasingFunction.easeInWeak;
+            break;
+        case EasingFunctionName.EASE_IN:
+            easingFunction = EasingFunction.easeIn;
+            break;
+        case EasingFunctionName.EASE_IN_STRONG:
+            easingFunction = EasingFunction.easeInStrong;
+            break;
+        case EasingFunctionName.EASE_IN_VERY_STRONG:
+            easingFunction = EasingFunction.easeInVeryStrong;
+            break;
+
+        case EasingFunctionName.EASE_OUT_VERY_WEAK:
+            easingFunction = EasingFunction.easeOutVeryWeak;
+            break;
+        case EasingFunctionName.EASE_OUT_WEAK:
+            easingFunction = EasingFunction.easeOutWeak;
+            break;
+        case EasingFunctionName.EASE_OUT:
+            easingFunction = EasingFunction.easeOut;
+            break;
+        case EasingFunctionName.EASE_OUT_STRONG:
+            easingFunction = EasingFunction.easeOutStrong;
+            break;
+        case EasingFunctionName.EASE_OUT_VERY_STRONG:
+            easingFunction = EasingFunction.easeOutVeryStrong;
+            break;
+
+        case EasingFunctionName.EASE_IN_OUT_VERY_WEAK:
+            easingFunction = EasingFunction.easeInOutVeryWeak;
+            break;
+        case EasingFunctionName.EASE_IN_OUT_WEAK:
+            easingFunction = EasingFunction.easeInOutWeak;
+            break;
+        case EasingFunctionName.EASE_IN_OUT:
+            easingFunction = EasingFunction.easeInOut;
+            break;
+        case EasingFunctionName.EASE_IN_OUT_STRONG:
+            easingFunction = EasingFunction.easeInOutStrong;
+            break;
+        case EasingFunctionName.EASE_IN_OUT_VERY_STRONG:
+            easingFunction = EasingFunction.easeInOutVeryStrong;
+            break;
+    }
+
+    return easingFunction;
+}
+
+export function getEasingFunctionNameByIndex(index: number): EasingFunctionName | null {
+    let easingFunctionName: EasingFunctionName | null = null;
+
+    switch (index) {
+        case 0:
+            easingFunctionName = EasingFunctionName.LINEAR;
+            break;
+
+        case 1:
+            easingFunctionName = EasingFunctionName.EASE_IN_VERY_WEAK;
+            break;
+        case 2:
+            easingFunctionName = EasingFunctionName.EASE_IN_WEAK;
+            break;
+        case 3:
+            easingFunctionName = EasingFunctionName.EASE_IN;
+            break;
+        case 4:
+            easingFunctionName = EasingFunctionName.EASE_IN_STRONG;
+            break;
+        case 5:
+            easingFunctionName = EasingFunctionName.EASE_IN_VERY_STRONG;
+            break;
+
+        case 6:
+            easingFunctionName = EasingFunctionName.EASE_OUT_VERY_WEAK;
+            break;
+        case 7:
+            easingFunctionName = EasingFunctionName.EASE_OUT_WEAK;
+            break;
+        case 8:
+            easingFunctionName = EasingFunctionName.EASE_OUT;
+            break;
+        case 9:
+            easingFunctionName = EasingFunctionName.EASE_OUT_STRONG;
+            break;
+        case 10:
+            easingFunctionName = EasingFunctionName.EASE_OUT_VERY_STRONG;
+            break;
+
+        case 11:
+            easingFunctionName = EasingFunctionName.EASE_IN_OUT_VERY_WEAK;
+            break;
+        case 12:
+            easingFunctionName = EasingFunctionName.EASE_IN_OUT_WEAK;
+            break;
+        case 13:
+            easingFunctionName = EasingFunctionName.EASE_IN_OUT;
+            break;
+        case 14:
+            easingFunctionName = EasingFunctionName.EASE_IN_OUT_STRONG;
+            break;
+        case 15:
+            easingFunctionName = EasingFunctionName.EASE_IN_OUT_VERY_STRONG;
+            break;
+    }
+
+    return easingFunctionName;
 }
 
 export function angleDistance(from: number, to: number): number {
@@ -306,6 +446,8 @@ export const MathUtils = {
     lerp,
     interpolate,
     interpolatePeriodic,
+    getEasingFunctionByName,
+    getEasingFunctionNameByIndex,
     angleDistance,
     angleDistanceDegrees,
     angleDistanceRadians,
@@ -317,5 +459,5 @@ export const MathUtils = {
     angleClampRadians,
     isInsideAngleRange,
     isInsideAngleRangeDegrees,
-    isInsideAngleRangeRadians
+    isInsideAngleRangeRadians,
 } as const;

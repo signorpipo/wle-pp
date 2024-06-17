@@ -1,4 +1,4 @@
-import { BaseObjectPool, PoolObject } from "./object_pool.js";
+import { BaseObjectPool } from "./object_pool.js";
 
 export class ObjectPoolManager {
 
@@ -37,7 +37,7 @@ export class ObjectPoolManager {
         return this._myPools.has(poolID);
     }
 
-    public get<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolID: unknown): PoolObjectType | null {
+    public get<PoolObjectType>(poolID: unknown): PoolObjectType | null {
         if (this._myPools.has(poolID)) {
             return this._myPools.get(poolID)!.get() as PoolObjectType | null;
         }
@@ -45,9 +45,9 @@ export class ObjectPoolManager {
         return null;
     }
 
-    public has<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolID: unknown, object: PoolObjectType): boolean;
-    public has<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(object: PoolObjectType): boolean;
-    public has<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): boolean {
+    public has<PoolObjectType>(poolID: unknown, object: PoolObjectType): boolean;
+    public has<PoolObjectType>(object: PoolObjectType): boolean;
+    public has<PoolObjectType>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): boolean {
         let hasObject = false;
 
         if (object == null) {
@@ -64,9 +64,9 @@ export class ObjectPoolManager {
         return hasObject;
     }
 
-    public isBusy<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolID: unknown, object: PoolObjectType): boolean;
-    public isBusy<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(object: PoolObjectType): boolean;
-    public isBusy<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): boolean {
+    public isBusy<PoolObjectType>(poolID: unknown, object: PoolObjectType): boolean;
+    public isBusy<PoolObjectType>(object: PoolObjectType): boolean;
+    public isBusy<PoolObjectType>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): boolean {
         let busy = false;
 
         if (object == null) {
@@ -83,9 +83,9 @@ export class ObjectPoolManager {
         return busy;
     }
 
-    public isAvailable<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolID: unknown, object: PoolObjectType): boolean;
-    public isAvailable<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(object: PoolObjectType): boolean;
-    public isAvailable<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): boolean {
+    public isAvailable<PoolObjectType>(poolID: unknown, object: PoolObjectType): boolean;
+    public isAvailable<PoolObjectType>(object: PoolObjectType): boolean;
+    public isAvailable<PoolObjectType>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): boolean {
         let available = false;
 
         if (object == null) {
@@ -102,9 +102,9 @@ export class ObjectPoolManager {
         return available;
     }
 
-    public release<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolID: unknown, object: PoolObjectType): void;
-    public release<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(object: PoolObjectType): void;
-    public release<PoolObjectType extends (PoolObject<PoolObjectType> & object)>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): void {
+    public release<PoolObjectType>(poolID: unknown, object: PoolObjectType): void;
+    public release<PoolObjectType>(object: PoolObjectType): void;
+    public release<PoolObjectType>(poolIDOrObject: unknown | PoolObjectType, object?: PoolObjectType): void {
         if (object == null) {
             for (const pool of this._myPools.values()) {
                 pool.release(poolIDOrObject);
