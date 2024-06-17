@@ -81,7 +81,7 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
         if (objectPrototype instanceof Object3D) {
             this._myIsObject3D = true;
 
-            if (this._myObjectPoolParams.myCloneParams == null || objectPrototype instanceof ObjectCloneParams) {
+            if (this._myObjectPoolParams.myCloneParams == null || this._myObjectPoolParams.myCloneParams instanceof ObjectCloneParams) {
                 this._myIsObject3DCloneParams = true;
             }
         }

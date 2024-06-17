@@ -1496,7 +1496,7 @@ export class PlayerTransformManager {
         this._myDestroyed = true;
 
         if (this._myVisibilityChangeEventListener != null) {
-            XRUtils.getSession(this._myParams.myEngine)!.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
+            XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
         }
 
         XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);

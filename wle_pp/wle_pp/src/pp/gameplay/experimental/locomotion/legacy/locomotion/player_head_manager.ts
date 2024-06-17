@@ -1217,8 +1217,8 @@ export class PlayerHeadManager {
     public destroy(): void {
         this._myDestroyed = true;
 
-        XRUtils.getReferenceSpace(this._myParams.myEngine)!.removeEventListener("reset", this._myViewResetEventListener!);
-        XRUtils.getSession(this._myParams.myEngine)!.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener!);
+        XRUtils.getReferenceSpace(this._myParams.myEngine)?.removeEventListener("reset", this._myViewResetEventListener!);
+        XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener!);
         XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
     }
 
