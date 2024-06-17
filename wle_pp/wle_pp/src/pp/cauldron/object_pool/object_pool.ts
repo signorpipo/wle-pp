@@ -190,7 +190,7 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
         }
 
         for (let i = 0; i < size; i++) {
-            const clonedObject = this._clone(this._myObjectPrototype);
+            const clonedObject = this._clonePrototype();
             if (clonedObject != null) {
                 this._myAvailableObjects.push(clonedObject);
             }
@@ -201,12 +201,12 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
         }
     }
 
-    private _clone(object: Readonly<PoolObjectType>): PoolObjectType | null {
+    private _clonePrototype(): PoolObjectType | null {
         let clone: PoolObjectType | null = null;
 
         const cloneParams = this._myObjectPoolParams.myCloneParams != null ? this._myObjectPoolParams.myCloneParams! : undefined;
         if (this._myObjectPoolParams.myCloneCallback != null) {
-            clone = this._myObjectPoolParams.myCloneCallback(object, cloneParams);
+            clone = this._myObjectPoolParams.myCloneCallback(this._myObjectPrototype, cloneParams);
         } else if (this._myIsObject3D && this._myIsObject3DCloneParams) {
             const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
             clone = ObjectUtils.clone(object3DPrototype, cloneParams as unknown as ObjectCloneParams) as PoolObjectType;
@@ -225,8 +225,8 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
         if (this._myObjectPoolParams.mySetActiveCallback != null) {
             this._myObjectPoolParams.mySetActiveCallback(object, active);
         } else if (this._myIsObject3D) {
-            const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
-            ObjectUtils.setActive(object3DPrototype, active);
+            const object3D = object as unknown as Object3D;
+            ObjectUtils.setActive(object3D, active);
         } else {
             console.error("No way have been provided to set the active state of the object");
         }
@@ -238,8 +238,8 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
         if (this._myObjectPoolParams.myEqualCallback != null) {
             equals = this._myObjectPoolParams.myEqualCallback(first, second);
         } else if (this._myIsObject3D) {
-            const firstObject3D = this._myObjectPrototype as unknown as Object3D;
-            const secondObject3D = this._myObjectPrototype as unknown as Object3D;
+            const firstObject3D = first as unknown as Object3D;
+            const secondObject3D = second as unknown as Object3D;
             equals = ObjectUtils.equals(firstObject3D, secondObject3D);
         } else {
             equals = first == second;
@@ -270,8 +270,8 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
         if (this._myObjectPoolParams.myDestroyCallback != null) {
             this._myObjectPoolParams.myDestroyCallback(object);
         } else if (this._myIsObject3D) {
-            const object3DPrototype = this._myObjectPrototype as unknown as Object3D;
-            ObjectUtils.destroy(object3DPrototype);
+            const object3D = object as unknown as Object3D;
+            ObjectUtils.destroy(object3D);
         } else {
             console.error("No way have been provided to destroy the object");
         }
