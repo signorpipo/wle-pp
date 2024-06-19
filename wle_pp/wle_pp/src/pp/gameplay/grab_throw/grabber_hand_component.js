@@ -64,7 +64,7 @@ export class GrabberHandComponent extends Component {
         }
 
         this._myPhysX = this.object.pp_getComponent(PhysXComponent);
-        this._myCollisionsCollector = new PhysicsCollisionCollector(this._myPhysX, true);
+        this._myCollisionsCollector = new PhysicsCollisionCollector(this._myPhysX);
     }
 
     update(dt) {

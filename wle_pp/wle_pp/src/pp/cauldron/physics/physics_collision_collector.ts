@@ -4,7 +4,6 @@ import { Timer } from "../cauldron/timer.js";
 export class PhysicsCollisionCollector {
 
     private readonly _myPhysXComponent: PhysXComponent;
-    private readonly _myIsTrigger: boolean;
 
     private _myActive: boolean = false;
 
@@ -29,6 +28,7 @@ export class PhysicsCollisionCollector {
     private _myCollisionObjectsEndedToProcess: Object3D[] = [];
 
     private _myUpdateActive: boolean = false;
+    private _myCollisionStartEndProcessingActive: boolean = true;
 
     private readonly _myTriggerDesyncFixDelay: Timer = new Timer(0.1);
 
@@ -36,12 +36,8 @@ export class PhysicsCollisionCollector {
 
     private _myDestroyed: boolean = false;
 
-
-
-    constructor(physXComponent: PhysXComponent, isTrigger: boolean = false) {
+    constructor(physXComponent: PhysXComponent) {
         this._myPhysXComponent = physXComponent;
-
-        this._myIsTrigger = isTrigger;
 
         this.setActive(true);
     }
@@ -77,7 +73,7 @@ export class PhysicsCollisionCollector {
             this._myCollisionObjectsStarted.pp_clear();
             this._myCollisionsEnded.pp_clear();
             this._myCollisionObjectsEnded.pp_clear();
-            this._myUpdateActive = false;
+
             this._myCollisionsStartedToProcess.pp_clear();
             this._myCollisionObjectsStartedToProcess.pp_clear();
             this._myCollisionsEndedToProcess.pp_clear();
@@ -92,12 +88,7 @@ export class PhysicsCollisionCollector {
         }
     }
 
-    // Set to true only if u are going to actually update this object and don't want to lose any collision start/end events prior to updating the first time after activation
-    public setUpdateActive(active: boolean): void {
-        this._myUpdateActive = active;
-    }
-
-    // Update is not mandatory, use it only if u want to access collisions start and end
+    /** `update` is not mandatory, use it only if u want to access collisions start and end or if the phsyX is a trigger */
     public update(dt: number): void {
         if (!this._myActive) {
             return;
@@ -105,29 +96,44 @@ export class PhysicsCollisionCollector {
 
         this._myUpdateActive = true;
 
-        const prevCollisionsStartToProcess = this._myCollisionsStartedToProcess;
-        this._myCollisionsStartedToProcess = this._myCollisionsStarted;
-        this._myCollisionsStartedToProcess.pp_clear();
-        this._myCollisionsStarted = prevCollisionsStartToProcess;
+        if (this._myCollisionStartEndProcessingActive) {
+            const prevCollisionsStartToProcess = this._myCollisionsStartedToProcess;
+            this._myCollisionsStartedToProcess = this._myCollisionsStarted;
+            this._myCollisionsStartedToProcess.pp_clear();
+            this._myCollisionsStarted = prevCollisionsStartToProcess;
 
-        const prevCollisionObjectsStartToProcess = this._myCollisionObjectsStartedToProcess;
-        this._myCollisionObjectsStartedToProcess = this._myCollisionObjectsStarted;
-        this._myCollisionObjectsStartedToProcess.pp_clear();
-        this._myCollisionObjectsStarted = prevCollisionObjectsStartToProcess;
+            const prevCollisionObjectsStartToProcess = this._myCollisionObjectsStartedToProcess;
+            this._myCollisionObjectsStartedToProcess = this._myCollisionObjectsStarted;
+            this._myCollisionObjectsStartedToProcess.pp_clear();
+            this._myCollisionObjectsStarted = prevCollisionObjectsStartToProcess;
 
-        const prevCollisionsEndToProcess = this._myCollisionsEndedToProcess;
-        this._myCollisionsEndedToProcess = this._myCollisionsEnded;
-        this._myCollisionsEndedToProcess.pp_clear();
-        this._myCollisionsEnded = prevCollisionsEndToProcess;
+            const prevCollisionsEndToProcess = this._myCollisionsEndedToProcess;
+            this._myCollisionsEndedToProcess = this._myCollisionsEnded;
+            this._myCollisionsEndedToProcess.pp_clear();
+            this._myCollisionsEnded = prevCollisionsEndToProcess;
 
-        const prevCollisionObjectsEndToProcess = this._myCollisionObjectsEndedToProcess;
-        this._myCollisionObjectsEndedToProcess = this._myCollisionObjectsEnded;
-        this._myCollisionObjectsEndedToProcess.pp_clear();
-        this._myCollisionObjectsEnded = prevCollisionObjectsEndToProcess;
+            const prevCollisionObjectsEndToProcess = this._myCollisionObjectsEndedToProcess;
+            this._myCollisionObjectsEndedToProcess = this._myCollisionObjectsEnded;
+            this._myCollisionObjectsEndedToProcess.pp_clear();
+            this._myCollisionObjectsEnded = prevCollisionObjectsEndToProcess;
+        }
 
-        if (this._myIsTrigger) {
+        if (this._myPhysXComponent.trigger) {
             this._triggerDesyncFix(dt);
         }
+    }
+
+    /** Set to `true` only if u are going to actually update this object and don't want to  
+        lose any collision start or end events prior to updating the first time after activation,  
+        since on update this flag is automatically set to `true` */
+    public setUpdateActive(active: boolean): void {
+        this._myUpdateActive = active;
+    }
+
+    /** If this is set to `false` you won't be able to get the collision that just started or ended, but just the current colliding ones  
+        Keep in mind that you also need to update the collector for this to work */
+    public setCollisionStartEndProcessingActive(active: boolean): void {
+        this._myCollisionStartEndProcessingActive = active;
     }
 
     public isLogEnabled(): boolean {
@@ -163,97 +169,119 @@ export class PhysicsCollisionCollector {
     }
 
     private _onCollision(type: CollisionEventType, physXComponent: PhysXComponent): void {
-        if (type == CollisionEventType.Touch || type == CollisionEventType.TriggerTouch) {
-            this._onCollisionStart(type, physXComponent);
-        } else if (type == CollisionEventType.TouchLost || type == CollisionEventType.TriggerTouchLost) {
-            this._onCollisionEnd(type, physXComponent);
-        }
+        let collisionValid = this._areLayerFlagsMatching(physXComponent);
 
-        this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponent, type);
+        if (collisionValid) {
+            if (type == CollisionEventType.Touch || type == CollisionEventType.TriggerTouch) {
+                collisionValid = this._onCollisionStart(type, physXComponent);
+            } else if (type == CollisionEventType.TouchLost || type == CollisionEventType.TriggerTouchLost) {
+                collisionValid = this._onCollisionEnd(type, physXComponent);
+            }
+
+            if (collisionValid) {
+                this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponent, type);
+            }
+        }
     }
 
-    private _onCollisionStart(type: CollisionEventType, physXComponent: PhysXComponent): void {
-        if (this._myLogEnabled) {
-            let componentFound = false;
-            for (const physXComponentToCheck of this._myCollisions) {
-                if (physXComponentToCheck.equals(physXComponent)) {
-                    componentFound = true;
-                    break;
+    private _onCollisionStart(type: CollisionEventType, physXComponent: PhysXComponent): boolean {
+        let componentFound = false;
+        for (const physXComponentToCheck of this._myCollisions) {
+            if (physXComponentToCheck.equals(physXComponent)) {
+                componentFound = true;
+                break;
+            }
+        }
+
+        if (this._myLogEnabled && componentFound) {
+            console.error("Collision Start on PhysX component already collected");
+        }
+
+        if (!componentFound) {
+            this._myCollisions.push(physXComponent);
+            this._myCollisionObjects.push(physXComponent.object);
+
+            if (this._myUpdateActive && this._myCollisionStartEndProcessingActive) {
+                this._myCollisionsStartedToProcess.push(physXComponent);
+                this._myCollisionObjectsStartedToProcess.push(physXComponent.object);
+
+                const indexesToRemove = this._myCollisionsEndedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
+                    return physXComponentToCheck.equals(physXComponent);
+                });
+
+                for (let i = indexesToRemove.length - 1; i >= 0; i--) {
+                    this._myCollisionsEndedToProcess.pp_removeIndex(indexesToRemove[i]);
+                    this._myCollisionObjectsEndedToProcess.pp_removeIndex(indexesToRemove[i]);
                 }
             }
 
-            if (componentFound) {
-                console.error("Collision Start on PhysX component already collected");
+            if (this._myLogEnabled) {
+                console.log("Collision Start - Object ID: " + physXComponent.object.pp_getID());
+            }
+
+            this._myCollisionStartEmitter.notify(this._myPhysXComponent, physXComponent, type);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private _onCollisionEnd(type: CollisionEventType, physXComponent: PhysXComponent): boolean {
+        let componentFound = false;
+        for (const physXComponentToCheck of this._myCollisions) {
+            if (physXComponentToCheck.equals(physXComponent)) {
+                componentFound = true;
+                break;
             }
         }
 
-        this._myCollisions.push(physXComponent);
-        this._myCollisionObjects.push(physXComponent.object);
+        if (this._myLogEnabled && !componentFound) {
+            console.error("Collision End on physX component not collected - Object ID: " + physXComponent.object.pp_getID());
+        }
 
-        if (this._myUpdateActive) {
-            this._myCollisionsStartedToProcess.push(physXComponent);
-            this._myCollisionObjectsStartedToProcess.push(physXComponent.object);
-
-            const indexesToRemove = this._myCollisionsEndedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
+        if (componentFound) {
+            const indexesToRemove = this._myCollisions.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
                 return physXComponentToCheck.equals(physXComponent);
             });
 
             for (let i = indexesToRemove.length - 1; i >= 0; i--) {
-                this._myCollisionsEndedToProcess.pp_removeIndex(indexesToRemove[i]);
-                this._myCollisionObjectsEndedToProcess.pp_removeIndex(indexesToRemove[i]);
+                this._myCollisions.pp_removeIndex(indexesToRemove[i]);
+                this._myCollisionObjects.pp_removeIndex(indexesToRemove[i]);
             }
-        }
 
-        if (this._myLogEnabled) {
-            console.log("Collision Start - Object ID: " + physXComponent.object.pp_getID());
-        }
+            if (this._myUpdateActive && this._myCollisionStartEndProcessingActive) {
+                this._myCollisionsEndedToProcess.push(physXComponent);
+                this._myCollisionObjectsEndedToProcess.push(physXComponent.object);
 
-        this._myCollisionStartEmitter.notify(this._myPhysXComponent, physXComponent, type);
-    }
+                const indexesToRemove = this._myCollisionsStartedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
+                    return physXComponentToCheck.equals(physXComponent);
+                });
 
-    private _onCollisionEnd(type: CollisionEventType, physXComponent: PhysXComponent): void {
-        if (this._myLogEnabled) {
-            let componentFound = false;
-            for (const physXComponentToCheck of this._myCollisions) {
-                if (physXComponentToCheck.equals(physXComponent)) {
-                    componentFound = true;
-                    break;
+                for (let i = indexesToRemove.length - 1; i >= 0; i--) {
+                    this._myCollisionsStartedToProcess.pp_removeIndex(indexesToRemove[i]);
+                    this._myCollisionObjectsStartedToProcess.pp_removeIndex(indexesToRemove[i]);
                 }
             }
 
-            if (!componentFound) {
-                console.error("Collision End on physX component not collected - Object ID: " + physXComponent.object.pp_getID());
+            if (this._myLogEnabled) {
+                console.log("Collision End - Object ID: " + physXComponent.object.pp_getID());
             }
+
+            this._myCollisionEndEmitter.notify(this._myPhysXComponent, physXComponent, type);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private _areLayerFlagsMatching(physXComponent: PhysXComponent): boolean {
+        if (!this._myPhysXComponent.trigger) {
+            return true;
         }
 
-        const indexesToRemove = this._myCollisions.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
-            return physXComponentToCheck.equals(physXComponent);
-        });
-
-        for (let i = indexesToRemove.length - 1; i >= 0; i--) {
-            this._myCollisions.pp_removeIndex(indexesToRemove[i]);
-            this._myCollisionObjects.pp_removeIndex(indexesToRemove[i]);
-        }
-
-        if (this._myUpdateActive) {
-            this._myCollisionsEndedToProcess.push(physXComponent);
-            this._myCollisionObjectsEndedToProcess.push(physXComponent.object);
-
-            const indexesToRemove = this._myCollisionsStartedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
-                return physXComponentToCheck.equals(physXComponent);
-            });
-
-            for (let i = indexesToRemove.length - 1; i >= 0; i--) {
-                this._myCollisionsStartedToProcess.pp_removeIndex(indexesToRemove[i]);
-                this._myCollisionObjectsStartedToProcess.pp_removeIndex(indexesToRemove[i]);
-            }
-        }
-
-        if (this._myLogEnabled) {
-            console.log("Collision End - Object ID: " + physXComponent.object.pp_getID());
-        }
-
-        this._myCollisionEndEmitter.notify(this._myPhysXComponent, physXComponent, type);
+        return (this._myPhysXComponent.groupsMask & physXComponent.groupsMask) > 0;
     }
 
     private static readonly _triggerDesyncFixSV =
@@ -268,21 +296,34 @@ export class PhysicsCollisionCollector {
         if (this._myTriggerDesyncFixDelay.isDone()) {
             this._myTriggerDesyncFixDelay.start();
 
-            const findAllCallback = PhysicsCollisionCollector._triggerDesyncFixSV.findAllCallback;
-            const collisionsToEndIndexes = this._myCollisionObjects.pp_findAllIndexes(findAllCallback);
+            if (this._myCollisionObjects.length > 0) {
+                const findAllCallback = PhysicsCollisionCollector._triggerDesyncFixSV.findAllCallback;
+                let collisionsToEndIndexes = null;
 
-            if (collisionsToEndIndexes.length > 0) {
-                const physXComponentsToEnd: PhysXComponent[] = [];
-                for (let i = 0; i < collisionsToEndIndexes.length; i++) {
-                    physXComponentsToEnd.push(this._myCollisions[collisionsToEndIndexes[i]]);
+                if (!this._myPhysXComponent.active) {
+                    collisionsToEndIndexes = [];
+                    for (let i = 0; i < this._myCollisionObjects.length; i++) {
+                        collisionsToEndIndexes.push(i);
+                    }
+                } else {
+                    collisionsToEndIndexes = this._myCollisionObjects.pp_findAllIndexes(findAllCallback);
                 }
 
-                for (const physXComponentToEnd of physXComponentsToEnd) {
-                    if (this._myLogEnabled) {
-                        console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd.object.pp_getID());
+                if (collisionsToEndIndexes.length > 0) {
+                    const physXComponentsToEnd: PhysXComponent[] = [];
+                    for (let i = 0; i < collisionsToEndIndexes.length; i++) {
+                        physXComponentsToEnd.push(this._myCollisions[collisionsToEndIndexes[i]]);
                     }
 
-                    this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd);
+                    for (const physXComponentToEnd of physXComponentsToEnd) {
+                        if (this._myLogEnabled) {
+                            console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd.object.pp_getID());
+                        }
+
+                        if (this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd)) {
+                            this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponentToEnd, CollisionEventType.TriggerTouchLost);
+                        }
+                    }
                 }
             }
         }
