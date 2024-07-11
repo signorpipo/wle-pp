@@ -85,6 +85,7 @@ export class PlayerLocomotionParams {
     public myTeleportType: number = PlayerLocomotionTeleportTeleportType.INSTANT;
     public myTeleportMaxDistance: number = 0;
     public myTeleportMaxHeightDifference: number = 0;
+    public myTeleportFloorLayerFlags: Readonly<PhysicsLayerFlags> = new PhysicsLayerFlags();
     public myTeleportRotationOnUpEnabled: boolean = false;
     public myTeleportValidMaterial: Readonly<Material> | null = null;
     public myTeleportInvalidMaterial: Readonly<Material> | null = null;
@@ -122,7 +123,7 @@ export class PlayerLocomotionParams {
 
     /** Works 100% properly only if it has the same value as `_mySyncWithRealWorldPositionOnlyIfValid` (both true or false)  */
     public myViewOcclusionInsideWallsEnabled: boolean = true;
-
+    public myViewOcclusionLayerFlags: Readonly<PhysicsLayerFlags> = new PhysicsLayerFlags();
 
     public mySyncNonVRHeightWithVROnExitSession: boolean = false;
     public mySyncNonVRVerticalAngleWithVROnExitSession: boolean = false;
@@ -252,8 +253,7 @@ export class PlayerLocomotion {
             params.myTeleportCollisionCheckParamsCopyFromMovement = true;
             params.myTeleportCollisionCheckParamsCheck360 = true;
 
-            params.myHeadCollisionBlockLayerFlags.copy(params.myMovementCollisionCheckParams.myHorizontalBlockLayerFlags);
-            params.myHeadCollisionBlockLayerFlags.add(params.myMovementCollisionCheckParams.myVerticalBlockLayerFlags);
+            params.myHeadCollisionBlockLayerFlags.copy(this._myParams.myViewOcclusionLayerFlags);
             params.myHeadCollisionObjectsToIgnore.pp_copy(params.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore as any);
             const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first.pp_equals(second);
             for (const objectToIgnore of params.myMovementCollisionCheckParams.myVerticalObjectsToIgnore) {
@@ -409,7 +409,7 @@ export class PlayerLocomotion {
                 params.myDetectionParams.myMustBeOnGround = true;
 
                 params.myDetectionParams.myTeleportBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
-                params.myDetectionParams.myTeleportFloorLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
+                params.myDetectionParams.myTeleportFloorLayerFlags.copy(this._myParams.myTeleportFloorLayerFlags);
 
                 params.myDetectionParams.myTeleportFeetPositionMustBeVisible = false;
                 params.myDetectionParams.myTeleportHeadPositionMustBeVisible = false;
@@ -546,6 +546,8 @@ export class PlayerLocomotion {
     }
 
     public update(dt: number): void {
+        if (!this._myActive) return;
+
         this._myPreUpdateEmitter.notify(dt, this);
 
         let collisionCheckEnabledBackup = false;

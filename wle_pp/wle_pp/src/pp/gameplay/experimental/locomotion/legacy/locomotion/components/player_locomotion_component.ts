@@ -120,6 +120,10 @@ export class PlayerLocomotionComponent extends Component {
     @property.float(1.25)
     private readonly _myTeleportMaxHeightDifference!: number;
 
+    /** If empty use {@link _myPhysicsBlockLayerFlags} */
+    @property.string("")
+    private readonly _myTeleportFloorLayerFlags!: string;
+
     @property.bool(false)
     private readonly _myTeleportRotationOnUpEnabled!: boolean;
 
@@ -176,6 +180,10 @@ export class PlayerLocomotionComponent extends Component {
     /** Works 100% properly only if it has the same value as `_mySyncWithRealWorldPositionOnlyIfValid` (both true or false)  */
     @property.bool(true)
     private readonly _myViewOcclusionInsideWallsEnabled!: boolean;
+
+    /** If empty use {@link _myPhysicsBlockLayerFlags} */
+    @property.string("")
+    private readonly _myViewOcclusionLayerFlags!: string;
 
 
 
@@ -362,10 +370,10 @@ export class PlayerLocomotionComponent extends Component {
         params.myCollisionCheckDisabled = this._myCollisionCheckDisabled;
 
         params.myPhysicsBlockLayerFlags.copy(this._getPhysicsBlockLayersFlags());
+        params.myTeleportFloorLayerFlags.copy(this._getTeleportFloorLayersFlags());
+        params.myViewOcclusionLayerFlags.copy(this._getViewOcclusionLayersFlags());
 
         (this._myPlayerLocomotion as PlayerLocomotion) = new PlayerLocomotion(params);
-
-        Globals.getHeadPose(this.engine)!.registerPostPoseUpdatedEventEventListener(this, this.onPostPoseUpdatedEvent.bind(this));
     }
 
     public onPostPoseUpdatedEvent(dt: number, pose: Readonly<BasePose>, manualUpdate: boolean): void {
@@ -378,12 +386,12 @@ export class PlayerLocomotionComponent extends Component {
 
         let raycastVisualDebugEnabledBackup = false;
         if (this._myRaycastVisualDebugEnabled && Globals.isDebugEnabled(this.engine)) {
-            raycastVisualDebugEnabledBackup = PhysicsUtils.isRaycastVisualDebugEnabled(this.engine.physics);
-            PhysicsUtils.setRaycastVisualDebugEnabled(true, this.engine.physics);
+            raycastVisualDebugEnabledBackup = PhysicsUtils.isRaycastVisualDebugEnabled(this.engine.physics!);
+            PhysicsUtils.setRaycastVisualDebugEnabled(true, this.engine.physics!);
         }
 
         if (this._myRaycastCountLogEnabled && Globals.isDebugEnabled(this.engine)) {
-            PhysicsUtils.resetRaycastCount(this.engine.physics);
+            PhysicsUtils.resetRaycastCount(this.engine.physics!);
         }
 
         if (!this._myLocomotionStarted) {
@@ -412,12 +420,12 @@ export class PlayerLocomotionComponent extends Component {
         }
 
         if (this._myRaycastVisualDebugEnabled && Globals.isDebugEnabled(this.engine)) {
-            PhysicsUtils.setRaycastVisualDebugEnabled(raycastVisualDebugEnabledBackup, this.engine.physics);
+            PhysicsUtils.setRaycastVisualDebugEnabled(raycastVisualDebugEnabledBackup, this.engine.physics!);
         }
 
         if (this._myRaycastCountLogEnabled && Globals.isDebugEnabled(this.engine)) {
-            console.log("Raycast count: " + PhysicsUtils.getRaycastCount(this.engine.physics));
-            PhysicsUtils.resetRaycastCount(this.engine.physics);
+            console.log("Raycast count: " + PhysicsUtils.getRaycastCount(this.engine.physics!));
+            PhysicsUtils.resetRaycastCount(this.engine.physics!);
         }
     }
 
@@ -428,19 +436,43 @@ export class PlayerLocomotionComponent extends Component {
     public override onActivate(): void {
         if (this._myPlayerLocomotion != null) {
             this._myPlayerLocomotion.setActive(true);
+
+            Globals.getHeadPose(this.engine)!.registerPostPoseUpdatedEventEventListener(this, this.onPostPoseUpdatedEvent.bind(this));
         }
     }
 
     public override onDeactivate(): void {
         if (this._myPlayerLocomotion != null) {
             this._myPlayerLocomotion.setActive(false);
+
+            Globals.getHeadPose(this.engine)!.unregisterPostPoseUpdatedEventEventListener(this);
         }
     }
 
     private _getPhysicsBlockLayersFlags(): PhysicsLayerFlags {
+        return this._convertStringToLayerFlags(this._myPhysicsBlockLayerFlags);
+    }
+
+    private _getTeleportFloorLayersFlags(): PhysicsLayerFlags {
+        if (this._myTeleportFloorLayerFlags.length == 0) {
+            return this._getPhysicsBlockLayersFlags();
+        }
+
+        return this._convertStringToLayerFlags(this._myTeleportFloorLayerFlags);
+    }
+
+    private _getViewOcclusionLayersFlags(): PhysicsLayerFlags {
+        if (this._myViewOcclusionLayerFlags.length == 0) {
+            return this._getPhysicsBlockLayersFlags();
+        }
+
+        return this._convertStringToLayerFlags(this._myViewOcclusionLayerFlags);
+    }
+
+    private _convertStringToLayerFlags(string: string): PhysicsLayerFlags {
         const physicsFlags = new PhysicsLayerFlags();
 
-        const flags = [...this._myPhysicsBlockLayerFlags.split(",")];
+        const flags = [...string.split(",")];
         for (let i = 0; i < flags.length; i++) {
             physicsFlags.setFlagActive(i, flags[i].trim() == "1");
         }

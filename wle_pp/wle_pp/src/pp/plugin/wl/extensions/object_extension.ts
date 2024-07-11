@@ -761,19 +761,19 @@ function _initObjectExtensionProtoype(): void {
             return ObjectUtils.scaleObject(this, scale as Vector3);
         },
 
-        pp_lookAt(this: Object3D, position: Readonly<Vector3>, up: Readonly<Vector3>): Object3D {
+        pp_lookAt(this: Object3D, position: Readonly<Vector3>, up?: Readonly<Vector3>): Object3D {
             return ObjectUtils.lookAt(this, position, up);
         },
 
-        pp_lookAtWorld(this: Object3D, position: Readonly<Vector3>, up: Readonly<Vector3>): Object3D {
+        pp_lookAtWorld(this: Object3D, position: Readonly<Vector3>, up?: Readonly<Vector3>): Object3D {
             return ObjectUtils.lookAtWorld(this, position, up);
         },
 
-        pp_lookAtLocal(this: Object3D, position: Readonly<Vector3>, up: Readonly<Vector3>): Object3D {
+        pp_lookAtLocal(this: Object3D, position: Readonly<Vector3>, up?: Readonly<Vector3>): Object3D {
             return ObjectUtils.lookAtLocal(this, position, up);
         },
 
-        pp_lookTo(this: Object3D, direction: Readonly<Vector3>, up: Readonly<Vector3>): Object3D {
+        pp_lookTo(this: Object3D, direction: Readonly<Vector3>, up?: Readonly<Vector3>): Object3D {
             return ObjectUtils.lookTo(this, direction, up);
         },
 
@@ -1055,6 +1055,42 @@ function _initObjectExtensionProtoype(): void {
 
         pp_toStringCompact(this: Readonly<Object3D>): string {
             return ObjectUtils.toStringCompact(this);
+        },
+
+        pp_log(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.log(this);
+        },
+
+        pp_logExtended(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.logExtended(this);
+        },
+
+        pp_logCompact(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.logCompact(this);
+        },
+
+        pp_warn(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.warn(this);
+        },
+
+        pp_warnExtended(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.warnExtended(this);
+        },
+
+        pp_warnCompact(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.warnCompact(this);
+        },
+
+        pp_error(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.error(this);
+        },
+
+        pp_errorExtended(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.errorExtended(this);
+        },
+
+        pp_errorCompact(this: Readonly<Object3D>): Object3D {
+            return ObjectUtils.errorCompact(this);
         },
 
         pp_getObjectByName(this: Readonly<Object3D>, name: string, isRegex?: boolean, index?: number): Object3D | null {

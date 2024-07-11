@@ -1,6 +1,11 @@
 import { Vector4 } from "../type_definitions/array_type_definitions.js";
 import { Vec4Utils } from "./array/vec4_utils.js";
 
+export enum ColorModel {
+    RGB,
+    HSV
+}
+
 /** `rgb` is in the `[0, 1]` space, alpha is not changed  */
 export function rgbToHSV<T extends Vector4>(rgb: Readonly<T>): T;
 export function rgbToHSV<T extends Vector4>(rgb: Readonly<Vector4>, out: T): T;

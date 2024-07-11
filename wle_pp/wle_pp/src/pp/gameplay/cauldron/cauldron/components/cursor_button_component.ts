@@ -1,6 +1,8 @@
 import { Component, MeshComponent, Object3D, TextComponent } from "@wonderlandengine/api";
 import { property } from "@wonderlandengine/api/decorators.js";
 import { Cursor, CursorTarget } from "@wonderlandengine/components";
+import { Timer } from "wle-pp/cauldron/cauldron/timer.js";
+import { FSM, TransitionData } from "wle-pp/cauldron/fsm/fsm.js";
 import { AudioPlayer } from "../../../../audio/audio_player.js";
 import { AudioSetup } from "../../../../audio/audio_setup.js";
 import { Vector3, Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
@@ -14,10 +16,39 @@ import { AnimatedNumber, AnimatedNumberParams } from "../animated_number.js";
 
 /** You can return `true` to prevent the default behavior of the cursor button to be performed after the action has been handled */
 export interface CursorButtonActionsHandler {
-    onHover?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor): boolean;
-    onDown?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor): boolean;
-    onUp?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor): boolean;
-    onUnhover?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor): boolean;
+
+    /**
+     * @param isSecondaryCursor `true` if the event is triggered but this is not the main cursor, which means the button is not actually changing the state  
+     *                          so you might want to perform limited logic, like only making the gamepad pulse and  
+     *                          play a sound to give the cursor feel but without changing the button state
+     * 
+     * @param isHoverFromDown `true` in the special case the button is pressed, another cursor enter the button, and the first cursor unhover
+     *                        without releasing down.  
+     *                        In this special case the button should go back to hover, but you might just want to perform limited logic based on the fact  
+     *                        that is not hovering from unhover but it's a special case
+     */
+    onHover?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor, isSecondaryCursor: boolean, isHoverFromDown: boolean): boolean;
+
+    /**
+     * @param isSecondaryCursor `true` if the event is triggered but this is not the main cursor, which means the button is not actually changing the state  
+     *                          so you might want to perform limited logic, like only making the gamepad pulse and  
+     *                          play a sound to give the cursor feel but without changing the button state
+     */
+    onDown?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor, isSecondaryCursor: boolean): boolean;
+
+    /**
+     * @param isSecondaryCursor `true` if the event is triggered but this is not the main cursor, which means the button is not actually changing the state  
+     *                          so you might want to perform limited logic, like only making the gamepad pulse and  
+     *                          play a sound to give the cursor feel but without changing the button state
+     */
+    onUp?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor, isSecondaryCursor: boolean): boolean;
+
+    /**
+     * @param isSecondaryCursor `true` if the event is triggered but this is not the main cursor, which means the button is not actually changing the state  
+     *                          so you might want to perform limited logic, like only making the gamepad pulse and  
+     *                          play a sound to give the cursor feel but without changing the button state
+     */
+    onUnhover?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor, isSecondaryCursor: boolean): boolean;
 }
 
 export class CursorButtonComponent extends Component {
@@ -28,6 +59,8 @@ export class CursorButtonComponent extends Component {
     @property.string("")
     private readonly _myButtonActionsHandlerNames!: string;
 
+
+
     @property.float(0.075)
     private readonly _myScaleOffsetOnHover!: number;
 
@@ -36,6 +69,8 @@ export class CursorButtonComponent extends Component {
 
     @property.float(0.075)
     private readonly _myScaleOffsetOnUp!: number;
+
+
 
     @property.float(0.1)
     private readonly _myPulseIntensityOnHover!: number;
@@ -49,6 +84,8 @@ export class CursorButtonComponent extends Component {
     @property.float(0)
     private readonly _myPulseIntensityOnUnhover!: number;
 
+
+
     @property.float(-0.1)
     private readonly _myColorBrigthnessOffsetOnHover!: number;
 
@@ -57,6 +94,8 @@ export class CursorButtonComponent extends Component {
 
     @property.float(-0.1)
     private readonly _myColorBrigthnessOffsetOnUp!: number;
+
+
 
     @property.bool(true)
     private readonly _myUseSpatialAudio!: boolean;
@@ -73,11 +112,63 @@ export class CursorButtonComponent extends Component {
     @property.string("")
     private readonly _mySFXOnUnhover!: string;
 
+
+
+    /** Even if you barely interact with the button, it will keep staying in this state for the specified amount */
+    @property.float(0)
+    private readonly _myMinHoverSecond!: number;
+
+    /** Even if you barely interact with the button, it will keep staying in this state for the specified amount */
+    @property.float(0.15)
+    private readonly _myMinDownSecond!: number;
+
+    /** Even if you barely interact with the button, it will keep staying in this state for the specified amount */
+    @property.float(0)
+    private readonly _myMinUpSecond!: number;
+
+    /** Even if you barely interact with the button, it will keep staying in this state for the specified amount */
+    @property.float(0)
+    private readonly _myMinUnhoverSecond!: number;
+
+
+
+    @property.bool(true)
+    private readonly _myPerformDefaultSecondaryCursorFeedbackOnHover!: number;
+
+    @property.bool(true)
+    private readonly _myPerformDefaultSecondaryCursorFeedbackOnDown!: number;
+
+    @property.bool(true)
+    private readonly _myPerformDefaultSecondaryCursorFeedbackOnUp!: number;
+
+    @property.bool(true)
+    private readonly _myPerformDefaultSecondaryCursorFeedbackOnUnhover!: number;
+
+
+
+    @property.bool(false)
+    private readonly _myUpCursorIsMainOnlyIfLastDown!: boolean;
+
+    @property.bool(false)
+    private readonly _myUpWithSecondaryCursorIsMain!: boolean;
+
+
+
     private readonly _myCursorButtonComponentID: string = "cursor_button_component" + MathUtils.randomUUID();
 
     private readonly _myCursorTarget!: CursorTarget;
 
     private readonly _myButtonActionsHandlers: Map<unknown, CursorButtonActionsHandler> = new Map();
+
+    private readonly _myFSM: FSM = new FSM();
+    private readonly _myKeepCurrentStateTimer: Timer = new Timer(0);
+
+    private readonly _myTransitionQueue: [string, Cursor, boolean, boolean | null, () => void][] = [];
+    private _myApplyQueuedTransitions: boolean = false;
+
+    private _myHoverCursors: Cursor[] = [];
+    private _myMainDownCursor: Cursor | null = null;
+    private _myDownCursors: Cursor[] = [];
 
     private readonly _myOriginalScaleLocal: Vector3 = vec3_create();
     private readonly _myAnimatedScale!: AnimatedNumber;
@@ -125,10 +216,10 @@ export class CursorButtonComponent extends Component {
     public override start(): void {
         (this._myCursorTarget as CursorTarget) = this.object.pp_getComponent(CursorTarget)!;
 
+        this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this));
         this._myCursorTarget.onHover.add(this._onHover.bind(this));
         this._myCursorTarget.onDown.add(this._onDown.bind(this));
         this._myCursorTarget.onUpWithDown.add(this.onUpWithDown.bind(this));
-        this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this));
 
         const buttonActionsHandlerNames = [...this._myButtonActionsHandlerNames.split(",")];
         for (let i = 0; i < buttonActionsHandlerNames.length; i++) {
@@ -148,6 +239,27 @@ export class CursorButtonComponent extends Component {
         }
 
         this._setupVisualsAndSFXs();
+
+        this._myKeepCurrentStateTimer.end();
+
+        this._myFSM.setLogEnabled(false, "Cursor Button");
+
+        this._myFSM.addState("unhover", { start: this._onUnhoverStart.bind(this) });
+        this._myFSM.addState("hover", { start: this._onHoverStart.bind(this) });
+        this._myFSM.addState("down", { start: this._onDownStart.bind(this) });
+        this._myFSM.addState("up_with_down", { start: this._onUpWithDownStart.bind(this) });
+
+        this._myFSM.addTransition("unhover", "hover", "hover");
+        this._myFSM.addTransition("hover", "down", "down");
+        this._myFSM.addTransition("down", "up_with_down", "up_with_down");
+        this._myFSM.addTransition("down", "hover", "hover");
+        this._myFSM.addTransition("up_with_down", "unhover", "unhover");
+        this._myFSM.addTransition("up_with_down", "down", "down");
+
+        this._myFSM.addTransition("hover", "unhover", "unhover");
+        this._myFSM.addTransition("down", "unhover", "unhover");
+
+        this._myFSM.init("unhover");
     }
 
     private static readonly _updateSV =
@@ -157,6 +269,37 @@ export class CursorButtonComponent extends Component {
             rgbColor: vec4_create()
         };
     public override update(dt: number): void {
+        this._myFSM.update(dt);
+
+        if (this._myKeepCurrentStateTimer.isRunning()) {
+            this._myKeepCurrentStateTimer.update(dt);
+            if (this._myKeepCurrentStateTimer.isDone()) {
+                this._myApplyQueuedTransitions = true;
+            }
+        }
+
+        if (this._myApplyQueuedTransitions) {
+            this._myApplyQueuedTransitions = false;
+
+            while (this._myTransitionQueue.length > 0) {
+                const transitionToApply = this._myTransitionQueue.shift()!;
+
+                if (this._myFSM.canPerform(transitionToApply[0])) {
+                    if (transitionToApply[3] != null) {
+                        this._myFSM.perform(transitionToApply[0], transitionToApply[1], transitionToApply[2], transitionToApply[3]);
+                    } else {
+                        this._myFSM.perform(transitionToApply[0], transitionToApply[1], transitionToApply[2]);
+                    }
+                } else {
+                    transitionToApply[4]();
+                }
+
+                if (this._myKeepCurrentStateTimer.isRunning()) {
+                    break;
+                }
+            }
+        }
+
         if (!this._myAnimatedScale.isDone()) {
             this._myAnimatedScale.update(dt);
 
@@ -186,110 +329,99 @@ export class CursorButtonComponent extends Component {
         }
     }
 
+    private _onUnhover(targetObject: Object3D, cursorComponent: Cursor): void {
+        this._myHoverCursors.pp_removeEqual(cursorComponent);
+        const cursorWasDown = this._myDownCursors.pp_removeEqual(cursorComponent);
+
+        const isMainCursorDown = (this._myDownCursors.length == 0 && cursorWasDown) || (this._myMainDownCursor == cursorComponent && !this._myUpCursorIsMainOnlyIfLastDown && !this._myUpWithSecondaryCursorIsMain);
+
+        if (isMainCursorDown) {
+            this._myMainDownCursor = null;
+
+            if (this._myHoverCursors.length > 0) {
+                this._addToTransitionQueue("hover", cursorComponent, false, true, this._onHoverStart.bind(this, null, null, cursorComponent, true, true));
+            } else {
+                this._addToTransitionQueue("unhover", cursorComponent, false, null, this._onUnhoverStart.bind(this, null, null, cursorComponent, true));
+            }
+        } else {
+            if (this._myMainDownCursor == cursorComponent) {
+                this._myMainDownCursor = this._myDownCursors[0];
+            }
+
+            const isSecondaryCursor = this._myHoverCursors.length > 0;
+
+            this._addToTransitionQueue("unhover", cursorComponent, isSecondaryCursor, null, this._onUnhoverStart.bind(this, null, null, cursorComponent, true));
+        }
+    }
+
     private _onHover(targetObject: Object3D, cursorComponent: Cursor): void {
-        let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
-            if (buttonActionsHandler.onHover != null) {
-                skipDefault ||= buttonActionsHandler.onHover(this, cursorComponent);
-            }
-        }
+        const isSecondaryCursor = this._myHoverCursors.length > 0;
 
-        if (skipDefault) {
-            return;
-        }
+        this._myHoverCursors.pp_pushUnique(cursorComponent);
 
-        if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-            this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnHover);
-        }
-
-        if (this._myPulseIntensityOnHover != 0) {
-            const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
-            if (handedness != null) {
-                Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnHover, 0.085);
-            }
-        }
-
-        if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-            this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnHover);
-        }
-
-        if (this._myOnHoverAudioPlayer != null) {
-            this._myOnHoverAudioPlayer.setPosition(this.object.pp_getPosition());
-            this._myOnHoverAudioPlayer.play();
-        }
+        this._addToTransitionQueue("hover", cursorComponent, isSecondaryCursor, false, this._onHoverStart.bind(this, null, null, cursorComponent, true, false));
     }
 
     private _onDown(targetObject: Object3D, cursorComponent: Cursor): void {
-        let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
-            if (buttonActionsHandler.onDown != null) {
-                skipDefault ||= buttonActionsHandler.onDown(this, cursorComponent);
-            }
+        const isSecondaryCursor = this._myMainDownCursor != null && this._myMainDownCursor != cursorComponent;
+
+        if (this._myMainDownCursor == null) {
+            this._myMainDownCursor = cursorComponent;
         }
 
-        if (skipDefault) {
-            return;
-        }
+        this._myDownCursors.pp_pushUnique(cursorComponent);
 
-        if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-            this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnDown);
-        }
-
-        if (this._myPulseIntensityOnDown != 0) {
-            const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
-            if (handedness != null) {
-                Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnDown, 0.085);
-            }
-        }
-
-        if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-            this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnDown);
-        }
-
-        if (this._myOnDownAudioPlayer != null) {
-            this._myOnDownAudioPlayer.setPosition(this.object.pp_getPosition());
-            this._myOnDownAudioPlayer.play();
-        }
+        this._addToTransitionQueue("down", cursorComponent, isSecondaryCursor, null, this._onDownStart.bind(this, null, null, cursorComponent, true));
     }
 
     private onUpWithDown(targetObject: Object3D, cursorComponent: Cursor): void {
-        let skipDefault = false;
-        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
-            if (buttonActionsHandler.onUp != null) {
-                skipDefault ||= buttonActionsHandler.onUp(this, cursorComponent);
+        this._myDownCursors.pp_removeEqual(cursorComponent);
+
+        const isSecondaryCursor = !this._myUpWithSecondaryCursorIsMain && (
+            (!this._myUpCursorIsMainOnlyIfLastDown && this._myMainDownCursor != cursorComponent) ||
+            (this._myUpCursorIsMainOnlyIfLastDown && this._myDownCursors.length > 0));
+
+        if (!isSecondaryCursor) {
+            this._myMainDownCursor = null;
+        } else if (this._myMainDownCursor == cursorComponent) {
+            this._myMainDownCursor = this._myDownCursors[0];
+        }
+
+        this._addToTransitionQueue("up_with_down", cursorComponent, isSecondaryCursor, null, this._onUpWithDownStart.bind(this, null, null, cursorComponent, true));
+    }
+
+    private _addToTransitionQueue(transitionToPerform: string, cursorComponent: Cursor, isSecondaryCursor: boolean, isHoverFromDown: boolean | null, startCallback: () => void): void {
+        if (!isSecondaryCursor) {
+            if (!this._myKeepCurrentStateTimer.isDone()) {
+                const index = this._myTransitionQueue.pp_findIndex((elementToCheck: [string, Cursor, boolean, boolean | null, () => void]) => {
+                    return elementToCheck[0] == transitionToPerform && elementToCheck[1] == cursorComponent && elementToCheck[2] == isSecondaryCursor && elementToCheck[3] == isHoverFromDown;
+                });
+
+                if (index == -1) {
+                    this._myTransitionQueue.push([transitionToPerform, cursorComponent, isSecondaryCursor, isHoverFromDown, startCallback]);
+                } else {
+                    this._myTransitionQueue.splice(index + 1);
+                }
+            } else if (this._myFSM.canPerform(transitionToPerform)) {
+                this._myFSM.perform(transitionToPerform, cursorComponent, isSecondaryCursor, isHoverFromDown);
+            } else {
+                startCallback();
             }
-        }
-
-        if (skipDefault) {
-            return;
-        }
-
-        if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-            this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnUp);
-        }
-
-        if (this._myPulseIntensityOnUp != 0) {
-            const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
-            if (handedness != null) {
-                Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnUp, 0.085);
-            }
-        }
-
-        if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-            this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnUp);
-        }
-
-        if (this._myOnUpAudioPlayer != null) {
-            this._myOnUpAudioPlayer.setPosition(this.object.pp_getPosition());
-            this._myOnUpAudioPlayer.play();
+        } else {
+            startCallback();
         }
     }
 
-    private _onUnhover(targetObject: Object3D, cursorComponent: Cursor): void {
+    private _onUnhoverStart(fsm: FSM | null, transitionData: Readonly<TransitionData> | null, cursorComponent: Cursor, isSecondaryCursor: boolean): void {
+        if (!isSecondaryCursor) {
+            this._myKeepCurrentStateTimer.start(this._myMinUnhoverSecond);
+            this._myKeepCurrentStateTimer.update(0); // Instantly end the timer if the duration is 0
+        }
+
         let skipDefault = false;
         for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
             if (buttonActionsHandler.onUnhover != null) {
-                skipDefault ||= buttonActionsHandler.onUnhover(this, cursorComponent);
+                skipDefault ||= buttonActionsHandler.onUnhover(this, cursorComponent, isSecondaryCursor);
             }
         }
 
@@ -297,24 +429,171 @@ export class CursorButtonComponent extends Component {
             return;
         }
 
-        if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-            this._myAnimatedScale.updateTargetValue(1);
-        }
-
-        if (this._myPulseIntensityOnUnhover != 0) {
-            const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
-            if (handedness != null) {
-                Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnUnhover, 0.085);
+        if (!isSecondaryCursor) {
+            if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+                this._myAnimatedScale.updateTargetValue(1);
             }
         }
 
-        if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-            this._myAnimatedColorBrightnessOffset.updateTargetValue(0);
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnUnhover) {
+            if (this._myPulseIntensityOnUnhover != 0) {
+                const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
+                if (handedness != null) {
+                    Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnUnhover, 0.085);
+                }
+            }
         }
 
-        if (this._myOnUnhoverAudioPlayer != null) {
-            this._myOnUnhoverAudioPlayer.setPosition(this.object.pp_getPosition());
-            this._myOnUnhoverAudioPlayer.play();
+        if (!isSecondaryCursor) {
+            if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+                this._myAnimatedColorBrightnessOffset.updateTargetValue(0);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnUnhover) {
+            if (this._myOnUnhoverAudioPlayer != null) {
+                this._myOnUnhoverAudioPlayer.setPosition(this.object.pp_getPosition());
+                this._myOnUnhoverAudioPlayer.play();
+            }
+        }
+    }
+
+
+    private _onHoverStart(fsm: FSM | null, transitionData: Readonly<TransitionData> | null, cursorComponent: Cursor, isSecondaryCursor: boolean, isHoverFromDown: boolean): void {
+        if (!isSecondaryCursor) {
+            this._myKeepCurrentStateTimer.start(this._myMinHoverSecond);
+            this._myKeepCurrentStateTimer.update(0); // Instantly end the timer if the duration is 0
+        }
+
+        let skipDefault = false;
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
+            if (buttonActionsHandler.onHover != null) {
+                skipDefault ||= buttonActionsHandler.onHover(this, cursorComponent, isSecondaryCursor, isHoverFromDown);
+            }
+        }
+
+        if (skipDefault) {
+            return;
+        }
+
+        if (!isSecondaryCursor) {
+            if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+                this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnHover);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnHover) {
+            if (this._myPulseIntensityOnHover != 0) {
+                const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
+                if (handedness != null) {
+                    Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnHover, 0.085);
+                }
+            }
+        }
+
+        if (!isSecondaryCursor) {
+            if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+                this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnHover);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnHover) {
+            if (this._myOnHoverAudioPlayer != null) {
+                this._myOnHoverAudioPlayer.setPosition(this.object.pp_getPosition());
+                this._myOnHoverAudioPlayer.play();
+            }
+        }
+    }
+
+    private _onDownStart(fsm: FSM | null, transitionData: Readonly<TransitionData> | null, cursorComponent: Cursor, isSecondaryCursor: boolean): void {
+        if (!isSecondaryCursor) {
+            this._myKeepCurrentStateTimer.start(this._myMinDownSecond);
+            this._myKeepCurrentStateTimer.update(0); // Instantly end the timer if the duration is 0
+        }
+
+        let skipDefault = false;
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
+            if (buttonActionsHandler.onDown != null) {
+                skipDefault ||= buttonActionsHandler.onDown(this, cursorComponent, isSecondaryCursor);
+            }
+        }
+
+        if (skipDefault) {
+            return;
+        }
+
+        if (!isSecondaryCursor) {
+            if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+                this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnDown);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnDown) {
+            if (this._myPulseIntensityOnDown != 0) {
+                const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
+                if (handedness != null) {
+                    Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnDown, 0.085);
+                }
+            }
+        }
+
+        if (!isSecondaryCursor) {
+            if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+                this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnDown);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnDown) {
+            if (this._myOnDownAudioPlayer != null) {
+                this._myOnDownAudioPlayer.setPosition(this.object.pp_getPosition());
+                this._myOnDownAudioPlayer.play();
+            }
+        }
+    }
+
+    private _onUpWithDownStart(fsm: FSM | null, transitionData: Readonly<TransitionData> | null, cursorComponent: Cursor, isSecondaryCursor: boolean): void {
+        if (!isSecondaryCursor) {
+            this._myKeepCurrentStateTimer.start(this._myMinUpSecond);
+            this._myKeepCurrentStateTimer.update(0); // Instantly end the timer if the duration is 0
+        }
+
+        let skipDefault = false;
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
+            if (buttonActionsHandler.onUp != null) {
+                skipDefault ||= buttonActionsHandler.onUp(this, cursorComponent, isSecondaryCursor);
+            }
+        }
+
+        if (skipDefault) {
+            return;
+        }
+
+        if (!isSecondaryCursor) {
+            if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
+                this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnUp);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnUp) {
+            if (this._myPulseIntensityOnUp != 0) {
+                const handedness = InputUtils.getHandednessByString(cursorComponent.handedness as string);
+                if (handedness != null) {
+                    Globals.getGamepads()![handedness].pulse(this._myPulseIntensityOnUp, 0.085);
+                }
+            }
+        }
+
+        if (!isSecondaryCursor) {
+            if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
+                this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnUp);
+            }
+        }
+
+        if (!isSecondaryCursor || this._myPerformDefaultSecondaryCursorFeedbackOnUp) {
+            if (this._myOnUpAudioPlayer != null) {
+                this._myOnUpAudioPlayer.setPosition(this.object.pp_getPosition());
+                this._myOnUpAudioPlayer.play();
+            }
         }
     }
 

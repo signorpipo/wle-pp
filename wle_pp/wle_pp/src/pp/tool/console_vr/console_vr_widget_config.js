@@ -146,7 +146,7 @@ export class ConsoleVRWidgetConfig {
 
         this.myPointerCursorTargetPosition = vec3_create(0, 0, 0);
         this.myPointerCursorTargetPosition[1] = (this.myMessagesPanelPosition[1] + this.myMessagesBackgroundScale[1]) - this.myPointerCollisionExtents[1];
-        this.myPointerCursorTargetPosition[2] = this.myButtonsPanelPosition[2] + this.myButtonTextPosition[2] - 0.0001; // A little behind the button target to avoid hiding it
+        this.myPointerCursorTargetPosition[2] = this.myButtonsPanelPosition[2] + this.myButtonTextPosition[2] - 0.0002; // A little behind the button target to avoid hiding it
     }
 
     _setupRuntimeConfig() {

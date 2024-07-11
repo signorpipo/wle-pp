@@ -24,7 +24,7 @@ function _initMathExtensionInstance(): void {
             return MathUtils.EPSILON_DEGREES;
         },
 
-        pp_clamp(value: number, start: number | null, end: number | null): number {
+        pp_clamp(value: number, start?: number, end?: number): number {
             return MathUtils.clamp(value, start, end);
         },
 

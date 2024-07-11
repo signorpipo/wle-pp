@@ -19,7 +19,7 @@ export interface MathExtension {
     PP_EPSILON_SQUARED: number;
     PP_EPSILON_DEGREES: number;
 
-    pp_clamp(value: number, start: number | null, end: number | null): number;
+    pp_clamp(value: number, start?: number, end?: number): number;
 
     pp_sign(value: number, zeroSign?: number): number;
 

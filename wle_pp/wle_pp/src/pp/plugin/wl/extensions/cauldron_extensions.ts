@@ -81,7 +81,7 @@ function _initRayHitExtensionPrototype(): void {
 
             for (let i = 0; i < this.hitCount; ++i) {
                 const objectPtr = alignedPtr + i;
-                out[i] = this.pp_getEngine().wrapObject(HEAPU16[objectPtr + i]);
+                out[i] = this.pp_getEngine().wrapObject(HEAPU16[objectPtr]);
             }
 
             return out;

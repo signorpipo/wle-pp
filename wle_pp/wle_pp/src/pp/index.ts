@@ -61,7 +61,7 @@ export * from "./cauldron/object_pool/components/object_pool_manager_component.j
 export * from "./cauldron/type_definitions/array_type_definitions.js";
 
 //    UTILS
-export { ColorUtils } from "./cauldron/utils/color_utils.js";
+export { ColorUtils, ColorModel } from "./cauldron/utils/color_utils.js";
 export { SaveUtils } from "./cauldron/utils/save_utils.js";
 export { XRUtils } from "./cauldron/utils/xr_utils.js";
 export { BrowserUtils } from "./cauldron/utils/browser_utils.js";
@@ -269,11 +269,9 @@ export * from "./tool/easy_tune/easy_object_tuners/easy_light_color.js";
 export * from "./tool/easy_tune/easy_object_tuners/easy_mesh_color.js";
 export * from "./tool/easy_tune/easy_object_tuners/easy_scale.js";
 export * from "./tool/easy_tune/easy_object_tuners/easy_transform.js";
-export * from "./tool/easy_tune/easy_object_tuners/easy_mesh_ambient_factor.js";
 export * from "./tool/easy_tune/easy_object_tuners/easy_text_color.js";
 export * from "./tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js";
 export * from "./tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js";
-export * from "./tool/easy_tune/easy_object_tuners/components/easy_mesh_ambient_factor_component.js";
 export * from "./tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js";
 export * from "./tool/easy_tune/easy_object_tuners/components/easy_scale_component.js";
 export * from "./tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js";

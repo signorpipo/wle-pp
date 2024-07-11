@@ -158,7 +158,7 @@ export class EasyTuneBaseWidgetConfig {
         this.myPointerCollisionExtents = this.myBackBackgroundScale.pp_clone();
         this.myPointerCollisionExtents[2] = this.myCursorTargetCollisionThickness;
         this.myPointerCursorTargetPosition = this.myBackPanelPosition.pp_clone();
-        this.myPointerCursorTargetPosition[2] = this._myColliderZOffset - 0.0001; // A little behind the button target to avoid hiding it
+        this.myPointerCursorTargetPosition[2] = this._myColliderZOffset - 0.0002; // A little behind the button target to avoid hiding it
     }
 
     _setupRuntimeConfig() {

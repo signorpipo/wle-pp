@@ -31,7 +31,7 @@ export interface VectorExtension<VectorType extends Vector> {
     vec_ceil<T extends VectorType>(this: Readonly<T>): T;
     vec_ceil<T extends VectorType, U extends Vector>(this: Readonly<T>, out: U): U;
 
-    vec_clamp<T extends VectorType>(this: Readonly<T>, start: number, end: number): T;
+    vec_clamp<T extends VectorType>(this: Readonly<T>, start?: number, end?: number): T;
     vec_clamp<T extends VectorType, U extends Vector>(this: Readonly<T>, start: number, end: number, out: U): U;
 
 

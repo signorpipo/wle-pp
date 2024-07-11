@@ -97,10 +97,10 @@ export class FSM {
 
     public addState(stateID: unknown, state?: State): void;
     public addState(stateID: unknown,
-        stateUpdateCallback?: ((dt: number, fsm: FSM, stateData: Readonly<StateData>, ...args: unknown[]) => void),
-        stateStartCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: unknown[]) => void),
-        stateEndCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: unknown[]) => void),
-        stateInitCallback?: ((fsm: FSM, stateData: Readonly<StateData>, ...args: unknown[]) => void)): void;
+        stateUpdateCallback?: ((dt: number, fsm: FSM, stateData: Readonly<StateData>, ...args: any[]) => void),
+        stateStartCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: any[]) => void),
+        stateEndCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: any[]) => void),
+        stateInitCallback?: ((fsm: FSM, stateData: Readonly<StateData>, ...args: any[]) => void)): void;
     public addState(stateID: unknown,
         state?: State | ((dt: number, fsm: FSM, stateData: Readonly<StateData>, ...args: unknown[]) => void),
         stateStartCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: unknown[]) => void),
@@ -142,7 +142,7 @@ export class FSM {
     }
 
     public addTransition(fromStateID: unknown, toStateID: unknown, transitionID: unknown, transition?: Transition, skipStateFunction?: SkipStateFunction): void;
-    public addTransition(fromStateID: unknown, toStateID: unknown, transitionID: unknown, transitionPerformCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: unknown[]) => void), skipStateFunction?: SkipStateFunction): void;
+    public addTransition(fromStateID: unknown, toStateID: unknown, transitionID: unknown, transitionPerformCallback?: ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: any[]) => void), skipStateFunction?: SkipStateFunction): void;
     public addTransition(fromStateID: unknown, toStateID: unknown, transitionID: unknown, transition?: Transition | ((fsm: FSM, transitionData: Readonly<TransitionData>, ...args: unknown[]) => void), skipStateFunction: SkipStateFunction = SkipStateFunction.NONE): void {
         let adjustedTransition: Transition | null = null;
         if (transition == null || typeof transition == "function") {

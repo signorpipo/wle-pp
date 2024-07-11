@@ -55,12 +55,9 @@ export const EPSILON: number = 0.000001;
 export const EPSILON_SQUARED: number = EPSILON * EPSILON;
 export const EPSILON_DEGREES: number = 0.00001;
 
-export function clamp(value: number, start: number | null, end: number | null): number {
-    const fixedStart = (start != null) ? start : -Number.MAX_VALUE;
-    const fixedEnd = (end != null) ? end : Number.MAX_VALUE;
-
-    const min = Math.min(fixedStart, fixedEnd);
-    const max = Math.max(fixedStart, fixedEnd);
+export function clamp(value: number, start: number = -Number.MAX_VALUE, end: number = Number.MAX_VALUE): number {
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
     return Math.min(Math.max(value, min), max);
 }
 

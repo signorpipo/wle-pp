@@ -15,7 +15,7 @@ export class EasyTuneImportVariablesComponent extends Component {
     update(dt) {
         if (this._myFirstUpdate) {
             this._myFirstUpdate = false;
-            EasyTuneUtils.importVariables(this._myVariablesImportURL, this._myResetVariablesDefaultValueOnImport, false, undefined, undefined, this.engine);
+            EasyTuneUtils.importVariables(this._myVariablesImportURL, this._myResetVariablesDefaultValueOnImport, false, false, undefined, undefined, this.engine);
         }
     }
 }

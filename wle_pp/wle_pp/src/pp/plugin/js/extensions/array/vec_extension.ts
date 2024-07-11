@@ -55,8 +55,8 @@ function _initVecExtensionProtoype(): void {
             return VecUtils.ceil(this, out!);
         },
 
-        vec_clamp<T extends Vector, U extends Vector>(this: Readonly<T>, start: number, end: number, out?: U): U {
-            return VecUtils.clamp(this, start, end, out!);
+        vec_clamp<T extends Vector, U extends Vector>(this: Readonly<T>, start?: number, end?: number, out?: U): U {
+            return VecUtils.clamp(this, start!, end!, out!);
         },
 
         vec_lerp<T extends Vector, U extends Vector>(this: Readonly<T>, to: Readonly<Vector>, interpolationFactor: number, out?: T | U): T | U {

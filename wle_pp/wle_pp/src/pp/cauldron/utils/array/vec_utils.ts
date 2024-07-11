@@ -126,13 +126,11 @@ export function ceil<T extends Vector, U extends Vector>(vector: Readonly<T>, ou
     return out;
 }
 
-export function clamp<T extends Vector>(vector: Readonly<T>, start: number, end: number): T;
+export function clamp<T extends Vector>(vector: Readonly<T>, start?: number, end?: number): T;
 export function clamp<T extends Vector>(vector: Readonly<Vector>, start: number, end: number, out: T): T;
-export function clamp<T extends Vector, U extends Vector>(vector: Readonly<T>, start: number, end: number, out: T | U = VecUtils.clone(vector)): T | U {
-    const fixedStart = (start != null) ? start : -Number.MAX_VALUE;
-    const fixedEnd = (end != null) ? end : Number.MAX_VALUE;
-    const min = Math.min(fixedStart, fixedEnd);
-    const max = Math.max(fixedStart, fixedEnd);
+export function clamp<T extends Vector, U extends Vector>(vector: Readonly<T>, start: number = -Number.MAX_VALUE, end: number = Number.MAX_VALUE, out: T | U = VecUtils.clone(vector)): T | U {
+    const min = Math.min(start, end);
+    const max = Math.max(start, end);
 
     for (let i = 0; i < vector.length; i++) {
         out[i] = MathUtils.clamp(vector[i], min, max);

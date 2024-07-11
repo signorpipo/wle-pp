@@ -449,11 +449,11 @@ export interface Object3DExtension {
 
 
 
-    pp_lookAt(this: Object3D, position: Readonly<Vector3>, up: Readonly<Vector3>): this;
-    pp_lookAtWorld(this: Object3D, position: Readonly<Vector3>, up: Readonly<Vector3>): this;
-    pp_lookAtLocal(this: Object3D, position: Readonly<Vector3>, up: Readonly<Vector3>): this;
+    pp_lookAt(this: Object3D, position: Readonly<Vector3>, up?: Readonly<Vector3>): this;
+    pp_lookAtWorld(this: Object3D, position: Readonly<Vector3>, up?: Readonly<Vector3>): this;
+    pp_lookAtLocal(this: Object3D, position: Readonly<Vector3>, up?: Readonly<Vector3>): this;
 
-    pp_lookTo(this: Object3D, direction: Readonly<Vector3>, up: Readonly<Vector3>): this;
+    pp_lookTo(this: Object3D, direction: Readonly<Vector3>, up?: Readonly<Vector3>): this;
     pp_lookToWorld(this: Object3D, direction: Readonly<Vector3>, up?: Readonly<Vector3>): this;
     pp_lookToLocal(this: Object3D, direction: Readonly<Vector3>, up?: Readonly<Vector3>): this;
 
@@ -613,6 +613,18 @@ export interface Object3DExtension {
     pp_toString(this: Readonly<Object3D>): string;
     pp_toStringExtended(this: Readonly<Object3D>): string;
     pp_toStringCompact(this: Readonly<Object3D>): string;
+
+    pp_log(this: Readonly<Object3D>): Object3D;
+    pp_logExtended(this: Readonly<Object3D>): Object3D;
+    pp_logCompact(this: Readonly<Object3D>): Object3D;
+
+    pp_warn(this: Readonly<Object3D>): Object3D;
+    pp_warnExtended(this: Readonly<Object3D>): Object3D;
+    pp_warnCompact(this: Readonly<Object3D>): Object3D;
+
+    pp_error(this: Readonly<Object3D>): Object3D;
+    pp_errorExtended(this: Readonly<Object3D>): Object3D;
+    pp_errorCompact(this: Readonly<Object3D>): Object3D;
 
 
 

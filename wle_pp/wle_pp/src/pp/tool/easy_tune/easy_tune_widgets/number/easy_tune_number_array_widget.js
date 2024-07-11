@@ -101,7 +101,7 @@ export class EasyTuneNumberArrayWidget extends EasyTuneBaseWidget {
 
                 this._myTempValue.pp_copy(this._getVariableValue());
 
-                if (this._myVariable._myEditAllValuesTogether) {
+                if (!this._myNonArray && this._myVariable._myEditAllValuesTogether) {
                     let newValue = Math.round(this._myValueRealValue * decimalPlacesMultiplier + Number.EPSILON) / decimalPlacesMultiplier;
                     let difference = newValue - this._myTempValue[this._myValueEditIndex];
 
