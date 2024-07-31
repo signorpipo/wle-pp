@@ -3,7 +3,7 @@ import { VirtualGamepadIcon } from "./virtual_gamepad_icon.js";
 
 export class VirtualGamepadVirtualButton {
 
-    constructor(buttonElementParent, virtualGamepadParams, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
+    constructor(buttonElementParent, virtualGamepadParams, virtualButtonHandedness, virtualGamepadButtonID) {
         this._myButtonElement = null;
         this._myButtonIcon = null;
         this._myButtonDetectionElement = null;
@@ -16,9 +16,9 @@ export class VirtualGamepadVirtualButton {
         this._myPressed = false;
 
         this._myVirtualGamepadParams = virtualGamepadParams;
-        this._myParams = this._myVirtualGamepadParams.myButtonParams[gamepadButtonHandedness][gamepadButtonID];
+        this._myParams = this._myVirtualGamepadParams.myButtonParams[virtualButtonHandedness][virtualGamepadButtonID];
 
-        this._build(buttonElementParent, virtualButtonHandedness, virtualButtonIndex);
+        this._build(buttonElementParent, virtualButtonHandedness, virtualGamepadButtonID);
 
         this._myPointerDownEventListener = this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents);
         this._myPointerUpEventListener = this._onPointerUp.bind(this);
@@ -131,7 +131,7 @@ export class VirtualGamepadVirtualButton {
 
         let minSizeMultiplier = Math.max(1, this._myVirtualGamepadParams.myMinSizeMultiplier / this._myVirtualGamepadParams.myInterfaceScale);
 
-        let buttonsAmount = this._myVirtualGamepadParams.myButtonsOrder[Handedness.LEFT].length;
+        let buttonsAmount = this._myVirtualGamepadParams.myButtonsEnabled[Handedness.LEFT].length;
 
         let angleStep = (buttonRingEndAngle - buttonRingStartAngle) / (buttonsAmount - 1);
 

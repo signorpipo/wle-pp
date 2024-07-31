@@ -8,7 +8,7 @@ export class SetHeadLocalTransformComponent extends Component {
     public static override TypeName = "pp-set-head-local-transform";
 
     public override start(): void {
-        Globals.getHeadPose(this.engine)!.registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
+        Globals.getHeadPose(this.engine)!.registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
     }
 
     private static readonly _onPoseUpdatedSV =
@@ -18,7 +18,7 @@ export class SetHeadLocalTransformComponent extends Component {
             cameraNonXRPosition: vec3_create(),
             headPoseTransform: quat2_create()
         };
-    public onPoseUpdated(dt: number, pose: Readonly<BasePose>): void {
+    private _onPoseUpdated(dt: number, pose: Readonly<BasePose>): void {
         if (this.active) {
             if (!XRUtils.isSessionActive(this.engine)) {
                 const cameraNonXR = Globals.getPlayerObjects(this.engine)!.myCameraNonXR!;

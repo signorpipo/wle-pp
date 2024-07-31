@@ -86,6 +86,8 @@ function _initCursorComponentModPrototype() {
     };
 
     cursorComponentMod.start = function start() {
+        this._screenSize = [0, 0];
+
         if (this.handedness == 0) {
             let inputComp = this.object.pp_getComponent(InputComponent);
             if (!inputComp) {
@@ -349,8 +351,7 @@ function _initCursorComponentModPrototype() {
             // Don't care about secondary pointers 
             if (this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset) return;
 
-            let bounds = document.body.getBoundingClientRect();
-            this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+            this._pp_updateMouseData(e, e.clientX, e.clientY, this._screenSize[0], this._screenSize[1], e.pointerId);
         }
     };
 
@@ -362,8 +363,7 @@ function _initCursorComponentModPrototype() {
             // Don't care about secondary pointers or non-left clicks 
             if ((this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset) || e.button != 0) return;
 
-            let bounds = document.body.getBoundingClientRect();
-            this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+            this._pp_updateMouseData(e, e.clientX, e.clientY, this._screenSize[0], this._screenSize[1], e.pointerId);
 
             this._isDown = true;
             this._isRealDown = true;
@@ -379,8 +379,7 @@ function _initCursorComponentModPrototype() {
             // Don't care about secondary pointers or non-left clicks 
             if ((this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset) || e.button != 0) return;
 
-            let bounds = document.body.getBoundingClientRect();
-            this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+            this._pp_updateMouseData(e, e.clientX, e.clientY, this._screenSize[0], this._screenSize[1], e.pointerId);
 
             if (!this._isDownForUpWithDown) {
                 this._isUpWithNoDown = true;
@@ -683,6 +682,14 @@ function _initCursorComponentModPrototype() {
             if (!this._myViewEventListenersRegistered) {
                 this._myViewEventListenersRegistered = true;
 
+                this._myWindowResizeEventListener = () => {
+                    let bounds = document.body.getBoundingClientRect();
+                    this._screenSize[0] = bounds.width;
+                    this._screenSize[1] = bounds.height;
+                };
+                this._myWindowResizeEventListener();
+                window.addEventListener("resize", this._myWindowResizeEventListener);
+
                 let onClick = this.onClick.bind(this);
                 Globals.getCanvas(this.engine).addEventListener("click", onClick);
                 let onPointerDown = this.onPointerDown.bind(this);
@@ -705,6 +712,8 @@ function _initCursorComponentModPrototype() {
                     Globals.getCanvas(this.engine).removeEventListener("pointerleave", onPointerLeave);
 
                     this.engine.onResize.remove(onViewportResize);
+
+                    window.removeEventListener("resize", this._myWindowResizeEventListener);
 
                     this._myViewEventListenersRegistered = false;
                 });

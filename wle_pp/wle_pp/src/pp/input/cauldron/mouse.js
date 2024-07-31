@@ -29,8 +29,8 @@ export class Mouse {
         this._myPreventMiddleButtonScrollEventListener = this._preventMiddleButtonScroll.bind(this);
 
         this._myInternalMousePosition = vec2_create();
+
         this._myScreenSize = vec2_create();
-        this._updateScreenSize();
 
         this._myResetMovingDelay = 0.15;
         this._myResetMovingTimer = new Timer(this._myResetMovingDelay, false);
@@ -84,6 +84,10 @@ export class Mouse {
         document.body.addEventListener("mousedown", this._myMouseDownEventListener);
         this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
         document.body.addEventListener("mouseup", this._myMouseUpEventListener);
+
+        this._updateScreenSize();
+        this._myWindowResizeEventListener = this._updateScreenSize.bind(this);
+        window.addEventListener("resize", this._myWindowResizeEventListener);
     }
 
     update(dt) {
@@ -103,8 +107,6 @@ export class Mouse {
             buttonInfo.myPressStartToProcess = false;
             buttonInfo.myPressEndToProcess = false;
         }
-
-        this._updateScreenSize();
 
         if (!this.isAnyButtonPressed() && !this._myMoving) {
             this._myPointerID = null;
@@ -355,7 +357,7 @@ export class Mouse {
 
         actionCallback(event);
 
-        this._updatePositionAndScreen(event);
+        this._updatePosition(event);
         this._updatePointerData(event);
     }
 
@@ -415,7 +417,7 @@ export class Mouse {
 
         this._myInsideView = true;
 
-        this._updatePositionAndScreen(event);
+        this._updatePosition(event);
         this._updatePointerData(event);
     }
 
@@ -434,8 +436,7 @@ export class Mouse {
         }
     }
 
-    _updatePositionAndScreen(event) {
-        this._updateScreenSize();
+    _updatePosition(event) {
         this._myInternalMousePosition[0] = event.clientX;
         this._myInternalMousePosition[1] = event.clientY;
 
@@ -499,6 +500,8 @@ export class Mouse {
 
         document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
         document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+
+        window.removeEventListener("resize", this._myWindowResizeEventListener);
     }
 
     isDestroyed() {

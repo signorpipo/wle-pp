@@ -34,20 +34,29 @@ export class KeyboardGamepadCore extends GamepadCore {
                     case GamepadButtonID.SQUEEZE:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyQ);
                         break;
-                    case GamepadButtonID.TOUCHPAD:
-                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyX);
-                        break;
                     case GamepadButtonID.THUMBSTICK:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyR);
-                        break;
-                    case GamepadButtonID.BOTTOM_BUTTON:
-                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyC);
                         break;
                     case GamepadButtonID.TOP_BUTTON:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyF);
                         break;
-                    case GamepadButtonID.THUMB_REST:
+                    case GamepadButtonID.BOTTOM_BUTTON:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyC);
+                        break;
+                    case GamepadButtonID.LEFT_BUTTON:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyX);
+                        break;
+                    case GamepadButtonID.RIGHT_BUTTON:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyV);
+                        break;
+                    case GamepadButtonID.MENU:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit3);
+                        break;
+                    case GamepadButtonID.TOUCHPAD:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit2);
+                        break;
+                    case GamepadButtonID.THUMB_REST:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit1);
                         break;
                 }
             } else {
@@ -58,20 +67,29 @@ export class KeyboardGamepadCore extends GamepadCore {
                     case GamepadButtonID.SQUEEZE:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyO);
                         break;
-                    case GamepadButtonID.TOUCHPAD:
-                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyM);
-                        break;
                     case GamepadButtonID.THUMBSTICK:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyY);
-                        break;
-                    case GamepadButtonID.BOTTOM_BUTTON:
-                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyN);
                         break;
                     case GamepadButtonID.TOP_BUTTON:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyH);
                         break;
-                    case GamepadButtonID.THUMB_REST:
+                    case GamepadButtonID.BOTTOM_BUTTON:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyN);
+                        break;
+                    case GamepadButtonID.LEFT_BUTTON:
                         this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyB);
+                        break;
+                    case GamepadButtonID.RIGHT_BUTTON:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyM);
+                        break;
+                    case GamepadButtonID.MENU:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit8);
+                        break;
+                    case GamepadButtonID.TOUCHPAD:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit9);
+                        break;
+                    case GamepadButtonID.THUMB_REST:
+                        this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit0);
                         break;
                 }
             }

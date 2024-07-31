@@ -3,6 +3,7 @@ import { Globals } from "../../pp/globals.js";
 import { GamepadsManager } from "../gamepad/cauldron/gamepads_manager.js";
 import { BasePoseParams } from "../pose/base_pose.js";
 import { HandPose, HandPoseParams } from "../pose/hand_pose.js";
+import { HandRayPose, HandRayPoseParams } from "../pose/hand_ray_pose.js";
 import { HeadPose } from "../pose/head_pose.js";
 import { TrackedHandPose, TrackedHandPoseParams } from "../pose/tracked_hand_pose.js";
 import { Handedness } from "./input_types.js";
@@ -17,6 +18,7 @@ export class InputManager {
     private readonly _myHeadPose: HeadPose;
 
     private readonly _myHandPoses: Record<Handedness, HandPose>;
+    private readonly _myHandRayPoses: Record<Handedness, HandRayPose>;
 
     private readonly _myTrackedHandPoses: Record<Handedness, TrackedHandPose>;
 
@@ -53,6 +55,15 @@ export class InputManager {
         this._myHandPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
         this._myHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
 
+        this._myHandRayPoses = {
+            [Handedness.LEFT]: new HandRayPose(Handedness.LEFT, new HandRayPoseParams(this._myEngine)),
+            [Handedness.RIGHT]: new HandRayPose(Handedness.RIGHT, new HandRayPoseParams(this._myEngine))
+        };
+        this._myHandRayPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
+        this._myHandRayPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
+        this._myHandRayPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+        this._myHandRayPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+
         this._myTrackedHandPoses = {
             [Handedness.LEFT]: new TrackedHandPose(Handedness.LEFT, new TrackedHandPoseParams(true, this._myEngine as any)),
             [Handedness.RIGHT]: new TrackedHandPose(Handedness.RIGHT, new TrackedHandPoseParams(true, this._myEngine as any))
@@ -76,6 +87,13 @@ export class InputManager {
             this._myHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
             this._myHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
             this._myHandPoses[handedness].start();
+        }
+
+        for (const rawHandedness in this._myHandRayPoses) {
+            const handedness = rawHandedness as Handedness;
+            this._myHandRayPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
+            this._myHandRayPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+            this._myHandRayPoses[handedness].start();
         }
 
         if (this._myTrackedHandPosesEnabled) {
@@ -102,6 +120,14 @@ export class InputManager {
             this._myHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
             this._myHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
             this._myHandPoses[handedness].update(dt);
+        }
+
+
+        for (const rawHandedness in this._myHandRayPoses) {
+            const handedness = rawHandedness as Handedness;
+            this._myHandRayPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
+            this._myHandRayPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+            this._myHandRayPoses[handedness].update(dt);
         }
 
         this._updateTrackedHandPoses(dt);
@@ -141,6 +167,22 @@ export class InputManager {
 
     public getHandPoses(): Record<Handedness, HandPose> {
         return this._myHandPoses;
+    }
+
+    public getLeftHandRayPose(): HandPose {
+        return this._myHandRayPoses[Handedness.LEFT];
+    }
+
+    public getRightHandRayPose(): HandPose {
+        return this._myHandRayPoses[Handedness.RIGHT];
+    }
+
+    public getHandRayPose(handedness: Handedness): HandPose {
+        return this._myHandRayPoses[handedness];
+    }
+
+    public getHandRayPoses(): Record<Handedness, HandPose> {
+        return this._myHandRayPoses;
     }
 
     public getLeftTrackedHandPose(): TrackedHandPose {
@@ -222,6 +264,11 @@ export class InputManager {
         for (const rawHandedness in this._myHandPoses) {
             const handedness = rawHandedness as Handedness;
             this._myHandPoses[handedness].destroy();
+        }
+
+        for (const rawHandedness in this._myHandRayPoses) {
+            const handedness = rawHandedness as Handedness;
+            this._myHandRayPoses[handedness].destroy();
         }
 
         for (const rawHandedness in this._myTrackedHandPoses) {

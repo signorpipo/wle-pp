@@ -1,18 +1,28 @@
 import { vec2 as gl_vec2, type vec2 as gl_vec2_type } from "gl-matrix";
 import { Vector2 } from "../../type_definitions/array_type_definitions.js";
 import { EasingFunction } from "../math_utils.js";
+import { getVector2AllocationFunction, setVector2AllocationFunction } from "./vec_allocation_utils.js";
 
 export function create(): Vector2;
 export function create(x: number, y: number): Vector2;
 export function create(uniformValue: number): Vector2;
 export function create(x?: number, y?: number): Vector2 {
-    const out = gl_vec2.create() as unknown as Vector2;
+    const out = getAllocationFunction()();
 
     if (x != null) {
         Vec2Utils.set(out, x, y!);
     }
 
     return out;
+}
+
+export function getAllocationFunction(): () => Vector2 {
+    return getVector2AllocationFunction();
+}
+
+/** Specify the function that will be used to allocate the vector when calling the {@link create} function */
+export function setAllocationFunction(allocationFunction: () => Vector2): void {
+    setVector2AllocationFunction(allocationFunction);
 }
 
 export function set<T extends Vector2>(vector: T, x: number, y: number): T;
@@ -85,6 +95,8 @@ export function interpolate<T extends Vector2, U extends Vector2>(from: Readonly
 
 export const Vec2Utils = {
     create,
+    getAllocationFunction,
+    setAllocationFunction,
     set,
     copy,
     clone,

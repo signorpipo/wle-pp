@@ -220,10 +220,13 @@ export abstract class Gamepad {
     private _updateButtonInfos(): void {
         this._updateSingleButtonInfo(GamepadButtonID.SELECT);
         this._updateSingleButtonInfo(GamepadButtonID.SQUEEZE);
-        this._updateSingleButtonInfo(GamepadButtonID.TOUCHPAD);
         this._updateSingleButtonInfo(GamepadButtonID.THUMBSTICK);
-        this._updateSingleButtonInfo(GamepadButtonID.BOTTOM_BUTTON);
         this._updateSingleButtonInfo(GamepadButtonID.TOP_BUTTON);
+        this._updateSingleButtonInfo(GamepadButtonID.BOTTOM_BUTTON);
+        this._updateSingleButtonInfo(GamepadButtonID.LEFT_BUTTON);
+        this._updateSingleButtonInfo(GamepadButtonID.RIGHT_BUTTON);
+        this._updateSingleButtonInfo(GamepadButtonID.MENU);
+        this._updateSingleButtonInfo(GamepadButtonID.TOUCHPAD);
         this._updateSingleButtonInfo(GamepadButtonID.THUMB_REST);
     }
 

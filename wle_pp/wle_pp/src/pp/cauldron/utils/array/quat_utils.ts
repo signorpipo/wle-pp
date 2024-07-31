@@ -4,18 +4,28 @@ import { EasingFunction, MathUtils } from "../math_utils.js";
 import { ArrayUtils } from "./array_utils.js";
 import { Mat3Utils, create as mat3_utils_create } from "./mat3_utils.js";
 import { Vec3Utils, create as vec3_utils_create } from "./vec3_utils.js";
+import { getQuaternionAllocationFunction, setQuaternionAllocationFunction } from "./vec_allocation_utils.js";
 
 export function create(): Quaternion;
 export function create(x: number, y: number, z: number, w: number): Quaternion;
 export function create(uniformValue: number): Quaternion;
 export function create(x?: number, y?: number, z?: number, w?: number): Quaternion {
-    const out = gl_quat.create() as unknown as Quaternion;
+    const out = getAllocationFunction()();
 
     if (x != null) {
         QuatUtils.set(out, x, y!, z!, w!);
     }
 
     return out;
+}
+
+export function getAllocationFunction(): () => Quaternion {
+    return getQuaternionAllocationFunction();
+}
+
+/** Specify the function that will be used to allocate the quaternion when calling the {@link create} function */
+export function setAllocationFunction(allocationFunction: () => Quaternion): void {
+    setQuaternionAllocationFunction(allocationFunction);
 }
 
 export function set<T extends Quaternion>(quat: T, x: number, y: number, z: number, w: number): T;
@@ -834,6 +844,8 @@ export const rotateAxisRadians = function () {
  */
 export const QuatUtils = {
     create,
+    getAllocationFunction,
+    setAllocationFunction,
     set,
     copy,
     clone,

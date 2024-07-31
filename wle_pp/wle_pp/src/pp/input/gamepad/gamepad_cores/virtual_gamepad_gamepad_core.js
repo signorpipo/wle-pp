@@ -1,10 +1,30 @@
 import { GamepadRawAxesData, GamepadRawButtonData } from "../gamepad.js";
+import { GamepadAxesID, GamepadButtonID } from "../gamepad_buttons.js";
+import { VirtualGamepadAxesID, VirtualGamepadButtonID } from "../virtual_gamepad/virtual_gamepad.js";
 import { GamepadCore } from "./gamepad_core.js";
 
 export class VirtualGamepadGamepadCore extends GamepadCore {
 
-    constructor(virtualGamepad, handPose) {
+    constructor(virtualGamepad, handPose, gamepadToVirtualGamepadButtonIDMap = null, gamepadToVirtualGamepadAxesIDMap = null) {
         super(handPose);
+
+        this.myGamepadToVirtualGamepadButtonIDMap = new Map();
+        if (gamepadToVirtualGamepadButtonIDMap == null) {
+            this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.SQUEEZE, [this.getHandedness(), VirtualGamepadButtonID.FIRST_BUTTON]);
+            this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.SELECT, [this.getHandedness(), VirtualGamepadButtonID.SECOND_BUTTON]);
+            this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.TOP_BUTTON, [this.getHandedness(), VirtualGamepadButtonID.THIRD_BUTTON]);
+            this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.BOTTOM_BUTTON, [this.getHandedness(), VirtualGamepadButtonID.FOURTH_BUTTON]);
+            this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.THUMBSTICK, [this.getHandedness(), VirtualGamepadButtonID.FIFTH_BUTTON]);
+        } else {
+            this.myGamepadToVirtualGamepadButtonIDMap = gamepadToVirtualGamepadButtonIDMap;
+        }
+
+        this.myGamepadToVirtualGamepadAxesIDMap = new Map();
+        if (gamepadToVirtualGamepadAxesIDMap == null) {
+            this.myGamepadToVirtualGamepadAxesIDMap.set(GamepadAxesID.THUMBSTICK, [this.getHandedness(), VirtualGamepadAxesID.FIRST_AXES]);
+        } else {
+            this.myGamepadToVirtualGamepadAxesIDMap = gamepadToVirtualGamepadAxesIDMap;
+        }
 
         this._myVirtualGamepad = virtualGamepad;
 
@@ -22,7 +42,8 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
         this._myButtonData.reset();
 
         if (this.isGamepadCoreActive()) {
-            if (this._myVirtualGamepad.isButtonPressed(this.getHandedness(), buttonID)) {
+            const virtualGamepadButtonInfo = this.myGamepadToVirtualGamepadButtonIDMap.get(buttonID);
+            if (virtualGamepadButtonInfo != null && this._myVirtualGamepad.isButtonPressed(virtualGamepadButtonInfo[0], virtualGamepadButtonInfo[1])) {
                 this._myButtonData.myPressed = true;
                 this._myButtonData.myTouched = true;
                 this._myButtonData.myValue = 1;
@@ -36,7 +57,10 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
         this._myAxesData.reset();
 
         if (this.isGamepadCoreActive()) {
-            this._myVirtualGamepad.getAxes(this.getHandedness(), axesID, this._myAxesData.myAxes);
+            const virtualGamepadAxesInfo = this.myGamepadToVirtualGamepadAxesIDMap.get(axesID);
+            if (virtualGamepadAxesInfo != null) {
+                this._myVirtualGamepad.getAxes(virtualGamepadAxesInfo[0], virtualGamepadAxesInfo[1], this._myAxesData.myAxes);
+            }
         }
 
         return this._myAxesData;

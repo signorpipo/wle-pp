@@ -1,6 +1,7 @@
 import { Component, Property, WonderlandEngine, type ComponentProperty } from "@wonderlandengine/api";
 import { AudioManagerComponent } from "../../audio/components/audio_manager_component.js";
 import { AnalyticsManagerComponent } from "../../cauldron/cauldron/components/analytics_manager_component.js";
+import { ClearConsoleComponent } from "../../cauldron/cauldron/components/clear_console_component.js";
 import { SaveManagerComponent } from "../../cauldron/cauldron/components/save_manager_component.js";
 import { ObjectPoolManagerComponent } from "../../cauldron/object_pool/components/object_pool_manager_component.js";
 import { VisualManagerComponent } from "../../cauldron/visual/components/visual_manager_component.js";
@@ -31,6 +32,7 @@ export class PPGatewayComponent extends Component {
         _myEnableTool: Property.bool(true),
         _myAddPPToWindow: Property.bool(true),
         _myAddWLToWindow: Property.bool(true),
+        _myClearConsoleOnInit: Property.bool(false),
         ...InputManagerComponent.Properties,
         ...AudioManagerComponent.Properties,
         ...VisualManagerComponent.Properties,
@@ -49,6 +51,8 @@ export class PPGatewayComponent extends Component {
     private readonly _myAddPPToWindow!: boolean;
     private readonly _myAddWLToWindow!: boolean;
 
+    private readonly _myClearConsoleOnInit!: boolean;
+
     private readonly _myGetDefaultResourcesComponent!: GetDefaultResourcesComponent;
     private readonly _myGetSceneObjectsComponent!: GetSceneObjectsComponent;
     private readonly _myEnableDebugComponent!: EnableDebugComponent;
@@ -66,6 +70,8 @@ export class PPGatewayComponent extends Component {
     private readonly _myAnalyticsManagerComponent!: AnalyticsManagerComponent;
     private readonly _myDebugManagerComponent!: DebugManagerComponent;
 
+    private _myClearConsoleComponent: ClearConsoleComponent | null = null;
+
     public static override onRegister(engine: WonderlandEngine): void {
         if (!_myRegisteredEngines.has(engine)) {
             _myRegisteredEngines.set(engine, null);
@@ -74,6 +80,10 @@ export class PPGatewayComponent extends Component {
     }
 
     public override init(): void {
+        if (this._myClearConsoleOnInit) {
+            this._myClearConsoleComponent = this.object.pp_addComponent(ClearConsoleComponent);
+        }
+
         (this._myGetDefaultResourcesComponent as GetDefaultResourcesComponent) = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties), false)!;
         (this._myGetSceneObjectsComponent as GetSceneObjectsComponent) = this.object.pp_addComponent(GetSceneObjectsComponent, this._getProperties(GetSceneObjectsComponent.Properties), false)!;
 

@@ -41,17 +41,26 @@ export class ClassicGamepadCore extends GamepadCore {
                     case GamepadButtonID.SQUEEZE:
                         button = classicGamepad.buttons[6];
                         break;
-                    case GamepadButtonID.TOUCHPAD:
-                        button = null;
-                        break;
                     case GamepadButtonID.THUMBSTICK:
                         button = classicGamepad.buttons[10];
+                        break;
+                    case GamepadButtonID.TOP_BUTTON:
+                        button = classicGamepad.buttons[12];
                         break;
                     case GamepadButtonID.BOTTOM_BUTTON:
                         button = classicGamepad.buttons[13];
                         break;
-                    case GamepadButtonID.TOP_BUTTON:
-                        button = classicGamepad.buttons[12];
+                    case GamepadButtonID.LEFT_BUTTON:
+                        button = classicGamepad.buttons[14];
+                        break;
+                    case GamepadButtonID.RIGHT_BUTTON:
+                        button = classicGamepad.buttons[15];
+                        break;
+                    case GamepadButtonID.MENU:
+                        button = classicGamepad.buttons[8];
+                        break;
+                    case GamepadButtonID.TOUCHPAD:
+                        button = null;
                         break;
                     case GamepadButtonID.THUMB_REST:
                         button = null;
@@ -65,17 +74,26 @@ export class ClassicGamepadCore extends GamepadCore {
                     case GamepadButtonID.SQUEEZE:
                         button = classicGamepad.buttons[7];
                         break;
-                    case GamepadButtonID.TOUCHPAD:
-                        button = null;
-                        break;
                     case GamepadButtonID.THUMBSTICK:
                         button = classicGamepad.buttons[11];
+                        break;
+                    case GamepadButtonID.TOP_BUTTON:
+                        button = classicGamepad.buttons[3];
                         break;
                     case GamepadButtonID.BOTTOM_BUTTON:
                         button = classicGamepad.buttons[0];
                         break;
-                    case GamepadButtonID.TOP_BUTTON:
-                        button = classicGamepad.buttons[3];
+                    case GamepadButtonID.LEFT_BUTTON:
+                        button = classicGamepad.buttons[2];
+                        break;
+                    case GamepadButtonID.RIGHT_BUTTON:
+                        button = classicGamepad.buttons[1];
+                        break;
+                    case GamepadButtonID.MENU:
+                        button = classicGamepad.buttons[9];
+                        break;
+                    case GamepadButtonID.TOUCHPAD:
+                        button = null;
                         break;
                     case GamepadButtonID.THUMB_REST:
                         button = null;

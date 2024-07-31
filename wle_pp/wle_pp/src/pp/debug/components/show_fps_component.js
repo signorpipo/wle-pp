@@ -1,7 +1,7 @@
 import { Alignment, Component, Justification, Property } from "@wonderlandengine/api";
-import { vec3_create, vec4_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
-import { Globals } from "../../../pp/globals.js";
-import { Timer } from "../timer.js";
+import { Timer } from "../../cauldron/cauldron/timer.js";
+import { vec3_create, vec4_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
+import { Globals } from "../../pp/globals.js";
 
 export class ShowFPSComponent extends Component {
     static TypeName = "pp-show-fps";

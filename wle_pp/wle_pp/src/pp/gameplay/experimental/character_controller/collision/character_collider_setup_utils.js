@@ -75,7 +75,6 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
     outCharacterColliderSetup.myGroundParams.mySurfaceSnapEnabled = simplifiedCreationParams.myShouldSnapOnGround;
     outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled = true;
     outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore = simplifiedCreationParams.myMaxWalkableGroundAngle;
-    outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngle = true;
 
     outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxOutsideDistance = 0.001;
     outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance = 0.001;
@@ -100,7 +99,6 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
         outCharacterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance;
         outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance;
         outCharacterColliderSetup.myCeilingParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft;
-        outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngle = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngle;
 
         outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxOutsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxOutsideDistance;
         outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance;

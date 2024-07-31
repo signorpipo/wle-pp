@@ -5,6 +5,8 @@ import { HeadPose } from "../../input/pose/head_pose.js";
 import { TrackedHandPose } from "../../input/pose/tracked_hand_pose.js";
 import { Globals } from "../../pp/globals.js";
 import { Gamepad } from "../gamepad/gamepad.js";
+import { UniversalGamepad } from "../gamepad/universal_gamepad.js";
+import { HandRayPose } from "../pose/hand_ray_pose.js";
 import { InputManager } from "./input_manager.js";
 import { Handedness } from "./input_types.js";
 import { Keyboard } from "./keyboard.js";
@@ -108,6 +110,46 @@ export function getRightGamepad(engine: Readonly<WonderlandEngine> | null = Glob
     return null;
 }
 
+export function getUniversalGamepad(handedness: Handedness, engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): UniversalGamepad | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getGamepadsManager().getUniversalGamepad(handedness);
+    }
+
+    return null;
+}
+
+export function getUniversalGamepads(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): Record<Handedness, UniversalGamepad> | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getGamepadsManager().getUniversalGamepads();
+    }
+
+    return null;
+}
+
+export function getLeftUniversalGamepad(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): UniversalGamepad | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getGamepadsManager().getLeftUniversalGamepad();
+    }
+
+    return null;
+}
+
+export function getRightUniversalGamepad(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): UniversalGamepad | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getGamepadsManager().getRightUniversalGamepad();
+    }
+
+    return null;
+}
+
 // Pose
 
 export function getHeadPose(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): HeadPose | null {
@@ -155,6 +197,46 @@ export function getRightHandPose(engine: Readonly<WonderlandEngine> | null = Glo
 
     if (inputManager != null) {
         return inputManager.getRightHandPose();
+    }
+
+    return null;
+}
+
+export function getHandRayPose(handedness: Handedness, engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): HandRayPose | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getHandRayPose(handedness);
+    }
+
+    return null;
+}
+
+export function getHandRayPoses(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): Record<Handedness, HandRayPose> | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getHandRayPoses();
+    }
+
+    return null;
+}
+
+export function getLeftHandRayPose(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): HandRayPose | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getLeftHandRayPose();
+    }
+
+    return null;
+}
+
+export function getRightHandRayPose(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): HandRayPose | null {
+    const inputManager = getInputManager(engine);
+
+    if (inputManager != null) {
+        return inputManager.getRightHandRayPose();
     }
 
     return null;

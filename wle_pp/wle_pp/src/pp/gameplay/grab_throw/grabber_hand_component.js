@@ -70,12 +70,7 @@ export class GrabberHandComponent extends Component {
     update(dt) {
         this._myCollisionsCollector.update(dt);
 
-        const currentInputSource = this._myGamepad.getHandPose().getInputSource();
-
-        let currentInputSourceType = null;
-        if (currentInputSource != null) {
-            currentInputSourceType = InputUtils.getInputSourceType(currentInputSource);
-        }
+        const currentInputSourceType = this._myGamepad.getHandPose().getInputSourceType();
 
         if (this._myPrevInputSourceType != currentInputSourceType) {
             this.throw();
@@ -84,17 +79,17 @@ export class GrabberHandComponent extends Component {
 
         if (this._myGrabButton != 1 || currentInputSourceType == InputSourceType.TRACKED_HAND) {
             if (this._myGamepad.getButtonInfo(GamepadButtonID.SELECT).isPressStart()) {
-                this._grab(this, GamepadButtonID.SELECT);
+                this._grab(GamepadButtonID.SELECT);
             } else if (this._myGamepad.getButtonInfo(GamepadButtonID.SELECT).isPressEnd()) {
-                this._throw(this, GamepadButtonID.SELECT);
+                this._throw(GamepadButtonID.SELECT);
             }
         }
 
         if (this._myGrabButton != 0) {
             if (this._myGamepad.getButtonInfo(GamepadButtonID.SQUEEZE).isPressStart()) {
-                this._grab(this, GamepadButtonID.SQUEEZE);
+                this._grab(GamepadButtonID.SQUEEZE);
             } else if (this._myGamepad.getButtonInfo(GamepadButtonID.SQUEEZE).isPressEnd()) {
-                this._throw(this, GamepadButtonID.SQUEEZE);
+                this._throw(GamepadButtonID.SQUEEZE);
             }
         }
 

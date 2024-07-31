@@ -175,7 +175,7 @@ export class PhysicsCollisionCollector {
             if (type == CollisionEventType.Touch || type == CollisionEventType.TriggerTouch) {
                 collisionValid = this._onCollisionStart(type, physXComponent);
             } else if (type == CollisionEventType.TouchLost || type == CollisionEventType.TriggerTouchLost) {
-                collisionValid = this._onCollisionEnd(type, physXComponent);
+                collisionValid = this._onCollisionEnd(type, physXComponent, physXComponent.object);
             }
 
             if (collisionValid) {
@@ -227,7 +227,7 @@ export class PhysicsCollisionCollector {
         }
     }
 
-    private _onCollisionEnd(type: CollisionEventType, physXComponent: PhysXComponent): boolean {
+    private _onCollisionEnd(type: CollisionEventType, physXComponent: PhysXComponent, physXObject: Object3D): boolean {
         let componentFound = false;
         for (const physXComponentToCheck of this._myCollisions) {
             if (physXComponentToCheck.equals(physXComponent)) {
@@ -237,7 +237,7 @@ export class PhysicsCollisionCollector {
         }
 
         if (this._myLogEnabled && !componentFound) {
-            console.error("Collision End on physX component not collected - Object ID: " + physXComponent.object.pp_getID());
+            console.error("Collision End on physX component not collected - Object ID: " + physXObject.pp_getID());
         }
 
         if (componentFound) {
@@ -252,7 +252,7 @@ export class PhysicsCollisionCollector {
 
             if (this._myUpdateActive && this._myCollisionStartEndProcessingActive) {
                 this._myCollisionsEndedToProcess.push(physXComponent);
-                this._myCollisionObjectsEndedToProcess.push(physXComponent.object);
+                this._myCollisionObjectsEndedToProcess.push(physXObject);
 
                 const indexesToRemove = this._myCollisionsStartedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
                     return physXComponentToCheck.equals(physXComponent);
@@ -265,7 +265,7 @@ export class PhysicsCollisionCollector {
             }
 
             if (this._myLogEnabled) {
-                console.log("Collision End - Object ID: " + physXComponent.object.pp_getID());
+                console.log("Collision End - Object ID: " + physXObject.pp_getID());
             }
 
             this._myCollisionEndEmitter.notify(this._myPhysXComponent, physXComponent, type);
@@ -310,18 +310,18 @@ export class PhysicsCollisionCollector {
                 }
 
                 if (collisionsToEndIndexes.length > 0) {
-                    const physXComponentsToEnd: PhysXComponent[] = [];
+                    const physXComponentsToEnd: [Object3D, PhysXComponent][] = [];
                     for (let i = 0; i < collisionsToEndIndexes.length; i++) {
-                        physXComponentsToEnd.push(this._myCollisions[collisionsToEndIndexes[i]]);
+                        physXComponentsToEnd.push([this._myCollisionObjects[collisionsToEndIndexes[i]], this._myCollisions[collisionsToEndIndexes[i]]]);
                     }
 
                     for (const physXComponentToEnd of physXComponentsToEnd) {
                         if (this._myLogEnabled) {
-                            console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd.object.pp_getID());
+                            console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd[0].pp_getID());
                         }
 
-                        if (this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd)) {
-                            this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponentToEnd, CollisionEventType.TriggerTouchLost);
+                        if (this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd[1], physXComponentToEnd[0])) {
+                            this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponentToEnd[1], CollisionEventType.TriggerTouchLost);
                         }
                     }
                 }

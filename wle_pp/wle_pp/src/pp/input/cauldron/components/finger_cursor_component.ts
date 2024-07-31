@@ -140,7 +140,12 @@ export class FingerCursorComponent extends Component {
     }
 
     private _updateHand(): void {
-        const newHandInputSource = InputUtils.getInputSource(this._myHandednessType, InputSourceType.TRACKED_HAND, this.engine);
+        let newHandInputSource = null;
+
+        const handPose = Globals.getHandPoses(this.engine)![this._myHandednessType];
+        if (handPose.getInputSourceType() == InputSourceType.TRACKED_HAND) {
+            newHandInputSource = handPose.getInputSource();
+        }
 
         if (newHandInputSource != null && (this._myHandInputSource == null || this._myForceRefreshActiveCursor)) {
             if (this._myDefaultCursorComponent != null) {

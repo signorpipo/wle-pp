@@ -63,7 +63,7 @@ __export(pp_exports, {
   CharacterCollisionWallSlideResults: () => CharacterCollisionWallSlideResults,
   CharacterControllerUtils: () => CharacterControllerUtils,
   ClassicGamepadCore: () => ClassicGamepadCore,
-  ClearConsoleOnXRSessionStartComponent: () => ClearConsoleOnXRSessionStartComponent,
+  ClearConsoleComponent: () => ClearConsoleComponent,
   CollisionCheck: () => CollisionCheck,
   CollisionCheckBridge: () => CollisionCheckBridge,
   CollisionCheckParams: () => CollisionCheckParams,
@@ -196,6 +196,8 @@ __export(pp_exports, {
   GrabberHandComponent: () => GrabberHandComponent,
   HandPose: () => HandPose,
   HandPoseParams: () => HandPoseParams,
+  HandRayPose: () => HandRayPose,
+  HandRayPoseParams: () => HandRayPoseParams,
   Handedness: () => Handedness,
   HandednessIndex: () => HandednessIndex,
   HeadPose: () => HeadPose,
@@ -289,7 +291,9 @@ __export(pp_exports, {
   ScaleOnSpawnComponent: () => ScaleOnSpawnComponent,
   SceneObjects: () => SceneObjects,
   SetActiveComponent: () => SetActiveComponent,
+  SetEngineLogLevelComponent: () => SetEngineLogLevelComponent,
   SetHandLocalTransformComponent: () => SetHandLocalTransformComponent,
+  SetHandRayLocalTransformComponent: () => SetHandRayLocalTransformComponent,
   SetHeadLocalTransformComponent: () => SetHeadLocalTransformComponent,
   SetPlayerHeightComponent: () => SetPlayerHeightComponent,
   SetTrackedHandJointLocalTransformComponent: () => SetTrackedHandJointLocalTransformComponent,
@@ -318,8 +322,11 @@ __export(pp_exports, {
   Vec2Utils: () => Vec2Utils,
   Vec3Utils: () => Vec3Utils,
   Vec4Utils: () => Vec4Utils,
+  VecAllocationUtils: () => VecAllocationUtils,
   VecUtils: () => VecUtils,
   VirtualGamepad: () => VirtualGamepad,
+  VirtualGamepadAxesID: () => VirtualGamepadAxesID,
+  VirtualGamepadButtonID: () => VirtualGamepadButtonID,
   VirtualGamepadButtonParams: () => VirtualGamepadButtonParams,
   VirtualGamepadComponent: () => VirtualGamepadComponent,
   VirtualGamepadGamepadCore: () => VirtualGamepadGamepadCore,
@@ -360,20 +367,36 @@ __export(pp_exports, {
   XRGamepadCore: () => XRGamepadCore,
   XRUtils: () => XRUtils,
   mat3_create: () => mat3_create,
+  mat3_getAllocationFunction: () => mat3_getAllocationFunction,
+  mat3_setAllocationFunction: () => mat3_setAllocationFunction,
   mat4_create: () => mat4_create,
+  mat4_getAllocationFunction: () => mat4_getAllocationFunction,
+  mat4_setAllocationFunction: () => mat4_setAllocationFunction,
   quat2_create: () => quat2_create,
+  quat2_getAllocationFunction: () => quat2_getAllocationFunction,
+  quat2_setAllocationFunction: () => quat2_setAllocationFunction,
   quat_create: () => quat_create,
+  quat_getAllocationFunction: () => quat_getAllocationFunction,
+  quat_setAllocationFunction: () => quat_setAllocationFunction,
   registerPPComponents: () => registerPPComponents,
   registerWLComponents: () => registerWLComponents,
   vec2_create: () => vec2_create,
+  vec2_getAllocationFunction: () => vec2_getAllocationFunction,
+  vec2_setAllocationFunction: () => vec2_setAllocationFunction,
   vec3_create: () => vec3_create,
+  vec3_getAllocationFunction: () => vec3_getAllocationFunction,
+  vec3_setAllocationFunction: () => vec3_setAllocationFunction,
   vec4_create: () => vec4_create,
-  vec_create: () => vec_create
+  vec4_getAllocationFunction: () => vec4_getAllocationFunction,
+  vec4_setAllocationFunction: () => vec4_setAllocationFunction,
+  vec_create: () => vec_create,
+  vec_getAllocationFunction: () => vec_getAllocationFunction,
+  vec_setAllocationFunction: () => vec_setAllocationFunction
 });
 
 // dist/pp/pp/register_pp_components.js
 function registerPPComponents(engine) {
-  engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleOnXRSessionStartComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, OverlapCursorComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, ScaleOnSpawnComponent, SetActiveComponent, SetHandLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, ShowXRButtonsComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
+  engine.registerComponent(AddPPToWindowComponent, AddWLToWindowComponent, AdjustHierarchyPhysXScaleComponent, AnalyticsManagerComponent, AudioManagerComponent, BenchmarkMaxPhysXComponent, BenchmarkMaxVisibleTrianglesComponent, CADisplayLeaderboardComponent, CharacterCollisionSystemComponent, ClearConsoleComponent, ConsoleVRToolComponent, CopyHandTransformComponent, CopyHeadTransformComponent, CopyReferenceSpaceTransformComponent, CopyPlayerTransformComponent, DebugPPArrayCreationPerformanceAnalyzerComponent, DebugArrayFunctionsPerformanceAnalyzerComponent, DebugFunctionsPerformanceAnalyzerComponent, DebugManagerComponent, DebugPPFunctionsPerformanceAnalyzerComponent, DebugTransformComponent, DebugWLComponentsFunctionsPerformanceAnalyzerComponent, DebugWLFunctionsPerformanceAnalyzerComponent, EasyLightAttenuationComponent, EasyLightColorComponent, EasyMeshColorComponent, EasyScaleComponent, EasySetTuneTargeetGrabComponent, EasySetTuneTargetChildNumberComponent, EasyTextColorComponent, EasyTransformComponent, EasyTuneImportVariablesComponent, EasyTuneToolComponent, EnableDebugComponent, EnableToolComponent, OverlapCursorComponent, FingerCursorComponent, GamepadControlSchemeComponent, GamepadMeshAnimatorComponent, GetDefaultResourcesComponent, GetSceneObjectsComponent, GrabbableComponent, GrabberHandComponent, InitConsoleVRComponent, InitEasyTuneVariablesComponent, InputManagerComponent, MuteEverythingComponent, ObjectPoolManagerComponent, PPGatewayComponent, PlayerLocomotionComponent, SaveManagerComponent, ScaleOnSpawnComponent, SetActiveComponent, SetEngineLogLevelComponent, SetHandLocalTransformComponent, SetHandRayLocalTransformComponent, SetHeadLocalTransformComponent, SetPlayerHeightComponent, SetTrackedHandJointLocalTransformComponent, ShowFPSComponent, ShowXRButtonsComponent, SpatialAudioListenerComponent, SwitchHandObjectComponent, ToolCursorComponent, TrackedHandDrawAllJointsComponent, TrackedHandDrawJointComponent, TrackedHandDrawSkinComponent, VirtualGamepadComponent, VisualManagerComponent);
 }
 
 // dist/pp/audio/audio_globals.js
@@ -931,18 +954,26 @@ __export(input_globals_exports, {
   getGamepadsManager: () => getGamepadsManager,
   getHandPose: () => getHandPose,
   getHandPoses: () => getHandPoses,
+  getHandRayPose: () => getHandRayPose,
+  getHandRayPoses: () => getHandRayPoses,
   getHeadPose: () => getHeadPose,
   getInputManager: () => getInputManager,
   getKeyboard: () => getKeyboard,
   getLeftGamepad: () => getLeftGamepad,
   getLeftHandPose: () => getLeftHandPose,
+  getLeftHandRayPose: () => getLeftHandRayPose,
   getLeftTrackedHandPose: () => getLeftTrackedHandPose,
+  getLeftUniversalGamepad: () => getLeftUniversalGamepad,
   getMouse: () => getMouse,
   getRightGamepad: () => getRightGamepad,
   getRightHandPose: () => getRightHandPose,
+  getRightHandRayPose: () => getRightHandRayPose,
   getRightTrackedHandPose: () => getRightTrackedHandPose,
+  getRightUniversalGamepad: () => getRightUniversalGamepad,
   getTrackedHandPose: () => getTrackedHandPose,
   getTrackedHandPoses: () => getTrackedHandPoses,
+  getUniversalGamepad: () => getUniversalGamepad,
+  getUniversalGamepads: () => getUniversalGamepads,
   hasInputManager: () => hasInputManager,
   hasPoseForwardFixed: () => hasPoseForwardFixed,
   isPoseForwardFixed: () => isPoseForwardFixed,
@@ -1021,6 +1052,34 @@ function getRightGamepad(engine = Globals.getMainEngine()) {
   }
   return null;
 }
+function getUniversalGamepad(handedness, engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getUniversalGamepad(handedness);
+  }
+  return null;
+}
+function getUniversalGamepads(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getUniversalGamepads();
+  }
+  return null;
+}
+function getLeftUniversalGamepad(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getLeftUniversalGamepad();
+  }
+  return null;
+}
+function getRightUniversalGamepad(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getGamepadsManager().getRightUniversalGamepad();
+  }
+  return null;
+}
 function getHeadPose(engine = Globals.getMainEngine()) {
   const inputManager = getInputManager(engine);
   if (inputManager != null) {
@@ -1053,6 +1112,34 @@ function getRightHandPose(engine = Globals.getMainEngine()) {
   const inputManager = getInputManager(engine);
   if (inputManager != null) {
     return inputManager.getRightHandPose();
+  }
+  return null;
+}
+function getHandRayPose(handedness, engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getHandRayPose(handedness);
+  }
+  return null;
+}
+function getHandRayPoses(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getHandRayPoses();
+  }
+  return null;
+}
+function getLeftHandRayPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getLeftHandRayPose();
+  }
+  return null;
+}
+function getRightHandRayPose(engine = Globals.getMainEngine()) {
+  const inputManager = getInputManager(engine);
+  if (inputManager != null) {
+    return inputManager.getRightHandRayPose();
   }
   return null;
 }
@@ -1232,7 +1319,7 @@ var Globals = {
 };
 
 // dist/pp/pp/components/pp_gateway_component.js
-import { Component as Component17, Property as Property13 } from "@wonderlandengine/api";
+import { Component as Component18, Property as Property13 } from "@wonderlandengine/api";
 
 // dist/pp/audio/components/audio_manager_component.js
 import { Component, Property } from "@wonderlandengine/api";
@@ -1982,8 +2069,79 @@ var AnalyticsManagerComponent = class extends Component2 {
   }
 };
 
+// dist/pp/cauldron/cauldron/components/clear_console_component.js
+import { Component as Component3 } from "@wonderlandengine/api";
+import { property } from "@wonderlandengine/api/decorators.js";
+var __decorate = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var ClearConsoleComponent = class extends Component3 {
+  static TypeName = "pp-clear-console";
+  _myWhen;
+  _myFirstTimeOnly;
+  _myFirstTimeDone = false;
+  init() {
+    if (this._myWhen == 0) {
+      this._clearConsole();
+    }
+  }
+  start() {
+    if (this._myWhen == 1) {
+      this._clearConsole();
+    }
+  }
+  update(dt) {
+    if (this._myWhen == 2) {
+      this._clearConsole();
+    }
+  }
+  _onXRSessionStart() {
+    if (this._myWhen == 3) {
+      this._clearConsole();
+    }
+  }
+  _onXRSessionEnd() {
+    if (this._myWhen == 4) {
+      this._clearConsole();
+    }
+  }
+  _clearConsole() {
+    if (!this._myFirstTimeOnly || !this._myFirstTimeDone) {
+      console.clear();
+      this._myFirstTimeDone = true;
+    }
+    if (this._myFirstTimeOnly && this._myFirstTimeDone) {
+      this.active = false;
+    }
+  }
+  onActivate() {
+    if (this._myWhen == 3) {
+      XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, true, this.engine);
+    }
+    if (this._myWhen == 4) {
+      XRUtils.registerSessionEndEventListener(this, this._onXRSessionEnd.bind(this), this.engine);
+    }
+  }
+  onDeactivate() {
+    XRUtils.unregisterSessionStartEndEventListeners(this, this.engine);
+  }
+};
+__decorate([
+  property.enum(["Init", "Start", "Update", "Enter XR", "Exit XR"], "Init")
+], ClearConsoleComponent.prototype, "_myWhen", void 0);
+__decorate([
+  property.bool(true)
+], ClearConsoleComponent.prototype, "_myFirstTimeOnly", void 0);
+
 // dist/pp/cauldron/cauldron/components/save_manager_component.js
-import { Component as Component3, Property as Property3 } from "@wonderlandengine/api";
+import { Component as Component4, Property as Property3 } from "@wonderlandengine/api";
 
 // dist/pp/cauldron/cauldron/save_manager.js
 import { Emitter as Emitter2 } from "@wonderlandengine/api";
@@ -2583,7 +2741,7 @@ var SaveManager = class {
 };
 
 // dist/pp/cauldron/cauldron/components/save_manager_component.js
-var SaveManagerComponent = class extends Component3 {
+var SaveManagerComponent = class extends Component4 {
   static TypeName = "pp-save-manager";
   static Properties = {
     _mySaveID: Property3.string(""),
@@ -2609,7 +2767,7 @@ var SaveManagerComponent = class extends Component3 {
 };
 
 // dist/pp/cauldron/object_pool/components/object_pool_manager_component.js
-import { Component as Component4 } from "@wonderlandengine/api";
+import { Component as Component5 } from "@wonderlandengine/api";
 
 // dist/pp/cauldron/object_pool/object_pool_manager.js
 var ObjectPoolManager = class {
@@ -2748,7 +2906,7 @@ var ObjectPoolManager = class {
 };
 
 // dist/pp/cauldron/object_pool/components/object_pool_manager_component.js
-var ObjectPoolManagerComponent = class extends Component4 {
+var ObjectPoolManagerComponent = class extends Component5 {
   static TypeName = "pp-object-pools-manager";
   init() {
     this._myObjectPoolManager = null;
@@ -2765,13 +2923,13 @@ var ObjectPoolManagerComponent = class extends Component4 {
 };
 
 // dist/pp/cauldron/visual/components/visual_manager_component.js
-import { Component as Component5 } from "@wonderlandengine/api";
+import { Component as Component6 } from "@wonderlandengine/api";
 
 // dist/pp/cauldron/utils/array/mat3_utils.js
-import { mat3 as gl_mat32, quat as gl_quat3 } from "gl-matrix";
+import { mat3 as gl_mat33, quat as gl_quat4 } from "gl-matrix";
 
 // dist/pp/cauldron/utils/array/quat_utils.js
-import { mat3 as gl_mat3, quat as gl_quat } from "gl-matrix";
+import { mat3 as gl_mat32, quat as gl_quat3 } from "gl-matrix";
 
 // dist/pp/cauldron/utils/math_utils.js
 var EasingFunction = {
@@ -3319,20 +3477,20 @@ function clear2(array) {
   return array;
 }
 function pushUnique(array, elementToAdd, elementsEqualCallback) {
-  let length5 = array.length;
+  let length6 = array.length;
   const hasElement = ArrayUtils.hasEqual(array, elementToAdd, elementsEqualCallback);
   if (!hasElement) {
-    length5 = array.push(elementToAdd);
+    length6 = array.push(elementToAdd);
   }
-  return length5;
+  return length6;
 }
 function unshiftUnique(array, elementToAdd, elementsEqualCallback) {
-  let length5 = array.length;
+  let length6 = array.length;
   const hasElement = ArrayUtils.hasEqual(array, elementToAdd, elementsEqualCallback);
   if (!hasElement) {
-    length5 = array.unshift(elementToAdd);
+    length6 = array.unshift(elementToAdd);
   }
-  return length5;
+  return length6;
 }
 var ArrayUtils = {
   copy,
@@ -3378,30 +3536,117 @@ function _findAllIndexesEqualOptimized(array, elementToFind) {
 }
 
 // dist/pp/cauldron/utils/array/vec3_utils.js
-import { vec3 as gl_vec3 } from "gl-matrix";
+import { vec3 as gl_vec32 } from "gl-matrix";
 
 // dist/pp/cauldron/utils/array/mat4_utils.js
-import { mat4 as gl_mat42 } from "gl-matrix";
+import { mat4 as gl_mat43 } from "gl-matrix";
 
 // dist/pp/cauldron/utils/array/quat2_utils.js
-import { mat4 as gl_mat4, quat2 as gl_quat2 } from "gl-matrix";
+import { mat4 as gl_mat42, quat2 as gl_quat22 } from "gl-matrix";
+
+// dist/pp/cauldron/utils/array/vec_allocation_utils.js
+import { mat3 as gl_mat3, mat4 as gl_mat4, quat as gl_quat, quat2 as gl_quat2, vec2 as gl_vec2, vec3 as gl_vec3, vec4 as gl_vec4, glMatrix } from "gl-matrix";
+var _myVectorAllocationFunction = () => {
+  return new glMatrix.ARRAY_TYPE(length);
+};
+function setVectorAllocationFunction(allocationFunction) {
+  _myVectorAllocationFunction = allocationFunction;
+}
+function getVectorAllocationFunction() {
+  return _myVectorAllocationFunction;
+}
+var _myVector2AllocationFunction = gl_vec2.create;
+function setVector2AllocationFunction(allocationFunction) {
+  _myVector2AllocationFunction = allocationFunction;
+}
+function getVector2AllocationFunction() {
+  return _myVector2AllocationFunction;
+}
+var _myVector3AllocationFunction = gl_vec3.create;
+function setVector3AllocationFunction(allocationFunction) {
+  _myVector3AllocationFunction = allocationFunction;
+}
+function getVector3AllocationFunction() {
+  return _myVector3AllocationFunction;
+}
+var _myVector4AllocationFunction = gl_vec4.create;
+function setVector4AllocationFunction(allocationFunction) {
+  _myVector4AllocationFunction = allocationFunction;
+}
+function getVector4AllocationFunction() {
+  return _myVector4AllocationFunction;
+}
+var _myQuaternionAllocationFunction = gl_quat.create;
+function setQuaternionAllocationFunction(allocationFunction) {
+  _myQuaternionAllocationFunction = allocationFunction;
+}
+function getQuaternionAllocationFunction() {
+  return _myQuaternionAllocationFunction;
+}
+var _myQuaternion2AllocationFunction = gl_quat2.create;
+function setQuaternion2AllocationFunction(allocationFunction) {
+  _myQuaternion2AllocationFunction = allocationFunction;
+}
+function getQuaternion2AllocationFunction() {
+  return _myQuaternion2AllocationFunction;
+}
+var _myMatrix3AllocationFunction = gl_mat3.create;
+function setMatrix3AllocationFunction(allocationFunction) {
+  _myMatrix3AllocationFunction = allocationFunction;
+}
+function getMatrix3AllocationFunction() {
+  return _myMatrix3AllocationFunction;
+}
+var _myMatrix4AllocationFunction = gl_mat4.create;
+function setMatrix4AllocationFunction(allocationFunction) {
+  _myMatrix4AllocationFunction = allocationFunction;
+}
+function getMatrix4AllocationFunction() {
+  return _myMatrix4AllocationFunction;
+}
+var VecAllocationUtils = {
+  setVectorAllocationFunction,
+  getVectorAllocationFunction,
+  setVector2AllocationFunction,
+  getVector2AllocationFunction,
+  setVector3AllocationFunction,
+  getVector3AllocationFunction,
+  setVector4AllocationFunction,
+  getVector4AllocationFunction,
+  setQuaternionAllocationFunction,
+  getQuaternionAllocationFunction,
+  setQuaternion2AllocationFunction,
+  getQuaternion2AllocationFunction,
+  setMatrix3AllocationFunction,
+  getMatrix3AllocationFunction,
+  setMatrix4AllocationFunction,
+  getMatrix4AllocationFunction
+};
+
+// dist/pp/cauldron/utils/array/quat2_utils.js
 function create4(x1, y1, z1, w1, x2, y2, z2, w2) {
-  const out = gl_quat2.create();
+  const out = getAllocationFunction()();
   if (x1 != null) {
     Quat2Utils.set(out, x1, y1, z1, w1, x2, y2, z2, w2);
   }
   return out;
 }
+function getAllocationFunction() {
+  return getQuaternion2AllocationFunction();
+}
+function setAllocationFunction(allocationFunction) {
+  setQuaternion2AllocationFunction(allocationFunction);
+}
 function set(quat, x1, y1, z1, w1, x2, y2, z2, w2) {
   if (y1 == null) {
-    gl_quat2.set(quat, x1, x1, x1, x1, x1, x1, x1, x1);
+    gl_quat22.set(quat, x1, x1, x1, x1, x1, x1, x1, x1);
   } else {
-    gl_quat2.set(quat, x1, y1, z1, w1, x2, y2, z2, w2);
+    gl_quat22.set(quat, x1, y1, z1, w1, x2, y2, z2, w2);
   }
   return quat;
 }
 function copy2(from, to) {
-  gl_quat2.copy(to, from);
+  gl_quat22.copy(to, from);
   return to;
 }
 function clone2(quat) {
@@ -3411,29 +3656,29 @@ function isNormalized(quat, epsilon = MathUtils.EPSILON) {
   return Math.abs(Quat2Utils.lengthSquared(quat) - 1) < epsilon;
 }
 function normalize(quat, out = Quat2Utils.clone(quat)) {
-  gl_quat2.normalize(out, quat);
+  gl_quat22.normalize(out, quat);
   return out;
 }
-function length(quat) {
-  return gl_quat2.length(quat);
+function length2(quat) {
+  return gl_quat22.length(quat);
 }
 function lengthSquared(quat) {
-  return gl_quat2.squaredLength(quat);
+  return gl_quat22.squaredLength(quat);
 }
 function identity(quat) {
-  gl_quat2.identity(quat);
+  gl_quat22.identity(quat);
   return quat;
 }
 function mul(first2, second, out = Quat2Utils.clone(first2)) {
-  gl_quat2.mul(out, first2, second);
+  gl_quat22.mul(out, first2, second);
   return out;
 }
 function invert(quat, out = Quat2Utils.clone(quat)) {
-  gl_quat2.invert(out, quat);
+  gl_quat22.invert(out, quat);
   return out;
 }
 function conjugate(quat, out = Quat2Utils.clone(quat)) {
-  gl_quat2.conjugate(out, quat);
+  gl_quat22.conjugate(out, quat);
   return out;
 }
 function lerp2(from, to, interpolationFactor, out = Quat2Utils.clone(from)) {
@@ -3444,7 +3689,7 @@ function lerp2(from, to, interpolationFactor, out = Quat2Utils.clone(from)) {
     Quat2Utils.copy(to, out);
     return out;
   }
-  gl_quat2.lerp(out, from, to, interpolationFactor);
+  gl_quat22.lerp(out, from, to, interpolationFactor);
   return out;
 }
 function interpolate2(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Quat2Utils.clone(from)) {
@@ -3482,7 +3727,7 @@ function interpolateSpherical(from, to, interpolationFactor, easingFunction = Ea
   return Quat2Utils.slerp(from, to, lerpFactor, out);
 }
 function getPosition(quat, out = Vec3Utils.create()) {
-  gl_quat2.getTranslation(out, quat);
+  gl_quat22.getTranslation(out, quat);
   return out;
 }
 function getRotation(quat, out) {
@@ -3563,7 +3808,7 @@ var setPositionRotationRadians = function() {
   };
 }();
 function setPositionRotationQuat(quat, position, rotation) {
-  gl_quat2.fromRotationTranslation(quat, rotation, position);
+  gl_quat22.fromRotationTranslation(quat, rotation, position);
   return quat;
 }
 function getAxes(quat, out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
@@ -3654,12 +3899,14 @@ function fromMatrix(matrix, out = Quat2Utils.create()) {
 }
 var Quat2Utils = {
   create: create4,
+  getAllocationFunction,
+  setAllocationFunction,
   set,
   copy: copy2,
   clone: clone2,
   isNormalized,
   normalize,
-  length,
+  length: length2,
   lengthSquared,
   identity,
   mul,
@@ -3712,52 +3959,58 @@ var _customGLMatrixFromQuat2 = function() {
       translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
       translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
     }
-    gl_mat4.fromRotationTranslation(out, quat, translation);
+    gl_mat42.fromRotationTranslation(out, quat, translation);
     return out;
   };
 }();
 
 // dist/pp/cauldron/utils/array/mat4_utils.js
 function create5(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
-  const out = gl_mat42.create();
+  const out = getAllocationFunction2()();
   if (m00 != null) {
     Mat4Utils.set(out, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
   }
   return out;
 }
+function getAllocationFunction2() {
+  return getMatrix4AllocationFunction();
+}
+function setAllocationFunction2(allocationFunction) {
+  setMatrix4AllocationFunction(allocationFunction);
+}
 function set3(matrix, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
   if (m01 == null) {
-    gl_mat42.set(matrix, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00);
+    gl_mat43.set(matrix, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00, m00);
   } else {
-    gl_mat42.set(matrix, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+    gl_mat43.set(matrix, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
   }
   return matrix;
 }
 function copy3(from, to) {
-  gl_mat42.copy(to, from);
+  gl_mat43.copy(to, from);
   return to;
 }
 function clone3(matrix) {
   return matrix.slice(0);
 }
 function identity2(matrix) {
-  gl_mat42.identity(matrix);
+  gl_mat43.identity(matrix);
   return matrix;
 }
 function invert2(matrix, out = Mat4Utils.clone(matrix)) {
-  gl_mat42.invert(out, matrix);
+  gl_mat43.invert(out, matrix);
   return out;
 }
 function mul2(first2, second, out = Mat4Utils.clone(first2)) {
-  gl_mat42.mul(out, first2, second);
+  gl_mat43.mul(out, first2, second);
   return out;
 }
 function scale(matrix, vector, out = Mat4Utils.clone(matrix)) {
-  gl_mat42.scale(out, matrix, vector);
+  gl_mat43.scale(out, matrix, vector);
   return out;
 }
 function getPosition2(matrix, out = Vec3Utils.create()) {
-  gl_mat42.getTranslation(out, matrix);
+  gl_mat43.getTranslation(out, matrix);
   return out;
 }
 function getRotation2(matrix, out) {
@@ -3797,7 +4050,7 @@ var getRotationQuat2 = function() {
   return getRotationQuat4;
 }();
 function getScale(matrix, out = Vec3Utils.create()) {
-  gl_mat42.getScaling(out, matrix);
+  gl_mat43.getScaling(out, matrix);
   return out;
 }
 function setPosition2(matrix, position) {
@@ -3862,7 +4115,7 @@ var setPositionRotationRadiansScale = function() {
   };
 }();
 function setPositionRotationQuatScale(matrix, position, rotation, scale4) {
-  gl_mat42.fromRotationTranslationScale(matrix, rotation, position, scale4);
+  gl_mat43.fromRotationTranslationScale(matrix, rotation, position, scale4);
   return matrix;
 }
 function setPositionRotation2(matrix, position, rotation) {
@@ -3884,7 +4137,7 @@ var setPositionRotationRadians2 = function() {
   };
 }();
 function setPositionRotationQuat2(matrix, position, rotation) {
-  gl_mat42.fromRotationTranslation(matrix, rotation, position);
+  gl_mat43.fromRotationTranslation(matrix, rotation, position);
   return matrix;
 }
 function getAxes2(matrix, out = [Vec3Utils.create(), Vec3Utils.create(), Vec3Utils.create()]) {
@@ -4003,6 +4256,8 @@ function fromQuat(quat, out = Mat4Utils.create()) {
 }
 var Mat4Utils = {
   create: create5,
+  getAllocationFunction: getAllocationFunction2,
+  setAllocationFunction: setAllocationFunction2,
   set: set3,
   copy: copy3,
   clone: clone3,
@@ -4046,7 +4301,7 @@ var Mat4Utils = {
 var _customGLMatrixGetRotation = function() {
   const scaling = create3();
   return function _customGLMatrixGetRotation2(out, mat) {
-    gl_mat42.getScaling(scaling, mat);
+    gl_mat43.getScaling(scaling, mat);
     const is1 = 1 / scaling[0];
     const is2 = 1 / scaling[1];
     const is3 = 1 / scaling[2];
@@ -4091,22 +4346,28 @@ var _customGLMatrixGetRotation = function() {
 
 // dist/pp/cauldron/utils/array/vec3_utils.js
 function create3(x, y, z) {
-  const out = gl_vec3.create();
+  const out = getAllocationFunction3()();
   if (x != null) {
     Vec3Utils.set(out, x, y, z);
   }
   return out;
 }
+function getAllocationFunction3() {
+  return getVector3AllocationFunction();
+}
+function setAllocationFunction3(allocationFunction) {
+  setVector3AllocationFunction(allocationFunction);
+}
 function set2(vector, x, y, z) {
   if (y == null) {
-    gl_vec3.set(vector, x, x, x);
+    gl_vec32.set(vector, x, x, x);
   } else {
-    gl_vec3.set(vector, x, y, z);
+    gl_vec32.set(vector, x, y, z);
   }
   return vector;
 }
 function copy4(from, to) {
-  gl_vec3.copy(to, from);
+  gl_vec32.copy(to, from);
   return to;
 }
 function clone4(vector) {
@@ -4116,21 +4377,21 @@ function isNormalized2(vector, epsilon = MathUtils.EPSILON) {
   return Math.abs(Vec3Utils.lengthSquared(vector) - 1) < epsilon;
 }
 function normalize2(vector, out = Vec3Utils.clone(vector)) {
-  gl_vec3.normalize(out, vector);
+  gl_vec32.normalize(out, vector);
   return out;
 }
 function isZero(vector, epsilon = 0) {
   return Vec3Utils.lengthSquared(vector) <= epsilon * epsilon;
 }
 function zero(vector) {
-  gl_vec3.zero(vector);
+  gl_vec32.zero(vector);
   return vector;
 }
-function length2(vector) {
-  return gl_vec3.length(vector);
+function length3(vector) {
+  return gl_vec32.length(vector);
 }
 function lengthSquared2(vector) {
-  return gl_vec3.squaredLength(vector);
+  return gl_vec32.squaredLength(vector);
 }
 function lengthSigned(vector, positiveDirection) {
   let signedLength = Vec3Utils.length(vector);
@@ -4140,10 +4401,10 @@ function lengthSigned(vector, positiveDirection) {
   return signedLength;
 }
 function distance(first2, second) {
-  return gl_vec3.dist(first2, second);
+  return gl_vec32.dist(first2, second);
 }
 function distanceSquared(first2, second) {
-  return gl_vec3.squaredDistance(first2, second);
+  return gl_vec32.squaredDistance(first2, second);
 }
 function equals2(first2, second, epsilon = 0) {
   let equals5 = first2.length == second.length;
@@ -4155,46 +4416,46 @@ function equals2(first2, second, epsilon = 0) {
   return equals5;
 }
 function add(first2, second, out = Vec3Utils.clone(first2)) {
-  gl_vec3.add(out, first2, second);
+  gl_vec32.add(out, first2, second);
   return out;
 }
 function sub(first2, second, out = Vec3Utils.clone(first2)) {
-  gl_vec3.sub(out, first2, second);
+  gl_vec32.sub(out, first2, second);
   return out;
 }
 function mul3(first2, second, out = Vec3Utils.clone(first2)) {
-  gl_vec3.mul(out, first2, second);
+  gl_vec32.mul(out, first2, second);
   return out;
 }
 function div(first2, second, out = Vec3Utils.clone(first2)) {
-  gl_vec3.div(out, first2, second);
+  gl_vec32.div(out, first2, second);
   return out;
 }
 function scale2(vector, value, out = Vec3Utils.clone(vector)) {
-  gl_vec3.scale(out, vector, value);
+  gl_vec32.scale(out, vector, value);
   return out;
 }
 function negate(vector, out = Vec3Utils.clone(vector)) {
-  gl_vec3.negate(out, vector);
+  gl_vec32.negate(out, vector);
   return out;
 }
 function dot(first2, second) {
-  return gl_vec3.dot(first2, second);
+  return gl_vec32.dot(first2, second);
 }
 function cross(first2, second, out = Vec3Utils.clone(first2)) {
-  gl_vec3.cross(out, first2, second);
+  gl_vec32.cross(out, first2, second);
   return out;
 }
 function transformQuat(vector, quat, out = Vec3Utils.clone(vector)) {
-  gl_vec3.transformQuat(out, vector, quat);
+  gl_vec32.transformQuat(out, vector, quat);
   return out;
 }
 function transformMat3(vector, matrix, out = Vec3Utils.clone(vector)) {
-  gl_vec3.transformMat3(out, vector, matrix);
+  gl_vec32.transformMat3(out, vector, matrix);
   return out;
 }
 function transformMat4(vector, matrix, out = Vec3Utils.clone(vector)) {
-  gl_vec3.transformMat4(out, vector, matrix);
+  gl_vec32.transformMat4(out, vector, matrix);
   return out;
 }
 function lerp3(from, to, interpolationFactor, out = Vec3Utils.clone(from)) {
@@ -4205,7 +4466,7 @@ function lerp3(from, to, interpolationFactor, out = Vec3Utils.clone(from)) {
     Vec3Utils.copy(to, out);
     return out;
   }
-  gl_vec3.lerp(out, from, to, interpolationFactor);
+  gl_vec32.lerp(out, from, to, interpolationFactor);
   return out;
 }
 function interpolate3(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec3Utils.clone(from)) {
@@ -4230,8 +4491,8 @@ function angleRadians(first2, second) {
   const lengthSquared4 = firstLengthSquared * secondLengthSquared;
   let angle2 = 0;
   if (lengthSquared4 > MathUtils.EPSILON_SQUARED) {
-    const length5 = Math.sqrt(lengthSquared4);
-    const cos = Vec3Utils.dot(first2, second) / length5;
+    const length6 = Math.sqrt(lengthSquared4);
+    const cos = Vec3Utils.dot(first2, second) / length6;
     angle2 = Math.acos(MathUtils.clamp(cos, -1, 1));
   }
   return angle2;
@@ -4801,6 +5062,8 @@ var radiansToMatrix = function() {
 }();
 var Vec3Utils = {
   create: create3,
+  getAllocationFunction: getAllocationFunction3,
+  setAllocationFunction: setAllocationFunction3,
   set: set2,
   copy: copy4,
   clone: clone4,
@@ -4808,7 +5071,7 @@ var Vec3Utils = {
   normalize: normalize2,
   isZero,
   zero,
-  length: length2,
+  length: length3,
   lengthSquared: lengthSquared2,
   lengthSigned,
   distance,
@@ -4913,22 +5176,28 @@ var Vec3Utils = {
 
 // dist/pp/cauldron/utils/array/quat_utils.js
 function create2(x, y, z, w) {
-  const out = gl_quat.create();
+  const out = getAllocationFunction4()();
   if (x != null) {
     QuatUtils.set(out, x, y, z, w);
   }
   return out;
 }
+function getAllocationFunction4() {
+  return getQuaternionAllocationFunction();
+}
+function setAllocationFunction4(allocationFunction) {
+  setQuaternionAllocationFunction(allocationFunction);
+}
 function set4(quat, x, y, z, w) {
   if (y == null) {
-    gl_quat.set(quat, x, x, x, x);
+    gl_quat3.set(quat, x, x, x, x);
   } else {
-    gl_quat.set(quat, x, y, z, w);
+    gl_quat3.set(quat, x, y, z, w);
   }
   return quat;
 }
 function copy5(from, to) {
-  gl_quat.copy(to, from);
+  gl_quat3.copy(to, from);
   return to;
 }
 function clone5(quat) {
@@ -4938,29 +5207,29 @@ function isNormalized3(quat, epsilon = MathUtils.EPSILON) {
   return Math.abs(QuatUtils.lengthSquared(quat) - 1) < epsilon;
 }
 function normalize3(quat, out = QuatUtils.clone(quat)) {
-  gl_quat.normalize(out, quat);
+  gl_quat3.normalize(out, quat);
   return out;
 }
-function length3(quat) {
-  return gl_quat.length(quat);
+function length4(quat) {
+  return gl_quat3.length(quat);
 }
 function lengthSquared3(quat) {
-  return gl_quat.squaredLength(quat);
+  return gl_quat3.squaredLength(quat);
 }
 function identity3(quat) {
-  gl_quat.identity(quat);
+  gl_quat3.identity(quat);
   return quat;
 }
 function mul4(first2, second, out = QuatUtils.clone(first2)) {
-  gl_quat.mul(out, first2, second);
+  gl_quat3.mul(out, first2, second);
   return out;
 }
 function invert3(quat, out = QuatUtils.clone(quat)) {
-  gl_quat.invert(out, quat);
+  gl_quat3.invert(out, quat);
   return out;
 }
 function conjugate2(quat, out = QuatUtils.clone(quat)) {
-  gl_quat.conjugate(out, quat);
+  gl_quat3.conjugate(out, quat);
   return out;
 }
 function lerp4(from, to, interpolationFactor, out = QuatUtils.clone(from)) {
@@ -4971,7 +5240,7 @@ function lerp4(from, to, interpolationFactor, out = QuatUtils.clone(from)) {
     QuatUtils.copy(to, out);
     return out;
   }
-  gl_quat.lerp(out, from, to, interpolationFactor);
+  gl_quat3.lerp(out, from, to, interpolationFactor);
   return out;
 }
 function interpolate4(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.clone(from)) {
@@ -4986,7 +5255,7 @@ function slerp2(from, to, interpolationFactor, out = QuatUtils.clone(from)) {
     QuatUtils.copy(to, out);
     return out;
   }
-  gl_quat.slerp(out, from, to, interpolationFactor);
+  gl_quat3.slerp(out, from, to, interpolationFactor);
   return out;
 }
 function interpolateSpherical2(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = QuatUtils.clone(from)) {
@@ -5003,14 +5272,14 @@ function getAngleDegrees(quat) {
 var getAngleRadians = function() {
   const vector = create3();
   return function getAngleRadians2(quat) {
-    const angle2 = gl_quat.getAxisAngle(vector, quat);
+    const angle2 = gl_quat3.getAxisAngle(vector, quat);
     return angle2;
   };
 }();
 var getAxis = function() {
   const zero4 = create3(0, 0, 0);
   function getAxis2(quat, out = Vec3Utils.create()) {
-    const angle2 = gl_quat.getAxisAngle(out, quat);
+    const angle2 = gl_quat3.getAxisAngle(out, quat);
     if (angle2 <= MathUtils.EPSILON) {
       Vec3Utils.copy(zero4, out);
     }
@@ -5202,7 +5471,7 @@ var toLocal3 = function() {
   return toLocal4;
 }();
 function fromDegrees(rotation, out = QuatUtils.create()) {
-  gl_quat.fromEuler(out, rotation[0], rotation[1], rotation[2]);
+  gl_quat3.fromEuler(out, rotation[0], rotation[1], rotation[2]);
   return out;
 }
 var fromRadians = function() {
@@ -5221,7 +5490,7 @@ function fromAxisDegrees(angle2, axis, out = QuatUtils.create()) {
   return out;
 }
 function fromAxisRadians(angle2, axis, out = QuatUtils.create()) {
-  gl_quat.setAxisAngle(out, axis, angle2);
+  gl_quat3.setAxisAngle(out, axis, angle2);
   return out;
 }
 var fromAxes = function() {
@@ -5254,7 +5523,7 @@ var toRadians3 = function() {
   return toRadians5;
 }();
 function toMatrix3(quat, out = Mat3Utils.create()) {
-  gl_mat3.fromQuat(out, quat);
+  gl_mat32.fromQuat(out, quat);
   return out;
 }
 function addRotation2(first2, second, out) {
@@ -5434,12 +5703,14 @@ var rotateAxisRadians3 = function() {
 }();
 var QuatUtils = {
   create: create2,
+  getAllocationFunction: getAllocationFunction4,
+  setAllocationFunction: setAllocationFunction4,
   set: set4,
   copy: copy5,
   clone: clone5,
   isNormalized: isNormalized3,
   normalize: normalize3,
-  length: length3,
+  length: length4,
   lengthSquared: lengthSquared3,
   identity: identity3,
   mul: mul4,
@@ -5597,22 +5868,28 @@ var _setAxes = function() {
 
 // dist/pp/cauldron/utils/array/mat3_utils.js
 function create(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
-  const out = gl_mat32.create();
+  const out = getAllocationFunction5()();
   if (m00 != null) {
     Mat3Utils.set(out, m00, m01, m02, m10, m11, m12, m20, m21, m22);
   }
   return out;
 }
+function getAllocationFunction5() {
+  return getMatrix3AllocationFunction();
+}
+function setAllocationFunction5(allocationFunction) {
+  setMatrix3AllocationFunction(allocationFunction);
+}
 function set5(matrix, m00, m01, m02, m10, m11, m12, m20, m21, m22) {
   if (m01 == null) {
-    gl_mat32.set(matrix, m00, m00, m00, m00, m00, m00, m00, m00, m00);
+    gl_mat33.set(matrix, m00, m00, m00, m00, m00, m00, m00, m00, m00);
   } else {
-    gl_mat32.set(matrix, m00, m01, m02, m10, m11, m12, m20, m21, m22);
+    gl_mat33.set(matrix, m00, m01, m02, m10, m11, m12, m20, m21, m22);
   }
   return matrix;
 }
 function copy6(from, to) {
-  gl_mat32.copy(to, from);
+  gl_mat33.copy(to, from);
   return to;
 }
 function clone6(matrix) {
@@ -5637,7 +5914,7 @@ var toRadians4 = function() {
   return toRadians5;
 }();
 function toQuat3(matrix, out = QuatUtils.create()) {
-  gl_quat3.fromMat3(out, matrix);
+  gl_quat4.fromMat3(out, matrix);
   return out;
 }
 function fromAxes2(left, up, forward, out = Mat3Utils.create()) {
@@ -5646,6 +5923,8 @@ function fromAxes2(left, up, forward, out = Mat3Utils.create()) {
 }
 var Mat3Utils = {
   create,
+  getAllocationFunction: getAllocationFunction5,
+  setAllocationFunction: setAllocationFunction5,
   set: set5,
   copy: copy6,
   clone: clone6,
@@ -5656,38 +5935,44 @@ var Mat3Utils = {
 };
 
 // dist/pp/cauldron/utils/array/vec2_utils.js
-import { vec2 as gl_vec2 } from "gl-matrix";
+import { vec2 as gl_vec22 } from "gl-matrix";
 function create6(x, y) {
-  const out = gl_vec2.create();
+  const out = getAllocationFunction6()();
   if (x != null) {
     Vec2Utils.set(out, x, y);
   }
   return out;
 }
+function getAllocationFunction6() {
+  return getVector2AllocationFunction();
+}
+function setAllocationFunction6(allocationFunction) {
+  setVector2AllocationFunction(allocationFunction);
+}
 function set6(vector, x, y) {
   if (y == null) {
-    gl_vec2.set(vector, x, x);
+    gl_vec22.set(vector, x, x);
   } else {
-    gl_vec2.set(vector, x, y);
+    gl_vec22.set(vector, x, y);
   }
   return vector;
 }
 function copy7(from, to) {
-  gl_vec2.copy(to, from);
+  gl_vec22.copy(to, from);
   return to;
 }
 function clone7(vector) {
   return vector.slice(0);
 }
-function length4(vector) {
-  return gl_vec2.length(vector);
+function length5(vector) {
+  return gl_vec22.length(vector);
 }
 function normalize4(vector, out = Vec2Utils.clone(vector)) {
-  gl_vec2.normalize(out, vector);
+  gl_vec22.normalize(out, vector);
   return out;
 }
 function zero2(vector) {
-  gl_vec2.zero(vector);
+  gl_vec22.zero(vector);
   return vector;
 }
 function isZero2(vector, epsilon = 0) {
@@ -5701,7 +5986,7 @@ function lerp5(from, to, interpolationFactor, out = Vec2Utils.clone(from)) {
     Vec2Utils.copy(to, out);
     return out;
   }
-  gl_vec2.lerp(out, from, to, interpolationFactor);
+  gl_vec22.lerp(out, from, to, interpolationFactor);
   return out;
 }
 function interpolate5(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec2Utils.clone(from)) {
@@ -5710,10 +5995,12 @@ function interpolate5(from, to, interpolationFactor, easingFunction = EasingFunc
 }
 var Vec2Utils = {
   create: create6,
+  getAllocationFunction: getAllocationFunction6,
+  setAllocationFunction: setAllocationFunction6,
   set: set6,
   copy: copy7,
   clone: clone7,
-  length: length4,
+  length: length5,
   normalize: normalize4,
   zero: zero2,
   isZero: isZero2,
@@ -5722,24 +6009,30 @@ var Vec2Utils = {
 };
 
 // dist/pp/cauldron/utils/array/vec4_utils.js
-import { vec4 as gl_vec4 } from "gl-matrix";
+import { vec4 as gl_vec42 } from "gl-matrix";
 function create7(x, y, z, w) {
-  const out = gl_vec4.create();
+  const out = getAllocationFunction7()();
   if (x != null) {
     Vec4Utils.set(out, x, y, z, w);
   }
   return out;
 }
+function getAllocationFunction7() {
+  return getVector4AllocationFunction();
+}
+function setAllocationFunction7(allocationFunction) {
+  setVector4AllocationFunction(allocationFunction);
+}
 function set7(vector, x, y, z, w) {
   if (y == null) {
-    gl_vec4.set(vector, x, x, x, x);
+    gl_vec42.set(vector, x, x, x, x);
   } else {
-    gl_vec4.set(vector, x, y, z, w);
+    gl_vec42.set(vector, x, y, z, w);
   }
   return vector;
 }
 function copy8(from, to) {
-  gl_vec4.copy(to, from);
+  gl_vec42.copy(to, from);
   return to;
 }
 function clone8(vector) {
@@ -5753,7 +6046,7 @@ function lerp6(from, to, interpolationFactor, out = Vec4Utils.clone(from)) {
     Vec4Utils.copy(to, out);
     return out;
   }
-  gl_vec4.lerp(out, from, to, interpolationFactor);
+  gl_vec42.lerp(out, from, to, interpolationFactor);
   return out;
 }
 function interpolate6(from, to, interpolationFactor, easingFunction = EasingFunction.linear, out = Vec4Utils.clone(from)) {
@@ -5762,6 +6055,8 @@ function interpolate6(from, to, interpolationFactor, easingFunction = EasingFunc
 }
 var Vec4Utils = {
   create: create7,
+  getAllocationFunction: getAllocationFunction7,
+  setAllocationFunction: setAllocationFunction7,
   set: set7,
   copy: copy8,
   clone: clone8,
@@ -5770,23 +6065,28 @@ var Vec4Utils = {
 };
 
 // dist/pp/cauldron/utils/array/vec_utils.js
-import { glMatrix } from "gl-matrix";
 function create8(firstValue, ...remainingValues) {
   let out = null;
   if (remainingValues.length == 0) {
-    const length5 = firstValue;
-    out = new glMatrix.ARRAY_TYPE(length5);
-    for (let i = 0; i < length5; i++) {
+    const length6 = firstValue;
+    out = getAllocationFunction8()(length6);
+    for (let i = 0; i < length6; i++) {
       out[i] = 0;
     }
   } else {
-    out = new glMatrix.ARRAY_TYPE(remainingValues.length + 1);
+    out = getAllocationFunction8()(remainingValues.length + 1);
     out[0] = firstValue;
     for (let i = 0; i < remainingValues.length; i++) {
       out[i + 1] = remainingValues[i];
     }
   }
   return out;
+}
+function getAllocationFunction8() {
+  return getVectorAllocationFunction();
+}
+function setAllocationFunction8(allocationFunction) {
+  setVectorAllocationFunction(allocationFunction);
 }
 function set8(vector, firstValue, ...remainingValues) {
   if (remainingValues.length == 0) {
@@ -5904,6 +6204,8 @@ function warn(vector, decimalPlaces = 4) {
 }
 var VecUtils = {
   create: create8,
+  getAllocationFunction: getAllocationFunction8,
+  setAllocationFunction: setAllocationFunction8,
   set: set8,
   copy: copy9,
   clone: clone9,
@@ -5942,26 +6244,74 @@ function _buildConsoleMessage(vector, decimalPlaces) {
 function vec_create(firstValue, ...remainingValues) {
   return VecUtils.create(firstValue, ...remainingValues);
 }
+function vec_getAllocationFunction() {
+  return VecUtils.getAllocationFunction();
+}
+function vec_setAllocationFunction(allocationFunction) {
+  VecUtils.setAllocationFunction(allocationFunction);
+}
 function vec2_create(x, y) {
   return Vec2Utils.create(x, y);
+}
+function vec2_getAllocationFunction() {
+  return Vec2Utils.getAllocationFunction();
+}
+function vec2_setAllocationFunction(allocationFunction) {
+  Vec2Utils.setAllocationFunction(allocationFunction);
 }
 function vec3_create(x, y, z) {
   return Vec3Utils.create(x, y, z);
 }
+function vec3_getAllocationFunction() {
+  return Vec3Utils.getAllocationFunction();
+}
+function vec3_setAllocationFunction(allocationFunction) {
+  Vec3Utils.setAllocationFunction(allocationFunction);
+}
 function vec4_create(x, y, z, w) {
   return Vec4Utils.create(x, y, z, w);
+}
+function vec4_getAllocationFunction() {
+  return Vec4Utils.getAllocationFunction();
+}
+function vec4_setAllocationFunction(allocationFunction) {
+  Vec4Utils.setAllocationFunction(allocationFunction);
 }
 function quat_create(x, y, z, w) {
   return QuatUtils.create(x, y, z, w);
 }
+function quat_getAllocationFunction() {
+  return QuatUtils.getAllocationFunction();
+}
+function quat_setAllocationFunction(allocationFunction) {
+  QuatUtils.setAllocationFunction(allocationFunction);
+}
 function quat2_create(x1, y1, z1, w1, x2, y2, z2, w2) {
   return Quat2Utils.create(x1, y1, z1, w1, x2, y2, z2, w2);
+}
+function quat2_getAllocationFunction() {
+  return Quat2Utils.getAllocationFunction();
+}
+function quat2_setAllocationFunction(allocationFunction) {
+  Quat2Utils.setAllocationFunction(allocationFunction);
 }
 function mat3_create(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
   return Mat3Utils.create(m00, m01, m02, m10, m11, m12, m20, m21, m22);
 }
+function mat3_getAllocationFunction() {
+  return Mat3Utils.getAllocationFunction();
+}
+function mat3_setAllocationFunction(allocationFunction) {
+  Mat3Utils.setAllocationFunction(allocationFunction);
+}
 function mat4_create(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
   return Mat4Utils.create(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+}
+function mat4_getAllocationFunction() {
+  return Mat4Utils.getAllocationFunction();
+}
+function mat4_setAllocationFunction(allocationFunction) {
+  Mat4Utils.setAllocationFunction(allocationFunction);
 }
 
 // dist/pp/cauldron/object_pool/object_pool.js
@@ -10374,8 +10724,8 @@ var RaycastResults = class _RaycastResults {
       }
     } else if (this.myHits.length < other.myHits.length) {
       if (this._myUnusedHits != null) {
-        const length5 = Math.min(this._myUnusedHits.length, other.myHits.length - this.myHits.length);
-        for (let i = 0; i < length5; i++) {
+        const length6 = Math.min(this._myUnusedHits.length, other.myHits.length - this.myHits.length);
+        for (let i = 0; i < length6; i++) {
           this.myHits.push(this._myUnusedHits.pop());
         }
       }
@@ -11269,7 +11619,7 @@ var VisualResourcesMaterials = class {
 };
 
 // dist/pp/cauldron/visual/components/visual_manager_component.js
-var VisualManagerComponent = class extends Component5 {
+var VisualManagerComponent = class extends Component6 {
   static TypeName = "pp-visual-manager";
   init() {
     this._myVisualManager = null;
@@ -11319,9 +11669,9 @@ var VisualManagerComponent = class extends Component5 {
 
 // dist/pp/cauldron/wl/components/add_wl_to_window_component.js
 import * as WLAPI from "@wonderlandengine/api";
-import { Component as Component6, Property as Property4 } from "@wonderlandengine/api";
+import { Component as Component7, Property as Property4 } from "@wonderlandengine/api";
 import * as WLComponents from "@wonderlandengine/components";
-var AddWLToWindowComponent = class extends Component6 {
+var AddWLToWindowComponent = class extends Component7 {
   static TypeName = "pp-add-wl-to-window";
   static Properties = {
     _myAdd: Property4.bool(true)
@@ -11347,7 +11697,7 @@ var AddWLToWindowComponent = class extends Component6 {
 };
 
 // dist/pp/cauldron/wl/getters/components/get_default_resources_component.js
-import { Component as Component7, Property as Property5 } from "@wonderlandengine/api";
+import { Component as Component8, Property as Property5 } from "@wonderlandengine/api";
 
 // dist/pp/cauldron/wl/getters/default_resources.js
 var DefaultResources = class {
@@ -11381,7 +11731,7 @@ var DefaultResourcesMaterials = class {
 };
 
 // dist/pp/cauldron/wl/getters/components/get_default_resources_component.js
-var GetDefaultResourcesComponent = class extends Component7 {
+var GetDefaultResourcesComponent = class extends Component8 {
   static TypeName = "pp-get-default-resources";
   static Properties = {
     _myPlane: Property5.mesh(),
@@ -11438,7 +11788,7 @@ var GetDefaultResourcesComponent = class extends Component7 {
 };
 
 // dist/pp/cauldron/wl/getters/components/get_scene_objects_component.js
-import { Component as Component8, Property as Property6 } from "@wonderlandengine/api";
+import { Component as Component9, Property as Property6 } from "@wonderlandengine/api";
 
 // dist/pp/input/cauldron/input_types.js
 var Handedness;
@@ -11540,7 +11890,7 @@ var PlayerObjects = class {
 };
 
 // dist/pp/cauldron/wl/getters/components/get_scene_objects_component.js
-var GetSceneObjectsComponent = class extends Component8 {
+var GetSceneObjectsComponent = class extends Component9 {
   static TypeName = "pp-get-scene-objects";
   static Properties = {
     _myRoot: Property6.object(),
@@ -11601,7 +11951,7 @@ var GetSceneObjectsComponent = class extends Component8 {
 };
 
 // dist/pp/debug/components/debug_manager_component.js
-import { Component as Component9 } from "@wonderlandengine/api";
+import { Component as Component10 } from "@wonderlandengine/api";
 
 // dist/pp/debug/debug_visual_manager.js
 import { Alignment as Alignment2, Justification as Justification2 } from "@wonderlandengine/api";
@@ -11620,13 +11970,13 @@ var DebugVisualManager = class extends VisualManager {
     this._myDefaultUITextScale = 1;
     this._myDefaultUITextScreenPosition = vec3_create(1, 1, 1);
   }
-  drawLine(lifetimeSeconds, start, direction, length5, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
+  drawLine(lifetimeSeconds, start, direction, length6, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
     let elementID = null;
     if (this.isActive()) {
       let visualParams = new VisualLineParams(this._myEngine);
       visualParams.myStart.vec3_copy(start);
       visualParams.myDirection.vec3_copy(direction);
-      visualParams.myLength = length5;
+      visualParams.myLength = length6;
       visualParams.myThickness = thickness;
       visualParams.myColor = vec4_create();
       visualParams.myColor.vec4_copy(color);
@@ -11636,13 +11986,13 @@ var DebugVisualManager = class extends VisualManager {
   }
   drawLineEnd(lifetimeSeconds, start, end, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
   }
-  drawArrow(lifetimeSeconds, start, direction, length5, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
+  drawArrow(lifetimeSeconds, start, direction, length6, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
     let elementID = null;
     if (this.isActive()) {
       let visualParams = new VisualArrowParams(this._myEngine);
       visualParams.myStart.vec3_copy(start);
       visualParams.myDirection.vec3_copy(direction);
-      visualParams.myLength = length5;
+      visualParams.myLength = length6;
       visualParams.myThickness = thickness;
       visualParams.myColor = vec4_create();
       visualParams.myColor.vec4_copy(color);
@@ -11693,12 +12043,12 @@ var DebugVisualManager = class extends VisualManager {
     }
     return elementID;
   }
-  drawTransform(lifetimeSeconds, transform, length5 = this._myDefaultAxisLength, thickness = this._myDefaultLineThickness) {
+  drawTransform(lifetimeSeconds, transform, length6 = this._myDefaultAxisLength, thickness = this._myDefaultLineThickness) {
     let elementID = null;
     if (this.isActive()) {
       let visualParams = new VisualTransformParams(this._myEngine);
       visualParams.myTransform.mat4_copy(transform);
-      visualParams.myLength = length5;
+      visualParams.myLength = length6;
       visualParams.myThickness = thickness;
       elementID = this.draw(visualParams, lifetimeSeconds);
     }
@@ -11716,9 +12066,9 @@ DebugVisualManager.prototype.drawLineEnd = function() {
     let elementID = null;
     if (this.isActive()) {
       direction = end.vec3_sub(start, direction);
-      let length5 = direction.vec3_length();
+      let length6 = direction.vec3_length();
       direction.vec3_normalize(direction);
-      elementID = this.drawLine(lifetimeSeconds, start, direction, length5, color, thickness);
+      elementID = this.drawLine(lifetimeSeconds, start, direction, length6, color, thickness);
     }
     return elementID;
   };
@@ -11729,9 +12079,9 @@ DebugVisualManager.prototype.drawArrowEnd = function() {
     let elementID = null;
     if (this.isActive()) {
       direction = end.vec3_sub(start, direction);
-      let length5 = direction.vec3_length();
+      let length6 = direction.vec3_length();
       direction.vec3_normalize(direction);
-      elementID = this.drawArrow(lifetimeSeconds, start, direction, length5, color, thickness);
+      elementID = this.drawArrow(lifetimeSeconds, start, direction, length6, color, thickness);
     }
     return elementID;
   };
@@ -11799,7 +12149,7 @@ var DebugManager = class {
 };
 
 // dist/pp/debug/components/debug_manager_component.js
-var DebugManagerComponent = class extends Component9 {
+var DebugManagerComponent = class extends Component10 {
   static TypeName = "pp-debug-manager";
   init() {
     this._myDebugManager = null;
@@ -11827,8 +12177,8 @@ var DebugManagerComponent = class extends Component9 {
 };
 
 // dist/pp/debug/components/enable_debug_component.js
-import { Component as Component10, Property as Property7 } from "@wonderlandengine/api";
-var EnableDebugComponent = class extends Component10 {
+import { Component as Component11, Property as Property7 } from "@wonderlandengine/api";
+var EnableDebugComponent = class extends Component11 {
   static TypeName = "pp-enable-debug";
   static Properties = {
     _myEnable: Property7.bool(true)
@@ -11848,7 +12198,7 @@ var EnableDebugComponent = class extends Component10 {
 };
 
 // dist/pp/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
-import { Component as Component11 } from "@wonderlandengine/api";
+import { Component as Component12 } from "@wonderlandengine/api";
 
 // dist/pp/gameplay/experimental/character_controller/collision/character_collision_results.js
 var CharacterCollisionResults = class {
@@ -16275,7 +16625,7 @@ CharacterCollisionSystem.prototype.checkTeleportToPosition = function() {
 }();
 
 // dist/pp/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
-var CharacterCollisionSystemComponent = class extends Component11 {
+var CharacterCollisionSystemComponent = class extends Component12 {
   static TypeName = "pp-character-collision-system";
   init() {
     this._myCharacterCollisionSystem = null;
@@ -16297,7 +16647,7 @@ var CharacterCollisionSystemComponent = class extends Component11 {
 };
 
 // dist/pp/input/cauldron/components/input_manager_component.js
-import { Component as Component12, Property as Property8 } from "@wonderlandengine/api";
+import { Component as Component13, Property as Property8 } from "@wonderlandengine/api";
 
 // dist/pp/input/gamepad/gamepad.js
 import { Emitter as Emitter3 } from "@wonderlandengine/api";
@@ -16307,11 +16657,14 @@ var GamepadButtonID;
 (function(GamepadButtonID2) {
   GamepadButtonID2[GamepadButtonID2["SELECT"] = 0] = "SELECT";
   GamepadButtonID2[GamepadButtonID2["SQUEEZE"] = 1] = "SQUEEZE";
-  GamepadButtonID2[GamepadButtonID2["TOUCHPAD"] = 2] = "TOUCHPAD";
-  GamepadButtonID2[GamepadButtonID2["THUMBSTICK"] = 3] = "THUMBSTICK";
+  GamepadButtonID2[GamepadButtonID2["THUMBSTICK"] = 2] = "THUMBSTICK";
+  GamepadButtonID2[GamepadButtonID2["TOP_BUTTON"] = 3] = "TOP_BUTTON";
   GamepadButtonID2[GamepadButtonID2["BOTTOM_BUTTON"] = 4] = "BOTTOM_BUTTON";
-  GamepadButtonID2[GamepadButtonID2["TOP_BUTTON"] = 5] = "TOP_BUTTON";
-  GamepadButtonID2[GamepadButtonID2["THUMB_REST"] = 6] = "THUMB_REST";
+  GamepadButtonID2[GamepadButtonID2["LEFT_BUTTON"] = 5] = "LEFT_BUTTON";
+  GamepadButtonID2[GamepadButtonID2["RIGHT_BUTTON"] = 6] = "RIGHT_BUTTON";
+  GamepadButtonID2[GamepadButtonID2["MENU"] = 7] = "MENU";
+  GamepadButtonID2[GamepadButtonID2["TOUCHPAD"] = 8] = "TOUCHPAD";
+  GamepadButtonID2[GamepadButtonID2["THUMB_REST"] = 9] = "THUMB_REST";
 })(GamepadButtonID || (GamepadButtonID = {}));
 var GamepadButtonEvent;
 (function(GamepadButtonEvent2) {
@@ -16621,10 +16974,13 @@ var Gamepad = class {
   _updateButtonInfos() {
     this._updateSingleButtonInfo(GamepadButtonID.SELECT);
     this._updateSingleButtonInfo(GamepadButtonID.SQUEEZE);
-    this._updateSingleButtonInfo(GamepadButtonID.TOUCHPAD);
     this._updateSingleButtonInfo(GamepadButtonID.THUMBSTICK);
-    this._updateSingleButtonInfo(GamepadButtonID.BOTTOM_BUTTON);
     this._updateSingleButtonInfo(GamepadButtonID.TOP_BUTTON);
+    this._updateSingleButtonInfo(GamepadButtonID.BOTTOM_BUTTON);
+    this._updateSingleButtonInfo(GamepadButtonID.LEFT_BUTTON);
+    this._updateSingleButtonInfo(GamepadButtonID.RIGHT_BUTTON);
+    this._updateSingleButtonInfo(GamepadButtonID.MENU);
+    this._updateSingleButtonInfo(GamepadButtonID.TOUCHPAD);
     this._updateSingleButtonInfo(GamepadButtonID.THUMB_REST);
   }
   _updateSingleButtonInfo(buttonID) {
@@ -16935,17 +17291,26 @@ var ClassicGamepadCore = class extends GamepadCore {
           case GamepadButtonID.SQUEEZE:
             button = classicGamepad.buttons[6];
             break;
-          case GamepadButtonID.TOUCHPAD:
-            button = null;
-            break;
           case GamepadButtonID.THUMBSTICK:
             button = classicGamepad.buttons[10];
+            break;
+          case GamepadButtonID.TOP_BUTTON:
+            button = classicGamepad.buttons[12];
             break;
           case GamepadButtonID.BOTTOM_BUTTON:
             button = classicGamepad.buttons[13];
             break;
-          case GamepadButtonID.TOP_BUTTON:
-            button = classicGamepad.buttons[12];
+          case GamepadButtonID.LEFT_BUTTON:
+            button = classicGamepad.buttons[14];
+            break;
+          case GamepadButtonID.RIGHT_BUTTON:
+            button = classicGamepad.buttons[15];
+            break;
+          case GamepadButtonID.MENU:
+            button = classicGamepad.buttons[8];
+            break;
+          case GamepadButtonID.TOUCHPAD:
+            button = null;
             break;
           case GamepadButtonID.THUMB_REST:
             button = null;
@@ -16959,17 +17324,26 @@ var ClassicGamepadCore = class extends GamepadCore {
           case GamepadButtonID.SQUEEZE:
             button = classicGamepad.buttons[7];
             break;
-          case GamepadButtonID.TOUCHPAD:
-            button = null;
-            break;
           case GamepadButtonID.THUMBSTICK:
             button = classicGamepad.buttons[11];
+            break;
+          case GamepadButtonID.TOP_BUTTON:
+            button = classicGamepad.buttons[3];
             break;
           case GamepadButtonID.BOTTOM_BUTTON:
             button = classicGamepad.buttons[0];
             break;
-          case GamepadButtonID.TOP_BUTTON:
-            button = classicGamepad.buttons[3];
+          case GamepadButtonID.LEFT_BUTTON:
+            button = classicGamepad.buttons[2];
+            break;
+          case GamepadButtonID.RIGHT_BUTTON:
+            button = classicGamepad.buttons[1];
+            break;
+          case GamepadButtonID.MENU:
+            button = classicGamepad.buttons[9];
+            break;
+          case GamepadButtonID.TOUCHPAD:
+            button = null;
             break;
           case GamepadButtonID.THUMB_REST:
             button = null;
@@ -17035,16 +17409,39 @@ var ClassicGamepadCore = class extends GamepadCore {
 
 // dist/pp/input/cauldron/keyboard.js
 var KeyID = {
-  _0: "0",
-  _1: "1",
-  _2: "2",
-  _3: "3",
-  _4: "4",
-  _5: "5",
-  _6: "6",
-  _7: "7",
-  _8: "8",
-  _9: "9",
+  /** These are when the number is pressed in some way */
+  Number0: "0",
+  Number1: "1",
+  Number2: "2",
+  Number3: "3",
+  Number4: "4",
+  Number5: "5",
+  Number6: "6",
+  Number7: "7",
+  Number8: "8",
+  Number9: "9",
+  /** These are just the numbers above the letters on the keyboard */
+  Digit0: "Digit0",
+  Digit1: "Digit1",
+  Digit2: "Digit2",
+  Digit3: "Digit3",
+  Digit4: "Digit4",
+  Digit5: "Digit5",
+  Digit6: "Digit6",
+  Digit7: "Digit7",
+  Digit8: "Digit8",
+  Digit9: "Digit9",
+  /** These are just the numbers on the numpad, but works even is num lock is disabled */
+  Numpad0: "Numpad0",
+  Numpad1: "Numpad1",
+  Numpad2: "Numpad2",
+  Numpad3: "Numpad3",
+  Numpad4: "Numpad4",
+  Numpad5: "Numpad5",
+  Numpad6: "Numpad6",
+  Numpad7: "Numpad7",
+  Numpad8: "Numpad8",
+  Numpad9: "Numpad9",
   KeyA: "KeyA",
   KeyB: "KeyB",
   KeyC: "KeyC",
@@ -17127,7 +17524,7 @@ var KeyID = {
   DOWN: "ArrowDown",
   LEFT: "ArrowLeft",
   RIGHT: "ArrowRight",
-  SPACE: " ",
+  SPACE: "Space",
   ENTER: "Enter",
   BACKSPACE: "Backspace",
   ESC: "Escape",
@@ -17202,6 +17599,8 @@ var Keyboard = class {
     }
   }
   _keyDown(event) {
+    if (event.repeat)
+      return;
     this._keyPressedChanged(event.key, true);
     if (event.key != event.code) {
       this._keyPressedChanged(event.code, true);
@@ -17216,12 +17615,14 @@ var Keyboard = class {
   _keyPressedChanged(keyID, pressed) {
     if (this._myKeyInfos[keyID] != null) {
       let keyInfo = this._myKeyInfos[keyID];
-      if (pressed) {
-        keyInfo.myPressed = true;
-        keyInfo.myPressStartToProcess = true;
-      } else {
-        keyInfo.myPressed = false;
-        keyInfo.myPressEndToProcess = true;
+      if (pressed != keyInfo.myPressed) {
+        if (pressed) {
+          keyInfo.myPressed = true;
+          keyInfo.myPressStartToProcess = true;
+        } else {
+          keyInfo.myPressed = false;
+          keyInfo.myPressEndToProcess = true;
+        }
       }
     }
   }
@@ -17261,20 +17662,29 @@ var KeyboardGamepadCore = class extends GamepadCore {
           case GamepadButtonID.SQUEEZE:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyQ);
             break;
-          case GamepadButtonID.TOUCHPAD:
-            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyX);
-            break;
           case GamepadButtonID.THUMBSTICK:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyR);
-            break;
-          case GamepadButtonID.BOTTOM_BUTTON:
-            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyC);
             break;
           case GamepadButtonID.TOP_BUTTON:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyF);
             break;
-          case GamepadButtonID.THUMB_REST:
+          case GamepadButtonID.BOTTOM_BUTTON:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyC);
+            break;
+          case GamepadButtonID.LEFT_BUTTON:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyX);
+            break;
+          case GamepadButtonID.RIGHT_BUTTON:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyV);
+            break;
+          case GamepadButtonID.MENU:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit3);
+            break;
+          case GamepadButtonID.TOUCHPAD:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit2);
+            break;
+          case GamepadButtonID.THUMB_REST:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit1);
             break;
         }
       } else {
@@ -17285,20 +17695,29 @@ var KeyboardGamepadCore = class extends GamepadCore {
           case GamepadButtonID.SQUEEZE:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyO);
             break;
-          case GamepadButtonID.TOUCHPAD:
-            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyM);
-            break;
           case GamepadButtonID.THUMBSTICK:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyY);
-            break;
-          case GamepadButtonID.BOTTOM_BUTTON:
-            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyN);
             break;
           case GamepadButtonID.TOP_BUTTON:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyH);
             break;
-          case GamepadButtonID.THUMB_REST:
+          case GamepadButtonID.BOTTOM_BUTTON:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyN);
+            break;
+          case GamepadButtonID.LEFT_BUTTON:
             this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyB);
+            break;
+          case GamepadButtonID.RIGHT_BUTTON:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.KeyM);
+            break;
+          case GamepadButtonID.MENU:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit8);
+            break;
+          case GamepadButtonID.TOUCHPAD:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit9);
+            break;
+          case GamepadButtonID.THUMB_REST:
+            this._myButtonData.myPressed = keyboard.isKeyPressed(KeyID.Digit0);
             break;
         }
       }
@@ -17379,20 +17798,47 @@ var XRGamepadCore = class extends GamepadCore {
   getButtonData(buttonID) {
     this._myButtonData.reset();
     if (this.isGamepadCoreActive()) {
-      if (buttonID < this._myGamepad.buttons.length) {
-        let gamepadButton = this._myGamepad.buttons[buttonID];
-        if (buttonID != GamepadButtonID.SELECT && buttonID != GamepadButtonID.SQUEEZE) {
-          this._myButtonData.myPressed = gamepadButton.pressed;
-        } else {
-          this._myButtonData.myPressed = this._getSpecialButtonPressed(buttonID);
-        }
-        this._myButtonData.myTouched = gamepadButton.touched;
-        this._myButtonData.myValue = gamepadButton.value;
-      } else if (buttonID == GamepadButtonID.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
-        let touchButton = this._myGamepad.buttons[2];
-        this._myButtonData.myPressed = touchButton.pressed;
-        this._myButtonData.myTouched = touchButton.touched;
-        this._myButtonData.myValue = touchButton.value;
+      let button = null;
+      switch (buttonID) {
+        case GamepadButtonID.SELECT:
+          button = this._myGamepad.buttons[0];
+          break;
+        case GamepadButtonID.SQUEEZE:
+          button = this._myGamepad.buttons[1];
+          break;
+        case GamepadButtonID.THUMBSTICK:
+          button = this._myGamepad.buttons[3];
+          break;
+        case GamepadButtonID.TOP_BUTTON:
+          if (this._myGamepad.buttons.length >= 6) {
+            button = this._myGamepad.buttons[5];
+          } else if (this._myGamepad.buttons.length >= 3) {
+            button = this._myGamepad.buttons[2];
+          }
+          break;
+        case GamepadButtonID.BOTTOM_BUTTON:
+          button = this._myGamepad.buttons[4];
+          break;
+        case GamepadButtonID.LEFT_BUTTON:
+          button = null;
+          break;
+        case GamepadButtonID.RIGHT_BUTTON:
+          button = null;
+          break;
+        case GamepadButtonID.MENU:
+          button = this._myGamepad.buttons[7];
+          break;
+        case GamepadButtonID.TOUCHPAD:
+          button = this._myGamepad.buttons[2];
+          break;
+        case GamepadButtonID.THUMB_REST:
+          button = this._myGamepad.buttons[6];
+          break;
+      }
+      if (button != null) {
+        this._myButtonData.myPressed = button.pressed;
+        this._myButtonData.myTouched = button.touched;
+        this._myButtonData.myValue = button.value;
       }
     }
     return this._myButtonData;
@@ -17632,44 +18078,56 @@ var UniversalGamepad = class extends Gamepad {
 
 // dist/pp/input/gamepad/cauldron/gamepads_manager.js
 var GamepadsManager = class {
-  _myGamepads;
+  _myUniversalGamepads;
   _myDestroyed = false;
   constructor() {
-    this._myGamepads = {
+    this._myUniversalGamepads = {
       [Handedness.LEFT]: new UniversalGamepad(Handedness.LEFT),
       [Handedness.RIGHT]: new UniversalGamepad(Handedness.RIGHT)
     };
     this._myDestroyed = false;
   }
   start() {
-    for (const rawHandedness in this._myGamepads) {
+    for (const rawHandedness in this._myUniversalGamepads) {
       const handedness = rawHandedness;
-      this._myGamepads[handedness].start();
+      this._myUniversalGamepads[handedness].start();
     }
   }
   update(dt) {
-    for (const rawHandedness in this._myGamepads) {
+    for (const rawHandedness in this._myUniversalGamepads) {
       const handedness = rawHandedness;
-      this._myGamepads[handedness].update(dt);
+      this._myUniversalGamepads[handedness].update(dt);
     }
   }
-  getLeftGamepad() {
-    return this._myGamepads[Handedness.LEFT];
-  }
-  getRightGamepad() {
-    return this._myGamepads[Handedness.RIGHT];
-  }
   getGamepad(handedness) {
-    return this._myGamepads[handedness];
+    return this._myUniversalGamepads[handedness];
   }
   getGamepads() {
-    return this._myGamepads;
+    return this._myUniversalGamepads;
+  }
+  getLeftGamepad() {
+    return this._myUniversalGamepads[Handedness.LEFT];
+  }
+  getRightGamepad() {
+    return this._myUniversalGamepads[Handedness.RIGHT];
+  }
+  getUniversalGamepad(handedness) {
+    return this._myUniversalGamepads[handedness];
+  }
+  getUniversalGamepads() {
+    return this._myUniversalGamepads;
+  }
+  getLeftUniversalGamepad() {
+    return this._myUniversalGamepads[Handedness.LEFT];
+  }
+  getRightUniversalGamepad() {
+    return this._myUniversalGamepads[Handedness.RIGHT];
   }
   destroy() {
     this._myDestroyed = true;
-    for (const rawHandedness in this._myGamepads) {
+    for (const rawHandedness in this._myUniversalGamepads) {
       const handedness = rawHandedness;
-      this._myGamepads[handedness].destroy();
+      this._myUniversalGamepads[handedness].destroy();
     }
   }
   isDestroyed() {
@@ -17815,7 +18273,9 @@ var BasePose = class {
   _getPose(xrFrame) {
     return null;
   }
-  _updateHook(dt, updateVelocity, xrPose) {
+  _preUpdate(dt, updateVelocity, manualUpdate) {
+  }
+  _postUpdate(dt, updateVelocity, manualUpdate, xrPose) {
   }
   _onXRSessionStartHook(manualCall, session) {
   }
@@ -17827,6 +18287,7 @@ var BasePose = class {
   }
   // Hooks End
   _update(dt, updateVelocity, manualUpdate) {
+    this._preUpdate(dt, updateVelocity, manualUpdate);
     this._myPrevPosition.vec3_copy(this._myPosition);
     this._myPrevRotationQuat.quat_copy(this._myRotationQuat);
     let xrFrame = XRUtils.getFrame(this._myEngine);
@@ -17879,7 +18340,7 @@ var BasePose = class {
         this._myLinearVelocityEmulated = true;
         this._myAngularVelocityEmulated = true;
       }
-      this._updateHook(dt, updateVelocity, xrPose);
+      this._postUpdate(dt, updateVelocity, manualUpdate, xrPose);
     } else {
       if (updateVelocity) {
         this._myLinearVelocity[0] = 0;
@@ -17892,7 +18353,7 @@ var BasePose = class {
       this._myValid = false;
       this._myLinearVelocityEmulated = true;
       this._myAngularVelocityEmulated = true;
-      this._updateHook(dt, updateVelocity, null);
+      this._postUpdate(dt, updateVelocity, manualUpdate, null);
     }
     this._myPrePoseUpdatedEventEmitter.notify(dt, this, manualUpdate);
     this._myPoseUpdatedEmitter.notify(dt, this, manualUpdate);
@@ -18133,6 +18594,7 @@ var InputUtils = {
 var HandPoseParams = class extends BasePoseParams {
   constructor(engine) {
     super(engine);
+    this.mySwitchToTrackedHandDelay = 0;
     this.myFixTrackedHandRotation = true;
   }
 };
@@ -18140,10 +18602,19 @@ var HandPose = class extends BasePose {
   constructor(handedness, handPoseParams = new HandPoseParams()) {
     super(handPoseParams);
     this._myInputSource = null;
+    this._myLastGamepadInputSource = null;
+    this._myRealInputSource = null;
+    this._myGamepadWasUsedFrameCounter = 0;
+    this._myInputSourceChangeDirty = false;
     this._myHandedness = handedness;
     this._myFixTrackedHandRotation = handPoseParams.myFixTrackedHandRotation;
+    this._mySwitchToTrackedHandDelay = handPoseParams.mySwitchToTrackedHandDelay;
+    this._mySwitchToTrackedHandTimer = new Timer(this._mySwitchToTrackedHandDelay, false);
+    this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter = 0;
+    this._myDisableSwitchToTrackedHandDelaySessionChangeTimer = new Timer(1, false);
     this._myTrackedHand = false;
     this._myInputSourcesChangeEventListener = null;
+    this._myVisibilityChangeEventListener = null;
   }
   getHandedness() {
     return this._myHandedness;
@@ -18161,7 +18632,13 @@ var HandPose = class extends BasePose {
     return this._myFixTrackedHandRotation;
   }
   setFixTrackedHandRotation(fixTrackedHandRotation) {
-    this.myFixTrackedHandRotation = fixTrackedHandRotation;
+    this._myFixTrackedHandRotation = fixTrackedHandRotation;
+  }
+  getSwitchToTrackedHandDelay() {
+    return this._mySwitchToTrackedHandDelay;
+  }
+  setSwitchToTrackedHandDelay(switchToTrackedHandDelay) {
+    this._mySwitchToTrackedHandDelay = switchToTrackedHandDelay;
   }
   getRotationQuat(out = quat_create(), referenceObjectOverride = void 0) {
   }
@@ -18171,28 +18648,123 @@ var HandPose = class extends BasePose {
   _getPose(xrFrame) {
     return xrFrame.getPose(this._myInputSource.gripSpace, this.getReferenceSpace());
   }
+  _preUpdate(dt) {
+    if (this._myGamepadWasUsedFrameCounter > 0) {
+      this._myGamepadWasUsedFrameCounter--;
+      if (this._myGamepadWasUsedFrameCounter == 0) {
+        this._myLastGamepadInputSource = null;
+      }
+    }
+    if (this._myInputSourceChangeDirty) {
+      this._myInputSourceChangeDirty = false;
+      this._myInputSourcesChangeEventListener();
+    }
+    if (this._mySwitchToTrackedHandTimer.isRunning()) {
+      this._mySwitchToTrackedHandTimer.update(dt);
+      if (this._mySwitchToTrackedHandTimer.isDone()) {
+        if (this._myInputSourcesChangeEventListener != null) {
+          const switchToTrackedHandDelayBackup = this._mySwitchToTrackedHandDelay;
+          this._mySwitchToTrackedHandDelay = 0;
+          this._myInputSourcesChangeEventListener();
+          this._mySwitchToTrackedHandDelay = switchToTrackedHandDelayBackup;
+        }
+      }
+    }
+    if (this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter > 0) {
+      this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter--;
+    } else {
+      this._myDisableSwitchToTrackedHandDelaySessionChangeTimer.update(dt);
+    }
+  }
   _onXRSessionStartHook(manualCall, session) {
+    this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter = 10;
+    this._myDisableSwitchToTrackedHandDelaySessionChangeTimer.start();
     this._myInputSourcesChangeEventListener = () => {
+      if (this._mySwitchToTrackedHandDelay > 0 && session.trackedSources != null && this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter == 0 && !this._myDisableSwitchToTrackedHandDelaySessionChangeTimer.isRunning()) {
+        const currentInputSourceType = this._myRealInputSource != null ? InputUtils.getInputSourceType(this._myRealInputSource) : null;
+        if (currentInputSourceType == InputSourceType.GAMEPAD) {
+          this._myGamepadWasUsedFrameCounter = 3;
+          this._myLastGamepadInputSource = this._myRealInputSource;
+        }
+      }
+      this._myRealInputSource = null;
       this._myInputSource = null;
-      if (session.inputSources != null && session.inputSources.length > 0) {
-        for (let i = 0; i < session.inputSources.length; i++) {
-          let inputSource = session.inputSources[i];
+      this._myTrackedHand = false;
+      let resetSwitchToTrackedHandTimer = true;
+      if (session.inputSources != null) {
+        let extraSourcesCheckForGamepad = false;
+        for (const inputSource of session.inputSources) {
           if (inputSource.handedness == this._myHandedness) {
+            this._myRealInputSource = inputSource;
             this._myInputSource = inputSource;
             this._myTrackedHand = InputUtils.getInputSourceType(this._myInputSource) == InputSourceType.TRACKED_HAND;
+            break;
           }
         }
+        if (this._myGamepadWasUsedFrameCounter > 0 && (this._myInputSource == null || this._myTrackedHand)) {
+          extraSourcesCheckForGamepad = true;
+        }
+        if (extraSourcesCheckForGamepad) {
+          const inputSourcesToCheck = [];
+          inputSourcesToCheck.push(...session.inputSources);
+          inputSourcesToCheck.push(...session.trackedSources);
+          let gamepadFound = false;
+          for (const inputSourceToCheck of inputSourcesToCheck) {
+            if (inputSourceToCheck.handedness == this._myHandedness) {
+              const inputSourceToCheckType = InputUtils.getInputSourceType(inputSourceToCheck);
+              if (inputSourceToCheckType == InputSourceType.GAMEPAD) {
+                this._myRealInputSource = inputSourceToCheck;
+                this._myInputSource = inputSourceToCheck;
+                this._myTrackedHand = false;
+                resetSwitchToTrackedHandTimer = false;
+                if (!this._mySwitchToTrackedHandTimer.isRunning()) {
+                  this._mySwitchToTrackedHandTimer.start(this._mySwitchToTrackedHandDelay);
+                }
+                gamepadFound = true;
+                break;
+              }
+            }
+          }
+          if (!gamepadFound) {
+            this._myInputSourceChangeDirty = true;
+            this._myInputSource = this._myLastGamepadInputSource;
+            this._myTrackedHand = false;
+          }
+        }
+      }
+      if (resetSwitchToTrackedHandTimer) {
+        this._mySwitchToTrackedHandTimer.reset();
       }
     };
     this._myInputSourcesChangeEventListener();
     session.addEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
+    this._myVisibilityChangeEventListener = () => {
+      this._myGamepadWasUsedFrameCounter = 0;
+      this._myLastGamepadInputSource = null;
+      this._myInputSourceChangeDirty = false;
+      this._mySwitchToTrackedHandTimer.reset();
+      this._myRealInputSource = null;
+      this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter = 10;
+      this._myDisableSwitchToTrackedHandDelaySessionChangeTimer.start();
+    };
+    session.addEventListener("visibilitychange", this._myVisibilityChangeEventListener);
   }
   _onXRSessionEndHook() {
+    this._myGamepadWasUsedFrameCounter = 0;
+    this._myLastGamepadInputSource = null;
+    this._myRealInputSource = null;
     this._myInputSource = null;
+    this._myTrackedHand = false;
+    this._myInputSourceChangeDirty = false;
+    this._mySwitchToTrackedHandTimer.reset();
+    this._myDisableSwitchToTrackedHandDelaySessionChangeFrameCounter = 0;
+    this._myDisableSwitchToTrackedHandDelaySessionChangeTimer.reset();
     this._myInputSourcesChangeEventListener = null;
+    this._myVisibilityChangeEventListener = null;
   }
   _destroyHook() {
     XRUtils.getSession(this.getEngine())?.removeEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
+    XRUtils.getSession(this.getEngine())?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
   }
 };
 HandPose.prototype.getRotationQuat = function() {
@@ -18218,6 +18790,18 @@ HandPose.prototype.getRotationQuat = function() {
     return out.quat_toWorld(referenceObject.pp_getRotationQuat(playerRotationQuat), out);
   };
 }();
+
+// dist/pp/input/pose/hand_ray_pose.js
+var HandRayPoseParams = class extends HandPoseParams {
+};
+var HandRayPose = class extends HandPose {
+  constructor(handedness, handRayPoseParams = new HandRayPoseParams()) {
+    super(handedness, handRayPoseParams);
+  }
+  _getPose(xrFrame) {
+    return xrFrame.getPose(this._myInputSource.targetRaySpace, this.getReferenceSpace());
+  }
+};
 
 // dist/pp/input/pose/head_pose.js
 var HeadPose = class extends BasePose {
@@ -18254,7 +18838,7 @@ var TrackedHandJointPose = class extends BasePose {
   _getPose(xrFrame) {
     return xrFrame.getJointPose(this._myInputSource.hand.get(this._myTrackedHandJointID), this.getReferenceSpace());
   }
-  _updateHook(dt, updateVelocity, xrPose) {
+  _postUpdate(dt, updateVelocity, manualUpdate, xrPose) {
     if (xrPose != null) {
       this._myJointRadius = xrPose.radius;
     }
@@ -18414,7 +18998,6 @@ var Mouse = class {
     this._myPreventMiddleButtonScrollEventListener = this._preventMiddleButtonScroll.bind(this);
     this._myInternalMousePosition = vec2_create();
     this._myScreenSize = vec2_create();
-    this._updateScreenSize();
     this._myResetMovingDelay = 0.15;
     this._myResetMovingTimer = new Timer(this._myResetMovingDelay, false);
     this._myMoving = false;
@@ -18455,6 +19038,9 @@ var Mouse = class {
     document.body.addEventListener("mousedown", this._myMouseDownEventListener);
     this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
     document.body.addEventListener("mouseup", this._myMouseUpEventListener);
+    this._updateScreenSize();
+    this._myWindowResizeEventListener = this._updateScreenSize.bind(this);
+    window.addEventListener("resize", this._myWindowResizeEventListener);
   }
   update(dt) {
     if (this._myResetMovingTimer.isRunning()) {
@@ -18472,7 +19058,6 @@ var Mouse = class {
       buttonInfo.myPressStartToProcess = false;
       buttonInfo.myPressEndToProcess = false;
     }
-    this._updateScreenSize();
     if (!this.isAnyButtonPressed() && !this._myMoving) {
       this._myPointerID = null;
     }
@@ -18672,7 +19257,7 @@ var Mouse = class {
       this._onPointerEnter(event);
     }
     actionCallback(event);
-    this._updatePositionAndScreen(event);
+    this._updatePosition(event);
     this._updatePointerData(event);
   }
   _onMouseAction(actionCallback, event) {
@@ -18725,7 +19310,7 @@ var Mouse = class {
     if (this._myInsideView && this._myPointerID != null || !this._isPointerEventIDValid(event) || !this._isPointerEventValid(event))
       return;
     this._myInsideView = true;
-    this._updatePositionAndScreen(event);
+    this._updatePosition(event);
     this._updatePointerData(event);
   }
   _preventContextMenu(event) {
@@ -18741,8 +19326,7 @@ var Mouse = class {
       return false;
     }
   }
-  _updatePositionAndScreen(event) {
-    this._updateScreenSize();
+  _updatePosition(event) {
     this._myInternalMousePosition[0] = event.clientX;
     this._myInternalMousePosition[1] = event.clientY;
     this._myValid = true;
@@ -18792,6 +19376,7 @@ var Mouse = class {
     document.body.removeEventListener("mouseup", this._myMouseUpEventListener);
     document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
     document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+    window.removeEventListener("resize", this._myWindowResizeEventListener);
   }
   isDestroyed() {
     return this._myDestroyed;
@@ -18804,6 +19389,7 @@ var InputManager = class {
   _myKeyboard;
   _myHeadPose;
   _myHandPoses;
+  _myHandRayPoses;
   _myTrackedHandPoses;
   _myGamepadsManager = new GamepadsManager();
   _myStarted = false;
@@ -18828,6 +19414,14 @@ var InputManager = class {
     this._myHandPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
     this._myHandPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     this._myHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+    this._myHandRayPoses = {
+      [Handedness.LEFT]: new HandRayPose(Handedness.LEFT, new HandRayPoseParams(this._myEngine)),
+      [Handedness.RIGHT]: new HandRayPose(Handedness.RIGHT, new HandRayPoseParams(this._myEngine))
+    };
+    this._myHandRayPoses[Handedness.LEFT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+    this._myHandRayPoses[Handedness.RIGHT].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+    this._myHandRayPoses[Handedness.LEFT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+    this._myHandRayPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     this._myTrackedHandPoses = {
       [Handedness.LEFT]: new TrackedHandPose(Handedness.LEFT, new TrackedHandPoseParams(true, this._myEngine)),
       [Handedness.RIGHT]: new TrackedHandPose(Handedness.RIGHT, new TrackedHandPoseParams(true, this._myEngine))
@@ -18849,6 +19443,12 @@ var InputManager = class {
       this._myHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
       this._myHandPoses[handedness].start();
     }
+    for (const rawHandedness in this._myHandRayPoses) {
+      const handedness = rawHandedness;
+      this._myHandRayPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+      this._myHandRayPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+      this._myHandRayPoses[handedness].start();
+    }
     if (this._myTrackedHandPosesEnabled) {
       this._startTrackedHandPoses();
     }
@@ -18867,6 +19467,12 @@ var InputManager = class {
       this._myHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
       this._myHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
       this._myHandPoses[handedness].update(dt);
+    }
+    for (const rawHandedness in this._myHandRayPoses) {
+      const handedness = rawHandedness;
+      this._myHandRayPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
+      this._myHandRayPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
+      this._myHandRayPoses[handedness].update(dt);
     }
     this._updateTrackedHandPoses(dt);
     this._myGamepadsManager.update(dt);
@@ -18895,6 +19501,18 @@ var InputManager = class {
   }
   getHandPoses() {
     return this._myHandPoses;
+  }
+  getLeftHandRayPose() {
+    return this._myHandRayPoses[Handedness.LEFT];
+  }
+  getRightHandRayPose() {
+    return this._myHandRayPoses[Handedness.RIGHT];
+  }
+  getHandRayPose(handedness) {
+    return this._myHandRayPoses[handedness];
+  }
+  getHandRayPoses() {
+    return this._myHandRayPoses;
   }
   getLeftTrackedHandPose() {
     return this._myTrackedHandPoses[Handedness.LEFT];
@@ -18959,6 +19577,10 @@ var InputManager = class {
       const handedness = rawHandedness;
       this._myHandPoses[handedness].destroy();
     }
+    for (const rawHandedness in this._myHandRayPoses) {
+      const handedness = rawHandedness;
+      this._myHandRayPoses[handedness].destroy();
+    }
     for (const rawHandedness in this._myTrackedHandPoses) {
       const handedness = rawHandedness;
       this._myTrackedHandPoses[handedness].destroy();
@@ -18971,12 +19593,13 @@ var InputManager = class {
 };
 
 // dist/pp/input/cauldron/components/input_manager_component.js
-var InputManagerComponent = class extends Component12 {
+var InputManagerComponent = class extends Component13 {
   static TypeName = "pp-input-manager";
   static Properties = {
     _myPoseForwardFixed: Property8.bool(true),
     _myPreventMouseContextMenu: Property8.bool(true),
     _myPreventMouseMiddleButtonScroll: Property8.bool(true),
+    _mySwitchToTrackedHandDelay: Property8.float(0),
     _myEnableTrackedHandPoses: Property8.bool(true)
   };
   init() {
@@ -18985,6 +19608,10 @@ var InputManagerComponent = class extends Component12 {
     if (!Globals.hasInputManager(this.engine)) {
       this._myInputManager = new InputManager(this.engine);
       this._myInputManager.setTrackedHandPosesEnabled(this._myEnableTrackedHandPoses);
+      this._myInputManager.getLeftHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
+      this._myInputManager.getRightHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
+      this._myInputManager.getLeftHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
+      this._myInputManager.getRightHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
       Globals.setInputManager(this._myInputManager, this.engine);
     }
     if (!Globals.hasPoseForwardFixed(this.engine)) {
@@ -19040,8 +19667,8 @@ var InputManagerComponent = class extends Component12 {
 };
 
 // dist/pp/tool/cauldron/components/enable_tool_component.js
-import { Component as Component13, Property as Property9 } from "@wonderlandengine/api";
-var EnableToolComponent = class extends Component13 {
+import { Component as Component14, Property as Property9 } from "@wonderlandengine/api";
+var EnableToolComponent = class extends Component14 {
   static TypeName = "pp-enable-tools";
   static Properties = {
     _myEnable: Property9.bool(true)
@@ -19061,7 +19688,7 @@ var EnableToolComponent = class extends Component13 {
 };
 
 // dist/pp/tool/console_vr/components/init_console_vr_component.js
-import { Component as Component14, Property as Property10 } from "@wonderlandengine/api";
+import { Component as Component15, Property as Property10 } from "@wonderlandengine/api";
 
 // dist/pp/tool/console_vr/console_original_functions.js
 var _myConsoleOriginalLog = console.log;
@@ -19180,7 +19807,7 @@ var ConsoleVR = class {
 };
 
 // dist/pp/tool/console_vr/components/init_console_vr_component.js
-var InitConsoleVRComponent = class extends Component14 {
+var InitConsoleVRComponent = class extends Component15 {
   static TypeName = "pp-init-console-vr";
   static Properties = {
     _myInit: Property10.bool(true)
@@ -19202,7 +19829,7 @@ var InitConsoleVRComponent = class extends Component14 {
 };
 
 // dist/pp/tool/easy_tune/components/init_easy_tune_variables_component.js
-import { Component as Component15, Property as Property11 } from "@wonderlandengine/api";
+import { Component as Component16, Property as Property11 } from "@wonderlandengine/api";
 
 // dist/pp/tool/easy_tune/easy_tune_variables.js
 var EasyTuneVariables = class {
@@ -19297,7 +19924,7 @@ var EasyTuneVariables = class {
 };
 
 // dist/pp/tool/easy_tune/components/init_easy_tune_variables_component.js
-var InitEasyTuneVariablesComponent = class extends Component15 {
+var InitEasyTuneVariablesComponent = class extends Component16 {
   static TypeName = "pp-init-easy-tune-variables";
   static Properties = {
     _myInit: Property11.bool(true)
@@ -19369,16 +19996,16 @@ function getObjectPropertyDescriptor(object, propertyName) {
   return propertyDescriptor;
 }
 function getObjectProperty(object, propertyName) {
-  let property14 = void 0;
+  let property16 = void 0;
   let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
   if (propertyDescriptor != null) {
     if (propertyDescriptor.get != null) {
-      property14 = propertyDescriptor.get.bind(object)();
+      property16 = propertyDescriptor.get.bind(object)();
     } else {
-      property14 = propertyDescriptor.value;
+      property16 = propertyDescriptor.value;
     }
   }
-  return property14;
+  return property16;
 }
 function setObjectProperty(valueToSet, object, propertyName) {
   let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
@@ -19559,17 +20186,17 @@ function isObjectByName(objectParent, objectName) {
   }
   return isObjectResult;
 }
-function isFunction(property14) {
-  return typeof property14 == "function" && !JSUtils.isClass(property14);
+function isFunction(property16) {
+  return typeof property16 == "function" && !JSUtils.isClass(property16);
 }
 var isClass = function() {
   let checkClassRegex = new RegExp("^class");
-  return function isClass2(property14) {
-    return typeof property14 == "function" && property14.prototype != null && typeof property14.prototype.constructor == "function" && property14.toString != null && typeof property14.toString == "function" && property14.toString()?.match(checkClassRegex) != null;
+  return function isClass2(property16) {
+    return typeof property16 == "function" && property16.prototype != null && typeof property16.prototype.constructor == "function" && property16.toString != null && typeof property16.toString == "function" && property16.toString()?.match(checkClassRegex) != null;
   };
 }();
-function isObject(property14) {
-  return typeof property14 == "object";
+function isObject(property16) {
+  return typeof property16 == "object";
 }
 var JSUtils = {
   getObjectPrototypes,
@@ -22087,6 +22714,7 @@ function _initCursorComponentModPrototype() {
     this._myViewEventListenersRegistered = false;
   };
   cursorComponentMod.start = function start() {
+    this._screenSize = [0, 0];
     if (this.handedness == 0) {
       let inputComp = this.object.pp_getComponent(InputComponent2);
       if (!inputComp) {
@@ -22285,8 +22913,7 @@ function _initCursorComponentModPrototype() {
     if (this.active && !this._pointerLeaveToProcess) {
       if (this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset)
         return;
-      let bounds = document.body.getBoundingClientRect();
-      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+      this._pp_updateMouseData(e, e.clientX, e.clientY, this._screenSize[0], this._screenSize[1], e.pointerId);
     }
   };
   cursorComponentMod.onClick = function onClick(e) {
@@ -22295,8 +22922,7 @@ function _initCursorComponentModPrototype() {
     if (this.active && !this._pointerLeaveToProcess) {
       if (this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset || e.button != 0)
         return;
-      let bounds = document.body.getBoundingClientRect();
-      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+      this._pp_updateMouseData(e, e.clientX, e.clientY, this._screenSize[0], this._screenSize[1], e.pointerId);
       this._isDown = true;
       this._isRealDown = true;
       if (!this._lastIsDown) {
@@ -22308,8 +22934,7 @@ function _initCursorComponentModPrototype() {
     if (this.active && !this._pointerLeaveToProcess) {
       if (this._pointerID != null && this._pointerID != e.pointerId && !this.isHeadset || e.button != 0)
         return;
-      let bounds = document.body.getBoundingClientRect();
-      this._pp_updateMouseData(e, e.clientX, e.clientY, bounds.width, bounds.height, e.pointerId);
+      this._pp_updateMouseData(e, e.clientX, e.clientY, this._screenSize[0], this._screenSize[1], e.pointerId);
       if (!this._isDownForUpWithDown) {
         this._isUpWithNoDown = true;
       }
@@ -22547,6 +23172,13 @@ function _initCursorComponentModPrototype() {
       this._viewComponent.projectionMatrix.mat4_invert(this._projectionMatrix);
       if (!this._myViewEventListenersRegistered) {
         this._myViewEventListenersRegistered = true;
+        this._myWindowResizeEventListener = () => {
+          let bounds = document.body.getBoundingClientRect();
+          this._screenSize[0] = bounds.width;
+          this._screenSize[1] = bounds.height;
+        };
+        this._myWindowResizeEventListener();
+        window.addEventListener("resize", this._myWindowResizeEventListener);
         let onClick = this.onClick.bind(this);
         Globals.getCanvas(this.engine).addEventListener("click", onClick);
         let onPointerDown = this.onPointerDown.bind(this);
@@ -22566,6 +23198,7 @@ function _initCursorComponentModPrototype() {
           Globals.getCanvas(this.engine).removeEventListener("pointerup", onPointerUp);
           Globals.getCanvas(this.engine).removeEventListener("pointerleave", onPointerLeave);
           this.engine.onResize.remove(onViewportResize);
+          window.removeEventListener("resize", this._myWindowResizeEventListener);
           this._myViewEventListenersRegistered = false;
         });
       }
@@ -22852,7 +23485,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.6.16";
+var PP_VERSION = "0.6.17";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -22865,8 +23498,8 @@ function initPP(engine) {
 }
 
 // dist/pp/pp/components/add_pp_to_window_component.js
-import { Component as Component16, Property as Property12 } from "@wonderlandengine/api";
-var AddPPToWindowComponent = class extends Component16 {
+import { Component as Component17, Property as Property12 } from "@wonderlandengine/api";
+var AddPPToWindowComponent = class extends Component17 {
   static TypeName = "pp-add-pp-to-window";
   static Properties = {
     _myAdd: Property12.bool(true)
@@ -22892,13 +23525,14 @@ var AddPPToWindowComponent = class extends Component16 {
 
 // dist/pp/pp/components/pp_gateway_component.js
 var _myRegisteredEngines = /* @__PURE__ */ new WeakMap();
-var PPGatewayComponent = class extends Component17 {
+var PPGatewayComponent = class extends Component18 {
   static TypeName = "pp-gateway";
   static Properties = {
     _myEnableDebug: Property13.bool(true),
     _myEnableTool: Property13.bool(true),
     _myAddPPToWindow: Property13.bool(true),
     _myAddWLToWindow: Property13.bool(true),
+    _myClearConsoleOnInit: Property13.bool(false),
     ...InputManagerComponent.Properties,
     ...AudioManagerComponent.Properties,
     ...VisualManagerComponent.Properties,
@@ -22914,6 +23548,7 @@ var PPGatewayComponent = class extends Component17 {
   _myEnableTool;
   _myAddPPToWindow;
   _myAddWLToWindow;
+  _myClearConsoleOnInit;
   _myGetDefaultResourcesComponent;
   _myGetSceneObjectsComponent;
   _myEnableDebugComponent;
@@ -22930,6 +23565,7 @@ var PPGatewayComponent = class extends Component17 {
   _mySaveManagerComponent;
   _myAnalyticsManagerComponent;
   _myDebugManagerComponent;
+  _myClearConsoleComponent = null;
   static onRegister(engine) {
     if (!_myRegisteredEngines.has(engine)) {
       _myRegisteredEngines.set(engine, null);
@@ -22937,6 +23573,9 @@ var PPGatewayComponent = class extends Component17 {
     }
   }
   init() {
+    if (this._myClearConsoleOnInit) {
+      this._myClearConsoleComponent = this.object.pp_addComponent(ClearConsoleComponent);
+    }
     this._myGetDefaultResourcesComponent = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties), false);
     this._myGetSceneObjectsComponent = this.object.pp_addComponent(GetSceneObjectsComponent, this._getProperties(GetSceneObjectsComponent.Properties), false);
     if (this._myEnableDebug) {
@@ -23050,9 +23689,9 @@ var HowlerAudioPlayer = class extends AudioPlayer {
 };
 
 // dist/pp/audio/components/mute_everything_component.js
-import { Component as Component18 } from "@wonderlandengine/api";
+import { Component as Component19 } from "@wonderlandengine/api";
 import { Howler as Howler4 } from "howler";
-var MuteEverythingComponent = class extends Component18 {
+var MuteEverythingComponent = class extends Component19 {
   static TypeName = "pp-mute-everything";
   static Properties = {};
   start() {
@@ -23061,9 +23700,9 @@ var MuteEverythingComponent = class extends Component18 {
 };
 
 // dist/pp/audio/components/spatial_audio_listener_component.js
-import { Component as Component19 } from "@wonderlandengine/api";
+import { Component as Component20 } from "@wonderlandengine/api";
 import { Howler as Howler5 } from "howler";
-var SpatialAudioListenerComponent = class extends Component19 {
+var SpatialAudioListenerComponent = class extends Component20 {
   static TypeName = "pp-spatial-audio-listener";
   static Properties = {};
   init() {
@@ -23087,7 +23726,7 @@ var SpatialAudioListenerComponent = class extends Component19 {
 };
 
 // dist/pp/cauldron/benchmarks/benchmark_max_physx_component.js
-import { Component as Component20, PhysXComponent as PhysXComponent4, Property as Property14, Shape } from "@wonderlandengine/api";
+import { Component as Component21, PhysXComponent as PhysXComponent4, Property as Property14, Shape } from "@wonderlandengine/api";
 
 // dist/pp/cauldron/physics/physics_collision_collector.js
 import { CollisionEventType, Emitter as Emitter8, PhysXComponent as PhysXComponent3 } from "@wonderlandengine/api";
@@ -23224,7 +23863,7 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
       if (type == CollisionEventType.Touch || type == CollisionEventType.TriggerTouch) {
         collisionValid = this._onCollisionStart(type, physXComponent);
       } else if (type == CollisionEventType.TouchLost || type == CollisionEventType.TriggerTouchLost) {
-        collisionValid = this._onCollisionEnd(type, physXComponent);
+        collisionValid = this._onCollisionEnd(type, physXComponent, physXComponent.object);
       }
       if (collisionValid) {
         this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponent, type);
@@ -23265,7 +23904,7 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
       return false;
     }
   }
-  _onCollisionEnd(type, physXComponent) {
+  _onCollisionEnd(type, physXComponent, physXObject) {
     let componentFound = false;
     for (const physXComponentToCheck of this._myCollisions) {
       if (physXComponentToCheck.equals(physXComponent)) {
@@ -23274,7 +23913,7 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
       }
     }
     if (this._myLogEnabled && !componentFound) {
-      console.error("Collision End on physX component not collected - Object ID: " + physXComponent.object.pp_getID());
+      console.error("Collision End on physX component not collected - Object ID: " + physXObject.pp_getID());
     }
     if (componentFound) {
       const indexesToRemove = this._myCollisions.pp_findAllIndexes(function(physXComponentToCheck) {
@@ -23286,7 +23925,7 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
       }
       if (this._myUpdateActive && this._myCollisionStartEndProcessingActive) {
         this._myCollisionsEndedToProcess.push(physXComponent);
-        this._myCollisionObjectsEndedToProcess.push(physXComponent.object);
+        this._myCollisionObjectsEndedToProcess.push(physXObject);
         const indexesToRemove2 = this._myCollisionsStartedToProcess.pp_findAllIndexes(function(physXComponentToCheck) {
           return physXComponentToCheck.equals(physXComponent);
         });
@@ -23296,7 +23935,7 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
         }
       }
       if (this._myLogEnabled) {
-        console.log("Collision End - Object ID: " + physXComponent.object.pp_getID());
+        console.log("Collision End - Object ID: " + physXObject.pp_getID());
       }
       this._myCollisionEndEmitter.notify(this._myPhysXComponent, physXComponent, type);
       return true;
@@ -23334,14 +23973,14 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
         if (collisionsToEndIndexes.length > 0) {
           const physXComponentsToEnd = [];
           for (let i = 0; i < collisionsToEndIndexes.length; i++) {
-            physXComponentsToEnd.push(this._myCollisions[collisionsToEndIndexes[i]]);
+            physXComponentsToEnd.push([this._myCollisionObjects[collisionsToEndIndexes[i]], this._myCollisions[collisionsToEndIndexes[i]]]);
           }
           for (const physXComponentToEnd of physXComponentsToEnd) {
             if (this._myLogEnabled) {
-              console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd.object.pp_getID());
+              console.log("Trigger Desync Fix - Object ID: " + physXComponentToEnd[0].pp_getID());
             }
-            if (this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd)) {
-              this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponentToEnd, CollisionEventType.TriggerTouchLost);
+            if (this._onCollisionEnd(CollisionEventType.TriggerTouchLost, physXComponentToEnd[1], physXComponentToEnd[0])) {
+              this._myCollisionEmitter.notify(this._myPhysXComponent, physXComponentToEnd[1], CollisionEventType.TriggerTouchLost);
             }
           }
         }
@@ -23361,7 +24000,7 @@ var PhysicsCollisionCollector = class _PhysicsCollisionCollector {
 };
 
 // dist/pp/cauldron/benchmarks/benchmark_max_physx_component.js
-var BenchmarkMaxPhysXComponent = class extends Component20 {
+var BenchmarkMaxPhysXComponent = class extends Component21 {
   static TypeName = "pp-benchmark-max-physx";
   static Properties = {
     _myStaticDomeSize: Property14.float(40),
@@ -23625,8 +24264,8 @@ var BenchmarkMaxPhysXComponent = class extends Component20 {
 };
 
 // dist/pp/cauldron/benchmarks/benchmark_max_visible_triangles_component.js
-import { Alignment as Alignment3, Component as Component21, Justification as Justification3, MeshComponent as MeshComponent7, Property as Property15, TextComponent as TextComponent4 } from "@wonderlandengine/api";
-var BenchmarkMaxVisibleTrianglesComponent = class extends Component21 {
+import { Alignment as Alignment3, Component as Component22, Justification as Justification3, MeshComponent as MeshComponent7, Property as Property15, TextComponent as TextComponent4 } from "@wonderlandengine/api";
+var BenchmarkMaxVisibleTrianglesComponent = class extends Component22 {
   static TypeName = "pp-benchmark-max-visible-triangles";
   static Properties = {
     _myTargetFrameRate: Property15.int(-1),
@@ -24011,8 +24650,8 @@ var BenchmarkMaxVisibleTrianglesComponent = class extends Component21 {
 };
 
 // dist/pp/cauldron/cauldron/components/adjust_hierarchy_physx_scale_component.js
-import { Component as Component22, PhysXComponent as PhysXComponent5, Property as Property16 } from "@wonderlandengine/api";
-var AdjustHierarchyPhysXScaleComponent = class extends Component22 {
+import { Component as Component23, PhysXComponent as PhysXComponent5, Property as Property16 } from "@wonderlandengine/api";
+var AdjustHierarchyPhysXScaleComponent = class extends Component23 {
   static TypeName = "pp-adjust-hierarchy-physx-scale";
   static Properties = {
     _myWhen: Property16.enum(["Init", "Start", "First Update"], "Start")
@@ -24049,32 +24688,10 @@ var AdjustHierarchyPhysXScaleComponent = class extends Component22 {
   }
 };
 
-// dist/pp/cauldron/cauldron/components/clear_console_on_xr_session_start_component.js
-import { Component as Component23, Property as Property17 } from "@wonderlandengine/api";
-var ClearConsoleOnXRSessionStartComponent = class extends Component23 {
-  static TypeName = "pp-clear-console-on-xr-session-start";
-  static Properties = {
-    _myFirstTimeOnly: Property17.bool(true)
-  };
-  start() {
-    this._myFirstTime = true;
-    XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, false, this.engine);
-  }
-  _onXRSessionStart() {
-    if (!this._myFirstTimeOnly || this._myFirstTime) {
-      this._myFirstTime = false;
-      console.clear();
-    }
-  }
-  onDestroy() {
-    XRUtils.unregisterSessionStartEventListener(this, this.engine);
-  }
-};
-
 // dist/pp/cauldron/cauldron/components/reset_local_transform_component.js
 import { Component as Component24 } from "@wonderlandengine/api";
-import { property } from "@wonderlandengine/api/decorators.js";
-var __decorate = function(decorators, target, key, desc) {
+import { property as property2 } from "@wonderlandengine/api/decorators.js";
+var __decorate2 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -24144,21 +24761,21 @@ var ResetLocalTransformComponent = class extends Component24 {
     XRUtils.unregisterSessionStartEndEventListeners(this, this.engine);
   }
 };
-__decorate([
-  property.enum(["Self", "Children", "Descendants", "Hierarchy"], "Self")
+__decorate2([
+  property2.enum(["Self", "Children", "Descendants", "Hierarchy"], "Self")
 ], ResetLocalTransformComponent.prototype, "_myResetLocalTransformOn", void 0);
-__decorate([
-  property.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
+__decorate2([
+  property2.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
 ], ResetLocalTransformComponent.prototype, "_myResetLocalTransformWhen", void 0);
 
 // dist/pp/cauldron/cauldron/components/set_active_component.js
-import { Component as Component25, Property as Property18 } from "@wonderlandengine/api";
+import { Component as Component25, Property as Property17 } from "@wonderlandengine/api";
 var SetActiveComponent = class extends Component25 {
   static TypeName = "pp-set-active";
   static Properties = {
-    _myActive: Property18.bool(true),
-    _mySetActiveOn: Property18.enum(["Self", "Children", "Descendants", "Hierarchy"], "Hierarchy"),
-    _mySetActiveWhen: Property18.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
+    _myActive: Property17.bool(true),
+    _mySetActiveOn: Property17.enum(["Self", "Children", "Descendants", "Hierarchy"], "Hierarchy"),
+    _mySetActiveWhen: Property17.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
   };
   init() {
     if (this.active && this._mySetActiveWhen == 0) {
@@ -24213,49 +24830,54 @@ var SetActiveComponent = class extends Component25 {
   }
 };
 
-// dist/pp/cauldron/cauldron/components/show_fps_component.js
-import { Alignment as Alignment4, Component as Component26, Justification as Justification4, Property as Property19 } from "@wonderlandengine/api";
-var ShowFPSComponent = class extends Component26 {
-  static TypeName = "pp-show-fps";
-  static Properties = {
-    _myRefreshSeconds: Property19.float(0.25),
-    _myScreenPositionX: Property19.float(1),
-    _myScreenPositionY: Property19.float(-1),
-    _myScreenPositionZ: Property19.float(1),
-    _myScale: Property19.float(1.5),
-    _myTextMaterial: Property19.material()
-  };
-  start() {
-    this._myColor = vec4_create(1, 1, 1, 1);
-    if (this._myTextMaterial != null) {
-      this._myColor.vec4_copy(this._myTextMaterial.color);
+// dist/pp/cauldron/cauldron/components/set_engine_log_level_component.js
+import { Component as Component26, LogLevel } from "@wonderlandengine/api";
+import { property as property3 } from "@wonderlandengine/api/decorators.js";
+var __decorate3 = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var SetEngineLogLevelComponent = class extends Component26 {
+  static TypeName = "pp-set-engine-log-level";
+  _myInfoEnabled;
+  _myWarnEnabled;
+  _myErrorEnabled;
+  init() {
+    const logLevelsToDisable = [];
+    if (!this._myInfoEnabled) {
+      logLevelsToDisable.push(LogLevel.Info);
     }
-    this._myScreenPosition = vec3_create(this._myScreenPositionX, this._myScreenPositionY, this._myScreenPositionZ);
-    this._myCurrentFPS = 0;
-    this._myTimer = new Timer(this._myRefreshSeconds);
-    this._myTotalDT = 0;
-    this._myFrames = 0;
-  }
-  update(dt) {
-    if (Globals.isDebugEnabled(this.engine)) {
-      this._myTotalDT += dt;
-      this._myFrames++;
-      this._myTimer.update(dt);
-      if (this._myTimer.isDone()) {
-        this._myTimer.start();
-        this._myCurrentFPS = Math.round(this._myFrames / this._myTotalDT);
-        this._myTotalDT = 0;
-        this._myFrames = 0;
-      }
-      Globals.getDebugVisualManager(this.engine).drawUIText(0, this._myCurrentFPS.toFixed(0), this._myScreenPosition, this._myScale, this._myColor, Alignment4.Right, Justification4.Bottom);
+    if (!this._myWarnEnabled) {
+      logLevelsToDisable.push(LogLevel.Warn);
+    }
+    if (!this._myErrorEnabled) {
+      logLevelsToDisable.push(LogLevel.Error);
+    }
+    if (logLevelsToDisable.length > 0) {
+      this.engine.log.levels.disable(...logLevelsToDisable);
     }
   }
 };
+__decorate3([
+  property3.bool(true)
+], SetEngineLogLevelComponent.prototype, "_myInfoEnabled", void 0);
+__decorate3([
+  property3.bool(true)
+], SetEngineLogLevelComponent.prototype, "_myWarnEnabled", void 0);
+__decorate3([
+  property3.bool(true)
+], SetEngineLogLevelComponent.prototype, "_myErrorEnabled", void 0);
 
 // dist/pp/cauldron/cauldron/components/show_xr_buttons_component.js
 import { Component as Component27 } from "@wonderlandengine/api";
-import { property as property2 } from "@wonderlandengine/api/decorators.js";
-var __decorate2 = function(decorators, target, key, desc) {
+import { property as property4 } from "@wonderlandengine/api/decorators.js";
+var __decorate4 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -24402,17 +25024,17 @@ var ShowXRButtonsComponent = class extends Component27 {
     }
   }
 };
-__decorate2([
-  property2.bool(true)
+__decorate4([
+  property4.bool(true)
 ], ShowXRButtonsComponent.prototype, "_myShowVRButton", void 0);
-__decorate2([
-  property2.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
+__decorate4([
+  property4.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
 ], ShowXRButtonsComponent.prototype, "_myVRButtonBehaviorWhenNotAvailable", void 0);
-__decorate2([
-  property2.bool(true)
+__decorate4([
+  property4.bool(true)
 ], ShowXRButtonsComponent.prototype, "_myShowARButton", void 0);
-__decorate2([
-  property2.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
+__decorate4([
+  property4.enum(Object.values(_ButtonBehaviorWhenNotAvailable), _ButtonBehaviorWhenNotAvailable.DISABLE)
 ], ShowXRButtonsComponent.prototype, "_myARButtonBehaviorWhenNotAvailable", void 0);
 
 // dist/pp/cauldron/fsm/fsm.js
@@ -25469,12 +26091,12 @@ var TextUtils = {
 };
 
 // dist/pp/debug/components/debug_transform_component.js
-import { Component as Component28, Property as Property20 } from "@wonderlandengine/api";
+import { Component as Component28, Property as Property18 } from "@wonderlandengine/api";
 var DebugTransformComponent = class extends Component28 {
   static TypeName = "pp-debug-transform";
   static Properties = {
-    _myLength: Property20.float(0.1),
-    _myThickness: Property20.float(5e-3)
+    _myLength: Property18.float(0.1),
+    _myThickness: Property18.float(5e-3)
   };
   start() {
     this._myStarted = false;
@@ -25500,6 +26122,45 @@ var DebugTransformComponent = class extends Component28 {
   onDestroy() {
     if (this._myStarted) {
       this._myDebugVisualTransform.destroy();
+    }
+  }
+};
+
+// dist/pp/debug/components/show_fps_component.js
+import { Alignment as Alignment4, Component as Component29, Justification as Justification4, Property as Property19 } from "@wonderlandengine/api";
+var ShowFPSComponent = class extends Component29 {
+  static TypeName = "pp-show-fps";
+  static Properties = {
+    _myRefreshSeconds: Property19.float(0.25),
+    _myScreenPositionX: Property19.float(1),
+    _myScreenPositionY: Property19.float(-1),
+    _myScreenPositionZ: Property19.float(1),
+    _myScale: Property19.float(1.5),
+    _myTextMaterial: Property19.material()
+  };
+  start() {
+    this._myColor = vec4_create(1, 1, 1, 1);
+    if (this._myTextMaterial != null) {
+      this._myColor.vec4_copy(this._myTextMaterial.color);
+    }
+    this._myScreenPosition = vec3_create(this._myScreenPositionX, this._myScreenPositionY, this._myScreenPositionZ);
+    this._myCurrentFPS = 0;
+    this._myTimer = new Timer(this._myRefreshSeconds);
+    this._myTotalDT = 0;
+    this._myFrames = 0;
+  }
+  update(dt) {
+    if (Globals.isDebugEnabled(this.engine)) {
+      this._myTotalDT += dt;
+      this._myFrames++;
+      this._myTimer.update(dt);
+      if (this._myTimer.isDone()) {
+        this._myTimer.start();
+        this._myCurrentFPS = Math.round(this._myFrames / this._myTotalDT);
+        this._myTotalDT = 0;
+        this._myFrames = 0;
+      }
+      Globals.getDebugVisualManager(this.engine).drawUIText(0, this._myCurrentFPS.toFixed(0), this._myScreenPosition, this._myScale, this._myColor, Alignment4.Right, Justification4.Bottom);
     }
   }
 };
@@ -25943,16 +26604,16 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   resetResults() {
     this._updateDerivatesResults();
     this._updateMaxResults();
-    for (let property14 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      this._myFunctionPerformanceAnalysisResults.get(property14).reset();
+    for (let property16 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      this._myFunctionPerformanceAnalysisResults.get(property16).reset();
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset = 0;
     this._myTimeOfLastReset = window.performance.now();
   }
   resetMaxResults() {
     this._myMaxTimeElapsedSinceLastReset = 0;
-    for (let property14 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
-      this._myFunctionPerformanceAnalysisMaxResults.get(property14).reset();
+    for (let property16 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
+      this._myFunctionPerformanceAnalysisMaxResults.get(property16).reset();
     }
   }
   getResults(sortOrder = DebugFunctionsPerformanceAnalyzerSortOrder.NONE) {
@@ -26033,8 +26694,8 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   _updateDerivatesResults() {
     let timeElapsedSinceLastReset = this.getTimeElapsedSinceLastReset();
     let beforeTime = window.performance.now();
-    for (let property14 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      let results = this._myFunctionPerformanceAnalysisResults.get(property14);
+    for (let property16 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      let results = this._myFunctionPerformanceAnalysisResults.get(property16);
       if (timeElapsedSinceLastReset != 0) {
         results.myTotalExecutionTimePercentage = results.myTotalExecutionTime / timeElapsedSinceLastReset;
       } else {
@@ -26056,13 +26717,13 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   _updateMaxResults() {
     let beforeTime = window.performance.now();
     this._myMaxTimeElapsedSinceLastReset = Math.max(this._myMaxTimeElapsedSinceLastReset, this.getTimeElapsedSinceLastReset());
-    for (let property14 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      if (this._myFunctionPerformanceAnalysisMaxResults.has(property14)) {
-        this._myFunctionPerformanceAnalysisMaxResults.get(property14).max(this._myFunctionPerformanceAnalysisResults.get(property14));
+    for (let property16 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      if (this._myFunctionPerformanceAnalysisMaxResults.has(property16)) {
+        this._myFunctionPerformanceAnalysisMaxResults.get(property16).max(this._myFunctionPerformanceAnalysisResults.get(property16));
       } else {
         let maxResults = new DebugFunctionPerformanceAnalysisResults();
-        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property14));
-        this._myFunctionPerformanceAnalysisMaxResults.set(property14, maxResults);
+        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property16));
+        this._myFunctionPerformanceAnalysisMaxResults.set(property16, maxResults);
       }
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
@@ -26461,37 +27122,37 @@ var DebugFunctionsPerformanceAnalysisResultsLogger = class {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js
-import { Component as Component29, Property as Property21 } from "@wonderlandengine/api";
-var DebugFunctionsPerformanceAnalyzerComponent = class extends Component29 {
+import { Component as Component30, Property as Property20 } from "@wonderlandengine/api";
+var DebugFunctionsPerformanceAnalyzerComponent = class extends Component30 {
   static TypeName = "pp-debug-functions-performance-analyzer";
   static Properties = {
-    _myObjectsByPath: Property21.string(""),
-    _myClassesByPath: Property21.string(""),
-    _myFunctionsByPath: Property21.string(""),
-    _myDelayStart: Property21.float(0),
-    _myLogTitle: Property21.string("Functions Performance Analysis Results"),
-    _myLogFunction: Property21.enum(["Log", "Error", "Warn", "Debug"], "Error"),
-    _mySecondsBetweenLogs: Property21.float(1),
-    _myLogMaxResults: Property21.bool(false),
-    _myLogSortOrder: Property21.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
-    _myLogCallsCountResults: Property21.bool(true),
-    _myLogTotalExecutionTimeResults: Property21.bool(false),
-    _myLogTotalExecutionTimePercentageResults: Property21.bool(false),
-    _myLogAverageExecutionTimeResults: Property21.bool(false),
-    _myLogMaxAmountOfFunctions: Property21.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property21.int(0),
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property21.float(-1),
-    _myFunctionPathsToInclude: Property21.string(""),
-    _myFunctionPathsToExclude: Property21.string(""),
-    _myExcludeConstructors: Property21.bool(false),
-    _myExcludeJSObjectFunctions: Property21.bool(true),
-    _myAddPathPrefixToFunctionID: Property21.bool(true),
-    _myObjectAddObjectDescendantsDepthLevel: Property21.int(0),
-    _myObjectAddClassDescendantsDepthLevel: Property21.int(0),
-    _myClearConsoleBeforeLog: Property21.bool(false),
-    _myResetMaxResultsShortcutEnabled: Property21.bool(false),
-    _myClassesByReference: Property21.enum(["Code Driven"], "Code Driven"),
-    _myObjectsByReference: Property21.enum(["Code Driven"], "Code Driven")
+    _myObjectsByPath: Property20.string(""),
+    _myClassesByPath: Property20.string(""),
+    _myFunctionsByPath: Property20.string(""),
+    _myDelayStart: Property20.float(0),
+    _myLogTitle: Property20.string("Functions Performance Analysis Results"),
+    _myLogFunction: Property20.enum(["Log", "Error", "Warn", "Debug"], "Error"),
+    _mySecondsBetweenLogs: Property20.float(1),
+    _myLogMaxResults: Property20.bool(false),
+    _myLogSortOrder: Property20.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
+    _myLogCallsCountResults: Property20.bool(true),
+    _myLogTotalExecutionTimeResults: Property20.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property20.bool(false),
+    _myLogAverageExecutionTimeResults: Property20.bool(false),
+    _myLogMaxAmountOfFunctions: Property20.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property20.int(0),
+    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property20.float(-1),
+    _myFunctionPathsToInclude: Property20.string(""),
+    _myFunctionPathsToExclude: Property20.string(""),
+    _myExcludeConstructors: Property20.bool(false),
+    _myExcludeJSObjectFunctions: Property20.bool(true),
+    _myAddPathPrefixToFunctionID: Property20.bool(true),
+    _myObjectAddObjectDescendantsDepthLevel: Property20.int(0),
+    _myObjectAddClassDescendantsDepthLevel: Property20.int(0),
+    _myClearConsoleBeforeLog: Property20.bool(false),
+    _myResetMaxResultsShortcutEnabled: Property20.bool(false),
+    _myClassesByReference: Property20.enum(["Code Driven"], "Code Driven"),
+    _myObjectsByReference: Property20.enum(["Code Driven"], "Code Driven")
   };
   init() {
     this._myActive = false;
@@ -26597,27 +27258,27 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component29 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component.js
-import { Component as Component30, Property as Property22 } from "@wonderlandengine/api";
-var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component30 {
+import { Component as Component31, Property as Property21 } from "@wonderlandengine/api";
+var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component31 {
   static TypeName = "pp-debug-pp-functions-performance-analyzer";
   static Properties = {
-    _myDelayStart: Property22.float(0),
-    _myLogFunction: Property22.enum(["Log", "Error", "Warn", "Debug"], "Error"),
-    _mySecondsBetweenLogs: Property22.float(1),
-    _myLogMaxResults: Property22.bool(false),
-    _myLogSortOrder: Property22.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
-    _myLogCallsCountResults: Property22.bool(true),
-    _myLogTotalExecutionTimeResults: Property22.bool(false),
-    _myLogTotalExecutionTimePercentageResults: Property22.bool(false),
-    _myLogAverageExecutionTimeResults: Property22.bool(false),
-    _myLogMaxAmountOfFunctions: Property22.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property22.int(0),
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property22.float(-1),
-    _myFunctionPathsToInclude: Property22.string(""),
-    _myFunctionPathsToExclude: Property22.string(""),
-    _myExcludeConstructors: Property22.bool(false),
-    _myClearConsoleBeforeLog: Property22.bool(false),
-    _myResetMaxResultsShortcutEnabled: Property22.bool(false)
+    _myDelayStart: Property21.float(0),
+    _myLogFunction: Property21.enum(["Log", "Error", "Warn", "Debug"], "Error"),
+    _mySecondsBetweenLogs: Property21.float(1),
+    _myLogMaxResults: Property21.bool(false),
+    _myLogSortOrder: Property21.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
+    _myLogCallsCountResults: Property21.bool(true),
+    _myLogTotalExecutionTimeResults: Property21.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property21.bool(false),
+    _myLogAverageExecutionTimeResults: Property21.bool(false),
+    _myLogMaxAmountOfFunctions: Property21.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property21.int(0),
+    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property21.float(-1),
+    _myFunctionPathsToInclude: Property21.string(""),
+    _myFunctionPathsToExclude: Property21.string(""),
+    _myExcludeConstructors: Property21.bool(false),
+    _myClearConsoleBeforeLog: Property21.bool(false),
+    _myResetMaxResultsShortcutEnabled: Property21.bool(false)
   };
   init() {
     this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
@@ -26649,29 +27310,29 @@ var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component30 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component.js
-import { Component as Component31, Property as Property23 } from "@wonderlandengine/api";
-var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component31 {
+import { Component as Component32, Property as Property22 } from "@wonderlandengine/api";
+var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component32 {
   static TypeName = "pp-debug-array-functions-performance-analyzer";
   static Properties = {
-    _myIncludeOnlyMainArrayTypes: Property23.bool(true),
-    _myIncludeOnlyArrayExtensionFunctions: Property23.bool(false),
-    _myDelayStart: Property23.float(0),
-    _myLogFunction: Property23.enum(["Log", "Error", "Warn", "Debug"], "Error"),
-    _mySecondsBetweenLogs: Property23.float(1),
-    _myLogMaxResults: Property23.bool(false),
-    _myLogSortOrder: Property23.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
-    _myLogCallsCountResults: Property23.bool(true),
-    _myLogTotalExecutionTimeResults: Property23.bool(false),
-    _myLogTotalExecutionTimePercentageResults: Property23.bool(false),
-    _myLogAverageExecutionTimeResults: Property23.bool(false),
-    _myLogMaxAmountOfFunctions: Property23.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property23.int(0),
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property23.float(-1),
-    _myFunctionPathsToInclude: Property23.string(""),
-    _myFunctionPathsToExclude: Property23.string(""),
-    _myExcludeConstructors: Property23.bool(false),
-    _myClearConsoleBeforeLog: Property23.bool(false),
-    _myResetMaxResultsShortcutEnabled: Property23.bool(false)
+    _myIncludeOnlyMainArrayTypes: Property22.bool(true),
+    _myIncludeOnlyArrayExtensionFunctions: Property22.bool(false),
+    _myDelayStart: Property22.float(0),
+    _myLogFunction: Property22.enum(["Log", "Error", "Warn", "Debug"], "Error"),
+    _mySecondsBetweenLogs: Property22.float(1),
+    _myLogMaxResults: Property22.bool(false),
+    _myLogSortOrder: Property22.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
+    _myLogCallsCountResults: Property22.bool(true),
+    _myLogTotalExecutionTimeResults: Property22.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property22.bool(false),
+    _myLogAverageExecutionTimeResults: Property22.bool(false),
+    _myLogMaxAmountOfFunctions: Property22.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property22.int(0),
+    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property22.float(-1),
+    _myFunctionPathsToInclude: Property22.string(""),
+    _myFunctionPathsToExclude: Property22.string(""),
+    _myExcludeConstructors: Property22.bool(false),
+    _myClearConsoleBeforeLog: Property22.bool(false),
+    _myResetMaxResultsShortcutEnabled: Property22.bool(false)
   };
   init() {
     let classesByPath = "Array, Uint8ClampedArray, Uint8Array, Uint16Array, Uint32Array, Int8Array, Int16Array, Int32Array, Float32Array, Float64Array";
@@ -26705,24 +27366,24 @@ var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component31 
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component.js
-import { Component as Component32, Property as Property24 } from "@wonderlandengine/api";
-var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component32 {
+import { Component as Component33, Property as Property23 } from "@wonderlandengine/api";
+var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component33 {
   static TypeName = "pp-debug-pp-array-creation-performance-analyzer";
   static Properties = {
-    _myDelayStart: Property24.float(0),
-    _myLogFunction: Property24.enum(["Log", "Error", "Warn", "Debug"], "Error"),
-    _mySecondsBetweenLogs: Property24.float(1),
-    _myLogMaxResults: Property24.bool(false),
-    _myLogSortOrder: Property24.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
-    _myLogCallsCountResults: Property24.bool(true),
-    _myLogTotalExecutionTimeResults: Property24.bool(false),
-    _myLogTotalExecutionTimePercentageResults: Property24.bool(false),
-    _myLogAverageExecutionTimeResults: Property24.bool(false),
-    _myLogMaxAmountOfFunctions: Property24.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property24.int(0),
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property24.float(-1),
-    _myClearConsoleBeforeLog: Property24.bool(false),
-    _myResetMaxResultsShortcutEnabled: Property24.bool(false)
+    _myDelayStart: Property23.float(0),
+    _myLogFunction: Property23.enum(["Log", "Error", "Warn", "Debug"], "Error"),
+    _mySecondsBetweenLogs: Property23.float(1),
+    _myLogMaxResults: Property23.bool(false),
+    _myLogSortOrder: Property23.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
+    _myLogCallsCountResults: Property23.bool(true),
+    _myLogTotalExecutionTimeResults: Property23.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property23.bool(false),
+    _myLogAverageExecutionTimeResults: Property23.bool(false),
+    _myLogMaxAmountOfFunctions: Property23.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property23.int(0),
+    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property23.float(-1),
+    _myClearConsoleBeforeLog: Property23.bool(false),
+    _myResetMaxResultsShortcutEnabled: Property23.bool(false)
   };
   init() {
     this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
@@ -26759,27 +27420,27 @@ var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component32
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component.js
-import { Component as Component33, Property as Property25 } from "@wonderlandengine/api";
-var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component33 {
+import { Component as Component34, Property as Property24 } from "@wonderlandengine/api";
+var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component34 {
   static TypeName = "pp-debug-wl-functions-performance-analyzer";
   static Properties = {
-    _myDelayStart: Property25.float(0),
-    _myLogFunction: Property25.enum(["Log", "Error", "Warn", "Debug"], "Error"),
-    _mySecondsBetweenLogs: Property25.float(1),
-    _myLogMaxResults: Property25.bool(false),
-    _myLogSortOrder: Property25.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
-    _myLogCallsCountResults: Property25.bool(true),
-    _myLogTotalExecutionTimeResults: Property25.bool(false),
-    _myLogTotalExecutionTimePercentageResults: Property25.bool(false),
-    _myLogAverageExecutionTimeResults: Property25.bool(false),
-    _myLogMaxAmountOfFunctions: Property25.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property25.int(0),
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property25.float(-1),
-    _myFunctionPathsToInclude: Property25.string(""),
-    _myFunctionPathsToExclude: Property25.string(""),
-    _myExcludeConstructors: Property25.bool(false),
-    _myClearConsoleBeforeLog: Property25.bool(false),
-    _myResetMaxResultsShortcutEnabled: Property25.bool(false)
+    _myDelayStart: Property24.float(0),
+    _myLogFunction: Property24.enum(["Log", "Error", "Warn", "Debug"], "Error"),
+    _mySecondsBetweenLogs: Property24.float(1),
+    _myLogMaxResults: Property24.bool(false),
+    _myLogSortOrder: Property24.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
+    _myLogCallsCountResults: Property24.bool(true),
+    _myLogTotalExecutionTimeResults: Property24.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property24.bool(false),
+    _myLogAverageExecutionTimeResults: Property24.bool(false),
+    _myLogMaxAmountOfFunctions: Property24.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property24.int(0),
+    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property24.float(-1),
+    _myFunctionPathsToInclude: Property24.string(""),
+    _myFunctionPathsToExclude: Property24.string(""),
+    _myExcludeConstructors: Property24.bool(false),
+    _myClearConsoleBeforeLog: Property24.bool(false),
+    _myResetMaxResultsShortcutEnabled: Property24.bool(false)
   };
   init() {
     this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
@@ -26811,30 +27472,30 @@ var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component33 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js
-import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component34, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent6, Property as Property26, TextComponent as TextComponent7, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
-var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component34 {
+import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component35, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent6, Property as Property25, TextComponent as TextComponent7, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
+var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component35 {
   static TypeName = "pp-debug-wl-components-functions-performance-analyzer";
   static Properties = {
-    _myAnalyzeComponentTypes: Property26.bool(true),
-    _myAnalyzeComponentInstances: Property26.bool(false),
-    _myComponentInstanceID: Property26.enum(["Object ID", "Object Name", "Object ID - Object Name"], "Object ID - Object Name"),
-    _myDelayStart: Property26.float(0),
-    _myLogFunction: Property26.enum(["Log", "Error", "Warn", "Debug"], "Error"),
-    _mySecondsBetweenLogs: Property26.float(1),
-    _myLogMaxResults: Property26.bool(false),
-    _myLogSortOrder: Property26.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
-    _myLogCallsCountResults: Property26.bool(true),
-    _myLogTotalExecutionTimeResults: Property26.bool(false),
-    _myLogTotalExecutionTimePercentageResults: Property26.bool(false),
-    _myLogAverageExecutionTimeResults: Property26.bool(false),
-    _myLogMaxAmountOfFunctions: Property26.int(-1),
-    _myLogFunctionsWithCallsCountAbove: Property26.int(0),
-    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property26.float(-1),
-    _myFunctionPathsToInclude: Property26.string(""),
-    _myFunctionPathsToExclude: Property26.string(""),
-    _myExcludeConstructors: Property26.bool(false),
-    _myClearConsoleBeforeLog: Property26.bool(false),
-    _myResetMaxResultsShortcutEnabled: Property26.bool(false)
+    _myAnalyzeComponentTypes: Property25.bool(true),
+    _myAnalyzeComponentInstances: Property25.bool(false),
+    _myComponentInstanceID: Property25.enum(["Object ID", "Object Name", "Object ID - Object Name"], "Object ID - Object Name"),
+    _myDelayStart: Property25.float(0),
+    _myLogFunction: Property25.enum(["Log", "Error", "Warn", "Debug"], "Error"),
+    _mySecondsBetweenLogs: Property25.float(1),
+    _myLogMaxResults: Property25.bool(false),
+    _myLogSortOrder: Property25.enum(["None", "Calls Count", "Total Execution Time", "Average Execution Time"], "Calls Count"),
+    _myLogCallsCountResults: Property25.bool(true),
+    _myLogTotalExecutionTimeResults: Property25.bool(false),
+    _myLogTotalExecutionTimePercentageResults: Property25.bool(false),
+    _myLogAverageExecutionTimeResults: Property25.bool(false),
+    _myLogMaxAmountOfFunctions: Property25.int(-1),
+    _myLogFunctionsWithCallsCountAbove: Property25.int(0),
+    _myLogFunctionsWithTotalExecutionTimePercentageAbove: Property25.float(-1),
+    _myFunctionPathsToInclude: Property25.string(""),
+    _myFunctionPathsToExclude: Property25.string(""),
+    _myExcludeConstructors: Property25.bool(false),
+    _myClearConsoleBeforeLog: Property25.bool(false),
+    _myResetMaxResultsShortcutEnabled: Property25.bool(false)
   };
   init() {
     this._myStartTimer = new Timer(this._myDelayStart);
@@ -27389,10 +28050,10 @@ var AnimatedNumber = class {
 };
 
 // dist/pp/gameplay/cauldron/cauldron/components/cursor_button_component.js
-import { Component as Component35, MeshComponent as MeshComponent10, TextComponent as TextComponent8 } from "@wonderlandengine/api";
-import { property as property3 } from "@wonderlandengine/api/decorators.js";
+import { Component as Component36, MeshComponent as MeshComponent10, TextComponent as TextComponent8 } from "@wonderlandengine/api";
+import { property as property5 } from "@wonderlandengine/api/decorators.js";
 import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
-var __decorate3 = function(decorators, target, key, desc) {
+var __decorate5 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -27402,7 +28063,7 @@ var __decorate3 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
+var CursorButtonComponent = class _CursorButtonComponent extends Component36 {
   static TypeName = "pp-cursor-button";
   /** This can be either a name of a component that is found on the same object of the cursor button,
       or the name of an handler added through `CursorButtonComponent.addButtonActionHandler` */
@@ -27849,92 +28510,92 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component35 {
     }
   }
 };
-__decorate3([
-  property3.string("")
+__decorate5([
+  property5.string("")
 ], CursorButtonComponent.prototype, "_myButtonActionsHandlerNames", void 0);
-__decorate3([
-  property3.float(0.075)
+__decorate5([
+  property5.float(0.075)
 ], CursorButtonComponent.prototype, "_myScaleOffsetOnHover", void 0);
-__decorate3([
-  property3.float(-0.075)
+__decorate5([
+  property5.float(-0.075)
 ], CursorButtonComponent.prototype, "_myScaleOffsetOnDown", void 0);
-__decorate3([
-  property3.float(0.075)
+__decorate5([
+  property5.float(0.075)
 ], CursorButtonComponent.prototype, "_myScaleOffsetOnUp", void 0);
-__decorate3([
-  property3.float(0.1)
+__decorate5([
+  property5.float(0.1)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnHover", void 0);
-__decorate3([
-  property3.float(0)
+__decorate5([
+  property5.float(0)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnDown", void 0);
-__decorate3([
-  property3.float(0.1)
+__decorate5([
+  property5.float(0.1)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnUp", void 0);
-__decorate3([
-  property3.float(0)
+__decorate5([
+  property5.float(0)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnUnhover", void 0);
-__decorate3([
-  property3.float(-0.1)
+__decorate5([
+  property5.float(-0.1)
 ], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnHover", void 0);
-__decorate3([
-  property3.float(0)
+__decorate5([
+  property5.float(0)
 ], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnDown", void 0);
-__decorate3([
-  property3.float(-0.1)
+__decorate5([
+  property5.float(-0.1)
 ], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnUp", void 0);
-__decorate3([
-  property3.bool(true)
+__decorate5([
+  property5.bool(true)
 ], CursorButtonComponent.prototype, "_myUseSpatialAudio", void 0);
-__decorate3([
-  property3.string("")
+__decorate5([
+  property5.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnHover", void 0);
-__decorate3([
-  property3.string("")
+__decorate5([
+  property5.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnDown", void 0);
-__decorate3([
-  property3.string("")
+__decorate5([
+  property5.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnUp", void 0);
-__decorate3([
-  property3.string("")
+__decorate5([
+  property5.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnUnhover", void 0);
-__decorate3([
-  property3.float(0)
+__decorate5([
+  property5.float(0)
 ], CursorButtonComponent.prototype, "_myMinHoverSecond", void 0);
-__decorate3([
-  property3.float(0.15)
+__decorate5([
+  property5.float(0.15)
 ], CursorButtonComponent.prototype, "_myMinDownSecond", void 0);
-__decorate3([
-  property3.float(0)
+__decorate5([
+  property5.float(0)
 ], CursorButtonComponent.prototype, "_myMinUpSecond", void 0);
-__decorate3([
-  property3.float(0)
+__decorate5([
+  property5.float(0)
 ], CursorButtonComponent.prototype, "_myMinUnhoverSecond", void 0);
-__decorate3([
-  property3.bool(true)
+__decorate5([
+  property5.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnHover", void 0);
-__decorate3([
-  property3.bool(true)
+__decorate5([
+  property5.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnDown", void 0);
-__decorate3([
-  property3.bool(true)
+__decorate5([
+  property5.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnUp", void 0);
-__decorate3([
-  property3.bool(true)
+__decorate5([
+  property5.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnUnhover", void 0);
-__decorate3([
-  property3.bool(false)
+__decorate5([
+  property5.bool(false)
 ], CursorButtonComponent.prototype, "_myUpCursorIsMainOnlyIfLastDown", void 0);
-__decorate3([
-  property3.bool(false)
+__decorate5([
+  property5.bool(false)
 ], CursorButtonComponent.prototype, "_myUpWithSecondaryCursorIsMain", void 0);
 
 // dist/pp/gameplay/cauldron/rough/components/scale_on_spawn_component.js
-import { Component as Component36, Property as Property27 } from "@wonderlandengine/api";
-var ScaleOnSpawnComponent = class extends Component36 {
+import { Component as Component37, Property as Property26 } from "@wonderlandengine/api";
+var ScaleOnSpawnComponent = class extends Component37 {
   static TypeName = "pp-scale-on-spawn";
   static Properties = {
-    _myStartDelay: Property27.float(0),
-    _myScaleDuration: Property27.float(0)
+    _myStartDelay: Property26.float(0),
+    _myScaleDuration: Property26.float(0)
   };
   init() {
     this._myTargetScale = vec3_create(1, 1, 1);
@@ -27962,14 +28623,14 @@ var ScaleOnSpawnComponent = class extends Component36 {
 };
 
 // dist/pp/gameplay/grab_throw/grabbable_component.js
-import { Component as Component37, Emitter as Emitter10, PhysXComponent as PhysXComponent7, Property as Property28 } from "@wonderlandengine/api";
-var GrabbableComponent = class extends Component37 {
+import { Component as Component38, Emitter as Emitter10, PhysXComponent as PhysXComponent7, Property as Property27 } from "@wonderlandengine/api";
+var GrabbableComponent = class extends Component38 {
   static TypeName = "pp-grabbable";
   static Properties = {
-    _myThrowLinearVelocityMultiplier: Property28.float(1),
-    _myThrowAngularVelocityMultiplier: Property28.float(1),
-    _myKinematicValueOnRelease: Property28.enum(["True", "False", "Own"], "False"),
-    _myParentOnRelease: Property28.enum(["Scene", "Own"], "Own")
+    _myThrowLinearVelocityMultiplier: Property27.float(1),
+    _myThrowAngularVelocityMultiplier: Property27.float(1),
+    _myKinematicValueOnRelease: Property27.enum(["True", "False", "Own"], "False"),
+    _myParentOnRelease: Property27.enum(["Scene", "Own"], "Own")
   };
   init() {
     this._myGrabbed = false;
@@ -28084,29 +28745,29 @@ var GrabbableComponent = class extends Component37 {
 };
 
 // dist/pp/gameplay/grab_throw/grabber_hand_component.js
-import { Component as Component38, Emitter as Emitter11, PhysXComponent as PhysXComponent8, Property as Property29 } from "@wonderlandengine/api";
-var GrabberHandComponent = class extends Component38 {
+import { Component as Component39, Emitter as Emitter11, PhysXComponent as PhysXComponent8, Property as Property28 } from "@wonderlandengine/api";
+var GrabberHandComponent = class extends Component39 {
   static TypeName = "pp-grabber-hand";
   static Properties = {
-    _myHandedness: Property29.enum(["Left", "Right"], "Left"),
-    _myGrabButton: Property29.enum(["Select", "Squeeze", "Both", "Both Exclusive"], "Squeeze"),
+    _myHandedness: Property28.enum(["Left", "Right"], "Left"),
+    _myGrabButton: Property28.enum(["Select", "Squeeze", "Both", "Both Exclusive"], "Squeeze"),
     // @"Both Exclusive" means u can use both buttons but you have to use the same button you grabbed with to throw
-    _mySnapGrabbableToOrigin: Property29.bool(false),
-    _myMaxNumberOfObjects: Property29.int(1),
+    _mySnapGrabbableToOrigin: Property28.bool(false),
+    _myMaxNumberOfObjects: Property28.int(1),
     // How many objects you can grab at the same time
     // ADVANCED SETTINGS
-    _myThrowVelocitySource: Property29.enum(["Hand", "Grabbable"], "Hand"),
-    _myThrowLinearVelocityMultiplier: Property29.float(1),
+    _myThrowVelocitySource: Property28.enum(["Hand", "Grabbable"], "Hand"),
+    _myThrowLinearVelocityMultiplier: Property28.float(1),
     // Multiply the overall throw speed, so slow throws will be multiplied too
-    _myThrowMaxLinearSpeed: Property29.float(15),
-    _myThrowAngularVelocityMultiplier: Property29.float(0.5),
-    _myThrowMaxAngularSpeed: Property29.float(1080),
+    _myThrowMaxLinearSpeed: Property28.float(15),
+    _myThrowAngularVelocityMultiplier: Property28.float(0.5),
+    _myThrowMaxAngularSpeed: Property28.float(1080),
     // @Degrees
-    _myThrowLinearVelocityBoost: Property29.float(1.75),
+    _myThrowLinearVelocityBoost: Property28.float(1.75),
     // This boost is applied from 0% to 100% based on how fast you throw, so slow throws are not affected
-    _myThrowLinearVelocityBoostMinSpeedThreshold: Property29.float(0.6),
+    _myThrowLinearVelocityBoostMinSpeedThreshold: Property28.float(0.6),
     // 0% boost is applied if plain throw speed is under this value
-    _myThrowLinearVelocityBoostMaxSpeedThreshold: Property29.float(2.5)
+    _myThrowLinearVelocityBoostMaxSpeedThreshold: Property28.float(2.5)
     // 100% boost is applied if plain throw speed is over this value
   };
   init() {
@@ -28139,27 +28800,23 @@ var GrabberHandComponent = class extends Component38 {
   }
   update(dt) {
     this._myCollisionsCollector.update(dt);
-    const currentInputSource = this._myGamepad.getHandPose().getInputSource();
-    let currentInputSourceType = null;
-    if (currentInputSource != null) {
-      currentInputSourceType = InputUtils.getInputSourceType(currentInputSource);
-    }
+    const currentInputSourceType = this._myGamepad.getHandPose().getInputSourceType();
     if (this._myPrevInputSourceType != currentInputSourceType) {
       this.throw();
     }
     this._myPrevInputSourceType = currentInputSourceType;
     if (this._myGrabButton != 1 || currentInputSourceType == InputSourceType.TRACKED_HAND) {
       if (this._myGamepad.getButtonInfo(GamepadButtonID.SELECT).isPressStart()) {
-        this._grab(this, GamepadButtonID.SELECT);
+        this._grab(GamepadButtonID.SELECT);
       } else if (this._myGamepad.getButtonInfo(GamepadButtonID.SELECT).isPressEnd()) {
-        this._throw(this, GamepadButtonID.SELECT);
+        this._throw(GamepadButtonID.SELECT);
       }
     }
     if (this._myGrabButton != 0) {
       if (this._myGamepad.getButtonInfo(GamepadButtonID.SQUEEZE).isPressStart()) {
-        this._grab(this, GamepadButtonID.SQUEEZE);
+        this._grab(GamepadButtonID.SQUEEZE);
       } else if (this._myGamepad.getButtonInfo(GamepadButtonID.SQUEEZE).isPressEnd()) {
-        this._throw(this, GamepadButtonID.SQUEEZE);
+        this._throw(GamepadButtonID.SQUEEZE);
       }
     }
     if (this._myGrabbables.length > 0) {
@@ -28806,20 +29463,20 @@ var CADummyServer = class {
 };
 
 // dist/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard_component.js
-import { Component as Component39, Property as Property30, TextComponent as TextComponent9 } from "@wonderlandengine/api";
-var CADisplayLeaderboardComponent = class extends Component39 {
+import { Component as Component40, Property as Property29, TextComponent as TextComponent9 } from "@wonderlandengine/api";
+var CADisplayLeaderboardComponent = class extends Component40 {
   static TypeName = "pp-ca-display-leaderboard";
   static Properties = {
-    _myUsernamesTextObject: Property30.object(),
-    _myScoresTextObject: Property30.object(),
-    _myLeaderboardID: Property30.string(""),
-    _myLocal: Property30.bool(false),
-    _myAscending: Property30.bool(false),
-    _myScoresAmount: Property30.int(10),
-    _myScoreFormat: Property30.enum(["Value", "Hours:Minutes:Seconds", "Minutes:Seconds", "Seconds", "Hours:Minutes", "Minutes"], "Value"),
-    _myPositionAndUsernameSeparator: Property30.string(" - "),
-    _myNumberOfLinesBetweenScores: Property30.int(1),
-    _myAddDefaultCADummyServer: Property30.bool(false)
+    _myUsernamesTextObject: Property29.object(),
+    _myScoresTextObject: Property29.object(),
+    _myLeaderboardID: Property29.string(""),
+    _myLocal: Property29.bool(false),
+    _myAscending: Property29.bool(false),
+    _myScoresAmount: Property29.int(10),
+    _myScoreFormat: Property29.enum(["Value", "Hours:Minutes:Seconds", "Minutes:Seconds", "Seconds", "Hours:Minutes", "Minutes"], "Value"),
+    _myPositionAndUsernameSeparator: Property29.string(" - "),
+    _myNumberOfLinesBetweenScores: Property29.int(1),
+    _myAddDefaultCADummyServer: Property29.bool(false)
   };
   init() {
     this._myUsernamesTextComponent = null;
@@ -29427,7 +30084,6 @@ function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = 
   outCharacterColliderSetup.myGroundParams.mySurfaceSnapEnabled = simplifiedCreationParams.myShouldSnapOnGround;
   outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled = true;
   outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore = simplifiedCreationParams.myMaxWalkableGroundAngle;
-  outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngle = true;
   outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxOutsideDistance = 1e-3;
   outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance = 1e-3;
   outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance = simplifiedCreationParams.myRadius > 0.1 ? 0.1 : 0.01;
@@ -29446,7 +30102,6 @@ function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = 
     outCharacterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance;
     outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance;
     outCharacterColliderSetup.myCeilingParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft;
-    outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngle = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngle;
     outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxOutsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxOutsideDistance;
     outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance;
     outCharacterColliderSetup.myCeilingParams.myCollectSurfaceNormalMaxOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceNormalMaxOutsideDistance;
@@ -35049,9 +35704,9 @@ PlayerLocomotionSmooth.prototype._onXRSessionEnd = function() {
 }();
 
 // dist/pp/gameplay/experimental/locomotion/legacy/locomotion/components/player_locomotion_component.js
-import { Component as Component40 } from "@wonderlandengine/api";
-import { property as property4 } from "@wonderlandengine/api/decorators.js";
-var __decorate4 = function(decorators, target, key, desc) {
+import { Component as Component41 } from "@wonderlandengine/api";
+import { property as property6 } from "@wonderlandengine/api/decorators.js";
+var __decorate6 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -35061,7 +35716,7 @@ var __decorate4 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var PlayerLocomotionComponent = class extends Component40 {
+var PlayerLocomotionComponent = class extends Component41 {
   static TypeName = "pp-player-locomotion";
   _myDefaultLocomotionType;
   _myAlwaysSmoothForNonVR;
@@ -35317,213 +35972,213 @@ var PlayerLocomotionComponent = class extends Component40 {
     }
   }
 };
-__decorate4([
-  property4.enum(["Smooth", "Teleport"], "Smooth")
+__decorate6([
+  property6.enum(["Smooth", "Teleport"], "Smooth")
 ], PlayerLocomotionComponent.prototype, "_myDefaultLocomotionType", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myAlwaysSmoothForNonVR", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySwitchLocomotionTypeShortcutEnabled", void 0);
-__decorate4([
-  property4.string("0, 0, 0, 0, 0, 0, 0, 0")
+__decorate6([
+  property6.string("0, 0, 0, 0, 0, 0, 0, 0")
 ], PlayerLocomotionComponent.prototype, "_myPhysicsBlockLayerFlags", void 0);
-__decorate4([
-  property4.float(1.7)
+__decorate6([
+  property6.float(1.7)
 ], PlayerLocomotionComponent.prototype, "_myDefaultHeight", void 0);
-__decorate4([
-  property4.float(0.3)
+__decorate6([
+  property6.float(0.3)
 ], PlayerLocomotionComponent.prototype, "_myCharacterRadius", void 0);
-__decorate4([
-  property4.float(2)
+__decorate6([
+  property6.float(2)
 ], PlayerLocomotionComponent.prototype, "_myMaxSpeed", void 0);
-__decorate4([
-  property4.float(100)
+__decorate6([
+  property6.float(100)
 ], PlayerLocomotionComponent.prototype, "_myMaxRotationSpeed", void 0);
-__decorate4([
-  property4.float(1)
+__decorate6([
+  property6.float(1)
 ], PlayerLocomotionComponent.prototype, "_mySpeedSlowDownPercentageOnWallSlid", void 0);
-__decorate4([
-  property4.float(-20)
+__decorate6([
+  property6.float(-20)
 ], PlayerLocomotionComponent.prototype, "_myGravityAcceleration", void 0);
-__decorate4([
-  property4.float(-15)
+__decorate6([
+  property6.float(-15)
 ], PlayerLocomotionComponent.prototype, "_myMaxGravitySpeed", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myIsSnapTurn", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySnapTurnOnlyVR", void 0);
-__decorate4([
-  property4.float(30)
+__decorate6([
+  property6.float(30)
 ], PlayerLocomotionComponent.prototype, "_mySnapTurnAngle", void 0);
-__decorate4([
-  property4.float(0)
+__decorate6([
+  property6.float(0)
 ], PlayerLocomotionComponent.prototype, "_mySnapTurnSpeedDegrees", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myFlyEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myStartFlying", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myFlyWithButtonsEnabled", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myFlyWithViewAngleEnabled", void 0);
-__decorate4([
-  property4.float(30)
+__decorate6([
+  property6.float(30)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyUpNonVR", void 0);
-__decorate4([
-  property4.float(50)
+__decorate6([
+  property6.float(50)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyDownNonVR", void 0);
-__decorate4([
-  property4.float(60)
+__decorate6([
+  property6.float(60)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyUpVR", void 0);
-__decorate4([
-  property4.float(1)
+__decorate6([
+  property6.float(1)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyDownVR", void 0);
-__decorate4([
-  property4.float(60)
+__decorate6([
+  property6.float(60)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyRight", void 0);
-__decorate4([
-  property4.enum(["Left", "Right"], "Left")
+__decorate6([
+  property6.enum(["Left", "Right"], "Left")
 ], PlayerLocomotionComponent.prototype, "_myMainHand", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myDirectionInvertForwardWhenUpsideDown", void 0);
-__decorate4([
-  property4.enum(["Head", "Hand", "Custom Object"], "Head")
+__decorate6([
+  property6.enum(["Head", "Hand", "Custom Object"], "Head")
 ], PlayerLocomotionComponent.prototype, "_myVRDirectionReferenceType", void 0);
-__decorate4([
-  property4.object()
+__decorate6([
+  property6.object()
 ], PlayerLocomotionComponent.prototype, "_myVRDirectionReferenceObject", void 0);
-__decorate4([
-  property4.enum(["Instant", "Blink", "Shift"], "Shift")
+__decorate6([
+  property6.enum(["Instant", "Blink", "Shift"], "Shift")
 ], PlayerLocomotionComponent.prototype, "_myTeleportType", void 0);
-__decorate4([
-  property4.float(3)
+__decorate6([
+  property6.float(3)
 ], PlayerLocomotionComponent.prototype, "_myTeleportMaxDistance", void 0);
-__decorate4([
-  property4.float(1.25)
+__decorate6([
+  property6.float(1.25)
 ], PlayerLocomotionComponent.prototype, "_myTeleportMaxHeightDifference", void 0);
-__decorate4([
-  property4.string("")
+__decorate6([
+  property6.string("")
 ], PlayerLocomotionComponent.prototype, "_myTeleportFloorLayerFlags", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myTeleportRotationOnUpEnabled", void 0);
-__decorate4([
-  property4.material()
+__decorate6([
+  property6.material()
 ], PlayerLocomotionComponent.prototype, "_myTeleportValidMaterial", void 0);
-__decorate4([
-  property4.material()
+__decorate6([
+  property6.material()
 ], PlayerLocomotionComponent.prototype, "_myTeleportInvalidMaterial", void 0);
-__decorate4([
-  property4.object()
+__decorate6([
+  property6.object()
 ], PlayerLocomotionComponent.prototype, "_myTeleportPositionObject", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myTeleportPositionObjectRotateWithHead", void 0);
-__decorate4([
-  property4.object()
+__decorate6([
+  property6.object()
 ], PlayerLocomotionComponent.prototype, "_myTeleportParableStartReferenceObject", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myResetRealOnStart", void 0);
-__decorate4([
-  property4.int(1)
+__decorate6([
+  property6.int(1)
 ], PlayerLocomotionComponent.prototype, "_myResetRealOnStartFramesAmount", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myResetHeadToFeetInsteadOfReal", void 0);
-__decorate4([
-  property4.float(0.25)
+__decorate6([
+  property6.float(0.25)
 ], PlayerLocomotionComponent.prototype, "_myResetHeadToRealMinDistance", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySyncWithRealWorldPositionOnlyIfValid", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionInsideWallsEnabled", void 0);
-__decorate4([
-  property4.string("")
+__decorate6([
+  property6.string("")
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionLayerFlags", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_mySyncNonVRHeightWithVROnExitSession", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_mySyncNonVRVerticalAngleWithVROnExitSession", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySyncHeadWithRealAfterLocomotionUpdateIfNeeded", void 0);
-__decorate4([
-  property4.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High")
+__decorate6([
+  property6.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High")
 ], PlayerLocomotionComponent.prototype, "_myColliderAccuracy", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myColliderCheckOnlyFeet", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myColliderSlideAlongWall", void 0);
-__decorate4([
-  property4.float(30)
+__decorate6([
+  property6.float(30)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableGroundAngle", void 0);
-__decorate4([
-  property4.bool(true)
+__decorate6([
+  property6.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myColliderSnapOnGround", void 0);
-__decorate4([
-  property4.float(0.1)
+__decorate6([
+  property6.float(0.1)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxDistanceToSnapOnGround", void 0);
-__decorate4([
-  property4.float(0.1)
+__decorate6([
+  property6.float(0.1)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableGroundStepHeight", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myColliderPreventFallingFromEdges", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myDebugFlyShortcutEnabled", void 0);
-__decorate4([
-  property4.float(5)
+__decorate6([
+  property6.float(5)
 ], PlayerLocomotionComponent.prototype, "_myDebugFlyMaxSpeedMultiplier", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myMoveThroughCollisionShortcutEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myMoveHeadShortcutEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myTripleSpeedShortcutEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myDebugHorizontalEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myDebugVerticalEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myCollisionCheckDisabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myRaycastCountLogEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myRaycastVisualDebugEnabled", void 0);
-__decorate4([
-  property4.bool(false)
+__decorate6([
+  property6.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myPerformanceLogEnabled", void 0);
 
 // dist/pp/input/cauldron/components/overlap_cursor_component.js
-import { CollisionComponent as CollisionComponent3, Component as Component41, PhysXComponent as PhysXComponent11 } from "@wonderlandengine/api";
-import { property as property5 } from "@wonderlandengine/api/decorators.js";
+import { CollisionComponent as CollisionComponent3, Component as Component42, PhysXComponent as PhysXComponent11 } from "@wonderlandengine/api";
+import { property as property7 } from "@wonderlandengine/api/decorators.js";
 import { CursorTarget as CursorTarget6 } from "@wonderlandengine/components";
-var __decorate5 = function(decorators, target, key, desc) {
+var __decorate7 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -35533,7 +36188,7 @@ var __decorate5 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var OverlapCursorComponent = class _OverlapCursorComponent extends Component41 {
+var OverlapCursorComponent = class _OverlapCursorComponent extends Component42 {
   static TypeName = "pp-overlap-cursor";
   /**
    * This is useful if you want to avoid the cursor entering and exiting the target when very close to the target,
@@ -35734,18 +36389,18 @@ var OverlapCursorComponent = class _OverlapCursorComponent extends Component41 {
     return overlapAngle <= this._myValidOverlapAngleFromTargetForward;
   }
 };
-__decorate5([
-  property5.float(1)
+__decorate7([
+  property7.float(1)
 ], OverlapCursorComponent.prototype, "_myCollisionSizeMultiplierOnOverlap", void 0);
-__decorate5([
-  property5.float(180)
+__decorate7([
+  property7.float(180)
 ], OverlapCursorComponent.prototype, "_myValidOverlapAngleFromTargetForward", void 0);
 
 // dist/pp/input/cauldron/components/finger_cursor_component.js
-import { Collider, CollisionComponent as CollisionComponent4, Component as Component42, PhysXComponent as PhysXComponent12, Shape as Shape2 } from "@wonderlandengine/api";
-import { property as property6 } from "@wonderlandengine/api/decorators.js";
+import { Collider, CollisionComponent as CollisionComponent4, Component as Component43, PhysXComponent as PhysXComponent12, Shape as Shape2 } from "@wonderlandengine/api";
+import { property as property8 } from "@wonderlandengine/api/decorators.js";
 import { Cursor as Cursor4 } from "@wonderlandengine/components";
-var __decorate6 = function(decorators, target, key, desc) {
+var __decorate8 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -35755,7 +36410,7 @@ var __decorate6 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var FingerCursorComponent = class extends Component42 {
+var FingerCursorComponent = class extends Component43 {
   static TypeName = "pp-finger-cursor";
   _myHandedness;
   _myFinger;
@@ -35848,7 +36503,11 @@ var FingerCursorComponent = class extends Component42 {
     }
   }
   _updateHand() {
-    const newHandInputSource = InputUtils.getInputSource(this._myHandednessType, InputSourceType.TRACKED_HAND, this.engine);
+    let newHandInputSource = null;
+    const handPose = Globals.getHandPoses(this.engine)[this._myHandednessType];
+    if (handPose.getInputSourceType() == InputSourceType.TRACKED_HAND) {
+      newHandInputSource = handPose.getInputSource();
+    }
     if (newHandInputSource != null && (this._myHandInputSource == null || this._myForceRefreshActiveCursor)) {
       if (this._myDefaultCursorComponent != null) {
         this._myDefaultCursorComponent.active = false;
@@ -35886,90 +36545,55 @@ var FingerCursorComponent = class extends Component42 {
     }
   }
 };
-__decorate6([
-  property6.enum(["Left", "Right"], "Left")
+__decorate8([
+  property8.enum(["Left", "Right"], "Left")
 ], FingerCursorComponent.prototype, "_myHandedness", void 0);
-__decorate6([
-  property6.enum(["Thumb", "Index", "Middle", "Ring", "Pinky"], "Index")
+__decorate8([
+  property8.enum(["Thumb", "Index", "Middle", "Ring", "Pinky"], "Index")
 ], FingerCursorComponent.prototype, "_myFinger", void 0);
-__decorate6([
-  property6.enum(["PhysX", "Collision"], "PhysX")
+__decorate8([
+  property8.enum(["PhysX", "Collision"], "PhysX")
 ], FingerCursorComponent.prototype, "_myCollisionMode", void 0);
-__decorate6([
-  property6.string("0, 0, 0, 0, 0, 0, 0, 0")
+__decorate8([
+  property8.string("0, 0, 0, 0, 0, 0, 0, 0")
 ], FingerCursorComponent.prototype, "_myCollisionFlags", void 0);
-__decorate6([
-  property6.float(0.0125)
+__decorate8([
+  property8.float(0.0125)
 ], FingerCursorComponent.prototype, "_myCollisionSize", void 0);
-__decorate6([
-  property6.float(1.25)
+__decorate8([
+  property8.float(1.25)
 ], FingerCursorComponent.prototype, "_myCollisionSizeMultiplierOnOverlap", void 0);
-__decorate6([
-  property6.float(90)
+__decorate8([
+  property8.float(90)
 ], FingerCursorComponent.prototype, "_myValidOverlapAngleFromTargetForward", void 0);
-__decorate6([
-  property6.object()
+__decorate8([
+  property8.object()
 ], FingerCursorComponent.prototype, "_myCursorPointerObject", void 0);
-__decorate6([
-  property6.bool(true)
+__decorate8([
+  property8.bool(true)
 ], FingerCursorComponent.prototype, "_myDisableDefaultCursorOnTrackedHandDetected", void 0);
-__decorate6([
-  property6.object()
+__decorate8([
+  property8.object()
 ], FingerCursorComponent.prototype, "_myDefaultCursorObject", void 0);
 
 // dist/pp/input/cauldron/components/switch_hand_object_component.js
-import { Component as Component43, Property as Property31 } from "@wonderlandengine/api";
-var SwitchHandObjectComponent = class extends Component43 {
+import { Component as Component44, Property as Property30 } from "@wonderlandengine/api";
+var SwitchHandObjectComponent = class extends Component44 {
   static TypeName = "pp-switch-hand-object";
   static Properties = {
-    _myHandedness: Property31.enum(["Left", "Right"], "Left"),
-    _myGamepad: Property31.object(),
-    _myTrackedHand: Property31.object(),
-    _myDisableHandsWhenNonXR: Property31.bool(true)
+    _myHandedness: Property30.enum(["Left", "Right"], "Left"),
+    _myGamepad: Property30.object(),
+    _myTrackedHand: Property30.object(),
+    _myDisableHandsWhenNonXR: Property30.bool(true)
   };
   start() {
     this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
     this._myFirstUpdate = true;
     this._myCurrentInputSourceType = null;
+    Globals.getHandPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
   }
   onActivate() {
     this._myFirstUpdate = true;
-  }
-  update(dt) {
-    if (this._myFirstUpdate) {
-      this._myFirstUpdate = false;
-      this._start();
-    }
-    if (this._myDisableHandsWhenNonXR && !XRUtils.isSessionActive()) {
-      if (this._myCurrentInputSourceType != null) {
-        this._myCurrentInputSourceType = null;
-        this._myGamepad.pp_setActive(false);
-        this._myTrackedHand.pp_setActive(false);
-      }
-    } else {
-      let inputSourceType = InputUtils.getInputSourceTypeByHandedness(this._myHandednessType, this.engine);
-      if (this._myCurrentInputSourceType != inputSourceType) {
-        this._myCurrentInputSourceType = inputSourceType;
-        if (inputSourceType == InputSourceType.TRACKED_HAND) {
-          if (this._myGamepad != null) {
-            this._myGamepad.pp_setActive(false);
-          }
-          if (this._myTrackedHand != null) {
-            this._myTrackedHand.pp_setActive(true);
-          }
-        } else if (inputSourceType == InputSourceType.GAMEPAD) {
-          if (this._myTrackedHand != null) {
-            this._myTrackedHand.pp_setActive(false);
-          }
-          if (this._myGamepad != null) {
-            this._myGamepad.pp_setActive(true);
-          }
-        } else if (inputSourceType == null) {
-          this._myGamepad.pp_setActive(false);
-          this._myTrackedHand.pp_setActive(false);
-        }
-      }
-    }
   }
   _start() {
     if (this._myGamepad != null) {
@@ -35980,15 +36604,56 @@ var SwitchHandObjectComponent = class extends Component43 {
     }
     this._myCurrentInputSourceType = null;
   }
+  _onPoseUpdated(dt, pose) {
+    if (this.active) {
+      if (this._myFirstUpdate) {
+        this._myFirstUpdate = false;
+        this._start();
+      }
+      if (this._myDisableHandsWhenNonXR && !XRUtils.isSessionActive()) {
+        if (this._myCurrentInputSourceType != null) {
+          this._myCurrentInputSourceType = null;
+          this._myGamepad.pp_setActive(false);
+          this._myTrackedHand.pp_setActive(false);
+        }
+      } else {
+        let inputSourceType = pose.getInputSourceType();
+        if (this._myCurrentInputSourceType != inputSourceType) {
+          this._myCurrentInputSourceType = inputSourceType;
+          if (inputSourceType == InputSourceType.TRACKED_HAND) {
+            if (this._myGamepad != null) {
+              this._myGamepad.pp_setActive(false);
+            }
+            if (this._myTrackedHand != null) {
+              this._myTrackedHand.pp_setActive(true);
+            }
+          } else if (inputSourceType == InputSourceType.GAMEPAD) {
+            if (this._myTrackedHand != null) {
+              this._myTrackedHand.pp_setActive(false);
+            }
+            if (this._myGamepad != null) {
+              this._myGamepad.pp_setActive(true);
+            }
+          } else if (inputSourceType == null) {
+            this._myGamepad.pp_setActive(false);
+            this._myTrackedHand.pp_setActive(false);
+          }
+        }
+      }
+    }
+  }
+  onDestroy() {
+    Globals.getHandPose(this._myHandednessType, this.engine)?.unregisterPoseUpdatedEventListener(this);
+  }
 };
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_joint_component.js
-import { Component as Component44, MeshComponent as MeshComponent12, Property as Property32 } from "@wonderlandengine/api";
-var TrackedHandDrawJointComponent = class extends Component44 {
+import { Component as Component45, MeshComponent as MeshComponent12, Property as Property31 } from "@wonderlandengine/api";
+var TrackedHandDrawJointComponent = class extends Component45 {
   static TypeName = "pp-tracked-hand-draw-joint";
   static Properties = {
-    _myHandedness: Property32.enum(["Left", "Right"], "Left"),
-    _myJointID: Property32.enum([
+    _myHandedness: Property31.enum(["Left", "Right"], "Left"),
+    _myJointID: Property31.enum([
       "Wrist",
       "Thumb Metacarpal",
       "Thumb Phalanx Proximal",
@@ -36015,8 +36680,8 @@ var TrackedHandDrawJointComponent = class extends Component44 {
       "Pinky Phalanx Distal",
       "Pinky Tip"
     ], "Wrist"),
-    _myJointMesh: Property32.mesh(),
-    _myJointMaterial: Property32.material()
+    _myJointMesh: Property31.mesh(),
+    _myJointMaterial: Property31.material()
   };
   start() {
     this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
@@ -36043,14 +36708,14 @@ TrackedHandDrawJointComponent.prototype.update = function() {
 }();
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_all_joints_component.js
-import { Component as Component45, Property as Property33 } from "@wonderlandengine/api";
-var TrackedHandDrawAllJointsComponent = class extends Component45 {
+import { Component as Component46, Property as Property32 } from "@wonderlandengine/api";
+var TrackedHandDrawAllJointsComponent = class extends Component46 {
   static TypeName = "pp-tracked-hand-draw-all-joints";
   static Properties = {
-    _myHandedness: Property33.enum(["Left", "Right"], "Left"),
-    _myHideMetacarpals: Property33.bool(true),
-    _myJointMesh: Property33.mesh(),
-    _myJointMaterial: Property33.material()
+    _myHandedness: Property32.enum(["Left", "Right"], "Left"),
+    _myHideMetacarpals: Property32.bool(true),
+    _myJointMesh: Property32.mesh(),
+    _myJointMaterial: Property32.material()
   };
   start() {
     this._buildTrackedHandHierarchy();
@@ -36075,12 +36740,12 @@ var TrackedHandDrawAllJointsComponent = class extends Component45 {
 };
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_skin_component.js
-import { Component as Component46, Property as Property34 } from "@wonderlandengine/api";
-var TrackedHandDrawSkinComponent = class extends Component46 {
+import { Component as Component47, Property as Property33 } from "@wonderlandengine/api";
+var TrackedHandDrawSkinComponent = class extends Component47 {
   static TypeName = "pp-tracked-hand-draw-skin";
   static Properties = {
-    _myHandedness: Property34.enum(["Left", "Right"], "Left"),
-    _myHandSkin: Property34.skin(null)
+    _myHandedness: Property33.enum(["Left", "Right"], "Left"),
+    _myHandSkin: Property33.skin(null)
   };
   start() {
     this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
@@ -36109,24 +36774,24 @@ TrackedHandDrawSkinComponent.prototype.update = function() {
 }();
 
 // dist/pp/input/gamepad/cauldron/gamepad_mesh_animator_component.js
-import { Component as Component47, Property as Property35 } from "@wonderlandengine/api";
-var GamepadMeshAnimatorComponent = class extends Component47 {
+import { Component as Component48, Property as Property34 } from "@wonderlandengine/api";
+var GamepadMeshAnimatorComponent = class extends Component48 {
   static TypeName = "pp-gamepad-mesh-animator";
   static Properties = {
-    _myHandedness: Property35.enum(["Left", "Right"], "Left"),
-    _mySelect: Property35.object(null),
-    _mySqueeze: Property35.object(null),
-    _myThumbstick: Property35.object(null),
-    _myTopButton: Property35.object(null),
-    _myBottomButton: Property35.object(null),
-    _mySelectRotateAngle: Property35.float(15),
-    _mySqueezeRotateAngle: Property35.float(11),
-    _myThumbstickRotateAngle: Property35.float(15),
-    _myThumbstickPressOffset: Property35.float(625e-6),
-    _myTopButtonPressOffset: Property35.float(15e-4),
-    _myBottomButtonPressOffset: Property35.float(15e-4),
-    _myUsePressForSqueeze: Property35.bool(false),
-    _mySqueezePressOffset: Property35.float(15e-4)
+    _myHandedness: Property34.enum(["Left", "Right"], "Left"),
+    _mySelect: Property34.object(null),
+    _mySqueeze: Property34.object(null),
+    _myThumbstick: Property34.object(null),
+    _myTopButton: Property34.object(null),
+    _myBottomButton: Property34.object(null),
+    _mySelectRotateAngle: Property34.float(15),
+    _mySqueezeRotateAngle: Property34.float(11),
+    _myThumbstickRotateAngle: Property34.float(15),
+    _myThumbstickPressOffset: Property34.float(625e-6),
+    _myTopButtonPressOffset: Property34.float(15e-4),
+    _myBottomButtonPressOffset: Property34.float(15e-4),
+    _myUsePressForSqueeze: Property34.bool(false),
+    _mySqueezePressOffset: Property34.float(15e-4)
   };
   start() {
     let gamepad = null;
@@ -36245,29 +36910,29 @@ GamepadMeshAnimatorComponent.prototype._thumbstickPressedStart = function() {
 }();
 
 // dist/pp/input/gamepad/cauldron/gamepad_control_scheme_component.js
-import { Alignment as Alignment5, Component as Component48, Justification as Justification5, MeshComponent as MeshComponent13, Property as Property36, TextComponent as TextComponent10 } from "@wonderlandengine/api";
-var GamepadControlSchemeComponent = class extends Component48 {
+import { Alignment as Alignment5, Component as Component49, Justification as Justification5, MeshComponent as MeshComponent13, Property as Property35, TextComponent as TextComponent10 } from "@wonderlandengine/api";
+var GamepadControlSchemeComponent = class extends Component49 {
   static TypeName = "pp-gamepad-control-scheme";
   static Properties = {
-    _myShowOnStart: Property36.bool(true),
-    _myHandedness: Property36.enum(["Left", "Right"], "Left"),
-    _mySelectText: Property36.string(""),
-    _mySqueezeText: Property36.string(""),
-    _myThumbstickText: Property36.string(""),
-    _myBottomButtonText: Property36.string(""),
-    _myTopButtonText: Property36.string(""),
-    _mySelect: Property36.object(null),
-    _mySqueeze: Property36.object(null),
-    _myThumbstick: Property36.object(null),
-    _myBottomButton: Property36.object(null),
-    _myTopButton: Property36.object(null),
-    _myTextScaleMultiplier: Property36.float(1),
-    _myTextOffsetMultiplier: Property36.float(1),
-    _myLineLengthMultiplier: Property36.float(1),
-    _myLineThicknessMultiplier: Property36.float(1),
-    _myDistanceFromButtonsMultiplier: Property36.float(1),
-    _myTextMaterial: Property36.material(),
-    _myLineMaterial: Property36.material()
+    _myShowOnStart: Property35.bool(true),
+    _myHandedness: Property35.enum(["Left", "Right"], "Left"),
+    _mySelectText: Property35.string(""),
+    _mySqueezeText: Property35.string(""),
+    _myThumbstickText: Property35.string(""),
+    _myBottomButtonText: Property35.string(""),
+    _myTopButtonText: Property35.string(""),
+    _mySelect: Property35.object(null),
+    _mySqueeze: Property35.object(null),
+    _myThumbstick: Property35.object(null),
+    _myBottomButton: Property35.object(null),
+    _myTopButton: Property35.object(null),
+    _myTextScaleMultiplier: Property35.float(1),
+    _myTextOffsetMultiplier: Property35.float(1),
+    _myLineLengthMultiplier: Property35.float(1),
+    _myLineThicknessMultiplier: Property35.float(1),
+    _myDistanceFromButtonsMultiplier: Property35.float(1),
+    _myTextMaterial: Property35.material(),
+    _myLineMaterial: Property35.material()
   };
   start() {
     this._myTextMaterialFinal = this._myTextMaterial != null ? this._myTextMaterial : Globals.getDefaultMaterials(this.engine).myText.clone();
@@ -36385,7 +37050,7 @@ var GamepadControlSchemeComponent = class extends Component48 {
   }
   _addLine(start, end, parentObject) {
     let lineDirection = end.vec3_sub(start);
-    let length5 = lineDirection.vec3_length();
+    let length6 = lineDirection.vec3_length();
     lineDirection.vec3_normalize(lineDirection);
     let lineParentObject = parentObject.pp_addObject();
     let lineObject = lineParentObject.pp_addObject();
@@ -36394,9 +37059,9 @@ var GamepadControlSchemeComponent = class extends Component48 {
     lineMesh.material = this._myLineMaterialFinal;
     lineParentObject.pp_setPositionLocal(start);
     let thickness = 1e-3 * this._myLineThicknessMultiplier;
-    lineObject.pp_scaleObject(vec3_create(thickness / 2, length5 / 2, thickness / 2));
+    lineObject.pp_scaleObject(vec3_create(thickness / 2, length6 / 2, thickness / 2));
     lineObject.pp_setUpLocal(lineDirection);
-    lineObject.pp_translateObject(vec3_create(0, length5 / 2, 0));
+    lineObject.pp_translateObject(vec3_create(0, length6 / 2, 0));
   }
   _addText(position, forward, up, parentObject) {
     let textObject = parentObject.pp_addObject();
@@ -36425,41 +37090,6 @@ var GamepadControlSchemeComponent = class extends Component48 {
     if (this._myTopButtonText.length == 0) {
       this._myTopButtonObject.pp_setActive(false);
     }
-  }
-};
-
-// dist/pp/input/gamepad/gamepad_cores/virtual_gamepad_gamepad_core.js
-var VirtualGamepadGamepadCore = class extends GamepadCore {
-  constructor(virtualGamepad, handPose) {
-    super(handPose);
-    this._myVirtualGamepad = virtualGamepad;
-    this._myButtonData = new GamepadRawButtonData();
-    this._myAxesData = new GamepadRawAxesData();
-    this._myHapticActuators = [];
-  }
-  isGamepadCoreActive() {
-    return this._myVirtualGamepad.isVisible();
-  }
-  getButtonData(buttonID) {
-    this._myButtonData.reset();
-    if (this.isGamepadCoreActive()) {
-      if (this._myVirtualGamepad.isButtonPressed(this.getHandedness(), buttonID)) {
-        this._myButtonData.myPressed = true;
-        this._myButtonData.myTouched = true;
-        this._myButtonData.myValue = 1;
-      }
-    }
-    return this._myButtonData;
-  }
-  getAxesData(axesID) {
-    this._myAxesData.reset();
-    if (this.isGamepadCoreActive()) {
-      this._myVirtualGamepad.getAxes(this.getHandedness(), axesID, this._myAxesData.myAxes);
-    }
-    return this._myAxesData;
-  }
-  getHapticActuators() {
-    return this._myHapticActuators;
   }
 };
 
@@ -36700,27 +37330,39 @@ var VirtualGamepadParams = class {
     this.myButtonParams = [];
     this.myButtonParams[Handedness.LEFT] = [];
     this.myButtonParams[Handedness.RIGHT] = [];
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.THUMBSTICK] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.TOP_BUTTON] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.THUMBSTICK] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON] = new VirtualGamepadButtonParams();
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON] = new VirtualGamepadButtonParams();
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON] = new VirtualGamepadButtonParams();
     this.myThumbstickParams = [];
     this.myThumbstickParams[Handedness.LEFT] = [];
     this.myThumbstickParams[Handedness.RIGHT] = [];
-    this.myThumbstickParams[Handedness.LEFT][GamepadAxesID.THUMBSTICK] = new VirtualGamepadThumbstickParams();
-    this.myThumbstickParams[Handedness.RIGHT][GamepadAxesID.THUMBSTICK] = new VirtualGamepadThumbstickParams();
-    this.myButtonsOrder = [];
-    this.myButtonsOrder[Handedness.LEFT] = [null, null, null, null, null];
-    this.myButtonsOrder[Handedness.RIGHT] = [null, null, null, null, null];
-    this.myThumbsticksOrder = [];
-    this.myThumbsticksOrder[Handedness.LEFT] = [null];
-    this.myThumbsticksOrder[Handedness.RIGHT] = [null];
+    this.myThumbstickParams[Handedness.LEFT][VirtualGamepadAxesID.FIRST_AXES] = new VirtualGamepadThumbstickParams();
+    this.myThumbstickParams[Handedness.RIGHT][VirtualGamepadAxesID.FIRST_AXES] = new VirtualGamepadThumbstickParams();
+    this.myButtonsEnabled = [];
+    this.myButtonsEnabled[Handedness.LEFT] = [];
+    this.myButtonsEnabled[Handedness.RIGHT] = [];
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON] = false;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON] = false;
+    this.myThumbsticksEnabled = [];
+    this.myThumbsticksEnabled[Handedness.LEFT] = [];
+    this.myThumbsticksEnabled[Handedness.RIGHT] = [];
+    this.myThumbsticksEnabled[Handedness.LEFT][VirtualGamepadAxesID.FIRST_AXES] = false;
+    this.myThumbsticksEnabled[Handedness.RIGHT][VirtualGamepadAxesID.FIRST_AXES] = false;
     this.myValidPointerButtons = [];
     this.myMarginLeft = 0;
     this.myMarginRight = 0;
@@ -36754,16 +37396,16 @@ var VirtualGamepadParams = class {
         buttonParams.myIconParams.myOverallHoveredBrightness = buttonHoveredBrightness;
       }
     }
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE].myIconParams.myIconType = VirtualGamepadIconType.SQUARE;
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE].myIconParams.myIconType = VirtualGamepadIconType.SQUARE;
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT].myIconParams.myIconType = VirtualGamepadIconType.FRAME;
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT].myIconParams.myIconType = VirtualGamepadIconType.FRAME;
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.TOP_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.CIRCLE;
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.CIRCLE;
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.RING;
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.RING;
-    this.myButtonParams[Handedness.LEFT][GamepadButtonID.THUMBSTICK].myIconParams.myIconType = VirtualGamepadIconType.DOT;
-    this.myButtonParams[Handedness.RIGHT][GamepadButtonID.THUMBSTICK].myIconParams.myIconType = VirtualGamepadIconType.DOT;
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.SQUARE;
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.SQUARE;
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.FRAME;
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.FRAME;
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.CIRCLE;
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.CIRCLE;
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.RING;
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.RING;
+    this.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.DOT;
+    this.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON].myIconParams.myIconType = VirtualGamepadIconType.DOT;
     for (let handedness in this.myThumbstickParams) {
       for (let gamepadAxesID in this.myThumbstickParams[handedness]) {
         let thumbstickParams = this.myThumbstickParams[handedness][gamepadAxesID];
@@ -36776,18 +37418,18 @@ var VirtualGamepadParams = class {
         thumbstickParams.myIncludeBackgroundToDetection = thumbstickIncludeBackgroundToDetection;
       }
     }
-    this.myButtonsOrder[Handedness.LEFT][0] = [Handedness.LEFT, GamepadButtonID.SQUEEZE];
-    this.myButtonsOrder[Handedness.LEFT][1] = [Handedness.LEFT, GamepadButtonID.SELECT];
-    this.myButtonsOrder[Handedness.LEFT][2] = [Handedness.LEFT, GamepadButtonID.TOP_BUTTON];
-    this.myButtonsOrder[Handedness.LEFT][3] = [Handedness.LEFT, GamepadButtonID.BOTTOM_BUTTON];
-    this.myButtonsOrder[Handedness.LEFT][4] = [Handedness.LEFT, GamepadButtonID.THUMBSTICK];
-    this.myButtonsOrder[Handedness.RIGHT][0] = [Handedness.RIGHT, GamepadButtonID.SQUEEZE];
-    this.myButtonsOrder[Handedness.RIGHT][1] = [Handedness.RIGHT, GamepadButtonID.SELECT];
-    this.myButtonsOrder[Handedness.RIGHT][2] = [Handedness.RIGHT, GamepadButtonID.TOP_BUTTON];
-    this.myButtonsOrder[Handedness.RIGHT][3] = [Handedness.RIGHT, GamepadButtonID.BOTTOM_BUTTON];
-    this.myButtonsOrder[Handedness.RIGHT][4] = [Handedness.RIGHT, GamepadButtonID.THUMBSTICK];
-    this.myThumbsticksOrder[Handedness.LEFT][0] = [Handedness.LEFT, GamepadAxesID.THUMBSTICK];
-    this.myThumbsticksOrder[Handedness.RIGHT][0] = [Handedness.RIGHT, GamepadAxesID.THUMBSTICK];
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON] = true;
+    this.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON] = true;
+    this.myThumbsticksEnabled[Handedness.LEFT][VirtualGamepadAxesID.FIRST_AXES] = true;
+    this.myThumbsticksEnabled[Handedness.RIGHT][VirtualGamepadAxesID.FIRST_AXES] = true;
     this.myMarginLeft = 3;
     this.myMarginRight = 3;
     this.myMarginBottom = 3;
@@ -36804,7 +37446,7 @@ var VirtualGamepadParams = class {
 
 // dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_button.js
 var VirtualGamepadVirtualButton = class {
-  constructor(buttonElementParent, virtualGamepadParams, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
+  constructor(buttonElementParent, virtualGamepadParams, virtualButtonHandedness, virtualGamepadButtonID) {
     this._myButtonElement = null;
     this._myButtonIcon = null;
     this._myButtonDetectionElement = null;
@@ -36813,8 +37455,8 @@ var VirtualGamepadVirtualButton = class {
     this._myPointerButton = null;
     this._myPressed = false;
     this._myVirtualGamepadParams = virtualGamepadParams;
-    this._myParams = this._myVirtualGamepadParams.myButtonParams[gamepadButtonHandedness][gamepadButtonID];
-    this._build(buttonElementParent, virtualButtonHandedness, virtualButtonIndex);
+    this._myParams = this._myVirtualGamepadParams.myButtonParams[virtualButtonHandedness][virtualGamepadButtonID];
+    this._build(buttonElementParent, virtualButtonHandedness, virtualGamepadButtonID);
     this._myPointerDownEventListener = this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents);
     this._myPointerUpEventListener = this._onPointerUp.bind(this);
     this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
@@ -36905,7 +37547,7 @@ var VirtualGamepadVirtualButton = class {
     let buttonRingStartAngle = this._myVirtualGamepadParams.myButtonsRingStartAngle;
     let buttonRingEndAngle = this._myVirtualGamepadParams.myButtonsRingEndAngle;
     let minSizeMultiplier = Math.max(1, this._myVirtualGamepadParams.myMinSizeMultiplier / this._myVirtualGamepadParams.myInterfaceScale);
-    let buttonsAmount = this._myVirtualGamepadParams.myButtonsOrder[Handedness.LEFT].length;
+    let buttonsAmount = this._myVirtualGamepadParams.myButtonsEnabled[Handedness.LEFT].length;
     let angleStep = (buttonRingEndAngle - buttonRingStartAngle) / (buttonsAmount - 1);
     let currentAngle = Math.pp_angleClamp(buttonRingStartAngle + angleStep * virtualButtonIndex);
     if (virtualButtonHandedness == Handedness.RIGHT) {
@@ -36974,10 +37616,12 @@ var VirtualGamepadVirtualButton = class {
 
 // dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_virtual_thumbstick.js
 var VirtualGamepadVirtualThumbstick = class {
-  constructor(thumbstickElementParent, virtualGamepadParams, virtualThumbstickHandedness, gamepadThumbstickHandedness, gamepadAxesID) {
+  constructor(thumbstickElementParent, virtualGamepadParams, virtualThumbstickHandedness, virtualGamepadAxesID) {
     this._myThumbstickElement = null;
     this._myThumbstickIcon = null;
     this._myThumbstickBackground = null;
+    this._myThumbstickBackgroundResizeObserver = null;
+    this._myThumbstickBackgroundWidth = 0;
     this._myThumbstickDetectionElement = null;
     this._myActive = true;
     this._myPointerID = null;
@@ -36986,7 +37630,7 @@ var VirtualGamepadVirtualThumbstick = class {
     this._myAxes = vec2_create();
     this._myPressed = false;
     this._myVirtualGamepadParams = virtualGamepadParams;
-    this._myParams = this._myVirtualGamepadParams.myThumbstickParams[gamepadThumbstickHandedness][gamepadAxesID];
+    this._myParams = this._myVirtualGamepadParams.myThumbstickParams[virtualThumbstickHandedness][virtualGamepadAxesID];
     this._build(thumbstickElementParent, virtualThumbstickHandedness);
     this._myPointerDownEventListener = this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents);
     this._myPointerUpEventListener = this._onPointerUp.bind(this);
@@ -37084,8 +37728,7 @@ var VirtualGamepadVirtualThumbstick = class {
       return;
     let mouseX = event.clientX;
     let mouseY = event.clientY;
-    let backgroundRect = this._myThumbstickBackground.getBoundingClientRect();
-    let maxDistanceFromCenter = backgroundRect.width / 2 * this._myParams.myMaxDistanceFromCenterMultiplier;
+    let maxDistanceFromCenter = this._myThumbstickBackgroundWidth / 2 * this._myParams.myMaxDistanceFromCenterMultiplier;
     let xDiff = mouseX - this._myThumbstickDragStartPosition[0];
     let yDiff = mouseY - this._myThumbstickDragStartPosition[1];
     let angle2 = Math.atan2(yDiff, xDiff);
@@ -37167,6 +37810,11 @@ var VirtualGamepadVirtualThumbstick = class {
       thumbstickDetectionElementSVG.appendChild(thumbstickDetectionElement);
       this._myThumbstickDetectionElement = thumbstickDetectionElement;
     }
+    this._myThumbstickBackgroundResizeObserver = new ResizeObserver(() => {
+      let backgroundRect = this._myThumbstickBackground.getBoundingClientRect();
+      this._myThumbstickBackgroundWidth = backgroundRect.width;
+    });
+    this._myThumbstickBackgroundResizeObserver.observe(this._myThumbstickBackground);
   }
   _createSizeValue(value, minSizeMultiplier) {
     return "min(" + value.toFixed(3) + "vmax," + (value * minSizeMultiplier).toFixed(3) + "vw)";
@@ -37179,6 +37827,7 @@ var VirtualGamepadVirtualThumbstick = class {
     document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
     this._myThumbstickDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
     this._myThumbstickDetectionElement.removeEventListener("mouseleave", this._myPointerUpEventLis_myMouseLeaveEventListenertener);
+    this._myThumbstickBackgroundResizeObserver.disconnect();
     this._myThumbstickIcon.destroy();
     this._myThumbstickContainer.remove();
   }
@@ -37188,6 +37837,16 @@ var VirtualGamepadVirtualThumbstick = class {
 };
 
 // dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad.js
+var VirtualGamepadButtonID = {
+  FIRST_BUTTON: 0,
+  SECOND_BUTTON: 1,
+  THIRD_BUTTON: 2,
+  FOURTH_BUTTON: 3,
+  FIFTH_BUTTON: 4
+};
+var VirtualGamepadAxesID = {
+  FIRST_AXES: 0
+};
 var VirtualGamepad = class {
   constructor(params = new VirtualGamepadParams()) {
     this._myParams = params;
@@ -37196,22 +37855,22 @@ var VirtualGamepad = class {
     this._myVirtualGamepadVirtualButtons = [];
     this._myVirtualGamepadVirtualButtons[Handedness.LEFT] = [];
     this._myVirtualGamepadVirtualButtons[Handedness.RIGHT] = [];
-    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][GamepadButtonID.SELECT] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][GamepadButtonID.SQUEEZE] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][GamepadButtonID.THUMBSTICK] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][GamepadButtonID.TOP_BUTTON] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][GamepadButtonID.SELECT] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][GamepadButtonID.SQUEEZE] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][GamepadButtonID.THUMBSTICK] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON] = null;
-    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON] = null;
+    this._myVirtualGamepadVirtualButtons[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON] = null;
     this._myButtonsAmount = this._myVirtualGamepadVirtualButtons[Handedness.LEFT].length;
     this._myVirtualGamepadVirtualThumbsticks = [];
     this._myVirtualGamepadVirtualThumbsticks[Handedness.LEFT] = [];
     this._myVirtualGamepadVirtualThumbsticks[Handedness.RIGHT] = [];
-    this._myVirtualGamepadVirtualThumbsticks[Handedness.LEFT][GamepadAxesID.THUMBSTICK] = null;
-    this._myVirtualGamepadVirtualThumbsticks[Handedness.RIGHT][GamepadAxesID.THUMBSTICK] = null;
+    this._myVirtualGamepadVirtualThumbsticks[Handedness.LEFT][VirtualGamepadAxesID.FIRST_AXES] = null;
+    this._myVirtualGamepadVirtualThumbsticks[Handedness.RIGHT][VirtualGamepadAxesID.FIRST_AXES] = null;
     this._myGestureStartEventListener = null;
     this._myDestroyed = false;
   }
@@ -37228,16 +37887,16 @@ var VirtualGamepad = class {
           this._myVirtualGamepadContainer.style.display = "none";
         }
         for (let handedness in this._myVirtualGamepadVirtualButtons) {
-          for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
-            let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
+          for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
+            let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
             if (button != null) {
               button.setActive(this._myVisible);
             }
           }
         }
         for (let handedness in this._myVirtualGamepadVirtualThumbsticks) {
-          for (let gamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
-            let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
+          for (let virtualGamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
+            let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][virtualGamepadAxesID];
             if (thumbstick != null) {
               thumbstick.setActive(this._myVisible);
             }
@@ -37246,19 +37905,19 @@ var VirtualGamepad = class {
       }
     }
   }
-  isButtonPressed(handedness, gamepadButtonID) {
+  isButtonPressed(handedness, virtualGamepadButtonID) {
     if (!this._myVisible)
       return false;
-    let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
+    let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
     if (button != null) {
       return button.isPressed();
     }
     return false;
   }
-  getAxes(handedness, gamepadAxesID, outAxes = vec2_create(0, 0)) {
+  getAxes(handedness, virtualGamepadAxesID, outAxes = vec2_create(0, 0)) {
     if (!this._myVisible)
       return outAxes;
-    let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
+    let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][virtualGamepadAxesID];
     if (thumbstick != null) {
       outAxes.vec2_copy(thumbstick.getAxes());
     }
@@ -37286,16 +37945,16 @@ var VirtualGamepad = class {
     }
     if (this._myVisible) {
       for (let handedness in this._myVirtualGamepadVirtualButtons) {
-        for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
-          let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
+        for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
+          let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
           if (button != null) {
             button.update(dt);
           }
         }
       }
       for (let handedness in this._myVirtualGamepadVirtualThumbsticks) {
-        for (let gamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
-          let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
+        for (let virtualGamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
+          let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][virtualGamepadAxesID];
           if (thumbstick != null) {
             thumbstick.update(dt);
           }
@@ -37314,30 +37973,32 @@ var VirtualGamepad = class {
     this._myVirtualGamepadContainer.appendChild(leftDiv);
     let rightDiv = document.createElement("div");
     this._myVirtualGamepadContainer.appendChild(rightDiv);
-    let buttonsAmount = this._myParams.myButtonsOrder[Handedness.LEFT].length;
-    for (let i = 0; i < buttonsAmount; i++) {
-      if (this._myParams.myButtonsOrder[Handedness.LEFT][i] != null) {
-        let gamepadButtonHandedness = this._myParams.myButtonsOrder[Handedness.LEFT][i][0];
-        let gamepadButtonID = this._myParams.myButtonsOrder[Handedness.LEFT][i][1];
-        this._buildButton(leftDiv, Handedness.LEFT, i, gamepadButtonHandedness, gamepadButtonID);
+    for (let virtualGamepadButtonID in this._myParams.myButtonsEnabled[Handedness.LEFT]) {
+      if (this._myParams.myButtonsEnabled[Handedness.LEFT][virtualGamepadButtonID] != null) {
+        let enabled = this._myParams.myButtonsEnabled[Handedness.LEFT][virtualGamepadButtonID];
+        if (enabled) {
+          this._buildButton(leftDiv, Handedness.LEFT, virtualGamepadButtonID);
+        }
       }
-      if (this._myParams.myButtonsOrder[Handedness.RIGHT][i] != null) {
-        let gamepadButtonHandedness = this._myParams.myButtonsOrder[Handedness.RIGHT][i][0];
-        let gamepadButtonID = this._myParams.myButtonsOrder[Handedness.RIGHT][i][1];
-        this._buildButton(rightDiv, Handedness.RIGHT, i, gamepadButtonHandedness, gamepadButtonID);
+      if (this._myParams.myButtonsEnabled[Handedness.RIGHT][virtualGamepadButtonID] != null) {
+        let enabled = this._myParams.myButtonsEnabled[Handedness.RIGHT][virtualGamepadButtonID];
+        if (enabled) {
+          this._buildButton(rightDiv, Handedness.RIGHT, virtualGamepadButtonID);
+        }
       }
     }
-    let thumbsticksAmount = this._myParams.myThumbsticksOrder[Handedness.LEFT].length;
-    for (let i = 0; i < thumbsticksAmount; i++) {
-      if (this._myParams.myThumbsticksOrder[Handedness.LEFT][i] != null) {
-        let gamepadThumbstickHandedness = this._myParams.myThumbsticksOrder[Handedness.LEFT][i][0];
-        let gamepadAxesID = this._myParams.myThumbsticksOrder[Handedness.LEFT][i][1];
-        this._buildThumbstick(leftDiv, Handedness.LEFT, gamepadThumbstickHandedness, gamepadAxesID);
+    for (let virtualGamepadAxesID in this._myParams.myThumbsticksEnabled[Handedness.LEFT]) {
+      if (this._myParams.myThumbsticksEnabled[Handedness.LEFT][virtualGamepadAxesID] != null) {
+        let enabled = this._myParams.myThumbsticksEnabled[Handedness.LEFT][virtualGamepadAxesID];
+        if (enabled) {
+          this._buildThumbstick(leftDiv, Handedness.LEFT, virtualGamepadAxesID);
+        }
       }
-      if (this._myParams.myThumbsticksOrder[Handedness.RIGHT][i] != null) {
-        let gamepadThumbstickHandedness = this._myParams.myThumbsticksOrder[Handedness.RIGHT][i][0];
-        let gamepadAxesID = this._myParams.myThumbsticksOrder[Handedness.RIGHT][i][1];
-        this._buildThumbstick(rightDiv, Handedness.RIGHT, gamepadThumbstickHandedness, gamepadAxesID);
+      if (this._myParams.myThumbsticksEnabled[Handedness.RIGHT][virtualGamepadAxesID] != null) {
+        let enabled = this._myParams.myThumbsticksEnabled[Handedness.RIGHT][virtualGamepadAxesID];
+        if (enabled) {
+          this._buildThumbstick(rightDiv, Handedness.RIGHT, virtualGamepadAxesID);
+        }
       }
     }
   }
@@ -37352,13 +38013,13 @@ var VirtualGamepad = class {
     };
     document.addEventListener("gesturestart", this._myGestureStartEventListener);
   }
-  _buildButton(buttonElementParent, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID) {
-    let virtualGamepadVirtualButton = new VirtualGamepadVirtualButton(buttonElementParent, this._myParams, virtualButtonHandedness, virtualButtonIndex, gamepadButtonHandedness, gamepadButtonID);
-    this._myVirtualGamepadVirtualButtons[gamepadButtonHandedness][gamepadButtonID] = virtualGamepadVirtualButton;
+  _buildButton(buttonElementParent, virtualButtonHandedness, virtualGamepadButtonID) {
+    let virtualGamepadVirtualButton = new VirtualGamepadVirtualButton(buttonElementParent, this._myParams, virtualButtonHandedness, virtualGamepadButtonID);
+    this._myVirtualGamepadVirtualButtons[virtualButtonHandedness][virtualGamepadButtonID] = virtualGamepadVirtualButton;
   }
-  _buildThumbstick(thumbstickElementParent, virtualThumbstickHandedness, gamepadThumbstickHandedness, gamepadAxesID) {
-    let virtualGamepadVirtualThumbstick = new VirtualGamepadVirtualThumbstick(thumbstickElementParent, this._myParams, virtualThumbstickHandedness, gamepadThumbstickHandedness, gamepadAxesID);
-    this._myVirtualGamepadVirtualThumbsticks[gamepadThumbstickHandedness][gamepadAxesID] = virtualGamepadVirtualThumbstick;
+  _buildThumbstick(thumbstickElementParent, virtualThumbstickHandedness, virtualGamepadAxesID) {
+    let virtualGamepadVirtualThumbstick = new VirtualGamepadVirtualThumbstick(thumbstickElementParent, this._myParams, virtualThumbstickHandedness, virtualGamepadAxesID);
+    this._myVirtualGamepadVirtualThumbsticks[virtualThumbstickHandedness][virtualGamepadAxesID] = virtualGamepadVirtualThumbstick;
   }
   _createSizeValue(value, minSizeMultiplier) {
     return "min(" + value.toFixed(3) + "vmax," + (value * minSizeMultiplier).toFixed(3) + "vw)";
@@ -37366,8 +38027,8 @@ var VirtualGamepad = class {
   _isAnyElementPressed() {
     let anyElementPressed = false;
     for (let handedness in this._myVirtualGamepadVirtualButtons) {
-      for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
-        let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
+      for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
+        let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
         if (button != null && button.isPressed()) {
           anyElementPressed = true;
           break;
@@ -37376,8 +38037,8 @@ var VirtualGamepad = class {
     }
     if (!anyElementPressed) {
       for (let handedness in this._myVirtualGamepadVirtualThumbsticks) {
-        for (let gamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
-          let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
+        for (let virtualGamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
+          let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][virtualGamepadAxesID];
           if (thumbstick != null && thumbstick.isPressed()) {
             anyElementPressed = true;
             break;
@@ -37389,16 +38050,16 @@ var VirtualGamepad = class {
   }
   _setMouseHoverEnabled(hoverActive) {
     for (let handedness in this._myVirtualGamepadVirtualButtons) {
-      for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
-        let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
+      for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
+        let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
         if (button != null) {
           button.setMouseHoverEnabled(hoverActive);
         }
       }
     }
     for (let handedness in this._myVirtualGamepadVirtualThumbsticks) {
-      for (let gamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
-        let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
+      for (let virtualGamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
+        let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][virtualGamepadAxesID];
         if (thumbstick != null) {
           thumbstick.setMouseHoverEnabled(hoverActive);
         }
@@ -37409,16 +38070,16 @@ var VirtualGamepad = class {
     this._myDestroyed = true;
     document.removeEventListener("gesturestart", this._myGestureStartEventListener);
     for (let handedness in this._myVirtualGamepadVirtualButtons) {
-      for (let gamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
-        let button = this._myVirtualGamepadVirtualButtons[handedness][gamepadButtonID];
+      for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
+        let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
         if (button != null) {
           button.destroy();
         }
       }
     }
     for (let handedness in this._myVirtualGamepadVirtualThumbsticks) {
-      for (let gamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
-        let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][gamepadAxesID];
+      for (let virtualGamepadAxesID in this._myVirtualGamepadVirtualThumbsticks[handedness]) {
+        let thumbstick = this._myVirtualGamepadVirtualThumbsticks[handedness][virtualGamepadAxesID];
         if (thumbstick != null) {
           thumbstick.destroy();
         }
@@ -37431,67 +38092,136 @@ var VirtualGamepad = class {
   }
 };
 
+// dist/pp/input/gamepad/gamepad_cores/virtual_gamepad_gamepad_core.js
+var VirtualGamepadGamepadCore = class extends GamepadCore {
+  constructor(virtualGamepad, handPose, gamepadToVirtualGamepadButtonIDMap = null, gamepadToVirtualGamepadAxesIDMap = null) {
+    super(handPose);
+    this.myGamepadToVirtualGamepadButtonIDMap = /* @__PURE__ */ new Map();
+    if (gamepadToVirtualGamepadButtonIDMap == null) {
+      this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.SQUEEZE, [this.getHandedness(), VirtualGamepadButtonID.FIRST_BUTTON]);
+      this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.SELECT, [this.getHandedness(), VirtualGamepadButtonID.SECOND_BUTTON]);
+      this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.TOP_BUTTON, [this.getHandedness(), VirtualGamepadButtonID.THIRD_BUTTON]);
+      this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.BOTTOM_BUTTON, [this.getHandedness(), VirtualGamepadButtonID.FOURTH_BUTTON]);
+      this.myGamepadToVirtualGamepadButtonIDMap.set(GamepadButtonID.THUMBSTICK, [this.getHandedness(), VirtualGamepadButtonID.FIFTH_BUTTON]);
+    } else {
+      this.myGamepadToVirtualGamepadButtonIDMap = gamepadToVirtualGamepadButtonIDMap;
+    }
+    this.myGamepadToVirtualGamepadAxesIDMap = /* @__PURE__ */ new Map();
+    if (gamepadToVirtualGamepadAxesIDMap == null) {
+      this.myGamepadToVirtualGamepadAxesIDMap.set(GamepadAxesID.THUMBSTICK, [this.getHandedness(), VirtualGamepadAxesID.FIRST_AXES]);
+    } else {
+      this.myGamepadToVirtualGamepadAxesIDMap = gamepadToVirtualGamepadAxesIDMap;
+    }
+    this._myVirtualGamepad = virtualGamepad;
+    this._myButtonData = new GamepadRawButtonData();
+    this._myAxesData = new GamepadRawAxesData();
+    this._myHapticActuators = [];
+  }
+  isGamepadCoreActive() {
+    return this._myVirtualGamepad.isVisible();
+  }
+  getButtonData(buttonID) {
+    this._myButtonData.reset();
+    if (this.isGamepadCoreActive()) {
+      const virtualGamepadButtonInfo = this.myGamepadToVirtualGamepadButtonIDMap.get(buttonID);
+      if (virtualGamepadButtonInfo != null && this._myVirtualGamepad.isButtonPressed(virtualGamepadButtonInfo[0], virtualGamepadButtonInfo[1])) {
+        this._myButtonData.myPressed = true;
+        this._myButtonData.myTouched = true;
+        this._myButtonData.myValue = 1;
+      }
+    }
+    return this._myButtonData;
+  }
+  getAxesData(axesID) {
+    this._myAxesData.reset();
+    if (this.isGamepadCoreActive()) {
+      const virtualGamepadAxesInfo = this.myGamepadToVirtualGamepadAxesIDMap.get(axesID);
+      if (virtualGamepadAxesInfo != null) {
+        this._myVirtualGamepad.getAxes(virtualGamepadAxesInfo[0], virtualGamepadAxesInfo[1], this._myAxesData.myAxes);
+      }
+    }
+    return this._myAxesData;
+  }
+  getHapticActuators() {
+    return this._myHapticActuators;
+  }
+};
+
 // dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_component.js
-import { Component as Component49, Property as Property37 } from "@wonderlandengine/api";
-var VirtualGamepadComponent = class extends Component49 {
+import { Component as Component50, Property as Property36 } from "@wonderlandengine/api";
+var VirtualGamepadComponent = class extends Component50 {
   static TypeName = "pp-virtual-gamepad";
   static Properties = {
-    _myShowOnDesktop: Property37.bool(false),
+    _myShowOnDesktop: Property36.bool(false),
     // You may have to enable headset too
-    _myShowOnMobile: Property37.bool(true),
-    _myShowOnHeadset: Property37.bool(false),
+    _myShowOnMobile: Property36.bool(true),
+    _myShowOnHeadset: Property36.bool(false),
     // Not 100% reliable, this is true if the device supports XR and it is Desktop
-    _myAddToUniversalGamepad: Property37.bool(true),
-    _myOpacity: Property37.float(0.5),
-    _myIconColor: Property37.string("#e0e0e0"),
-    _myBackgroundColor: Property37.string("#616161"),
-    _myInterfaceScale: Property37.float(1),
-    _myMarginScale: Property37.float(1),
-    ADVANCED_PARAMS_BELOW: Property37.string(""),
-    _myLabelFontSize: Property37.float(2),
-    _myLabelFontFamily: Property37.string("sans-serif"),
-    _myLabelFontWeight: Property37.string("bold"),
-    _myImagePressedBrightness: Property37.float(0.5),
-    _myLeftSelectButtonVisible: Property37.bool(true),
-    _myLeftSelectButtonOrderIndex: Property37.int(1),
-    _myLeftSelectButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Frame"),
-    _myLeftSelectButtonIconLabelOrImageUrl: Property37.string(""),
-    _myLeftSqueezeButtonVisible: Property37.bool(true),
-    _myLeftSqueezeButtonOrderIndex: Property37.int(0),
-    _myLeftSqueezeButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Square"),
-    _myLeftSqueezeButtonIconLabelOrImageUrl: Property37.string(""),
-    _myLeftThumbstickButtonVisible: Property37.bool(true),
-    _myLeftThumbstickButtonOrderIndex: Property37.int(4),
-    _myLeftThumbstickButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Dot"),
-    _myLeftThumbstickButtonIconLabelOrImageUrl: Property37.string(""),
-    _myLeftTopButtonVisible: Property37.bool(true),
-    _myLeftTopButtonOrderIndex: Property37.int(2),
-    _myLeftTopButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Circle"),
-    _myLeftTopButtonIconLabelOrImageUrl: Property37.string(""),
-    _myLeftBottomButtonVisible: Property37.bool(true),
-    _myLeftBottomButtonOrderIndex: Property37.int(3),
-    _myLeftBottomButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Ring"),
-    _myLeftBottomButtonIconLabelOrImageUrl: Property37.string(""),
-    _myRightSelectButtonVisible: Property37.bool(true),
-    _myRightSelectButtonOrderIndex: Property37.int(1),
-    _myRightSelectButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Frame"),
-    _myRightSelectButtonIconLabelOrImageUrl: Property37.string(""),
-    _myRightSqueezeButtonVisible: Property37.bool(true),
-    _myRightSqueezeButtonOrderIndex: Property37.int(0),
-    _myRightSqueezeButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Square"),
-    _myRightSqueezeButtonIconLabelOrImageUrl: Property37.string(""),
-    _myRightThumbstickButtonVisible: Property37.bool(true),
-    _myRightThumbstickButtonOrderIndex: Property37.int(4),
-    _myRightThumbstickButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Dot"),
-    _myRightThumbstickButtonIconLabelOrImageUrl: Property37.string(""),
-    _myRightTopButtonVisible: Property37.bool(true),
-    _myRightTopButtonOrderIndex: Property37.int(2),
-    _myRightTopButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Circle"),
-    _myRightTopButtonIconLabelOrImageUrl: Property37.string(""),
-    _myRightBottomButtonVisible: Property37.bool(true),
-    _myRightBottomButtonOrderIndex: Property37.int(3),
-    _myRightBottomButtonIconType: Property37.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Ring"),
-    _myRightBottomButtonIconLabelOrImageUrl: Property37.string("")
+    _myAddToUniversalGamepad: Property36.bool(true),
+    _myOpacity: Property36.float(0.5),
+    _myIconColor: Property36.string("#e0e0e0"),
+    _myBackgroundColor: Property36.string("#616161"),
+    _myInterfaceScale: Property36.float(1),
+    _myMarginScale: Property36.float(1),
+    ADVANCED_PARAMS_BELOW: Property36.string(""),
+    _myLabelFontSize: Property36.float(2),
+    _myLabelFontFamily: Property36.string("sans-serif"),
+    _myLabelFontWeight: Property36.string("bold"),
+    _myImagePressedBrightness: Property36.float(0.5),
+    _myLeftFirstButtonEnabled: Property36.bool(true),
+    _myLeftFirstButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Squeeze"),
+    _myLeftFirstButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Left"),
+    _myLeftFirstButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Square"),
+    _myLeftFirstButtonIconLabelOrImageUrl: Property36.string(""),
+    _myLeftSecondButtonEnabled: Property36.bool(true),
+    _myLeftSecondButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Select"),
+    _myLeftSecondButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Left"),
+    _myLeftSecondButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Frame"),
+    _myLeftSecondButtonIconLabelOrImageUrl: Property36.string(""),
+    _myLeftThirdButtonEnabled: Property36.bool(true),
+    _myLeftThirdButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Top Button"),
+    _myLeftThirdButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Left"),
+    _myLeftThirdButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Circle"),
+    _myLeftThirdButtonIconLabelOrImageUrl: Property36.string(""),
+    _myLeftFourthButtonEnabled: Property36.bool(true),
+    _myLeftFourthButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Bottom Button"),
+    _myLeftFourthButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Left"),
+    _myLeftFourthButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Ring"),
+    _myLeftFourthButtonIconLabelOrImageUrl: Property36.string(""),
+    _myLeftFifthButtonEnabled: Property36.bool(true),
+    _myLeftFifthButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Thumbstick"),
+    _myLeftFifthButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Left"),
+    _myLeftFifthButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Dot"),
+    _myLeftFifthButtonIconLabelOrImageUrl: Property36.string(""),
+    _myLeftThumbstickEnabled: Property36.bool(true),
+    _myLeftThumbstickGamepadHandedness: Property36.enum(["Left", "Right"], "Left"),
+    _myRightFirstButtonEnabled: Property36.bool(true),
+    _myRightFirstButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Squeeze"),
+    _myRightFirstButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Right"),
+    _myRightFirstButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Square"),
+    _myRightFirstButtonIconLabelOrImageUrl: Property36.string(""),
+    _myRightSecondButtonEnabled: Property36.bool(true),
+    _myRightSecondButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Select"),
+    _myRightSecondButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Right"),
+    _myRightSecondButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Frame"),
+    _myRightSecondButtonIconLabelOrImageUrl: Property36.string(""),
+    _myRightThirdButtonEnabled: Property36.bool(true),
+    _myRightThirdButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Top Button"),
+    _myRightThirdButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Right"),
+    _myRightThirdButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Circle"),
+    _myRightThirdButtonIconLabelOrImageUrl: Property36.string(""),
+    _myRightFourthButtonEnabled: Property36.bool(true),
+    _myRightFourthButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Bottom Button"),
+    _myRightFourthButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Right"),
+    _myRightFourthButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Ring"),
+    _myRightFourthButtonIconLabelOrImageUrl: Property36.string(""),
+    _myRightFifthButtonEnabled: Property36.bool(true),
+    _myRightFifthButtonGamepadButtonID: Property36.enum(["Select", "Squeeze", "Thumbstick", "Top Button", "Bottom Button", "Left Button", "Right Button", "Menu", "Touchpad", "Thumb Rest"], "Thumbstick"),
+    _myRightFifthButtonGamepadHandedness: Property36.enum(["Left", "Right"], "Right"),
+    _myRightFifthButtonIconType: Property36.enum(["None", "Label", "Image", "Dot", "Circle", "Square", "Ring", "Frame"], "Dot"),
+    _myRightFifthButtonIconLabelOrImageUrl: Property36.string(""),
+    _myRightThumbstickEnabled: Property36.bool(true),
+    _myRightThumbstickGamepadHandedness: Property36.enum(["Left", "Right"], "Right")
   };
   start() {
     let params = new VirtualGamepadParams(this.engine);
@@ -37538,147 +38268,256 @@ var VirtualGamepadComponent = class extends Component49 {
     if (this._myFirstUpdate) {
       this._myFirstUpdate = false;
       if (this._myAddToUniversalGamepad) {
-        this._myLeftVirtualGamepadGamepadCore = new VirtualGamepadGamepadCore(this._myVirtualGamepad, Globals.getLeftGamepad(this.engine).getGamepadCore("pp_left_xr_gamepad").getHandPose());
-        this._myRightVirtualGamepadGamepadCore = new VirtualGamepadGamepadCore(this._myVirtualGamepad, Globals.getRightGamepad(this.engine).getGamepadCore("pp_right_xr_gamepad").getHandPose());
-        Globals.getLeftGamepad(this.engine).addGamepadCore("pp_left_virtual_gamepad", this._myLeftVirtualGamepadGamepadCore);
-        Globals.getRightGamepad(this.engine).addGamepadCore("pp_right_virtual_gamepad", this._myRightVirtualGamepadGamepadCore);
+        this._addToUniversalGamepad();
       }
     }
     this._myVirtualGamepad.update(dt);
   }
   _advancedConfig(params) {
-    params.myButtonsOrder[Handedness.LEFT] = [null, null, null, null, null];
-    params.myButtonsOrder[Handedness.RIGHT] = [null, null, null, null, null];
     {
-      let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.SELECT];
-      buttonParams.myIconParams.myIconType = this._myLeftSelectButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myLeftSelectButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myLeftSelectButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myLeftSecondButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myLeftSecondButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myLeftSecondButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myLeftSelectButtonVisible) {
-        params.myButtonsOrder[Handedness.LEFT][this._myLeftSelectButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.SELECT];
-      }
+      params.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.SECOND_BUTTON] = this._myLeftSecondButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.SQUEEZE];
-      buttonParams.myIconParams.myIconType = this._myLeftSqueezeButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myLeftSqueezeButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myLeftSqueezeButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myLeftFirstButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myLeftFirstButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myLeftFirstButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myLeftSqueezeButtonVisible) {
-        params.myButtonsOrder[Handedness.LEFT][this._myLeftSqueezeButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.SQUEEZE];
-      }
+      params.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FIRST_BUTTON] = this._myLeftFirstButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.THUMBSTICK];
-      buttonParams.myIconParams.myIconType = this._myLeftThumbstickButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myLeftThumbstickButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myLeftThumbstickButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myLeftFifthButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myLeftFifthButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myLeftFifthButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myLeftThumbstickButtonVisible) {
-        params.myButtonsOrder[Handedness.LEFT][this._myLeftThumbstickButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.THUMBSTICK];
-      }
+      params.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FIFTH_BUTTON] = this._myLeftFifthButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.TOP_BUTTON];
-      buttonParams.myIconParams.myIconType = this._myLeftTopButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myLeftTopButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myLeftTopButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myLeftThirdButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myLeftThirdButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myLeftThirdButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myLeftTopButtonVisible) {
-        params.myButtonsOrder[Handedness.LEFT][this._myLeftTopButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.TOP_BUTTON];
-      }
+      params.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.THIRD_BUTTON] = this._myLeftThirdButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.LEFT][GamepadButtonID.BOTTOM_BUTTON];
-      buttonParams.myIconParams.myIconType = this._myLeftBottomButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myLeftBottomButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myLeftBottomButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myLeftFourthButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myLeftFourthButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myLeftFourthButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myLeftBottomButtonVisible) {
-        params.myButtonsOrder[Handedness.LEFT][this._myLeftBottomButtonOrderIndex] = [Handedness.LEFT, GamepadButtonID.BOTTOM_BUTTON];
-      }
+      params.myButtonsEnabled[Handedness.LEFT][VirtualGamepadButtonID.FOURTH_BUTTON] = this._myLeftFourthButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.SELECT];
-      buttonParams.myIconParams.myIconType = this._myRightSelectButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myRightSelectButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myRightSelectButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myRightSecondButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myRightSecondButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myRightSecondButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myRightSelectButtonVisible) {
-        params.myButtonsOrder[Handedness.RIGHT][this._myRightSelectButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.SELECT];
-      }
+      params.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.SECOND_BUTTON] = this._myRightSecondButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.SQUEEZE];
-      buttonParams.myIconParams.myIconType = this._myRightSqueezeButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myRightSqueezeButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myRightSqueezeButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myRightFirstButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myRightFirstButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myRightFirstButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myRightSqueezeButtonVisible) {
-        params.myButtonsOrder[Handedness.RIGHT][this._myRightSqueezeButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.SQUEEZE];
-      }
+      params.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FIRST_BUTTON] = this._myRightFirstButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.THUMBSTICK];
-      buttonParams.myIconParams.myIconType = this._myRightThumbstickButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myRightThumbstickButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myRightThumbstickButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myRightFifthButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myRightFifthButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myRightFifthButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myRightThumbstickButtonVisible) {
-        params.myButtonsOrder[Handedness.RIGHT][this._myRightThumbstickButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.THUMBSTICK];
-      }
+      params.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FIFTH_BUTTON] = this._myRightFifthButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.TOP_BUTTON];
-      buttonParams.myIconParams.myIconType = this._myRightTopButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myRightTopButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myRightTopButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myRightThirdButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myRightThirdButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myRightThirdButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myRightTopButtonVisible) {
-        params.myButtonsOrder[Handedness.RIGHT][this._myRightTopButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.TOP_BUTTON];
-      }
+      params.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.THIRD_BUTTON] = this._myRightThirdButtonEnabled;
     }
     {
-      let buttonParams = params.myButtonParams[Handedness.RIGHT][GamepadButtonID.BOTTOM_BUTTON];
-      buttonParams.myIconParams.myIconType = this._myRightBottomButtonIconType;
-      buttonParams.myIconParams.myLabel = this._myRightBottomButtonIconLabelOrImageUrl;
-      buttonParams.myIconParams.myImageURL = this._myRightBottomButtonIconLabelOrImageUrl;
+      let buttonParams = params.myButtonParams[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON];
+      buttonParams.myIconParams.myIconType = this._myRightFourthButtonIconType;
+      buttonParams.myIconParams.myLabel = this._myRightFourthButtonIconLabelOrImageUrl;
+      buttonParams.myIconParams.myImageURL = this._myRightFourthButtonIconLabelOrImageUrl;
       buttonParams.myIconParams.myLabelFontSize = this._myLabelFontSize;
       buttonParams.myIconParams.myLabelFontFamily = this._myLabelFontFamily;
       buttonParams.myIconParams.myLabelFontWeight = this._myLabelFontWeight;
       buttonParams.myIconParams.myImagePressedBrightness = this._myImagePressedBrightness;
-      if (this._myRightBottomButtonVisible) {
-        params.myButtonsOrder[Handedness.RIGHT][this._myRightBottomButtonOrderIndex] = [Handedness.RIGHT, GamepadButtonID.BOTTOM_BUTTON];
+      params.myButtonsEnabled[Handedness.RIGHT][VirtualGamepadButtonID.FOURTH_BUTTON] = this._myRightFourthButtonEnabled;
+    }
+    params.myThumbsticksEnabled[Handedness.LEFT][VirtualGamepadAxesID.FIRST_AXES] = this._myLeftThumbstickEnabled;
+    params.myThumbsticksEnabled[Handedness.RIGHT][VirtualGamepadAxesID.FIRST_AXES] = this._myRightThumbstickEnabled;
+  }
+  _addToUniversalGamepad() {
+    const leftGamepadToVirtualGamepadButtonIDMap = /* @__PURE__ */ new Map();
+    const rightGamepadToVirtualGamepadButtonIDMap = /* @__PURE__ */ new Map();
+    if (this._myLeftFirstButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myLeftFirstButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftFirstButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.FIRST_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftFirstButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.FIRST_BUTTON]);
       }
     }
+    if (this._myLeftSecondButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myLeftSecondButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftSecondButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.SECOND_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftSecondButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.SECOND_BUTTON]);
+      }
+    }
+    if (this._myLeftThirdButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myLeftThirdButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftThirdButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.THIRD_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftThirdButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.THIRD_BUTTON]);
+      }
+    }
+    if (this._myLeftFourthButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myLeftFourthButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftFourthButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.FOURTH_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftFourthButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.FOURTH_BUTTON]);
+      }
+    }
+    if (this._myLeftFifthButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myLeftFifthButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftFifthButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.FIFTH_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myLeftFifthButtonGamepadButtonID), [Handedness.LEFT, VirtualGamepadButtonID.FIFTH_BUTTON]);
+      }
+    }
+    if (this._myRightFirstButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myRightFirstButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightFirstButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.FIRST_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightFirstButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.FIRST_BUTTON]);
+      }
+    }
+    if (this._myRightSecondButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myRightSecondButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightSecondButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.SECOND_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightSecondButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.SECOND_BUTTON]);
+      }
+    }
+    if (this._myRightThirdButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myRightThirdButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightThirdButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.THIRD_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightThirdButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.THIRD_BUTTON]);
+      }
+    }
+    if (this._myRightFourthButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myRightFourthButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightFourthButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.FOURTH_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightFourthButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.FOURTH_BUTTON]);
+      }
+    }
+    if (this._myRightFifthButtonEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myRightFifthButtonGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightFifthButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.FIFTH_BUTTON]);
+      } else {
+        rightGamepadToVirtualGamepadButtonIDMap.set(this._gamepadPropertyButtonIDToEnum(this._myRightFifthButtonGamepadButtonID), [Handedness.RIGHT, VirtualGamepadButtonID.FIFTH_BUTTON]);
+      }
+    }
+    const leftGamepadToVirtualGamepadAxesIDMap = /* @__PURE__ */ new Map();
+    const rightGamepadToVirtualGamepadAxesIDMap = /* @__PURE__ */ new Map();
+    if (this._myLeftThumbstickEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myLeftThumbstickGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadAxesIDMap.set(GamepadAxesID.THUMBSTICK, [Handedness.LEFT, VirtualGamepadAxesID.FIRST_AXES]);
+      } else {
+        rightGamepadToVirtualGamepadAxesIDMap.set(GamepadAxesID.THUMBSTICK, [Handedness.LEFT, VirtualGamepadAxesID.FIRST_AXES]);
+      }
+    }
+    if (this._myRightThumbstickEnabled) {
+      if (InputUtils.getHandednessByIndex(this._myRightThumbstickGamepadHandedness) == Handedness.LEFT) {
+        leftGamepadToVirtualGamepadAxesIDMap.set(GamepadAxesID.THUMBSTICK, [Handedness.RIGHT, VirtualGamepadAxesID.FIRST_AXES]);
+      } else {
+        rightGamepadToVirtualGamepadAxesIDMap.set(GamepadAxesID.THUMBSTICK, [Handedness.RIGHT, VirtualGamepadAxesID.FIRST_AXES]);
+      }
+    }
+    const leftHandPose = Globals.getLeftGamepad(this.engine).getGamepadCore("pp_left_xr_gamepad").getHandPose();
+    const rightHandPose = Globals.getRightGamepad(this.engine).getGamepadCore("pp_right_xr_gamepad").getHandPose();
+    this._myLeftVirtualGamepadGamepadCore = new VirtualGamepadGamepadCore(this._myVirtualGamepad, leftHandPose, leftGamepadToVirtualGamepadButtonIDMap, leftGamepadToVirtualGamepadAxesIDMap);
+    this._myRightVirtualGamepadGamepadCore = new VirtualGamepadGamepadCore(this._myVirtualGamepad, rightHandPose, rightGamepadToVirtualGamepadButtonIDMap, rightGamepadToVirtualGamepadAxesIDMap);
+    Globals.getLeftGamepad(this.engine).addGamepadCore("pp_left_virtual_gamepad", this._myLeftVirtualGamepadGamepadCore);
+    Globals.getRightGamepad(this.engine).addGamepadCore("pp_right_virtual_gamepad", this._myRightVirtualGamepadGamepadCore);
+  }
+  _gamepadPropertyButtonIDToEnum(propertyButtonID) {
+    let buttonID = null;
+    switch (propertyButtonID) {
+      case 0:
+        buttonID = GamepadButtonID.SELECT;
+        break;
+      case 1:
+        buttonID = GamepadButtonID.SQUEEZE;
+        break;
+      case 2:
+        buttonID = GamepadButtonID.THUMBSTICK;
+        break;
+      case 3:
+        buttonID = GamepadButtonID.TOP_BUTTON;
+        break;
+      case 4:
+        buttonID = GamepadButtonID.BOTTOM_BUTTON;
+        break;
+      case 5:
+        buttonID = GamepadButtonID.LEFT_BUTTON;
+        break;
+      case 6:
+        buttonID = GamepadButtonID.RIGHT_BUTTON;
+        break;
+      case 7:
+        buttonID = GamepadButtonID.MENU;
+        break;
+      case 8:
+        buttonID = GamepadButtonID.TOUCHPAD;
+        break;
+      case 9:
+        buttonID = GamepadButtonID.THUMB_REST;
+        break;
+    }
+    return buttonID;
   }
   onDestroy() {
     Globals.getLeftGamepad(this.engine)?.removeGamepadCore("pp_left_virtual_gamepad");
@@ -37690,12 +38529,12 @@ var VirtualGamepadComponent = class extends Component49 {
 };
 
 // dist/pp/input/pose/components/set_player_height_component.js
-import { Component as Component50, Property as Property38 } from "@wonderlandengine/api";
-var SetPlayerHeightComponent = class extends Component50 {
+import { Component as Component51, Property as Property37 } from "@wonderlandengine/api";
+var SetPlayerHeightComponent = class extends Component51 {
   static TypeName = "pp-set-player-height";
   static Properties = {
-    _myEyesHeight: Property38.float(1.65),
-    _mySetOnlyOnStart: Property38.bool(false)
+    _myEyesHeight: Property37.float(1.65),
+    _mySetOnlyOnStart: Property37.bool(false)
   };
   start() {
     let localPosition = this.object.pp_getPositionLocal();
@@ -37723,25 +38562,55 @@ var SetPlayerHeightComponent = class extends Component50 {
 };
 
 // dist/pp/input/pose/components/set_hand_local_transform_component.js
-import { Component as Component51, Property as Property39 } from "@wonderlandengine/api";
-var SetHandLocalTransformComponent = class extends Component51 {
+import { Component as Component52, Property as Property38 } from "@wonderlandengine/api";
+var SetHandLocalTransformComponent = class extends Component52 {
   static TypeName = "pp-set-hand-local-transform";
   static Properties = {
-    _myHandedness: Property39.enum(["Left", "Right"], "Left")
+    _myHandedness: Property38.enum(["Left", "Right"], "Left")
   };
   start() {
     this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
-    Globals.getHandPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
+    Globals.getHandPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
   }
-  onPoseUpdated(dt, pose) {
+  _onPoseUpdated(dt, pose) {
   }
   onDestroy() {
     Globals.getHandPose(this._myHandednessType, this.engine)?.unregisterPoseUpdatedEventListener(this);
   }
 };
-SetHandLocalTransformComponent.prototype.onPoseUpdated = function() {
+SetHandLocalTransformComponent.prototype._onPoseUpdated = function() {
   let handPoseTransform = quat2_create();
-  return function onPoseUpdated(dt, pose) {
+  return function _onPoseUpdated(dt, pose) {
+    if (this.active) {
+      if (XRUtils.isSessionActive(this.engine)) {
+        if (pose.isValid()) {
+          this.object.pp_setTransformLocalQuat(pose.getTransformQuat(handPoseTransform, null));
+        }
+      }
+    }
+  };
+}();
+
+// dist/pp/input/pose/components/set_hand_ray_local_transform_component.js
+import { Component as Component53, Property as Property39 } from "@wonderlandengine/api";
+var SetHandRayLocalTransformComponent = class extends Component53 {
+  static TypeName = "pp-set-hand-ray-local-transform";
+  static Properties = {
+    _myHandedness: Property39.enum(["Left", "Right"], "Left")
+  };
+  start() {
+    this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
+    Globals.getHandRayPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+  }
+  _onPoseUpdated(dt, pose) {
+  }
+  onDestroy() {
+    Globals.getHandRayPose(this._myHandednessType, this.engine)?.unregisterPoseUpdatedEventListener(this);
+  }
+};
+SetHandRayLocalTransformComponent.prototype._onPoseUpdated = function() {
+  let handPoseTransform = quat2_create();
+  return function _onPoseUpdated(dt, pose) {
     if (this.active) {
       if (XRUtils.isSessionActive(this.engine)) {
         if (pose.isValid()) {
@@ -37753,11 +38622,11 @@ SetHandLocalTransformComponent.prototype.onPoseUpdated = function() {
 }();
 
 // dist/pp/input/pose/components/set_head_local_transform_component.js
-import { Component as Component52 } from "@wonderlandengine/api";
-var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component52 {
+import { Component as Component54 } from "@wonderlandengine/api";
+var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component54 {
   static TypeName = "pp-set-head-local-transform";
   start() {
-    Globals.getHeadPose(this.engine).registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
+    Globals.getHeadPose(this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
   }
   static _onPoseUpdatedSV = {
     cameraNonXRRotation: quat_create(),
@@ -37765,7 +38634,7 @@ var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent exten
     cameraNonXRPosition: vec3_create(),
     headPoseTransform: quat2_create()
   };
-  onPoseUpdated(dt, pose) {
+  _onPoseUpdated(dt, pose) {
     if (this.active) {
       if (!XRUtils.isSessionActive(this.engine)) {
         const cameraNonXR = Globals.getPlayerObjects(this.engine).myCameraNonXR;
@@ -37792,8 +38661,8 @@ var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent exten
 };
 
 // dist/pp/input/pose/components/set_tracked_hand_joint_local_transform_component.js
-import { Component as Component53, Property as Property40 } from "@wonderlandengine/api";
-var SetTrackedHandJointLocalTransformComponent = class extends Component53 {
+import { Component as Component55, Property as Property40 } from "@wonderlandengine/api";
+var SetTrackedHandJointLocalTransformComponent = class extends Component55 {
   static TypeName = "pp-set-tracked-hand-joint-local-transform";
   static Properties = {
     _myHandedness: Property40.enum(["Left", "Right"], "Left"),
@@ -37829,17 +38698,17 @@ var SetTrackedHandJointLocalTransformComponent = class extends Component53 {
   start() {
     this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
     this._myJointIDType = InputUtils.getJointIDByIndex(this._myJointID);
-    Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(this._myJointIDType).registerPoseUpdatedEventListener(this, this.onPoseUpdated.bind(this));
+    Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(this._myJointIDType).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
   }
-  onPoseUpdated(dt, pose) {
+  _onPoseUpdated(dt, pose) {
   }
   onDestroy() {
     Globals.getTrackedHandPose(this._myHandednessType, this.engine)?.getJointPose(this._myJointIDType)?.unregisterPoseUpdatedEventListener(this);
   }
 };
-SetTrackedHandJointLocalTransformComponent.prototype.onPoseUpdated = function() {
+SetTrackedHandJointLocalTransformComponent.prototype._onPoseUpdated = function() {
   let jointPoseTransform = quat2_create();
-  return function onPoseUpdated(dt, pose) {
+  return function _onPoseUpdated(dt, pose) {
     if (this.active) {
       if (XRUtils.isSessionActive(this.engine)) {
         if (pose.isValid()) {
@@ -37854,8 +38723,8 @@ SetTrackedHandJointLocalTransformComponent.prototype.onPoseUpdated = function() 
 }();
 
 // dist/pp/input/pose/components/copy_hand_transform_component.js
-import { Component as Component54, Property as Property41 } from "@wonderlandengine/api";
-var CopyHandTransformComponent = class extends Component54 {
+import { Component as Component56, Property as Property41 } from "@wonderlandengine/api";
+var CopyHandTransformComponent = class extends Component56 {
   static TypeName = "pp-copy-hand-transform";
   static Properties = {
     _myHandedness: Property41.enum(["Left", "Right"], "Left")
@@ -37871,8 +38740,8 @@ var CopyHandTransformComponent = class extends Component54 {
 };
 
 // dist/pp/input/pose/components/copy_head_transform_component.js
-import { Component as Component55 } from "@wonderlandengine/api";
-var CopyHeadTransformComponent = class extends Component55 {
+import { Component as Component57 } from "@wonderlandengine/api";
+var CopyHeadTransformComponent = class extends Component57 {
   static TypeName = "pp-copy-head-transform";
   static Properties = {};
   update(dt) {
@@ -37883,8 +38752,8 @@ var CopyHeadTransformComponent = class extends Component55 {
 };
 
 // dist/pp/input/pose/components/copy_player_transform_component.js
-import { Component as Component56 } from "@wonderlandengine/api";
-var CopyPlayerTransformComponent = class extends Component56 {
+import { Component as Component58 } from "@wonderlandengine/api";
+var CopyPlayerTransformComponent = class extends Component58 {
   static TypeName = "pp-copy-player-transform";
   static Properties = {};
   update(dt) {
@@ -37895,8 +38764,8 @@ var CopyPlayerTransformComponent = class extends Component56 {
 };
 
 // dist/pp/input/pose/components/copy_reference_space_transform_component.js
-import { Component as Component57 } from "@wonderlandengine/api";
-var CopyReferenceSpaceTransformComponent = class extends Component57 {
+import { Component as Component59 } from "@wonderlandengine/api";
+var CopyReferenceSpaceTransformComponent = class extends Component59 {
   static TypeName = "pp-copy-reference-space-transform";
   static Properties = {};
   update(dt) {
@@ -37919,9 +38788,9 @@ var ToolInputSourceType = {
 };
 
 // dist/pp/tool/cauldron/components/tool_cursor_component.js
-import { Component as Component58, MeshComponent as MeshComponent14, Property as Property42, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
+import { Component as Component60, MeshComponent as MeshComponent14, Property as Property42, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
 import { Cursor as Cursor5, CursorTarget as CursorTarget7 } from "@wonderlandengine/components";
-var ToolCursorComponent = class extends Component58 {
+var ToolCursorComponent = class extends Component60 {
   static TypeName = "pp-tool-cursor";
   static Properties = {
     _myHandedness: Property42.enum(["Left", "Right"], "Left"),
@@ -38666,7 +39535,7 @@ var WidgetFrameUI = class {
   }
   _updateObjectsTransforms(forceRefreshObjectsTransforms) {
     if (XRUtils.isSessionActive(this._myEngine)) {
-      let inputSourceType = InputUtils.getInputSourceTypeByHandedness(this._myParams.myHandedness, this._myEngine);
+      let inputSourceType = Globals.getHandPoses(this._myEngine)[this._myParams.myHandedness].getInputSourceType();
       if (inputSourceType != this._myInputSourceType || forceRefreshObjectsTransforms) {
         this._myInputSourceType = inputSourceType;
         if (!this._myPinned) {
@@ -39645,8 +40514,8 @@ var ConsoleVRWidget = class {
 };
 
 // dist/pp/tool/console_vr/components/console_vr_tool_component.js
-import { Component as Component59, Property as Property43 } from "@wonderlandengine/api";
-var ConsoleVRToolComponent = class extends Component59 {
+import { Component as Component61, Property as Property43 } from "@wonderlandengine/api";
+var ConsoleVRToolComponent = class extends Component61 {
   static TypeName = "pp-console-vr-tool";
   static Properties = {
     _myHandedness: Property43.enum(["None", "Left", "Right"], "None"),
@@ -40397,8 +41266,8 @@ var EasyTuneTransform = class _EasyTuneTransform extends EasyTuneVariableTyped {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
-import { Component as Component60 } from "@wonderlandengine/api";
-import { property as property7 } from "@wonderlandengine/api/decorators.js";
+import { Component as Component62 } from "@wonderlandengine/api";
+import { property as property9 } from "@wonderlandengine/api/decorators.js";
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget.js
 import { Emitter as Emitter15 } from "@wonderlandengine/api";
@@ -43290,11 +44159,11 @@ var EasyTuneWidget = class {
   _createIndexString() {
     let indexString = " (";
     let index = (this._getVariableIndex(this._myCurrentVariable) + 1).toString();
-    let length5 = this.getValidEasyTuneVariablesLength().toString();
-    while (index.length < length5.length) {
+    let length6 = this.getValidEasyTuneVariablesLength().toString();
+    while (index.length < length6.length) {
       index = "0".concat(index);
     }
-    indexString = indexString.concat(index).concat(" - ").concat(length5).concat(")");
+    indexString = indexString.concat(index).concat(" - ").concat(length6).concat(")");
     return indexString;
   }
   _getVariableIndex(variable) {
@@ -43362,7 +44231,7 @@ var EasyTuneWidget = class {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
-var __decorate7 = function(decorators, target, key, desc) {
+var __decorate9 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -43372,7 +44241,7 @@ var __decorate7 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyTuneToolComponent = class extends Component60 {
+var EasyTuneToolComponent = class extends Component62 {
   static TypeName = "pp-easy-tune-tool";
   _myHandedness;
   _myShowOnStart;
@@ -43488,43 +44357,43 @@ var EasyTuneToolComponent = class extends Component60 {
     EasyTuneUtils.removeRefreshWidgetCallback(this, this.engine);
   }
 };
-__decorate7([
-  property7.enum(["None", "Left", "Right"], "None")
+__decorate9([
+  property9.enum(["None", "Left", "Right"], "None")
 ], EasyTuneToolComponent.prototype, "_myHandedness", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate9([
+  property9.bool(false)
 ], EasyTuneToolComponent.prototype, "_myShowOnStart", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate9([
+  property9.bool(false)
 ], EasyTuneToolComponent.prototype, "_myShowVisibilityButton", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate9([
+  property9.bool(true)
 ], EasyTuneToolComponent.prototype, "_myGamepadScrollVariableEnabled", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate9([
+  property9.bool(false)
 ], EasyTuneToolComponent.prototype, "_myShowVariablesImportExportButtons", void 0);
-__decorate7([
-  property7.string("")
+__decorate9([
+  property9.string("")
 ], EasyTuneToolComponent.prototype, "_myVariablesImportURL", void 0);
-__decorate7([
-  property7.string("")
+__decorate9([
+  property9.string("")
 ], EasyTuneToolComponent.prototype, "_myVariablesExportURL", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate9([
+  property9.bool(false)
 ], EasyTuneToolComponent.prototype, "_myImportVariablesOnStart", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate9([
+  property9.bool(false)
 ], EasyTuneToolComponent.prototype, "_myResetVariablesDefaultValueOnImport", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate9([
+  property9.bool(true)
 ], EasyTuneToolComponent.prototype, "_myKeepImportVariablesOnExport", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate9([
+  property9.bool(true)
 ], EasyTuneToolComponent.prototype, "_myAvoidExportingVariablesWithValueAsDefault", void 0);
 
 // dist/pp/tool/easy_tune/components/easy_tune_import_variables_component.js
-import { Component as Component61, Property as Property44 } from "@wonderlandengine/api";
-var EasyTuneImportVariablesComponent = class extends Component61 {
+import { Component as Component63, Property as Property44 } from "@wonderlandengine/api";
+var EasyTuneImportVariablesComponent = class extends Component63 {
   static TypeName = "pp-easy-tune-import-variables";
   static Properties = {
     _myVariablesImportURL: Property44.string(""),
@@ -43972,9 +44841,9 @@ var EasyTextColor = class _EasyTextColor extends EasyObjectTuner {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js
-import { Component as Component62 } from "@wonderlandengine/api";
-import { property as property8 } from "@wonderlandengine/api/decorators.js";
-var __decorate8 = function(decorators, target, key, desc) {
+import { Component as Component64 } from "@wonderlandengine/api";
+import { property as property10 } from "@wonderlandengine/api/decorators.js";
+var __decorate10 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -43984,7 +44853,7 @@ var __decorate8 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyLightAttenuationComponent = class extends Component62 {
+var EasyLightAttenuationComponent = class extends Component64 {
   static TypeName = "pp-easy-light-attenuation";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -44018,20 +44887,20 @@ var EasyLightAttenuationComponent = class extends Component62 {
     return clonedComponent;
   }
 };
-__decorate8([
-  property8.string("")
+__decorate10([
+  property10.string("")
 ], EasyLightAttenuationComponent.prototype, "_myVariableName", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate10([
+  property10.bool(false)
 ], EasyLightAttenuationComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate10([
+  property10.bool(false)
 ], EasyLightAttenuationComponent.prototype, "_myUseTuneTarget", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js
-import { Component as Component63 } from "@wonderlandengine/api";
-import { property as property9 } from "@wonderlandengine/api/decorators.js";
-var __decorate9 = function(decorators, target, key, desc) {
+import { Component as Component65 } from "@wonderlandengine/api";
+import { property as property11 } from "@wonderlandengine/api/decorators.js";
+var __decorate11 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -44041,7 +44910,7 @@ var __decorate9 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyLightColorComponent = class extends Component63 {
+var EasyLightColorComponent = class extends Component65 {
   static TypeName = "pp-easy-light-color";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -44076,23 +44945,23 @@ var EasyLightColorComponent = class extends Component63 {
     return clonedComponent;
   }
 };
-__decorate9([
-  property9.string("")
+__decorate11([
+  property11.string("")
 ], EasyLightColorComponent.prototype, "_myVariableName", void 0);
-__decorate9([
-  property9.bool(false)
+__decorate11([
+  property11.bool(false)
 ], EasyLightColorComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate9([
-  property9.bool(false)
+__decorate11([
+  property11.bool(false)
 ], EasyLightColorComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate9([
-  property9.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
+__decorate11([
+  property11.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
 ], EasyLightColorComponent.prototype, "_myColorModel", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js
-import { Component as Component64 } from "@wonderlandengine/api";
-import { property as property10 } from "@wonderlandengine/api/decorators.js";
-var __decorate10 = function(decorators, target, key, desc) {
+import { Component as Component66 } from "@wonderlandengine/api";
+import { property as property12 } from "@wonderlandengine/api/decorators.js";
+var __decorate12 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -44102,7 +44971,7 @@ var __decorate10 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyMeshColorComponent = class extends Component64 {
+var EasyMeshColorComponent = class extends Component66 {
   static TypeName = "pp-easy-mesh-color";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -44138,26 +45007,26 @@ var EasyMeshColorComponent = class extends Component64 {
     return clonedComponent;
   }
 };
-__decorate10([
-  property10.string("")
+__decorate12([
+  property12.string("")
 ], EasyMeshColorComponent.prototype, "_myVariableName", void 0);
-__decorate10([
-  property10.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyMeshColorComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate10([
-  property10.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyMeshColorComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate10([
-  property10.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
+__decorate12([
+  property12.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
 ], EasyMeshColorComponent.prototype, "_myColorModel", void 0);
-__decorate10([
-  property10.enum(["Color", "Diffuse Color", "Ambient Color", "Specular Color", "Emissive Color", "Fog Color"], "Color")
+__decorate12([
+  property12.enum(["Color", "Diffuse Color", "Ambient Color", "Specular Color", "Emissive Color", "Fog Color"], "Color")
 ], EasyMeshColorComponent.prototype, "_myColorType", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_scale_component.js
-import { Component as Component65 } from "@wonderlandengine/api";
-import { property as property11 } from "@wonderlandengine/api/decorators.js";
-var __decorate11 = function(decorators, target, key, desc) {
+import { Component as Component67 } from "@wonderlandengine/api";
+import { property as property13 } from "@wonderlandengine/api/decorators.js";
+var __decorate13 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -44167,7 +45036,7 @@ var __decorate11 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyScaleComponent = class extends Component65 {
+var EasyScaleComponent = class extends Component67 {
   static TypeName = "pp-easy-scale";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -44205,28 +45074,28 @@ var EasyScaleComponent = class extends Component65 {
     return clonedComponent;
   }
 };
-__decorate11([
-  property11.string("")
+__decorate13([
+  property13.string("")
 ], EasyScaleComponent.prototype, "_myVariableName", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate13([
+  property13.bool(false)
 ], EasyScaleComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate13([
+  property13.bool(false)
 ], EasyScaleComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate11([
-  property11.bool(true)
+__decorate13([
+  property13.bool(true)
 ], EasyScaleComponent.prototype, "_myLocal", void 0);
-__decorate11([
-  property11.bool(true)
+__decorate13([
+  property13.bool(true)
 ], EasyScaleComponent.prototype, "_myScaleAsOne", void 0);
-__decorate11([
-  property11.float(1)
+__decorate13([
+  property13.float(1)
 ], EasyScaleComponent.prototype, "_myStepPerSecond", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js
-import { Component as Component66, Property as Property45 } from "@wonderlandengine/api";
-var EasySetTuneTargetChildNumberComponent = class extends Component66 {
+import { Component as Component68, Property as Property45 } from "@wonderlandengine/api";
+var EasySetTuneTargetChildNumberComponent = class extends Component68 {
   static TypeName = "pp-easy-set-tune-target-child-number";
   static Properties = {
     _myVariableName: Property45.string(""),
@@ -44291,8 +45160,8 @@ var EasySetTuneTargetChildNumberComponent = class extends Component66 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_grab_component.js
-import { Component as Component67 } from "@wonderlandengine/api";
-var EasySetTuneTargeetGrabComponent = class extends Component67 {
+import { Component as Component69 } from "@wonderlandengine/api";
+var EasySetTuneTargeetGrabComponent = class extends Component69 {
   static TypeName = "pp-easy-set-tune-target-grab";
   static Properties = {};
   start() {
@@ -44329,9 +45198,9 @@ var EasySetTuneTargeetGrabComponent = class extends Component67 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_text_color_component.js
-import { Component as Component68 } from "@wonderlandengine/api";
-import { property as property12 } from "@wonderlandengine/api/decorators.js";
-var __decorate12 = function(decorators, target, key, desc) {
+import { Component as Component70 } from "@wonderlandengine/api";
+import { property as property14 } from "@wonderlandengine/api/decorators.js";
+var __decorate14 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -44341,7 +45210,7 @@ var __decorate12 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyTextColorComponent = class extends Component68 {
+var EasyTextColorComponent = class extends Component70 {
   static TypeName = "pp-easy-text-color";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -44377,26 +45246,26 @@ var EasyTextColorComponent = class extends Component68 {
     return clonedComponent;
   }
 };
-__decorate12([
-  property12.string("")
+__decorate14([
+  property14.string("")
 ], EasyTextColorComponent.prototype, "_myVariableName", void 0);
-__decorate12([
-  property12.bool(false)
+__decorate14([
+  property14.bool(false)
 ], EasyTextColorComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate12([
-  property12.bool(false)
+__decorate14([
+  property14.bool(false)
 ], EasyTextColorComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate12([
-  property12.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
+__decorate14([
+  property14.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
 ], EasyTextColorComponent.prototype, "_myColorModel", void 0);
-__decorate12([
-  property12.enum(["Color", "Effect Color"], "Color")
+__decorate14([
+  property14.enum(["Color", "Effect Color"], "Color")
 ], EasyTextColorComponent.prototype, "_myColorType", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_transform_component.js
-import { Component as Component69 } from "@wonderlandengine/api";
-import { property as property13 } from "@wonderlandengine/api/decorators.js";
-var __decorate13 = function(decorators, target, key, desc) {
+import { Component as Component71 } from "@wonderlandengine/api";
+import { property as property15 } from "@wonderlandengine/api/decorators.js";
+var __decorate15 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -44406,7 +45275,7 @@ var __decorate13 = function(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyTransformComponent = class extends Component69 {
+var EasyTransformComponent = class extends Component71 {
   static TypeName = "pp-easy-transform";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -44446,29 +45315,29 @@ var EasyTransformComponent = class extends Component69 {
     return clonedComponent;
   }
 };
-__decorate13([
-  property13.string("")
+__decorate15([
+  property15.string("")
 ], EasyTransformComponent.prototype, "_myVariableName", void 0);
-__decorate13([
-  property13.bool(false)
+__decorate15([
+  property15.bool(false)
 ], EasyTransformComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate13([
-  property13.bool(false)
+__decorate15([
+  property15.bool(false)
 ], EasyTransformComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate13([
-  property13.bool(true)
+__decorate15([
+  property15.bool(true)
 ], EasyTransformComponent.prototype, "_myLocal", void 0);
-__decorate13([
-  property13.bool(true)
+__decorate15([
+  property15.bool(true)
 ], EasyTransformComponent.prototype, "_myScaleAsOne", void 0);
-__decorate13([
-  property13.float(1)
+__decorate15([
+  property15.float(1)
 ], EasyTransformComponent.prototype, "_myPositionStepPerSecond", void 0);
-__decorate13([
-  property13.float(50)
+__decorate15([
+  property15.float(50)
 ], EasyTransformComponent.prototype, "_myRotationStepPerSecond", void 0);
-__decorate13([
-  property13.float(1)
+__decorate15([
+  property15.float(1)
 ], EasyTransformComponent.prototype, "_myScaleStepPerSecond", void 0);
 export {
   AddPPToWindowComponent,
@@ -44527,7 +45396,7 @@ export {
   CharacterCollisionWallSlideResults,
   CharacterControllerUtils,
   ClassicGamepadCore,
-  ClearConsoleOnXRSessionStartComponent,
+  ClearConsoleComponent,
   CollisionCheck,
   CollisionCheckBridge,
   CollisionCheckParams,
@@ -44660,6 +45529,8 @@ export {
   GrabberHandComponent,
   HandPose,
   HandPoseParams,
+  HandRayPose,
+  HandRayPoseParams,
   Handedness,
   HandednessIndex,
   HeadPose,
@@ -44753,7 +45624,9 @@ export {
   ScaleOnSpawnComponent,
   SceneObjects,
   SetActiveComponent,
+  SetEngineLogLevelComponent,
   SetHandLocalTransformComponent,
+  SetHandRayLocalTransformComponent,
   SetHeadLocalTransformComponent,
   SetPlayerHeightComponent,
   SetTrackedHandJointLocalTransformComponent,
@@ -44782,8 +45655,11 @@ export {
   Vec2Utils,
   Vec3Utils,
   Vec4Utils,
+  VecAllocationUtils,
   VecUtils,
   VirtualGamepad,
+  VirtualGamepadAxesID,
+  VirtualGamepadButtonID,
   VirtualGamepadButtonParams,
   VirtualGamepadComponent,
   VirtualGamepadGamepadCore,
@@ -44824,14 +45700,30 @@ export {
   XRGamepadCore,
   XRUtils,
   mat3_create,
+  mat3_getAllocationFunction,
+  mat3_setAllocationFunction,
   mat4_create,
+  mat4_getAllocationFunction,
+  mat4_setAllocationFunction,
   quat2_create,
+  quat2_getAllocationFunction,
+  quat2_setAllocationFunction,
   quat_create,
+  quat_getAllocationFunction,
+  quat_setAllocationFunction,
   registerPPComponents,
   registerWLComponents,
   vec2_create,
+  vec2_getAllocationFunction,
+  vec2_setAllocationFunction,
   vec3_create,
+  vec3_getAllocationFunction,
+  vec3_setAllocationFunction,
   vec4_create,
-  vec_create
+  vec4_getAllocationFunction,
+  vec4_setAllocationFunction,
+  vec_create,
+  vec_getAllocationFunction,
+  vec_setAllocationFunction
 };
 //# sourceMappingURL=bundle.js.map

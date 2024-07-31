@@ -1,7 +1,6 @@
 import { CollisionComponent, MeshComponent, TextComponent } from "@wonderlandengine/api";
 import { CursorTarget } from "@wonderlandengine/components";
 import { XRUtils } from "../../cauldron/utils/xr_utils.js";
-import { InputUtils } from "../../input/cauldron/input_utils.js";
 import { vec3_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { ToolHandedness, ToolInputSourceType } from "../cauldron/tool_types.js";
@@ -73,7 +72,7 @@ export class WidgetFrameUI {
 
     _updateObjectsTransforms(forceRefreshObjectsTransforms) {
         if (XRUtils.isSessionActive(this._myEngine)) {
-            let inputSourceType = InputUtils.getInputSourceTypeByHandedness(this._myParams.myHandedness, this._myEngine);
+            let inputSourceType = Globals.getHandPoses(this._myEngine)[this._myParams.myHandedness].getInputSourceType();
 
             if (inputSourceType != this._myInputSourceType || forceRefreshObjectsTransforms) {
                 this._myInputSourceType = inputSourceType;

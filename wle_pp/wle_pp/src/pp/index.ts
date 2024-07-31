@@ -36,11 +36,11 @@ export * from "./cauldron/cauldron/timer.js";
 
 export * from "./cauldron/cauldron/components/adjust_hierarchy_physx_scale_component.js";
 export * from "./cauldron/cauldron/components/analytics_manager_component.js";
-export * from "./cauldron/cauldron/components/clear_console_on_xr_session_start_component.js";
+export * from "./cauldron/cauldron/components/clear_console_component.js";
 export * from "./cauldron/cauldron/components/reset_local_transform_component.js";
 export * from "./cauldron/cauldron/components/save_manager_component.js";
 export * from "./cauldron/cauldron/components/set_active_component.js";
-export * from "./cauldron/cauldron/components/show_fps_component.js";
+export * from "./cauldron/cauldron/components/set_engine_log_level_component.js";
 export * from "./cauldron/cauldron/components/show_xr_buttons_component.js";
 
 //    FSM
@@ -76,6 +76,7 @@ export { QuatUtils } from "./cauldron/utils/array/quat_utils.js";
 export { Quat2Utils } from "./cauldron/utils/array/quat2_utils.js";
 export { Mat3Utils } from "./cauldron/utils/array/mat3_utils.js";
 export { Mat4Utils } from "./cauldron/utils/array/mat4_utils.js";
+export { VecAllocationUtils } from "./cauldron/utils/array/vec_allocation_utils.js";
 
 export { JSUtils } from "./cauldron/utils/js_utils.js";
 export { MathUtils, EasingFunction, EasingFunctionName, WaveFunction } from "./cauldron/utils/math_utils.js";
@@ -124,6 +125,7 @@ export * from "./debug/debug_visual_manager.js";
 export * from "./debug/components/debug_transform_component.js";
 export * from "./debug/components/debug_manager_component.js";
 export * from "./debug/components/enable_debug_component.js";
+export * from "./debug/components/show_fps_component.js";
 
 export * from "./debug/debug_functions_overwriter/debug_functions_overwriter.js";
 export * from "./debug/debug_functions_overwriter/debug_functions_performance_analyzer/debug_functions_performance_analyzer.js";
@@ -227,12 +229,14 @@ export * from "./input/gamepad/virtual_gamepad/virtual_gamepad_icon.js";
 
 export * from "./input/pose/base_pose.js";
 export * from "./input/pose/hand_pose.js";
+export * from "./input/pose/hand_ray_pose.js";
 export * from "./input/pose/head_pose.js";
 export * from "./input/pose/tracked_hand_joint_pose.js";
 export * from "./input/pose/tracked_hand_pose.js";
 
 export * from "./input/pose/components/set_player_height_component.js";
 export * from "./input/pose/components/set_hand_local_transform_component.js";
+export * from "./input/pose/components/set_hand_ray_local_transform_component.js";
 export * from "./input/pose/components/set_head_local_transform_component.js";
 export * from "./input/pose/components/set_tracked_hand_joint_local_transform_component.js";
 export * from "./input/pose/components/copy_hand_transform_component.js";

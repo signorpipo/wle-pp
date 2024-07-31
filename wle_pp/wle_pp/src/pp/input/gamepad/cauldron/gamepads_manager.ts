@@ -4,12 +4,12 @@ import { UniversalGamepad } from "../universal_gamepad.js";
 
 export class GamepadsManager {
 
-    private readonly _myGamepads: Record<Handedness, Gamepad>;
+    private readonly _myUniversalGamepads: Record<Handedness, UniversalGamepad>;
 
     private _myDestroyed: boolean = false;
 
     constructor() {
-        this._myGamepads = {
+        this._myUniversalGamepads = {
             [Handedness.LEFT]: new UniversalGamepad(Handedness.LEFT),
             [Handedness.RIGHT]: new UniversalGamepad(Handedness.RIGHT)
         };
@@ -18,41 +18,57 @@ export class GamepadsManager {
     }
 
     public start(): void {
-        for (const rawHandedness in this._myGamepads) {
+        for (const rawHandedness in this._myUniversalGamepads) {
             const handedness = rawHandedness as Handedness;
-            this._myGamepads[handedness].start();
+            this._myUniversalGamepads[handedness].start();
         }
     }
 
     public update(dt: number): void {
-        for (const rawHandedness in this._myGamepads) {
+        for (const rawHandedness in this._myUniversalGamepads) {
             const handedness = rawHandedness as Handedness;
-            this._myGamepads[handedness].update(dt);
+            this._myUniversalGamepads[handedness].update(dt);
         }
     }
 
-    public getLeftGamepad(): Gamepad {
-        return this._myGamepads[Handedness.LEFT];
-    }
-
-    public getRightGamepad(): Gamepad {
-        return this._myGamepads[Handedness.RIGHT];
-    }
-
     public getGamepad(handedness: Handedness): Gamepad {
-        return this._myGamepads[handedness];
+        return this._myUniversalGamepads[handedness];
     }
 
     public getGamepads(): Record<Handedness, Gamepad> {
-        return this._myGamepads;
+        return this._myUniversalGamepads;
+    }
+
+    public getLeftGamepad(): Gamepad {
+        return this._myUniversalGamepads[Handedness.LEFT];
+    }
+
+    public getRightGamepad(): Gamepad {
+        return this._myUniversalGamepads[Handedness.RIGHT];
+    }
+
+    public getUniversalGamepad(handedness: Handedness): UniversalGamepad {
+        return this._myUniversalGamepads[handedness];
+    }
+
+    public getUniversalGamepads(): Record<Handedness, UniversalGamepad> {
+        return this._myUniversalGamepads;
+    }
+
+    public getLeftUniversalGamepad(): UniversalGamepad {
+        return this._myUniversalGamepads[Handedness.LEFT];
+    }
+
+    public getRightUniversalGamepad(): UniversalGamepad {
+        return this._myUniversalGamepads[Handedness.RIGHT];
     }
 
     public destroy(): void {
         this._myDestroyed = true;
 
-        for (const rawHandedness in this._myGamepads) {
+        for (const rawHandedness in this._myUniversalGamepads) {
             const handedness = rawHandedness as Handedness;
-            this._myGamepads[handedness].destroy();
+            this._myUniversalGamepads[handedness].destroy();
         }
     }
 

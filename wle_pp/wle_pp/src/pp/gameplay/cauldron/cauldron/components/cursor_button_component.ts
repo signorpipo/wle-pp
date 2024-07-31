@@ -1,10 +1,10 @@
 import { Component, MeshComponent, Object3D, TextComponent } from "@wonderlandengine/api";
 import { property } from "@wonderlandengine/api/decorators.js";
 import { Cursor, CursorTarget } from "@wonderlandengine/components";
-import { Timer } from "wle-pp/cauldron/cauldron/timer.js";
-import { FSM, TransitionData } from "wle-pp/cauldron/fsm/fsm.js";
 import { AudioPlayer } from "../../../../audio/audio_player.js";
 import { AudioSetup } from "../../../../audio/audio_setup.js";
+import { Timer } from "../../../../cauldron/cauldron/timer.js";
+import { FSM, TransitionData } from "../../../../cauldron/fsm/fsm.js";
 import { Vector3, Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
 import { ColorUtils } from "../../../../cauldron/utils/color_utils.js";
 import { MathUtils } from "../../../../cauldron/utils/math_utils.js";

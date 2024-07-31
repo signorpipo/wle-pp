@@ -57,24 +57,50 @@ export class XRGamepadCore extends GamepadCore {
         this._myButtonData.reset();
 
         if (this.isGamepadCoreActive()) {
-            if (buttonID < this._myGamepad.buttons.length) {
-                let gamepadButton = this._myGamepad.buttons[buttonID];
+            let button = null;
 
-                if (buttonID != GamepadButtonID.SELECT && buttonID != GamepadButtonID.SQUEEZE) {
-                    this._myButtonData.myPressed = gamepadButton.pressed;
-                } else {
-                    this._myButtonData.myPressed = this._getSpecialButtonPressed(buttonID);
-                }
+            switch (buttonID) {
+                case GamepadButtonID.SELECT:
+                    button = this._myGamepad.buttons[0];
+                    break;
+                case GamepadButtonID.SQUEEZE:
+                    button = this._myGamepad.buttons[1];
+                    break;
+                case GamepadButtonID.THUMBSTICK:
+                    button = this._myGamepad.buttons[3];
+                    break;
+                case GamepadButtonID.TOP_BUTTON:
+                    if (this._myGamepad.buttons.length >= 6) {
+                        button = this._myGamepad.buttons[5];
+                    } else if (this._myGamepad.buttons.length >= 3) {
+                        // This way if you are using a basic touch gamepad, top button will work anyway
+                        button = this._myGamepad.buttons[2];
+                    }
+                    break;
+                case GamepadButtonID.BOTTOM_BUTTON:
+                    button = this._myGamepad.buttons[4];
+                    break;
+                case GamepadButtonID.LEFT_BUTTON:
+                    button = null;
+                    break;
+                case GamepadButtonID.RIGHT_BUTTON:
+                    button = null;
+                    break;
+                case GamepadButtonID.MENU:
+                    button = this._myGamepad.buttons[7];
+                    break;
+                case GamepadButtonID.TOUCHPAD:
+                    button = this._myGamepad.buttons[2];
+                    break;
+                case GamepadButtonID.THUMB_REST:
+                    button = this._myGamepad.buttons[6];
+                    break;
+            }
 
-                this._myButtonData.myTouched = gamepadButton.touched;
-                this._myButtonData.myValue = gamepadButton.value;
-            } else if (buttonID == GamepadButtonID.TOP_BUTTON && this._myGamepad.buttons.length >= 3) {
-                // This way if you are using a basic touch gamepad, top button will work anyway
-
-                let touchButton = this._myGamepad.buttons[2];
-                this._myButtonData.myPressed = touchButton.pressed;
-                this._myButtonData.myTouched = touchButton.touched;
-                this._myButtonData.myValue = touchButton.value;
+            if (button != null) {
+                this._myButtonData.myPressed = button.pressed;
+                this._myButtonData.myTouched = button.touched;
+                this._myButtonData.myValue = button.value;
             }
         }
 

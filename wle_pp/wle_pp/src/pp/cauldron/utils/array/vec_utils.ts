@@ -1,6 +1,6 @@
-import { glMatrix } from "gl-matrix";
 import { Vector } from "../../type_definitions/array_type_definitions.js";
 import { EasingFunction, MathUtils } from "../math_utils.js";
+import { getVectorAllocationFunction, setVectorAllocationFunction } from "./vec_allocation_utils.js";
 
 export function create(length: number): Vector;
 export function create(firstValue: number, ...remainingValues: number[]): Vector;
@@ -9,12 +9,12 @@ export function create(firstValue: number, ...remainingValues: number[]): Vector
 
     if (remainingValues.length == 0) {
         const length = firstValue;
-        out = new glMatrix.ARRAY_TYPE(length);
+        out = getAllocationFunction()(length);
         for (let i = 0; i < length; i++) {
             out[i] = 0;
         }
     } else {
-        out = new glMatrix.ARRAY_TYPE(remainingValues.length + 1);
+        out = getAllocationFunction()(remainingValues.length + 1);
         out[0] = firstValue;
         for (let i = 0; i < remainingValues.length; i++) {
             out[i + 1] = remainingValues[i];
@@ -22,6 +22,15 @@ export function create(firstValue: number, ...remainingValues: number[]): Vector
     }
 
     return out;
+}
+
+export function getAllocationFunction(): (length: number) => Vector {
+    return getVectorAllocationFunction();
+}
+
+/** Specify the function that will be used to allocate the vector when calling the {@link create} function */
+export function setAllocationFunction(allocationFunction: (length: number) => Vector): void {
+    setVectorAllocationFunction(allocationFunction);
 }
 
 export function set<T extends Vector>(vector: T, uniformValue: number): T;
@@ -196,6 +205,8 @@ export function warn(vector: Readonly<Vector>, decimalPlaces: number = 4): Vecto
 
 export const VecUtils = {
     create,
+    getAllocationFunction,
+    setAllocationFunction,
     set,
     copy,
     clone,

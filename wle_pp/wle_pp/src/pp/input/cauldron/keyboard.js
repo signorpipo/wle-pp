@@ -1,16 +1,41 @@
 import { Globals } from "../../pp/globals.js";
 
 export let KeyID = {
-    _0: "0",
-    _1: "1",
-    _2: "2",
-    _3: "3",
-    _4: "4",
-    _5: "5",
-    _6: "6",
-    _7: "7",
-    _8: "8",
-    _9: "9",
+    /** These are when the number is pressed in some way */
+    Number0: "0",
+    Number1: "1",
+    Number2: "2",
+    Number3: "3",
+    Number4: "4",
+    Number5: "5",
+    Number6: "6",
+    Number7: "7",
+    Number8: "8",
+    Number9: "9",
+
+    /** These are just the numbers above the letters on the keyboard */
+    Digit0: "Digit0",
+    Digit1: "Digit1",
+    Digit2: "Digit2",
+    Digit3: "Digit3",
+    Digit4: "Digit4",
+    Digit5: "Digit5",
+    Digit6: "Digit6",
+    Digit7: "Digit7",
+    Digit8: "Digit8",
+    Digit9: "Digit9",
+
+    /** These are just the numbers on the numpad, but works even is num lock is disabled */
+    Numpad0: "Numpad0",
+    Numpad1: "Numpad1",
+    Numpad2: "Numpad2",
+    Numpad3: "Numpad3",
+    Numpad4: "Numpad4",
+    Numpad5: "Numpad5",
+    Numpad6: "Numpad6",
+    Numpad7: "Numpad7",
+    Numpad8: "Numpad8",
+    Numpad9: "Numpad9",
 
     KeyA: "KeyA",
     KeyB: "KeyB",
@@ -98,7 +123,7 @@ export let KeyID = {
     LEFT: "ArrowLeft",
     RIGHT: "ArrowRight",
 
-    SPACE: " ",
+    SPACE: "Space",
     ENTER: "Enter",
     BACKSPACE: "Backspace",
     ESC: "Escape",
@@ -172,7 +197,6 @@ export class Keyboard {
 
     update(dt) {
         if (!document.hasFocus()) {
-
             for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
                 let id = this._myKeyInfosIDs[i];
                 let keyInfo = this._myKeyInfos[id];
@@ -194,6 +218,8 @@ export class Keyboard {
     }
 
     _keyDown(event) {
+        if (event.repeat) return;
+
         this._keyPressedChanged(event.key, true);
         if (event.key != event.code) {
             this._keyPressedChanged(event.code, true);
@@ -211,12 +237,14 @@ export class Keyboard {
         if (this._myKeyInfos[keyID] != null) {
             let keyInfo = this._myKeyInfos[keyID];
 
-            if (pressed) {
-                keyInfo.myPressed = true;
-                keyInfo.myPressStartToProcess = true;
-            } else {
-                keyInfo.myPressed = false;
-                keyInfo.myPressEndToProcess = true;
+            if (pressed != keyInfo.myPressed) {
+                if (pressed) {
+                    keyInfo.myPressed = true;
+                    keyInfo.myPressStartToProcess = true;
+                } else {
+                    keyInfo.myPressed = false;
+                    keyInfo.myPressEndToProcess = true;
+                }
             }
         }
     }

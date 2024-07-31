@@ -5,18 +5,28 @@ import { Mat3Utils } from "./mat3_utils.js";
 import { Mat4Utils, create as mat4_utils_create } from "./mat4_utils.js";
 import { Quat2Utils } from "./quat2_utils.js";
 import { QuatUtils, create as quat_utils_create } from "./quat_utils.js";
+import { getVector3AllocationFunction, setVector3AllocationFunction } from "./vec_allocation_utils.js";
 
 export function create(): Vector3;
 export function create(x: number, y: number, z: number): Vector3;
 export function create(uniformValue: number): Vector3;
 export function create(x?: number, y?: number, z?: number): Vector3 {
-    const out = gl_vec3.create() as unknown as Vector3;
+    const out = getAllocationFunction()();
 
     if (x != null) {
         Vec3Utils.set(out, x, y!, z!);
     }
 
     return out;
+}
+
+export function getAllocationFunction(): () => Vector3 {
+    return getVector3AllocationFunction();
+}
+
+/** Specify the function that will be used to allocate the vector when calling the {@link create} function */
+export function setAllocationFunction(allocationFunction: () => Vector3): void {
+    setVector3AllocationFunction(allocationFunction);
 }
 
 export function set<T extends Vector3>(vector: T, x: number, y: number, z: number): T;
@@ -1129,6 +1139,8 @@ export const radiansToMatrix = function () {
  */
 export const Vec3Utils = {
     create,
+    getAllocationFunction,
+    setAllocationFunction,
     set,
     copy,
     clone,
@@ -1236,5 +1248,5 @@ export const Vec3Utils = {
     degreesToQuat,
     toMatrix,
     degreesToMatrix,
-    radiansToMatrix,
+    radiansToMatrix
 } as const;

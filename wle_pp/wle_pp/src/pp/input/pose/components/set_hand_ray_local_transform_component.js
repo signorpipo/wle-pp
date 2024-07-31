@@ -4,8 +4,8 @@ import { quat2_create } from "../../../plugin/js/extensions/array/vec_create_ext
 import { Globals } from "../../../pp/globals.js";
 import { InputUtils } from "../../cauldron/input_utils.js";
 
-export class SetHandLocalTransformComponent extends Component {
-    static TypeName = "pp-set-hand-local-transform";
+export class SetHandRayLocalTransformComponent extends Component {
+    static TypeName = "pp-set-hand-ray-local-transform";
     static Properties = {
         _myHandedness: Property.enum(["Left", "Right"], "Left")
     };
@@ -13,7 +13,7 @@ export class SetHandLocalTransformComponent extends Component {
     start() {
         this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
 
-        Globals.getHandPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+        Globals.getHandRayPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
     }
 
     _onPoseUpdated(dt, pose) {
@@ -21,7 +21,7 @@ export class SetHandLocalTransformComponent extends Component {
     }
 
     onDestroy() {
-        Globals.getHandPose(this._myHandednessType, this.engine)?.unregisterPoseUpdatedEventListener(this);
+        Globals.getHandRayPose(this._myHandednessType, this.engine)?.unregisterPoseUpdatedEventListener(this);
     }
 }
 
@@ -29,7 +29,7 @@ export class SetHandLocalTransformComponent extends Component {
 
 // IMPLEMENTATION
 
-SetHandLocalTransformComponent.prototype._onPoseUpdated = function () {
+SetHandRayLocalTransformComponent.prototype._onPoseUpdated = function () {
     let handPoseTransform = quat2_create();
     return function _onPoseUpdated(dt, pose) {
         if (this.active) {

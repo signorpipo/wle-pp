@@ -9,16 +9,25 @@ export enum GamepadButtonID {
     /** Grip */
     SQUEEZE = 1,
 
-    TOUCHPAD = 2,
-    THUMBSTICK = 3,
+    THUMBSTICK = 2,
+
+    /** B or Y button on oculus quest gamepad, reverts to `TOUCHPAD` button for gamepads that does not support `TOP_BUTTON` */
+    TOP_BUTTON = 3,
 
     /** A or X button on oculus quest gamepad */
     BOTTOM_BUTTON = 4,
 
-    /** B or Y button on oculus quest gamepad, reverts to `TOUCHPAD` button for gamepads that does not support `TOP_BUTTON` */
-    TOP_BUTTON = 5,
+    /** Square button on a playstation gamepad */
+    LEFT_BUTTON = 5,
 
-    THUMB_REST = 6
+    /** Circle button on a playstation gamepad */
+    RIGHT_BUTTON = 6,
+
+    MENU = 7,
+
+    TOUCHPAD = 8,
+
+    THUMB_REST = 9
 }
 
 export enum GamepadButtonEvent {
