@@ -25038,7 +25038,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.7.0";
+var PP_VERSION = "0.7.1";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -29907,7 +29907,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
   _myUpCursorIsMainOnlyIfLastDown;
   _myUpWithSecondaryCursorIsMain;
   _myCursorButtonComponentID = "cursor_button_component" + MathUtils.randomUUID();
-  _myCursorTarget;
+  _myCursorTarget = null;
   _myButtonActionsHandlers = /* @__PURE__ */ new Map();
   _myFSM = new FSM();
   _myKeepCurrentStateTimer = new Timer(0);
@@ -29925,6 +29925,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
   _myOnDownAudioPlayer = null;
   _myOnUpAudioPlayer = null;
   _myOnUnhoverAudioPlayer = null;
+  _myFirstUpdate = true;
   static _myCursorButtonActionHandlers = /* @__PURE__ */ new Map();
   /** Used to add handlers for every cursor buttons that can be indexes with a string */
   static addButtonActionHandler(id, buttonActionHandler, engine = Globals.getMainEngine()) {
@@ -29953,29 +29954,26 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
     const buttonActionHandler = this._myButtonActionsHandlers.get(id);
     return buttonActionHandler != null ? buttonActionHandler : null;
   }
-  onActivate() {
-    this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this), { id: this });
-    this._myCursorTarget.onHover.add(this._onHover.bind(this), { id: this });
-    this._myCursorTarget.onDown.add(this._onDown.bind(this), { id: this });
-    this._myCursorTarget.onUpWithDown.add(this.onUpWithDown.bind(this), { id: this });
-  }
-  onDeactivate() {
-    if (this._myCursorTarget != null) {
-      this._myCursorTarget.onUnhover.remove(this);
-      this._myCursorTarget.onHover.remove(this);
-      this._myCursorTarget.onDown.remove(this);
-      this._myCursorTarget.onUpWithDown.remove(this);
-      this._myKeepCurrentStateTimer.end();
-      this._myTransitionQueue.pp_clear();
-      this._myApplyQueuedTransitions = false;
-      this._myHoverCursors.pp_clear();
-      this._myMainDownCursor = null;
-      this._myDownCursors.pp_clear();
-      this._myFSM.perform("instant_unhover");
+  getCurrentState() {
+    let currentState = CursorButtonState.UNHOVER;
+    const currentFSMState = this._myFSM.getCurrentStateData().myID;
+    switch (currentFSMState) {
+      case "unhover":
+        currentState = CursorButtonState.UNHOVER;
+        break;
+      case "hover":
+        currentState = CursorButtonState.HOVER;
+        break;
+      case "down":
+        currentState = CursorButtonState.DOWN;
+        break;
+      case "up_with_down":
+        currentState = CursorButtonState.UP;
+        break;
     }
+    return currentState;
   }
   start() {
-    this._myCursorTarget = this.object.pp_getComponent(CursorTarget5);
     const buttonActionsHandlerNames = [...this._myButtonActionsHandlerNames.split(",")];
     for (let i = 0; i < buttonActionsHandlerNames.length; i++) {
       buttonActionsHandlerNames[i] = buttonActionsHandlerNames[i].trim();
@@ -29991,7 +29989,6 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
         }
       }
     }
-    this._setupVisualsAndSFXs();
     this._myKeepCurrentStateTimer.end();
     this._myFSM.setLogEnabled(false, "Cursor Button");
     this._myFSM.addState("unhover", { start: this._onUnhoverStart.bind(this) });
@@ -30012,12 +30009,21 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
     this._myFSM.addTransition("unhover", "unhover", "instant_unhover", this._onInstantUnhover.bind(this), SkipStateFunction.BOTH);
     this._myFSM.init("unhover");
   }
+  _start() {
+    this._setupVisualsAndSFXs();
+    this._myCursorTarget = this.object.pp_getComponent(CursorTarget5);
+    this.onActivate();
+  }
   static _updateSV = {
     buttonScale: vec3_create(),
     hsvColor: vec4_create(),
     rgbColor: vec4_create()
   };
   update(dt) {
+    if (this._myFirstUpdate) {
+      this._start();
+      this._myFirstUpdate = false;
+    }
     this._myFSM.update(dt);
     if (this._myKeepCurrentStateTimer.isRunning()) {
       this._myKeepCurrentStateTimer.update(dt);
@@ -30072,25 +30078,6 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
         }
       }
     }
-  }
-  getCurrentState() {
-    let currentState = CursorButtonState.UNHOVER;
-    const currentFSMState = this._myFSM.getCurrentStateData().myID;
-    switch (currentFSMState) {
-      case "unhover":
-        currentState = CursorButtonState.UNHOVER;
-        break;
-      case "hover":
-        currentState = CursorButtonState.HOVER;
-        break;
-      case "down":
-        currentState = CursorButtonState.DOWN;
-        break;
-      case "up_with_down":
-        currentState = CursorButtonState.UP;
-        break;
-    }
-    return currentState;
   }
   _onUnhover(targetObject, cursorComponent) {
     this._myHoverCursors.pp_removeEqual(cursorComponent);
@@ -30404,6 +30391,29 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
       const audioID = this._myCursorButtonComponentID + "_on_unhover";
       audioManager.addAudioSetup(audioID, audioSetup);
       this._myOnUnhoverAudioPlayer = audioManager.createAudioPlayer(audioID);
+    }
+  }
+  onActivate() {
+    if (this._myCursorTarget != null) {
+      this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this), { id: this });
+      this._myCursorTarget.onHover.add(this._onHover.bind(this), { id: this });
+      this._myCursorTarget.onDown.add(this._onDown.bind(this), { id: this });
+      this._myCursorTarget.onUpWithDown.add(this.onUpWithDown.bind(this), { id: this });
+    }
+  }
+  onDeactivate() {
+    if (this._myCursorTarget != null) {
+      this._myCursorTarget.onUnhover.remove(this);
+      this._myCursorTarget.onHover.remove(this);
+      this._myCursorTarget.onDown.remove(this);
+      this._myCursorTarget.onUpWithDown.remove(this);
+      this._myKeepCurrentStateTimer.end();
+      this._myTransitionQueue.pp_clear();
+      this._myApplyQueuedTransitions = false;
+      this._myHoverCursors.pp_clear();
+      this._myMainDownCursor = null;
+      this._myDownCursors.pp_clear();
+      this._myFSM.perform("instant_unhover");
     }
   }
 };
