@@ -12,12 +12,12 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
 
     start() {
         if (Globals.isToolEnabled(this.engine)) {
-            let easyTuneVariableName = "Target Child ";
+            this._myEasyTuneVariableName = "Target Child ";
 
             if (this._myVariableName == "") {
-                easyTuneVariableName = easyTuneVariableName.concat(this.object.pp_getID());
+                this._myEasyTuneVariableName = this._myEasyTuneVariableName.concat(this.object.pp_getID());
             } else {
-                easyTuneVariableName = easyTuneVariableName.concat(this._myVariableName);
+                this._myEasyTuneVariableName = this._myEasyTuneVariableName.concat(this._myVariableName);
             }
 
             let childrenCount = this.object.pp_getChildren().length;
@@ -28,12 +28,10 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
                 max = 0;
             }
 
-            this._myEasyTuneVariable = new EasyTuneInt(easyTuneVariableName, 0, null, true, 10, min, max, undefined, this.engine);
-            Globals.getEasyTuneVariables(this.engine).add(this._myEasyTuneVariable);
+            this._mySetupDone = false;
 
-            if (this._mySetAsWidgetCurrentVariable) {
-                EasyTuneUtils.setWidgetCurrentVariable(easyTuneVariableName, this.engine);
-            }
+            this._myEasyTuneVariable = new EasyTuneInt(this._myEasyTuneVariableName, 0, null, true, 10, min, max, undefined, this.engine);
+            Globals.getEasyTuneVariables(this.engine).add(this._myEasyTuneVariable);
 
             this._myCurrentChildIndex = -1;
             this._myCurrentChildrenCount = childrenCount;
@@ -44,6 +42,16 @@ export class EasySetTuneTargetChildNumberComponent extends Component {
 
     update(dt) {
         if (Globals.isToolEnabled(this.engine)) {
+            if (!this._mySetupDone) {
+                if (Globals.hasEasyTuneWidget()) {
+                    if (this._mySetAsWidgetCurrentVariable) {
+                        EasyTuneUtils.setWidgetCurrentVariable(this._myEasyTuneVariableName, this.engine);
+                    }
+
+                    this._mySetupDone = true;
+                }
+            }
+
             if (Globals.getEasyTuneVariables(this.engine).isWidgetCurrentVariable(this._myEasyTuneVariable.getName())) {
                 let childrenCount = this.object.pp_getChildren().length;
                 if (childrenCount != this._myCurrentChildrenCount) {

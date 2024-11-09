@@ -25,12 +25,16 @@ function _initMat3ExtensionProtoype(): void {
             );
         },
 
-        mat3_copy<T extends Matrix3>(this: T, vector: Readonly<Matrix3>): T {
-            return Mat3Utils.copy(vector, this);
+        mat3_copy<T extends Matrix3>(this: T, matrix: Readonly<Matrix3>): T {
+            return Mat3Utils.copy(matrix, this);
         },
 
         mat3_clone<T extends Matrix3>(this: Readonly<T>): T {
             return Mat3Utils.clone(this);
+        },
+
+        mat3_equals(this: Readonly<Matrix3>, matrix: Readonly<Matrix3>, epsilon?: number): boolean {
+            return Mat3Utils.equals(this, matrix, epsilon);
         },
 
         mat3_toDegrees<T extends Matrix3, U extends Vector3>(this: Readonly<T>, out?: Vector3 | U): Vector3 | U {

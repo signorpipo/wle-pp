@@ -12,8 +12,7 @@ import { vec3_create } from "../../../../../plugin/js/extensions/array/vec_creat
 import { Globals } from "../../../../../pp/globals.js";
 import { CharacterColliderSetupSimplifiedCreationAccuracyLevel, CharacterColliderSetupSimplifiedCreationParams, CharacterColliderSetupUtils } from "../../../character_controller/collision/character_collider_setup_utils.js";
 import { CollisionCheckBridge } from "../../../character_controller/collision/collision_check_bridge.js";
-import { CollisionCheckUtils } from "../../../character_controller/collision/legacy/collision_check/collision_check_utils.js";
-import { CollisionCheckParams, CollisionRuntimeParams } from "../../../character_controller/collision/legacy/collision_check/collision_params.js";
+import { CollisionCheckParams } from "../../../character_controller/collision/legacy/collision_check/collision_params.js";
 import { NonVRReferenceSpaceMode, PlayerHeadManager, PlayerHeadManagerParams } from "./player_head_manager.js";
 import { PlayerLocomotionMovementRuntimeParams } from "./player_locomotion_movement.js";
 import { PlayerLocomotionRotate, PlayerLocomotionRotateParams } from "./player_locomotion_rotate.js";
@@ -46,7 +45,12 @@ export class PlayerLocomotionParams {
 
 
     public myDefaultHeight: number = 0;
+    public myMinHeight: number = 0;
     public myCharacterRadius: number = 0;
+
+    /** Set this to `null` to auto compute the feet radius based on {@link myCharacterRadius} */
+    public myCharacterFeetRadius: number | null = null;
+
     public myForeheadExtraHeight: number = 0;
 
 
@@ -116,14 +120,40 @@ export class PlayerLocomotionParams {
 
     public myResetHeadToRealMinDistance: number = 0;
 
+    public myMaxHeadToRealHeadSteps: number | null = null;
 
-    /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space.
-        Works 100% properly only if it has the same value as `_myViewOcclusionInsideWallsEnabled` (both true or false)  */
+
+    /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space */
     public mySyncWithRealWorldPositionOnlyIfValid: boolean = true;
 
-    /** Works 100% properly only if it has the same value as `_mySyncWithRealWorldPositionOnlyIfValid` (both true or false)  */
+    /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space */
+    public mySyncWithRealHeightOnlyIfValid: boolean = true;
+
+    public mySnapRealPositionToGround: boolean = false;
+    public myPreventRealFromColliding: boolean = false;
+
     public myViewOcclusionInsideWallsEnabled: boolean = true;
     public myViewOcclusionLayerFlags: Readonly<PhysicsLayerFlags> = new PhysicsLayerFlags();
+
+    /**
+     * To avoid occlusion issues when moving when touching a tilted ceiling (which is not commong anyway),  
+     * this would be better to be less or equal than the feet radius of the character (usually half of {@link myCharacterRadius})
+     * Increasing {@link myColliderExtraHeight} can help reducing the view occlusion
+     * 
+     * If you have a high camera near value, you might need to increase this value, even though the view occlusion might become more aggressive
+     */
+    public myViewOcclusionHeadRadius: number = 0;
+
+    /**
+     * Half of this value should be a bit lower than {@link myForeheadExtraHeight} plus {@link myColliderExtraHeight}, otherwise view occlusion might  
+     * trigger simply when moving under a low ceiling
+     * 
+     * If you have a high camera near value, you might need to increase this value, even though the view occlusion might become more aggressive
+     */
+    public myViewOcclusionHeadHeight: number = 0;
+
+    public myViewOcclusionFadeOutSeconds: number = 0;
+    public myViewOcclusionMaxRealHeadDistance: number = 0;
 
     public mySyncNonVRHeightWithVROnExitSession: boolean = false;
     public mySyncNonVRVerticalAngleWithVROnExitSession: boolean = false;
@@ -132,14 +162,63 @@ export class PlayerLocomotionParams {
     public mySyncHeadWithRealAfterLocomotionUpdateIfNeeded: boolean = false;
 
 
+
     public myColliderAccuracy: number = CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW;
+
+    /**
+     * If you enable this, you might also want to disable {@link myColliderCheckCeilings},  
+     * since it doesn't make much sense to check for ceilings when not checking the height
+     */
     public myColliderCheckOnlyFeet: boolean = false;
+
+    /**
+     * If you enable this, you might also want to disable {@link myColliderCheckOnlyFeet},  
+     * since it doesn't make much sense to check for ceilings without also checking the height
+     */
+    public myColliderCheckCeilings: boolean = false;
+
     public myColliderSlideAlongWall: boolean = false;
     public myColliderMaxWalkableGroundAngle: number = 0;
+
+    /**
+     * This is useful if you want the locomotion teleport feature to be able to go downhill
+     * on surfaces steeper than {@link myColliderMaxWalkableGroundAngle}
+     * 
+     * By default the locomotion teleport can't go up on surfaces steeper than {@link myColliderMaxWalkableGroundAngle} anyway,
+     * no matter, the value of {@link myColliderMaxTeleportableGroundAngle}
+     * 
+     * If you set this to a value bigger than {@link myColliderMaxWalkableGroundAngle} you will be able to teleport in any case on steeper surfaces,
+     * so be careful if you want that, even though usually it's safe, since teleport positions, aside from the locomotion teleport ones, are predefined and
+     * safe positions
+     * 
+     * The idea is that with the locomotion smooth you can always go downhill but might no be able to climb back up due to the surface beeing steep,
+     * this sort of replicates that for the locomotion, letting you teleport down on steep surfaces but not up
+     */
+    public myColliderMaxTeleportableGroundAngle: number | null = null;
     public myColliderSnapOnGround: boolean = false;
     public myColliderMaxDistanceToSnapOnGround: number = 0;
     public myColliderMaxWalkableGroundStepHeight: number = 0;
+
+    /**
+     * Allowing walkable steps on ceiling might create issues with view occlusion for the player (especially with a high value)  
+     * since you can go more under some low ceiling making the occlusion head collide with it
+     * 
+     * Settings it to zero is safer, but means that the ceilings physx must be more flat, because it's easier that a small ceiling bump now blocks you
+     * 
+     * If you want this to be higher than 0, you might also want to increase {@link myColliderExtraHeight} by this value to avoid issue with view occlusion
+     * It will need you to be further from ceiling to be able to move under them tho (since it will be like wearing a hat as tall as {@link myColliderExtraHeight})
+     */
+    public myColliderMaxWalkableCeilingStepHeight: number = 0;
     public myColliderPreventFallingFromEdges: boolean = false;
+    public myColliderMaxMovementSteps: number | null = null;
+
+    /**
+     * Helps staying a little further from the ceiling
+     * 
+     * If you need to increase {@link myViewOcclusionHeadRadius}, also increasing this can help preventing view occlusion happening when shouldn't
+     */
+    public myColliderExtraHeight: number = 0;
+
 
 
     /** Main hand (default: left) select + thumbstick press, auto switch to smooth */
@@ -174,15 +253,13 @@ export class PlayerLocomotionParams {
 // #TODO Add lerped snap on vertical over like half a second to avoid the "snap effect"
 // This could be done by detatching the actual vertical position of the player from the collision real one when a snap is detected above a certain threshold
 // with a timer, after which the vertical position is just copied, while during the detatching is lerped toward the collision vertical one
+/**
+ * Tips  
+ *   - Be sure that your colliders has faces on both sides of the mesh, this helps the collision check which otherise might be able to move through walls
+ */
 export class PlayerLocomotion {
 
     private readonly _myParams: PlayerLocomotionParams;
-
-    private readonly _myCollisionCheckParamsMovement: CollisionCheckParams = new CollisionCheckParams();
-    private readonly _myCollisionCheckParamsTeleport: CollisionCheckParams = new CollisionCheckParams();
-
-    private readonly _myCollisionRuntimeParams = new CollisionRuntimeParams();
-    private readonly _myMovementRuntimeParams = new PlayerLocomotionMovementRuntimeParams();
 
     private readonly _myPlayerHeadManager: PlayerHeadManager;
     private readonly _myPlayerTransformManager: PlayerTransformManager;
@@ -209,11 +286,10 @@ export class PlayerLocomotion {
     constructor(params: PlayerLocomotionParams) {
         this._myParams = params;
 
-        this._setupCollisionCheckParamsMovement();
-        this._setupCollisionCheckParamsTeleport();
+        const collisionCheckParamsMovement = this._setupCollisionCheckParamsMovement();
 
-        this._myMovementRuntimeParams.myIsFlying = this._myParams.myStartFlying;
-        this._myMovementRuntimeParams.myCollisionRuntimeParams = this._myCollisionRuntimeParams;
+        const movementRuntimeParams = new PlayerLocomotionMovementRuntimeParams();
+        movementRuntimeParams.myIsFlying = this._myParams.myStartFlying;
 
         {
             const params = new PlayerHeadManagerParams(this._myParams.myEngine as any);
@@ -248,34 +324,59 @@ export class PlayerLocomotion {
 
             params.myPlayerHeadManager = this._myPlayerHeadManager;
 
-            params.myMovementCollisionCheckParams = this._myCollisionCheckParamsMovement;
+            params.myMovementCollisionCheckParams = collisionCheckParamsMovement;
             params.myTeleportCollisionCheckParams = null;
             params.myTeleportCollisionCheckParamsCopyFromMovement = true;
             params.myTeleportCollisionCheckParamsCheck360 = true;
+            params.myTeleportCollisionCheckParamsGroundAngleToIgnore = this._myParams.myColliderMaxTeleportableGroundAngle;
 
             params.myHeadCollisionBlockLayerFlags.copy(this._myParams.myViewOcclusionLayerFlags);
             params.myHeadCollisionObjectsToIgnore.pp_copy(params.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore as any);
-            const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first.pp_equals(second);
+            const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first == second;
             for (const objectToIgnore of params.myMovementCollisionCheckParams.myVerticalObjectsToIgnore) {
                 params.myHeadCollisionObjectsToIgnore.pp_pushUnique(objectToIgnore, objectsEqualCallback);
             }
 
-            params.myHeadRadius = 0.2;
+            // To avoid obscure issues when moving when touching a tilted ceiling (which is not commong anyway)
+            // This would be better to be less or equal than the feet radius of the character
+            params.myHeadRadius = this._myParams.myViewOcclusionHeadRadius;
+            params.myHeadHeight = this._myParams.myViewOcclusionHeadHeight;
+            params.myExtraHeight = this._myParams.myColliderExtraHeight;
 
-            params.myAlwaysSyncPositionWithReal = !this._myParams.mySyncWithRealWorldPositionOnlyIfValid;
-            params.myAlwaysSyncHeadPositionWithReal = false;
-
-            if (!this._myParams.myViewOcclusionInsideWallsEnabled && !this._myParams.mySyncWithRealWorldPositionOnlyIfValid) {
+            if (!this._myParams.mySyncWithRealWorldPositionOnlyIfValid) {
                 params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
                 params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
                 params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
 
-                params.myAlwaysSyncHeadPositionWithReal = !this._myParams.mySyncWithRealWorldPositionOnlyIfValid;
+                params.myAlwaysSyncPositionWithReal = true;
             }
+
+            if (!this._myParams.mySyncWithRealHeightOnlyIfValid) {
+                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+            }
+
+            if (!this._myParams.myViewOcclusionInsideWallsEnabled) {
+                params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+
+                params.myAlwaysSyncHeadPositionWithReal = true;
+
+                params.myUpdatePositionHeadValid = false;
+                params.myUpdateRealPositionHeadValid = false;
+            }
+
+            params.myApplyRealToValidAdjustmentsToRealPositionToo = this._myParams.mySnapRealPositionToGround;
+            params.myPreventRealFromColliding = this._myParams.myPreventRealFromColliding;
 
             params.myMaxDistanceFromRealToSyncEnabled = true;
             params.myMaxDistanceFromRealToSync = 0.5;
+            params.myMaxDistanceFromHeadRealToSyncEnabled = true;
+            params.myMaxDistanceFromHeadRealToSync = 0.75;
+            if (params.myMovementCollisionCheckParams.mySplitMovementEnabled &&
+                params.myMovementCollisionCheckParams.mySplitMovementMaxStepsEnabled &&
+                params.myMovementCollisionCheckParams.mySplitMovementMaxLengthEnabled) {
+                // A bit more of the max movement you can perform, so that the head always have space to move back to the real one
+                params.myMaxDistanceFromHeadRealToSync = Math.max(params.myMaxDistanceFromHeadRealToSync, 1.1 * (params.myMovementCollisionCheckParams.mySplitMovementMaxSteps * params.myMovementCollisionCheckParams.mySplitMovementMaxLength));
+            }
 
             params.myIsFloatingValidIfVerticalMovement = false;
             params.myIsFloatingValidIfVerticalMovementAndRealOnGround = false;
@@ -283,13 +384,16 @@ export class PlayerLocomotion {
             params.myIsFloatingValidIfVerticalMovementAndSteepGround = false;
             params.myIsFloatingValidIfRealOnGround = false;
             params.myFloatingSplitCheckEnabled = true;
-            params.myFloatingSplitCheckMinLength = this._myCollisionCheckParamsMovement.myFeetRadius * 1.5;
-            params.myFloatingSplitCheckMaxLength = this._myCollisionCheckParamsMovement.myFeetRadius * 1.5;
-            params.myFloatingSplitCheckMaxSteps = 3;
-            params.myRealMovementAllowVerticalAdjustments = false;
+            params.myFloatingSplitCheckMinLength = collisionCheckParamsMovement.myFeetRadius * 1.5;
+            params.myFloatingSplitCheckMaxLength = params.myFloatingSplitCheckMinLength;
+
+            params.myRealMovementAllowVerticalAdjustments = true;
+            params.myIgnoreUpwardMovementToRealIfValidOnGround = true;
 
             params.myUpdateRealPositionValid = false;
             params.myUpdatePositionValid = false;
+
+            params.myMinHeight = this._myParams.myMinHeight;
 
             params.myIsBodyCollidingWhenHeightBelowValue = null;
             params.myIsBodyCollidingWhenHeightAboveValue = null;
@@ -314,6 +418,7 @@ export class PlayerLocomotion {
 
             params.myResetHeadToFeetInsteadOfRealOnlyIfRealNotReachable = this._myParams.myResetHeadToFeetInsteadOfReal;
             params.myResetHeadToRealMinDistance = this._myParams.myResetHeadToRealMinDistance;
+            params.myMaxHeadToRealHeadSteps = this._myParams.myMaxHeadToRealHeadSteps;
 
             params.myNeverResetRealPositionVR = false;
             params.myNeverResetRealRotationVR = false;
@@ -327,7 +432,6 @@ export class PlayerLocomotion {
         {
             const params = new PlayerLocomotionRotateParams(this._myParams.myEngine as any);
 
-            params.myPlayerHeadManager = this._myPlayerHeadManager;
             params.myPlayerTransformManager = this._myPlayerTransformManager;
 
             params.myMaxRotationSpeed = this._myParams.myMaxRotationSpeed;
@@ -358,7 +462,6 @@ export class PlayerLocomotion {
             {
                 const params = new PlayerLocomotionSmoothParams(this._myParams.myEngine as any);
 
-                params.myPlayerHeadManager = this._myPlayerHeadManager;
                 params.myPlayerTransformManager = this._myPlayerTransformManager;
 
                 params.myHandedness = this._myParams.myMainHand;
@@ -389,24 +492,22 @@ export class PlayerLocomotion {
                 params.myMoveHeadShortcutEnabled = this._myParams.myMoveHeadShortcutEnabled;
                 params.myTripleSpeedShortcutEnabled = this._myParams.myTripleSpeedShortcutEnabled;
 
-                this._myPlayerLocomotionSmooth = new PlayerLocomotionSmooth(params, this._myMovementRuntimeParams);
+                this._myPlayerLocomotionSmooth = new PlayerLocomotionSmooth(params, movementRuntimeParams);
             }
 
             {
                 const params = new PlayerLocomotionTeleportParams(this._myParams.myEngine as any);
 
-                params.myPlayerHeadManager = this._myPlayerHeadManager;
                 params.myPlayerTransformManager = this._myPlayerTransformManager;
-
-                params.myCollisionCheckParams = this._myCollisionCheckParamsTeleport;
 
                 params.myHandedness = this._myParams.myMainHand;
 
                 params.myDetectionParams.myMaxDistance = this._myParams.myTeleportMaxDistance;
                 params.myDetectionParams.myMaxHeightDifference = this._myParams.myTeleportMaxHeightDifference;
-                params.myDetectionParams.myGroundAngleToIgnoreUpward = this._myCollisionCheckParamsMovement.myGroundAngleToIgnore;
+                params.myDetectionParams.myGroundAngleToIgnoreUpward = collisionCheckParamsMovement.myGroundAngleToIgnore;
                 params.myDetectionParams.myRotationOnUpEnabled = this._myParams.myTeleportRotationOnUpEnabled;
                 params.myDetectionParams.myMustBeOnGround = true;
+                params.myDetectionParams.myMustBeOnIgnorableGroundAngle = true;
 
                 params.myDetectionParams.myTeleportBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
                 params.myDetectionParams.myTeleportFloorLayerFlags.copy(this._myParams.myTeleportFloorLayerFlags);
@@ -418,6 +519,13 @@ export class PlayerLocomotion {
                 params.myDetectionParams.myTeleportParableStartReferenceObject = this._myParams.myTeleportParableStartReferenceObject;
 
                 params.myDetectionParams.myVisibilityBlockLayerFlags.copy(params.myDetectionParams.myTeleportBlockLayerFlags);
+
+                params.myDetectionParams.myPlayerTransformManagerMustBeSyncedFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+
+                params.myDetectionParams.myPositionRealMaxDistance = 0.4;
+                params.myDetectionParams.myPositionHeadRealMaxDistance = this._myParams.myViewOcclusionMaxRealHeadDistance / 2;
+
+                params.myDetectionParams.myPositionHeadMustBeValid = true;
 
                 params.myTeleportParams.myTeleportType = this._myParams.myTeleportType;
 
@@ -438,8 +546,10 @@ export class PlayerLocomotion {
                 params.myDebugShowEnabled = true;
                 params.myDebugVisibilityEnabled = false;
 
-                this._myPlayerLocomotionTeleport = new PlayerLocomotionTeleport(params, this._myMovementRuntimeParams);
+                this._myPlayerLocomotionTeleport = new PlayerLocomotionTeleport(params, movementRuntimeParams);
             }
+
+            this._myPlayerTransformManager.setPlayerLocomotionTeleport(this._myPlayerLocomotionTeleport);
 
             {
                 const params = new PlayerObscureManagerParams(this._myParams.myEngine as any);
@@ -453,11 +563,13 @@ export class PlayerLocomotion {
                 params.myObscureMaterial = null;
                 params.myObscureRadius = 0.5;
 
-                params.myObscureFadeOutSeconds = 0.1;
+                params.myObscureFadeOutSeconds = this._myParams.myViewOcclusionFadeOutSeconds;
                 params.myObscureFadeInSeconds = 0.25;
 
                 params.myObscureFadeEasingFunction = EasingFunction.linear;
                 params.myObscureLevelRelativeDistanceEasingFunction = EasingFunction.linear;
+
+                params.myObscureIfPositionHeadNotValid = true;
 
                 params.myDistanceToStartObscureWhenBodyColliding = 0.75;
                 params.myDistanceToStartObscureWhenHeadColliding = 0;
@@ -465,7 +577,7 @@ export class PlayerLocomotion {
                 params.myDistanceToStartObscureWhenFar = 0.75;
 
                 params.myRelativeDistanceToMaxObscureWhenBodyColliding = 0.5;
-                params.myRelativeDistanceToMaxObscureWhenHeadColliding = 0.05;
+                params.myRelativeDistanceToMaxObscureWhenHeadColliding = this._myParams.myViewOcclusionMaxRealHeadDistance;
                 params.myRelativeDistanceToMaxObscureWhenFloating = 0.5;
                 params.myRelativeDistanceToMaxObscureWhenFar = 0.5;
 
@@ -523,10 +635,17 @@ export class PlayerLocomotion {
                     this._myPlayerObscureManager.stop();
                 }
             }
-
-            this._myPlayerHeadManager.setActive(this._myActive);
-            this._myPlayerTransformManager.setActive(this._myActive);
         }
+
+        this._myPlayerHeadManager.setActive(this._myActive);
+        this._myPlayerTransformManager.setActive(this._myActive);
+        this._myPlayerObscureManager.setActive(this._myActive);
+        this._myPlayerLocomotionSmooth.setActive(this._myActive);
+        this._myPlayerLocomotionTeleport.setActive(this._myActive);
+    }
+
+    public isActive(): boolean {
+        return this._myActive;
     }
 
     public isStarted(): boolean {
@@ -566,15 +685,11 @@ export class PlayerLocomotion {
 
             this._myPlayerTransformManager.resetReal(true, true, undefined, undefined, undefined, true);
             this._myPlayerTransformManager.update(dt);
-
-            if (this._myPlayerHeadManager.isSynced()) {
-                this._updateCollisionHeight();
-            }
         } else {
             this._myPlayerTransformManager.update(dt);
 
             if (!this._myPlayerLocomotionSmooth.isDebugFlyEnabled() || !Globals.isDebugEnabled(this._myParams.myEngine)) {
-                if (!this._myParams.myAlwaysSmoothForNonVR || XRUtils.isSessionActive()) {
+                if (!this._myParams.myAlwaysSmoothForNonVR || XRUtils.isSessionActive(this._myParams.myEngine)) {
                     if (this._myParams.mySwitchLocomotionTypeShortcutEnabled &&
                         this._getMainHandGamepad().getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2)) {
                         if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
@@ -585,12 +700,12 @@ export class PlayerLocomotion {
                     }
                 }
 
-                if (this._myParams.myAlwaysSmoothForNonVR && !XRUtils.isSessionActive()) {
+                if (this._myParams.myAlwaysSmoothForNonVR && !XRUtils.isSessionActive(this._myParams.myEngine)) {
                     if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
                         this._mySwitchToTeleportOnEnterSession = true;
                         this._myLocomotionMovementFSM.perform("next");
                     }
-                } else if (this._mySwitchToTeleportOnEnterSession && XRUtils.isSessionActive()) {
+                } else if (this._mySwitchToTeleportOnEnterSession && XRUtils.isSessionActive(this._myParams.myEngine)) {
                     if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
                         this._mySwitchToTeleportOnEnterSession = false;
                         this._myLocomotionMovementFSM.perform("next");
@@ -612,8 +727,6 @@ export class PlayerLocomotion {
             }
 
             if (this._myPlayerHeadManager.isSynced()) {
-                this._updateCollisionHeight();
-
                 if (!this._myIdle) {
                     this._myPlayerLocomotionRotate.update(dt);
                     this._myLocomotionMovementFSM.update(dt);
@@ -685,29 +798,19 @@ export class PlayerLocomotion {
         this._myPostUpdateEmitter.remove(id);
     }
 
-    private _updateCollisionHeight(): void {
-        this._myCollisionCheckParamsMovement.myHeight = this._myPlayerHeadManager.getHeightHead();
-        if (this._myCollisionCheckParamsMovement.myHeight <= 0.000001) {
-            this._myCollisionCheckParamsMovement.myHeight = 0;
-        }
-        this._myCollisionCheckParamsTeleport.myHeight = this._myCollisionCheckParamsMovement.myHeight;
-    }
-
-    private _setupCollisionCheckParamsMovement(): void {
+    private _setupCollisionCheckParamsMovement(): CollisionCheckParams {
         const simplifiedParams = new CharacterColliderSetupSimplifiedCreationParams();
 
         simplifiedParams.myHeight = this._myParams.myDefaultHeight;
         simplifiedParams.myRadius = this._myParams.myCharacterRadius;
+        simplifiedParams.myFeetRadius = this._myParams.myCharacterFeetRadius;
 
         simplifiedParams.myAccuracyLevel = this._myParams.myColliderAccuracy;
 
         simplifiedParams.myIsPlayer = true;
 
         simplifiedParams.myCheckOnlyFeet = this._myParams.myColliderCheckOnlyFeet;
-
-        simplifiedParams.myMaxSpeed = this._myParams.myMaxSpeed;
-
-        simplifiedParams.myCanFly = this._myParams.myFlyEnabled;
+        simplifiedParams.myCheckCeilings = this._myParams.myColliderCheckCeilings;
 
         simplifiedParams.myShouldSlideAlongWall = this._myParams.myColliderSlideAlongWall;
 
@@ -716,67 +819,24 @@ export class PlayerLocomotion {
         simplifiedParams.myShouldSnapOnGround = this._myParams.myColliderSnapOnGround;
         simplifiedParams.myMaxDistanceToSnapOnGround = this._myParams.myColliderMaxDistanceToSnapOnGround;
         simplifiedParams.myMaxWalkableGroundStepHeight = this._myParams.myColliderMaxWalkableGroundStepHeight;
+        simplifiedParams.myMaxWalkableCeilingStepHeight = this._myParams.myColliderMaxWalkableCeilingStepHeight;
         simplifiedParams.myShouldNotFallFromEdges = this._myParams.myColliderPreventFallingFromEdges;
+        simplifiedParams.myMaxMovementSteps = this._myParams.myColliderMaxMovementSteps;
 
         simplifiedParams.myHorizontalCheckBlockLayerFlags.copy(this._myParams.myPhysicsBlockLayerFlags);
         const physXComponents = Globals.getPlayerObjects(this._myParams.myEngine)!.myPlayer!.pp_getComponents(PhysXComponent);
         for (const physXComponent of physXComponents) {
-            simplifiedParams.myHorizontalCheckObjectsToIgnore.pp_pushUnique(physXComponent.object, (first, second) => first.pp_equals(second));
+            simplifiedParams.myHorizontalCheckObjectsToIgnore.pp_pushUnique(physXComponent.object, (first, second) => first == second);
         }
         simplifiedParams.myVerticalCheckBlockLayerFlags.copy(simplifiedParams.myHorizontalCheckBlockLayerFlags);
         simplifiedParams.myVerticalCheckObjectsToIgnore.pp_copy(simplifiedParams.myHorizontalCheckObjectsToIgnore);
 
-        simplifiedParams.myHorizontalCheckDebugEnabled = this._myParams.myDebugHorizontalEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
-        simplifiedParams.myVerticalCheckDebugEnabled = this._myParams.myDebugVerticalEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
+        simplifiedParams.myHorizontalCheckDebugEnabled = this._myParams.myDebugHorizontalEnabled;
+        simplifiedParams.myVerticalCheckDebugEnabled = this._myParams.myDebugVerticalEnabled;
 
         const colliderSetup = CharacterColliderSetupUtils.createSimplified(simplifiedParams);
 
-        CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(colliderSetup, this._myCollisionCheckParamsMovement);
-    }
-
-    private _setupCollisionCheckParamsTeleport(): void {
-        CollisionCheckUtils.generate360TeleportParamsFromMovementParams(this._myCollisionCheckParamsMovement, this._myCollisionCheckParamsTeleport);
-
-        // Increased so to let teleport on steep slopes from above (from below is fixed through detection myGroundAngleToIgnoreUpward)
-        this._myCollisionCheckParamsTeleport.myGroundAngleToIgnore = 61;
-        this._myCollisionCheckParamsTeleport.myTeleportMustBeOnIgnorableGroundAngle = true;
-        this._myCollisionCheckParamsTeleport.myTeleportMustBeOnGround = true;
-
-        /*
-        this._myCollisionCheckParamsTeleport.myExtraTeleportCheckCallback = function (
-            offsetTeleportPosition, endPosition, feetPosition, transformUp, transformForward, height,
-            collisionCheckParams, prevCollisionRuntimeParams, collisionRuntimeParams, newFeetPosition
-     
-        ) {
-            let isTeleportingUpward = endPosition.vec3_isFartherAlongAxis(feetPosition, transformUp);
-            if (isTeleportingUpward) {
-                collisionRuntimeParams.myTeleportCanceled = collisionRuntimeParams.myGroundAngle > 30 + 0.0001;
-                console.error(collisionRuntimeParams.myTeleportCanceled);
-            }
-     
-            return newFeetPosition;
-        }*/
-
-        // This is needed for when u want to perform the teleport as a movement
-        // Maybe this should be another set of collsion check params copied from the smooth ones?
-        // When you teleport as move, u check with the teleport for the position, and this other params for the move, so that u can use a smaller
-        // cone, and sliding if desired
-        // If nothing is specified it's copied from the teleport and if greater than 90 cone is tuned down, and also the below settings are applied
-
-        // You could also do this if u want to perform the teleport as movement, instead of using the smooth
-        // but this will make even the final teleport check be halved
-        //this._myCollisionCheckParamsTeleport.myHalfConeAngle = 90;
-        //this._myCollisionCheckParamsTeleport.myHalfConeSliceAmount = 3;
-        //this._myCollisionCheckParamsTeleport.myCheckHorizontalFixedForwardEnabled = false;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementEnabled = true;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementMaxLengthEnabled = true;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementMaxLength = this._myCollisionCheckParamsTeleport.myRadius * 0.75;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementMinLengthEnabled = true;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementMinLength = params.mySplitMovementMaxLength;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementStopWhenHorizontalMovementCanceled = true;
-        //this._myCollisionCheckParamsTeleport.mySplitMovementStopWhenVerticalMovementCanceled = true;
-
-        //this._myCollisionCheckParamsTeleport.myDebugEnabled = true;
+        return CollisionCheckBridge.convertCharacterColliderSetupToCollisionCheckParams(colliderSetup);
     }
 
     private _fixAlmostUp(): void {
@@ -807,11 +867,13 @@ export class PlayerLocomotion {
         this._myLocomotionMovementFSM.addState("idleTeleport");
 
         this._myLocomotionMovementFSM.addTransition("init", "smooth", "startSmooth", function (this: PlayerLocomotion) {
+            this._myPlayerLocomotionTeleport.stop();
             this._myPlayerLocomotionSmooth.start();
         }.bind(this));
 
         this._myLocomotionMovementFSM.addTransition("init", "teleport", "startTeleport", function (this: PlayerLocomotion) {
-            this._myPlayerLocomotionSmooth.start();
+            this._myPlayerLocomotionSmooth.stop();
+            this._myPlayerLocomotionTeleport.start();
         }.bind(this));
 
         this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "next", function (this: PlayerLocomotion) {

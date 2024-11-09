@@ -16,6 +16,9 @@ export abstract class EasyObjectTuner<ValueType, EasyTuneVariableType extends Ea
     private _myPrevObject: Object3D | null = null;
     private _myManualVariableUpdate: boolean = false;
 
+    private _myActive: boolean = true;
+    private _mySetupDone: boolean = false;
+
     protected readonly _myEngine: Readonly<WonderlandEngine>;
 
     constructor(object: Object3D, variableName: string, setAsWidgetCurrentVariable: boolean, useTuneTarget: boolean, engine: Readonly<WonderlandEngine> = Globals.getMainEngine()!) {
@@ -52,10 +55,6 @@ export abstract class EasyObjectTuner<ValueType, EasyTuneVariableType extends Ea
         this._myEasyTuneVariable = this._createEasyTuneVariable(this._myInitialEasyTuneVariableName);
         Globals.getEasyTuneVariables(this._myEngine)!.add(this._myEasyTuneVariable);
 
-        if (this._mySetAsWidgetCurrentVariable) {
-            EasyTuneUtils.setWidgetCurrentVariable(this._myInitialEasyTuneVariableName, this._myEngine);
-        }
-
         let easyObject: Object3D | null = this._myObject;
         if (this._myUseTuneTarget) {
             easyObject = Globals.getEasyTuneTarget(this._myEngine);
@@ -67,22 +66,51 @@ export abstract class EasyObjectTuner<ValueType, EasyTuneVariableType extends Ea
             this._myEasyTuneVariable.setValue(value, true);
         }
 
-        this._myEasyTuneVariable.registerValueChangedEventListener(this, function (this: EasyObjectTuner<ValueType, EasyTuneVariableType>, newValue: Readonly<ValueType>) {
-            if (this._myManualVariableUpdate) return;
+        this._myActive = false;
+        this.setActive(true);
+    }
 
-            let easyObject: Object3D | null = this._myObject;
-            if (this._myUseTuneTarget) {
-                easyObject = Globals.getEasyTuneTarget(this._myEngine);
-            }
+    public setActive(active: boolean): void {
+        if (this._myActive != active) {
+            this._myActive = active;
 
-            if (easyObject != null) {
-                this._updateObjectValue(easyObject, newValue);
+            if (this._myEasyTuneVariable != null) {
+                if (this._myActive) {
+                    this._myEasyTuneVariable.registerValueChangedEventListener(this, function (this: EasyObjectTuner<ValueType, EasyTuneVariableType>, newValue: Readonly<ValueType>) {
+                        if (this._myManualVariableUpdate) return;
+
+                        let easyObject: Object3D | null = this._myObject;
+                        if (this._myUseTuneTarget) {
+                            easyObject = Globals.getEasyTuneTarget(this._myEngine);
+                        }
+
+                        if (easyObject != null) {
+                            this._updateObjectValue(easyObject, newValue);
+                        }
+                    }.bind(this));
+                } else {
+                    this._myEasyTuneVariable.unregisterValueChangedEventListener(this);
+                }
             }
-        }.bind(this));
+        }
+    }
+
+    public isActive(): boolean {
+        return this._myActive;
     }
 
     public update(dt: number): void {
-        if (this._myEasyTuneVariable == null) return;
+        if (!this._mySetupDone) {
+            if (Globals.hasEasyTuneWidget()) {
+                if (this._mySetAsWidgetCurrentVariable) {
+                    EasyTuneUtils.setWidgetCurrentVariable(this._myInitialEasyTuneVariableName, this._myEngine);
+                }
+
+                this._mySetupDone = true;
+            }
+        }
+
+        if (this._myEasyTuneVariable == null || !this._myActive || !this.canUpdate()) return;
 
         let easyObject: Object3D | null = this._myObject;
         if (this._myUseTuneTarget) {
@@ -106,6 +134,10 @@ export abstract class EasyObjectTuner<ValueType, EasyTuneVariableType extends Ea
                 this._myManualVariableUpdate = false;
             }
         }
+    }
+
+    protected canUpdate(): boolean {
+        return true;
     }
 
     protected abstract _getVariableNamePrefix(): string;

@@ -81,7 +81,7 @@ export class PhysicsCollisionCollector {
 
             if (this._myActive) {
                 this._myCollisionCallbackID = this._myPhysXComponent.onCollision(this._onCollision.bind(this));
-            } else if (this._myCollisionCallbackID != null) {
+            } else if (this._myCollisionCallbackID != null && !this._myPhysXComponent.isDestroyed) {
                 this._myPhysXComponent.removeCollisionCallback(this._myCollisionCallbackID);
                 this._myCollisionCallbackID = null;
             }
@@ -187,7 +187,7 @@ export class PhysicsCollisionCollector {
     private _onCollisionStart(type: CollisionEventType, physXComponent: PhysXComponent): boolean {
         let componentFound = false;
         for (const physXComponentToCheck of this._myCollisions) {
-            if (physXComponentToCheck.equals(physXComponent)) {
+            if (physXComponentToCheck == physXComponent) {
                 componentFound = true;
                 break;
             }
@@ -206,7 +206,7 @@ export class PhysicsCollisionCollector {
                 this._myCollisionObjectsStartedToProcess.push(physXComponent.object);
 
                 const indexesToRemove = this._myCollisionsEndedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
-                    return physXComponentToCheck.equals(physXComponent);
+                    return physXComponentToCheck == physXComponent;
                 });
 
                 for (let i = indexesToRemove.length - 1; i >= 0; i--) {
@@ -230,7 +230,7 @@ export class PhysicsCollisionCollector {
     private _onCollisionEnd(type: CollisionEventType, physXComponent: PhysXComponent, physXObject: Object3D): boolean {
         let componentFound = false;
         for (const physXComponentToCheck of this._myCollisions) {
-            if (physXComponentToCheck.equals(physXComponent)) {
+            if (physXComponentToCheck == physXComponent) {
                 componentFound = true;
                 break;
             }
@@ -242,7 +242,7 @@ export class PhysicsCollisionCollector {
 
         if (componentFound) {
             const indexesToRemove = this._myCollisions.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
-                return physXComponentToCheck.equals(physXComponent);
+                return physXComponentToCheck == physXComponent;
             });
 
             for (let i = indexesToRemove.length - 1; i >= 0; i--) {
@@ -255,7 +255,7 @@ export class PhysicsCollisionCollector {
                 this._myCollisionObjectsEndedToProcess.push(physXObject);
 
                 const indexesToRemove = this._myCollisionsStartedToProcess.pp_findAllIndexes(function (physXComponentToCheck: PhysXComponent) {
-                    return physXComponentToCheck.equals(physXComponent);
+                    return physXComponentToCheck == physXComponent;
                 });
 
                 for (let i = indexesToRemove.length - 1; i >= 0; i--) {
@@ -332,10 +332,7 @@ export class PhysicsCollisionCollector {
     public destroy(): void {
         this._myDestroyed = true;
 
-        if (this._myCollisionCallbackID != null) {
-            this._myPhysXComponent.removeCollisionCallback(this._myCollisionCallbackID);
-            this._myCollisionCallbackID = null;
-        }
+        this.setActive(false);
     }
 
     public isDestroyed(): boolean {

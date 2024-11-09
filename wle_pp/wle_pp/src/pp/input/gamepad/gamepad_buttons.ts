@@ -143,6 +143,35 @@ export class GamepadButtonInfo {
         return (!this.myTouched && this.myPrevIsTouched) && (multipleTouchCount == null || this.myMultipleTouchEndCount == multipleTouchCount);
     }
 
+    public reset(): void {
+        this.myPressed = false;
+        this.myPrevIsPressed = false;
+        this.myTouched = false;
+        this.myPrevIsTouched = false;
+        this.myValue = 0;
+        this.myPrevValue = 0;
+
+        this.myTimePressed = 0;
+        this.myPrevTimePressed = 0;
+        this.myTimeNotPressed = 0;
+        this.myPrevTimeNotPressed = 0;
+
+        this.myTimeTouched = 0;
+        this.myPrevTimeTouched = 0;
+        this.myTimeNotTouched = 0;
+        this.myPrevTimeNotTouched = 0;
+
+        this.myMultiplePressStartCount = 0;
+        this.myPrevMultiplePressStartCount = 0;
+        this.myMultiplePressEndCount = 0;
+        this.myPrevMultiplePressEndCount = 0;
+
+        this.myMultipleTouchStartCount = 0;
+        this.myPrevMultipleTouchStartCount = 0;
+        this.myMultipleTouchEndCount = 0;
+        this.myPrevMultipleTouchEndCount = 0;
+    }
+
     public clone(): GamepadButtonInfo {
         const value = new GamepadButtonInfo(this.myID, this.myHandedness);
 
@@ -203,6 +232,11 @@ export class GamepadAxesInfo {
 
     public getHandedness(): Handedness {
         return this.myHandedness;
+    }
+
+    public reset(): void {
+        this.myAxes.vec2_zero();
+        this.myPrevAxes.vec2_zero();
     }
 
     public clone(): GamepadAxesInfo {

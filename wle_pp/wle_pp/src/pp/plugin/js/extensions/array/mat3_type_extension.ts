@@ -11,8 +11,10 @@ export interface Matrix3Extension<MatrixType extends Matrix3> {
         m20: number, m21: number, m22: number): this;
     mat3_set<T extends MatrixType>(this: T, uniformValue: number): this;
 
-    mat3_copy<T extends MatrixType>(this: T, vector: Readonly<Matrix3>): this;
+    mat3_copy<T extends MatrixType>(this: T, matrix: Readonly<Matrix3>): this;
     mat3_clone<T extends MatrixType>(this: Readonly<T>): T;
+
+    mat3_equals<T extends MatrixType>(this: Readonly<T>, matrix: Readonly<Matrix3>, epsilon?: number): boolean;
 
 
     mat3_toDegrees<T extends MatrixType>(this: Readonly<T>): Vector3;

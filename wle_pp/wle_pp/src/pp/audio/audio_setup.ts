@@ -23,7 +23,7 @@ export class AudioSetup {
     public mySpatial: boolean = true;
 
     /** At this distance (and closer) the volume is not reduced */
-    public myReferenceDistance: number = Number.MAX_VALUE;
+    public myReferenceDistance: number = 1;
 
     // End Spatial Params
 
@@ -33,7 +33,7 @@ export class AudioSetup {
         }
     }
 
-    clone(): AudioSetup {
+    public clone(): AudioSetup {
         const audioSetup = new AudioSetup();
 
         audioSetup.myAudioFilePath = this.myAudioFilePath;

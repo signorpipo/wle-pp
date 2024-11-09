@@ -673,7 +673,7 @@ export interface Object3DExtension {
 
 
 
-    pp_addObject(this: Object3D): Object3D;
+    pp_addChild(this: Object3D): Object3D;
 
     pp_getName(this: Readonly<Object3D>): string;
     pp_setName(this: Object3D, name: string): this;
@@ -685,8 +685,6 @@ export interface Object3DExtension {
     pp_markDirty(this: Object3D): this;
 
     pp_isTransformChanged(this: Readonly<Object3D>): boolean;
-
-    pp_equals(this: Readonly<Object3D>, object: Readonly<Object3D>): boolean;
 
     pp_destroy(this: Object3D): void;
 

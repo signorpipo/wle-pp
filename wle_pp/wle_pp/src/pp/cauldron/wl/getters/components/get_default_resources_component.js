@@ -20,52 +20,51 @@ export class GetDefaultResourcesComponent extends Component {
     };
 
     init() {
-        this._myDefaultResources = null;
+        this._myDefaultResources = new DefaultResources();
+        this._myDefaultResources.myMeshes.myPlane = MeshUtils.clone(this._myPlane);
+        this._myDefaultResources.myMeshes.myCube = MeshUtils.clone(this._myCube);
+        this._myDefaultResources.myMeshes.mySphere = MeshUtils.clone(this._mySphere);
+        this._myDefaultResources.myMeshes.myCone = MeshUtils.clone(this._myCone);
+        this._myDefaultResources.myMeshes.myCylinder = MeshUtils.clone(this._myCylinder);
+        this._myDefaultResources.myMeshes.myCircle = MeshUtils.clone(this._myCircle);
 
-        // Prevents double global from same engine
+        this._myDefaultResources.myMeshes.myInvertedCube = MeshUtils.invert(this._myCube);
+        this._myDefaultResources.myMeshes.myInvertedSphere = MeshUtils.invert(this._mySphere);
+        this._myDefaultResources.myMeshes.myInvertedCone = MeshUtils.invert(this._myCone);
+        this._myDefaultResources.myMeshes.myInvertedCylinder = MeshUtils.invert(this._myCylinder);
+
+        this._myDefaultResources.myMeshes.myDoubleSidedPlane = MeshUtils.makeDoubleSided(this._myPlane);
+        this._myDefaultResources.myMeshes.myDoubleSidedCube = MeshUtils.makeDoubleSided(this._myCube);
+        this._myDefaultResources.myMeshes.myDoubleSidedSphere = MeshUtils.makeDoubleSided(this._mySphere);
+        this._myDefaultResources.myMeshes.myDoubleSidedCone = MeshUtils.makeDoubleSided(this._myCone);
+        this._myDefaultResources.myMeshes.myDoubleSidedCylinder = MeshUtils.makeDoubleSided(this._myCylinder);
+        this._myDefaultResources.myMeshes.myDoubleSidedCircle = MeshUtils.makeDoubleSided(this._myCircle);
+
+        if (this._myFlatOpaque != null) {
+            this._myDefaultResources.myMaterials.myFlatOpaque = this._myFlatOpaque.clone();
+        }
+
+        if (this._myFlatTransparentNoDepth != null) {
+            this._myDefaultResources.myMaterials.myFlatTransparentNoDepth = this._myFlatTransparentNoDepth.clone();
+        }
+
+        if (this._myPhongOpaque != null) {
+            this._myDefaultResources.myMaterials.myPhongOpaque = this._myPhongOpaque.clone();
+        }
+
+        if (this._myText != null) {
+            this._myDefaultResources.myMaterials.myText = this._myText.clone();
+        }
+    }
+
+    onActivate() {
         if (!Globals.hasDefaultResources(this.engine)) {
-            this._myDefaultResources = new DefaultResources();
-            this._myDefaultResources.myMeshes.myPlane = MeshUtils.clone(this._myPlane);
-            this._myDefaultResources.myMeshes.myCube = MeshUtils.clone(this._myCube);
-            this._myDefaultResources.myMeshes.mySphere = MeshUtils.clone(this._mySphere);
-            this._myDefaultResources.myMeshes.myCone = MeshUtils.clone(this._myCone);
-            this._myDefaultResources.myMeshes.myCylinder = MeshUtils.clone(this._myCylinder);
-            this._myDefaultResources.myMeshes.myCircle = MeshUtils.clone(this._myCircle);
-
-            this._myDefaultResources.myMeshes.myInvertedCube = MeshUtils.invert(this._myCube);
-            this._myDefaultResources.myMeshes.myInvertedSphere = MeshUtils.invert(this._mySphere);
-            this._myDefaultResources.myMeshes.myInvertedCone = MeshUtils.invert(this._myCone);
-            this._myDefaultResources.myMeshes.myInvertedCylinder = MeshUtils.invert(this._myCylinder);
-
-            this._myDefaultResources.myMeshes.myDoubleSidedPlane = MeshUtils.makeDoubleSided(this._myPlane);
-            this._myDefaultResources.myMeshes.myDoubleSidedCube = MeshUtils.makeDoubleSided(this._myCube);
-            this._myDefaultResources.myMeshes.myDoubleSidedSphere = MeshUtils.makeDoubleSided(this._mySphere);
-            this._myDefaultResources.myMeshes.myDoubleSidedCone = MeshUtils.makeDoubleSided(this._myCone);
-            this._myDefaultResources.myMeshes.myDoubleSidedCylinder = MeshUtils.makeDoubleSided(this._myCylinder);
-            this._myDefaultResources.myMeshes.myDoubleSidedCircle = MeshUtils.makeDoubleSided(this._myCircle);
-
-            if (this._myFlatOpaque != null) {
-                this._myDefaultResources.myMaterials.myFlatOpaque = this._myFlatOpaque.clone();
-            }
-
-            if (this._myFlatTransparentNoDepth != null) {
-                this._myDefaultResources.myMaterials.myFlatTransparentNoDepth = this._myFlatTransparentNoDepth.clone();
-            }
-
-            if (this._myPhongOpaque != null) {
-                this._myDefaultResources.myMaterials.myPhongOpaque = this._myPhongOpaque.clone();
-            }
-
-            if (this._myText != null) {
-                this._myDefaultResources.myMaterials.myText = this._myText.clone();
-            }
-
             Globals.setDefaultResources(this._myDefaultResources, this.engine);
         }
     }
 
-    onDestroy() {
-        if (this._myDefaultResources != null && Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
+    onDeactivate() {
+        if (Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
             Globals.removeDefaultResources(this.engine);
         }
     }

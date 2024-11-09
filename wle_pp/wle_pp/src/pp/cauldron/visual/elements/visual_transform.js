@@ -27,12 +27,22 @@ export class VisualTransformParams extends AbstractVisualElementParams {
         this.myType = VisualElementDefaultType.TRANSFORM;
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualTransformParams();
+        return new VisualTransformParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myThickness == other.myThickness &&
+            this.myLength == other.myLength &&
+            this.myForwardMaterial == other.myForwardMaterial &&
+            this.myUpMaterial == other.myUpMaterial &&
+            this.myRightMaterial == other.myRightMaterial &&
+            this.myLocal == other.myLocal &&
+            this.myTransform.vec_equals(other.myTransform);
     }
 }
 
@@ -82,14 +92,8 @@ export class VisualTransform extends AbstractVisualElement {
 
     }
 
-    _refresh() {
+    _refreshHook() {
         // Implemented outside class definition
-    }
-
-    _forceRefreshHook() {
-        this._myVisualRight.forceRefresh();
-        this._myVisualUp.forceRefresh();
-        this._myVisualForward.forceRefresh();
     }
 
     _new(params) {
@@ -107,11 +111,11 @@ export class VisualTransform extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualTransform.prototype._refresh = function () {
+VisualTransform.prototype._refreshHook = function () {
     let axes = [vec3_create(), vec3_create(), vec3_create()];
     let scale = vec3_create();
     let position = vec3_create();
-    return function _refresh() {
+    return function _refreshHook() {
         axes = this._myParams.myTransform.mat4_getAxes(axes);
         scale = this._myParams.myTransform.mat4_getScale(scale);
         let maxValue = 0;
@@ -190,27 +194,27 @@ VisualTransform.prototype._refresh = function () {
     };
 }();
 
-VisualTransformParams.prototype._copyHook = function _copyHook(other) {
+VisualTransformParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myTransform.mat4_copy(other.myTransform);
     this.myLength = other.myLength;
     this.myThickness = other.myThickness;
 
-    if (other.myRightMaterial != null) {
+    if (other.myRightMaterial != null && deepCopy) {
         this.myRightMaterial = other.myRightMaterial.clone();
     } else {
-        this.myRightMaterial = null;
+        this.myRightMaterial = other.myRightMaterial;
     }
 
-    if (other.myUpMaterial != null) {
+    if (other.myUpMaterial != null && deepCopy) {
         this.myUpMaterial = other.myUpMaterial.clone();
     } else {
-        this.myUpMaterial = null;
+        this.myUpMaterial = other.myUpMaterial;
     }
 
-    if (other.myForwardMaterial != null) {
+    if (other.myForwardMaterial != null && deepCopy) {
         this.myForwardMaterial = other.myForwardMaterial.clone();
     } else {
-        this.myForwardMaterial = null;
+        this.myForwardMaterial = other.myForwardMaterial;
     }
 
     this.myLocal = other.myLocal;

@@ -39,6 +39,8 @@ export class Mouse {
         this._myInsideView = false;
         this._myValid = false;
 
+        this._myActive = true;
+
         this._myPointerUpOnPointerLeave = true;
 
         this._myContextMenuActive = true;
@@ -57,6 +59,7 @@ export class Mouse {
         this._myPointerEnterEventListener = null;
         this._myMouseDownEventListener = null;
         this._myMouseUpEventListener = null;
+        this._myWindowResizeEventListener = null;
 
         this._myDestroyed = false;
 
@@ -67,30 +70,99 @@ export class Mouse {
         this._myDirectionWorld = vec3_create();
     }
 
+    setActive(active) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (this._myActive) {
+                this._myPointerMoveEventListener = this._onPointerAction.bind(this, this._onPointerMove.bind(this));
+                document.body.addEventListener("pointermove", this._myPointerMoveEventListener);
+                this._myPointerDownEventListener = this._onPointerAction.bind(this, this._onPointerDown.bind(this));
+                document.body.addEventListener("pointerdown", this._myPointerDownEventListener);
+                this._myPointerUpEventListener = this._onPointerAction.bind(this, this._onPointerUp.bind(this));
+                document.body.addEventListener("pointerup", this._myPointerUpEventListener);
+                this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
+                document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
+                this._myPointerEnterEventListener = this._onPointerEnter.bind(this);
+                document.body.addEventListener("pointerenter", this._myPointerEnterEventListener);
+
+                // These are needed to being able to detect for example left and right click together, pointer only allow one down at a time
+                this._myMouseDownEventListener = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
+                document.body.addEventListener("mousedown", this._myMouseDownEventListener);
+                this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
+                document.body.addEventListener("mouseup", this._myMouseUpEventListener);
+
+                this._updateScreenSize();
+                this._myWindowResizeEventListener = this._updateScreenSize.bind(this);
+                window.addEventListener("resize", this._myWindowResizeEventListener);
+
+                this._myContextMenuActive = !this._myContextMenuActive;
+                this.setContextMenuActive(!this._myContextMenuActive);
+
+                this._myMiddleButtonScrollActive = !this._myMiddleButtonScrollActive;
+                this.setMiddleButtonScrollActive(!this._myMiddleButtonScrollActive);
+            } else {
+                for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+                    let id = this._myButtonInfosIDs[i];
+                    let buttonInfo = this._myButtonInfos[id];
+                    buttonInfo.myPressed = false;
+                    buttonInfo.myPressStart = false;
+                    buttonInfo.myPressEnd = false;
+                    buttonInfo.myPressStartToProcess = false;
+                    buttonInfo.myPressEndToProcess = false;
+                }
+
+                this._myInternalMousePosition.vec2_zero();
+
+                this._myScreenSize.vec2_zero();
+
+                this._myResetMovingTimer.reset();
+                this._myMoving = false;
+
+                this._myInsideView = false;
+                this._myValid = false;
+
+                this._myPointerID = null;
+                this._myLastValidPointerEvent = null;
+
+                document.body.removeEventListener("pointermove", this._myPointerMoveEventListener);
+                document.body.removeEventListener("pointerdown", this._myPointerDownEventListener);
+                document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+                document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+                document.body.removeEventListener("pointerenter", this._myPointerEnterEventListener);
+
+                document.body.removeEventListener("mousedown", this._myMouseDownEventListener);
+                document.body.removeEventListener("mouseup", this._myMouseUpEventListener);
+
+                document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+                document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+
+                window.removeEventListener("resize", this._myWindowResizeEventListener);
+
+                this._myPointerMoveEventListener = null;
+                this._myPointerDownEventListener = null;
+                this._myPointerUpEventListener = null;
+                this._myPointerLeaveEventListener = null;
+                this._myPointerEnterEventListener = null;
+                this._myMouseDownEventListener = null;
+                this._myMouseUpEventListener = null;
+                this._myWindowResizeEventListener = null;
+            }
+        }
+    }
+
+    isActive() {
+        return this._myActive;
+    }
+
     start() {
-        this._myPointerMoveEventListener = this._onPointerAction.bind(this, this._onPointerMove.bind(this));
-        document.body.addEventListener("pointermove", this._myPointerMoveEventListener);
-        this._myPointerDownEventListener = this._onPointerAction.bind(this, this._onPointerDown.bind(this));
-        document.body.addEventListener("pointerdown", this._myPointerDownEventListener);
-        this._myPointerUpEventListener = this._onPointerAction.bind(this, this._onPointerUp.bind(this));
-        document.body.addEventListener("pointerup", this._myPointerUpEventListener);
-        this._myPointerLeaveEventListener = this._onPointerLeave.bind(this);
-        document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
-        this._myPointerEnterEventListener = this._onPointerEnter.bind(this);
-        document.body.addEventListener("pointerenter", this._myPointerEnterEventListener);
-
-        // These are needed to being able to detect for example left and right click together, pointer only allow one down at a time
-        this._myMouseDownEventListener = this._onMouseAction.bind(this, this._onPointerDown.bind(this));
-        document.body.addEventListener("mousedown", this._myMouseDownEventListener);
-        this._myMouseUpEventListener = this._onMouseAction.bind(this, this._onPointerUp.bind(this));
-        document.body.addEventListener("mouseup", this._myMouseUpEventListener);
-
-        this._updateScreenSize();
-        this._myWindowResizeEventListener = this._updateScreenSize.bind(this);
-        window.addEventListener("resize", this._myWindowResizeEventListener);
+        this._myActive = false;
+        this.setActive(true);
     }
 
     update(dt) {
+        if (!this._myActive) return;
+
         if (this._myResetMovingTimer.isRunning()) {
             this._myResetMovingTimer.update(dt);
             if (this._myResetMovingTimer.isDone()) {
@@ -489,19 +561,7 @@ export class Mouse {
     destroy() {
         this._myDestroyed = true;
 
-        document.body.removeEventListener("pointermove", this._myPointerMoveEventListener);
-        document.body.removeEventListener("pointerdown", this._myPointerDownEventListener);
-        document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
-        document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
-        document.body.removeEventListener("pointerenter", this._myPointerEnterEventListener);
-
-        document.body.removeEventListener("mousedown", this._myMouseDownEventListener);
-        document.body.removeEventListener("mouseup", this._myMouseUpEventListener);
-
-        document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
-        document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
-
-        window.removeEventListener("resize", this._myWindowResizeEventListener);
+        this.setActive(false);
     }
 
     isDestroyed() {

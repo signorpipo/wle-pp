@@ -33,7 +33,7 @@ export class TrackedHandDrawJointComponent extends Component {
     }
 
     _buildTrackedHandHierarchy() {
-        this._myJointMeshObject = this.object.pp_addObject();
+        this._myJointMeshObject = this.object.pp_addChild();
 
         let mesh = this._myJointMeshObject.pp_addComponent(MeshComponent);
         mesh.mesh = this._myJointMesh;

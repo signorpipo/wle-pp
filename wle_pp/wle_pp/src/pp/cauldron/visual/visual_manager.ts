@@ -1,4 +1,4 @@
-import { WonderlandEngine } from "@wonderlandengine/api";
+import { Object3D, WonderlandEngine } from "@wonderlandengine/api";
 import { Globals } from "../../pp/globals.js";
 import { Timer } from "../cauldron/timer.js";
 import { ObjectPool, ObjectPoolParams } from "../object_pool/object_pool.js";
@@ -21,6 +21,7 @@ export class VisualManager {
     private _myVisualElementLastID: number = 0;
     private readonly _myVisualElementsToShow: VisualElement[] = [];
 
+    private _myVisualElementsParent: Object3D | null = null;
     private _myActive: boolean = true;
 
     private readonly _myObjectPoolManagerPrefix: string;
@@ -41,26 +42,36 @@ export class VisualManager {
     public setActive(active: boolean): void {
         if (this._myActive != active) {
             this._myActive = active;
+
+            if (!this._myActive) {
+                this.clearAllVisualElements();
+            } else {
+                this._myVisualElementsParent = Globals.getSceneObjects(this._myEngine)?.myVisualElements ?? null;
+            }
         }
     }
 
     public isActive(): boolean {
-        return this._myActive;
+        return this._myActive && this._myVisualElementsParent != null;
     }
 
     public start(): void {
-
+        if (this._myActive) {
+            this._myVisualElementsParent = Globals.getSceneObjects(this._myEngine)?.myVisualElements ?? null;
+        }
     }
 
     public update(dt: number): void {
         if (this._myActive) {
+            this._myVisualElementsParent = Globals.getSceneObjects(this._myEngine)?.myVisualElements ?? null;
+
             this._updateDraw(dt);
         }
     }
 
     /** `lifetimeSeconds` can be `null`, in that case the element will be drawn until cleared */
     public draw(visualElementParams: VisualElementParams, lifetimeSeconds: number | null = 0, idToReuse?: unknown): unknown | null {
-        if (!this._myActive) {
+        if (!this.isActive()) {
             return null;
         }
 
@@ -152,32 +163,38 @@ export class VisualManager {
         return elementID;
     }
 
-    public clearVisualElement(elementID?: unknown): void {
-        if (elementID == null) {
-            for (const visualElements of this._myVisualElementsTypeMap.values()) {
-                for (const visualElement of visualElements.values()) {
-                    this._releaseElement(visualElement[0]);
-                }
+    public clearAllVisualElements(): void {
+        if (!this.isActive()) return;
+
+        for (const visualElements of this._myVisualElementsTypeMap.values()) {
+            for (const visualElement of visualElements.values()) {
+                this._releaseElement(visualElement[0]);
             }
+        }
 
-            this._myVisualElementsToShow.pp_clear();
-            this._myVisualElementsTypeMap.clear();
-            this._myVisualElementLastID = 0;
-        } else {
-            for (const visualElements of this._myVisualElementsTypeMap.values()) {
-                if (visualElements.has(elementID)) {
-                    const visualElementPair = visualElements.get(elementID)!;
-                    this._releaseElement(visualElementPair[0]);
-                    visualElements.delete(elementID);
+        this._myVisualElementsToShow.pp_clear();
+        this._myVisualElementsTypeMap.clear();
+        this._myVisualElementLastID = 0;
+    }
 
-                    this._myVisualElementsToShow.pp_removeEqual(visualElementPair[0]);
-                    break;
-                }
+    public clearVisualElement(elementID: unknown): void {
+        if (!this.isActive()) return;
+
+        for (const visualElements of this._myVisualElementsTypeMap.values()) {
+            if (visualElements.has(elementID)) {
+                const visualElementPair = visualElements.get(elementID)!;
+                this._releaseElement(visualElementPair[0]);
+                visualElements.delete(elementID);
+
+                this._myVisualElementsToShow.pp_removeEqual(visualElementPair[0]);
+                break;
             }
         }
     }
 
     public allocateVisualElementType(visualElementType: unknown | VisualElementDefaultType, amount: number): void {
+        if (!this.isActive()) return;
+
         if (!Globals.getObjectPoolManager(this._myEngine)!.hasPool(this._getTypePoolID(visualElementType))) {
             this._addVisualElementTypeToPool(visualElementType);
         }
@@ -292,13 +309,15 @@ export class VisualManager {
     }
 
     private _releaseElement(visualElement: VisualElement): void {
-        const defaultElementsParent = Globals.getSceneObjects(this._myEngine)!.myVisualElements!;
-        if (visualElement.getParamsGeneric().myParent != defaultElementsParent) {
-            visualElement.getParamsGeneric().myParent = defaultElementsParent;
-            visualElement.forceRefresh(); // just used to trigger the parent change, I'm lazy
+        if (this._myVisualElementsParent != null) {
+            if (visualElement.getParamsGeneric().myParent != this._myVisualElementsParent) {
+                visualElement.getParamsGeneric().myParent = this._myVisualElementsParent;
+                visualElement.paramsUpdated();
+                visualElement.refresh(); // just used to trigger the parent change, I'm lazy
+            }
         }
 
-        Globals.getObjectPoolManager(this._myEngine)!.release(this._getTypePoolID(visualElement.getParamsGeneric().myType), visualElement);
+        Globals.getObjectPoolManager(this._myEngine)?.release(this._getTypePoolID(visualElement.getParamsGeneric().myType), visualElement);
     }
 
     private _getClassName(): string {
@@ -307,6 +326,8 @@ export class VisualManager {
 
     public destroy(): void {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         for (const poolID of this._myTypePoolIDs.values()) {
             Globals.getObjectPoolManager(this._myEngine)?.destroyPool(poolID);

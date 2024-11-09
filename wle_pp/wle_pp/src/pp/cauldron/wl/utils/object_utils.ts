@@ -2240,7 +2240,7 @@ export const clone = function () {
                 const parent = cloneData![0];
                 const objectToClone = cloneData![1];
 
-                const currentClonedObject = (parent != null) ? ObjectUtils.addObject(parent) : ObjectUtils.addObject(Globals.getRootObject(ObjectUtils.getEngine(object))!);
+                const currentClonedObject = (parent != null) ? ObjectUtils.addChild(parent) : ObjectUtils.addChild(Globals.getRootObject(ObjectUtils.getEngine(object))!);
                 ObjectUtils.setName(currentClonedObject, ObjectUtils.getName(objectToClone));
 
                 ObjectUtils.setScaleLocal(currentClonedObject, ObjectUtils.getScaleLocal(objectToClone, scale));
@@ -2254,9 +2254,9 @@ export const clone = function () {
                     for (const child of ObjectUtils.getChildren(objectToClone)) {
                         let cloneDescendant = false;
                         if (cloneParams.myDescendantsToInclude.length > 0) {
-                            cloneDescendant = cloneParams.myDescendantsToInclude.find(descendantToInclude => ObjectUtils.equals(descendantToInclude, child)) != null;
+                            cloneDescendant = cloneParams.myDescendantsToInclude.find(descendantToInclude => descendantToInclude == child) != null;
                         } else {
-                            cloneDescendant = cloneParams.myDescendantsToIgnore.find(descendantToIgnore => ObjectUtils.equals(descendantToIgnore, child)) == null;
+                            cloneDescendant = cloneParams.myDescendantsToIgnore.find(descendantToIgnore => descendantToIgnore == child) == null;
                         }
 
                         if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
@@ -2387,9 +2387,9 @@ export function isCloneable(object: Readonly<Object3D>, cloneParams: Readonly<Ob
             for (const child of ObjectUtils.getChildren(objectToClone)) {
                 let cloneDescendant = false;
                 if (cloneParams.myDescendantsToInclude.length > 0) {
-                    cloneDescendant = cloneParams.myDescendantsToInclude.find(descendantToInclude => ObjectUtils.equals(descendantToInclude, child)) != null;
+                    cloneDescendant = cloneParams.myDescendantsToInclude.find(descendantToInclude => descendantToInclude == child) != null;
                 } else {
-                    cloneDescendant = cloneParams.myDescendantsToIgnore.find(descendantToInclude => ObjectUtils.equals(descendantToInclude, child)) == null;
+                    cloneDescendant = cloneParams.myDescendantsToIgnore.find(descendantToIgnore => descendantToIgnore == child) == null;
                 }
 
                 if (cloneDescendant && cloneParams.myIgnoreDescendantCallback != null) {
@@ -2778,8 +2778,8 @@ export function getSelf(object: Readonly<Object3D>): Object3D {
 
 // Cauldron
 
-export function addObject(object: Object3D): Object3D {
-    return Globals.getScene(ObjectUtils.getEngine(object)).addObject(object);
+export function addChild(object: Object3D): Object3D {
+    return object.addChild();
 }
 
 export function getName(object: Readonly<Object3D>): string {
@@ -2808,20 +2808,8 @@ export function isTransformChanged(object: Readonly<Object3D>): boolean {
     return object.changed;
 }
 
-export function equals(first: Readonly<Object3D>, second: Readonly<Object3D>): boolean {
-    return first.equals(second as Object3D);
-}
-
 export function destroy(object: Object3D): void {
-    let destroyReturnValue = undefined;
-
-    try {
-        destroyReturnValue = object.destroy();
-    } catch (error) {
-        // Do nothing
-    }
-
-    return destroyReturnValue;
+    object.destroy();
 }
 
 export function reserveObjects(object: Readonly<Object3D>, count: number): Object3D {
@@ -3021,7 +3009,7 @@ export function getObjectsByIDObjects(objects: Object3D[], id: number): Object3D
 }
 
 export function wrapObject(id: number, engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): Object3D | null {
-    return engine != null ? engine.wrapObject(id) : null;
+    return engine != null ? Globals.getScene(engine).wrap(id) : null;
 }
 
 /**
@@ -3381,14 +3369,13 @@ export const ObjectUtils = {
     getDescendantsDepth,
     getChildren,
     getSelf,
-    addObject,
+    addChild,
     getName,
     setName,
     getEngine,
     getID,
     markDirty,
     isTransformChanged,
-    equals,
     destroy,
     reserveObjects,
     reserveObjectsSelf,

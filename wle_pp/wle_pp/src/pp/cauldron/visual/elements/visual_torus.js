@@ -30,12 +30,23 @@ export class VisualTorusParams extends AbstractVisualElementParams {
         this.myType = VisualElementDefaultType.TORUS;
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualTorusParams();
+        return new VisualTorusParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myRadius == other.myRadius &&
+            this.mySegmentsAmount == other.mySegmentsAmount &&
+            this.mySegmentThickness == other.mySegmentThickness &&
+            this.mySegmentMesh == other.mySegmentMesh &&
+            this.myMaterial == other.myMaterial &&
+            this.myLocal == other.myLocal &&
+            (this.myColor == other.myColor || (this.myColor != null && other.myColor != null && this.myColor.vec_equals(other.myColor))) &&
+            this.myTransform.vec_equals(other.myTransform);
     }
 }
 
@@ -93,7 +104,7 @@ export class VisualTorus extends AbstractVisualElement {
     }
 
     _build() {
-        this._myTorusParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
+        this._myTorusParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addChild();
 
         this._fillSegmentList();
     }
@@ -112,17 +123,8 @@ export class VisualTorus extends AbstractVisualElement {
         }
     }
 
-    _refresh() {
+    _refreshHook() {
         // Implemented outside class definition
-    }
-
-    _forceRefreshHook() {
-        let segmentToRefresh = Math.min(this._myParams.mySegmentsAmount, this._myVisualSegmentList.length);
-
-        for (let i = 0; i < segmentToRefresh; i++) {
-            let visualSegment = this._myVisualSegmentList[i];
-            visualSegment.forceRefresh();
-        }
     }
 
     _new(params) {
@@ -141,7 +143,7 @@ export class VisualTorus extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualTorus.prototype._refresh = function () {
+VisualTorus.prototype._refreshHook = function () {
     let segmentStart = vec3_create();
     let segmentEnd = vec3_create();
 
@@ -151,10 +153,11 @@ VisualTorus.prototype._refresh = function () {
     let fixedSegmentEnd = vec3_create();
 
     let up = vec3_create(0, 1, 0);
-    return function _refresh() {
+    return function _refreshHook() {
         this._fillSegmentList();
 
-        for (let visualSegment of this._myVisualSegmentList) {
+        for (let i = this._myParams.mySegmentsAmount; i < this._myVisualSegmentList.length; i++) {
+            let visualSegment = this._myVisualSegmentList[i];
             visualSegment.setVisible(false);
         }
 
@@ -209,7 +212,7 @@ VisualTorus.prototype._refresh = function () {
     };
 }();
 
-VisualTorusParams.prototype._copyHook = function _copyHook(other) {
+VisualTorusParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myRadius = other.myRadius;
     this.mySegmentsAmount = other.mySegmentsAmount;
     this.mySegmentThickness = other.mySegmentThickness;
@@ -218,10 +221,10 @@ VisualTorusParams.prototype._copyHook = function _copyHook(other) {
 
     this.mySegmentMesh = other.mySegmentMesh;
 
-    if (other.myMaterial != null) {
+    if (other.myMaterial != null && deepCopy) {
         this.myMaterial = other.myMaterial.clone();
     } else {
-        this.myMaterial = null;
+        this.myMaterial = other.myMaterial;
     }
 
     if (other.myColor != null) {

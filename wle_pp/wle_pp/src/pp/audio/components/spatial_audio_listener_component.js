@@ -4,7 +4,6 @@ import { vec3_create } from "../../plugin/js/extensions/array/vec_create_extensi
 
 export class SpatialAudioListenerComponent extends Component {
     static TypeName = "pp-spatial-audio-listener";
-    static Properties = {};
 
     init() {
         this._myOrigin = vec3_create();

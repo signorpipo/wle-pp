@@ -1,4 +1,4 @@
-import { Alignment, Justification, TextComponent } from "@wonderlandengine/api";
+import { Alignment, TextComponent, VerticalAlignment } from "@wonderlandengine/api";
 import { mat4_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { AbstractVisualElement, AbstractVisualElementParams } from "./visual_element.js";
@@ -16,7 +16,7 @@ export class VisualTextParams extends AbstractVisualElementParams {
 
         this.myText = "";
         this.myAlignment = Alignment.Center;
-        this.myJustification = Justification.Middle;
+        this.myVerticalAlignment = VerticalAlignment.Middle;
 
         this.myTransform = mat4_create();
 
@@ -31,12 +31,23 @@ export class VisualTextParams extends AbstractVisualElementParams {
         this.myType = VisualElementDefaultType.TEXT;
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualTextParams();
+        return new VisualTextParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myText == other.myText &&
+            this.myAlignment == other.myAlignment &&
+            this.myVerticalAlignment == other.myVerticalAlignment &&
+            this.myMaterial == other.myMaterial &&
+            this.myLookAtObject == other.myLookAtObject &&
+            this.myLocal == other.myLocal &&
+            (this.myColor == other.myColor || (this.myColor != null && other.myColor != null && this.myColor.vec_equals(other.myColor))) &&
+            this.myTransform.vec_equals(other.myTransform);
     }
 }
 
@@ -74,11 +85,11 @@ export class VisualText extends AbstractVisualElement {
     }
 
     _build() {
-        this._myTextObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
+        this._myTextObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addChild();
         this._myTextComponent = this._myTextObject.pp_addComponent(TextComponent);
     }
 
-    _refresh() {
+    _refreshHook() {
         // Implemented outside class definition
     }
 
@@ -95,17 +106,17 @@ export class VisualText extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualTextParams.prototype._copyHook = function _copyHook(other) {
+VisualTextParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myText = other.myText;
     this.myAlignment = other.myAlignment;
-    this.myJustification = other.myJustification;
+    this.myVerticalAlignment = other.myVerticalAlignment;
 
     this.myTransform.mat4_copy(other.myTransform);
 
-    if (other.myMaterial != null) {
+    if (other.myMaterial != null && deepCopy) {
         this.myMaterial = other.myMaterial.clone();
     } else {
-        this.myMaterial = null;
+        this.myMaterial = other.myMaterial;
     }
 
     if (other.myColor != null) {
@@ -123,9 +134,9 @@ VisualTextParams.prototype._copyHook = function _copyHook(other) {
     this.myLookAtObject = other.myLookAtObject;
 };
 
-VisualText.prototype._refresh = function () {
+VisualText.prototype._refreshHook = function () {
     let lookAtPosition = vec3_create();
-    return function _refresh() {
+    return function _refreshHook() {
         this._myTextObject.pp_setParent(this._myParams.myParent, false);
 
         if (this._myParams.myLocal) {
@@ -155,7 +166,7 @@ VisualText.prototype._refresh = function () {
 
         this._myTextComponent.text = this._myParams.myText;
         this._myTextComponent.alignment = this._myParams.myAlignment;
-        this._myTextComponent.justification = this._myParams.myJustification;
+        this._myTextComponent.verticalAlignment = this._myParams.myVerticalAlignment;
 
         this._myDirty = false;
     };

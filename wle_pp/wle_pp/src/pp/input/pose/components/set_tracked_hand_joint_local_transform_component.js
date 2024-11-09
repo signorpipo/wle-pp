@@ -25,14 +25,30 @@ export class SetTrackedHandJointLocalTransformComponent extends Component {
         this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
         this._myJointIDType = InputUtils.getJointIDByIndex(this._myJointID);
 
-        Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(this._myJointIDType).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+        this._myActivateOnNextUpdate = false;
+    }
+
+    update(dt) {
+        if (this._myActivateOnNextUpdate) {
+            this._onActivate();
+
+            this._myActivateOnNextUpdate = false;
+        }
     }
 
     _onPoseUpdated(dt, pose) {
         // Implemented outside class definition
     }
 
-    onDestroy() {
+    onActivate() {
+        this._myActivateOnNextUpdate = true;
+    }
+
+    _onActivate() {
+        Globals.getTrackedHandPose(this._myHandednessType, this.engine).getJointPose(this._myJointIDType).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+    }
+
+    onDeactivate() {
         Globals.getTrackedHandPose(this._myHandednessType, this.engine)?.getJointPose(this._myJointIDType)?.unregisterPoseUpdatedEventListener(this);
     }
 }
@@ -44,14 +60,17 @@ export class SetTrackedHandJointLocalTransformComponent extends Component {
 SetTrackedHandJointLocalTransformComponent.prototype._onPoseUpdated = function () {
     let jointPoseTransform = quat2_create();
     return function _onPoseUpdated(dt, pose) {
-        if (this.active) {
-            if (XRUtils.isSessionActive(this.engine)) {
-                if (pose.isValid()) {
-                    this.object.pp_setTransformLocalQuat(pose.getTransformQuat(jointPoseTransform, null));
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
 
-                    if (this._mySetLocalScaleAsJointRadius) {
-                        this.object.pp_setScaleLocal(pose.getJointRadius());
-                    }
+        if (XRUtils.isSessionActive(this.engine)) {
+            if (pose.isValid()) {
+                this.object.pp_setTransformLocalQuat(pose.getTransformQuat(jointPoseTransform, null));
+
+                if (this._mySetLocalScaleAsJointRadius) {
+                    this.object.pp_setScaleLocal(pose.getJointRadius());
                 }
             }
         }

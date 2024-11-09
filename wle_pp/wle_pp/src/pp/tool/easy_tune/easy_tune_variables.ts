@@ -104,11 +104,17 @@ export class EasyTuneVariables {
         return JSON.stringify(objectJSON);
     }
 
+    /**
+     * @param id if `undefined` is used as id, it will overwrite the default variable listener
+     */
     public registerValueChangedEventListener<ValueType, EasyTuneVariableType extends EasyTuneVariableTyped<ValueType>>(variableName: string, id: unknown, callback: (value: ValueType, easyTuneVariable: EasyTuneVariableType) => void): void {
         this._myVariables.get(variableName)!.registerValueChangedEventListener(id, callback as (value: unknown, easyTuneVariable: EasyTuneVariable) => void);
     }
 
-    public unregisterValueChangedEventListener(variableName: string, id: unknown): void {
+    /**
+     * @param id if `undefined` is used as id, it will unregister the default variable listener
+     */
+    public unregisterValueChangedEventListener(variableName: string, id?: unknown): void {
         this._myVariables.get(variableName)!.unregisterValueChangedEventListener(id);
     }
 }

@@ -20,7 +20,7 @@ export class VisualMeshParams extends AbstractVisualElementParams<VisualMeshPara
     public myMaterial: Material | null = null;
 
 
-    protected _copyHook(other: Readonly<VisualMeshParams>): void {
+    protected _copyHook(other: Readonly<VisualMeshParams>, deepCopy: boolean): void {
         this.myTransform.pp_copy(other.myTransform);
 
         if (other.myMesh != null) {
@@ -29,17 +29,24 @@ export class VisualMeshParams extends AbstractVisualElementParams<VisualMeshPara
             this.myMesh = null;
         }
 
-        if (other.myMaterial != null) {
+        if (other.myMaterial != null && deepCopy) {
             this.myMaterial = other.myMaterial.clone();
         } else {
-            this.myMaterial = null;
+            this.myMaterial = other.myMaterial;
         }
 
         this.myLocal = other.myLocal;
     }
 
     protected _new(): VisualMeshParams {
-        return new VisualMeshParams();
+        return new VisualMeshParams(this.myParent.pp_getEngine());
+    }
+
+    protected _equalsHook(other: Readonly<VisualMeshParams>): boolean {
+        return this.myMesh == other.myMesh &&
+            this.myMaterial == other.myMaterial &&
+            this.myLocal == other.myLocal &&
+            this.myTransform.vec_equals(other.myTransform);
     }
 }
 
@@ -75,12 +82,12 @@ export class VisualMesh extends AbstractVisualElement<VisualMesh, VisualMeshPara
     }
 
     protected _build(): void {
-        (this._myMeshObject as Object3D) = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine())!.myVisualElements!.pp_addObject();
+        (this._myMeshObject as Object3D) = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine())!.myVisualElements!.pp_addChild();
 
         (this._myMeshComponent as MeshComponent) = this._myMeshObject.pp_addComponent(MeshComponent)!;
     }
 
-    protected _refresh(): void {
+    protected _refreshHook(): void {
         this._myMeshObject.pp_setParent(this._myParams.myParent, false);
 
         if (this._myParams.myLocal) {

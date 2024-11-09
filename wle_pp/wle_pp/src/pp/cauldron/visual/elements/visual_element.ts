@@ -8,8 +8,10 @@ export interface VisualElementParams {
     /** If not specified it will default to `Globals.getSceneObjects().myVisualElements` */
     myParent: Object3D;
 
-    copyGeneric(other: Readonly<VisualElementParams>): void;
-    cloneGeneric(): VisualElementParams;
+    copyGeneric(other: Readonly<VisualElementParams>, deepCopy: boolean): void;
+    cloneGeneric(deepClone: boolean): VisualElementParams;
+
+    equalsGeneric(other: Readonly<VisualElementParams>): boolean;
 }
 
 export abstract class AbstractVisualElementParams<T extends AbstractVisualElementParams<T>> implements VisualElementParams {
@@ -21,32 +23,46 @@ export abstract class AbstractVisualElementParams<T extends AbstractVisualElemen
         this.myParent = Globals.getSceneObjects(engine)!.myVisualElements!;
     }
 
-    public copy(other: Readonly<T>): void {
+    public copy(other: Readonly<T>, deepCopy: boolean = true): void {
         this.myParent = other.myParent;
 
-        this._copyHook(other);
+        this._copyHook(other, deepCopy);
     }
 
-    public clone(): T {
+    public clone(deepClone: boolean = true): T {
         const clonedParams = this._new();
-        clonedParams.copyGeneric(this);
+        clonedParams.copyGeneric(this, deepClone);
         return clonedParams;
     }
 
-    public copyGeneric(other: Readonly<VisualElementParams>): void {
+    public equals(other: Readonly<T>): boolean {
+        if (this as unknown as T == other) return true;
+
+        if (this.myParent != other.myParent) return false;
+
+        return this._equalsHook(other);
+    }
+
+    public copyGeneric(other: Readonly<VisualElementParams>, deepCopy: boolean = true): void {
         if (other.myType != this.myType) {
             throw new Error("Trying to copy from params with a different type - From Type: " + other.myType + " - To Type: " + this.myType);
         }
 
-        this.copy(other as Readonly<T>);
+        this.copy(other as Readonly<T>, deepCopy);
     }
 
-    public cloneGeneric(): VisualElementParams {
-        return this.clone();
+    public cloneGeneric(deepClone: boolean = true): VisualElementParams {
+        return this.clone(deepClone);
     }
 
-    protected abstract _copyHook(other: Readonly<T>): void;
+    public equalsGeneric(other: Readonly<VisualElementParams>): boolean {
+        return this.equals(other as Readonly<T>);
+    }
+
+    protected abstract _copyHook(other: Readonly<T>, deepCopy: boolean): void;
     protected abstract _new(): T;
+
+    protected abstract _equalsHook(other: Readonly<T>): boolean;
 }
 
 export interface VisualElement {
@@ -55,7 +71,6 @@ export interface VisualElement {
     setVisible(visible: boolean): void;
 
     refresh(): void;
-    forceRefresh(): void;
     setAutoRefresh(autoRefresh: boolean): void;
 
     getParamsGeneric(): VisualElementParams;
@@ -72,6 +87,7 @@ export interface VisualElement {
 export abstract class AbstractVisualElement<VisualElementType extends AbstractVisualElement<VisualElementType, VisualElementParamsType>, VisualElementParamsType extends AbstractVisualElementParams<VisualElementParamsType>> implements VisualElement {
 
     protected _myParams: VisualElementParamsType;
+    protected _myPrevParams: VisualElementParamsType;
 
     protected _myVisible: boolean = false;
     protected _myAutoRefresh: boolean = true;
@@ -82,6 +98,7 @@ export abstract class AbstractVisualElement<VisualElementType extends AbstractVi
 
     constructor(params: VisualElementParamsType) {
         this._myParams = params;
+        this._myPrevParams = this._myParams.clone();
     }
 
     public update(dt: number): void {
@@ -106,12 +123,6 @@ export abstract class AbstractVisualElement<VisualElementType extends AbstractVi
         this.update(0);
     }
 
-    public forceRefresh(): void {
-        this._refresh();
-
-        this._forceRefreshHook();
-    }
-
     public setAutoRefresh(autoRefresh: boolean): void {
         this._myAutoRefresh = autoRefresh;
     }
@@ -122,12 +133,12 @@ export abstract class AbstractVisualElement<VisualElementType extends AbstractVi
 
     public setParams(params: VisualElementParamsType): void {
         this._myParams = params;
-        this._markDirty();
+        this.paramsUpdated();
     }
 
     public copyParams(params: VisualElementParamsType): void {
         this._myParams.copy(params);
-        this._markDirty();
+        this.paramsUpdated();
     }
 
     public getParamsGeneric(): VisualElementParams {
@@ -151,7 +162,9 @@ export abstract class AbstractVisualElement<VisualElementType extends AbstractVi
     }
 
     public paramsUpdated(): void {
-        this._markDirty();
+        if (!this._myParams.equals(this._myPrevParams)) {
+            this._markDirty();
+        }
     }
 
     private _markDirty(): void {
@@ -174,10 +187,20 @@ export abstract class AbstractVisualElement<VisualElementType extends AbstractVi
     }
 
     protected _prepare(): void {
+        this._myPrevParams.copy(this._myParams, false);
+
         this._build();
-        this.forceRefresh();
+
+        this._myDirty = true;
+        this.refresh();
 
         this.setVisible(true);
+    }
+
+    private _refresh(): void {
+        this._myPrevParams.copy(this._myParams, false);
+
+        this._refreshHook();
     }
 
     protected _updateHook(dt: number): void { }
@@ -185,8 +208,7 @@ export abstract class AbstractVisualElement<VisualElementType extends AbstractVi
     protected _visibleChanged(): void { }
 
     protected abstract _build(): void;
-    protected abstract _refresh(): void;
-    protected _forceRefreshHook(): void { }
+    protected abstract _refreshHook(): void;
 
     protected abstract _new(params: VisualElementParamsType): VisualElementType;
 

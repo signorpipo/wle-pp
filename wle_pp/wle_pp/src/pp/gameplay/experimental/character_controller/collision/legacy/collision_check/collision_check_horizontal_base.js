@@ -108,7 +108,7 @@ CollisionCheckHorizontalBase.prototype._horizontalCheckRaycast = function () {
 }();
 
 CollisionCheckHorizontalBase.prototype._ignoreSurfaceAngle = function () {
-    let objectsEqualCallback = (first, second) => first.pp_equals(second);
+    let objectsEqualCallback = (first, second) => first == second;
 
     let movementDirection = vec3_create();
     let hitDirection = vec3_create();

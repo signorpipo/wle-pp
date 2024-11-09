@@ -12,23 +12,38 @@ export class SaveManagerComponent extends Component {
     init() {
         this._mySaveManager = null;
 
-        // Prevents double global from same engine
-        if (this._mySaveID.length > 0 && !Globals.hasSaveManager(this.engine)) {
+        if (this._mySaveID.length > 0) {
             this._mySaveManager = new SaveManager(this._mySaveID, this._myAutoLoadSaves, this.engine);
+        }
+    }
+
+    update(dt) {
+        if (this._mySaveManager != null && Globals.getSaveManager(this.engine) == this._mySaveManager) {
+            this._mySaveManager.update(dt);
+        }
+    }
+
+    onActivate() {
+        if (this._mySaveManager != null && !Globals.hasSaveManager(this.engine)) {
+            this._mySaveManager.setActive(true);
 
             Globals.setSaveManager(this._mySaveManager, this.engine);
         }
     }
 
-    update(dt) {
+    onDeactivate() {
         if (this._mySaveManager != null) {
-            this._mySaveManager.update(dt);
+            this._mySaveManager.setActive(false);
+
+            if (Globals.getSaveManager(this.engine) == this._mySaveManager) {
+                Globals.removeSaveManager(this.engine);
+            }
         }
     }
 
     onDestroy() {
-        if (this._mySaveManager != null && Globals.getSaveManager(this.engine) == this._mySaveManager) {
-            Globals.removeSaveManager(this.engine);
+        if (this._mySaveManager != null) {
+            this._mySaveManager.destroy();
         }
     }
 }

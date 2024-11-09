@@ -14,6 +14,8 @@ export interface VectorExtension<VectorType extends Vector> {
 
     vec_equals<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector>, epsilon?: number): boolean;
 
+
+
     vec_zero<T extends VectorType>(this: T): this;
     vec_isZero<T extends VectorType>(this: Readonly<T>, epsilon?: number): boolean;
 

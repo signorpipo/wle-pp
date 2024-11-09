@@ -27,10 +27,10 @@ export interface QuaternionExtension<QuaternionType extends Quaternion> {
     quat_set<T extends QuaternionType>(this: T, x: number, y: number, z: number, w: number): this;
     quat_set<T extends QuaternionType>(this: T, uniformValue: number): this;
 
-
-
     quat_copy<T extends QuaternionType>(this: T, quat: Readonly<Quaternion>): this;
     quat_clone<T extends QuaternionType>(this: Readonly<T>): T;
+
+    quat_equals<T extends QuaternionType>(this: Readonly<T>, quat: Readonly<Quaternion>, epsilon?: number): boolean;
 
 
 

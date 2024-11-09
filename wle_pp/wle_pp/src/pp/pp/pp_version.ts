@@ -1,1 +1,1 @@
-export const PP_VERSION = "0.6.17";
+export const PP_VERSION = "0.7.0";

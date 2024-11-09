@@ -12,6 +12,8 @@ export interface Vector4Extension<VectorType extends Vector4> {
     vec4_copy<T extends VectorType>(this: T, vector: Readonly<Vector4>): this;
     vec4_clone<T extends VectorType>(this: Readonly<T>): T;
 
+    vec4_equals<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector4>, epsilon?: number): boolean;
+
     vec4_lerp<T extends VectorType>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number): T;
     vec4_lerp<T extends VectorType, U extends Vector4>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, out: U): U;
 

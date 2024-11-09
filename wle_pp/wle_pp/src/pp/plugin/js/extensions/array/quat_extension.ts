@@ -27,6 +27,10 @@ function _initQuatExtensionProtoype(): void {
             return QuatUtils.clone(this);
         },
 
+        quat_equals(this: Readonly<Quaternion>, quat: Readonly<Quaternion>, epsilon?: number): boolean {
+            return QuatUtils.equals(this, quat, epsilon);
+        },
+
         quat_isNormalized(this: Readonly<Quaternion>, epsilon?: number): boolean {
             return QuatUtils.isNormalized(this, epsilon);
         },

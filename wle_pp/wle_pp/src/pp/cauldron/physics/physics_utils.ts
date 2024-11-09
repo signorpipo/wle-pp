@@ -44,7 +44,7 @@ export const raycast = function () {
 
     const insideCheckSubVector = vec3_create();
     const invertedRaycastDirection = vec3_create();
-    const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first.pp_equals(second);
+    const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first == second;
     return function raycast(raycastParams: Readonly<RaycastParams>, raycastResults: RaycastResults = new RaycastResults()): RaycastResults {
         const internalRaycastResults = raycastParams.myPhysics.rayCast(raycastParams.myOrigin, raycastParams.myDirection, raycastParams.myBlockLayerFlags.getMask(), raycastParams.myDistance);
 
@@ -80,7 +80,7 @@ export const raycast = function () {
                 if (raycastParams.myObjectsToIgnore.length != 0) {
                     if (!objectsAlreadyGet) {
                         objectsAlreadyGet = true;
-                        internalRaycastResults.pp_getObjects(objects);
+                        internalRaycastResults.getObjects(objects);
                     }
 
                     if (raycastParams.myObjectsToIgnore.pp_hasEqual(objects[i], objectsEqualCallback)) {
@@ -90,7 +90,7 @@ export const raycast = function () {
 
                 if (!distancesAlreadyGet) {
                     distancesAlreadyGet = true;
-                    internalRaycastResults.pp_getDistances(distances);
+                    internalRaycastResults.getDistances(distances);
                 }
 
                 let colliderTypeValid = true;
@@ -99,7 +99,7 @@ export const raycast = function () {
 
                     if (!objectsAlreadyGet) {
                         objectsAlreadyGet = true;
-                        internalRaycastResults.pp_getObjects(objects);
+                        internalRaycastResults.getObjects(objects);
                     }
 
                     const physXComponent = objects[i].pp_getComponentSelf(PhysXComponent)!;
@@ -111,7 +111,7 @@ export const raycast = function () {
                     if (hitInsideCollision) {
                         if (!locationsAlreadyGet) {
                             locationsAlreadyGet = true;
-                            internalRaycastResults.pp_getLocations(locations);
+                            internalRaycastResults.getLocations(locations);
                         }
 
                         hitInsideCollision &&= raycastParams.myOrigin.vec3_sub(locations[i], insideCheckSubVector).vec3_isZero(Math.PP_EPSILON);
@@ -119,7 +119,7 @@ export const raycast = function () {
                         if (hitInsideCollision) {
                             if (!normalsAlreadyGet) {
                                 normalsAlreadyGet = true;
-                                internalRaycastResults.pp_getNormals(normals);
+                                internalRaycastResults.getNormals(normals);
                             }
 
                             hitInsideCollision &&= invertedRaycastDirection.vec3_equals(normals[i], Math.PP_EPSILON_DEGREES);
@@ -142,17 +142,17 @@ export const raycast = function () {
 
                         if (!objectsAlreadyGet) {
                             objectsAlreadyGet = true;
-                            internalRaycastResults.pp_getObjects(objects);
+                            internalRaycastResults.getObjects(objects);
                         }
 
                         if (!locationsAlreadyGet) {
                             locationsAlreadyGet = true;
-                            internalRaycastResults.pp_getLocations(locations);
+                            internalRaycastResults.getLocations(locations);
                         }
 
                         if (!normalsAlreadyGet) {
                             normalsAlreadyGet = true;
-                            internalRaycastResults.pp_getNormals(normals);
+                            internalRaycastResults.getNormals(normals);
                         }
 
                         hit!.myPosition.vec3_copy(locations[i]);
@@ -182,9 +182,9 @@ export const raycast = function () {
             }
         }
 
-        if (Globals.isDebugEnabled(raycastParams.myPhysics.pp_getEngine())) {
+        if (Globals.isDebugEnabled(raycastParams.myPhysics.engine)) {
             if (PhysicsUtils.isRaycastVisualDebugEnabled(raycastParams.myPhysics)) {
-                Globals.getDebugVisualManager(raycastParams.myPhysics.pp_getEngine())!.drawRaycast(0, raycastResults);
+                Globals.getDebugVisualManager(raycastParams.myPhysics.engine)!.drawRaycast(0, raycastResults);
             }
 
             _increaseRaycastCount(raycastParams.myPhysics);

@@ -97,7 +97,7 @@ export let updateCeilingInfo = function () {
     };
 }();
 
-export function convertCharacterCollisionResultsToCollisionRuntimeParams(characterCollisionResults, outCollisionRuntimeParams) {
+export function convertCharacterCollisionResultsToCollisionRuntimeParams(characterCollisionResults, outCollisionRuntimeParams = new CollisionRuntimeParams()) {
     outCollisionRuntimeParams.reset();
 
     characterCollisionResults.myTransformResults.myInitialTransformQuat.quat2_getPosition(outCollisionRuntimeParams.myOriginalPosition);
@@ -193,6 +193,8 @@ export function convertCharacterCollisionResultsToCollisionRuntimeParams(charact
     outCollisionRuntimeParams.mySplitMovementSteps = characterCollisionResults.mySplitMovementResults.myStepsToPerform;
     outCollisionRuntimeParams.mySplitMovementStepsPerformed = characterCollisionResults.mySplitMovementResults.myStepsPerformed;
     outCollisionRuntimeParams.mySplitMovementStop = characterCollisionResults.mySplitMovementResults.myMovementInterrupted;
+    outCollisionRuntimeParams.mySplitMovementReduced = characterCollisionResults.mySplitMovementResults.myMovementReduced;
+    outCollisionRuntimeParams.mySplitMovementLastStepLongerThanMaxLength = characterCollisionResults.mySplitMovementResults.myLastStepLongerThanMaxStepLength;
     outCollisionRuntimeParams.mySplitMovementMovementChecked.vec3_copy(characterCollisionResults.mySplitMovementResults.myMovementChecked);
 
     return outCollisionRuntimeParams;
@@ -200,7 +202,7 @@ export function convertCharacterCollisionResultsToCollisionRuntimeParams(charact
 
 export let convertCollisionRuntimeParamsToCharacterCollisionResults = function () {
     let rotationQuat = quat_create();
-    return function convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults) {
+    return function convertCollisionRuntimeParamsToCharacterCollisionResults(collisionRuntimeParams, currentTransformQuat, outCharacterCollisionResults = new CharacterCollisionResults()) {
         outCharacterCollisionResults.reset();
 
         if (collisionRuntimeParams.myIsMove) {
@@ -290,6 +292,8 @@ export let convertCollisionRuntimeParamsToCharacterCollisionResults = function (
         outCharacterCollisionResults.mySplitMovementResults.myStepsToPerform = collisionRuntimeParams.mySplitMovementSteps;
         outCharacterCollisionResults.mySplitMovementResults.myStepsPerformed = collisionRuntimeParams.mySplitMovementStepsPerformed;
         outCharacterCollisionResults.mySplitMovementResults.myMovementInterrupted = collisionRuntimeParams.mySplitMovementStop;
+        outCharacterCollisionResults.mySplitMovementResults.myMovementReduced = collisionRuntimeParams.mySplitMovementReduced;
+        outCharacterCollisionResults.mySplitMovementResults.myLastStepLongerThanMaxStepLength = collisionRuntimeParams.mySplitMovementLastStepLongerThanMaxLength;
         outCharacterCollisionResults.mySplitMovementResults.myMovementChecked.vec3_copy(collisionRuntimeParams.mySplitMovementMovementChecked);
 
         outCharacterCollisionResults.myInternalResults.myLastRelevantInitialHorizontalMovement.vec3_copy(collisionRuntimeParams.myLastValidOriginalHorizontalMovement);
@@ -314,7 +318,7 @@ export let convertCollisionRuntimeParamsToCharacterCollisionResults = function (
 }();
 
 export let convertCharacterColliderSetupToCollisionCheckParams = function () {
-    return function convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, outCollisionCheckParams) {
+    return function convertCharacterColliderSetupToCollisionCheckParams(characterColliderSetup, outCollisionCheckParams = new CollisionCheckParams()) {
         outCollisionCheckParams.myHeight = characterColliderSetup.myHeight;
 
         outCollisionCheckParams.myRadius = characterColliderSetup.myHorizontalCheckParams.myHorizontalCheckConeRadius;
@@ -404,6 +408,7 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.myCheckVerticalFixedForwardEnabled = characterColliderSetup.myVerticalCheckParams.myVerticalCheckFixedForwardEnabled;
         outCollisionCheckParams.myCheckVerticalFixedForward.vec3_copy(characterColliderSetup.myVerticalCheckParams.myVerticalCheckFixedForward);
         outCollisionCheckParams.myCheckVerticalBothDirection = characterColliderSetup.myVerticalCheckParams.myVerticalMovementCheckPerformCheckOnBothSides;
+        outCollisionCheckParams.myCheckVerticalPositionBothDirection = characterColliderSetup.myVerticalCheckParams.myVerticalPositionCheckPerformCheckOnBothSides;
 
         outCollisionCheckParams.myVerticalMovementReduceEnabled = characterColliderSetup.myVerticalCheckParams.myVerticalMovementCheckReductionEnabled;
 
@@ -417,6 +422,8 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.myVerticalBlockLayerFlags.copy(characterColliderSetup.myVerticalCheckParams.myVerticalCheckBlockLayerFlags);
         outCollisionCheckParams.myHorizontalObjectsToIgnore.pp_copy(characterColliderSetup.myHorizontalCheckParams.myHorizontalCheckObjectsToIgnore);
         outCollisionCheckParams.myVerticalObjectsToIgnore.pp_copy(characterColliderSetup.myVerticalCheckParams.myVerticalCheckObjectsToIgnore);
+        outCollisionCheckParams.myHorizontalBlockColliderType = characterColliderSetup.myHorizontalCheckParams.myHorizontalBlockColliderType;
+        outCollisionCheckParams.myVerticalBlockColliderType = characterColliderSetup.myVerticalCheckParams.myVerticalBlockColliderType;
 
         outCollisionCheckParams.mySnapOnGroundEnabled = characterColliderSetup.myGroundParams.mySurfaceSnapEnabled;
         outCollisionCheckParams.mySnapOnGroundExtraDistance = characterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance;
@@ -508,12 +515,15 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.mySplitMovementEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementEnabled;
         outCollisionCheckParams.mySplitMovementMaxLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength == null ? 0 : characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength;
         outCollisionCheckParams.mySplitMovementMaxLengthEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength != null;
+        outCollisionCheckParams.mySplitMovementMaxLengthLastStepCanBeLonger = characterColliderSetup.mySplitMovementParams.mySplitMovementLastStepCanBeLongerThanMaxStepLength;
         outCollisionCheckParams.mySplitMovementMaxSteps = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps == null ? 0 : characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps;
         outCollisionCheckParams.mySplitMovementMaxStepsEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps != null;
         outCollisionCheckParams.mySplitMovementMinLength = characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength == null ? 0 : characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength;
         outCollisionCheckParams.mySplitMovementMinLengthEnabled = characterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength != null;
         outCollisionCheckParams.mySplitMovementStopWhenHorizontalMovementCanceled = characterColliderSetup.mySplitMovementParams.mySplitMovementStopOnHorizontalMovementFailed;
+        outCollisionCheckParams.mySplitMovementStopAndFailIfMovementWouldBeReduced = characterColliderSetup.mySplitMovementParams.mySplitMovementStopAndFailIfMovementWouldBeReduced;
         outCollisionCheckParams.mySplitMovementStopWhenVerticalMovementCanceled = characterColliderSetup.mySplitMovementParams.mySplitMovementStopOnVerticalMovementFailed;
+        outCollisionCheckParams.mySplitMovementStopWhenVerticalMovementReduced = characterColliderSetup.mySplitMovementParams.mySplitMovementStopOnVerticalMovementReduced;
         outCollisionCheckParams.mySplitMovementStopCallback = null;
         outCollisionCheckParams.mySplitMovementStopReturnPrevious = characterColliderSetup.mySplitMovementParams.mySplitMovementStopReturnPreviousResults;
 

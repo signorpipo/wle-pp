@@ -6,6 +6,7 @@ export class GamepadsManager {
 
     private readonly _myUniversalGamepads: Record<Handedness, UniversalGamepad>;
 
+    private _myActive: boolean = true;
     private _myDestroyed: boolean = false;
 
     constructor() {
@@ -17,6 +18,19 @@ export class GamepadsManager {
         this._myDestroyed = false;
     }
 
+    public setActive(active: boolean): void {
+        this._myActive = active;
+
+        for (const rawHandedness in this._myUniversalGamepads) {
+            const handedness = rawHandedness as Handedness;
+            this._myUniversalGamepads[handedness].setActive(active);
+        }
+    }
+
+    public isActive(): boolean {
+        return this._myActive;
+    }
+
     public start(): void {
         for (const rawHandedness in this._myUniversalGamepads) {
             const handedness = rawHandedness as Handedness;
@@ -25,6 +39,8 @@ export class GamepadsManager {
     }
 
     public update(dt: number): void {
+        if (!this._myActive) return;
+
         for (const rawHandedness in this._myUniversalGamepads) {
             const handedness = rawHandedness as Handedness;
             this._myUniversalGamepads[handedness].update(dt);
@@ -65,6 +81,8 @@ export class GamepadsManager {
 
     public destroy(): void {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         for (const rawHandedness in this._myUniversalGamepads) {
             const handedness = rawHandedness as Handedness;

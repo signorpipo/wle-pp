@@ -1,4 +1,4 @@
-import { Mesh, MeshAttribute, MeshIndexType } from "@wonderlandengine/api";
+import { MeshAttribute, MeshIndexType } from "@wonderlandengine/api";
 import { vec2_create, vec3_create, vec4_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 
@@ -41,7 +41,7 @@ export function create(meshCreationParams) {
     indexDataUnsignedInt.pp_copy(indexData);
 
     let vertexCount = meshCreationParams.myVertexes.length;
-    let mesh = new Mesh(meshCreationParams.myEngine, {
+    let mesh = meshCreationParams.myEngine.meshes.create({
         vertexCount: vertexCount,
         indexData: indexDataUnsignedInt,
         indexType: MeshIndexType.UnsignedInt
@@ -108,7 +108,7 @@ export let clone = function () {
 
         let clonedIndexData = mesh.indexData.pp_clone();
 
-        let clonedMesh = new Mesh(mesh.engine, {
+        let clonedMesh = mesh.engine.meshes.create({
             vertexCount: mesh.vertexCount,
             indexData: clonedIndexData,
             indexType: MeshIndexType.UnsignedInt
@@ -194,7 +194,7 @@ export let invert = function () {
             invertedIndexData[i * 3 + 2] = mesh.indexData[i * 3 + 0];
         }
 
-        let invertedMesh = new Mesh(mesh.engine, {
+        let invertedMesh = mesh.engine.meshes.create({
             vertexCount: mesh.vertexCount,
             indexData: invertedIndexData,
             indexType: MeshIndexType.UnsignedInt
@@ -288,7 +288,7 @@ export let makeDoubleSided = function () {
             doubleSidedIndexData[i * 3 * 2 + 5] = mesh.indexData[i * 3 + 0] * 2 + 1;
         }
 
-        let doubleSidedMesh = new Mesh(mesh.engine, {
+        let doubleSidedMesh = mesh.engine.meshes.create({
             vertexCount: mesh.vertexCount * 2,
             indexData: doubleSidedIndexData,
             indexType: MeshIndexType.UnsignedInt

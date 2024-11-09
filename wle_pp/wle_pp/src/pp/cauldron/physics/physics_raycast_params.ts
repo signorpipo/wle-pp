@@ -51,6 +51,19 @@ export class RaycastParams {
         this.myObjectsToIgnore.pp_clear();
         this.myIgnoreHitsInsideCollision = false;
     }
+
+    public equals(other: Readonly<RaycastParams>): boolean {
+        if (this == other) return true;
+
+        return this.myOrigin.vec3_equals(other.myOrigin) &&
+            this.myDirection.vec3_equals(other.myDirection) &&
+            this.myDistance == other.myDistance &&
+            this.myBlockLayerFlags.equals(other.myBlockLayerFlags) &&
+            this.myBlockColliderType == other.myBlockColliderType &&
+            this.myObjectsToIgnore.pp_equals(other.myObjectsToIgnore) &&
+            this.myIgnoreHitsInsideCollision == other.myIgnoreHitsInsideCollision &&
+            this.myPhysics == other.myPhysics;
+    }
 }
 
 export class RaycastResults {
@@ -197,6 +210,19 @@ export class RaycastResults {
 
         this.removeAllHits();
     }
+
+    private static readonly _equalsSV =
+        {
+            hitsEqualCallback: (first: Readonly<RaycastHit>, second: Readonly<RaycastHit>): boolean => first.equals(second)
+        };
+    public equals(other: Readonly<RaycastResults>): boolean {
+        if (this == other) return true;
+
+        const hitsEqualCallback = RaycastResults._equalsSV.hitsEqualCallback;
+        return (this.myRaycastParams == other.myRaycastParams ||
+            (this.myRaycastParams != null && other.myRaycastParams != null && this.myRaycastParams.equals(other.myRaycastParams))) &&
+            this.myHits.pp_equals(other.myHits, hitsEqualCallback);
+    }
 }
 
 export class RaycastHit {
@@ -226,5 +252,15 @@ export class RaycastHit {
         this.myDistance = 0;
         this.myObject = null;
         this.myInsideCollision = false;
+    }
+
+    public equals(other: Readonly<RaycastHit>): boolean {
+        if (this == other) return true;
+
+        return this.myPosition.vec3_equals(other.myPosition) &&
+            this.myNormal.vec3_equals(other.myNormal) &&
+            this.myDistance == other.myDistance &&
+            this.myObject == other.myObject &&
+            this.myInsideCollision == other.myInsideCollision;
     }
 }

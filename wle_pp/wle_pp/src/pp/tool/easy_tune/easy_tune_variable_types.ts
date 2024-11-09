@@ -58,7 +58,7 @@ export abstract class EasyTuneVariable {
 
     protected readonly _myEngine: Readonly<WonderlandEngine>;
 
-    constructor(type: EasyTuneVariableType, name: string, onValueChangedEventListener: ((value: unknown, easyTuneVariable: EasyTuneVariable) => void) | null = null, showOnWidget: boolean = true, extraParams: Readonly<EasyTuneVariableExtraParams> = new EasyTuneVariableExtraParams(), engine: Readonly<WonderlandEngine> = Globals.getMainEngine()!) {
+    constructor(type: EasyTuneVariableType, name: string, valueChangedEventListener: ((value: unknown, easyTuneVariable: EasyTuneVariable) => void) | null = null, showOnWidget: boolean = true, extraParams: Readonly<EasyTuneVariableExtraParams> = new EasyTuneVariableExtraParams(), engine: Readonly<WonderlandEngine> = Globals.getMainEngine()!) {
         this._myType = type;
 
         this._myName = name;
@@ -74,8 +74,8 @@ export abstract class EasyTuneVariable {
 
         this._myEngine = engine;
 
-        if (onValueChangedEventListener != null) {
-            this.registerValueChangedEventListener(this, onValueChangedEventListener);
+        if (valueChangedEventListener != null) {
+            this.registerValueChangedEventListener(this, valueChangedEventListener);
         }
     }
 
@@ -193,13 +193,29 @@ export abstract class EasyTuneVariable {
         return JSON.stringify(this.getValue());
     }
 
+    /**
+     * @param id if `undefined` is used as id, it will overwrite the default variable listener
+     */
     public registerValueChangedEventListener(id: unknown, listener: (value: unknown, easyTuneVariable: EasyTuneVariable) => void): this {
-        this._myValueChangedEmitter.add(listener, { id: id });
+        if (id !== undefined) {
+            this._myValueChangedEmitter.add(listener, { id: id });
+        } else {
+            this._myValueChangedEmitter.add(listener, { id: this });
+        }
+
         return this;
     }
 
-    public unregisterValueChangedEventListener(id: unknown): this {
-        this._myValueChangedEmitter.remove(id);
+    /**
+     * @param id if `undefined` is used as id, it will unregister the default variable listener
+     */
+    public unregisterValueChangedEventListener(id?: unknown): this {
+        if (id !== undefined) {
+            this._myValueChangedEmitter.remove(id);
+        } else {
+            this._myValueChangedEmitter.remove(this);
+        }
+
         return this;
     }
 
@@ -212,8 +228,8 @@ export abstract class EasyTuneVariableTyped<T> extends EasyTuneVariable {
     protected abstract override _myValue: T;
     protected abstract override _myDefaultValue: T;
 
-    constructor(type: EasyTuneVariableType, name: string, onValueChangedEventListener?: ((value: Readonly<T>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(type, name, onValueChangedEventListener as (value: unknown, easyTuneVariable: EasyTuneVariable) => void, showOnWidget, extraParams, engine);
+    constructor(type: EasyTuneVariableType, name: string, valueChangedEventListener?: ((value: Readonly<T>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(type, name, valueChangedEventListener as (value: unknown, easyTuneVariable: EasyTuneVariable) => void, showOnWidget, extraParams, engine);
     }
 
     public override getValue(): Readonly<T> {
@@ -240,7 +256,7 @@ export abstract class EasyTuneVariableTyped<T> extends EasyTuneVariable {
         return super.registerValueChangedEventListener(id, listener as (value: unknown, easyTuneVariable: EasyTuneVariable) => void);
     }
 
-    public override unregisterValueChangedEventListener(id: unknown): this {
+    public override unregisterValueChangedEventListener(id?: unknown): this {
         return super.unregisterValueChangedEventListener(id);
     }
 }
@@ -249,8 +265,8 @@ export abstract class EasyTuneVariableArray<ArrayType extends ArrayLike<ArrayEle
     protected override _myValue!: ArrayType;
     protected override _myDefaultValue!: ArrayType;
 
-    constructor(type: EasyTuneVariableType, name: string, value: ArrayType, onValueChangedEventListener?: ((value: Readonly<ArrayType>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(type, name, onValueChangedEventListener, showOnWidget, extraParams, engine);
+    constructor(type: EasyTuneVariableType, name: string, value: ArrayType, valueChangedEventListener?: ((value: Readonly<ArrayType>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(type, name, valueChangedEventListener, showOnWidget, extraParams, engine);
 
         this.setValue(value, true, true);
     }
@@ -303,8 +319,8 @@ export class EasyTuneNumberArray extends EasyTuneVariableArray<ArrayLike<number>
 
     private _myEditAllValuesTogether: boolean;
 
-    constructor(name: string, value: Readonly<ArrayLike<number>>, onValueChangedEventListener?: ((value: Readonly<ArrayLike<number>>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, decimalPlaces: number = 3, stepPerSecond: number = 1, min: number = -Number.MAX_VALUE, max: number = Number.MAX_VALUE, editAllValuesTogether: boolean = false, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(EasyTuneVariableType.NUMBER, name, value, onValueChangedEventListener, showOnWidget, extraParams, engine);
+    constructor(name: string, value: Readonly<ArrayLike<number>>, valueChangedEventListener?: ((value: Readonly<ArrayLike<number>>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, decimalPlaces: number = 3, stepPerSecond: number = 1, min: number = -Number.MAX_VALUE, max: number = Number.MAX_VALUE, editAllValuesTogether: boolean = false, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(EasyTuneVariableType.NUMBER, name, value, valueChangedEventListener, showOnWidget, extraParams, engine);
 
         this._myDecimalPlaces = decimalPlaces;
         this._myStepPerSecond = stepPerSecond;
@@ -353,14 +369,14 @@ export class EasyTuneNumberArray extends EasyTuneVariableArray<ArrayLike<number>
 
 export class EasyTuneIntArray extends EasyTuneNumberArray {
 
-    constructor(name: string, value: Readonly<ArrayLike<number>>, onValueChangedEventListener?: ((value: Readonly<ArrayLike<number>>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, stepPerSecond?: number, min: number = -Number.MAX_VALUE, max: number = Number.MAX_VALUE, editAllValuesTogether?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+    constructor(name: string, value: Readonly<ArrayLike<number>>, valueChangedEventListener?: ((value: Readonly<ArrayLike<number>>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, stepPerSecond?: number, min: number = -Number.MAX_VALUE, max: number = Number.MAX_VALUE, editAllValuesTogether?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
         const roundedValue = value.pp_clone();
 
         for (let i = 0; i < value.length; i++) {
             roundedValue[i] = Math.round(roundedValue[i]);
         }
 
-        super(name, roundedValue, onValueChangedEventListener, showOnWidget, 0, stepPerSecond, Math.round(min), Math.round(max), editAllValuesTogether, extraParams, engine);
+        super(name, roundedValue, valueChangedEventListener, showOnWidget, 0, stepPerSecond, Math.round(min), Math.round(max), editAllValuesTogether, extraParams, engine);
     }
 }
 
@@ -377,8 +393,8 @@ export class EasyTuneNumber extends EasyTuneVariableTyped<number> {
     private _myMin: number;
     private _myMax: number;
 
-    constructor(name: string, value: number, onValueChangedEventListener?: ((value: number, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, decimalPlaces: number = 3, stepPerSecond: number = 1, min: number = -Number.MAX_VALUE, max: number = Number.MAX_VALUE, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(EasyTuneVariableType.NUMBER, name, onValueChangedEventListener, showOnWidget, extraParams, engine);
+    constructor(name: string, value: number, valueChangedEventListener?: ((value: number, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, decimalPlaces: number = 3, stepPerSecond: number = 1, min: number = -Number.MAX_VALUE, max: number = Number.MAX_VALUE, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(EasyTuneVariableType.NUMBER, name, valueChangedEventListener, showOnWidget, extraParams, engine);
 
         this.setValue(value, true, true);
 
@@ -427,8 +443,8 @@ export class EasyTuneNumber extends EasyTuneVariableTyped<number> {
 
 export class EasyTuneInt extends EasyTuneNumber {
 
-    constructor(name: string, value: number, onValueChangedEventListener?: ((value: number, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, stepPerSecond?: number, min?: number, max?: number, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(name, value, onValueChangedEventListener, showOnWidget, 0, stepPerSecond, min, max, extraParams, engine);
+    constructor(name: string, value: number, valueChangedEventListener?: ((value: number, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, stepPerSecond?: number, min?: number, max?: number, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(name, value, valueChangedEventListener, showOnWidget, 0, stepPerSecond, min, max, extraParams, engine);
     }
 }
 
@@ -436,8 +452,8 @@ export class EasyTuneInt extends EasyTuneNumber {
 
 export class EasyTuneBoolArray extends EasyTuneVariableArray<ArrayLike<boolean>, boolean> {
 
-    constructor(name: string, value: Readonly<ArrayLike<boolean>>, onValueChangedEventListener?: ((value: Readonly<ArrayLike<boolean>>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(EasyTuneVariableType.BOOL, name, value, onValueChangedEventListener, showOnWidget, extraParams, engine);
+    constructor(name: string, value: Readonly<ArrayLike<boolean>>, valueChangedEventListener?: ((value: Readonly<ArrayLike<boolean>>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(EasyTuneVariableType.BOOL, name, value, valueChangedEventListener, showOnWidget, extraParams, engine);
     }
 }
 
@@ -446,8 +462,8 @@ export class EasyTuneBool extends EasyTuneVariableTyped<boolean> {
     protected override _myValue!: boolean;
     protected override _myDefaultValue!: boolean;
 
-    constructor(name: string, value: boolean, onValueChangedEventListener?: ((value: boolean, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(EasyTuneVariableType.BOOL, name, onValueChangedEventListener, showOnWidget, extraParams, engine);
+    constructor(name: string, value: boolean, valueChangedEventListener?: ((value: boolean, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(EasyTuneVariableType.BOOL, name, valueChangedEventListener, showOnWidget, extraParams, engine);
 
         this.setValue(value, true, true);
     }
@@ -479,8 +495,8 @@ export class EasyTuneTransform extends EasyTuneVariableTyped<Matrix4> {
     private _myDefaultRotationStepPerSecond: number;
     private _myDefaultScaleStepPerSecond: number;
 
-    constructor(name: string, value: Readonly<Matrix4>, onValueChangedEventListener?: ((value: Readonly<Matrix4>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, scaleAsOne: boolean = true, decimalPlaces: number = 3, positionStepPerSecond: number = 1, rotationStepPerSecond: number = 50, scaleStepPerSecond: number = 1, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
-        super(EasyTuneVariableType.TRANSFORM, name, onValueChangedEventListener, showOnWidget, extraParams, engine);
+    constructor(name: string, value: Readonly<Matrix4>, valueChangedEventListener?: ((value: Readonly<Matrix4>, easyTuneVariable: EasyTuneVariable) => void) | null, showOnWidget?: boolean, scaleAsOne: boolean = true, decimalPlaces: number = 3, positionStepPerSecond: number = 1, rotationStepPerSecond: number = 50, scaleStepPerSecond: number = 1, extraParams?: Readonly<EasyTuneVariableExtraParams>, engine?: Readonly<WonderlandEngine>) {
+        super(EasyTuneVariableType.TRANSFORM, name, valueChangedEventListener, showOnWidget, extraParams, engine);
 
         this._myDecimalPlaces = decimalPlaces;
 

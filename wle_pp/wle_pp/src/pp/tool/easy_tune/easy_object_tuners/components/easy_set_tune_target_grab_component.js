@@ -4,14 +4,20 @@ import { Globals } from "../../../../pp/globals.js";
 
 export class EasySetTuneTargeetGrabComponent extends Component {
     static TypeName = "pp-easy-set-tune-target-grab";
-    static Properties = {};
 
     start() {
         this._myGrabber = null;
+        this._myEasyTuneTarget = null;
+    }
 
+    update(dt) {
         if (Globals.isToolEnabled(this.engine)) {
-            this._myGrabber = this.object.pp_getComponent(GrabberHandComponent);
-            this._myEasyTuneTarget = null;
+            if (this._myGrabber == null) {
+                this._myGrabber = this.object.pp_getComponent(GrabberHandComponent);
+
+                //this._myGrabber.registerGrabEventListener(this, this._onGrab.bind(this));
+                this._myGrabber.registerThrowEventListener(this, this._onRelease.bind(this));
+            }
         }
     }
 

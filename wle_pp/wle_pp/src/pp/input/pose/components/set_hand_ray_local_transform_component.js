@@ -13,14 +13,30 @@ export class SetHandRayLocalTransformComponent extends Component {
     start() {
         this._myHandednessType = InputUtils.getHandednessByIndex(this._myHandedness);
 
-        Globals.getHandRayPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+        this._myActivateOnNextUpdate = false;
+    }
+
+    update(dt) {
+        if (this._myActivateOnNextUpdate) {
+            this._onActivate();
+
+            this._myActivateOnNextUpdate = false;
+        }
     }
 
     _onPoseUpdated(dt, pose) {
         // Implemented outside class definition
     }
 
-    onDestroy() {
+    onActivate() {
+        this._myActivateOnNextUpdate = true;
+    }
+
+    _onActivate() {
+        Globals.getHandRayPose(this._myHandednessType, this.engine).registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+    }
+
+    onDeactivate() {
         Globals.getHandRayPose(this._myHandednessType, this.engine)?.unregisterPoseUpdatedEventListener(this);
     }
 }
@@ -32,11 +48,14 @@ export class SetHandRayLocalTransformComponent extends Component {
 SetHandRayLocalTransformComponent.prototype._onPoseUpdated = function () {
     let handPoseTransform = quat2_create();
     return function _onPoseUpdated(dt, pose) {
-        if (this.active) {
-            if (XRUtils.isSessionActive(this.engine)) {
-                if (pose.isValid()) {
-                    this.object.pp_setTransformLocalQuat(pose.getTransformQuat(handPoseTransform, null));
-                }
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
+        if (XRUtils.isSessionActive(this.engine)) {
+            if (pose.isValid()) {
+                this.object.pp_setTransformLocalQuat(pose.getTransformQuat(handPoseTransform, null));
             }
         }
     };

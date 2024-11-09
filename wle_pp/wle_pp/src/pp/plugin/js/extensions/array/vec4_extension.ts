@@ -27,6 +27,10 @@ function _initVec4ExtensionProtoype(): void {
             return Vec4Utils.clone(this);
         },
 
+        vec4_equals(this: Readonly<Vector4>, vector: Readonly<Vector4>, epsilon?: number): boolean {
+            return Vec4Utils.equals(this, vector, epsilon);
+        },
+
         vec4_lerp<T extends Vector4, U extends Vector4>(this: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, out?: T | U): T | U {
             return Vec4Utils.lerp(this, to, interpolationFactor, out!);
         },

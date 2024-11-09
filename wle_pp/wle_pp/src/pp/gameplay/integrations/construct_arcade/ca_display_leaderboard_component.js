@@ -23,7 +23,6 @@ export class CADisplayLeaderboardComponent extends Component {
         this._myScoresTextComponent = null;
 
         this._myStarted = false;
-        this._myDestroyed = false;
     }
 
     start() {
@@ -154,9 +153,5 @@ export class CADisplayLeaderboardComponent extends Component {
         let clonedComponent = ComponentUtils.cloneDefault(this, targetObject);
 
         return clonedComponent;
-    }
-
-    onDestroy() {
-        this._myDestroyed = true;
     }
 }

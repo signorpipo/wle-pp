@@ -40,9 +40,9 @@ export class EasyTuneTransformWidgetUI extends EasyTuneBaseWidgetUI {
     _createSkeletonHook() {
         // Position
 
-        this.myPositionPanel = this.myDisplayPanel.pp_addObject();
-        this.myPositionLabelText = this.myPositionPanel.pp_addObject();
-        this.myPositionLabelCursorTarget = this.myPositionPanel.pp_addObject();
+        this.myPositionPanel = this.myDisplayPanel.pp_addChild();
+        this.myPositionLabelText = this.myPositionPanel.pp_addChild();
+        this.myPositionLabelCursorTarget = this.myPositionPanel.pp_addChild();
 
         this.myPositionPanels = [];
         this.myPositionTexts = [];
@@ -59,26 +59,26 @@ export class EasyTuneTransformWidgetUI extends EasyTuneBaseWidgetUI {
         this.myPositionDecreaseButtonCursorTargets = [];
 
         for (let i = 0; i < 3; i++) {
-            this.myPositionPanels[i] = this.myPositionPanel.pp_addObject();
-            this.myPositionTexts[i] = this.myPositionPanels[i].pp_addObject();
-            this.myPositionCursorTargets[i] = this.myPositionPanels[i].pp_addObject();
+            this.myPositionPanels[i] = this.myPositionPanel.pp_addChild();
+            this.myPositionTexts[i] = this.myPositionPanels[i].pp_addChild();
+            this.myPositionCursorTargets[i] = this.myPositionPanels[i].pp_addChild();
 
-            this.myPositionIncreaseButtonPanels[i] = this.myPositionPanels[i].pp_addObject();
-            this.myPositionIncreaseButtonBackgrounds[i] = this.myPositionIncreaseButtonPanels[i].pp_addObject();
-            this.myPositionIncreaseButtonTexts[i] = this.myPositionIncreaseButtonPanels[i].pp_addObject();
-            this.myPositionIncreaseButtonCursorTargets[i] = this.myPositionIncreaseButtonPanels[i].pp_addObject();
+            this.myPositionIncreaseButtonPanels[i] = this.myPositionPanels[i].pp_addChild();
+            this.myPositionIncreaseButtonBackgrounds[i] = this.myPositionIncreaseButtonPanels[i].pp_addChild();
+            this.myPositionIncreaseButtonTexts[i] = this.myPositionIncreaseButtonPanels[i].pp_addChild();
+            this.myPositionIncreaseButtonCursorTargets[i] = this.myPositionIncreaseButtonPanels[i].pp_addChild();
 
-            this.myPositionDecreaseButtonPanels[i] = this.myPositionPanels[i].pp_addObject();
-            this.myPositionDecreaseButtonBackgrounds[i] = this.myPositionDecreaseButtonPanels[i].pp_addObject();
-            this.myPositionDecreaseButtonTexts[i] = this.myPositionDecreaseButtonPanels[i].pp_addObject();
-            this.myPositionDecreaseButtonCursorTargets[i] = this.myPositionDecreaseButtonPanels[i].pp_addObject();
+            this.myPositionDecreaseButtonPanels[i] = this.myPositionPanels[i].pp_addChild();
+            this.myPositionDecreaseButtonBackgrounds[i] = this.myPositionDecreaseButtonPanels[i].pp_addChild();
+            this.myPositionDecreaseButtonTexts[i] = this.myPositionDecreaseButtonPanels[i].pp_addChild();
+            this.myPositionDecreaseButtonCursorTargets[i] = this.myPositionDecreaseButtonPanels[i].pp_addChild();
         }
 
         // Rotation
 
-        this.myRotationPanel = this.myDisplayPanel.pp_addObject();
-        this.myRotationLabelText = this.myRotationPanel.pp_addObject();
-        this.myRotationLabelCursorTarget = this.myRotationPanel.pp_addObject();
+        this.myRotationPanel = this.myDisplayPanel.pp_addChild();
+        this.myRotationLabelText = this.myRotationPanel.pp_addChild();
+        this.myRotationLabelCursorTarget = this.myRotationPanel.pp_addChild();
 
         this.myRotationPanels = [];
         this.myRotationTexts = [];
@@ -95,26 +95,26 @@ export class EasyTuneTransformWidgetUI extends EasyTuneBaseWidgetUI {
         this.myRotationDecreaseButtonCursorTargets = [];
 
         for (let i = 0; i < 3; i++) {
-            this.myRotationPanels[i] = this.myRotationPanel.pp_addObject();
-            this.myRotationTexts[i] = this.myRotationPanels[i].pp_addObject();
-            this.myRotationCursorTargets[i] = this.myRotationPanels[i].pp_addObject();
+            this.myRotationPanels[i] = this.myRotationPanel.pp_addChild();
+            this.myRotationTexts[i] = this.myRotationPanels[i].pp_addChild();
+            this.myRotationCursorTargets[i] = this.myRotationPanels[i].pp_addChild();
 
-            this.myRotationIncreaseButtonPanels[i] = this.myRotationPanels[i].pp_addObject();
-            this.myRotationIncreaseButtonBackgrounds[i] = this.myRotationIncreaseButtonPanels[i].pp_addObject();
-            this.myRotationIncreaseButtonTexts[i] = this.myRotationIncreaseButtonPanels[i].pp_addObject();
-            this.myRotationIncreaseButtonCursorTargets[i] = this.myRotationIncreaseButtonPanels[i].pp_addObject();
+            this.myRotationIncreaseButtonPanels[i] = this.myRotationPanels[i].pp_addChild();
+            this.myRotationIncreaseButtonBackgrounds[i] = this.myRotationIncreaseButtonPanels[i].pp_addChild();
+            this.myRotationIncreaseButtonTexts[i] = this.myRotationIncreaseButtonPanels[i].pp_addChild();
+            this.myRotationIncreaseButtonCursorTargets[i] = this.myRotationIncreaseButtonPanels[i].pp_addChild();
 
-            this.myRotationDecreaseButtonPanels[i] = this.myRotationPanels[i].pp_addObject();
-            this.myRotationDecreaseButtonBackgrounds[i] = this.myRotationDecreaseButtonPanels[i].pp_addObject();
-            this.myRotationDecreaseButtonTexts[i] = this.myRotationDecreaseButtonPanels[i].pp_addObject();
-            this.myRotationDecreaseButtonCursorTargets[i] = this.myRotationDecreaseButtonPanels[i].pp_addObject();
+            this.myRotationDecreaseButtonPanels[i] = this.myRotationPanels[i].pp_addChild();
+            this.myRotationDecreaseButtonBackgrounds[i] = this.myRotationDecreaseButtonPanels[i].pp_addChild();
+            this.myRotationDecreaseButtonTexts[i] = this.myRotationDecreaseButtonPanels[i].pp_addChild();
+            this.myRotationDecreaseButtonCursorTargets[i] = this.myRotationDecreaseButtonPanels[i].pp_addChild();
         }
 
         // Scale
 
-        this.myScalePanel = this.myDisplayPanel.pp_addObject();
-        this.myScaleLabelText = this.myScalePanel.pp_addObject();
-        this.myScaleLabelCursorTarget = this.myScalePanel.pp_addObject();
+        this.myScalePanel = this.myDisplayPanel.pp_addChild();
+        this.myScaleLabelText = this.myScalePanel.pp_addChild();
+        this.myScaleLabelCursorTarget = this.myScalePanel.pp_addChild();
 
         this.myScalePanels = [];
         this.myScaleTexts = [];
@@ -131,70 +131,70 @@ export class EasyTuneTransformWidgetUI extends EasyTuneBaseWidgetUI {
         this.myScaleDecreaseButtonCursorTargets = [];
 
         for (let i = 0; i < 3; i++) {
-            this.myScalePanels[i] = this.myScalePanel.pp_addObject();
-            this.myScaleTexts[i] = this.myScalePanels[i].pp_addObject();
-            this.myScaleCursorTargets[i] = this.myScalePanels[i].pp_addObject();
+            this.myScalePanels[i] = this.myScalePanel.pp_addChild();
+            this.myScaleTexts[i] = this.myScalePanels[i].pp_addChild();
+            this.myScaleCursorTargets[i] = this.myScalePanels[i].pp_addChild();
 
-            this.myScaleIncreaseButtonPanels[i] = this.myScalePanels[i].pp_addObject();
-            this.myScaleIncreaseButtonBackgrounds[i] = this.myScaleIncreaseButtonPanels[i].pp_addObject();
-            this.myScaleIncreaseButtonTexts[i] = this.myScaleIncreaseButtonPanels[i].pp_addObject();
-            this.myScaleIncreaseButtonCursorTargets[i] = this.myScaleIncreaseButtonPanels[i].pp_addObject();
+            this.myScaleIncreaseButtonPanels[i] = this.myScalePanels[i].pp_addChild();
+            this.myScaleIncreaseButtonBackgrounds[i] = this.myScaleIncreaseButtonPanels[i].pp_addChild();
+            this.myScaleIncreaseButtonTexts[i] = this.myScaleIncreaseButtonPanels[i].pp_addChild();
+            this.myScaleIncreaseButtonCursorTargets[i] = this.myScaleIncreaseButtonPanels[i].pp_addChild();
 
-            this.myScaleDecreaseButtonPanels[i] = this.myScalePanels[i].pp_addObject();
-            this.myScaleDecreaseButtonBackgrounds[i] = this.myScaleDecreaseButtonPanels[i].pp_addObject();
-            this.myScaleDecreaseButtonTexts[i] = this.myScaleDecreaseButtonPanels[i].pp_addObject();
-            this.myScaleDecreaseButtonCursorTargets[i] = this.myScaleDecreaseButtonPanels[i].pp_addObject();
+            this.myScaleDecreaseButtonPanels[i] = this.myScalePanels[i].pp_addChild();
+            this.myScaleDecreaseButtonBackgrounds[i] = this.myScaleDecreaseButtonPanels[i].pp_addChild();
+            this.myScaleDecreaseButtonTexts[i] = this.myScaleDecreaseButtonPanels[i].pp_addChild();
+            this.myScaleDecreaseButtonCursorTargets[i] = this.myScaleDecreaseButtonPanels[i].pp_addChild();
         }
 
         // Steps
 
         // Position
 
-        this.myPositionStepPanel = this.myPositionPanel.pp_addObject();
-        this.myPositionStepText = this.myPositionStepPanel.pp_addObject();
-        this.myPositionStepCursorTarget = this.myPositionStepPanel.pp_addObject();
+        this.myPositionStepPanel = this.myPositionPanel.pp_addChild();
+        this.myPositionStepText = this.myPositionStepPanel.pp_addChild();
+        this.myPositionStepCursorTarget = this.myPositionStepPanel.pp_addChild();
 
-        this.myPositionStepIncreaseButtonPanel = this.myPositionStepPanel.pp_addObject();
-        this.myPositionStepIncreaseButtonBackground = this.myPositionStepIncreaseButtonPanel.pp_addObject();
-        this.myPositionStepIncreaseButtonText = this.myPositionStepIncreaseButtonPanel.pp_addObject();
-        this.myPositionStepIncreaseButtonCursorTarget = this.myPositionStepIncreaseButtonPanel.pp_addObject();
+        this.myPositionStepIncreaseButtonPanel = this.myPositionStepPanel.pp_addChild();
+        this.myPositionStepIncreaseButtonBackground = this.myPositionStepIncreaseButtonPanel.pp_addChild();
+        this.myPositionStepIncreaseButtonText = this.myPositionStepIncreaseButtonPanel.pp_addChild();
+        this.myPositionStepIncreaseButtonCursorTarget = this.myPositionStepIncreaseButtonPanel.pp_addChild();
 
-        this.myPositionStepDecreaseButtonPanel = this.myPositionStepPanel.pp_addObject();
-        this.myPositionStepDecreaseButtonBackground = this.myPositionStepDecreaseButtonPanel.pp_addObject();
-        this.myPositionStepDecreaseButtonText = this.myPositionStepDecreaseButtonPanel.pp_addObject();
-        this.myPositionStepDecreaseButtonCursorTarget = this.myPositionStepDecreaseButtonPanel.pp_addObject();
+        this.myPositionStepDecreaseButtonPanel = this.myPositionStepPanel.pp_addChild();
+        this.myPositionStepDecreaseButtonBackground = this.myPositionStepDecreaseButtonPanel.pp_addChild();
+        this.myPositionStepDecreaseButtonText = this.myPositionStepDecreaseButtonPanel.pp_addChild();
+        this.myPositionStepDecreaseButtonCursorTarget = this.myPositionStepDecreaseButtonPanel.pp_addChild();
 
         // Rotation
 
-        this.myRotationStepPanel = this.myRotationPanel.pp_addObject();
-        this.myRotationStepText = this.myRotationStepPanel.pp_addObject();
-        this.myRotationStepCursorTarget = this.myRotationStepPanel.pp_addObject();
+        this.myRotationStepPanel = this.myRotationPanel.pp_addChild();
+        this.myRotationStepText = this.myRotationStepPanel.pp_addChild();
+        this.myRotationStepCursorTarget = this.myRotationStepPanel.pp_addChild();
 
-        this.myRotationStepIncreaseButtonPanel = this.myRotationStepPanel.pp_addObject();
-        this.myRotationStepIncreaseButtonBackground = this.myRotationStepIncreaseButtonPanel.pp_addObject();
-        this.myRotationStepIncreaseButtonText = this.myRotationStepIncreaseButtonPanel.pp_addObject();
-        this.myRotationStepIncreaseButtonCursorTarget = this.myRotationStepIncreaseButtonPanel.pp_addObject();
+        this.myRotationStepIncreaseButtonPanel = this.myRotationStepPanel.pp_addChild();
+        this.myRotationStepIncreaseButtonBackground = this.myRotationStepIncreaseButtonPanel.pp_addChild();
+        this.myRotationStepIncreaseButtonText = this.myRotationStepIncreaseButtonPanel.pp_addChild();
+        this.myRotationStepIncreaseButtonCursorTarget = this.myRotationStepIncreaseButtonPanel.pp_addChild();
 
-        this.myRotationStepDecreaseButtonPanel = this.myRotationStepPanel.pp_addObject();
-        this.myRotationStepDecreaseButtonBackground = this.myRotationStepDecreaseButtonPanel.pp_addObject();
-        this.myRotationStepDecreaseButtonText = this.myRotationStepDecreaseButtonPanel.pp_addObject();
-        this.myRotationStepDecreaseButtonCursorTarget = this.myRotationStepDecreaseButtonPanel.pp_addObject();
+        this.myRotationStepDecreaseButtonPanel = this.myRotationStepPanel.pp_addChild();
+        this.myRotationStepDecreaseButtonBackground = this.myRotationStepDecreaseButtonPanel.pp_addChild();
+        this.myRotationStepDecreaseButtonText = this.myRotationStepDecreaseButtonPanel.pp_addChild();
+        this.myRotationStepDecreaseButtonCursorTarget = this.myRotationStepDecreaseButtonPanel.pp_addChild();
 
         // Scale
 
-        this.myScaleStepPanel = this.myScalePanel.pp_addObject();
-        this.myScaleStepText = this.myScaleStepPanel.pp_addObject();
-        this.myScaleStepCursorTarget = this.myScaleStepPanel.pp_addObject();
+        this.myScaleStepPanel = this.myScalePanel.pp_addChild();
+        this.myScaleStepText = this.myScaleStepPanel.pp_addChild();
+        this.myScaleStepCursorTarget = this.myScaleStepPanel.pp_addChild();
 
-        this.myScaleStepIncreaseButtonPanel = this.myScaleStepPanel.pp_addObject();
-        this.myScaleStepIncreaseButtonBackground = this.myScaleStepIncreaseButtonPanel.pp_addObject();
-        this.myScaleStepIncreaseButtonText = this.myScaleStepIncreaseButtonPanel.pp_addObject();
-        this.myScaleStepIncreaseButtonCursorTarget = this.myScaleStepIncreaseButtonPanel.pp_addObject();
+        this.myScaleStepIncreaseButtonPanel = this.myScaleStepPanel.pp_addChild();
+        this.myScaleStepIncreaseButtonBackground = this.myScaleStepIncreaseButtonPanel.pp_addChild();
+        this.myScaleStepIncreaseButtonText = this.myScaleStepIncreaseButtonPanel.pp_addChild();
+        this.myScaleStepIncreaseButtonCursorTarget = this.myScaleStepIncreaseButtonPanel.pp_addChild();
 
-        this.myScaleStepDecreaseButtonPanel = this.myScaleStepPanel.pp_addObject();
-        this.myScaleStepDecreaseButtonBackground = this.myScaleStepDecreaseButtonPanel.pp_addObject();
-        this.myScaleStepDecreaseButtonText = this.myScaleStepDecreaseButtonPanel.pp_addObject();
-        this.myScaleStepDecreaseButtonCursorTarget = this.myScaleStepDecreaseButtonPanel.pp_addObject();
+        this.myScaleStepDecreaseButtonPanel = this.myScaleStepPanel.pp_addChild();
+        this.myScaleStepDecreaseButtonBackground = this.myScaleStepDecreaseButtonPanel.pp_addChild();
+        this.myScaleStepDecreaseButtonText = this.myScaleStepDecreaseButtonPanel.pp_addChild();
+        this.myScaleStepDecreaseButtonCursorTarget = this.myScaleStepDecreaseButtonPanel.pp_addChild();
     }
 
     _setTransformHook() {

@@ -10,9 +10,11 @@ export class AddWLToWindowComponent extends Component {
 
     init() {
         if (this._myAdd) {
-            window.WL = {};
+            this._myWL = {};
             this._addProperties(WLAPI);
             this._addProperties(WLComponents);
+
+            window.WL = this._myWL;
         }
     }
 
@@ -20,12 +22,20 @@ export class AddWLToWindowComponent extends Component {
         let propertyNames = Object.getOwnPropertyNames(object);
         for (let propertyName of propertyNames) {
             if (object[propertyName] != undefined) {
-                window.WL[propertyName] = object[propertyName];
+                this._myWL[propertyName] = object[propertyName];
             }
         }
     }
 
-    onDestroy() {
-        window.WL = undefined;
+    onActivate() {
+        if (this._myWL != null) {
+            window.WL = this._myWL;
+        }
+    }
+
+    onDeactivate() {
+        if (this._myWL != null) {
+            delete window.WL;
+        }
     }
 }

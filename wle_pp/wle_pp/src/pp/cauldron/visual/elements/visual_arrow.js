@@ -46,12 +46,27 @@ export class VisualArrowParams extends AbstractVisualElementParams {
         return this;
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualArrowParams();
+        return new VisualArrowParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myThickness == other.myThickness &&
+            this.myLength == other.myLength &&
+            this.myLineMesh == other.myLineMesh &&
+            this.myArrowMesh == other.myArrowMesh &&
+            this.myMaterial == other.myMaterial &&
+            this.myLocal == other.myLocal &&
+            this.myArrowThickness == other.myArrowThickness &&
+            this.myArrowLength == other.myArrowLength &&
+            this.myShareArrowLengthWithLineWhenArrowLongerThanLength == other.myShareArrowLengthWithLineWhenArrowLongerThanLength &&
+            (this.myColor == other.myColor || (this.myColor != null && other.myColor != null && this.myColor.vec_equals(other.myColor))) &&
+            this.myStart.vec3_equals(other.myStart) &&
+            this.myDirection.vec3_equals(other.myDirection);
     }
 }
 
@@ -100,13 +115,13 @@ export class VisualArrow extends AbstractVisualElement {
     }
 
     _build() {
-        this._myArrowParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
-        this._myArrowObject = this._myArrowParentObject.pp_addObject();
+        this._myArrowParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addChild();
+        this._myArrowObject = this._myArrowParentObject.pp_addChild();
 
         this._myArrowMeshComponent = this._myArrowObject.pp_addComponent(MeshComponent);
     }
 
-    _refresh() {
+    _refreshHook() {
         // Implemented outside class definition
     }
 
@@ -124,13 +139,13 @@ export class VisualArrow extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualArrow.prototype._refresh = function () {
+VisualArrow.prototype._refreshHook = function () {
     let arrowPosition = vec3_create();
     let parentTranslate = vec3_create();
     let arrowScale = vec3_create();
 
     let forward = vec3_create(0, 1, 0);
-    return function _refresh() {
+    return function _refreshHook() {
         this._myArrowParentObject.pp_setParent(this._myParams.myParent, false);
 
         let arrowThickness = (this._myParams.myArrowThickness != null) ? this._myParams.myArrowThickness : this._myParams.myThickness * 1.5;
@@ -202,7 +217,7 @@ VisualArrow.prototype._refresh = function () {
     };
 }();
 
-VisualArrowParams.prototype._copyHook = function _copyHook(other) {
+VisualArrowParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myStart.vec3_copy(other.myStart);
     this.myDirection.vec3_copy(other.myDirection);
     this.myLength = other.myLength;
@@ -216,10 +231,10 @@ VisualArrowParams.prototype._copyHook = function _copyHook(other) {
     this.myArrowMesh = other.myArrowMesh;
     this.myLineMesh = other.myLineMesh;
 
-    if (other.myMaterial != null) {
+    if (other.myMaterial != null && deepCopy) {
         this.myMaterial = other.myMaterial.clone();
     } else {
-        this.myMaterial = null;
+        this.myMaterial = other.myMaterial;
     }
 
     if (other.myColor != null) {

@@ -1,4 +1,5 @@
 import { Emitter } from "@wonderlandengine/api";
+import { MathUtils } from "../utils/math_utils.js";
 
 export class Timer {
     private _myDuration: number = 0;
@@ -86,12 +87,18 @@ export class Timer {
         return this._myTimeLeft;
     }
 
-    public setTimeLeft(timeLeft: number): void {
+    public setTimeLeft(timeLeft: number, keepPercentage: boolean = false): void {
         if (this.isRunning()) {
+            const currentPercentage = this.getPercentage();
+
             this._myTimeLeft = Math.max(0, timeLeft);
 
             if (this._myTimeLeft > this._myDuration) {
                 this._myDuration = this._myTimeLeft;
+            }
+
+            if (keepPercentage && this._myTimeLeft > MathUtils.EPSILON) {
+                this._myDuration = this._myTimeLeft / Math.max(MathUtils.EPSILON, (1 - currentPercentage));
             }
         }
     }

@@ -1,11 +1,10 @@
-import { FSM } from "../../../../../../cauldron/fsm/fsm.js";
+import { FSM, SkipStateFunction } from "../../../../../../cauldron/fsm/fsm.js";
 import { XRUtils } from "../../../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../../../input/cauldron/input_types.js";
 import { MouseButtonID } from "../../../../../../input/cauldron/mouse.js";
 import { GamepadAxesID } from "../../../../../../input/gamepad/gamepad_buttons.js";
-import { quat2_create, vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
+import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
-import { CollisionCheckBridge } from "../../../../character_controller/collision/collision_check_bridge.js";
 import { PlayerLocomotionMovement } from "../player_locomotion_movement.js";
 import { PlayerLocomotionTeleportDetectionParams, PlayerLocomotionTeleportDetectionState } from "./player_locomotion_teleport_detection_state.js";
 import { PlayerLocomotionTeleportDetectionVisualizerParams } from "./player_locomotion_teleport_detection_visualizer.js";
@@ -14,10 +13,7 @@ import { PlayerLocomotionTeleportTeleportParams, PlayerLocomotionTeleportTelepor
 export class PlayerLocomotionTeleportParams {
 
     constructor(engine = Globals.getMainEngine()) {
-        this.myPlayerHeadManager = null;
         this.myPlayerTransformManager = null;
-
-        this.myCollisionCheckParams = null;
 
         this.myDetectionParams = new PlayerLocomotionTeleportDetectionParams();
         this.myVisualizerParams = new PlayerLocomotionTeleportDetectionVisualizerParams();
@@ -55,7 +51,7 @@ export class PlayerLocomotionTeleportRuntimeParams {
 
     constructor() {
         this.myTeleportPosition = vec3_create();
-        this.myTeleportRotationOnUp = 0;
+        this.myTeleportForward = vec3_create(0, 0, 0);
     }
 }
 
@@ -84,17 +80,23 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
 
         this._myFSM.addTransition("idle", "detect", "detect");
         this._myFSM.addTransition("detect", "teleport", "teleport");
-        this._myFSM.addTransition("detect", "idle", "cancel");
         this._myFSM.addTransition("teleport", "idle", "done");
 
         this._myFSM.addTransition("idle", "idle", "stop");
         this._myFSM.addTransition("detect", "idle", "stop");
         this._myFSM.addTransition("teleport", "idle", "stop", this._completeTeleport.bind(this));
 
+        this._myFSM.addTransition("idle", "idle", "cancel");
+        this._myFSM.addTransition("detect", "idle", "cancel");
+        this._myFSM.addTransition("teleport", "idle", "cancel", this._cancelTeleport.bind(this), SkipStateFunction.END);
+
         this._myFSM.init("init");
         this._myFSM.perform("start");
 
+        this._myIsUpdating = false;
         this._myDestroyed = false;
+
+        this.setActive(true);
     }
 
     start() {
@@ -102,6 +104,12 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
 
     stop() {
         this._myFSM.perform("stop");
+    }
+
+    cancelTeleport() {
+        if (!this._myIsUpdating && this._myFSM.isInState("teleport")) {
+            this._myFSM.perform("cancel");
+        }
     }
 
     canStop() {
@@ -121,6 +129,12 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
     }
 
     update(dt) {
+        if (!this.isActive()) return;
+
+        this._myIsUpdating = true;
+
+        this._prepareCollisionCheckParams();
+
         this._myLocomotionRuntimeParams.myTeleportJustPerformed = false;
 
         this._myFSM.update(dt);
@@ -129,9 +143,11 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
             this._applyGravity(dt);
         }
 
-        if (this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnGround) {
+        if (this._myTeleportParams.myPlayerTransformManager.getCollisionRuntimeParams().myIsOnGround) {
             this._myLocomotionRuntimeParams.myIsFlying = false;
         }
+
+        this._myIsUpdating = false;
     }
 
     _idleUpdate(dt) {
@@ -166,6 +182,63 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
         this._myTeleportState.completeTeleport();
     }
 
+    _cancelDetection() {
+        this._myDetectionState.cancel();
+    }
+
+    _cancelTeleport() {
+        this._myTeleportState.cancelTeleport();
+    }
+
+    _prepareCollisionCheckParams() {
+        //this._myTeleportCollisionCheckParams.copy(this._myTeleportParams.myPlayerTransformManager.getTeleportCollisionCheckParams());
+
+        // Increased so to let teleport on steep slopes from above (from below is fixed through detection myGroundAngleToIgnoreUpward)
+        // this._myTeleportCollisionCheckParams.myGroundAngleToIgnore = Math.max(61, this._myTeleportCollisionCheckParams.myGroundAngleToIgnore);
+
+        /*
+        this._myTeleportCollisionCheckParams.myExtraTeleportCheckCallback = function (
+            offsetTeleportPosition, endPosition, feetPosition, transformUp, transformForward, height,
+            collisionCheckParams, prevCollisionRuntimeParams, collisionRuntimeParams, newFeetPosition
+
+        ) {
+            let isTeleportingUpward = endPosition.vec3_isFartherAlongAxis(feetPosition, transformUp);
+            if (isTeleportingUpward) {
+                collisionRuntimeParams.myTeleportCanceled = collisionRuntimeParams.myGroundAngle > 30 + 0.0001;
+                console.error(collisionRuntimeParams.myTeleportCanceled);
+            }
+
+            return newFeetPosition;
+        }
+        */
+
+        /*
+         * This is needed for when u want to perform the teleport as a movement
+         * Maybe this should be another set of collsion check params copied from the smooth ones?
+         * When you teleport as move, u check with the teleport for the position, and this other params for the move, so that u can use a smaller
+         * cone, and sliding if desired
+         * If nothing is specified it's copied from the teleport and if greater than 90 cone is tuned down, and also the below settings are applied
+
+         * You could also do this if u want to perform the teleport as movement, instead of using the smooth
+         * but this will make even the final teleport check be halved
+         */
+
+        /*
+        this._myTeleportCollisionCheckParams.myHalfConeAngle = 90;
+        this._myTeleportCollisionCheckParams.myHalfConeSliceAmount = 3;
+        this._myTeleportCollisionCheckParams.myCheckHorizontalFixedForwardEnabled = false;
+        this._myTeleportCollisionCheckParams.mySplitMovementEnabled = true;
+        this._myTeleportCollisionCheckParams.mySplitMovementMaxLengthEnabled = true;
+        this._myTeleportCollisionCheckParams.mySplitMovementMaxLength = this._myTeleportCollisionCheckParams.myRadius * 0.75;
+        this._myTeleportCollisionCheckParams.mySplitMovementMinLengthEnabled = true;
+        this._myTeleportCollisionCheckParams.mySplitMovementMinLength = params.mySplitMovementMaxLength;
+        this._myTeleportCollisionCheckParams.mySplitMovementStopWhenHorizontalMovementCanceled = true;
+        this._myTeleportCollisionCheckParams.mySplitMovementStopWhenVerticalMovementCanceled = true;
+
+        this._myTeleportCollisionCheckParams.myDebugEnabled = true;
+        */
+    }
+
     destroy() {
         this._myDestroyed = true;
 
@@ -183,13 +256,13 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
 // IMPLEMENTATION
 
 PlayerLocomotionTeleport.prototype._applyGravity = function () {
+    let playerRotationQuat = quat_create();
     let playerUp = vec3_create();
     let gravityMovement = vec3_create();
-    let feetTransformQuat = quat2_create();
     return function _applyGravity(dt) {
         // If gravity is zero it's still important to move to remain snapped and gather proper surface data even when not teleporting
 
-        playerUp = this._myTeleportParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
+        playerUp = this._myTeleportParams.myPlayerTransformManager.getRotationQuat(playerRotationQuat).quat_getUp(playerUp);
 
         gravityMovement.vec3_zero();
         if (!this._myLocomotionRuntimeParams.myIsFlying && !this._myLocomotionRuntimeParams.myIsTeleporting) {
@@ -204,14 +277,11 @@ PlayerLocomotionTeleport.prototype._applyGravity = function () {
             this._myLocomotionRuntimeParams.myGravitySpeed = 0;
         }
 
-        feetTransformQuat = this._myTeleportParams.myPlayerHeadManager.getTransformFeetQuat(feetTransformQuat);
-        CollisionCheckBridge.getCollisionCheck(this._myTeleportParams.myEngine).move(gravityMovement, feetTransformQuat, this._myTeleportParams.myCollisionCheckParams, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
-        if (!this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myVerticalMovementCanceled) {
-            this._myTeleportParams.myPlayerHeadManager.teleportPositionFeet(this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myNewPosition);
-        }
+        this._myTeleportParams.myPlayerTransformManager.move(gravityMovement, false);
 
-        if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnCeiling ||
-            this._myLocomotionRuntimeParams.myGravitySpeed < 0 && this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnGround) {
+        const collisionRuntimeParams = this._myTeleportParams.myPlayerTransformManager.getCollisionRuntimeParams();
+        if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && collisionRuntimeParams.myIsOnCeiling ||
+            this._myLocomotionRuntimeParams.myGravitySpeed < 0 && collisionRuntimeParams.myIsOnGround) {
             this._myLocomotionRuntimeParams.myGravitySpeed = 0;
         }
     };

@@ -11,28 +11,32 @@ export class DebugTransformComponent extends Component {
 
     start() {
         this._myStarted = false;
-
-        if (Globals.isDebugEnabled(this.engine)) {
-            this._myDebugVisualTransform = null;
-
-            this._myDebugTransformParams = new VisualTransformParams(this.engine);
-            this._myDebugTransformParams.myLength = this._myLength;
-            this._myDebugTransformParams.myThickness = this._myThickness;
-
-            this._myDebugVisualTransform = new VisualTransform(this._myDebugTransformParams);
-            this._myDebugVisualTransform.setVisible(Globals.isDebugEnabled(this.engine));
-
-            this._myStarted = true;
-        }
     }
 
     update(dt) {
         if (Globals.isDebugEnabled(this.engine)) {
-            if (this._myStarted) {
+            if (!this._myStarted) {
+                this._myDebugVisualTransform = null;
+
+                this._myDebugTransformParams = new VisualTransformParams(this.engine);
+                this._myDebugTransformParams.myLength = this._myLength;
+                this._myDebugTransformParams.myThickness = this._myThickness;
+
+                this._myDebugVisualTransform = new VisualTransform(this._myDebugTransformParams);
+                this._myDebugVisualTransform.setVisible(Globals.isDebugEnabled(this.engine));
+
+                this._myStarted = true;
+            } else {
                 this.object.pp_getTransform(this._myDebugTransformParams.myTransform);
                 this._myDebugVisualTransform.paramsUpdated();
                 this._myDebugVisualTransform.setVisible(true);
             }
+        }
+    }
+
+    onDeactivate() {
+        if (this._myStarted) {
+            this._myDebugVisualTransform.setVisible(false);
         }
     }
 

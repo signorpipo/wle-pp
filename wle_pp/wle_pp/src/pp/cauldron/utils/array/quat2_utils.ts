@@ -54,6 +54,23 @@ export function clone<T extends Quaternion2>(quat: Readonly<T>): T {
     return quat.slice(0) as T;
 }
 
+export function equals(first: Readonly<Quaternion2>, second: Readonly<Quaternion2>, epsilon: number = 0): boolean {
+    let equals = first.length == second.length;
+
+    if (equals) {
+        equals &&= (Math.abs(first[0] - second[0]) <= epsilon);
+        equals &&= (Math.abs(first[1] - second[1]) <= epsilon);
+        equals &&= (Math.abs(first[2] - second[2]) <= epsilon);
+        equals &&= (Math.abs(first[3] - second[3]) <= epsilon);
+        equals &&= (Math.abs(first[4] - second[4]) <= epsilon);
+        equals &&= (Math.abs(first[5] - second[5]) <= epsilon);
+        equals &&= (Math.abs(first[6] - second[6]) <= epsilon);
+        equals &&= (Math.abs(first[7] - second[7]) <= epsilon);
+    }
+
+    return equals;
+}
+
 export function isNormalized(quat: Readonly<Quaternion2>, epsilon: number = MathUtils.EPSILON): boolean {
     return Math.abs(Quat2Utils.lengthSquared(quat) - 1) < epsilon;
 }
@@ -446,6 +463,7 @@ export const Quat2Utils = {
     set,
     copy,
     clone,
+    equals,
     isNormalized,
     normalize,
     length,

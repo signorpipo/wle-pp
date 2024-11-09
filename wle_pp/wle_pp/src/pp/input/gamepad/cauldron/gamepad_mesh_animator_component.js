@@ -24,13 +24,6 @@ export class GamepadMeshAnimatorComponent extends Component {
     };
 
     start() {
-        let gamepad = null;
-        if (this._myHandedness == HandednessIndex.LEFT) {
-            gamepad = Globals.getLeftGamepad(this.engine);
-        } else {
-            gamepad = Globals.getRightGamepad(this.engine);
-        }
-
         if (this._mySelect != null) {
             this._mySelectOriginalRotation = this._mySelect.pp_getRotationLocalQuat();
             this._mySelectOriginalLeft = this._mySelect.pp_getLeftLocal();
@@ -59,6 +52,29 @@ export class GamepadMeshAnimatorComponent extends Component {
         if (this._myBottomButton != null) {
             this._myBottomButtonOriginalPosition = this._myBottomButton.pp_getPositionLocal();
             this._myBottomButtonOriginalUp = this._myBottomButton.pp_getUpLocal();
+        }
+
+        this._myActivateOnNextUpdate = true;
+    }
+
+    update(dt) {
+        if (this._myActivateOnNextUpdate) {
+            this._onActivate();
+
+            this._myActivateOnNextUpdate = false;
+        }
+    }
+
+    onActivate() {
+        this._myActivateOnNextUpdate = true;
+    }
+
+    _onActivate() {
+        let gamepad = null;
+        if (this._myHandedness == HandednessIndex.LEFT) {
+            gamepad = Globals.getLeftGamepad(this.engine);
+        } else {
+            gamepad = Globals.getRightGamepad(this.engine);
         }
 
         // PRESSED
@@ -93,31 +109,104 @@ export class GamepadMeshAnimatorComponent extends Component {
         }
     }
 
+    onDeactivate() {
+        let gamepad = null;
+        if (this._myHandedness == HandednessIndex.LEFT) {
+            gamepad = Globals.getLeftGamepad(this.engine);
+        } else {
+            gamepad = Globals.getRightGamepad(this.engine);
+        }
+
+        if (gamepad != null) {
+            // PRESSED
+            if (this._myThumbstick != null) {
+                gamepad.unregisterButtonEventListener(GamepadButtonID.THUMBSTICK, GamepadButtonEvent.PRESS_START, this);
+                gamepad.unregisterButtonEventListener(GamepadButtonID.THUMBSTICK, GamepadButtonEvent.PRESS_END, this);
+            }
+
+            if (this._myTopButton != null) {
+                gamepad.unregisterButtonEventListener(GamepadButtonID.TOP_BUTTON, GamepadButtonEvent.PRESS_START, this);
+                gamepad.unregisterButtonEventListener(GamepadButtonID.TOP_BUTTON, GamepadButtonEvent.PRESS_END, this);
+            }
+
+            if (this._myBottomButton != null) {
+
+                gamepad.unregisterButtonEventListener(GamepadButtonID.BOTTOM_BUTTON, GamepadButtonEvent.PRESS_START, this);
+                gamepad.unregisterButtonEventListener(GamepadButtonID.BOTTOM_BUTTON, GamepadButtonEvent.PRESS_END, this);
+            }
+
+            // VALUE CHANGED
+            if (this._mySelect != null) {
+                gamepad.unregisterButtonEventListener(GamepadButtonID.SELECT, GamepadButtonEvent.VALUE_CHANGED, this);
+            }
+
+            if (this._mySqueeze != null) {
+                gamepad.unregisterButtonEventListener(GamepadButtonID.SQUEEZE, GamepadButtonEvent.VALUE_CHANGED, this);
+            }
+
+            // AXES CHANGED
+            if (this._myThumbstick != null) {
+                gamepad.unregisterAxesEventListener(GamepadAxesID.THUMBSTICK, GamepadAxesEvent.AXES_CHANGED, this);
+            }
+        }
+    }
+
     _thumbstickPressedStart() {
         // Implemented outside class definition
     }
 
     _thumbstickPressedEnd(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._myThumbstick.pp_setPositionLocal(this._myThumbstickOriginalPosition);
     }
 
     _topButtonPressedStart(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
+
         this._myTopButton.pp_translateAxisLocal(-this._myTopButtonPressOffset, this._myTopButtonOriginalUp);
     }
 
     _topButtonPressedEnd(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._myTopButton.pp_setPositionLocal(this._myTopButtonOriginalPosition);
     }
 
     _bottomButtonPressedStart(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._myBottomButton.pp_translateAxisLocal(-this._myBottomButtonPressOffset, this._myBottomButtonOriginalUp);
     }
 
     _bottomButtonPressedEnd(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._myBottomButton.pp_setPositionLocal(this._myBottomButtonOriginalPosition);
     }
 
     _selectValueChanged(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._mySelect.pp_setRotationLocalQuat(this._mySelectOriginalRotation);
 
         if (buttonInfo.getValue() > 0.00001) {
@@ -126,6 +215,11 @@ export class GamepadMeshAnimatorComponent extends Component {
     }
 
     _squeezeValueChanged(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._mySqueeze.pp_setPositionLocal(this._mySqueezeOriginalPosition);
         this._mySqueeze.pp_setRotationLocalQuat(this._mySqueezeOriginalRotation);
 
@@ -149,6 +243,11 @@ export class GamepadMeshAnimatorComponent extends Component {
     }
 
     _thumbstickValueChanged(axesInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         this._myThumbstick.pp_setRotationLocalQuat(this._myThumbstickOriginalRotation);
 
         let leftRotation = this._myThumbstickRotateAngle * axesInfo.myAxes[1];
@@ -171,6 +270,11 @@ export class GamepadMeshAnimatorComponent extends Component {
 GamepadMeshAnimatorComponent.prototype._thumbstickPressedStart = function () {
     let upTranslation = vec3_create();
     return function _thumbstickPressedStart(buttonInfo, gamepad) {
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
+
         // Since thumbstick object rotate you need to specifically use its original up to translate it
         this._myThumbstickOriginalUp.vec3_scale(-this._myThumbstickPressOffset, upTranslation);
         this._myThumbstick.pp_translateLocal(upTranslation);

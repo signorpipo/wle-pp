@@ -27,12 +27,21 @@ export class VisualPointParams extends AbstractVisualElementParams {
         this.myType = VisualElementDefaultType.POINT;
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualPointParams();
+        return new VisualPointParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myRadius == other.myRadius &&
+            this.myMesh == other.myMesh &&
+            this.myMaterial == other.myMaterial &&
+            this.myLocal == other.myLocal &&
+            (this.myColor == other.myColor || (this.myColor != null && other.myColor != null && this.myColor.vec_equals(other.myColor))) &&
+            this.myPosition.vec3_equals(other.myPosition);
     }
 }
 
@@ -70,12 +79,12 @@ export class VisualPoint extends AbstractVisualElement {
     }
 
     _build() {
-        this._myPointObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
+        this._myPointObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addChild();
 
         this._myPointMeshComponent = this._myPointObject.pp_addComponent(MeshComponent);
     }
 
-    _refresh() {
+    _refreshHook() {
         // Implemented outside class definition
     }
 
@@ -92,9 +101,9 @@ export class VisualPoint extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualPoint.prototype._refresh = function () {
+VisualPoint.prototype._refreshHook = function () {
     let rotation = vec3_create(0, 0, 0);
-    return function _refresh() {
+    return function _refreshHook() {
         this._myPointObject.pp_setParent(this._myParams.myParent, false);
 
         if (this._myParams.myLocal) {
@@ -129,16 +138,16 @@ VisualPoint.prototype._refresh = function () {
     };
 }();
 
-VisualPointParams.prototype._copyHook = function _copyHook(other) {
+VisualPointParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myPosition.vec3_copy(other.myPosition);
     this.myRadius = other.myRadius;
 
     this.myMesh = other.myMesh;
 
-    if (other.myMaterial != null) {
+    if (other.myMaterial != null && deepCopy) {
         this.myMaterial = other.myMaterial.clone();
     } else {
-        this.myMaterial = null;
+        this.myMaterial = other.myMaterial;
     }
 
     if (other.myColor != null) {

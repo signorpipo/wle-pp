@@ -33,6 +33,8 @@ export class EasyTuneBaseWidget {
         this._myResetImportLabelTimer = new Timer(0, false);
         this._myResetExportLabelTimer = new Timer(0, false);
 
+        this._myUnhoverCallbacks = [];
+
         this._myDestroyed = false;
 
     }
@@ -43,6 +45,12 @@ export class EasyTuneBaseWidget {
         }
 
         this._myUI.setVisible(visible);
+
+        if (this._myVisible != visible) {
+            for (const unhoverCallback of this._myUnhoverCallbacks) {
+                unhoverCallback();
+            }
+        }
 
         this._myVisible = visible;
     }
@@ -228,6 +236,8 @@ export class EasyTuneBaseWidget {
     _addListeners() {
         let ui = this._myUI;
 
+        this._myUnhoverCallbacks = [];
+
         ui.myNextButtonCursorTargetComponent.onDown.add(this._setScrollVariableActive.bind(this, true, 1, false));
         ui.myNextButtonCursorTargetComponent.onDownOnHover.add(this._setScrollVariableActive.bind(this, true, 1, false));
         ui.myNextButtonCursorTargetComponent.onUpWithDown.add(this._setScrollVariableActive.bind(this, false, 0, false));
@@ -235,6 +245,9 @@ export class EasyTuneBaseWidget {
         ui.myNextButtonCursorTargetComponent.onUnhover.add(this._setScrollVariableActive.bind(this, false, 0, true));
         ui.myNextButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myNextButtonBackgroundComponent.material));
         ui.myNextButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myNextButtonBackgroundComponent.material));
+
+        this._myUnhoverCallbacks.push(this._setScrollVariableActive.bind(this, false, 0, true));
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myNextButtonBackgroundComponent.material));
 
         ui.myPreviousButtonCursorTargetComponent.onDown.add(this._setScrollVariableActive.bind(this, true, -1, false));
         ui.myPreviousButtonCursorTargetComponent.onDownOnHover.add(this._setScrollVariableActive.bind(this, true, -1, false));
@@ -244,13 +257,20 @@ export class EasyTuneBaseWidget {
         ui.myPreviousButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
         ui.myPreviousButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
 
+        this._myUnhoverCallbacks.push(this._setScrollVariableActive.bind(this, false, 0, true));
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myPreviousButtonBackgroundComponent.material));
+
         ui.myImportButtonCursorTargetComponent.onUpWithDown.add(this._importVariables.bind(this));
         ui.myImportButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myImportButtonBackgroundComponent.material));
         ui.myImportButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myImportButtonBackgroundComponent.material));
 
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myImportButtonBackgroundComponent.material));
+
         ui.myExportButtonCursorTargetComponent.onUpWithDown.add(this._exportVariables.bind(this));
         ui.myExportButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myExportButtonBackgroundComponent.material));
         ui.myExportButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myExportButtonBackgroundComponent.material));
+
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myExportButtonBackgroundComponent.material));
 
         this._addListenersHook();
     }
@@ -300,8 +320,14 @@ export class EasyTuneBaseWidget {
         }
     }
 
+    setActive(active) {
+        this._myUI.setActive(active);
+    }
+
     destroy() {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         if (this._myUI != null) {
             this._myUI.destroy();

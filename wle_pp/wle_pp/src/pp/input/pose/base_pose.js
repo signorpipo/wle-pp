@@ -29,13 +29,15 @@ export class BasePose {
         this._myEngine = basePoseParams.myEngine;
 
         this._myPosition = vec3_create();
-        this._myRotationQuat = quat2_create();
+        this._myRotationQuat = quat_create();
 
         this._myPrevPosition = vec3_create();
         this._myPrevRotationQuat = quat_create();
 
         this._myLinearVelocity = vec3_create();
         this._myAngularVelocityRadians = vec3_create();
+
+        this._myActive = true;
 
         this._myValid = false;
         this._myLinearVelocityEmulated = true;
@@ -52,6 +54,44 @@ export class BasePose {
 
     getEngine() {
         return this._myEngine;
+    }
+
+    setActive(active) {
+        if (this._myActive != active) {
+            if (active) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myEngine);
+            } else {
+                this._myPosition.vec3_zero();
+                this._myRotationQuat.quat_identity();
+
+                this._myPrevPosition.vec3_zero();
+                this._myPrevRotationQuat.quat_identity();
+
+                this._myLinearVelocity.vec3_zero();
+                this._myAngularVelocityRadians.vec3_zero();
+
+                this._myValid = false;
+
+                this._myLinearVelocityEmulated = true;
+                this._myAngularVelocityEmulated = true;
+
+                if (this._myViewResetEventListener != null) {
+                    XRUtils.getReferenceSpace(this._myEngine)?.removeEventListener?.("reset", this._myViewResetEventListener);
+                }
+
+                this._myViewResetEventListener = null;
+
+                XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+            }
+        }
+
+        this._setActiveHook(active);
+
+        this._myActive = active;
+    }
+
+    isActive() {
+        return this._myActive;
     }
 
     // If the reference object is set, the transform will be converted using it as a parent,
@@ -158,11 +198,11 @@ export class BasePose {
         return this._myAngularVelocityEmulated;
     }
 
-    registerPrePoseUpdatedEventEventListener(id, listener) {
+    registerPrePoseUpdatedEventListener(id, listener) {
         this._myPrePoseUpdatedEventEmitter.add(listener, { id: id });
     }
 
-    unregisterPrePoseUpdatedEventEventListener(id) {
+    unregisterPrePoseUpdatedEventListener(id) {
         this._myPrePoseUpdatedEventEmitter.remove(id);
     }
 
@@ -174,19 +214,22 @@ export class BasePose {
         this._myPoseUpdatedEmitter.remove(id);
     }
 
-    registerPostPoseUpdatedEventEventListener(id, listener) {
+    registerPostPoseUpdatedEventListener(id, listener) {
         this._myPostPoseUpdatedEventEmitter.add(listener, { id: id });
     }
 
-    unregisterPostPoseUpdatedEventEventListener(id) {
+    unregisterPostPoseUpdatedEventListener(id) {
         this._myPostPoseUpdatedEventEmitter.remove(id);
     }
 
     start() {
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myEngine);
+        this._myActive = false;
+        this.setActive(true);
     }
 
     update(dt) {
+        if (!this._myActive) return;
+
         this._update(dt, true, false);
     }
 
@@ -217,6 +260,10 @@ export class BasePose {
     }
 
     _onViewResetHook() {
+
+    }
+
+    _setActiveHook(active) {
 
     }
 
@@ -318,7 +365,7 @@ export class BasePose {
             this._postUpdate(dt, updateVelocity, manualUpdate, null);
         }
 
-        // This is now a pre update event, it's a pre pose updated, which can be used to guarantee a bit of order if you want something
+        // This is not a pre update event, it's a pre pose updated, which can be used to guarantee a bit of order if you want something
         // to update before the stuff that updates on pose updated
         this._myPrePoseUpdatedEventEmitter.notify(dt, this, manualUpdate);
         this._myPoseUpdatedEmitter.notify(dt, this, manualUpdate);
@@ -368,10 +415,9 @@ export class BasePose {
     destroy() {
         this._myDestroyed = true;
 
-        this._destroyHook();
+        this.setActive(false);
 
-        XRUtils.getReferenceSpace(this._myEngine)?.removeEventListener?.("reset", this._myViewResetEventListener);
-        XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+        this._destroyHook();
     }
 
     isDestroyed() {

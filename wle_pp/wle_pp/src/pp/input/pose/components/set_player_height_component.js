@@ -14,8 +14,14 @@ export class SetPlayerHeightComponent extends Component {
         this.object.pp_setPositionLocal(vec3_create(localPosition[0], this._myEyesHeight, localPosition[2]));
 
         this._myHeightSetOnce = false;
+    }
 
+    onActivate() {
         XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this.engine);
+    }
+
+    onDeactivate() {
+        XRUtils.unregisterSessionStartEndEventListeners(this, this.engine);
     }
 
     _onXRSessionStart() {

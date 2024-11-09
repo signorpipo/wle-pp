@@ -290,6 +290,7 @@ CollisionCheckSurface.prototype._adjustVerticalMovementWithSurface = function ()
 
         let extraVerticalLength = 0;
         horizontalDirection = horizontalMovement.vec3_normalize(horizontalDirection);
+
         if (previousCollisionRuntimeParams.myIsOnGround) {
             let groundPerceivedAngle = this.computeSurfacePerceivedAngle(
                 previousCollisionRuntimeParams.myGroundNormal,

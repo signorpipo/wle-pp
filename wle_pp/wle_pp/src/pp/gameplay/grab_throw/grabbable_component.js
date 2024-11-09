@@ -24,11 +24,21 @@ export class GrabbableComponent extends Component {
         this._myGrabEmitter = new Emitter();      // Signature: listener(grabber, grabbable)
         this._myThrowEmitter = new Emitter();     // Signature: listener(grabber, grabbable)
         this._myReleaseEmitter = new Emitter();   // Signature: listener(grabber, grabbable, isThrow)
+
+        this._mySceneParent = null;
     }
 
     start() {
         this._myOldParent = this.object.pp_getParent();
         this._myPhysX = this.object.pp_getComponent(PhysXComponent);
+    }
+
+    update(dt) {
+        this._mySceneParent = Globals.getSceneObjects(this.engine)?.myDynamics ?? null;
+    }
+
+    onActivate() {
+        this._mySceneParent = Globals.getSceneObjects(this.engine)?.myDynamics ?? null;
     }
 
     onDeactivate() {
@@ -133,7 +143,7 @@ export class GrabbableComponent extends Component {
 
     _release() {
         if (this._myParentOnRelease == 0) {
-            this.object.pp_setParent(Globals.getSceneObjects(this.engine).myDynamics);
+            this.object.pp_setParent(this._mySceneParent);
         } else {
             this.object.pp_setParent(this._myOldParent);
         }

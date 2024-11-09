@@ -35,6 +35,10 @@ function _initMat4ExtensionProtoype(): void {
             return Mat4Utils.clone(this);
         },
 
+        mat4_equals(this: Readonly<Matrix4>, matrix: Readonly<Matrix4>, epsilon?: number): boolean {
+            return Mat4Utils.equals(this, matrix, epsilon);
+        },
+
         mat4_identity<T extends Matrix4>(this: T): T {
             return Mat4Utils.identity(this);
         },

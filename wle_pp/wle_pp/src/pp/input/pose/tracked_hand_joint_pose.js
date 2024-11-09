@@ -48,6 +48,17 @@ export class TrackedHandJointPose extends BasePose {
         }
     }
 
+    _setActiveHook(active) {
+        if (this.isActive() != active) {
+            if (!active) {
+                this._myInputSource = null;
+                this._myJointRadius = 0;
+
+                XRUtils.getSession(this.getEngine())?.removeEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
+            }
+        }
+    }
+
     _onXRSessionStartHook(manualCall, session) {
         this._myInputSourcesChangeEventListener = () => {
             this._myInputSource = null;
@@ -74,9 +85,5 @@ export class TrackedHandJointPose extends BasePose {
         this._myInputSource = null;
 
         this._myInputSourcesChangeEventListener = null;
-    }
-
-    _destroyHook() {
-        XRUtils.getSession(this.getEngine())?.removeEventListener("inputsourceschange", this._myInputSourcesChangeEventListener);
     }
 }

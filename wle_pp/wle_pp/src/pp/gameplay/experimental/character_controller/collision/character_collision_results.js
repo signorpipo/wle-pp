@@ -190,6 +190,8 @@ export class CharacterCollisionSplitMovementResults {
         this.myStepsToPerform = 0;
         this.myStepsPerformed = 0;
         this.myMovementInterrupted = false;
+        this.myMovementReduced = false;
+        this.myLastStepLongerThanMaxStepLength = false;
         this.myMovementChecked = vec3_create();
     }
 
@@ -421,6 +423,8 @@ CharacterCollisionSplitMovementResults.prototype.reset = function reset() {
     this.myStepsToPerform = 0;
     this.myStepsPerformed = 0;
     this.myMovementInterrupted = false;
+    this.myMovementReduced = false;
+    this.myLastStepLongerThanMaxStepLength = false;
     this.myMovementChecked.vec3_zero();
 };
 
@@ -428,6 +432,8 @@ CharacterCollisionSplitMovementResults.prototype.copy = function copy(other) {
     this.myStepsToPerform = other.myStepsToPerform;
     this.myStepsPerformed = other.myStepsPerformed;
     this.myMovementInterrupted = other.myMovementInterrupted;
+    this.myMovementReduced = other.myMovementReduced;
+    this.myLastStepLongerThanMaxStepLength = other.myLastStepLongerThanMaxStepLength;
     this.myMovementChecked.vec3_copy(other.myMovementChecked);
 };
 

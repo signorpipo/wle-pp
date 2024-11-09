@@ -31,17 +31,18 @@ export class BenchmarkMaxPhysXComponent extends Component {
     };
 
     start() {
-        this._myValid = false;
+        this._myActive = false;
 
-        if (!Globals.isDebugEnabled(this.engine)) return;
+        if (Globals.isDebugEnabled(this.engine)) {
+            this._myActive = true;
+        }
 
-        this._myValid = true;
         this._myStarted = false;
         this._myPreStartTimer = new Timer(1);
     }
 
     _start() {
-        this._myParentObject = this.object.pp_addObject();
+        this._myParentObject = this.object.pp_addChild();
 
         this._myRaycastParams = new RaycastParams(Globals.getPhysics(this.engine));
         this._myRaycastResults = new RaycastResults();
@@ -78,7 +79,7 @@ export class BenchmarkMaxPhysXComponent extends Component {
     }
 
     update(dt) {
-        if (!this._myValid) return;
+        if (!this._myActive || !Globals.isDebugEnabled(this.engine)) return;
 
         if (!this._myStarted) {
             this._myPreStartTimer.update(dt);
@@ -286,7 +287,7 @@ export class BenchmarkMaxPhysXComponent extends Component {
             scale *= this._myShapeScaleMultiplier;
         }
 
-        let physX = this._myParentObject.pp_addObject();
+        let physX = this._myParentObject.pp_addChild();
         physX.pp_setPosition(position);
 
         let physXComponent = physX.pp_addComponent(PhysXComponent, {
@@ -313,17 +314,63 @@ export class BenchmarkMaxPhysXComponent extends Component {
         }
     }
 
+    onActivate() {
+        if (this._myStaticPhysXCollectors != null) {
+            for (let collector of this._myStaticPhysXCollectors) {
+                collector.setActive(true);
+            }
+        }
+
+        if (this._myDynamicPhysXCollectors != null) {
+            for (let collector of this._myDynamicPhysXCollectors) {
+                collector.setActive(true);
+            }
+        }
+
+        if (this._myKinematicPhysXCollectors != null) {
+            for (let collector of this._myKinematicPhysXCollectors) {
+                collector.setActive(true);
+            }
+        }
+    }
+
+    onDeactivate() {
+        if (this._myStaticPhysXCollectors != null) {
+            for (let collector of this._myStaticPhysXCollectors) {
+                collector.setActive(false);
+            }
+        }
+
+        if (this._myDynamicPhysXCollectors != null) {
+            for (let collector of this._myDynamicPhysXCollectors) {
+                collector.setActive(false);
+            }
+        }
+
+        if (this._myKinematicPhysXCollectors != null) {
+            for (let collector of this._myKinematicPhysXCollectors) {
+                collector.setActive(false);
+            }
+        }
+    }
+
     onDestroy() {
-        for (let collector of this._myStaticPhysXCollectors) {
-            collector.destroy();
+        if (this._myStaticPhysXCollectors != null) {
+            for (let collector of this._myStaticPhysXCollectors) {
+                collector.destroy();
+            }
         }
 
-        for (let collector of this._myDynamicPhysXCollectors) {
-            collector.destroy();
+        if (this._myDynamicPhysXCollectors != null) {
+            for (let collector of this._myDynamicPhysXCollectors) {
+                collector.destroy();
+            }
         }
 
-        for (let collector of this._myKinematicPhysXCollectors) {
-            collector.destroy();
+        if (this._myKinematicPhysXCollectors != null) {
+            for (let collector of this._myKinematicPhysXCollectors) {
+                collector.destroy();
+            }
         }
     }
 }

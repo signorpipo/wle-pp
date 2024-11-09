@@ -10,6 +10,7 @@ export class TrackedHandPoseParams extends BasePoseParams {
         super(engine);
 
         this.myTrackedHandJointIDList = [];
+        this._myActive = true;
 
         if (addAllJointIDs) {
             for (let key in TrackedHandJointID) {
@@ -29,6 +30,7 @@ export class TrackedHandPose {
         this._myReferenceObject = trackedHandPoseParams.myReferenceObject;
 
         this._myEngine = trackedHandPoseParams.myEngine;
+        this._myActive = true;
 
         this._myTrackedHandJointPoseParams = new BasePoseParams(this._myEngine);
         this._myTrackedHandJointPoseParams.myForwardFixed = this._myForwardFixed;
@@ -42,6 +44,18 @@ export class TrackedHandPose {
         }
     }
 
+    setActive(active) {
+        this._myActive = active;
+
+        for (let jointPose of this._myTrackedHandJointPoses) {
+            jointPose.setActive(active);
+        }
+    }
+
+    isActive() {
+        return this._myActive;
+    }
+
     start() {
         for (let jointPoseKey in this._myTrackedHandJointPoses) {
             let jointPose = this._myTrackedHandJointPoses[jointPoseKey];
@@ -50,6 +64,8 @@ export class TrackedHandPose {
     }
 
     update(dt) {
+        if (!this._myActive) return;
+
         for (let jointPoseKey in this._myTrackedHandJointPoses) {
             let jointPose = this._myTrackedHandJointPoses[jointPoseKey];
             jointPose.update(dt);
@@ -57,7 +73,7 @@ export class TrackedHandPose {
     }
 
     getEngine() {
-        this._myEngine;
+        return this._myEngine;
     }
 
     getHandedness() {
@@ -128,6 +144,8 @@ export class TrackedHandPose {
 
     destroy() {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         for (let jointPose of this._myTrackedHandJointPoses) {
             jointPose.destroy();

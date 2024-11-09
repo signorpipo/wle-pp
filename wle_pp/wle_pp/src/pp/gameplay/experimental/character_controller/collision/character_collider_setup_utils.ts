@@ -1,79 +1,101 @@
+import { Object3D } from "@wonderlandengine/api";
 import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags.js";
 import { CharacterColliderSetup, CharacterColliderSlideFlickerPreventionMode } from "./character_collider_setup.js";
 
-export let CharacterColliderSetupSimplifiedCreationAccuracyLevel = {
-    VERY_LOW: 0,
-    LOW: 1,
-    MEDIUM: 2,
-    HIGH: 3,
-    VERY_HIGH: 4
+export enum CharacterColliderSetupSimplifiedCreationAccuracyLevel {
+    VERY_LOW = 0,
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 3,
+    VERY_HIGH = 4
 };
 
 export class CharacterColliderSetupSimplifiedCreationParams {
 
-    constructor() {
-        this.myHeight = 0;
-        this.myRadius = 0;
+    public myHeight: number = 0;
+    public myRadius: number = 0;
+    public myFeetRadius: number | null = null;
 
-        this.myAccuracyLevel = CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW;
+    public myAccuracyLevel: CharacterColliderSetupSimplifiedCreationAccuracyLevel = CharacterColliderSetupSimplifiedCreationAccuracyLevel.VERY_LOW;
 
-        this.myIsPlayer = false;
+    public myIsPlayer: boolean = false;
 
-        this.myCheckOnlyFeet = false;
+    /**
+     * If you enable this, you might also want to disable {@link myCheckCeilings},  
+     * since it doesn't make much sense to check for ceilings when not checking the height
+     */
+    public myCheckOnlyFeet: boolean = false;
 
-        this.myMaxSpeed = 0;
-        this.myAverageFPS = 72;
+    /**
+     * If you enable this, you might also want to disable {@link myCheckOnlyFeet},  
+     * since it doesn't make much sense to check for ceilings without also checking the height
+     */
+    public myCheckCeilings: boolean = false;
 
-        this.myCanFly = false;
+    public myMaxMovementSteps: number | null = null;
 
-        this.myShouldSlideAlongWall = false;
+    public myShouldSlideAlongWall: boolean = false;
 
-        this.myCollectGroundInfo = false;
-        this.myShouldSnapOnGround = false;
-        this.myMaxDistanceToSnapOnGround = 0;
-        this.myMaxWalkableGroundAngle = 0;
-        this.myMaxWalkableGroundStepHeight = 0;
-        this.myShouldNotFallFromEdges = false;
 
-        this.myHorizontalCheckBlockLayerFlags = new PhysicsLayerFlags();
-        this.myHorizontalCheckObjectsToIgnore = [];
 
-        this.myVerticalCheckBlockLayerFlags = new PhysicsLayerFlags();
-        this.myVerticalCheckObjectsToIgnore = [];
+    public myCollectGroundInfo: boolean = false;
+    public myShouldSnapOnGround: boolean = false;
+    public myMaxDistanceToSnapOnGround: number = 0;
+    public myMaxWalkableGroundAngle: number = 0;
+    public myMaxWalkableGroundStepHeight: number = 0;
 
-        this.myHorizontalCheckDebugEnabled = false;
-        this.myVerticalCheckDebugEnabled = false;
-    }
+    /**
+     * Normally, the ground params are used for the ceiling too, but this needs to be a different setting,  
+     * since allowing walkable steps on ceiling might create issues with view occlusion for the player (especially with a high value)  
+     * since you can go more under some low ceiling making the occlusion head collide with it
+     * 
+     * Settings it to zero is safer, but means that the ceilings physx must be more flat, because it's easier that a small ceiling bump now blocks you
+     */
+    public myMaxWalkableCeilingStepHeight: number = 0;
+
+    public myShouldNotFallFromEdges: boolean = false;
+
+
+
+    public myHorizontalCheckBlockLayerFlags: PhysicsLayerFlags = new PhysicsLayerFlags();
+    public myHorizontalCheckObjectsToIgnore: Object3D[] = [];
+
+    public myVerticalCheckBlockLayerFlags: PhysicsLayerFlags = new PhysicsLayerFlags();
+    public myVerticalCheckObjectsToIgnore: Object3D[] = [];
+
+    public myHorizontalCheckDebugEnabled: boolean = false;
+    public myVerticalCheckDebugEnabled: boolean = false;
 }
 
-export function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = new CharacterColliderSetup()) {
+export function createSimplified(simplifiedCreationParams: Readonly<CharacterColliderSetupSimplifiedCreationParams>, outCharacterColliderSetup: CharacterColliderSetup = new CharacterColliderSetup()): CharacterColliderSetup {
     outCharacterColliderSetup.myHeight = simplifiedCreationParams.myHeight;
     outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckConeRadius = simplifiedCreationParams.myRadius;
-    outCharacterColliderSetup.myVerticalCheckParams.myVerticalCheckCircumferenceRadius = simplifiedCreationParams.myRadius / 2;
+    outCharacterColliderSetup.myVerticalCheckParams.myVerticalCheckCircumferenceRadius = simplifiedCreationParams.myFeetRadius ?? simplifiedCreationParams.myRadius / 2;
 
     outCharacterColliderSetup.myVerticalCheckParams.myVerticalCheckFixedForwardEnabled = true;
     outCharacterColliderSetup.myVerticalCheckParams.myVerticalCheckFixedForward.vec3_set(0, 0, 1);
 
-    if (!simplifiedCreationParams.myCheckOnlyFeet || simplifiedCreationParams.myCanFly) {
+    if (!simplifiedCreationParams.myCheckOnlyFeet) {
         outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalHeightCheckEnabled = true;
         outCharacterColliderSetup.myVerticalCheckParams.myVerticalPositionCheckEnabled = true;
     }
 
     outCharacterColliderSetup.myWallSlideParams.myWallSlideEnabled = simplifiedCreationParams.myShouldSlideAlongWall;
 
+
+
     outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore = simplifiedCreationParams.myMaxWalkableGroundStepHeight;
 
-
-
+    outCharacterColliderSetup.myGroundParams.mySurfaceSnapEnabled = simplifiedCreationParams.myShouldSnapOnGround;
     outCharacterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance = simplifiedCreationParams.myMaxDistanceToSnapOnGround;
+    outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled = true;
     outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = simplifiedCreationParams.myMaxDistanceToSnapOnGround > 0 ?
         simplifiedCreationParams.myMaxDistanceToSnapOnGround : (simplifiedCreationParams.myRadius > 0.1) ? 0.1 : 0.01;
     outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore);
+
     outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = simplifiedCreationParams.myRadius * 0.75;
 
     outCharacterColliderSetup.myGroundParams.myCollectSurfaceInfo = simplifiedCreationParams.myCollectGroundInfo || simplifiedCreationParams.myMaxWalkableGroundAngle > 0;
-    outCharacterColliderSetup.myGroundParams.mySurfaceSnapEnabled = simplifiedCreationParams.myShouldSnapOnGround;
-    outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled = true;
     outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore = simplifiedCreationParams.myMaxWalkableGroundAngle;
 
     outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxOutsideDistance = 0.001;
@@ -89,16 +111,23 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
     outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = true;
     outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = true;
 
-    if (simplifiedCreationParams.myCanFly) {
-        outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore = outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore;
+    if (simplifiedCreationParams.myShouldNotFallFromEdges) {
+        outCharacterColliderSetup.myGroundParams.myMovementMustStayOnSurface = true;
+        outCharacterColliderSetup.myGroundParams.myMovementMustStayOnSurfaceAngleDownhill = Math.max(60, outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore);
+    }
+
+
+    outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore = simplifiedCreationParams.myMaxWalkableCeilingStepHeight;
+
+    if (simplifiedCreationParams.myCheckCeilings) {
+        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutEnabled = outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled;
+        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance;
+        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore);
+
+        outCharacterColliderSetup.myCeilingParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft;
 
         outCharacterColliderSetup.myCeilingParams.myCollectSurfaceInfo = outCharacterColliderSetup.myGroundParams.myCollectSurfaceInfo;
-        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutEnabled = outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled;
         outCharacterColliderSetup.myCeilingParams.mySurfaceAngleToIgnore = outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore;
-
-        outCharacterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance;
-        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance;
-        outCharacterColliderSetup.myCeilingParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft;
 
         outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxOutsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxOutsideDistance;
         outCharacterColliderSetup.myCeilingParams.myOnSurfaceMaxInsideDistance = outCharacterColliderSetup.myGroundParams.myOnSurfaceMaxInsideDistance;
@@ -110,13 +139,7 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
         outCharacterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitOutsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitOutsideDistance;
         outCharacterColliderSetup.myCeilingParams.myCollectSurfaceCollisionHitInsideDistance = outCharacterColliderSetup.myGroundParams.myCollectSurfaceCollisionHitInsideDistance;
 
-        outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleDownhill;
         outCharacterColliderSetup.myCeilingParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill = outCharacterColliderSetup.myGroundParams.myHorizontalMovementAdjustVerticalMovementOverSurfacePerceivedAngleUphill;
-    }
-
-    if (simplifiedCreationParams.myShouldNotFallFromEdges) {
-        outCharacterColliderSetup.myGroundParams.myMovementMustStayOnSurface = true;
-        outCharacterColliderSetup.myGroundParams.myMovementMustStayOnSurfaceAngleDownhill = Math.max(60, outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore);
     }
 
 
@@ -133,6 +156,7 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
         outCharacterColliderSetup.myDebugParams.myVisualDebugEnabled = true;
         outCharacterColliderSetup.myDebugParams.myVisualDebugHorizontalMovementCheckEnabled = true;
         outCharacterColliderSetup.myDebugParams.myVisualDebugHorizontalPositionCheckEnabled = true;
+        outCharacterColliderSetup.myDebugParams.myVisualDebugSlideEnabled = true;
     }
 
     if (simplifiedCreationParams.myVerticalCheckDebugEnabled) {
@@ -211,6 +235,7 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
 
 
         outCharacterColliderSetup.myVerticalCheckParams.myVerticalMovementCheckPerformCheckOnBothSides = true;
+        outCharacterColliderSetup.myVerticalCheckParams.myVerticalPositionCheckPerformCheckOnBothSides = true;
 
         outCharacterColliderSetup.myVerticalCheckParams.myVerticalCheckCircumferenceSlices = 6;
         outCharacterColliderSetup.myVerticalCheckParams.myVerticalCheckCircumferenceRadialSteps = 2;
@@ -226,6 +251,15 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
             outCharacterColliderSetup.myWallSlideParams.myWallSlideFlickerPreventionCheckOnlyIfAlreadySliding = true;
             outCharacterColliderSetup.myWallSlideParams.myWallSlideFlickerPreventionForceCheckCounter = 4;
         }
+
+
+
+        outCharacterColliderSetup.mySplitMovementParams.mySplitMovementEnabled = true;
+        outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps = simplifiedCreationParams.myMaxMovementSteps;
+
+        const safeRadius = simplifiedCreationParams.myRadius * 0.75;
+        outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength = safeRadius;
+        outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength = safeRadius;
     }
 
     if (simplifiedCreationParams.myAccuracyLevel >= CharacterColliderSetupSimplifiedCreationAccuracyLevel.HIGH) {
@@ -261,17 +295,9 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
 
 
         outCharacterColliderSetup.myGroundParams.myBaseInsideCollisionCheckEnabled = true;
-        outCharacterColliderSetup.myCeilingParams.myBaseInsideCollisionCheckEnabled = true;
 
-
-
-        let safeRadius = simplifiedCreationParams.myRadius * 0.75;
-        if (simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS > safeRadius) {
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementEnabled = true;
-
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxSteps = Math.ceil((simplifiedCreationParams.myMaxSpeed / simplifiedCreationParams.myAverageFPS) / safeRadius);
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMaxStepLength = safeRadius;
-            outCharacterColliderSetup.mySplitMovementParams.mySplitMovementMinStepLength = safeRadius;
+        if (simplifiedCreationParams.myCheckCeilings) {
+            outCharacterColliderSetup.myCeilingParams.myBaseInsideCollisionCheckEnabled = true;
         }
     }
 
@@ -298,13 +324,16 @@ export function createSimplified(simplifiedCreationParams, outCharacterColliderS
 
 
         outCharacterColliderSetup.myGroundParams.myRecollectSurfaceInfoOnSurfaceCheckFailed = true;
-        outCharacterColliderSetup.myCeilingParams.myRecollectSurfaceInfoOnSurfaceCheckFailed = outCharacterColliderSetup.myGroundParams.myRecollectSurfaceInfoOnSurfaceCheckFailed;
+
+        if (simplifiedCreationParams.myCheckCeilings) {
+            outCharacterColliderSetup.myCeilingParams.myRecollectSurfaceInfoOnSurfaceCheckFailed = outCharacterColliderSetup.myGroundParams.myRecollectSurfaceInfoOnSurfaceCheckFailed;
+        }
     }
 
     return outCharacterColliderSetup;
 }
 
-export function createTeleportColliderSetupFromMovementColliderSetup(movementColliderSetup, outTeleportColliderSetup = new CharacterColliderSetup()) {
+export function createTeleportColliderSetupFromMovementColliderSetup(movementColliderSetup: Readonly<CharacterColliderSetup>, outTeleportColliderSetup: CharacterColliderSetup = new CharacterColliderSetup()): CharacterColliderSetup {
     outTeleportColliderSetup.copy(movementColliderSetup);
 
     outTeleportColliderSetup.myHorizontalCheckParams.myHorizontalCheckConeHalfAngle = 180;
@@ -318,7 +347,7 @@ export function createTeleportColliderSetupFromMovementColliderSetup(movementCol
     return outTeleportColliderSetup;
 }
 
-export let CharacterColliderSetupUtils = {
+export const CharacterColliderSetupUtils = {
     createSimplified,
     createTeleportColliderSetupFromMovementColliderSetup
-};
+} as const;

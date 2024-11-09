@@ -51,6 +51,19 @@ export function clone<T extends Vector4>(vector: Readonly<T>): T {
     return vector.slice(0) as T;
 }
 
+export function equals(first: Readonly<Vector4>, second: Readonly<Vector4>, epsilon: number = 0): boolean {
+    let equals = first.length == second.length;
+
+    if (equals) {
+        equals &&= (Math.abs(first[0] - second[0]) <= epsilon);
+        equals &&= (Math.abs(first[1] - second[1]) <= epsilon);
+        equals &&= (Math.abs(first[2] - second[2]) <= epsilon);
+        equals &&= (Math.abs(first[3] - second[3]) <= epsilon);
+    }
+
+    return equals;
+}
+
 export function lerp<T extends Vector4>(from: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number): T;
 export function lerp<T extends Vector4>(from: Readonly<Vector4>, to: Readonly<Vector4>, interpolationFactor: number, out: T): T;
 export function lerp<T extends Vector4, U extends Vector4>(from: Readonly<T>, to: Readonly<Vector4>, interpolationFactor: number, out: T | U = Vec4Utils.clone(from)): T | U {
@@ -80,6 +93,7 @@ export const Vec4Utils = {
     set,
     copy,
     clone,
+    equals,
     lerp,
     interpolate
 } as const;

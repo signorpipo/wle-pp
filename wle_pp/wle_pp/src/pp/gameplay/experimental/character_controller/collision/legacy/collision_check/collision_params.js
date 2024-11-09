@@ -1,5 +1,5 @@
 import { PhysicsLayerFlags } from "../../../../../../cauldron/physics/physics_layer_flags.js";
-import { RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params.js";
+import { RaycastBlockColliderType, RaycastHit } from "../../../../../../cauldron/physics/physics_raycast_params.js";
 import { quat_create, vec3_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 
 export class CollisionCheckParams {
@@ -8,14 +8,17 @@ export class CollisionCheckParams {
         this.mySplitMovementEnabled = false;
         this.mySplitMovementMaxLength = 0;
         this.mySplitMovementMaxLengthEnabled = false;
+        this.mySplitMovementMaxLengthLastStepCanBeLonger = false;
         this.mySplitMovementMaxSteps = 0;
         this.mySplitMovementMaxStepsEnabled = false;
         this.mySplitMovementMinLength = 0;
         this.mySplitMovementMinLengthEnabled = false;
         this.mySplitMovementStopWhenHorizontalMovementCanceled = false;
         this.mySplitMovementStopWhenVerticalMovementCanceled = false;
+        this.mySplitMovementStopWhenVerticalMovementReduced = false;
         this.mySplitMovementStopCallback = null;                        // Signature: callback(collisionRuntimeParams)
         this.mySplitMovementStopReturnPrevious = false;
+        this.mySplitMovementStopAndFailIfMovementWouldBeReduced = false; // It means the overall movement would be reduced due to max steps for example
 
         this.myRadius = 0;
         this.myDistanceFromFeetToIgnore = 0;
@@ -99,6 +102,7 @@ export class CollisionCheckParams {
         this.myCheckVerticalFixedForwardEnabled = false;
         this.myCheckVerticalFixedForward = vec3_create();
         this.myCheckVerticalBothDirection = false;
+        this.myCheckVerticalPositionBothDirection = false;
 
         this.mySnapOnGroundEnabled = false;
         this.mySnapOnGroundExtraDistance = 0;
@@ -242,8 +246,16 @@ export class CollisionCheckParams {
         this.myHorizontalBlockLayerFlags = new PhysicsLayerFlags();
         this.myHorizontalObjectsToIgnore = [];
 
+        // #TODO it should just hit NORMAL colliders, but for perf reasons since I need to get the component from the object it's better to keep it like this
+        // When changing this to NORMAL, do also remember to update the other place like player teleport where BOTH is also used to NORMAL
+        this.myHorizontalBlockColliderType = RaycastBlockColliderType.BOTH;
+
         this.myVerticalBlockLayerFlags = new PhysicsLayerFlags();
         this.myVerticalObjectsToIgnore = [];
+
+        // #TODO it should just hit NORMAL colliders, but for perf reasons since I need to get the component from the object it's better to keep it like this
+        // When changing this to NORMAL, do also remember to update the other place like player teleport where BOTH is also used to NORMAL
+        this.myVerticalBlockColliderType = RaycastBlockColliderType.BOTH;
 
         this.myExtraMovementCheckCallback = null;              // Signature: callback(startMovement, endMovement, currentPosition, currentTransformUp, currentTransformForward, currentHeight, collisionCheckParams, prevCollisionRuntimeParams, outCollisionRuntimeParams, outFixedMovement) -> outFixedMovement
         this.myExtraTeleportCheckCallback = null;              // Signature: callback(collisionRuntimeParams) -> bool
@@ -260,20 +272,29 @@ export class CollisionCheckParams {
         this.myDebugCeilingInfoEnabled = false;
         this.myDebugRuntimeParamsEnabled = false;
         this.myDebugMovementEnabled = false;
+
+        /** Internal Flags */
+
+        this._myInternalSplitMovementMaxStepsDisabled = false; // Specifically used when the movement should be tested completely and not stop on max steps
     }
 
     copy(other) {
+        if (this == other) return;
+
         this.mySplitMovementEnabled = other.mySplitMovementEnabled;
         this.mySplitMovementMaxLength = other.mySplitMovementMaxLength;
         this.mySplitMovementMaxLengthEnabled = other.mySplitMovementMaxLengthEnabled;
+        this.mySplitMovementMaxLengthLastStepCanBeLonger = other.mySplitMovementMaxLengthLastStepCanBeLonger;
         this.mySplitMovementMaxSteps = other.mySplitMovementMaxSteps;
         this.mySplitMovementMaxStepsEnabled = other.mySplitMovementMaxStepsEnabled;
         this.mySplitMovementMinLength = other.mySplitMovementMinLength;
         this.mySplitMovementMinLengthEnabled = other.mySplitMovementMinLengthEnabled;
         this.mySplitMovementStopWhenHorizontalMovementCanceled = other.mySplitMovementStopWhenHorizontalMovementCanceled;
         this.mySplitMovementStopWhenVerticalMovementCanceled = other.mySplitMovementStopWhenVerticalMovementCanceled;
+        this.mySplitMovementStopWhenVerticalMovementReduced = other.mySplitMovementStopWhenVerticalMovementReduced;
         this.mySplitMovementStopCallback = other.mySplitMovementStopCallback;
         this.mySplitMovementStopReturnPrevious = other.mySplitMovementStopReturnPrevious;
+        this.mySplitMovementStopAndFailIfMovementWouldBeReduced = other.mySplitMovementStopAndFailIfMovementWouldBeReduced;
 
         this.myRadius = other.myRadius;
         this.myDistanceFromFeetToIgnore = other.myDistanceFromFeetToIgnore;
@@ -337,6 +358,7 @@ export class CollisionCheckParams {
         this.myCheckVerticalFixedForwardEnabled = other.myCheckVerticalFixedForwardEnabled;
         this.myCheckVerticalFixedForward.vec3_copy(other.myCheckVerticalFixedForward);
         this.myCheckVerticalBothDirection = other.myCheckVerticalBothDirection;
+        this.myCheckVerticalPositionBothDirection = other.myCheckVerticalPositionBothDirection;
 
         this.mySnapOnGroundEnabled = other.mySnapOnGroundEnabled;
         this.mySnapOnGroundExtraDistance = other.mySnapOnGroundExtraDistance;
@@ -456,9 +478,11 @@ export class CollisionCheckParams {
 
         this.myHorizontalBlockLayerFlags.copy(other.myHorizontalBlockLayerFlags);
         this.myHorizontalObjectsToIgnore.pp_copy(other.myHorizontalObjectsToIgnore);
+        this.myHorizontalBlockColliderType = other.myHorizontalBlockColliderType;
 
         this.myVerticalBlockLayerFlags.copy(other.myVerticalBlockLayerFlags);
         this.myVerticalObjectsToIgnore.pp_copy(other.myVerticalObjectsToIgnore);
+        this.myVerticalBlockColliderType = other.myVerticalBlockColliderType;
 
         this.myExtraMovementCheckCallback = other.myExtraMovementCheckCallback;
         this.myExtraTeleportCheckCallback = other.myExtraTeleportCheckCallback;
@@ -475,6 +499,8 @@ export class CollisionCheckParams {
         this.myDebugCeilingInfoEnabled = other.myDebugCeilingInfoEnabled;
         this.myDebugRuntimeParamsEnabled = other.myDebugRuntimeParamsEnabled;
         this.myDebugMovementEnabled = other.myDebugMovementEnabled;
+
+        this._myInternalSplitMovementMaxStepsDisabled = other._myInternalSplitMovementMaxStepsDisabled;
     }
 }
 
@@ -490,6 +516,7 @@ export class CollisionRuntimeParams {
         this.myOriginalUp = vec3_create();
 
         this.myOffsetUp = vec3_create();
+        this.myTeleportForward = vec3_create();
 
         this.myOriginalMovement = vec3_create();
         this.myFixedMovement = vec3_create();
@@ -574,6 +601,8 @@ export class CollisionRuntimeParams {
         this.mySplitMovementSteps = 0;
         this.mySplitMovementStepsPerformed = 0;
         this.mySplitMovementStop = false;
+        this.mySplitMovementLastStepLongerThanMaxLength = false;
+        this.mySplitMovementReduced = false;
         this.mySplitMovementMovementChecked = vec3_create();
 
         this.myRealIsOnGround = false;
@@ -590,6 +619,7 @@ export class CollisionRuntimeParams {
         this.myOriginalUp.vec3_zero();
 
         this.myOffsetUp.vec3_zero();
+        this.myTeleportForward.vec3_zero();
 
         this.myOriginalMovement.vec3_zero();
         this.myFixedMovement.vec3_zero();
@@ -675,6 +705,8 @@ export class CollisionRuntimeParams {
         this.mySplitMovementSteps = 0;
         this.mySplitMovementStepsPerformed = 0;
         this.mySplitMovementStop = false;
+        this.mySplitMovementLastStepLongerThanMaxLength = false;
+        this.mySplitMovementReduced = false;
         this.mySplitMovementMovementChecked.vec3_zero();
 
         this.myRealIsOnGround = false;
@@ -682,6 +714,8 @@ export class CollisionRuntimeParams {
     }
 
     copy(other) {
+        if (this == other) return;
+
         this.myOriginalPosition.vec3_copy(other.myOriginalPosition);
         this.myNewPosition.vec3_copy(other.myNewPosition);
 
@@ -691,6 +725,7 @@ export class CollisionRuntimeParams {
         this.myOriginalUp.vec3_copy(other.myOriginalUp);
 
         this.myOffsetUp.vec3_copy(other.myOffsetUp);
+        this.myTeleportForward.vec3_copy(other.myTeleportForward);
 
         this.myOriginalMovement.vec3_copy(other.myOriginalMovement);
         this.myFixedMovement.vec3_copy(other.myFixedMovement);
@@ -774,6 +809,8 @@ export class CollisionRuntimeParams {
         this.mySplitMovementSteps = other.mySplitMovementSteps;
         this.mySplitMovementStepsPerformed = other.mySplitMovementStepsPerformed;
         this.mySplitMovementStop = other.mySplitMovementStop;
+        this.mySplitMovementLastStepLongerThanMaxLength = other.mySplitMovementLastStepLongerThanMaxLength;
+        this.mySplitMovementReduced = other.mySplitMovementReduced;
         this.mySplitMovementMovementChecked.vec3_copy(other.mySplitMovementMovementChecked);
 
         this.myRealIsOnGround = other.myRealIsOnGround;

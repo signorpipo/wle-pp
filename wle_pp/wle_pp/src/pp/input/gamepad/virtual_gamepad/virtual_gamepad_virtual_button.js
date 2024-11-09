@@ -18,7 +18,8 @@ export class VirtualGamepadVirtualButton {
         this._myVirtualGamepadParams = virtualGamepadParams;
         this._myParams = this._myVirtualGamepadParams.myButtonParams[virtualButtonHandedness][virtualGamepadButtonID];
 
-        this._build(buttonElementParent, virtualButtonHandedness, virtualGamepadButtonID);
+        this._myButtonElementParent = buttonElementParent;
+        this._build(virtualButtonHandedness, virtualGamepadButtonID);
 
         this._myPointerDownEventListener = this._onPointerDown.bind(this, this._myVirtualGamepadParams.myStopPropagatingPointerDownEvents);
         this._myPointerUpEventListener = this._onPointerUp.bind(this);
@@ -45,11 +46,35 @@ export class VirtualGamepadVirtualButton {
 
     setActive(active) {
         if (this._myActive != active) {
+            this._myActive = active;
+
             this.reset();
             this._myButtonIcon.reset();
-        }
 
-        this._myActive = active;
+            if (this._myActive) {
+                this._myButtonDetectionElement.addEventListener("pointerdown", this._myPointerDownEventListener);
+                document.body.addEventListener("pointerup", this._myPointerUpEventListener);
+
+                if (this._myVirtualGamepadParams.myReleaseOnPointerLeave) {
+                    document.body.addEventListener("pointerleave", this._myPointerLeaveEventListener);
+                }
+
+                this._myButtonDetectionElement.addEventListener("mouseenter", this._myMouseEnterEventListener);
+                this._myButtonDetectionElement.addEventListener("mouseleave", this._myMouseLeaveEventListener);
+
+                this._myButtonElementParent.appendChild(this._myButtonContainer);
+            } else {
+                this._myButtonDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
+
+                document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
+                document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
+
+                this._myButtonDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
+                this._myButtonDetectionElement.removeEventListener("mouseleave", this._myMouseLeaveEventListener);
+
+                this._myButtonContainer.remove();
+            }
+        }
     }
 
     setMouseHoverEnabled(hoverActive) {
@@ -114,7 +139,7 @@ export class VirtualGamepadVirtualButton {
         this._myButtonIcon.onMouseLeave(event);
     }
 
-    _build(buttonElementParent, virtualButtonHandedness, virtualButtonIndex) {
+    _build(virtualButtonHandedness, virtualButtonIndex) {
         // Config variables used for the sizes and the like
 
         let buttonSize = this._myVirtualGamepadParams.myButtonSize * this._myVirtualGamepadParams.myInterfaceScale;
@@ -164,7 +189,7 @@ export class VirtualGamepadVirtualButton {
         }
 
         this._myButtonContainer.style.transform = "rotate(" + currentAngle + "deg) translateX(" + this._createSizeValue(buttonsRingRadius, minSizeMultiplier) + ")";
-        buttonElementParent.appendChild(this._myButtonContainer);
+        this._myButtonElementParent.appendChild(this._myButtonContainer);
 
         this._myButtonElement = document.createElement("div");
         this._myButtonElement.style.position = "absolute";
@@ -205,17 +230,9 @@ export class VirtualGamepadVirtualButton {
     destroy() {
         this._myDestroyed = true;
 
-        this._myButtonDetectionElement.removeEventListener("pointerdown", this._myPointerDownEventListener);
-
-        document.body.removeEventListener("pointerup", this._myPointerUpEventListener);
-        document.body.removeEventListener("pointerleave", this._myPointerLeaveEventListener);
-
-        this._myButtonDetectionElement.removeEventListener("mouseenter", this._myMouseEnterEventListener);
-        this._myButtonDetectionElement.removeEventListener("mouseleave", this._myMouseLeaveEventListener);
+        this.setActive(false);
 
         this._myButtonIcon.destroy();
-
-        this._myButtonContainer.remove();
     }
 
     isDestroyed() {

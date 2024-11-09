@@ -70,4 +70,8 @@ export class PhysicsLayerFlags {
     setMask(layerMask) {
         this._myLayerMask = layerMask;
     }
+
+    equals(other) {
+        return this._myLayerMask == other._myLayerMask;
+    }
 }

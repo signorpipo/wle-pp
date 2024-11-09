@@ -8,62 +8,64 @@ export class VisualManagerComponent extends Component {
     static TypeName = "pp-visual-manager";
 
     init() {
-        this._myVisualManager = null;
+        this._myVisualManager = new VisualManager(this.engine);
 
-        // Prevents double global from same engine
-        if (!Globals.hasVisualManager(this.engine)) {
-            this._myVisualManager = new VisualManager(this.engine);
-
-            Globals.setVisualManager(this._myVisualManager, this.engine);
-        }
-
-        // Prevents double global from same engine
-        if (!Globals.hasVisualResources(this.engine)) {
-            this._myVisualResources = new VisualResources();
-
-            Globals.setVisualResources(this._myVisualResources, this.engine);
-        }
+        this._myVisualResources = new VisualResources();
     }
 
     start() {
-        if (this._myVisualResources != null) {
-            this._myVisualResources.myDefaultMaterials.myMesh = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
+        this._myVisualResources.myDefaultMaterials.myMesh = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
 
-            this._myVisualResources.myDefaultMaterials.myText = Globals.getDefaultMaterials(this.engine).myText.clone();
+        this._myVisualResources.myDefaultMaterials.myText = Globals.getDefaultMaterials(this.engine).myText.clone();
 
-            this._myVisualResources.myDefaultMaterials.myRight = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
-            this._myVisualResources.myDefaultMaterials.myRight.color = vec4_create(1, 0, 0, 1);
-            this._myVisualResources.myDefaultMaterials.myUp = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
-            this._myVisualResources.myDefaultMaterials.myUp.color = vec4_create(0, 1, 0, 1);
-            this._myVisualResources.myDefaultMaterials.myForward = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
-            this._myVisualResources.myDefaultMaterials.myForward.color = vec4_create(0, 0, 1, 1);
+        this._myVisualResources.myDefaultMaterials.myRight = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
+        this._myVisualResources.myDefaultMaterials.myRight.color = vec4_create(1, 0, 0, 1);
+        this._myVisualResources.myDefaultMaterials.myUp = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
+        this._myVisualResources.myDefaultMaterials.myUp.color = vec4_create(0, 1, 0, 1);
+        this._myVisualResources.myDefaultMaterials.myForward = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
+        this._myVisualResources.myDefaultMaterials.myForward.color = vec4_create(0, 0, 1, 1);
 
-            this._myVisualResources.myDefaultMaterials.myRay = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
-            this._myVisualResources.myDefaultMaterials.myRay.color = vec4_create(0, 1, 0, 1);
-            this._myVisualResources.myDefaultMaterials.myHitNormal = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
-            this._myVisualResources.myDefaultMaterials.myHitNormal.color = vec4_create(1, 0, 0, 1);
-        }
+        this._myVisualResources.myDefaultMaterials.myRay = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
+        this._myVisualResources.myDefaultMaterials.myRay.color = vec4_create(0, 1, 0, 1);
+        this._myVisualResources.myDefaultMaterials.myHitNormal = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
+        this._myVisualResources.myDefaultMaterials.myHitNormal.color = vec4_create(1, 0, 0, 1);
 
-        if (this._myVisualManager != null) {
-            this._myVisualManager.start();
-        }
+        this._myVisualManager.start();
     }
 
     update(dt) {
-        if (this._myVisualManager != null) {
+        if (Globals.getVisualManager(this.engine) == this._myVisualManager) {
             this._myVisualManager.update(dt);
         }
     }
 
-    onDestroy() {
-        if (this._myVisualManager != null && Globals.getVisualManager(this.engine) == this._myVisualManager) {
-            Globals.removeVisualManager(this.engine);
+    onActivate() {
+        if (!Globals.hasVisualManager(this.engine)) {
+            this._myVisualManager.setActive(true);
 
-            this._myVisualManager.destroy();
+            Globals.setVisualManager(this._myVisualManager, this.engine);
         }
 
-        if (this._myVisualResources != null && Globals.getVisualResources(this.engine) == this._myVisualResources) {
+        if (!Globals.hasVisualResources(this.engine)) {
+            Globals.setVisualResources(this._myVisualResources, this.engine);
+        }
+    }
+
+    onDeactivate() {
+        this._myVisualManager.setActive(false);
+
+        if (Globals.getVisualManager(this.engine) == this._myVisualManager) {
+            Globals.removeVisualManager(this.engine);
+        }
+
+        if (Globals.getVisualResources(this.engine) == this._myVisualResources) {
             Globals.removeVisualResources(this.engine);
+        }
+    }
+
+    onDestroy() {
+        if (this._myVisualManager != null) {
+            this._myVisualManager.destroy();
         }
     }
 }

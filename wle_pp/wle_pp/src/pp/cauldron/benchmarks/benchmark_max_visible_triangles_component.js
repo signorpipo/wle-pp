@@ -1,4 +1,4 @@
-import { Alignment, Component, Justification, MeshComponent, Property, TextComponent } from "@wonderlandengine/api";
+import { Alignment, Component, MeshComponent, Property, TextComponent, VerticalAlignment } from "@wonderlandengine/api";
 import { vec2_create, vec3_create, vec4_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
 import { Timer } from "../cauldron/timer.js";
@@ -31,6 +31,139 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     };
 
     _start() {
+        if (this._myPlaneMaterial == null) {
+            this._myPlaneMaterial = Globals.getDefaultMaterials(this.engine).myPhongOpaque.clone();
+            this._myPlaneMaterial.diffuseColor = vec4_create(0.95, 0.95, 0.95, 1);
+            this._myPlaneMaterial.ambientColor = vec4_create(0, 0, 0, 1);
+            this._myPlaneMaterial.ambientFactor = 0.5;
+        }
+
+        if (this._myBackgroundMaterial == null) {
+            this._myBackgroundMaterial = Globals.getDefaultMaterials(this.engine).myPhongOpaque.clone();
+            this._myBackgroundMaterial.diffuseColor = vec4_create(0.25, 0.25, 0.25, 1);
+            this._myBackgroundMaterial.ambientColor = vec4_create(0, 0, 0, 1);
+            this._myBackgroundMaterial.ambientFactor = 0.5;
+        }
+
+        if (this._myTextMaterial == null) {
+            this._myTextMaterial = Globals.getDefaultMaterials(this.engine).myText.clone();
+        }
+
+        this._myLagColor = vec4_create(0.6, 0, 0, 1);
+        this._myNormalColor = vec4_create(0.25, 0.25, 0.25, 1);
+
+        this._myRealTrianglesAmount = 0;
+
+        let parent = this.object;
+        if (this._myDisplayInFrontOfPlayer) {
+            parent = Globals.getPlayerObjects(this.engine).myHead.pp_addChild();
+            parent.pp_rotateAxis(180, vec3_create(0, 1, 0));
+            parent.pp_translateLocal(vec3_create(0, 0, this._myDisplayInFrontOfPlayerDistance));
+        }
+
+        this._myTrianglesObject = parent.pp_addChild();
+
+        this._myBackgroundObject = this._myTrianglesObject.pp_addChild();
+        {
+            let meshComponent = this._myBackgroundObject.pp_addComponent(MeshComponent);
+            meshComponent.mesh = MeshUtils.createPlane(this.engine);
+            meshComponent.material = this._myBackgroundMaterial.clone();
+        }
+
+        this._myPlaneObject = this._myTrianglesObject.pp_addChild();
+        {
+            let meshComponent = this._myPlaneObject.pp_addComponent(MeshComponent);
+            meshComponent.mesh = this._createPlaneMesh(this._myPlaneTriangles);
+            this._myRealTrianglesAmount = meshComponent.mesh.indexData.length / 3;
+            meshComponent.material = this._myPlaneMaterial.clone();
+        }
+
+        let poolParams = new ObjectPoolParams();
+        if (!this._myCloneMesh) {
+            poolParams.myInitialPoolSize = 30000;
+        } else {
+            if (this._myRealTrianglesAmount <= 4) {
+                poolParams.myInitialPoolSize = 15000;
+            } else if (this._myRealTrianglesAmount <= 8) {
+                poolParams.myInitialPoolSize = 10000;
+            } else if (this._myRealTrianglesAmount <= 64) {
+                poolParams.myInitialPoolSize = 7500;
+            } else {
+                poolParams.myInitialPoolSize = 5000;
+            }
+        }
+        poolParams.myPercentageToAddWhenEmpty = 0;
+        poolParams.myAmountToAddWhenEmpty = 10000;
+        poolParams.myCloneParams = new ObjectCloneParams();
+        poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "material", this._myCloneMaterial);
+        poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "mesh", this._myCloneMesh);
+
+        this._myPoolID = this.type + "_" + Math.pp_randomUUID();
+        Globals.getObjectPoolManager(this.engine).addPool(this._myPoolID, new ObjectPool(this._myPlaneObject, poolParams));
+
+        this._myBackgroundObject.pp_setActive(false);
+        this._myPlaneObject.pp_setActive(false);
+
+        this._myTextsObject = this._myTrianglesObject.pp_addChild();
+        //this._myTextsObject.pp_addComponent(EasyTransformComponent);
+
+        this._myTriangleTextObject = this._myTextsObject.pp_addChild();
+        //this._myTriangleTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
+
+        this._myTriangleTextComponent = this._myTriangleTextObject.pp_addComponent(TextComponent);
+
+        this._myTriangleTextComponent.alignment = Alignment.Left;
+        this._myTriangleTextComponent.verticalAlignment = VerticalAlignment.Line;
+        this._myTriangleTextComponent.material = this._myTextMaterial.clone();
+        this._myTriangleTextComponent.material.color = this._myNormalColor;
+        this._myTriangleTextComponent.text = " ";
+        //this._myTriangleTextComponent.text = "Triangles: 9999999";
+
+        this._myPlaneTextObject = this._myTextsObject.pp_addChild();
+
+        this._myPlaneTextComponent = this._myPlaneTextObject.pp_addComponent(TextComponent);
+        //this._myPlaneTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
+
+        this._myPlaneTextComponent.alignment = Alignment.Left;
+        this._myPlaneTextComponent.verticalAlignment = VerticalAlignment.Line;
+        this._myPlaneTextComponent.material = this._myTextMaterial.clone();
+        this._myPlaneTextComponent.material.color = this._myNormalColor;
+        this._myPlaneTextComponent.text = " ";
+        //this._myPlaneTextComponent.text = "Planes: 9999999";
+
+        this._myFPSTextObject = this._myTextsObject.pp_addChild();
+
+        this._myFPSTextComponent = this._myFPSTextObject.pp_addComponent(TextComponent);
+        //this._myFPSTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
+
+        this._myFPSTextComponent.alignment = Alignment.Left;
+        this._myFPSTextComponent.verticalAlignment = VerticalAlignment.Line;
+        this._myFPSTextComponent.material = this._myTextMaterial.clone();
+        this._myFPSTextComponent.material.color = this._myNormalColor;
+        this._myFPSTextComponent.text = " ";
+        //this._myFPSTextComponent.text = "FPS: 99.99";
+
+        this._myDoneTextObject = this._myTrianglesObject.pp_addChild();
+
+        this._myDoneTextComponent = this._myDoneTextObject.pp_addComponent(TextComponent);
+        //this._myDoneTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
+
+        this._myDoneTextComponent.alignment = Alignment.Center;
+        this._myDoneTextComponent.verticalAlignment = VerticalAlignment.Line;
+        this._myDoneTextComponent.material = this._myTextMaterial.clone();
+        this._myDoneTextComponent.material.color = this._myNormalColor;
+        this._myDoneTextComponent.text = " ";
+        //this._myDoneTextComponent.text = "End";
+
+        this._myTextsObject.pp_setPositionLocal(vec3_create(0, 4.3, 0));
+        this._myTextsObject.pp_setScale(2.75);
+
+        this._myTriangleTextObject.pp_setPositionLocal(vec3_create(-1.4, 0, 0));
+        this._myPlaneTextObject.pp_setPositionLocal(vec3_create(0.55, 0, 0));
+        this._myFPSTextObject.pp_setPositionLocal(vec3_create(-0.315, 0, 0));
+        this._myDoneTextObject.pp_setPositionLocal(vec3_create(0, -4.6, 0));
+        this._myDoneTextObject.pp_setScale(4);
+
         this._myBackgroundSize = 4;
         this._myBackgroundObject.pp_setActive(true);
         this._myBackgroundObject.pp_setScale(this._myBackgroundSize + 0.1);
@@ -238,147 +371,14 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     }
 
     start() {
-        this._myValid = false;
+        this._myActive = false;
 
-        if (!Globals.isDebugEnabled(this.engine)) return;
-
-        this._myValid = true;
-
-        if (this._myPlaneMaterial == null) {
-            this._myPlaneMaterial = Globals.getDefaultMaterials(this.engine).myPhongOpaque.clone();
-            this._myPlaneMaterial.diffuseColor = vec4_create(0.95, 0.95, 0.95, 1);
-            this._myPlaneMaterial.ambientColor = vec4_create(0, 0, 0, 1);
-            this._myPlaneMaterial.ambientFactor = 0.5;
+        if (Globals.isDebugEnabled(this.engine)) {
+            this._myActive = true;
         }
-
-        if (this._myBackgroundMaterial == null) {
-            this._myBackgroundMaterial = Globals.getDefaultMaterials(this.engine).myPhongOpaque.clone();
-            this._myBackgroundMaterial.diffuseColor = vec4_create(0.25, 0.25, 0.25, 1);
-            this._myBackgroundMaterial.ambientColor = vec4_create(0, 0, 0, 1);
-            this._myBackgroundMaterial.ambientFactor = 0.5;
-        }
-
-        if (this._myTextMaterial == null) {
-            this._myTextMaterial = Globals.getDefaultMaterials(this.engine).myText.clone();
-        }
-
-        this._myLagColor = vec4_create(0.6, 0, 0, 1);
-        this._myNormalColor = vec4_create(0.25, 0.25, 0.25, 1);
-
-        this._myRealTrianglesAmount = 0;
-
-        let parent = this.object;
-        if (this._myDisplayInFrontOfPlayer) {
-            parent = Globals.getPlayerObjects(this.engine).myHead.pp_addObject();
-            parent.pp_rotateAxis(180, vec3_create(0, 1, 0));
-            parent.pp_translateLocal(vec3_create(0, 0, this._myDisplayInFrontOfPlayerDistance));
-        }
-
-        this._myTrianglesObject = parent.pp_addObject();
-
-        this._myBackgroundObject = this._myTrianglesObject.pp_addObject();
-        {
-            let meshComponent = this._myBackgroundObject.pp_addComponent(MeshComponent);
-            meshComponent.mesh = MeshUtils.createPlane(this.engine);
-            meshComponent.material = this._myBackgroundMaterial.clone();
-        }
-
-        this._myPlaneObject = this._myTrianglesObject.pp_addObject();
-        {
-            let meshComponent = this._myPlaneObject.pp_addComponent(MeshComponent);
-            meshComponent.mesh = this._createPlaneMesh(this._myPlaneTriangles);
-            this._myRealTrianglesAmount = meshComponent.mesh.indexData.length / 3;
-            meshComponent.material = this._myPlaneMaterial.clone();
-        }
-
-        let poolParams = new ObjectPoolParams();
-        if (!this._myCloneMesh) {
-            poolParams.myInitialPoolSize = 30000;
-        } else {
-            if (this._myRealTrianglesAmount <= 4) {
-                poolParams.myInitialPoolSize = 15000;
-            } else if (this._myRealTrianglesAmount <= 8) {
-                poolParams.myInitialPoolSize = 10000;
-            } else if (this._myRealTrianglesAmount <= 64) {
-                poolParams.myInitialPoolSize = 7500;
-            } else {
-                poolParams.myInitialPoolSize = 5000;
-            }
-        }
-        poolParams.myPercentageToAddWhenEmpty = 0;
-        poolParams.myAmountToAddWhenEmpty = 10000;
-        poolParams.myCloneParams = new ObjectCloneParams();
-        poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "material", this._myCloneMaterial);
-        poolParams.myCloneParams.myComponentDeepCloneParams.setDeepCloneComponentVariable(MeshComponent.TypeName, "mesh", this._myCloneMesh);
-
-        this._myPoolID = this.type + "_" + Math.pp_randomUUID();
-        Globals.getObjectPoolManager(this.engine).addPool(this._myPoolID, new ObjectPool(this._myPlaneObject, poolParams));
-
-        this._myBackgroundObject.pp_setActive(false);
-        this._myPlaneObject.pp_setActive(false);
 
         this._myStartTimer = new Timer(2);
         this._mySessionStarted = false;
-
-        this._myTextsObject = this._myTrianglesObject.pp_addObject();
-        //this._myTextsObject.pp_addComponent(EasyTransformComponent);
-
-        this._myTriangleTextObject = this._myTextsObject.pp_addObject();
-        //this._myTriangleTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
-
-        this._myTriangleTextComponent = this._myTriangleTextObject.pp_addComponent(TextComponent);
-
-        this._myTriangleTextComponent.alignment = Alignment.Left;
-        this._myTriangleTextComponent.justification = Justification.Line;
-        this._myTriangleTextComponent.material = this._myTextMaterial.clone();
-        this._myTriangleTextComponent.material.color = this._myNormalColor;
-        this._myTriangleTextComponent.text = " ";
-        //this._myTriangleTextComponent.text = "Triangles: 9999999";
-
-        this._myPlaneTextObject = this._myTextsObject.pp_addObject();
-
-        this._myPlaneTextComponent = this._myPlaneTextObject.pp_addComponent(TextComponent);
-        //this._myPlaneTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
-
-        this._myPlaneTextComponent.alignment = Alignment.Left;
-        this._myPlaneTextComponent.justification = Justification.Line;
-        this._myPlaneTextComponent.material = this._myTextMaterial.clone();
-        this._myPlaneTextComponent.material.color = this._myNormalColor;
-        this._myPlaneTextComponent.text = " ";
-        //this._myPlaneTextComponent.text = "Planes: 9999999";
-
-        this._myFPSTextObject = this._myTextsObject.pp_addObject();
-
-        this._myFPSTextComponent = this._myFPSTextObject.pp_addComponent(TextComponent);
-        //this._myFPSTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
-
-        this._myFPSTextComponent.alignment = Alignment.Left;
-        this._myFPSTextComponent.justification = Justification.Line;
-        this._myFPSTextComponent.material = this._myTextMaterial.clone();
-        this._myFPSTextComponent.material.color = this._myNormalColor;
-        this._myFPSTextComponent.text = " ";
-        //this._myFPSTextComponent.text = "FPS: 99.99";
-
-        this._myDoneTextObject = this._myTrianglesObject.pp_addObject();
-
-        this._myDoneTextComponent = this._myDoneTextObject.pp_addComponent(TextComponent);
-        //this._myDoneTextObject.pp_addComponent(EasyTransformComponent, { _myLocal: true });
-
-        this._myDoneTextComponent.alignment = Alignment.Center;
-        this._myDoneTextComponent.justification = Justification.Line;
-        this._myDoneTextComponent.material = this._myTextMaterial.clone();
-        this._myDoneTextComponent.material.color = this._myNormalColor;
-        this._myDoneTextComponent.text = " ";
-        //this._myDoneTextComponent.text = "End";
-
-        this._myTextsObject.pp_setPositionLocal(vec3_create(0, 4.3, 0));
-        this._myTextsObject.pp_setScale(2.75);
-
-        this._myTriangleTextObject.pp_setPositionLocal(vec3_create(-1.4, 0, 0));
-        this._myPlaneTextObject.pp_setPositionLocal(vec3_create(0.55, 0, 0));
-        this._myFPSTextObject.pp_setPositionLocal(vec3_create(-0.315, 0, 0));
-        this._myDoneTextObject.pp_setPositionLocal(vec3_create(0, -4.6, 0));
-        this._myDoneTextObject.pp_setScale(4);
 
         this._myDTHistory = [];
 
@@ -386,7 +386,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
     }
 
     update(dt) {
-        if (!this._myValid) return;
+        if (!this._myActive || !Globals.isDebugEnabled(this.engine)) return;
 
         if (this._myFramesToSkip == 0) {
             if (this._mySessionStarted || !this._myStartOnXRStart) {
@@ -406,6 +406,7 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
                             console.log("Target Frame Rate:", this._myStableFrameRate, "- Threshold: ", (this._myStableFrameRate - this._myTargetFrameRateThreshold));
                             console.log("");
                         }
+
                         this._start();
                     }
                 } else {
@@ -506,6 +507,10 @@ export class BenchmarkMaxVisibleTrianglesComponent extends Component {
         let mesh = MeshUtils.create(meshCreationParams);
 
         return mesh;
+    }
+
+    onDeactivate() {
+        Globals.getObjectPoolManager(this.engine)?.releaseAll(this._myPoolID);
     }
 
     onDestroy() {

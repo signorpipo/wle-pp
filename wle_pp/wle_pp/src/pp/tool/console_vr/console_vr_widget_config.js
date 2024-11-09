@@ -1,4 +1,4 @@
-import { Alignment, Collider, Justification } from "@wonderlandengine/api";
+import { Alignment, Collider, VerticalAlignment } from "@wonderlandengine/api";
 import { vec3_create, vec4_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { ToolHandedness } from "../cauldron/tool_types.js";
 import { ConsoleVRWidgetMessageType } from "./console_vr_types.js";
@@ -21,7 +21,7 @@ export class ConsoleVRWidgetConfig {
         this.myDefaultTextColor = vec4_create(255 / 255, 255 / 255, 255 / 255, 1);
 
         this.myTextAlignment = Alignment.Center;
-        this.myTextJustification = Justification.Middle;
+        this.myTextVerticalAlignment = VerticalAlignment.Middle;
         this.myTextColor = this.myDefaultTextColor;
 
         this.myMessageTypeColors = [];
@@ -46,7 +46,7 @@ export class ConsoleVRWidgetConfig {
 
         this.myMessagesTextStartString = ".\n"; // To avoid issue with text component padding
         this.myMessagesTextAlignment = Alignment.Left;
-        this.myMessagesTextJustification = Justification.Top;
+        this.myMessagesTextVerticalAlignment = VerticalAlignment.Top;
 
         this.myMessagesTextPositions = [];
         this.myMessagesTextPositions[ConsoleVRWidgetMessageType.LOG] = vec3_create(0, 0, 0.0002);

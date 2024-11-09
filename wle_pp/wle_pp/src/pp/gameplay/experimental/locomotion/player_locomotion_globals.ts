@@ -1,6 +1,5 @@
 import { WonderlandEngine } from "@wonderlandengine/api";
 import { Globals } from "../../../pp/globals.js";
-import { PlayerLocomotionComponent } from "./legacy/locomotion/components/player_locomotion_component.js";
 import { PlayerHeadManager } from "./legacy/locomotion/player_head_manager.js";
 import { PlayerLocomotion } from "./legacy/locomotion/player_locomotion.js";
 import { PlayerLocomotionRotate } from "./legacy/locomotion/player_locomotion_rotate.js";
@@ -9,38 +8,28 @@ import { PlayerObscureManager } from "./legacy/locomotion/player_obscure_manager
 import { PlayerTransformManager } from "./legacy/locomotion/player_transform_manager.js";
 import { PlayerLocomotionTeleport } from "./legacy/locomotion/teleport/player_locomotion_teleport.js";
 
-const _myPlayerLocomotionComponents: WeakMap<Readonly<WonderlandEngine>, PlayerLocomotionComponent> = new WeakMap();
-
-export function getPlayerLocomotionComponent(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): PlayerLocomotionComponent | null {
-    if (engine == null) return null;
-
-    return _myPlayerLocomotionComponents.get(engine) ?? null;
-}
-
-export function setPlayerLocomotionComponent(playerLocomotionComponent: PlayerLocomotionComponent, engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): void {
-    if (engine != null) {
-        _myPlayerLocomotionComponents.set(engine, playerLocomotionComponent);
-    }
-}
-
-export function removePlayerLocomotionComponent(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): void {
-    if (engine != null) {
-        _myPlayerLocomotionComponents.delete(engine);
-    }
-}
-
-export function hasPlayerLocomotionComponent(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): boolean {
-    return engine != null ? _myPlayerLocomotionComponents.has(engine) : false;
-}
+const _myPlayerLocomotions: WeakMap<Readonly<WonderlandEngine>, PlayerLocomotion> = new WeakMap();
 
 export function getPlayerLocomotion(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): PlayerLocomotion | null {
-    const playerLocomotionComponent = getPlayerLocomotionComponent(engine);
+    if (engine == null) return null;
 
-    if (playerLocomotionComponent != null) {
-        return playerLocomotionComponent.getPlayerLocomotion();
+    return _myPlayerLocomotions.get(engine) ?? null;
+}
+
+export function setPlayerLocomotion(playerLocomotionComponent: PlayerLocomotion, engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): void {
+    if (engine != null) {
+        _myPlayerLocomotions.set(engine, playerLocomotionComponent);
     }
+}
 
-    return null;
+export function removePlayerLocomotion(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): void {
+    if (engine != null) {
+        _myPlayerLocomotions.delete(engine);
+    }
+}
+
+export function hasPlayerLocomotion(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): boolean {
+    return engine != null ? _myPlayerLocomotions.has(engine) : false;
 }
 
 export function getPlayerHeadManager(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): PlayerHeadManager | null {

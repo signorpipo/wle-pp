@@ -27,6 +27,10 @@ function _initVec2ExtensionProtoype(): void {
             return Vec2Utils.clone(this);
         },
 
+        vec2_equals(this: Readonly<Vector2>, vector: Readonly<Vector2>, epsilon?: number): boolean {
+            return Vec2Utils.equals(this, vector, epsilon);
+        },
+
         vec2_length(this: Readonly<Vector2>): number {
             return Vec2Utils.length(this);
         },

@@ -112,8 +112,8 @@ export class PlayerHeadManager {
 
     private _myDestroyed: boolean = false;
 
-    private static _myResyncCounterFrames = 3;
-    private static _myIsSyncedDelayCounterFrames = 1;
+    private static readonly _myResyncCounterFrames = 3;
+    private static readonly _myIsSyncedDelayCounterFrames = 1;
 
     constructor(params: PlayerHeadManagerParams = new PlayerHeadManagerParams()) {
         this._myParams = params;
@@ -130,15 +130,32 @@ export class PlayerHeadManager {
 
         this._setCameraNonXRHeight(this._myHeightNonVR);
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myParams.myEngine);
+        this._myActive = false;
+        this.setActive(true);
     }
 
     public setActive(active: boolean): void {
-        if (active != this._myActive) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (this._myActive) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myParams.myEngine);
+            } else {
+                if (this._myViewResetEventListener != null) {
+                    XRUtils.getReferenceSpace(this._myParams.myEngine)?.removeEventListener?.("reset", this._myViewResetEventListener);
+                }
+
+                if (this._myVisibilityChangeEventListener != null) {
+                    XRUtils.getSession(this._myParams.myEngine)?.removeEventListener?.("visibilitychange", this._myVisibilityChangeEventListener);
+                }
+
+                XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+
+                this._onXRSessionEnd();
+            }
+
             this.cancelSync();
         }
-
-        this._myActive = active;
     }
 
     public getParams(): PlayerHeadManagerParams {
@@ -1235,11 +1252,6 @@ export class PlayerHeadManager {
         }
     }
 
-    private static readonly _getHeadTransformFromLocalSV =
-        {
-            direction: vec3_create(),
-            feetPosition: vec3_create()
-        };
     private _getHeadTransformFromLocal(transformLocal: Readonly<Quaternion2>): Quaternion2 {
         return this._myCurrentHead.pp_convertTransformLocalToWorldQuat(transformLocal);
     }
@@ -1280,9 +1292,7 @@ export class PlayerHeadManager {
     public destroy(): void {
         this._myDestroyed = true;
 
-        XRUtils.getReferenceSpace(this._myParams.myEngine)?.removeEventListener("reset", this._myViewResetEventListener!);
-        XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener!);
-        XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+        this.setActive(false);
     }
 
     public isDestroyed(): boolean {

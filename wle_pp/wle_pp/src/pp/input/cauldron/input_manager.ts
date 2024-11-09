@@ -25,6 +25,7 @@ export class InputManager {
     private readonly _myGamepadsManager: GamepadsManager = new GamepadsManager();
 
     private _myStarted: boolean = false;
+    private _myActive: boolean = true;
 
     private _myTrackedHandPosesEnabled: boolean = true;
     private _myTrackedHandPosesStarted: boolean = false;
@@ -74,6 +75,36 @@ export class InputManager {
         this._myTrackedHandPoses[Handedness.RIGHT].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
     }
 
+    public setActive(active: boolean): void {
+        this._myActive = active;
+
+        this._myMouse.setActive(active);
+        this._myKeyboard.setActive(active);
+
+        this._myHeadPose.setActive(active);
+
+        for (const rawHandedness in this._myHandPoses) {
+            const handedness = rawHandedness as Handedness;
+            this._myHandPoses[handedness].setActive(active);
+        }
+
+        for (const rawHandedness in this._myHandRayPoses) {
+            const handedness = rawHandedness as Handedness;
+            this._myHandRayPoses[handedness].setActive(active);
+        }
+
+        for (const rawHandedness in this._myTrackedHandPoses) {
+            const handedness = rawHandedness as Handedness;
+            this._myTrackedHandPoses[handedness].setActive(active);
+        }
+
+        this._myGamepadsManager.setActive(active);
+    }
+
+    public isActive(): boolean {
+        return this._myActive;
+    }
+
     public start(): void {
         this._myMouse.start();
         this._myKeyboard.start();
@@ -106,6 +137,8 @@ export class InputManager {
     }
 
     public update(dt: number): void {
+        if (!this._myActive) return;
+
         this._myPreUpdateEmitter.notify(dt, this);
 
         this._myMouse.update(dt);
@@ -255,6 +288,8 @@ export class InputManager {
 
     public destroy(): void {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         this._myMouse.destroy();
         this._myKeyboard.destroy();

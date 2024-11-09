@@ -1,10 +1,9 @@
-import { Component, MeshComponent, Object3D, TextComponent } from "@wonderlandengine/api";
-import { property } from "@wonderlandengine/api/decorators.js";
+import { Component, MeshComponent, Object3D, property, TextComponent, WonderlandEngine } from "@wonderlandengine/api";
 import { Cursor, CursorTarget } from "@wonderlandengine/components";
 import { AudioPlayer } from "../../../../audio/audio_player.js";
 import { AudioSetup } from "../../../../audio/audio_setup.js";
 import { Timer } from "../../../../cauldron/cauldron/timer.js";
-import { FSM, TransitionData } from "../../../../cauldron/fsm/fsm.js";
+import { FSM, SkipStateFunction, TransitionData } from "../../../../cauldron/fsm/fsm.js";
 import { Vector3, Vector4 } from "../../../../cauldron/type_definitions/array_type_definitions.js";
 import { ColorUtils } from "../../../../cauldron/utils/color_utils.js";
 import { MathUtils } from "../../../../cauldron/utils/math_utils.js";
@@ -14,8 +13,18 @@ import { vec3_create, vec4_create } from "../../../../plugin/js/extensions/array
 import { Globals } from "../../../../pp/globals.js";
 import { AnimatedNumber, AnimatedNumberParams } from "../animated_number.js";
 
+/** {@link CursorButtonState.UP} is fundamentally a {@link CursorButtonState.HOVER} but after the button has been pressed */
+enum CursorButtonState {
+    UNHOVER,
+    HOVER,
+    DOWN,
+    UP
+}
+
 /** You can return `true` to prevent the default behavior of the cursor button to be performed after the action has been handled */
 export interface CursorButtonActionsHandler {
+
+    onUpdate?(dt: number, cursorButtonComponent: CursorButtonComponent, cursorState: CursorButtonState): boolean;
 
     /**
      * @param isSecondaryCursor `true` if the event is triggered but this is not the main cursor, which means the button is not actually changing the state  
@@ -49,6 +58,13 @@ export interface CursorButtonActionsHandler {
      *                          play a sound to give the cursor feel but without changing the button state
      */
     onUnhover?(cursorButtonComponent: CursorButtonComponent, cursorComponent: Cursor, isSecondaryCursor: boolean): boolean;
+
+    /** 
+     * Used to instantly reset to a complete unhover state, used for example when the button is deactivated 
+     * Usually, if something is done {@link onUnhover}, it should also be done here, but instantly instead of starting it here
+     * and continue it in the {@link onUpdate} callback
+     */
+    onInstantUnhover?(cursorButtonComponent: CursorButtonComponent): boolean;
 }
 
 export class CursorButtonComponent extends Component {
@@ -99,6 +115,9 @@ export class CursorButtonComponent extends Component {
 
     @property.bool(true)
     private readonly _myUseSpatialAudio!: boolean;
+
+    @property.float(1.5)
+    private readonly _mySpatialAudioReferenceDistance!: number;
 
     @property.string("")
     private readonly _mySFXOnHover!: string;
@@ -183,19 +202,25 @@ export class CursorButtonComponent extends Component {
     private _myOnUpAudioPlayer: AudioPlayer | null = null;
     private _myOnUnhoverAudioPlayer: AudioPlayer | null = null;
 
-    private static _myCursorButtonActionHandlers: Map<string, CursorButtonActionsHandler> = new Map();
+    private static readonly _myCursorButtonActionHandlers: Map<Readonly<WonderlandEngine>, Map<string, CursorButtonActionsHandler>> = new Map();
 
     /** Used to add handlers for every cursor buttons that can be indexes with a string */
-    public static addButtonActionHandler(id: string, buttonActionHandler: Readonly<CursorButtonActionsHandler>): void {
-        CursorButtonComponent._myCursorButtonActionHandlers.set(id, buttonActionHandler);
+    public static addButtonActionHandler(id: string, buttonActionHandler: Readonly<CursorButtonActionsHandler>, engine = Globals.getMainEngine()!): void {
+        if (!CursorButtonComponent._myCursorButtonActionHandlers.has(engine)) {
+            CursorButtonComponent._myCursorButtonActionHandlers.set(engine, new Map());
+        }
+
+        CursorButtonComponent._myCursorButtonActionHandlers.get(engine)!.set(id, buttonActionHandler);
     }
 
-    public static removeButtonActionHandler(id: string): void {
-        CursorButtonComponent._myCursorButtonActionHandlers.delete(id);
+    public static removeButtonActionHandler(id: string, engine = Globals.getMainEngine()!): void {
+        if (CursorButtonComponent._myCursorButtonActionHandlers.has(engine)) {
+            CursorButtonComponent._myCursorButtonActionHandlers.get(engine)!.delete(id);
+        }
     }
 
-    public static getButtonActionHandler(id: string): CursorButtonActionsHandler | null {
-        const buttonActionHandler = CursorButtonComponent._myCursorButtonActionHandlers.get(id);
+    public static getButtonActionHandler(id: string, engine = Globals.getMainEngine()!): CursorButtonActionsHandler | null {
+        const buttonActionHandler = CursorButtonComponent._myCursorButtonActionHandlers.get(engine)?.get(id);
         return buttonActionHandler != null ? buttonActionHandler : null;
     }
 
@@ -213,13 +238,34 @@ export class CursorButtonComponent extends Component {
         return buttonActionHandler != null ? buttonActionHandler : null;
     }
 
+    public override onActivate(): void {
+        this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this), { id: this });
+        this._myCursorTarget.onHover.add(this._onHover.bind(this), { id: this });
+        this._myCursorTarget.onDown.add(this._onDown.bind(this), { id: this });
+        this._myCursorTarget.onUpWithDown.add(this.onUpWithDown.bind(this), { id: this });
+    }
+
+    public override onDeactivate(): void {
+        if (this._myCursorTarget != null) {
+            this._myCursorTarget.onUnhover.remove(this);
+            this._myCursorTarget.onHover.remove(this);
+            this._myCursorTarget.onDown.remove(this);
+            this._myCursorTarget.onUpWithDown.remove(this);
+
+            this._myKeepCurrentStateTimer.end();
+            this._myTransitionQueue.pp_clear();
+            this._myApplyQueuedTransitions = false;
+
+            this._myHoverCursors.pp_clear();
+            this._myMainDownCursor = null;
+            this._myDownCursors.pp_clear();
+
+            this._myFSM.perform("instant_unhover");
+        }
+    }
+
     public override start(): void {
         (this._myCursorTarget as CursorTarget) = this.object.pp_getComponent(CursorTarget)!;
-
-        this._myCursorTarget.onUnhover.add(this._onUnhover.bind(this));
-        this._myCursorTarget.onHover.add(this._onHover.bind(this));
-        this._myCursorTarget.onDown.add(this._onDown.bind(this));
-        this._myCursorTarget.onUpWithDown.add(this.onUpWithDown.bind(this));
 
         const buttonActionsHandlerNames = [...this._myButtonActionsHandlerNames.split(",")];
         for (let i = 0; i < buttonActionsHandlerNames.length; i++) {
@@ -231,7 +277,7 @@ export class CursorButtonComponent extends Component {
             if (buttonActionHandlerComponent != null) {
                 this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerComponent);
             } else {
-                const buttonActionHandlerStatic = CursorButtonComponent.getButtonActionHandler(buttonActionsHandlerName);
+                const buttonActionHandlerStatic = CursorButtonComponent.getButtonActionHandler(buttonActionsHandlerName, this.engine);
                 if (buttonActionHandlerStatic != null) {
                     this._myButtonActionsHandlers.set(buttonActionsHandlerName, buttonActionHandlerStatic);
                 }
@@ -258,6 +304,11 @@ export class CursorButtonComponent extends Component {
 
         this._myFSM.addTransition("hover", "unhover", "unhover");
         this._myFSM.addTransition("down", "unhover", "unhover");
+
+        this._myFSM.addTransition("hover", "unhover", "instant_unhover", this._onInstantUnhover.bind(this), SkipStateFunction.BOTH);
+        this._myFSM.addTransition("up_with_down", "unhover", "instant_unhover", this._onInstantUnhover.bind(this), SkipStateFunction.BOTH);
+        this._myFSM.addTransition("down", "unhover", "instant_unhover", this._onInstantUnhover.bind(this), SkipStateFunction.BOTH);
+        this._myFSM.addTransition("unhover", "unhover", "instant_unhover", this._onInstantUnhover.bind(this), SkipStateFunction.BOTH);
 
         this._myFSM.init("unhover");
     }
@@ -300,33 +351,64 @@ export class CursorButtonComponent extends Component {
             }
         }
 
-        if (!this._myAnimatedScale.isDone()) {
-            this._myAnimatedScale.update(dt);
-
-            const buttonScale = CursorButtonComponent._updateSV.buttonScale;
-            this.object.pp_setScaleLocal(this._myOriginalScaleLocal.vec3_scale(this._myAnimatedScale.getCurrentValue(), buttonScale));
-        }
-
-        if (!this._myAnimatedColorBrightnessOffset.isDone()) {
-            this._myAnimatedColorBrightnessOffset.update(dt);
-
-            const colorBrightnessOffsetCurrentValue = this._myAnimatedColorBrightnessOffset.getCurrentValue();
-
-            const hsvColor = CursorButtonComponent._updateSV.hsvColor;
-            const rgbColor = CursorButtonComponent._updateSV.rgbColor;
-
-            for (const [material, originalColor] of this._myPhongMaterialOriginalColors) {
-                ColorUtils.rgbToHSV(originalColor, hsvColor);
-                hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
-                material.diffuseColor = ColorUtils.hsvToRGB(hsvColor, rgbColor);
-            }
-
-            for (const [material, originalColor] of this._myFlatMaterialOriginalColors) {
-                ColorUtils.rgbToHSV(originalColor, hsvColor);
-                hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
-                material.color = ColorUtils.hsvToRGB(hsvColor, rgbColor);
+        let skipDefault = false;
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
+            if (buttonActionsHandler.onUpdate != null) {
+                skipDefault ||= buttonActionsHandler.onUpdate(dt, this, this.getCurrentState());
             }
         }
+
+        if (!skipDefault) {
+            if (!this._myAnimatedScale.isDone()) {
+                this._myAnimatedScale.update(dt);
+
+                const buttonScale = CursorButtonComponent._updateSV.buttonScale;
+                this.object.pp_setScaleLocal(this._myOriginalScaleLocal.vec3_scale(this._myAnimatedScale.getCurrentValue(), buttonScale));
+            }
+
+            if (!this._myAnimatedColorBrightnessOffset.isDone()) {
+                this._myAnimatedColorBrightnessOffset.update(dt);
+
+                const colorBrightnessOffsetCurrentValue = this._myAnimatedColorBrightnessOffset.getCurrentValue();
+
+                const hsvColor = CursorButtonComponent._updateSV.hsvColor;
+                const rgbColor = CursorButtonComponent._updateSV.rgbColor;
+
+                for (const [material, originalColor] of this._myPhongMaterialOriginalColors) {
+                    ColorUtils.rgbToHSV(originalColor, hsvColor);
+                    hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
+                    material.diffuseColor = ColorUtils.hsvToRGB(hsvColor, rgbColor);
+                }
+
+                for (const [material, originalColor] of this._myFlatMaterialOriginalColors) {
+                    ColorUtils.rgbToHSV(originalColor, hsvColor);
+                    hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
+                    material.color = ColorUtils.hsvToRGB(hsvColor, rgbColor);
+                }
+            }
+        }
+    }
+
+    public getCurrentState(): CursorButtonState {
+        let currentState = CursorButtonState.UNHOVER;
+
+        const currentFSMState = this._myFSM.getCurrentStateData()!.myID;
+        switch (currentFSMState) {
+            case "unhover":
+                currentState = CursorButtonState.UNHOVER;
+                break;
+            case "hover":
+                currentState = CursorButtonState.HOVER;
+                break;
+            case "down":
+                currentState = CursorButtonState.DOWN;
+                break;
+            case "up_with_down":
+                currentState = CursorButtonState.UP;
+                break;
+        }
+
+        return currentState;
     }
 
     private _onUnhover(targetObject: Object3D, cursorComponent: Cursor): void {
@@ -412,6 +494,45 @@ export class CursorButtonComponent extends Component {
         }
     }
 
+    private _onInstantUnhover(fsm: FSM | null, transitionData: Readonly<TransitionData> | null): void {
+        let skipDefault = false;
+        for (const buttonActionsHandler of this._myButtonActionsHandlers.values()) {
+            if (buttonActionsHandler.onInstantUnhover != null) {
+                skipDefault ||= buttonActionsHandler.onInstantUnhover(this);
+            }
+        }
+
+        if (skipDefault) {
+            return;
+        }
+
+        {
+            this._myAnimatedScale.setTargetValue(1);
+            this._myAnimatedScale.end();
+
+            this.object.pp_setScaleLocal(this._myOriginalScaleLocal.vec3_scale(this._myAnimatedScale.getCurrentValue()));
+        }
+
+        {
+            this._myAnimatedColorBrightnessOffset.setTargetValue(0);
+            this._myAnimatedColorBrightnessOffset.end();
+
+            const colorBrightnessOffsetCurrentValue = this._myAnimatedColorBrightnessOffset.getCurrentValue();
+
+            for (const [material, originalColor] of this._myPhongMaterialOriginalColors) {
+                const hsvColor = ColorUtils.rgbToHSV(originalColor);
+                hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
+                material.diffuseColor = ColorUtils.hsvToRGB(hsvColor);
+            }
+
+            for (const [material, originalColor] of this._myFlatMaterialOriginalColors) {
+                const hsvColor = ColorUtils.rgbToHSV(originalColor);
+                hsvColor[2] = MathUtils.clamp(hsvColor[2] + colorBrightnessOffsetCurrentValue, 0, 1);
+                material.color = ColorUtils.hsvToRGB(hsvColor);
+            }
+        }
+    }
+
     private _onUnhoverStart(fsm: FSM | null, transitionData: Readonly<TransitionData> | null, cursorComponent: Cursor, isSecondaryCursor: boolean): void {
         if (!isSecondaryCursor) {
             this._myKeepCurrentStateTimer.start(this._myMinUnhoverSecond);
@@ -431,7 +552,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-                this._myAnimatedScale.updateTargetValue(1);
+                this._myAnimatedScale.setTargetValue(1);
             }
         }
 
@@ -446,7 +567,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-                this._myAnimatedColorBrightnessOffset.updateTargetValue(0);
+                this._myAnimatedColorBrightnessOffset.setTargetValue(0);
             }
         }
 
@@ -457,7 +578,6 @@ export class CursorButtonComponent extends Component {
             }
         }
     }
-
 
     private _onHoverStart(fsm: FSM | null, transitionData: Readonly<TransitionData> | null, cursorComponent: Cursor, isSecondaryCursor: boolean, isHoverFromDown: boolean): void {
         if (!isSecondaryCursor) {
@@ -478,7 +598,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-                this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnHover);
+                this._myAnimatedScale.setTargetValue(1 + this._myScaleOffsetOnHover);
             }
         }
 
@@ -493,7 +613,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-                this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnHover);
+                this._myAnimatedColorBrightnessOffset.setTargetValue(this._myColorBrigthnessOffsetOnHover);
             }
         }
 
@@ -524,7 +644,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-                this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnDown);
+                this._myAnimatedScale.setTargetValue(1 + this._myScaleOffsetOnDown);
             }
         }
 
@@ -539,7 +659,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-                this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnDown);
+                this._myAnimatedColorBrightnessOffset.setTargetValue(this._myColorBrigthnessOffsetOnDown);
             }
         }
 
@@ -570,7 +690,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myScaleOffsetOnHover != 0 || this._myScaleOffsetOnDown != 0 || this._myScaleOffsetOnUp != 0) {
-                this._myAnimatedScale.updateTargetValue(1 + this._myScaleOffsetOnUp);
+                this._myAnimatedScale.setTargetValue(1 + this._myScaleOffsetOnUp);
             }
         }
 
@@ -585,7 +705,7 @@ export class CursorButtonComponent extends Component {
 
         if (!isSecondaryCursor) {
             if (this._myColorBrigthnessOffsetOnHover != 0 || this._myColorBrigthnessOffsetOnDown != 0 || this._myColorBrigthnessOffsetOnUp != 0) {
-                this._myAnimatedColorBrightnessOffset.updateTargetValue(this._myColorBrigthnessOffsetOnUp);
+                this._myAnimatedColorBrightnessOffset.setTargetValue(this._myColorBrigthnessOffsetOnUp);
             }
         }
 
@@ -639,6 +759,7 @@ export class CursorButtonComponent extends Component {
         if (this._mySFXOnHover.length > 0) {
             const audioSetup = new AudioSetup(this._mySFXOnHover);
             audioSetup.mySpatial = this._myUseSpatialAudio;
+            audioSetup.myReferenceDistance = this._mySpatialAudioReferenceDistance;
 
             const audioID = this._myCursorButtonComponentID + "_on_hover";
             audioManager.addAudioSetup(audioID, audioSetup);
@@ -649,6 +770,7 @@ export class CursorButtonComponent extends Component {
         if (this._mySFXOnDown.length > 0) {
             const audioSetup = new AudioSetup(this._mySFXOnDown);
             audioSetup.mySpatial = this._myUseSpatialAudio;
+            audioSetup.myReferenceDistance = this._mySpatialAudioReferenceDistance;
 
             const audioID = this._myCursorButtonComponentID + "_on_down";
             audioManager.addAudioSetup(audioID, audioSetup);
@@ -659,6 +781,7 @@ export class CursorButtonComponent extends Component {
         if (this._mySFXOnUp.length > 0) {
             const audioSetup = new AudioSetup(this._mySFXOnUp);
             audioSetup.mySpatial = this._myUseSpatialAudio;
+            audioSetup.myReferenceDistance = this._mySpatialAudioReferenceDistance;
 
             const audioID = this._myCursorButtonComponentID + "_on_up";
             audioManager.addAudioSetup(audioID, audioSetup);
@@ -669,6 +792,7 @@ export class CursorButtonComponent extends Component {
         if (this._mySFXOnUnhover.length > 0) {
             const audioSetup = new AudioSetup(this._mySFXOnUnhover);
             audioSetup.mySpatial = this._myUseSpatialAudio;
+            audioSetup.myReferenceDistance = this._mySpatialAudioReferenceDistance;
 
             const audioID = this._myCursorButtonComponentID + "_on_unhover";
             audioManager.addAudioSetup(audioID, audioSetup);

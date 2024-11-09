@@ -41,16 +41,18 @@ CollisionCheckVertical.prototype._verticalCheck = function () {
 
         outFixedMovement.vec3_copy(verticalMovement);
         if (collisionCheckParams.myVerticalMovementCheckEnabled) {
-            outFixedMovement = this._verticalMovementAdjustment(verticalMovement, isMovementDownward, originalMovementSign, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, outFixedMovement);
+            const firstRaycastPerformed = this._verticalMovementAdjustment(verticalMovement, isMovementDownward, originalMovementSign, feetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, outFixedMovement);
 
             if (!collisionRuntimeParams.myIsCollidingVertically && collisionCheckParams.myCheckVerticalBothDirection &&
                 (outFixedMovement.vec_equals(verticalMovement, 0.00001) || originalMovementSign == 0 || (movementSign != originalMovementSign))) {
                 newFeetPosition = feetPosition.vec3_add(outFixedMovement, newFeetPosition);
                 let isOppositeMovementDownward = !isMovementDownward;
-                additionalFixedMovement = this._verticalMovementAdjustment(zero, isOppositeMovementDownward, originalMovementSign, newFeetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, additionalFixedMovement);
+                const secondRaycastPerformed = this._verticalMovementAdjustment(zero, isOppositeMovementDownward, originalMovementSign, newFeetPosition, height, up, forward, collisionCheckParams, collisionRuntimeParams, additionalFixedMovement);
 
-                outFixedMovement.vec3_add(additionalFixedMovement, outFixedMovement);
-                isMovementDownward = !isMovementDownward;
+                if (!additionalFixedMovement.vec3_isZero() || (secondRaycastPerformed && !firstRaycastPerformed)) {
+                    outFixedMovement.vec3_add(additionalFixedMovement, outFixedMovement);
+                    isMovementDownward = !isMovementDownward;
+                }
             }
         }
 
@@ -64,6 +66,10 @@ CollisionCheckVertical.prototype._verticalCheck = function () {
         if (!collisionRuntimeParams.myIsCollidingVertically && collisionCheckParams.myVerticalPositionCheckEnabled) {
             newFeetPosition = feetPosition.vec3_add(outFixedMovement, newFeetPosition);
             let canStay = this._verticalPositionCheck(newFeetPosition, isMovementDownward, height, up, forward, collisionCheckParams, collisionRuntimeParams);
+            if (canStay && collisionCheckParams.myCheckVerticalPositionBothDirection) {
+                canStay = this._verticalPositionCheck(newFeetPosition, !isMovementDownward, height, up, forward, collisionCheckParams, collisionRuntimeParams);
+            }
+
             if (!canStay) {
                 outFixedMovement.vec3_zero();
 
@@ -98,6 +104,8 @@ CollisionCheckVertical.prototype._verticalMovementAdjustment = function () {
 
         startOffset.vec3_zero();
         endOffset.vec3_zero();
+
+        let raycastPerformed = false;
 
         let popOutEnabled = false;
         let snapEnabled = false;
@@ -139,6 +147,8 @@ CollisionCheckVertical.prototype._verticalMovementAdjustment = function () {
             }
 
             let furtherDirectionPositionSet = false;
+            let atLeastOneIsOk = false;
+            let insideHitSet = false;
 
             for (let i = 0; i < checkPositions.length; i++) {
                 let currentPosition = checkPositions[i];
@@ -148,76 +158,102 @@ CollisionCheckVertical.prototype._verticalMovementAdjustment = function () {
                 let distance = direction.vec3_length();
                 direction.vec3_normalize(direction);
 
-                let raycastResult = this._raycastAndDebug(origin, direction, distance, true, false, collisionCheckParams, collisionRuntimeParams);
+                let raycastResult = this._raycastAndDebug(origin, direction, distance, false, false, collisionCheckParams, collisionRuntimeParams);
+                raycastPerformed = true;
 
-                if (raycastResult.myHits.length > 0) {
-                    if (furtherDirectionPositionSet) {
-                        if (raycastResult.myHits[0].myPosition.vec3_isFartherAlongAxis(furtherDirectionPosition, furtherDirection)) {
-                            furtherDirectionPosition.vec3_copy(raycastResult.myHits[0].myPosition);
-                            verticalCollisionHit.copy(raycastResult.myHits[0]);
+                if (raycastResult.isColliding()) {
+                    let hit = raycastResult.myHits[0];
+                    if (!hit.myInsideCollision) {
+                        atLeastOneIsOk = true;
+
+                        if (furtherDirectionPositionSet) {
+                            if (hit.myPosition.vec3_isFartherAlongAxis(furtherDirectionPosition, furtherDirection)) {
+                                furtherDirectionPosition.vec3_copy(hit.myPosition);
+                                verticalCollisionHit.copy(hit);
+                            }
+                        } else {
+                            furtherDirectionPositionSet = true;
+                            furtherDirectionPosition.vec3_copy(hit.myPosition);
+                            verticalCollisionHit.copy(hit);
                         }
-                    } else {
-                        furtherDirectionPositionSet = true;
-                        furtherDirectionPosition.vec3_copy(raycastResult.myHits[0].myPosition);
-                        verticalCollisionHit.copy(raycastResult.myHits[0]);
+                    } else if (!insideHitSet) {
+                        insideHitSet = true;
+                        verticalCollisionHit.copy(hit);
+                        if (!collisionCheckParams.myVerticalAllowHitInsideCollisionIfOneOk) {
+                            break;
+                        }
                     }
+                } else {
+                    atLeastOneIsOk = true;
                 }
             }
 
-            if (furtherDirectionPositionSet) {
-                upNegate = up.vec3_negate(upNegate);
-                if (isMovementDownward) {
-                    outFixedMovement = furtherDirectionPosition.vec3_sub(feetPosition, outFixedMovement).vec3_componentAlongAxis(up, outFixedMovement);
+            if (!atLeastOneIsOk) {
+                outFixedMovement.vec3_zero();
 
-                    if (snapEnabled && outFixedMovement.vec3_isFartherAlongAxis(verticalMovement, upNegate)) {
-                        collisionRuntimeParams.myHasSnappedOnGround = true;
-                    } else if (popOutEnabled && outFixedMovement.vec3_isFartherAlongAxis(verticalMovement, up)) {
-                        if (!outFixedMovement.vec3_isZero(0.00001) &&
-                            (verticalMovement.vec3_isZero(0.00001) || !outFixedMovement.vec3_isConcordant(verticalMovement))) {
-                            collisionRuntimeParams.myHasPoppedOutGround = true;
-                        } else {
-                            collisionRuntimeParams.myHasReducedVerticalMovement = true;
+                // #TODO Probably this should not be reset, you should be required to check if the movement was ok to be sure this values have a meaning
+                collisionRuntimeParams.myHasSnappedOnGround = false;
+                collisionRuntimeParams.myHasSnappedOnCeiling = false;
+                collisionRuntimeParams.myHasPoppedOutGround = false;
+                collisionRuntimeParams.myHasPoppedOutCeiling = false;
+                collisionRuntimeParams.myHasReducedVerticalMovement = false;
+
+                collisionRuntimeParams.myIsCollidingVertically = true;
+                collisionRuntimeParams.myVerticalCollisionHit.copy(verticalCollisionHit);
+            } else {
+                if (furtherDirectionPositionSet) {
+                    upNegate = up.vec3_negate(upNegate);
+                    if (isMovementDownward) {
+                        outFixedMovement = furtherDirectionPosition.vec3_sub(feetPosition, outFixedMovement).vec3_componentAlongAxis(up, outFixedMovement);
+
+                        if (!outFixedMovement.vec3_equals(verticalMovement, 0.00001)) {
+                            const outFixedMovementValueAlongUp = outFixedMovement.vec3_valueAlongAxis(up);
+                            const verticalMovementValueAlongUp = verticalMovement.vec3_valueAlongAxis(up);
+                            if (snapEnabled && outFixedMovementValueAlongUp < verticalMovementValueAlongUp) {
+                                collisionRuntimeParams.myHasSnappedOnGround = true;
+                            } else if (popOutEnabled && outFixedMovementValueAlongUp > 0.00001) {
+                                collisionRuntimeParams.myHasPoppedOutGround = true;
+                            } else if (outFixedMovementValueAlongUp > verticalMovementValueAlongUp) {
+                                collisionRuntimeParams.myHasReducedVerticalMovement = true;
+                            }
                         }
                     } else {
-                        collisionRuntimeParams.myHasReducedVerticalMovement = true;
+                        outFixedMovement = furtherDirectionPosition.vec3_sub(feetPosition.vec3_add(up.vec3_scale(height, outFixedMovement), outFixedMovement), outFixedMovement).
+                            vec3_componentAlongAxis(up, outFixedMovement);
+
+                        if (!outFixedMovement.vec3_equals(verticalMovement, 0.00001)) {
+                            const outFixedMovementValueAlongUp = outFixedMovement.vec3_valueAlongAxis(up);
+                            const verticalMovementValueAlongUp = verticalMovement.vec3_valueAlongAxis(up);
+                            if (snapEnabled && outFixedMovementValueAlongUp > verticalMovementValueAlongUp) {
+                                collisionRuntimeParams.myHasSnappedOnCeiling = true;
+                            } else if (popOutEnabled && outFixedMovementValueAlongUp < -0.00001) {
+                                collisionRuntimeParams.myHasPoppedOutCeiling = true;
+                            } else if (outFixedMovementValueAlongUp < verticalMovementValueAlongUp) {
+                                collisionRuntimeParams.myHasReducedVerticalMovement = true;
+                            }
+                        }
+                    }
+
+                    if (!popOutEnabled && !outFixedMovement.vec3_isConcordant(verticalMovement)) {
+                        outFixedMovement.vec3_zero();
+                    }
+
+                    if (!collisionCheckParams.myVerticalMovementReduceEnabled && collisionRuntimeParams.myHasReducedVerticalMovement) {
+                        outFixedMovement.vec3_zero();
+
+                        // #TODO Probably this should not be reset, you should be required to check if the movement was ok to be sure this values have a meaning
+                        collisionRuntimeParams.myHasSnappedOnGround = false;
+                        collisionRuntimeParams.myHasSnappedOnCeiling = false;
+                        collisionRuntimeParams.myHasPoppedOutGround = false;
+                        collisionRuntimeParams.myHasPoppedOutCeiling = false;
+                        collisionRuntimeParams.myHasReducedVerticalMovement = false;
+
+                        collisionRuntimeParams.myIsCollidingVertically = true;
+                        collisionRuntimeParams.myVerticalCollisionHit.copy(verticalCollisionHit);
                     }
                 } else {
-                    outFixedMovement = furtherDirectionPosition.vec3_sub(feetPosition.vec3_add(up.vec3_scale(height, outFixedMovement), outFixedMovement), outFixedMovement).
-                        vec3_componentAlongAxis(up, outFixedMovement);
-
-                    if (snapEnabled && outFixedMovement.vec3_isFartherAlongAxis(verticalMovement, up)) {
-                        collisionRuntimeParams.myHasSnappedOnCeiling = true;
-                    } else if (popOutEnabled && outFixedMovement.vec3_isFartherAlongAxis(verticalMovement, upNegate)) {
-                        if (!outFixedMovement.vec3_isZero(0.00001) &&
-                            (verticalMovement.vec3_isZero(0.00001) || !outFixedMovement.vec3_isConcordant(verticalMovement))) {
-                            collisionRuntimeParams.myHasPoppedOutCeiling = true;
-                        } else {
-                            collisionRuntimeParams.myHasReducedVerticalMovement = true;
-                        }
-                    } else {
-                        collisionRuntimeParams.myHasReducedVerticalMovement = true;
-                    }
+                    outFixedMovement.vec3_copy(verticalMovement);
                 }
-
-                if (!popOutEnabled && !outFixedMovement.vec3_isConcordant(verticalMovement)) {
-                    outFixedMovement.vec3_zero();
-                }
-
-                if (!collisionCheckParams.myVerticalMovementReduceEnabled && collisionRuntimeParams.myHasReducedVerticalMovement) {
-                    outFixedMovement.vec3_zero();
-
-                    // #TODO Probably this should not be reset, you should be required to check if the movement was ok to be sure this values have a meaning
-                    collisionRuntimeParams.myHasSnappedOnGround = false;
-                    collisionRuntimeParams.myHasSnappedOnCeiling = false;
-                    collisionRuntimeParams.myHasPoppedOutGround = false;
-                    collisionRuntimeParams.myHasPoppedOutCeiling = false;
-                    collisionRuntimeParams.myHasReducedVerticalMovement = false;
-
-                    collisionRuntimeParams.myIsCollidingVertically = true;
-                    collisionRuntimeParams.myVerticalCollisionHit.copy(verticalCollisionHit);
-                }
-            } else {
-                outFixedMovement.vec3_copy(verticalMovement);
             }
         } else {
             outFixedMovement.vec3_copy(verticalMovement);
@@ -227,7 +263,7 @@ CollisionCheckVertical.prototype._verticalMovementAdjustment = function () {
             outFixedMovement.vec3_zero();
         }
 
-        return outFixedMovement;
+        return raycastPerformed;
     };
 }();
 
@@ -328,7 +364,7 @@ CollisionCheckVertical.prototype._getVerticalCheckPositions = function () {
 
         let radiusStep = collisionCheckParams.myFeetRadius / collisionCheckParams.myGroundCircumferenceStepAmount;
         let sliceAngle = 360 / collisionCheckParams.myGroundCircumferenceSliceAmount;
-        let currentStepRotation = 0;
+        let currentStepRotation = -collisionCheckParams.myGroundCircumferenceRotationPerStep * (collisionCheckParams.myGroundCircumferenceStepAmount - 1);
         for (let i = 0; i < collisionCheckParams.myGroundCircumferenceStepAmount; i++) {
             let currentRadius = radiusStep * (i + 1);
 

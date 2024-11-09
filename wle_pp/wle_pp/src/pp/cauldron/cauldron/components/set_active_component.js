@@ -24,16 +24,16 @@ export class SetActiveComponent extends Component {
         this._myFirstXRStart = true;
         this._myFirstXREnd = true;
 
-        if (this._mySetActiveWhen == 3 || this._mySetActiveWhen == 5) {
-            XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, true, this.engine);
-        }
-
-        if (this._mySetActiveWhen == 4 || this._mySetActiveWhen == 6) {
-            XRUtils.registerSessionEndEventListener(this, this._onXRSessionEnd.bind(this), this.engine);
-        }
+        this._myActivateOnNextUpdate = false;
     }
 
     update(dt) {
+        if (this._myActivateOnNextUpdate) {
+            this._onActivate();
+
+            this._myActivateOnNextUpdate = false;
+        }
+
         if (this._mySetActiveWhen == 2 && this._myFirstUpdate) {
             this._setActive();
         }
@@ -69,7 +69,19 @@ export class SetActiveComponent extends Component {
         }
     }
 
-    onDestroy() {
+    onActivate() {
+        this._myActivateOnNextUpdate = true;
+    }
+
+    _onActivate() {
+        if (this._mySetActiveWhen == 3 || this._mySetActiveWhen == 5) {
+            XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, true, this.engine);
+        } else if (this._mySetActiveWhen == 4 || this._mySetActiveWhen == 6) {
+            XRUtils.registerSessionEndEventListener(this, this._onXRSessionEnd.bind(this), this.engine);
+        }
+    }
+
+    onDeactivate() {
         XRUtils.unregisterSessionStartEndEventListeners(this, this.engine);
     }
 }

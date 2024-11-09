@@ -34,7 +34,7 @@ function _initCursorComponentModPrototype() {
         this._multipleClickObject = null;
         this._multipleClickDelay = 0.3;
 
-        this._onDestroyCallbacks = [];
+        this._onDeactivateCallbacks = [];
 
         this._prevHitLocationLocalToTarget = vec3_create();
 
@@ -70,6 +70,7 @@ function _initCursorComponentModPrototype() {
         this._tempVec = vec3_create();
 
         this._viewComponent = null;
+        this._viewComponentBackup = null;
 
         this._cursorRayOrigin = vec3_create();
         this._cursorRayScale = vec3_create();
@@ -101,11 +102,7 @@ function _initCursorComponentModPrototype() {
         }
 
         this.pp_setViewComponent(this.object.pp_getComponent(ViewComponent));
-
-        XRUtils.registerSessionStartEventListener(this, this.setupVREvents.bind(this), true, false, this.engine);
-        this._onDestroyCallbacks.push(() => {
-            XRUtils.unregisterSessionStartEventListener(this, this.engine);
-        });
+        this._viewComponentBackup = null;
 
         if (this.cursorRayObject) {
             this.cursorRayObject.pp_setActive(false);
@@ -118,7 +115,7 @@ function _initCursorComponentModPrototype() {
         this._setCursorVisibility(false);
 
         if (this.useWebXRHitTest) {
-            this._hitTestObject = this.object.pp_addObject();
+            this._hitTestObject = this.object.pp_addChild();
             this._hitTestLocation = this.hitTestObject.pp_addComponent(HitTestLocation, { scaleObject: false, });
         }
 
@@ -141,19 +138,23 @@ function _initCursorComponentModPrototype() {
         // If in XR, set the cursor ray based on object transform
         // View Component not null is currently used as a way to specify this is cursor should only work for Non XR
         if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null) {
-            // Since Google Cardboard tap is registered as arTouchDown without a gamepad, we need to check for gamepad presence 
-            if (this.arTouchDown && this._pp_isAR()) {
-                let axes = XRUtils.getSession(this.engine).inputSources[0].gamepad.axes;
-                // Screenspace Y is inverted 
-                this._direction.vec3_set(axes[0], -axes[1], -1.0);
-                this.updateDirection();
-            } else {
-                this.object.pp_getPosition(this._origin);
-                this.object.pp_getForward(this._direction);
-            }
+            if (Globals.getHandPose(this.handedness, this.engine).getInputSourceType() != null) {
+                // Since Google Cardboard tap is registered as arTouchDown without a gamepad, we need to check for gamepad presence 
+                if (this.arTouchDown && this._pp_isAR()) {
+                    let axes = XRUtils.getSession(this.engine).inputSources[0].gamepad.axes;
+                    // Screenspace Y is inverted 
+                    this._direction.vec3_set(axes[0], -axes[1], -1.0);
+                    this.updateDirection();
+                } else {
+                    this.object.pp_getPosition(this._origin);
+                    this.object.pp_getForward(this._direction);
+                }
 
-            let hitObjectData = this._pp_rayCast();
-            this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalGamepadEvent);
+                let hitObjectData = this._pp_rayCast();
+                this._pp_hoverBehaviour(hitObjectData[0], hitObjectData[1], hitObjectData[2], this._lastOriginalGamepadEvent);
+            } else if (this.hoveringObject != null) {
+                this._pp_hoverBehaviour(null, null, null, this._lastOriginalGamepadEvent, true); // Trigger Unhover
+            }
         } else if (!XRUtils.isSessionActive(this.engine) && this._viewComponent != null) {
             if (this._lastPointerID != null) {
                 this._pp_updateMousePos(this._lastClientX, this._lastClientY, this._lastWidth, this._lastHeight);
@@ -220,6 +221,20 @@ function _initCursorComponentModPrototype() {
 
         this._isDownForUpWithDown = false;
         this._isUpWithNoDown = false;
+
+        if (this._viewComponent == null) {
+            if (this._viewComponentBackup != null) {
+                this.pp_setViewComponent(this._viewComponentBackup);
+            } else {
+                this.pp_setViewComponent(this.object.pp_getComponent(ViewComponent));
+                this._viewComponentBackup = null;
+            }
+        }
+
+        XRUtils.registerSessionStartEventListener(this, this.setupVREvents.bind(this), true, false, this.engine);
+        this._onDeactivateCallbacks.push(() => {
+            XRUtils.unregisterSessionStartEventListener(this, this.engine);
+        });
     };
 
     cursorComponentMod.onDeactivate = function onDeactivate() {
@@ -258,15 +273,19 @@ function _initCursorComponentModPrototype() {
 
         this._pointerLeaveToProcess = false;
         this._pointerLeaveMouseEvent = null;
+
+        for (let callback of this._onDeactivateCallbacks) {
+            callback();
+        }
+
+        this._onDeactivateCallbacks = [];
+
+        this._viewComponent = null;
     };
 
     cursorComponentMod.onDestroy = function onDestroy() {
         if (this._hitTestObject != null) {
             this._hitTestObject.pp_destroy();
-        }
-
-        for (let callback of this._onDestroyCallbacks) {
-            callback();
         }
     };
 
@@ -292,7 +311,7 @@ function _initCursorComponentModPrototype() {
         let onSelectEnd = this.onSelectEnd.bind(this);
         session.addEventListener("selectend", onSelectEnd);
 
-        this._onDestroyCallbacks.push(() => {
+        this._onDeactivateCallbacks.push(() => {
             if (!XRUtils.isSessionActive(this.engine)) return;
 
             let session = XRUtils.getSession(this.engine);
@@ -428,11 +447,11 @@ function _initCursorComponentModPrototype() {
     cursorComponentMod._pp_hoverBehaviour = function _pp_hoverBehaviour(hitObject, hitLocation, hitTestResults, originalEvent = null, forceUnhover = false) {
         if (!forceUnhover && hitObject != null) {
             let hoveringObjectChanged = false;
-            if (this.hoveringObject == null || !this.hoveringObject.pp_equals(hitObject)) {
+            if (this.hoveringObject == null || this.hoveringObject != hitObject) {
                 // Unhover previous, if exists 
                 if (this.hoveringObject != null) {
                     if (!this.hoveringReality) {
-                        if (this.hoveringObjectTarget) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
+                        if (this.hoveringObjectTarget && !this.hoveringObjectTarget.isDestroyed && this.hoveringObjectTarget.active) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
                         this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
                     } else {
                         this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
@@ -443,7 +462,10 @@ function _initCursorComponentModPrototype() {
 
                 // Hover new object 
                 this.hoveringObject = hitObject;
-                this.hoveringObjectTarget = this.hoveringObject.pp_getComponent(CursorTarget);
+                this.hoveringObjectTarget = this.hoveringObject.pp_getComponentSelf(CursorTarget);
+                if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.active) {
+                    this.hoveringObjectTarget = null;
+                }
 
                 if (!this.hoveringReality) {
                     if (this.hoveringObjectTarget) this.hoveringObjectTarget.onHover.notify(this.hoveringObject, this, originalEvent);
@@ -502,7 +524,7 @@ function _initCursorComponentModPrototype() {
                 }
 
                 // Multiple Clicks 
-                if (this._tripleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject.pp_equals(this.hoveringObject)) {
+                if (this._tripleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject == this.hoveringObject) {
                     if (!this.hoveringReality) {
                         if (this.hoveringObjectTarget) this.hoveringObjectTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
                         this.globalTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
@@ -511,7 +533,7 @@ function _initCursorComponentModPrototype() {
                     }
 
                     this._tripleClickTimer = 0;
-                } else if (this._doubleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject.pp_equals(this.hoveringObject)) {
+                } else if (this._doubleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject == this.hoveringObject) {
                     if (!this.hoveringReality) {
                         if (this.hoveringObjectTarget) this.hoveringObjectTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
                         this.globalTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
@@ -565,7 +587,7 @@ function _initCursorComponentModPrototype() {
             this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
         } else if (this.hoveringObject != null && (forceUnhover || hitObject == null)) {
             if (!this.hoveringReality) {
-                if (this.hoveringObjectTarget) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
+                if (this.hoveringObjectTarget && !this.hoveringObjectTarget.isDestroyed && this.hoveringObjectTarget.active) this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
                 this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
             } else {
                 this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
@@ -649,6 +671,15 @@ function _initCursorComponentModPrototype() {
             this._hitObjectData[2] = this._hitTestLocation.getHitTestResults(xrFrame)[0];
         }
 
+        if (this._hitObjectData[0] != null) {
+            const cursorTarget = this._hitObjectData[0].pp_getComponentSelf(CursorTarget);
+            if (cursorTarget == null || !cursorTarget.active) {
+                this._hitObjectData[0] = null;
+                this._hitObjectData[1] = null;
+                this._hitObjectData[2] = null;
+            }
+        }
+
         return this._hitObjectData;
     };
 
@@ -704,7 +735,7 @@ function _initCursorComponentModPrototype() {
                 let onViewportResize = this._onViewportResize.bind(this);
                 this.engine.onResize.add(onViewportResize);
 
-                this._onDestroyCallbacks.push(() => {
+                this._onDeactivateCallbacks.push(() => {
                     Globals.getCanvas(this.engine).removeEventListener("click", onClick);
                     Globals.getCanvas(this.engine).removeEventListener("pointerdown", onPointerDown);
                     Globals.getCanvas(this.engine).removeEventListener("pointermove", onPointerMove);
@@ -719,6 +750,8 @@ function _initCursorComponentModPrototype() {
                 });
             }
         }
+
+        this._viewComponentBackup = this._viewComponent;
     };
 
     cursorComponentMod._pp_onPointerLeave = function _pp_onPointerLeave(e) {

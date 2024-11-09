@@ -1,23 +1,24 @@
+
 export class AnalyticsManager {
-    constructor() {
-        this._myAnalyticsEnabled = true;
 
-        this._mySendDataCallback = null;
+    private _myAnalyticsEnabled: boolean = true;
 
-        this._myDefaultEventCooldown = 0;
-        this._myEventCooldowns = new Map();
+    private _mySendDataCallback: ((...args: unknown[]) => void) | null = null;
 
-        this._myDataLogEnabled = false;
-        this._myEventsLogEnabled = false;
+    private _myDefaultEventCooldown: number = 0;
+    private _myEventCooldowns: Map<string, number> = new Map();
 
-        this._myErrorsLogEnabled = false;
-    }
+    private _myEventsSentOnce: string[] = [];
 
-    update(dt) {
+    private _myDataLogEnabled: boolean = false;
+    private _myEventsLogEnabled: boolean = false;
+
+    private _myErrorsLogEnabled: boolean = false;
+
+    public update(dt: number): void {
         if (this._myEventCooldowns.size > 0) {
-            let eventNamesToUpdateCooldown = this._myEventCooldowns.keys();
-            for (let eventName of eventNamesToUpdateCooldown) {
-                let newCooldown = this._myEventCooldowns.get(eventName) - dt;
+            for (const [eventName, eventCooldown] of this._myEventCooldowns.entries()) {
+                const newCooldown = eventCooldown - dt;
                 if (newCooldown <= 0) {
                     this._myEventCooldowns.delete(eventName);
                 } else {
@@ -27,19 +28,19 @@ export class AnalyticsManager {
         }
     }
 
-    setAnalyticsEnabled(enabled) {
+    public setAnalyticsEnabled(enabled: boolean): void {
         this._myAnalyticsEnabled = enabled;
     }
 
-    isAnalyticsEnabled() {
+    public isAnalyticsEnabled(): boolean {
         return this._myAnalyticsEnabled;
     }
 
-    setSendDataCallback(callback) {
+    public setSendDataCallback(callback: ((...args: unknown[]) => void) | null): void {
         this._mySendDataCallback = callback;
     }
 
-    sendData(...args) {
+    public sendData(...args: unknown[]): boolean {
         let dataSent = false;
 
         try {
@@ -69,22 +70,22 @@ export class AnalyticsManager {
         return dataSent;
     }
 
-    sendEvent(eventName, value = null) {
+    public sendEvent(eventName: string, params?: Record<string, unknown>): boolean {
         let eventSent = false;
 
         try {
             if (this._myAnalyticsEnabled) {
                 if (this._myEventsLogEnabled) {
-                    if (value != null) {
-                        console.log("Analytics Event: " + eventName + " - Value: " + value);
+                    if (params != null) {
+                        console.log("Analytics Event: " + eventName + " - Params:", params);
                     } else {
                         console.log("Analytics Event: " + eventName);
                     }
                 }
 
                 if (this._mySendDataCallback != null) {
-                    if (value != null) {
-                        this._mySendDataCallback("event", eventName, { "value": value });
+                    if (params != null) {
+                        this._mySendDataCallback("event", eventName, params);
                     } else {
                         this._mySendDataCallback("event", eventName);
                     }
@@ -107,64 +108,80 @@ export class AnalyticsManager {
         return eventSent;
     }
 
-    sendEventOnce(eventName, value = null) {
+    public sendEventOnce(eventName: string, params?: Record<string, unknown>): boolean {
+        let eventSent = false;
+
         if (this._myAnalyticsEnabled) {
             if (!this.hasEventAlreadyBeenSent(eventName)) {
-                let eventSent = this.sendEvent(eventName, value, true);
+                eventSent = this.sendEvent(eventName, params);
 
                 if (eventSent) {
                     this._myEventsSentOnce.pp_pushUnique(eventName);
                 }
             }
         }
+
+        return eventSent;
     }
 
-    clearEventSentOnceState(eventName) {
+    public sendEventWithValue(eventName: string, value: number): boolean {
+        return this.sendEvent(eventName, { "value": value });
+    }
+
+    public sendEventOnceWithValue(eventName: string, value: number): boolean {
+        return this.sendEventOnce(eventName, { "value": value });
+    }
+
+    public clearEventSentOnceState(eventName: string): void {
         this._myEventsSentOnce.pp_removeEqual(eventName);
     }
 
-    clearAllEventsSentOnceState() {
+    public clearAllEventsSentOnceState(): void {
         this._myEventsSentOnce.pp_clear();
     }
 
-    hasEventAlreadyBeenSent(eventName) {
+    public hasEventAlreadyBeenSent(eventName: string): boolean {
         return this._myEventsSentOnce.pp_hasEqual(eventName);
     }
 
-    getEventsAlreadyBeenSent() {
+    public getEventsAlreadyBeenSent(): string[] {
         return this._myEventsSentOnce;
     }
 
-    sendEventWithCooldown(eventName, value = null, cooldownSeconds = this._myDefaultEventCooldown) {
+    public sendEventWithCooldown(eventName: string, cooldownSeconds: number = this._myDefaultEventCooldown, params?: Record<string, unknown>): boolean {
+        let eventSent = false;
+
         if (this._myAnalyticsEnabled) {
             if (this.getEventCooldown(eventName) <= 0) {
-                let eventSent = this.sendEvent(eventName, value, true);
+                eventSent = this.sendEvent(eventName, params);
 
                 if (eventSent) {
                     this._myEventCooldowns.set(eventName, cooldownSeconds);
                 }
             }
         }
+
+        return eventSent;
     }
 
-    getDefaultEventCooldown() {
+    public getDefaultEventCooldown(): number {
         return this._myDefaultEventCooldown;
     }
 
-    setDefaultEventCooldown(cooldownSeconds) {
+    public setDefaultEventCooldown(cooldownSeconds: number): void {
         this._myDefaultEventCooldown = cooldownSeconds;
     }
 
-    clearEventCooldown(eventName) {
+    public clearEventCooldown(eventName: string): void {
         this._myEventCooldowns.delete(eventName);
     }
 
-    clearAllEventCooldowns() {
+    public clearAllEventCooldowns(): void {
         this._myEventCooldowns.clear();
     }
 
-    getEventCooldown(eventName) {
-        let eventCooldown = this._myEventCooldowns.get(eventName);
+    public getEventCooldown(eventName: string): number {
+        const eventCooldown = this._myEventCooldowns.get(eventName);
 
         if (eventCooldown != null) {
             return eventCooldown;
@@ -173,31 +190,31 @@ export class AnalyticsManager {
         return 0;
     }
 
-    getEventCooldowns() {
+    public getEventCooldowns(): Map<string, number> {
         return this._myEventCooldowns;
     }
 
-    setDataLogEnabled(enabled) {
+    public setDataLogEnabled(enabled: boolean): void {
         this._myDataLogEnabled = enabled;
     }
 
-    isDataLogEnabled() {
+    public isDataLogEnabled(): boolean {
         return this._myDataLogEnabled;
     }
 
-    setEventsLogEnabled(enabled) {
+    public setEventsLogEnabled(enabled: boolean): void {
         this._myEventsLogEnabled = enabled;
     }
 
-    isEventsLogEnabled() {
+    public isEventsLogEnabled(): boolean {
         return this._myEventsLogEnabled;
     }
 
-    setErrorsLogEnabled(enabled) {
+    public setErrorsLogEnabled(enabled: boolean): void {
         this._myErrorsLogEnabled = enabled;
     }
 
-    isErrorsLogEnabled() {
+    public isErrorsLogEnabled(): boolean {
         return this._myErrorsLogEnabled;
     }
 }

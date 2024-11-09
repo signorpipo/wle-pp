@@ -39,12 +39,23 @@ export class VisualLineParams extends AbstractVisualElementParams {
         return this;
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualLineParams();
+        return new VisualLineParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myThickness == other.myThickness &&
+            this.myLength == other.myLength &&
+            this.myMesh == other.myMesh &&
+            this.myMaterial == other.myMaterial &&
+            this.myLocal == other.myLocal &&
+            (this.myColor == other.myColor || (this.myColor != null && other.myColor != null && this.myColor.vec_equals(other.myColor))) &&
+            this.myStart.vec3_equals(other.myStart) &&
+            this.myDirection.vec3_equals(other.myDirection);
     }
 }
 
@@ -84,13 +95,13 @@ export class VisualLine extends AbstractVisualElement {
     }
 
     _build() {
-        this._myLineParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addObject();
-        this._myLineObject = this._myLineParentObject.pp_addObject();
+        this._myLineParentObject = Globals.getSceneObjects(this._myParams.myParent.pp_getEngine()).myVisualElements.pp_addChild();
+        this._myLineObject = this._myLineParentObject.pp_addChild();
 
         this._myLineMeshComponent = this._myLineObject.pp_addComponent(MeshComponent);
     }
 
-    _refresh() {
+    _refreshHook() {
         // Implemented outside class definition
     }
 
@@ -107,12 +118,12 @@ export class VisualLine extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualLine.prototype._refresh = function () {
+VisualLine.prototype._refreshHook = function () {
     let scaleLine = vec3_create();
     let translateLine = vec3_create();
 
     let forward = vec3_create(0, 1, 0);
-    return function _refresh() {
+    return function _refreshHook() {
         this._myLineParentObject.pp_setParent(this._myParams.myParent, false);
 
         if (this._myParams.myLocal) {
@@ -160,7 +171,7 @@ VisualLine.prototype._refresh = function () {
     };
 }();
 
-VisualLineParams.prototype._copyHook = function _copyHook(other) {
+VisualLineParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myStart.vec3_copy(other.myStart);
     this.myDirection.vec3_copy(other.myDirection);
     this.myLength = other.myLength;
@@ -168,10 +179,10 @@ VisualLineParams.prototype._copyHook = function _copyHook(other) {
 
     this.myMesh = other.myMesh;
 
-    if (other.myMaterial != null) {
+    if (other.myMaterial != null && deepCopy) {
         this.myMaterial = other.myMaterial.clone();
     } else {
-        this.myMaterial = null;
+        this.myMaterial = other.myMaterial;
     }
 
     if (other.myColor != null) {

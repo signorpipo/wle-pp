@@ -7,8 +7,14 @@ import { BasePose } from "../base_pose.js";
 export class SetHeadLocalTransformComponent extends Component {
     public static override TypeName = "pp-set-head-local-transform";
 
-    public override start(): void {
-        Globals.getHeadPose(this.engine)!.registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+    private _myActivateOnNextUpdate: boolean = false;
+
+    public override update(dt: number): void {
+        if (this._myActivateOnNextUpdate) {
+            this._onActivate();
+
+            this._myActivateOnNextUpdate = false;
+        }
     }
 
     private static readonly _onPoseUpdatedSV =
@@ -19,31 +25,42 @@ export class SetHeadLocalTransformComponent extends Component {
             headPoseTransform: quat2_create()
         };
     private _onPoseUpdated(dt: number, pose: Readonly<BasePose>): void {
-        if (this.active) {
-            if (!XRUtils.isSessionActive(this.engine)) {
-                const cameraNonXR = Globals.getPlayerObjects(this.engine)!.myCameraNonXR!;
+        if (!this.active || this._myActivateOnNextUpdate) {
+            this.onDeactivate();
+            return;
+        }
 
-                const cameraNonXRRotation = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRRotation;
-                cameraNonXR.pp_getRotationLocalQuat(cameraNonXRRotation);
+        if (!XRUtils.isSessionActive(this.engine)) {
+            const cameraNonXR = Globals.getPlayerObjects(this.engine)!.myCameraNonXR!;
 
-                if (Globals.isPoseForwardFixed(this.engine)) {
-                    const cameraNonXRUp = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRUp;
-                    cameraNonXRRotation.quat_rotateAxisRadians(Math.PI, cameraNonXRRotation.quat_getUp(cameraNonXRUp), cameraNonXRRotation);
-                }
+            const cameraNonXRRotation = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRRotation;
+            cameraNonXR.pp_getRotationLocalQuat(cameraNonXRRotation);
 
-                const cameraNonXRPosition = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRPosition;
-                this.object.pp_setPositionLocal(cameraNonXR.pp_getPositionLocal(cameraNonXRPosition));
-                this.object.pp_setRotationLocalQuat(cameraNonXRRotation);
-            } else {
-                if (pose.isValid()) {
-                    const headPoseTransform = SetHeadLocalTransformComponent._onPoseUpdatedSV.headPoseTransform;
-                    this.object.pp_setTransformLocalQuat(pose.getTransformQuat(headPoseTransform, null));
-                }
+            if (Globals.isPoseForwardFixed(this.engine)) {
+                const cameraNonXRUp = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRUp;
+                cameraNonXRRotation.quat_rotateAxisRadians(Math.PI, cameraNonXRRotation.quat_getUp(cameraNonXRUp), cameraNonXRRotation);
+            }
+
+            const cameraNonXRPosition = SetHeadLocalTransformComponent._onPoseUpdatedSV.cameraNonXRPosition;
+            this.object.pp_setPositionLocal(cameraNonXR.pp_getPositionLocal(cameraNonXRPosition));
+            this.object.pp_setRotationLocalQuat(cameraNonXRRotation);
+        } else {
+            if (pose.isValid()) {
+                const headPoseTransform = SetHeadLocalTransformComponent._onPoseUpdatedSV.headPoseTransform;
+                this.object.pp_setTransformLocalQuat(pose.getTransformQuat(headPoseTransform, null));
             }
         }
     }
 
-    public override onDestroy(): void {
+    public override onActivate(): void {
+        this._myActivateOnNextUpdate = true;
+    }
+
+    private _onActivate(): void {
+        Globals.getHeadPose(this.engine)!.registerPoseUpdatedEventListener(this, this._onPoseUpdated.bind(this));
+    }
+
+    public override onDeactivate(): void {
         Globals.getHeadPose(this.engine)?.unregisterPoseUpdatedEventListener(this);
     }
 }

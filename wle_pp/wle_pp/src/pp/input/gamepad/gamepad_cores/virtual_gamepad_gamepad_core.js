@@ -35,7 +35,7 @@ export class VirtualGamepadGamepadCore extends GamepadCore {
     }
 
     isGamepadCoreActive() {
-        return this._myVirtualGamepad.isVisible();
+        return this.isActive() && this._myVirtualGamepad.isVisible();
     }
 
     getButtonData(buttonID) {

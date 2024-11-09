@@ -10,29 +10,27 @@ export class AnalyticsManagerComponent extends Component {
     };
 
     init() {
-        this._myAnalyticsManager = null;
+        this._myAnalyticsManager = new AnalyticsManager();
+    }
 
-        // Prevents double global from same engine
+    update(dt) {
+        if (Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
+            this._myAnalyticsManager.update(dt);
+        }
+    }
+
+    onActivate() {
         if (!Globals.hasAnalyticsManager(this.engine)) {
-            this._myAnalyticsManager = new AnalyticsManager();
-
             if (BrowserUtils.isLocalhost() && this._myDisableAnalyticsOnLocalhost) {
                 this._myAnalyticsManager.setAnalyticsEnabled(false);
             }
 
             Globals.setAnalyticsManager(this._myAnalyticsManager, this.engine);
-
         }
     }
 
-    update(dt) {
-        if (this._myAnalyticsManager != null) {
-            this._myAnalyticsManager.update(dt);
-        }
-    }
-
-    onDestroy() {
-        if (this._myAnalyticsManager != null && Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
+    onDeactivate() {
+        if (Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
             Globals.removeAnalyticsManager(this.engine);
         }
     }

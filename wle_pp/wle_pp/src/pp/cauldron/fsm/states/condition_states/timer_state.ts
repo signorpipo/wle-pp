@@ -13,31 +13,31 @@ export class TimerState extends BaseConditionState implements State {
         this._myTimer = new Timer(duration, false);
     }
 
-    setDuration(duration: number): void {
+    public setDuration(duration: number): void {
         this._myTimer.setDuration(duration);
     }
 
-    onEnd(listener: () => void, id?: unknown): void {
+    public onEnd(listener: () => void, id?: unknown): void {
         this._myTimer.onEnd(listener, id);
     }
 
-    unregisterOnEnd(id?: unknown): void {
+    public unregisterOnEnd(id?: unknown): void {
         this._myTimer.unregisterOnEnd(id);
     }
 
-    update(dt: number, fsm: FSM): void {
+    public update(dt: number, fsm: FSM): void {
         this._myTimer.update(dt);
 
         super._update(dt, fsm);
     }
 
-    start(fsm: FSM, transitionData: Readonly<TransitionData>, duration?: number, transitionToPerformOnEnd?: unknown, ...transitionArgs: unknown[]): void {
+    public start(fsm: FSM, transitionData: Readonly<TransitionData>, duration?: number, transitionToPerformOnEnd?: unknown, ...transitionArgs: unknown[]): void {
         this._myTimer.start(duration);
 
         super._start(fsm, transitionData, undefined, transitionToPerformOnEnd, ...transitionArgs);
     }
 
-    init(fsm: FSM, stateData: Readonly<StateData>, duration?: number, transitionToPerformOnEnd?: unknown, ...transitionArgs: unknown[]): void {
+    public init(fsm: FSM, stateData: Readonly<StateData>, duration?: number, transitionToPerformOnEnd?: unknown, ...transitionArgs: unknown[]): void {
         this._myTimer.start(duration);
 
         super._init(fsm, stateData, undefined, transitionToPerformOnEnd, ...transitionArgs);

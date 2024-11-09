@@ -61,9 +61,29 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
 
     _setEasyTuneVariableHook() {
         if (this._myVariable != null) {
+            if (this._myValueEditIndex >= 0 && this._myValueEditIndex < 3) {
+                switch (this._myComponentIndex) {
+                    case 0:
+                        this._myValueRealValue = this._myVariable._myPosition[this._myValueEditIndex];
+                        this._myComponentStepValue = this._myVariable._myPositionStepPerSecond;
+                        break;
+                    case 1:
+                        this._myValueRealValue = this._myVariable._myRotation[this._myValueEditIndex];
+                        this._myComponentStepValue = this._myVariable._myRotationStepPerSecond;
+                        break;
+                    case 2:
+                        this._myValueRealValue = this._myVariable._myScale[this._myValueEditIndex];
+                        this._myComponentStepValue = this._myVariable._myScaleStepPerSecond;
+                        break;
+                }
+            }
+
             this._myTempPositionValue.pp_copy(this._myVariable._myPosition);
             this._myTempRotationValue.pp_copy(this._myVariable._myRotation);
             this._myTempScaleValue.pp_copy(this._myVariable._myScale);
+
+            this._myStepMultiplierValue = 0;
+            this._myStepFastEdit = false;
         }
     }
 
@@ -225,9 +245,14 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         ui.myVariableLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myVariableLabelText));
         ui.myVariableLabelCursorTargetComponent.onUnhover.add(this._genericTextUnhover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
 
+        this._myUnhoverCallbacks.push(this._genericTextUnhover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
+
         ui.myPositionLabelCursorTargetComponent.onClick.add(this._resetComponentValues.bind(this, 0));
         ui.myPositionLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myPositionLabelText));
         ui.myPositionLabelCursorTargetComponent.onUnhover.add(this._genericTextUnhover.bind(this, ui.myPositionLabelText, this._myConfig.myComponentLabelTextScale));
+
+        this._myUnhoverCallbacks.push(this._genericTextUnhover.bind(this, ui.myPositionLabelText, this._myConfig.myComponentLabelTextScale));
+
         for (let i = 0; i < 3; i++) {
             ui.myPositionIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 0, i, 1));
             ui.myPositionIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 0, i, 1));
@@ -238,19 +263,29 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
             ui.myPositionDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 0, i, 0));
             ui.myPositionDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 0, i, 0));
 
+            this._myUnhoverCallbacks.push(this._setValueEditIntensity.bind(this, 0, i, 0));
+
             ui.myPositionIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
             ui.myPositionIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
             ui.myPositionDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
             ui.myPositionDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
 
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myPositionIncreaseButtonBackgroundComponents[i].material));
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myPositionDecreaseButtonBackgroundComponents[i].material));
+
             ui.myPositionCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, 0, i));
             ui.myPositionCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, 0, i, ui.myPositionTexts[i], true));
             ui.myPositionCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, 0, i, ui.myPositionTexts[i], false));
+
+            this._myUnhoverCallbacks.push(this._setValueEditEnabled.bind(this, 0, i, ui.myPositionTexts[i], false));
         }
 
         ui.myRotationLabelCursorTargetComponent.onClick.add(this._resetComponentValues.bind(this, 1));
         ui.myRotationLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myRotationLabelText));
         ui.myRotationLabelCursorTargetComponent.onUnhover.add(this._genericTextUnhover.bind(this, ui.myRotationLabelText, this._myConfig.myComponentLabelTextScale));
+
+        this._myUnhoverCallbacks.push(this._genericTextUnhover.bind(this, ui.myRotationLabelText, this._myConfig.myComponentLabelTextScale));
+
         for (let i = 0; i < 3; i++) {
             ui.myRotationIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 1, i, 1));
             ui.myRotationIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 1, i, 1));
@@ -261,19 +296,29 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
             ui.myRotationDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 1, i, 0));
             ui.myRotationDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 1, i, 0));
 
+            this._myUnhoverCallbacks.push(this._setValueEditIntensity.bind(this, 1, i, 0));
+
             ui.myRotationIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
             ui.myRotationIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
             ui.myRotationDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
             ui.myRotationDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
 
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myRotationIncreaseButtonBackgroundComponents[i].material));
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myRotationDecreaseButtonBackgroundComponents[i].material));
+
             ui.myRotationCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, 1, i));
             ui.myRotationCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, 1, i, ui.myRotationTexts[i], true));
             ui.myRotationCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, 1, i, ui.myRotationTexts[i], false));
+
+            this._myUnhoverCallbacks.push(this._setValueEditEnabled.bind(this, 1, i, ui.myRotationTexts[i], false));
         }
 
         ui.myScaleLabelCursorTargetComponent.onClick.add(this._resetComponentValues.bind(this, 2));
         ui.myScaleLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myScaleLabelText));
         ui.myScaleLabelCursorTargetComponent.onUnhover.add(this._genericTextUnhover.bind(this, ui.myScaleLabelText, this._myConfig.myComponentLabelTextScale));
+
+        this._myUnhoverCallbacks.push(this._genericTextUnhover.bind(this, ui.myScaleLabelText, this._myConfig.myComponentLabelTextScale));
+
         for (let i = 0; i < 3; i++) {
             ui.myScaleIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, 2, i, 1));
             ui.myScaleIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, 2, i, 1));
@@ -284,19 +329,28 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
             ui.myScaleDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, 2, i, 0));
             ui.myScaleDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, 2, i, 0));
 
+            this._myUnhoverCallbacks.push(this._setValueEditIntensity.bind(this, 2, i, 0));
+
             ui.myScaleIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
             ui.myScaleIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
             ui.myScaleDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
             ui.myScaleDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
 
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myScaleIncreaseButtonBackgroundComponents[i].material));
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myScaleDecreaseButtonBackgroundComponents[i].material));
+
             ui.myScaleCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, 2, i));
             ui.myScaleCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, 2, i, ui.myScaleTexts[i], true));
             ui.myScaleCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, 2, i, ui.myScaleTexts[i], false));
+
+            this._myUnhoverCallbacks.push(this._setValueEditEnabled.bind(this, 2, i, ui.myScaleTexts[i], false));
         }
 
         ui.myPositionStepCursorTargetComponent.onClick.add(this._resetStep.bind(this, 0));
         ui.myPositionStepCursorTargetComponent.onHover.add(this._setStepEditEnabled.bind(this, 0, ui.myPositionStepText, true));
         ui.myPositionStepCursorTargetComponent.onUnhover.add(this._setStepEditEnabled.bind(this, 0, ui.myPositionStepText, false));
+
+        this._myUnhoverCallbacks.push(this._setStepEditEnabled.bind(this, 0, ui.myPositionStepText, false));
 
         ui.myPositionStepIncreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 0, 1));
         ui.myPositionStepIncreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 0, 1));
@@ -307,14 +361,21 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         ui.myPositionStepDecreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 0, 0));
         ui.myPositionStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 0, 0));
 
+        this._myUnhoverCallbacks.push(this._setStepEditIntensity.bind(this, 0, 0));
+
         ui.myPositionStepIncreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
         ui.myPositionStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
         ui.myPositionStepDecreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
         ui.myPositionStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
 
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myPositionStepIncreaseButtonBackgroundComponent.material));
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myPositionStepDecreaseButtonBackgroundComponent.material));
+
         ui.myRotationStepCursorTargetComponent.onClick.add(this._resetStep.bind(this, 1));
         ui.myRotationStepCursorTargetComponent.onHover.add(this._setStepEditEnabled.bind(this, 1, ui.myRotationStepText, true));
         ui.myRotationStepCursorTargetComponent.onUnhover.add(this._setStepEditEnabled.bind(this, 1, ui.myRotationStepText, false));
+
+        this._myUnhoverCallbacks.push(this._setStepEditEnabled.bind(this, 1, ui.myRotationStepText, false));
 
         ui.myRotationStepIncreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 1, 1));
         ui.myRotationStepIncreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 1, 1));
@@ -325,14 +386,21 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         ui.myRotationStepDecreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 1, 0));
         ui.myRotationStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 1, 0));
 
+        this._myUnhoverCallbacks.push(this._setStepEditIntensity.bind(this, 1, 0));
+
         ui.myRotationStepIncreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
         ui.myRotationStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
         ui.myRotationStepDecreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
         ui.myRotationStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
 
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myRotationStepIncreaseButtonBackgroundComponent.material));
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myRotationStepDecreaseButtonBackgroundComponent.material));
+
         ui.myScaleStepCursorTargetComponent.onClick.add(this._resetStep.bind(this, 2));
         ui.myScaleStepCursorTargetComponent.onHover.add(this._setStepEditEnabled.bind(this, 2, ui.myScaleStepText, true));
         ui.myScaleStepCursorTargetComponent.onUnhover.add(this._setStepEditEnabled.bind(this, 2, ui.myScaleStepText, false));
+
+        this._myUnhoverCallbacks.push(this._setStepEditEnabled.bind(this, 2, ui.myScaleStepText, false));
 
         ui.myScaleStepIncreaseButtonCursorTargetComponent.onDown.add(this._setStepEditIntensity.bind(this, 2, 1));
         ui.myScaleStepIncreaseButtonCursorTargetComponent.onDownOnHover.add(this._setStepEditIntensity.bind(this, 2, 1));
@@ -343,10 +411,15 @@ export class EasyTuneTransformWidget extends EasyTuneBaseWidget {
         ui.myScaleStepDecreaseButtonCursorTargetComponent.onUp.add(this._setStepEditIntensity.bind(this, 2, 0));
         ui.myScaleStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._setStepEditIntensity.bind(this, 2, 0));
 
+        this._myUnhoverCallbacks.push(this._setStepEditIntensity.bind(this, 2, 0));
+
         ui.myScaleStepIncreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
         ui.myScaleStepIncreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
         ui.myScaleStepDecreaseButtonCursorTargetComponent.onHover.add(this._genericHover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
         ui.myScaleStepDecreaseButtonCursorTargetComponent.onUnhover.add(this._genericUnhover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
+
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myScaleStepIncreaseButtonBackgroundComponent.material));
+        this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myScaleStepDecreaseButtonBackgroundComponent.material));
 
     }
 

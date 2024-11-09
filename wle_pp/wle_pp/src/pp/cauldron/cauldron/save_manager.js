@@ -42,14 +42,14 @@ export class SaveManager {
         }
 
         this._myXRVisibilityChangeEventListener = null;
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
-
         this._myWindowVisibilityChangeEventListener = function () {
             if (document.visibilityState != "visible") {
                 this._onInterrupt();
             }
         }.bind(this);
-        window.addEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
+
+        this._myActive = false;
+        this.setActive(true);
 
         this._myDestroyed = false;
     }
@@ -468,13 +468,30 @@ export class SaveManager {
         this._myLoadSavesEmitter.remove(listenerID);
     }
 
+    setActive(active) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (active) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
+                window.addEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
+            } else {
+                XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
+                XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+
+                window.removeEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
+            }
+        }
+    }
+
+    isActive() {
+        return this._myActive;
+    }
+
     destroy() {
         this._myDestroyed = true;
 
-        XRUtils.getSession(this._myEngine)?.removeEventListener("visibilitychange", this._myXRVisibilityChangeEventListener);
-        XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
-
-        window.removeEventListener("visibilitychange", this._myWindowVisibilityChangeEventListener);
+        this.setActive(false);
     }
 
     isDestroyed() {

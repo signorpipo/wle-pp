@@ -30,11 +30,34 @@ export class XRGamepadCore extends GamepadCore {
 
     isGamepadCoreActive() {
         // connected == null is to fix webxr emulator that leaves that field undefined
-        return this._myXRSessionActive && this._myGamepad != null && (this._myGamepad.connected == null || this._myGamepad.connected);
+        return this.isActive() && this._myXRSessionActive && this._myGamepad != null && (this._myGamepad.connected == null || this._myGamepad.connected);
     }
 
-    _startHook() {
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this.getEngine());
+    _setActiveHook(active) {
+        if (this.isActive() != active) {
+            if (active) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this.getEngine());
+            } else {
+                this._mySelectPressed = false;
+                this._mySqueezePressed = false;
+
+                this._myXRSessionActive = false;
+                this._myInputSource = null;
+                this._myGamepad = null;
+
+                XRUtils.getSession(this.getEngine())?.removeEventListener("selectstart", this._mySelectStartEventListener);
+                XRUtils.getSession(this.getEngine())?.removeEventListener("selectend", this._mySelectEndEventListener);
+                XRUtils.getSession(this.getEngine())?.removeEventListener("squeezestart", this._mySqueezeStartEventListener);
+                XRUtils.getSession(this.getEngine())?.removeEventListener("squeezeend", this._mySqueezeEndEventListener);
+
+                XRUtils.unregisterSessionStartEndEventListeners(this, this.getEngine());
+
+                this._mySelectStartEventListener = null;
+                this._mySelectEndEventListener = null;
+                this._mySqueezeStartEventListener = null;
+                this._mySqueezeEndEventListener = null;
+            }
+        }
     }
 
     _preUpdateHook(dt) {
@@ -70,12 +93,7 @@ export class XRGamepadCore extends GamepadCore {
                     button = this._myGamepad.buttons[3];
                     break;
                 case GamepadButtonID.TOP_BUTTON:
-                    if (this._myGamepad.buttons.length >= 6) {
-                        button = this._myGamepad.buttons[5];
-                    } else if (this._myGamepad.buttons.length >= 3) {
-                        // This way if you are using a basic touch gamepad, top button will work anyway
-                        button = this._myGamepad.buttons[2];
-                    }
+                    button = this._myGamepad.buttons[5];
                     break;
                 case GamepadButtonID.BOTTOM_BUTTON:
                     button = this._myGamepad.buttons[4];
@@ -87,8 +105,14 @@ export class XRGamepadCore extends GamepadCore {
                     button = null;
                     break;
                 case GamepadButtonID.MENU:
-                    button = this._myGamepad.buttons[7];
-                    break;
+                    {
+                        const inputSourceProfiles = this._myInputSource.profiles;
+                        if (inputSourceProfiles.includes("oculus-touch-v3") || inputSourceProfiles.includes("meta-quest-touch-pro")) {
+                            button = this._myGamepad.buttons[this._myGamepad.buttons.length - 1];
+                        }
+
+                        break;
+                    }
                 case GamepadButtonID.TOUCHPAD:
                     button = this._myGamepad.buttons[2];
                     break;
@@ -225,14 +249,5 @@ export class XRGamepadCore extends GamepadCore {
         if (this._myInputSource != null && this._myInputSource == event.inputSource) {
             this._mySqueezePressed = false;
         }
-    }
-
-    _destroyHook() {
-        XRUtils.getSession(this.getEngine())?.removeEventListener("selectstart", this._mySelectStartEventListener);
-        XRUtils.getSession(this.getEngine())?.removeEventListener("selectend", this._mySelectEndEventListener);
-        XRUtils.getSession(this.getEngine())?.removeEventListener("squeezestart", this._mySqueezeStartEventListener);
-        XRUtils.getSession(this.getEngine())?.removeEventListener("squeezeend", this._mySqueezeEndEventListener);
-
-        XRUtils.unregisterSessionStartEndEventListeners(this, this.getEngine());
     }
 }

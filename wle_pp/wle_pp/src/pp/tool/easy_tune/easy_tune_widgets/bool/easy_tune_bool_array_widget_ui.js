@@ -22,7 +22,7 @@ export class EasyTuneBoolArrayWidgetUI extends EasyTuneBaseWidgetUI {
     }
 
     _createSkeletonHook() {
-        this.myValuesPanel = this.myDisplayPanel.pp_addObject();
+        this.myValuesPanel = this.myDisplayPanel.pp_addChild();
 
         this.myValuePanels = [];
         this.myValueTexts = [];
@@ -39,19 +39,19 @@ export class EasyTuneBoolArrayWidgetUI extends EasyTuneBaseWidgetUI {
         this.myValueDecreaseButtonCursorTargets = [];
 
         for (let i = 0; i < this._myConfig.myArraySize; i++) {
-            this.myValuePanels[i] = this.myValuesPanel.pp_addObject();
-            this.myValueTexts[i] = this.myValuePanels[i].pp_addObject();
-            this.myValueCursorTargets[i] = this.myValuePanels[i].pp_addObject();
+            this.myValuePanels[i] = this.myValuesPanel.pp_addChild();
+            this.myValueTexts[i] = this.myValuePanels[i].pp_addChild();
+            this.myValueCursorTargets[i] = this.myValuePanels[i].pp_addChild();
 
-            this.myValueIncreaseButtonPanels[i] = this.myValuePanels[i].pp_addObject();
-            this.myValueIncreaseButtonBackgrounds[i] = this.myValueIncreaseButtonPanels[i].pp_addObject();
-            this.myValueIncreaseButtonTexts[i] = this.myValueIncreaseButtonPanels[i].pp_addObject();
-            this.myValueIncreaseButtonCursorTargets[i] = this.myValueIncreaseButtonPanels[i].pp_addObject();
+            this.myValueIncreaseButtonPanels[i] = this.myValuePanels[i].pp_addChild();
+            this.myValueIncreaseButtonBackgrounds[i] = this.myValueIncreaseButtonPanels[i].pp_addChild();
+            this.myValueIncreaseButtonTexts[i] = this.myValueIncreaseButtonPanels[i].pp_addChild();
+            this.myValueIncreaseButtonCursorTargets[i] = this.myValueIncreaseButtonPanels[i].pp_addChild();
 
-            this.myValueDecreaseButtonPanels[i] = this.myValuePanels[i].pp_addObject();
-            this.myValueDecreaseButtonBackgrounds[i] = this.myValueDecreaseButtonPanels[i].pp_addObject();
-            this.myValueDecreaseButtonTexts[i] = this.myValueDecreaseButtonPanels[i].pp_addObject();
-            this.myValueDecreaseButtonCursorTargets[i] = this.myValueDecreaseButtonPanels[i].pp_addObject();
+            this.myValueDecreaseButtonPanels[i] = this.myValuePanels[i].pp_addChild();
+            this.myValueDecreaseButtonBackgrounds[i] = this.myValueDecreaseButtonPanels[i].pp_addChild();
+            this.myValueDecreaseButtonTexts[i] = this.myValueDecreaseButtonPanels[i].pp_addChild();
+            this.myValueDecreaseButtonCursorTargets[i] = this.myValueDecreaseButtonPanels[i].pp_addChild();
         }
     }
 

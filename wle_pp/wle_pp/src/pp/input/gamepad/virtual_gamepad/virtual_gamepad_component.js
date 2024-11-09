@@ -1,5 +1,5 @@
 import { Component, Property } from "@wonderlandengine/api";
-import { InputUtils } from "wle-pp/input/cauldron/input_utils.js";
+import { InputUtils } from "../../../input/cauldron/input_utils.js";
 import { Globals } from "../../../pp/globals.js";
 import { Handedness } from "../../cauldron/input_types.js";
 import { GamepadAxesID, GamepadButtonID } from "../gamepad_buttons.js";
@@ -145,9 +145,17 @@ export class VirtualGamepadComponent extends Component {
 
         this._myLeftVirtualGamepadGamepadCore = null;
         this._myRightVirtualGamepadGamepadCore = null;
+
+        this._myActivateOnNextUpdate = false;
     }
 
     update(dt) {
+        if (this._myActivateOnNextUpdate) {
+            this._onActivate();
+
+            this._myActivateOnNextUpdate = false;
+        }
+
         if (this._myFirstUpdate) {
             this._myFirstUpdate = false;
 
@@ -446,13 +454,36 @@ export class VirtualGamepadComponent extends Component {
         return buttonID;
     }
 
+    onActivate() {
+        this._myActivateOnNextUpdate = true;
+    }
+
+    _onActivate() {
+        if (!this._myFirstUpdate && this._myAddToUniversalGamepad) {
+            Globals.getLeftGamepad(this.engine).addGamepadCore("pp_left_virtual_gamepad", this._myLeftVirtualGamepadGamepadCore);
+            Globals.getRightGamepad(this.engine).addGamepadCore("pp_right_virtual_gamepad", this._myRightVirtualGamepadGamepadCore);
+        }
+    }
+
+    onDeactivate() {
+        this._myVirtualGamepad?.setVisible(false);
+
+        if (!this._myFirstUpdate && this._myAddToUniversalGamepad) {
+            // Sadly here, if it can't manage to remove them due to global gamepads being null,
+            // then if the gamepad is activated again it will still have and use the virtual gamepad cores
+            // Usually not an issue since this is happens only when the whole scene is deactivated
+            Globals.getLeftGamepad(this.engine)?.removeGamepadCore("pp_left_virtual_gamepad");
+            Globals.getRightGamepad(this.engine)?.removeGamepadCore("pp_right_virtual_gamepad");
+
+            this._myLeftVirtualGamepadGamepadCore.setActive(false);
+            this._myRightVirtualGamepadGamepadCore.setActive(false);
+        }
+    }
+
     onDestroy() {
-        Globals.getLeftGamepad(this.engine)?.removeGamepadCore("pp_left_virtual_gamepad");
-        Globals.getRightGamepad(this.engine)?.removeGamepadCore("pp_right_virtual_gamepad");
+        this._myLeftVirtualGamepadGamepadCore?.destroy();
+        this._myRightVirtualGamepadGamepadCore?.destroy();
 
-        this._myLeftVirtualGamepadGamepadCore.destroy();
-        this._myRightVirtualGamepadGamepadCore.destroy();
-
-        this._myVirtualGamepad.destroy();
+        this._myVirtualGamepad?.destroy();
     }
 }

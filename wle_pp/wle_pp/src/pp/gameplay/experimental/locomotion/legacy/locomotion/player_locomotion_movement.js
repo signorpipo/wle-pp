@@ -3,7 +3,6 @@ export class PlayerLocomotionMovementRuntimeParams {
     constructor() {
         this.myIsFlying = false;
         this.myGravitySpeed = 0;
-        this.myCollisionRuntimeParams = null;
 
         this.myIsTeleportDetecting = false;
         this.myIsTeleporting = false;
@@ -15,6 +14,8 @@ export class PlayerLocomotionMovement {
 
     constructor(locomotionRuntimeParams) {
         this._myLocomotionRuntimeParams = locomotionRuntimeParams;
+
+        this._myActive = false;
     }
 
     getRuntimeParams() {
@@ -27,6 +28,14 @@ export class PlayerLocomotionMovement {
 
     stop() {
 
+    }
+
+    setActive(active) {
+        this._myActive = active;
+    }
+
+    isActive() {
+        return this._myActive;
     }
 
     canStop() {

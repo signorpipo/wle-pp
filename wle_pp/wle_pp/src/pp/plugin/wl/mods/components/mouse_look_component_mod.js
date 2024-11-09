@@ -77,7 +77,13 @@ function _initMouseLookComponentModPrototype() {
                 }
             }
         }.bind(this);
+    };
 
+    // New Functions
+
+    mouseLookComponentMod.start = function start() { };
+
+    mouseLookComponentMod.onActivate = function onActivate() {
         document.body.addEventListener("pointermove", this.pointerMoveListener);
 
         if (this.requireMouseDown) {
@@ -93,11 +99,6 @@ function _initMouseLookComponentModPrototype() {
         document.body.addEventListener("pointerleave", this.pointerLeave);
     };
 
-    // New Functions
-
-    mouseLookComponentMod.start = function start() { };
-    mouseLookComponentMod.onActivate = function onActivate() { };
-
     mouseLookComponentMod.onDeactivate = function onDeactivate() {
         if (this.mouseDown) {
             //document.body.style.cursor = "default";
@@ -108,9 +109,7 @@ function _initMouseLookComponentModPrototype() {
 
         this.pointerId = null;
         this.prevMoveEvent = null;
-    };
 
-    mouseLookComponentMod.onDestroy = function onDestroy() {
         document.body.removeEventListener("pointermove", this.pointerMoveListener);
         Globals.getCanvas(this.engine).removeEventListener("contextmenu", this.contextMenuListener);
         Globals.getCanvas(this.engine).removeEventListener("pointerdown", this.pointerDown);

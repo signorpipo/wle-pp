@@ -39,7 +39,7 @@ CollisionCheckHorizontalMovement.prototype._horizontalMovementCheck = function (
     let _localCeilingObjectsToIgnore = [];
     let _localGroundCeilingObjectsToIgnore = [];
 
-    let objectsEqualCallback = (first, second) => first.pp_equals(second);
+    let objectsEqualCallback = (first, second) => first == second;
 
     let movementDirection = vec3_create();
     let heightOffset = vec3_create();

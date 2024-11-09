@@ -37,12 +37,22 @@ export class VisualRaycastParams extends AbstractVisualElementParams {
         this._myRaycastResults.copy(result);
     }
 
-    _copyHook(other) {
+    _copyHook(other, deepCopy) {
         // Implemented outside class definition
     }
 
     _new() {
-        return new VisualRaycastParams();
+        return new VisualRaycastParams(this.myParent.pp_getEngine());
+    }
+
+    _equalsHook(other) {
+        return this.myHitNormalLength == other.myHitNormalLength &&
+            this.myThickness == other.myThickness &&
+            this.myShowOnlyFirstHit == other.myShowOnlyFirstHit &&
+            this.myRayMaterial == other.myRayMaterial &&
+            this.myHitNormalMaterial == other.myHitNormalMaterial &&
+            this.myLocal == other.myLocal &&
+            this._myRaycastResults.equals(other._myRaycastResults);
     }
 }
 
@@ -109,7 +119,7 @@ export class VisualRaycast extends AbstractVisualElement {
 
     }
 
-    _refresh() {
+    _refreshHook() {
         for (let visualRaycastHit of this._myVisualRaycastHitList) {
             visualRaycastHit.setVisible(false);
         }
@@ -196,20 +206,6 @@ export class VisualRaycast extends AbstractVisualElement {
         }
     }
 
-
-    _forceRefreshHook() {
-        this._myVisualRaycast.forceRefresh();
-
-        if (this._myParams.myRaycastResults.myHits.length > 0) {
-            let hitsToRefresh = Math.min(this._myParams.myRaycastResults.myHits.length, this._myVisualRaycastHitList.length);
-
-            for (let i = 0; i < hitsToRefresh; i++) {
-                let visualRaycastHit = this._myVisualRaycastHitList[i];
-                visualRaycastHit.forceRefresh();
-            }
-        }
-    }
-
     _new(params) {
         return new VisualRaycast(params);
     }
@@ -235,22 +231,22 @@ export class VisualRaycast extends AbstractVisualElement {
 
 // IMPLEMENTATION
 
-VisualRaycastParams.prototype._copyHook = function _copyHook(other) {
+VisualRaycastParams.prototype._copyHook = function _copyHook(other, deepCopy) {
     this.myRaycastResults = other.myRaycastResults;
     this.myHitNormalLength = other.myHitNormalLength;
     this.myThickness = other.myThickness;
     this.myShowOnlyFirstHit = other.myShowOnlyFirstHit;
 
-    if (other.myRayMaterial != null) {
+    if (other.myRayMaterial != null && deepCopy) {
         this.myRayMaterial = other.myRayMaterial.clone();
     } else {
-        this.myRayMaterial = null;
+        this.myRayMaterial = other.myRayMaterial;
     }
 
-    if (other.myHitNormalMaterial != null) {
-        this.myHitNormalMaterial = other.myHitNormalMaterial.clone();
+    if (other.myHitNormalMaterial != null && deepCopy) {
+        this.myHitNormalMaterial = other.myForwardMaterial.clone();
     } else {
-        this.myHitNormalMaterial = null;
+        this.myHitNormalMaterial = other.myHitNormalMaterial;
     }
 
     this.myParent = other.myParent;

@@ -3,7 +3,6 @@ import { Globals } from "../../../pp/globals.js";
 
 export class CopyPlayerTransformComponent extends Component {
     static TypeName = "pp-copy-player-transform";
-    static Properties = {};
 
     update(dt) {
         let player = Globals.getPlayerObjects(this.engine).myPlayer;

@@ -30,10 +30,10 @@ export interface Matrix4Extension<MatrixType extends Matrix4> {
         m30: number, m31: number, m32: number, m33: number): this;
     mat4_set<T extends MatrixType>(this: T, uniformValue: number): this;
 
-
-
     mat4_copy<T extends MatrixType>(this: T, matrix: Readonly<Matrix4>): this;
     mat4_clone<T extends MatrixType>(this: Readonly<T>): T;
+
+    mat4_equals<T extends MatrixType>(this: Readonly<T>, matrix: Readonly<Matrix4>, epsilon?: number): boolean;
 
 
 

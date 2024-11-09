@@ -264,6 +264,7 @@ CollisionCheckTeleport.prototype._teleport = function () {
         collisionRuntimeParams.myOriginalPosition = transformQuat.quat2_getPosition(collisionRuntimeParams.myOriginalPosition);
 
         collisionRuntimeParams.myOffsetUp.vec3_copy(transformUp);
+        collisionRuntimeParams.myTeleportForward.vec3_copy(forwardForHorizontal);
 
         collisionRuntimeParams.myOriginalHeight = collisionCheckParams.myHeight;
 

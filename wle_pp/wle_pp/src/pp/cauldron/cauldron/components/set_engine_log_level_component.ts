@@ -1,5 +1,4 @@
-import { Component, LogLevel } from "@wonderlandengine/api";
-import { property } from "@wonderlandengine/api/decorators.js";
+import { Component, LogLevel, property } from "@wonderlandengine/api";
 
 export class SetEngineLogLevelComponent extends Component {
     public static override TypeName = "pp-set-engine-log-level";

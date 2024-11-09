@@ -9,6 +9,7 @@ export class EasyTuneBaseWidgetUI {
     constructor(engine = Globals.getMainEngine()) {
         this._myEngine = engine;
 
+        this._myActive = false;
         this._myDestroyed = false;
     }
 
@@ -29,7 +30,7 @@ export class EasyTuneBaseWidgetUI {
 
         this._setTransformForNonXR();
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
+        this.setActive(true);
     }
 
     setVisible(visible) {
@@ -70,48 +71,48 @@ export class EasyTuneBaseWidgetUI {
     // Skeleton
 
     _createSkeleton() {
-        this.myPivotObject = this._myParentObject.pp_addObject();
+        this.myPivotObject = this._myParentObject.pp_addChild();
 
-        this.myBackPanel = this.myPivotObject.pp_addObject();
-        this.myBackBackground = this.myBackPanel.pp_addObject();
+        this.myBackPanel = this.myPivotObject.pp_addChild();
+        this.myBackBackground = this.myBackPanel.pp_addChild();
 
         // Display
 
-        this.myDisplayPanel = this.myPivotObject.pp_addObject();
+        this.myDisplayPanel = this.myPivotObject.pp_addChild();
 
-        this.myVariableLabelPanel = this.myDisplayPanel.pp_addObject();
-        this.myVariableLabelText = this.myVariableLabelPanel.pp_addObject();
-        this.myVariableLabelCursorTarget = this.myVariableLabelPanel.pp_addObject();
+        this.myVariableLabelPanel = this.myDisplayPanel.pp_addChild();
+        this.myVariableLabelText = this.myVariableLabelPanel.pp_addChild();
+        this.myVariableLabelCursorTarget = this.myVariableLabelPanel.pp_addChild();
 
         // Next/Previous
 
-        this.myNextButtonPanel = this.myVariableLabelPanel.pp_addObject();
-        this.myNextButtonBackground = this.myNextButtonPanel.pp_addObject();
-        this.myNextButtonText = this.myNextButtonPanel.pp_addObject();
-        this.myNextButtonCursorTarget = this.myNextButtonPanel.pp_addObject();
+        this.myNextButtonPanel = this.myVariableLabelPanel.pp_addChild();
+        this.myNextButtonBackground = this.myNextButtonPanel.pp_addChild();
+        this.myNextButtonText = this.myNextButtonPanel.pp_addChild();
+        this.myNextButtonCursorTarget = this.myNextButtonPanel.pp_addChild();
 
-        this.myPreviousButtonPanel = this.myVariableLabelPanel.pp_addObject();
-        this.myPreviousButtonBackground = this.myPreviousButtonPanel.pp_addObject();
-        this.myPreviousButtonText = this.myPreviousButtonPanel.pp_addObject();
-        this.myPreviousButtonCursorTarget = this.myPreviousButtonPanel.pp_addObject();
+        this.myPreviousButtonPanel = this.myVariableLabelPanel.pp_addChild();
+        this.myPreviousButtonBackground = this.myPreviousButtonPanel.pp_addChild();
+        this.myPreviousButtonText = this.myPreviousButtonPanel.pp_addChild();
+        this.myPreviousButtonCursorTarget = this.myPreviousButtonPanel.pp_addChild();
 
         // Import/Export
 
-        this.myImportExportPanel = this.myPivotObject.pp_addObject();
+        this.myImportExportPanel = this.myPivotObject.pp_addChild();
 
-        this.myImportButtonPanel = this.myImportExportPanel.pp_addObject();
-        this.myImportButtonBackground = this.myImportButtonPanel.pp_addObject();
-        this.myImportButtonText = this.myImportButtonPanel.pp_addObject();
-        this.myImportButtonCursorTarget = this.myImportButtonPanel.pp_addObject();
+        this.myImportButtonPanel = this.myImportExportPanel.pp_addChild();
+        this.myImportButtonBackground = this.myImportButtonPanel.pp_addChild();
+        this.myImportButtonText = this.myImportButtonPanel.pp_addChild();
+        this.myImportButtonCursorTarget = this.myImportButtonPanel.pp_addChild();
 
-        this.myExportButtonPanel = this.myImportExportPanel.pp_addObject();
-        this.myExportButtonBackground = this.myExportButtonPanel.pp_addObject();
-        this.myExportButtonText = this.myExportButtonPanel.pp_addObject();
-        this.myExportButtonCursorTarget = this.myExportButtonPanel.pp_addObject();
+        this.myExportButtonPanel = this.myImportExportPanel.pp_addChild();
+        this.myExportButtonBackground = this.myExportButtonPanel.pp_addChild();
+        this.myExportButtonText = this.myExportButtonPanel.pp_addChild();
+        this.myExportButtonCursorTarget = this.myExportButtonPanel.pp_addChild();
 
         // Pointer
 
-        this.myPointerCursorTarget = this.myPivotObject.pp_addObject();
+        this.myPointerCursorTarget = this.myPivotObject.pp_addChild();
 
         this._createSkeletonHook();
     }
@@ -264,7 +265,7 @@ export class EasyTuneBaseWidgetUI {
 
     _setupTextComponent(textComponent) {
         textComponent.alignment = this._myConfig.myTextAlignment;
-        textComponent.justification = this._myConfig.myTextJustification;
+        textComponent.verticalAlignment = this._myConfig.myTextVerticalAlignment;
         textComponent.material = this._myParams.myTextMaterial.clone();
         textComponent.material.color = this._myConfig.myTextColor;
         textComponent.text = "";
@@ -286,10 +287,22 @@ export class EasyTuneBaseWidgetUI {
         this.myPivotObject.pp_setPositionLocal(this._myConfig.myPivotObjectPositions[ToolHandedness.NONE]);
     }
 
+    setActive(active) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (this._myActive) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myEngine);
+            } else {
+                XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+            }
+        }
+    }
+
     destroy() {
         this._myDestroyed = true;
 
-        XRUtils.unregisterSessionStartEndEventListeners(this, this._myEngine);
+        this.setActive(false);
     }
 
     isDestroyed() {

@@ -55,6 +55,18 @@ export function clone<T extends Vector3>(vector: Readonly<T>): T {
     return vector.slice(0) as T;
 }
 
+export function equals(first: Readonly<Vector3>, second: Readonly<Vector3>, epsilon: number = 0): boolean {
+    let equals = first.length == second.length;
+
+    if (equals) {
+        equals &&= (Math.abs(first[0] - second[0]) <= epsilon);
+        equals &&= (Math.abs(first[1] - second[1]) <= epsilon);
+        equals &&= (Math.abs(first[2] - second[2]) <= epsilon);
+    }
+
+    return equals;
+}
+
 export function isNormalized(vector: Readonly<Vector3>, epsilon: number = MathUtils.EPSILON): boolean {
     return Math.abs(Vec3Utils.lengthSquared(vector) - 1) < epsilon;
 }
@@ -98,18 +110,6 @@ export function distance(first: Readonly<Vector3>, second: Readonly<Vector3>): n
 
 export function distanceSquared(first: Readonly<Vector3>, second: Readonly<Vector3>): number {
     return gl_vec3.squaredDistance(first as unknown as gl_vec3_type, second as unknown as gl_vec3_type);
-}
-
-export function equals(first: Readonly<Vector3>, second: Readonly<Vector3>, epsilon: number = 0): boolean {
-    let equals = first.length == second.length;
-
-    if (equals) {
-        equals &&= (Math.abs(first[0] - second[0]) <= epsilon);
-        equals &&= (Math.abs(first[1] - second[1]) <= epsilon);
-        equals &&= (Math.abs(first[2] - second[2]) <= epsilon);
-    }
-
-    return equals;
 }
 
 export function add<T extends Vector3>(first: Readonly<T>, second: Readonly<Vector3>): T;
@@ -1144,6 +1144,7 @@ export const Vec3Utils = {
     set,
     copy,
     clone,
+    equals,
     isNormalized,
     normalize,
     isZero,
@@ -1153,7 +1154,6 @@ export const Vec3Utils = {
     lengthSigned,
     distance,
     distanceSquared,
-    equals,
     add,
     sub,
     mul,

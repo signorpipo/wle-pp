@@ -1,4 +1,4 @@
-import { RaycastBlockColliderType, RaycastHit, RaycastParams, RaycastResults } from "../../../../../../cauldron/physics/physics_raycast_params.js";
+import { RaycastHit, RaycastParams, RaycastResults } from "../../../../../../cauldron/physics/physics_raycast_params.js";
 import { PhysicsUtils } from "../../../../../../cauldron/physics/physics_utils.js";
 import { quat2_create, vec3_create, vec4_create } from "../../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../../pp/globals.js";
@@ -122,16 +122,14 @@ CollisionCheckBase.prototype._raycastAndDebug = function () {
         if (isHorizontal) {
             this._myRaycastParams.myBlockLayerFlags.copy(collisionCheckParams.myHorizontalBlockLayerFlags);
             this._myRaycastParams.myObjectsToIgnore = collisionCheckParams.myHorizontalObjectsToIgnore;
+            this._myRaycastParams.myBlockColliderType = collisionCheckParams.myHorizontalBlockColliderType;
         } else {
             this._myRaycastParams.myBlockLayerFlags.copy(collisionCheckParams.myVerticalBlockLayerFlags);
             this._myRaycastParams.myObjectsToIgnore = collisionCheckParams.myVerticalObjectsToIgnore;
+            this._myRaycastParams.myBlockColliderType = collisionCheckParams.myVerticalBlockColliderType;
         }
 
         this._myRaycastParams.myIgnoreHitsInsideCollision = ignoreHitsInsideCollision;
-
-        // #TODO it should just hit NORMAL colliders, but for perf reasons since I need to get the component from the object it's better to keep it like this 
-        // When changing this to NORMAL, do also remember to update the other place like player teleport where BOTH is also used to NORMAL
-        this._myRaycastParams.myBlockColliderType = RaycastBlockColliderType.BOTH;
 
         let raycastResult = null;
 

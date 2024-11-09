@@ -41,10 +41,10 @@ export interface Vector3Extension<VectorType extends Vector3> {
     vec3_set<T extends VectorType>(this: T, x: number, y: number, z: number): this;
     vec3_set<T extends VectorType>(this: T, uniformValue: number): this;
 
-
-
     vec3_copy<T extends VectorType>(this: T, vector: Readonly<Vector3>): this;
     vec3_clone<T extends VectorType>(this: Readonly<T>): T;
+
+    vec3_equals<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector3>, epsilon?: number): boolean;
 
 
 
@@ -64,9 +64,6 @@ export interface Vector3Extension<VectorType extends Vector3> {
     vec3_distance<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector3>): number;
     vec3_distanceSquared<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector3>): number;
 
-
-
-    vec3_equals<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector3>, epsilon?: number): boolean;
 
 
     vec3_add<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector3>): T;

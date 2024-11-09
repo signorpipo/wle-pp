@@ -17,7 +17,7 @@ export class KeyboardGamepadCore extends GamepadCore {
     }
 
     isGamepadCoreActive() {
-        return true;
+        return this.isActive();
     }
 
     getButtonData(buttonID) {

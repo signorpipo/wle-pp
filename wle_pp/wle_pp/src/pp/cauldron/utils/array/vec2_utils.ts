@@ -51,6 +51,17 @@ export function clone<T extends Vector2>(vector: Readonly<T>): T {
     return vector.slice(0) as T;
 }
 
+export function equals(first: Readonly<Vector2>, second: Readonly<Vector2>, epsilon: number = 0): boolean {
+    let equals = first.length == second.length;
+
+    if (equals) {
+        equals &&= (Math.abs(first[0] - second[0]) <= epsilon);
+        equals &&= (Math.abs(first[1] - second[1]) <= epsilon);
+    }
+
+    return equals;
+}
+
 export function length(vector: Readonly<Vector2>): number {
     return gl_vec2.length(vector as unknown as gl_vec2_type);
 }
@@ -100,6 +111,7 @@ export const Vec2Utils = {
     set,
     copy,
     clone,
+    equals,
     length,
     normalize,
     zero,

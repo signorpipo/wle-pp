@@ -1,4 +1,5 @@
 import { PhysicsLayerFlags } from "../../../../cauldron/physics/physics_layer_flags.js";
+import { RaycastBlockColliderType } from "../../../../cauldron/physics/physics_raycast_params.js";
 import { quat_create, vec3_create } from "../../../../plugin/js/extensions/array/vec_create_extension.js";
 
 export class CharacterColliderSetup {
@@ -126,6 +127,7 @@ export class CharacterColliderHorizontalCheckParams {
 
         this.myHorizontalCheckBlockLayerFlags = new PhysicsLayerFlags();
         this.myHorizontalCheckObjectsToIgnore = [];
+        this.myHorizontalBlockColliderType = RaycastBlockColliderType.BOTH;
     }
 
     copy(other) {
@@ -151,6 +153,7 @@ export class CharacterColliderVerticalCheckParams {
         this.myVerticalMovementCheckPerformCheckOnBothSides = false;
 
         this.myVerticalPositionCheckEnabled = false;
+        this.myVerticalPositionCheckPerformCheckOnBothSides = false;
 
         this.myVerticalCheckAllowHitsInsideCollisionIfOneValid = false;
         // If at least one vertical raycast is valid (no hit, outside collision) is it ok if the other checks are completely inside a collision
@@ -158,6 +161,7 @@ export class CharacterColliderVerticalCheckParams {
 
         this.myVerticalCheckBlockLayerFlags = new PhysicsLayerFlags();
         this.myVerticalCheckObjectsToIgnore = [];
+        this.myVerticalBlockColliderType = RaycastBlockColliderType.BOTH;
     }
 
     copy(other) {
@@ -292,9 +296,13 @@ export class CharacterColliderSplitMovementParams {
         this.mySplitMovementMaxSteps = null;
         this.mySplitMovementMaxStepLength = null;
         this.mySplitMovementMinStepLength = null;
+        this.mySplitMovementLastStepCanBeLongerThanMaxStepLength = false;
 
         this.mySplitMovementStopOnHorizontalMovementFailed = false;
         this.mySplitMovementStopOnVerticalMovementFailed = false;
+        this.mySplitMovementStopOnVerticalMovementReduced = false;
+
+        this.mySplitMovementStopAndFailIfMovementWouldBeReduced = false;
 
         /*
         this will not be available until the bridge is removed with a new implementation that directly use the collider and results
@@ -454,6 +462,7 @@ CharacterColliderHorizontalCheckParams.prototype.copy = function copy(other) {
 
     this.myHorizontalCheckBlockLayerFlags.setMask(other.myHorizontalCheckBlockLayerFlags.getMask());
     this.myHorizontalCheckObjectsToIgnore.pp_copy(other.myHorizontalCheckObjectsToIgnore);
+    this.myHorizontalBlockColliderType = other.myHorizontalBlockColliderType;
 };
 
 CharacterColliderVerticalCheckParams.prototype.copy = function copy(other) {
@@ -472,11 +481,13 @@ CharacterColliderVerticalCheckParams.prototype.copy = function copy(other) {
     this.myVerticalMovementCheckPerformCheckOnBothSides = other.myVerticalMovementCheckPerformCheckOnBothSides;
 
     this.myVerticalPositionCheckEnabled = other.myVerticalPositionCheckEnabled;
+    this.myVerticalPositionCheckPerformCheckOnBothSides = other.myVerticalPositionCheckPerformCheckOnBothSides;
 
     this.myVerticalCheckAllowHitsInsideCollisionIfOneValid = other.myVerticalCheckAllowHitsInsideCollisionIfOneValid;
 
     this.myVerticalCheckBlockLayerFlags.setMask(other.myVerticalCheckBlockLayerFlags.getMask());
     this.myVerticalCheckObjectsToIgnore.pp_copy(other.myVerticalCheckObjectsToIgnore);
+    this.myVerticalBlockColliderType = other.myVerticalBlockColliderType;
 };
 
 CharacterColliderWallSlideParams.prototype.copy = function copy(other) {
@@ -561,9 +572,13 @@ CharacterColliderSplitMovementParams.prototype.copy = function copy(other) {
     this.mySplitMovementMaxSteps = other.mySplitMovementMaxSteps;
     this.mySplitMovementMaxStepLength = other.mySplitMovementMaxStepLength;
     this.mySplitMovementMinStepLength = other.mySplitMovementMinStepLength;
+    this.mySplitMovementLastStepCanBeLongerThanMaxStepLength = other.mySplitMovementLastStepCanBeLongerThanMaxStepLength;
 
     this.mySplitMovementStopOnHorizontalMovementFailed = other.mySplitMovementStopOnHorizontalMovementFailed;
     this.mySplitMovementStopOnVerticalMovementFailed = other.mySplitMovementStopOnVerticalMovementFailed;
+    this.mySplitMovementStopOnVerticalMovementReduced = other.mySplitMovementStopOnVerticalMovementReduced;
+
+    this.mySplitMovementStopAndFailIfMovementWouldBeReduced = other.mySplitMovementStopAndFailIfMovementWouldBeReduced;
 
     /*
     this.mySplitMovementStopOnCallback = other.mySplitMovementStopOnCallback;

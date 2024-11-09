@@ -27,6 +27,10 @@ function _initVec3ExtensionProtoype(): void {
             return Vec3Utils.clone(this);
         },
 
+        vec3_equals(this: Readonly<Vector3>, vector: Readonly<Vector3>, epsilon?: number): boolean {
+            return Vec3Utils.equals(this, vector, epsilon);
+        },
+
         vec3_isNormalized(this: Readonly<Vector3>, epsilon?: number): boolean {
             return Vec3Utils.isNormalized(this, epsilon);
         },
@@ -59,10 +63,6 @@ function _initVec3ExtensionProtoype(): void {
 
         vec3_distanceSquared(this: Readonly<Vector3>, vector: Readonly<Vector3>): number {
             return Vec3Utils.distanceSquared(this, vector);
-        },
-
-        vec3_equals(this: Readonly<Vector3>, vector: Readonly<Vector3>, epsilon?: number): boolean {
-            return Vec3Utils.equals(this, vector, epsilon);
         },
 
         vec3_add<T extends Vector3, U extends Vector3>(this: Readonly<T>, vector: Readonly<Vector3>, out?: T | U): T | U {

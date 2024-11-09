@@ -24,10 +24,11 @@ export class EasyTuneBaseArrayWidgetSelector {
 
         this._myEngine = engine;
 
+        this._myActive = true;
         this._myDestroyed = false;
     }
 
-    setEasyTuneVariable(variable, appendToVariableName) {
+    setEasyTuneVariable(variable, appendToVariableName, skipSetVisible = false) {
         this._myVariable = variable;
 
         this._myCurrentArraySize = this._myVariable.getValue().length; // null for non array variable
@@ -43,20 +44,29 @@ export class EasyTuneBaseArrayWidgetSelector {
             widget.setEasyTuneVariable(variable, appendToVariableName);
         }
 
-        this.setVisible(this._myVisible);
+        if (!skipSetVisible) {
+            this.setVisible(this._myVisible);
+        }
     }
 
     setVisible(visible) {
-        for (let widget of this._myWidgets.values()) {
-            widget.setVisible(false);
-        }
-
         if (this._myVariable) {
-            this._sizeChangedCheck();
+            this._sizeChangedCheck(true);
 
-            let widget = this._myWidgets.get(this._myCurrentArraySize);
-            if (widget) {
-                widget.setVisible(visible);
+            let currentWidget = this._myWidgets.get(this._myCurrentArraySize);
+
+            for (let widget of this._myWidgets.values()) {
+                if (currentWidget != widget) {
+                    widget.setVisible(false);
+                }
+            }
+
+            if (currentWidget) {
+                currentWidget.setVisible(visible);
+            }
+        } else {
+            for (let widget of this._myWidgets.values()) {
+                widget.setVisible(false);
             }
         }
 
@@ -163,11 +173,12 @@ export class EasyTuneBaseArrayWidgetSelector {
         this._myWidgets.get(arraySize).start(this._myParentObject, this._myEasyTuneParams);
         this._myWidgets.get(arraySize).setVisible(false);
         this._myWidgets.get(arraySize).registerScrollVariableRequestEventListener(this, this._scrollVariableRequest.bind(this));
+        this._myWidgets.get(arraySize).setActive(this._myActive);
     }
 
-    _sizeChangedCheck() {
+    _sizeChangedCheck(skipSetVisible = false) {
         if (this._myVariable.getValue().length != this._myCurrentArraySize) {
-            this.setEasyTuneVariable(this._myVariable, this._myAppendToVariableName);
+            this.setEasyTuneVariable(this._myVariable, this._myAppendToVariableName, skipSetVisible);
         }
     }
 
@@ -180,8 +191,17 @@ export class EasyTuneBaseArrayWidgetSelector {
         return null;
     }
 
+    setActive(active) {
+        this._myActive = active;
+        for (let widget of this._myWidgets.values()) {
+            widget.setActive(active);
+        }
+    }
+
     destroy() {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         for (let widget of this._myWidgets.values()) {
             widget.destroy();

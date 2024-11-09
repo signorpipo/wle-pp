@@ -19,8 +19,8 @@ import { initPP } from "../init_pp.js";
 import { AddPPToWindowComponent } from "./add_pp_to_window_component.js";
 
 // #TODO enable this again as soon as it is possible for the wonderland engine to find components not specified in the index.js,
-//since that would make the extension be included just by using the library, and not only when this component is used
-//import "../../plugin/add_type_extensions_to_typescript.js";
+// since that would make the extension be included just by using the library, and not only when this component is used
+// import "../../plugin/add_type_extensions_to_typescript.js";
 
 const _myRegisteredEngines: WeakMap<Readonly<WonderlandEngine>, null> = new WeakMap();
 
@@ -81,7 +81,7 @@ export class PPGatewayComponent extends Component {
 
     public override init(): void {
         if (this._myClearConsoleOnInit) {
-            this._myClearConsoleComponent = this.object.pp_addComponent(ClearConsoleComponent);
+            this._myClearConsoleComponent = this.object.pp_addComponent(ClearConsoleComponent, false);
         }
 
         (this._myGetDefaultResourcesComponent as GetDefaultResourcesComponent) = this.object.pp_addComponent(GetDefaultResourcesComponent, this._getProperties(GetDefaultResourcesComponent.Properties), false)!;
@@ -118,6 +118,10 @@ export class PPGatewayComponent extends Component {
     }
 
     public override start(): void {
+        if (this._myClearConsoleComponent != null) {
+            this._myClearConsoleComponent.active = true;
+        }
+
         this._myGetDefaultResourcesComponent.active = true;
         this._myGetSceneObjectsComponent.active = true;
 

@@ -16,7 +16,7 @@ export class TrackedHandDrawAllJointsComponent extends Component {
     }
 
     _buildTrackedHandHierarchy() {
-        this._myTrackedHandMeshObject = this.object.pp_addObject();
+        this._myTrackedHandMeshObject = this.object.pp_addChild();
 
         this._myJointMeshObjectList = [];
 
@@ -27,7 +27,7 @@ export class TrackedHandDrawAllJointsComponent extends Component {
                     jointID != TrackedHandJointID.INDEX_FINGER_METACARPAL && jointID != TrackedHandJointID.MIDDLE_FINGER_METACARPAL &&
                     jointID != TrackedHandJointID.RING_FINGER_METACARPAL && jointID != TrackedHandJointID.PINKY_FINGER_METACARPAL)
             ) {
-                let jointObject = this._myTrackedHandMeshObject.pp_addObject();
+                let jointObject = this._myTrackedHandMeshObject.pp_addChild();
                 this._myJointMeshObjectList[jointID] = jointObject;
 
                 jointObject.pp_addComponent(TrackedHandDrawJointComponent,

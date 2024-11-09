@@ -40,7 +40,7 @@ CollisionCheckHorizontalPosition.prototype._horizontalPositionCheck = function (
     let _localCeilingObjectsToIgnore = [];
     let _localGroundCeilingObjectsToIgnore = [];
 
-    let objectsEqualCallback = (first, second) => first.pp_equals(second);
+    let objectsEqualCallback = (first, second) => first == second;
 
     let heightOffset = vec3_create();
     let heightStep = vec3_create();

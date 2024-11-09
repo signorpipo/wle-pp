@@ -12,16 +12,17 @@ export class InitEasyTuneVariablesComponent extends Component {
         this._myEasyTuneVariables = null;
 
         if (this._myInit) {
-            // Prevents double global from same engine
-            if (!Globals.hasEasyTuneVariables(this.engine)) {
-                this._myEasyTuneVariables = new EasyTuneVariables();
-
-                Globals.setEasyTuneVariables(this._myEasyTuneVariables, this.engine);
-            }
+            this._myEasyTuneVariables = new EasyTuneVariables();
         }
     }
 
-    onDestroy() {
+    onActivate() {
+        if (this._myEasyTuneVariables != null && !Globals.hasEasyTuneVariables(this.engine)) {
+            Globals.setEasyTuneVariables(this._myEasyTuneVariables, this.engine);
+        }
+    }
+
+    onDeactivate() {
         if (this._myEasyTuneVariables != null && Globals.getEasyTuneVariables(this.engine) == this._myEasyTuneVariables) {
             Globals.removeEasyTuneVariables(this.engine);
         }

@@ -8,9 +8,9 @@ export class EasyTuneNoneWidgetUI extends EasyTuneBaseWidgetUI {
     }
 
     _createSkeletonHook() {
-        this.myTypeNotSupportedPanel = this.myDisplayPanel.pp_addObject();
-        this.myTypeNotSupportedText = this.myTypeNotSupportedPanel.pp_addObject();
-        this.myTypeNotSupportedCursorTarget = this.myTypeNotSupportedPanel.pp_addObject();
+        this.myTypeNotSupportedPanel = this.myDisplayPanel.pp_addChild();
+        this.myTypeNotSupportedText = this.myTypeNotSupportedPanel.pp_addChild();
+        this.myTypeNotSupportedCursorTarget = this.myTypeNotSupportedPanel.pp_addChild();
     }
 
     _setTransformHook() {

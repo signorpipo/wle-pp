@@ -17,40 +17,12 @@ export class InputManagerComponent extends Component {
 
     init() {
         this._myInputManager = null;
-        this._myPoseForwardFixedGlobal = null;
 
-        // Prevents double global from same engine
-        if (!Globals.hasInputManager(this.engine)) {
-            this._myInputManager = new InputManager(this.engine);
-            this._myInputManager.setTrackedHandPosesEnabled(this._myEnableTrackedHandPoses);
-            this._myInputManager.getLeftHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-            this._myInputManager.getRightHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-            this._myInputManager.getLeftHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-            this._myInputManager.getRightHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-
-            Globals.setInputManager(this._myInputManager, this.engine);
-        }
-
-        // Prevents double global from same engine
-        if (!Globals.hasPoseForwardFixed(this.engine)) {
-            this._myPoseForwardFixedGlobal = this._myPoseForwardFixed;
-
-            Globals.setPoseForwardFixed(this._myPoseForwardFixedGlobal, this.engine);
-        }
-    }
-
-    start() {
-        if (this._myInputManager != null) {
-            this._myInputManager.start();
-
-            this._setupMousePrevent();
-
-            this._addGamepadCores();
-        }
+        this._myPoseForwardFixedGlobal = this._myPoseForwardFixed;
     }
 
     update(dt) {
-        if (this._myInputManager != null) {
+        if (Globals.getInputManager(this.engine) == this._myInputManager) {
             this._myInputManager.update(dt);
         }
     }
@@ -88,15 +60,50 @@ export class InputManagerComponent extends Component {
         this._myInputManager.getGamepadsManager().getRightGamepad().addGamepadCore("pp_right_classic_gamepad", rightClassicGamepadCore);
     }
 
-    onDestroy() {
-        if (this._myInputManager != null && Globals.getInputManager(this.engine) == this._myInputManager) {
-            Globals.removeInputManager(this.engine);
+    onActivate() {
+        if (this._myInputManager == null) {
+            this._myInputManager = new InputManager(this.engine);
+            this._myInputManager.setTrackedHandPosesEnabled(this._myEnableTrackedHandPoses);
+            this._myInputManager.getLeftHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
+            this._myInputManager.getRightHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
+            this._myInputManager.getLeftHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
+            this._myInputManager.getRightHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
 
-            this._myInputManager.destroy();
+            this._myInputManager.start();
+
+            this._setupMousePrevent();
+
+            this._addGamepadCores();
         }
 
-        if (this._myPoseForwardFixedGlobal != null && Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixedGlobal) {
+        if (!Globals.hasInputManager(this.engine)) {
+            this._myInputManager.setActive(true);
+
+            Globals.setInputManager(this._myInputManager, this.engine);
+        }
+
+        if (!Globals.hasPoseForwardFixed(this.engine)) {
+            Globals.setPoseForwardFixed(this._myPoseForwardFixedGlobal, this.engine);
+        }
+    }
+
+    onDeactivate() {
+        if (this._myInputManager != null) {
+            this._myInputManager.setActive(false);
+
+            if (Globals.getInputManager(this.engine) == this._myInputManager) {
+                Globals.removeInputManager(this.engine);
+            }
+        }
+
+        if (Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixedGlobal) {
             Globals.removePoseForwardFixed(this.engine);
+        }
+    }
+
+    onDestroy() {
+        if (this._myInputManager != null) {
+            this._myInputManager.destroy();
         }
     }
 }

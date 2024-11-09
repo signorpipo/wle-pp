@@ -5,7 +5,6 @@ import { HeadPose } from "../../input/pose/head_pose.js";
 import { TrackedHandPose } from "../../input/pose/tracked_hand_pose.js";
 import { Globals } from "../../pp/globals.js";
 import { Gamepad } from "../gamepad/gamepad.js";
-import { UniversalGamepad } from "../gamepad/universal_gamepad.js";
 import { HandRayPose } from "../pose/hand_ray_pose.js";
 import { InputManager } from "./input_manager.js";
 import { Handedness } from "./input_types.js";
@@ -105,46 +104,6 @@ export function getRightGamepad(engine: Readonly<WonderlandEngine> | null = Glob
 
     if (inputManager != null) {
         return inputManager.getGamepadsManager().getRightGamepad();
-    }
-
-    return null;
-}
-
-export function getUniversalGamepad(handedness: Handedness, engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): UniversalGamepad | null {
-    const inputManager = getInputManager(engine);
-
-    if (inputManager != null) {
-        return inputManager.getGamepadsManager().getUniversalGamepad(handedness);
-    }
-
-    return null;
-}
-
-export function getUniversalGamepads(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): Record<Handedness, UniversalGamepad> | null {
-    const inputManager = getInputManager(engine);
-
-    if (inputManager != null) {
-        return inputManager.getGamepadsManager().getUniversalGamepads();
-    }
-
-    return null;
-}
-
-export function getLeftUniversalGamepad(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): UniversalGamepad | null {
-    const inputManager = getInputManager(engine);
-
-    if (inputManager != null) {
-        return inputManager.getGamepadsManager().getLeftUniversalGamepad();
-    }
-
-    return null;
-}
-
-export function getRightUniversalGamepad(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): UniversalGamepad | null {
-    const inputManager = getInputManager(engine);
-
-    if (inputManager != null) {
-        return inputManager.getGamepadsManager().getRightUniversalGamepad();
     }
 
     return null;

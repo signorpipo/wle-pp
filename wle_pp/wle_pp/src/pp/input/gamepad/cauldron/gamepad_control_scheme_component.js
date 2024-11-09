@@ -1,4 +1,4 @@
-import { Alignment, Component, Justification, MeshComponent, Property, TextComponent } from "@wonderlandengine/api";
+import { Alignment, Component, MeshComponent, Property, TextComponent, VerticalAlignment } from "@wonderlandengine/api";
 import { vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../pp/globals.js";
 import { Handedness } from "../../cauldron/input_types.js";
@@ -115,28 +115,28 @@ export class GamepadControlSchemeComponent extends Component {
     }
 
     _createControlScheme() {
-        this._myParentObject = this.object.pp_addObject();
+        this._myParentObject = this.object.pp_addChild();
 
         let distanceFromButton = 0.02 * this._myDistanceFromButtonsMultiplier;
         let lineLength = 0.0935 * this._myLineLengthMultiplier;
 
         let referenceObject = this._myThumbstick;
 
-        this._mySelectObject = this._myParentObject.pp_addObject();
+        this._mySelectObject = this._myParentObject.pp_addChild();
         this._mySelectTextComponent = this._addScheme(this._mySelect, referenceObject,
             vec3_create(0, 0, distanceFromButton),
             vec3_create(lineLength * this._myControlSchemeDirection, 0, 0),
             this._mySelectObject);
         this._mySelectTextComponent.text = this._mySelectText;
 
-        this._mySqueezeObject = this._myParentObject.pp_addObject();
+        this._mySqueezeObject = this._myParentObject.pp_addChild();
         this._mySqueezeTextComponent = this._addScheme(this._mySqueeze, referenceObject,
             vec3_create(distanceFromButton * this._myControlSchemeDirection, 0, 0),
             vec3_create(lineLength * this._myControlSchemeDirection, 0, 0),
             this._mySqueezeObject);
         this._mySqueezeTextComponent.text = this._mySqueezeText;
 
-        this._myThumbstickObject = this._myParentObject.pp_addObject();
+        this._myThumbstickObject = this._myParentObject.pp_addChild();
         this._myThumbstickTextComponent = this._addScheme(this._myThumbstick, referenceObject,
             vec3_create(0, distanceFromButton, 0),
             vec3_create(-lineLength * this._myControlSchemeDirection, 0, 0),
@@ -151,7 +151,7 @@ export class GamepadControlSchemeComponent extends Component {
             let difference = bottomButtonPositionLocal.vec3_sub(thumbstickPositionLocal);
             let differenceOnUp = difference.vec3_valueAlongAxis(thumbstickUpLocal);
 
-            this._myBottomButtonObject = this._myParentObject.pp_addObject();
+            this._myBottomButtonObject = this._myParentObject.pp_addChild();
             this._myBottomButtonTextComponent = this._addScheme(this._myBottomButton, referenceObject,
                 vec3_create(0, distanceFromButton - differenceOnUp, 0),
                 vec3_create(0, 0, -lineLength),
@@ -164,7 +164,7 @@ export class GamepadControlSchemeComponent extends Component {
             let difference = topButtonPositionLocal.vec3_sub(thumbstickPositionLocal);
             let differenceOnUp = difference.vec3_valueAlongAxis(thumbstickUpLocal);
 
-            this._myTopButtonObject = this._myParentObject.pp_addObject();
+            this._myTopButtonObject = this._myParentObject.pp_addChild();
             this._myTopButtonTextComponent = this._addScheme(this._myTopButton, referenceObject,
                 vec3_create(0, distanceFromButton - differenceOnUp, 0),
                 vec3_create(-lineLength * this._myControlSchemeDirection, 0, 0).vec3_rotateAxis(-45 * this._myControlSchemeDirection, vec3_create(0, 1, 0)),
@@ -201,8 +201,8 @@ export class GamepadControlSchemeComponent extends Component {
         let length = lineDirection.vec3_length();
         lineDirection.vec3_normalize(lineDirection);
 
-        let lineParentObject = parentObject.pp_addObject();
-        let lineObject = lineParentObject.pp_addObject();
+        let lineParentObject = parentObject.pp_addChild();
+        let lineObject = lineParentObject.pp_addChild();
 
         let lineMesh = lineObject.pp_addComponent(MeshComponent);
         lineMesh.mesh = Globals.getDefaultMeshes(this.engine).myCylinder;
@@ -218,14 +218,14 @@ export class GamepadControlSchemeComponent extends Component {
     }
 
     _addText(position, forward, up, parentObject) {
-        let textObject = parentObject.pp_addObject();
+        let textObject = parentObject.pp_addChild();
         textObject.pp_setPositionLocal(position);
         textObject.pp_lookToLocal(up, forward);
         textObject.pp_scaleObject(0.0935 * this._myTextScaleMultiplier);
 
         let textComponent = textObject.pp_addComponent(TextComponent);
         textComponent.alignment = Alignment.Center;
-        textComponent.justification = Justification.Top;
+        textComponent.verticalAlignment = VerticalAlignment.Top;
         textComponent.material = this._myTextMaterialFinal;
 
         return textComponent;

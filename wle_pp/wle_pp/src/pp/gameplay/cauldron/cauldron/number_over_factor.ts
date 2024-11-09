@@ -26,7 +26,7 @@ export class NumberOverFactor {
         this._myRoundingFunction = roundingFunction;
     }
 
-    get(factor: number): number {
+    public get(factor: number): number {
         const interpolationFactor = this._myEasingFunction(Math.pp_mapToRange(factor, this._myFromFactor, this._myToFactor, 0, 1));
         let currentValue = Math.pp_lerp(this._myFromValue, this._myToValue, interpolationFactor);
 
@@ -37,34 +37,34 @@ export class NumberOverFactor {
         return currentValue;
     }
 
-    getAverage(factor: number): number {
+    public getAverage(factor: number): number {
         return this.get(factor);
     }
 
-    getRange(factor: number): [number, number] {
+    public getRange(factor: number): [number, number] {
         const currentValue = this.get(factor);
         return [currentValue, currentValue];
     }
 
-    getMax(factor: number): number {
+    public getMax(factor: number): number {
         return this.get(factor);
     }
 
-    getMin(factor: number): number {
+    public getMin(factor: number): number {
         return this.get(factor);
     }
 
-    isInside(value: number, factor: number): boolean {
+    public isInside(value: number, factor: number): boolean {
         const currentValue = this.get(factor);
 
         return currentValue == value;
     }
 
-    isInsideAngleRange(value: number, factor: number): boolean {
+    public isInsideAngleRange(value: number, factor: number): boolean {
         return this.isInsideAngleRangeDegrees(value, factor);
     }
 
-    isInsideAngleRangeDegrees(value: number, factor: number): boolean {
+    public isInsideAngleRangeDegrees(value: number, factor: number): boolean {
         const currentValue = this.get(factor);
 
         const clampedValue = Math.pp_angleClampDegrees(value);
@@ -73,7 +73,7 @@ export class NumberOverFactor {
         return clampedValue == clampedCurrentValue;
     }
 
-    isInsideAngleRangeRadians(value: number, factor: number): boolean {
+    public isInsideAngleRangeRadians(value: number, factor: number): boolean {
         const currentValue = this.get(factor);
 
         const clampedValue = Math.pp_angleClampRadians(value);
@@ -121,7 +121,7 @@ export class NumberRangeOverFactor {
         this._myRoundingFunction = roundingFunction;
     }
 
-    get(factor: number): number {
+    public get(factor: number): number {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
@@ -136,7 +136,7 @@ export class NumberRangeOverFactor {
         return randomValue;
     }
 
-    getAverage(factor: number): number {
+    public getAverage(factor: number): number {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
@@ -148,28 +148,28 @@ export class NumberRangeOverFactor {
         return averageValue;
     }
 
-    getRange(factor: number): [number, number] {
+    public getRange(factor: number): [number, number] {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
         return [rangeStart, rangeEnd];
     }
 
-    getMax(factor: number): number {
+    public getMax(factor: number): number {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
         return Math.max(rangeStart, rangeEnd);
     }
 
-    getMin(factor: number): number {
+    public getMin(factor: number): number {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
         return Math.min(rangeStart, rangeEnd);
     }
 
-    isInside(value: number, factor: number): boolean {
+    public isInside(value: number, factor: number): boolean {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
@@ -179,18 +179,18 @@ export class NumberRangeOverFactor {
         return value >= min && value <= max;
     }
 
-    isInsideAngleRange(value: number, factor: number): boolean {
+    public isInsideAngleRange(value: number, factor: number): boolean {
         return this.isInsideAngleRangeDegrees(value, factor);
     }
 
-    isInsideAngleRangeDegrees(value: number, factor: number): boolean {
+    public isInsideAngleRangeDegrees(value: number, factor: number): boolean {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 
         return Math.pp_isInsideAngleRangeDegrees(value, rangeStart, rangeEnd);
     }
 
-    isInsideAngleRangeRadians(value: number, factor: number): boolean {
+    public isInsideAngleRangeRadians(value: number, factor: number): boolean {
         const rangeStart = this._myRangeStartOverFactor.get(factor);
         const rangeEnd = this._myRangeEndOverFactor.get(factor);
 

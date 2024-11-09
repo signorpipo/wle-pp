@@ -1221,8 +1221,8 @@ function _initObjectExtensionProtoype(): void {
             return ObjectUtils.getSelf(this);
         },
 
-        pp_addObject(this: Object3D): Object3D {
-            return ObjectUtils.addObject(this);
+        pp_addChild(this: Object3D): Object3D {
+            return ObjectUtils.addChild(this);
         },
 
         pp_getName(this: Readonly<Object3D>): string {
@@ -1247,10 +1247,6 @@ function _initObjectExtensionProtoype(): void {
 
         pp_isTransformChanged(this: Readonly<Object3D>): boolean {
             return ObjectUtils.isTransformChanged(this);
-        },
-
-        pp_equals(this: Readonly<Object3D>, object: Readonly<Object3D>): boolean {
-            return ObjectUtils.equals(this, object);
         },
 
         pp_destroy(this: Object3D): void {

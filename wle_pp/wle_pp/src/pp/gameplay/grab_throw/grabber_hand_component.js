@@ -70,7 +70,10 @@ export class GrabberHandComponent extends Component {
     update(dt) {
         this._myCollisionsCollector.update(dt);
 
-        const currentInputSourceType = this._myGamepad.getHandPose().getInputSourceType();
+        let currentInputSourceType = null;
+        if (this._myGamepad.getHandPose() != null) {
+            currentInputSourceType = this._myGamepad.getHandPose().getInputSourceType();
+        }
 
         if (this._myPrevInputSourceType != currentInputSourceType) {
             this.throw();
@@ -93,10 +96,8 @@ export class GrabberHandComponent extends Component {
             }
         }
 
-        if (this._myGrabbables.length > 0) {
-            this._updateLinearVelocityHistory();
-            this._updateAngularVelocityHistory();
-        }
+        this._updateLinearVelocityHistory();
+        this._updateAngularVelocityHistory();
     }
 
     grab(grabButton = null) {
@@ -131,8 +132,20 @@ export class GrabberHandComponent extends Component {
         this._myThrowEmitter.remove(id);
     }
 
+    onActivate() {
+        this._myCollisionsCollector.setActive(true);
+    }
+
     onDeactivate() {
         this.throw();
+
+        this._myHandLinearVelocityHistory = new Array(this._myLinearVelocityHistorySize);
+        this._myHandLinearVelocityHistory.fill(vec3_create());
+
+        this._myHandAngularVelocityHistory = new Array(this._myAngularVelocityHistorySize);
+        this._myHandAngularVelocityHistory.fill(vec3_create());
+
+        this._myCollisionsCollector.setActive(false);
     }
 
     _grab(grabButton) {
@@ -232,9 +245,15 @@ export class GrabberHandComponent extends Component {
     }
 
     _updateLinearVelocityHistory() {
+        const velocityToReuse = this._myHandLinearVelocityHistory.pop();
+
         let handPose = this._myGamepad.getHandPose();
-        this._myHandLinearVelocityHistory.unshift(handPose.getLinearVelocity());
-        this._myHandLinearVelocityHistory.pop();
+        if (handPose != null) {
+            this._myHandLinearVelocityHistory.unshift(handPose.getLinearVelocity(velocityToReuse));
+        } else {
+            velocityToReuse.vec3_zero();
+            this._myHandLinearVelocityHistory.unshift(velocityToReuse);
+        }
 
         for (let grabbable of this._myGrabbables) {
             grabbable.updateLinearVelocityHistory();
@@ -242,9 +261,15 @@ export class GrabberHandComponent extends Component {
     }
 
     _updateAngularVelocityHistory() {
+        const velocityToReuse = this._myHandAngularVelocityHistory.pop();
+
         let handPose = this._myGamepad.getHandPose();
-        this._myHandAngularVelocityHistory.unshift(handPose.getAngularVelocityRadians());
-        this._myHandAngularVelocityHistory.pop();
+        if (handPose != null) {
+            this._myHandAngularVelocityHistory.unshift(handPose.getAngularVelocityRadians(velocityToReuse));
+        } else {
+            velocityToReuse.vec3_zero();
+            this._myHandAngularVelocityHistory.unshift(velocityToReuse);
+        }
 
         for (let grabbable of this._myGrabbables) {
             grabbable.updateAngularVelocityHistory();
@@ -301,7 +326,7 @@ export class GrabberHandComponent extends Component {
         speed = Math.pp_clamp(speed * this._myThrowAngularVelocityMultiplier, 0, this._myThrowMaxAngularSpeedRadians);
 
         // Direction
-        let direction = angularVelocity;
+        let direction = angularVelocity.vec3_clone();
         direction.vec3_normalize(direction);
 
         direction.vec3_scale(speed, direction);
@@ -333,6 +358,10 @@ export class GrabberHandComponent extends Component {
     _isAlreadyGrabbed(grabbable) {
         let found = this._myGrabbables.pp_find(element => element.getGrabbable() == grabbable);
         return found != null;
+    }
+
+    onDestroy() {
+        this._myCollisionsCollector.destroy();
     }
 }
 
@@ -375,9 +404,5 @@ class _GrabberHandComponentGrabbableData {
             this._myAngularVelocityHistory.unshift(this._myGrabbable.getAngularVelocityRadians());
             this._myAngularVelocityHistory.pop();
         }
-    }
-
-    onDestroy() {
-        this._myCollisionsCollector.destroy();
     }
 }

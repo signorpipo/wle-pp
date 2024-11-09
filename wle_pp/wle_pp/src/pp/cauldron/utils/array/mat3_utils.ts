@@ -69,6 +69,25 @@ export function clone<T extends Matrix3>(matrix: Readonly<T>): T {
     return matrix.slice(0) as T;
 }
 
+export function equals(first: Readonly<Matrix3>, second: Readonly<Matrix3>, epsilon: number = 0): boolean {
+    let equals = first.length == second.length;
+
+    if (equals) {
+        equals &&= (Math.abs(first[0] - second[0]) <= epsilon);
+        equals &&= (Math.abs(first[1] - second[1]) <= epsilon);
+        equals &&= (Math.abs(first[2] - second[2]) <= epsilon);
+        equals &&= (Math.abs(first[3] - second[3]) <= epsilon);
+        equals &&= (Math.abs(first[4] - second[4]) <= epsilon);
+        equals &&= (Math.abs(first[5] - second[5]) <= epsilon);
+        equals &&= (Math.abs(first[6] - second[6]) <= epsilon);
+        equals &&= (Math.abs(first[7] - second[7]) <= epsilon);
+        equals &&= (Math.abs(first[8] - second[8]) <= epsilon);
+    }
+
+    return equals;
+}
+
+
 export const toDegrees = function () {
     const quat = quat_utils_create();
 
@@ -121,6 +140,7 @@ export const Mat3Utils = {
     set,
     copy,
     clone,
+    equals,
     toDegrees,
     toRadians,
     toQuat,

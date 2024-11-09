@@ -27,6 +27,8 @@ export class PlayerObscureManagerParams {
 
         this.myObscureFadeEasingFunction = EasingFunction.linear;
 
+        this.myObscureIfPositionHeadNotValid = false;
+
         this.myDistanceToStartObscureWhenHeadColliding = 0;
         this.myDistanceToStartObscureWhenBodyColliding = 0;
         this.myDistanceToStartObscureWhenFloating = 0;
@@ -40,7 +42,7 @@ export class PlayerObscureManagerParams {
         this.myObscureLevelRelativeDistanceEasingFunction = EasingFunction.linear;
 
         this.myDisableObscureWhileTeleporting = true;
-        this.myDisableObscureWhileTeleportingDuration = 0.5;
+        this.myDisableObscureWhileTeleportingDuration = null;
 
         this.myEngine = engine;
     }
@@ -96,9 +98,28 @@ export class PlayerObscureManager {
 
         this._myFSM.perform("end");
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), false, false, this._myParams.myEngine);
+        this._myActive = false;
+        this.setActive(true);
 
         this._myDestroyed = false;
+    }
+
+    setActive(active) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (this._myActive) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), false, false, this._myParams.myEngine);
+            } else {
+                XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+
+                this._setObscureLevel(0);
+            }
+        }
+    }
+
+    isActive() {
+        return this._myActive;
     }
 
     start() {
@@ -114,6 +135,8 @@ export class PlayerObscureManager {
     }
 
     update(dt) {
+        if (!this._myActive) return;
+
         if (!this._myParams.myPlayerLocomotionTeleport.isTeleporting()) {
             if (this._myParams.myDisableObscureWhileTeleportingDuration != null) {
                 this._myDisableObscureWhileTeleportingTimer.start();
@@ -166,10 +189,12 @@ export class PlayerObscureManager {
     }
 
     getCurrentObscureLevel() {
-        this._myCurrentObscureLevel;
+        return this._myCurrentObscureLevel;
     }
 
     overrideObscureLevel(obscureLevel, instantFade = false) {
+        if (!this._myActive) return;
+
         this._myObscureLevelOverride = obscureLevel;
 
         if (instantFade && this.isStarted()) {
@@ -302,12 +327,15 @@ export class PlayerObscureManager {
                 // For example if u stand up and go with the head in the ceiling and reset by moving
                 // Add a setting for this though, since someone could prefer being able to see in this case,
                 // so to be able to know where to move (since it might be resetting to this invalid position)
-                if (this._myParams.myPlayerTransformManager.isHeadColliding() || !this._myParams.myPlayerTransformManager.isPositionHeadValid()) {
+                if (!this._myParams.myPlayerTransformManager.isPositionHeadValid() && this._myParams.myObscureIfPositionHeadNotValid) {
+                    let targetObscureLevel = this._myParams.myObscureLevelRelativeDistanceEasingFunction(1);
+                    this._myTargetObscureLevel = Math.max(this._myTargetObscureLevel, targetObscureLevel);
+                } else if (this._myParams.myPlayerTransformManager.isHeadColliding()) {
                     let distance = this._myParams.myPlayerTransformManager.getDistanceToRealHead();
                     let relativeDistance = distance - this._myParams.myDistanceToStartObscureWhenHeadColliding;
                     if (relativeDistance >= 0) {
                         let relativeDistancePercentage = Math.pp_clamp(relativeDistance / this._myParams.myRelativeDistanceToMaxObscureWhenHeadColliding, 0, 1);
-                        if (isNaN(relativeDistancePercentage) || !this._myParams.myPlayerTransformManager.isPositionHeadValid()) {
+                        if (isNaN(relativeDistancePercentage)) {
                             relativeDistancePercentage = 1;
                         }
                         let targetObscureLevel = this._myParams.myObscureLevelRelativeDistanceEasingFunction(relativeDistancePercentage);
@@ -366,7 +394,7 @@ export class PlayerObscureManager {
             this._myObscureMaterial.color = vec4_create(0, 0, 0, 1);
         }
 
-        this._myObscureParentObject = Globals.getPlayerObjects(this._myParams.myEngine).myCauldron.pp_addObject();
+        this._myObscureParentObject = Globals.getPlayerObjects(this._myParams.myEngine).myCauldron.pp_addChild();
 
         let obscureVisualParams = new VisualMeshParams(this._myParams.myEngine);
         obscureVisualParams.myMesh = Globals.getDefaultMeshes(this._myParams.myEngine).myInvertedSphere;

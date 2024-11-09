@@ -44,6 +44,8 @@ export abstract class Gamepad {
 
     private readonly _myPulseInfo: GamepadPulseInfo = new GamepadPulseInfo();
 
+    private _myActive: boolean = true;
+
     // Config
     private _myMultiplePressMaxDelay: number = 0.4;
     private _myMultipleTouchMaxDelay: number = 0.4;
@@ -86,6 +88,46 @@ export abstract class Gamepad {
                 this._myAxesEmitters[gamepadAxesID]![gamepadAxesEvent] = new Emitter();
             }
         }
+    }
+
+    public setActive(active: boolean): void {
+        this._setActiveHook(active);
+
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (!this._myActive) {
+
+                // Quick way to trigger callbacks
+                this._preUpdateButtonInfos();
+                this._updateButtonInfos();
+                this._postUpdateButtonInfos(0);
+
+                this._preUpdateAxesInfos();
+                this._updateAxesInfos();
+                this._postUpdateAxesInfos();
+
+                this.stopPulse();
+                this._updatePulse(0);
+
+                // Reset buttons
+                for (let i = 0; i < this._myButtonInfosIDs.length; i++) {
+                    const id = this._myButtonInfosIDs[i];
+                    const info = this._myButtonInfos[id]!;
+                    info.reset();
+                }
+
+                for (let i = 0; i < this._myAxesInfosIDs.length; i++) {
+                    const id = this._myAxesInfosIDs[i];
+                    const info = this._myAxesInfos[id]!;
+                    info.reset();
+                }
+            }
+        }
+    }
+
+    public isActive(): boolean {
+        return this._myActive;
     }
 
     public getHandedness(): Handedness {
@@ -156,6 +198,10 @@ export abstract class Gamepad {
         return null;
     }
 
+    protected _setActiveHook(active: boolean): void {
+
+    }
+
     protected _startHook(): void {
 
     }
@@ -192,6 +238,8 @@ export abstract class Gamepad {
     }
 
     public update(dt: number): void {
+        if (!this._myActive) return;
+
         this._preUpdate(dt);
 
         this._preUpdateButtonInfos();
@@ -481,6 +529,8 @@ export abstract class Gamepad {
 
     public destroy(): void {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         this._destroyHook();
     }

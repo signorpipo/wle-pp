@@ -1,4 +1,4 @@
-import { Alignment, Justification } from "@wonderlandengine/api";
+import { Alignment, VerticalAlignment } from "@wonderlandengine/api";
 import { XRUtils } from "../cauldron/utils/xr_utils.js";
 import { VisualArrowParams } from "../cauldron/visual/elements/visual_arrow.js";
 import { VisualLineParams } from "../cauldron/visual/elements/visual_line.js";
@@ -22,13 +22,18 @@ export class DebugVisualManager extends VisualManager {
 
         this._myDefaultTextLookAtPlayer = true;
         this._myDefaultTextAlignment = Alignment.Center;
-        this._myDefaultTextJustification = Justification.Middle;
+        this._myDefaultTextVerticalAlignment = VerticalAlignment.Middle;
 
         this._myDefaultUITextAlignment = Alignment.Center;
-        this._myDefaultUITextJustification = Justification.Middle;
+        this._myDefaultUITextVerticalAlignment = VerticalAlignment.Middle;
         this._myDefaultUITextScale = 1;
 
         this._myDefaultUITextScreenPosition = vec3_create(1, 1, 1);
+    }
+
+    setActive(active) {
+        active = active && Globals.isDebugEnabled(this._myEngine);
+        super.setActive(active);
     }
 
     drawLine(lifetimeSeconds, start, direction, length, color = this._myDefaultColor, thickness = this._myDefaultLineThickness) {
@@ -88,14 +93,14 @@ export class DebugVisualManager extends VisualManager {
         return elementID;
     }
 
-    drawText(lifetimeSeconds, text, transform, color = this._myDefaultColor, lookAtPlayer = this._myDefaultTextLookAtPlayer, alignment = this._myDefaultTextAlignment, justification = this._myDefaultTextJustification) {
+    drawText(lifetimeSeconds, text, transform, color = this._myDefaultColor, lookAtPlayer = this._myDefaultTextLookAtPlayer, alignment = this._myDefaultTextAlignment, verticalAlignment = this._myDefaultTextVerticalAlignment) {
         let elementID = null;
 
         if (this.isActive()) {
             let visualParams = new VisualTextParams(this._myEngine);
             visualParams.myText = text;
             visualParams.myAlignment = alignment;
-            visualParams.myJustification = justification;
+            visualParams.myVerticalAlignment = verticalAlignment;
             visualParams.myTransform.mat4_copy(transform);
             visualParams.myColor = vec4_create();
             visualParams.myColor.vec4_copy(color);
@@ -139,7 +144,7 @@ export class DebugVisualManager extends VisualManager {
         return elementID;
     }
 
-    drawUIText(lifetimeSeconds, text, screenPosition, scale = this._myDefaultUITextScale, color = this._myDefaultColor, alignment = this._myDefaultUITextAlignment, justification = this._myDefaultUITextJustification) {
+    drawUIText(lifetimeSeconds, text, screenPosition, scale = this._myDefaultUITextScale, color = this._myDefaultColor, alignment = this._myDefaultUITextAlignment, verticalAlignment = this._myDefaultUITextVerticalAlignment) {
         // Implemented outside class definition
     }
 
@@ -195,14 +200,14 @@ DebugVisualManager.prototype.drawUIText = function () {
     let textPosition = vec3_create();
     let textRotation = vec3_create();
     let textScale = vec3_create();
-    return function drawUIText(lifetimeSeconds, text, screenPosition = this._myDefaultUITextScreenPosition, scale = this._myDefaultUITextScale, color = this._myDefaultColor, alignment = this._myDefaultUITextAlignment, justification = this._myDefaultUITextJustification) {
+    return function drawUIText(lifetimeSeconds, text, screenPosition = this._myDefaultUITextScreenPosition, scale = this._myDefaultUITextScale, color = this._myDefaultColor, alignment = this._myDefaultUITextAlignment, verticalAlignment = this._myDefaultUITextVerticalAlignment) {
         let elementID = null;
 
         if (this.isActive()) {
             let visualParams = new VisualTextParams(this._myEngine);
             visualParams.myText = text;
             visualParams.myAlignment = alignment;
-            visualParams.myJustification = justification;
+            visualParams.myVerticalAlignment = verticalAlignment;
             visualParams.myColor = vec4_create();
             visualParams.myColor.vec4_copy(color);
 

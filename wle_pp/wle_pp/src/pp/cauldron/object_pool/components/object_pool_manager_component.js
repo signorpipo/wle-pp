@@ -6,19 +6,24 @@ export class ObjectPoolManagerComponent extends Component {
     static TypeName = "pp-object-pools-manager";
 
     init() {
-        this._myObjectPoolManager = null;
+        this._myObjectPoolManager = new ObjectPoolManager();
+    }
 
-        // Prevents double global from same engine
+    onActivate() {
         if (!Globals.hasObjectPoolManager(this.engine)) {
-            this._myObjectPoolManager = new ObjectPoolManager();
-
             Globals.setObjectPoolManager(this._myObjectPoolManager, this.engine);
         }
     }
 
-    onDestroy() {
-        if (this._myObjectPoolManager != null && Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+    onDeactivate() {
+        if (Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+            this._myObjectPoolManager.releaseAll();
+
             Globals.removeObjectPoolManager(this.engine);
         }
+    }
+
+    onDestroy() {
+        this._myObjectPoolManager.destroy();
     }
 }

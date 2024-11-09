@@ -25,7 +25,7 @@ export class EasyTuneNumberArrayWidgetUI extends EasyTuneBaseWidgetUI {
     }
 
     _createSkeletonHook() {
-        this.myValuesPanel = this.myDisplayPanel.pp_addObject();
+        this.myValuesPanel = this.myDisplayPanel.pp_addChild();
 
         this.myValuePanels = [];
         this.myValueTexts = [];
@@ -42,34 +42,34 @@ export class EasyTuneNumberArrayWidgetUI extends EasyTuneBaseWidgetUI {
         this.myValueDecreaseButtonCursorTargets = [];
 
         for (let i = 0; i < this._myConfig.myArraySize; i++) {
-            this.myValuePanels[i] = this.myValuesPanel.pp_addObject();
-            this.myValueTexts[i] = this.myValuePanels[i].pp_addObject();
-            this.myValueCursorTargets[i] = this.myValuePanels[i].pp_addObject();
+            this.myValuePanels[i] = this.myValuesPanel.pp_addChild();
+            this.myValueTexts[i] = this.myValuePanels[i].pp_addChild();
+            this.myValueCursorTargets[i] = this.myValuePanels[i].pp_addChild();
 
-            this.myValueIncreaseButtonPanels[i] = this.myValuePanels[i].pp_addObject();
-            this.myValueIncreaseButtonBackgrounds[i] = this.myValueIncreaseButtonPanels[i].pp_addObject();
-            this.myValueIncreaseButtonTexts[i] = this.myValueIncreaseButtonPanels[i].pp_addObject();
-            this.myValueIncreaseButtonCursorTargets[i] = this.myValueIncreaseButtonPanels[i].pp_addObject();
+            this.myValueIncreaseButtonPanels[i] = this.myValuePanels[i].pp_addChild();
+            this.myValueIncreaseButtonBackgrounds[i] = this.myValueIncreaseButtonPanels[i].pp_addChild();
+            this.myValueIncreaseButtonTexts[i] = this.myValueIncreaseButtonPanels[i].pp_addChild();
+            this.myValueIncreaseButtonCursorTargets[i] = this.myValueIncreaseButtonPanels[i].pp_addChild();
 
-            this.myValueDecreaseButtonPanels[i] = this.myValuePanels[i].pp_addObject();
-            this.myValueDecreaseButtonBackgrounds[i] = this.myValueDecreaseButtonPanels[i].pp_addObject();
-            this.myValueDecreaseButtonTexts[i] = this.myValueDecreaseButtonPanels[i].pp_addObject();
-            this.myValueDecreaseButtonCursorTargets[i] = this.myValueDecreaseButtonPanels[i].pp_addObject();
+            this.myValueDecreaseButtonPanels[i] = this.myValuePanels[i].pp_addChild();
+            this.myValueDecreaseButtonBackgrounds[i] = this.myValueDecreaseButtonPanels[i].pp_addChild();
+            this.myValueDecreaseButtonTexts[i] = this.myValueDecreaseButtonPanels[i].pp_addChild();
+            this.myValueDecreaseButtonCursorTargets[i] = this.myValueDecreaseButtonPanels[i].pp_addChild();
         }
 
-        this.myStepPanel = this.myPivotObject.pp_addObject();
-        this.myStepText = this.myStepPanel.pp_addObject();
-        this.myStepCursorTarget = this.myStepPanel.pp_addObject();
+        this.myStepPanel = this.myPivotObject.pp_addChild();
+        this.myStepText = this.myStepPanel.pp_addChild();
+        this.myStepCursorTarget = this.myStepPanel.pp_addChild();
 
-        this.myStepIncreaseButtonPanel = this.myStepPanel.pp_addObject();
-        this.myStepIncreaseButtonBackground = this.myStepIncreaseButtonPanel.pp_addObject();
-        this.myStepIncreaseButtonText = this.myStepIncreaseButtonPanel.pp_addObject();
-        this.myStepIncreaseButtonCursorTarget = this.myStepIncreaseButtonPanel.pp_addObject();
+        this.myStepIncreaseButtonPanel = this.myStepPanel.pp_addChild();
+        this.myStepIncreaseButtonBackground = this.myStepIncreaseButtonPanel.pp_addChild();
+        this.myStepIncreaseButtonText = this.myStepIncreaseButtonPanel.pp_addChild();
+        this.myStepIncreaseButtonCursorTarget = this.myStepIncreaseButtonPanel.pp_addChild();
 
-        this.myStepDecreaseButtonPanel = this.myStepPanel.pp_addObject();
-        this.myStepDecreaseButtonBackground = this.myStepDecreaseButtonPanel.pp_addObject();
-        this.myStepDecreaseButtonText = this.myStepDecreaseButtonPanel.pp_addObject();
-        this.myStepDecreaseButtonCursorTarget = this.myStepDecreaseButtonPanel.pp_addObject();
+        this.myStepDecreaseButtonPanel = this.myStepPanel.pp_addChild();
+        this.myStepDecreaseButtonBackground = this.myStepDecreaseButtonPanel.pp_addChild();
+        this.myStepDecreaseButtonText = this.myStepDecreaseButtonPanel.pp_addChild();
+        this.myStepDecreaseButtonCursorTarget = this.myStepDecreaseButtonPanel.pp_addChild();
     }
 
     _setTransformHook() {

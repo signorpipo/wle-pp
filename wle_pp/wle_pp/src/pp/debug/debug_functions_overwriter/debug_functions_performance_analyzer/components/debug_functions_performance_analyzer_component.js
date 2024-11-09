@@ -41,22 +41,34 @@ export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
         this._myActive = false;
 
         if (Globals.isDebugEnabled(this.engine)) {
-            this._myActive = true;
+            this._init();
+        }
+    }
 
-            this._myFunctionsPerformanceAnalyzer = null;
-            this._myFunctionsPerformanceAnalysisResultsLogger = null;
+    _init() {
+        this._myActive = true;
 
-            this._mySkipFirstUpdate = true;
-            this._myStartTimer = new Timer(this._myDelayStart);
-            if (this._myDelayStart == 0) {
-                this._myStartTimer.end();
-                this._mySkipFirstUpdate = false;
-                this._start();
-            }
+        this._myFunctionsPerformanceAnalyzer = null;
+        this._myFunctionsPerformanceAnalysisResultsLogger = null;
+
+        this._mySkipFirstUpdate = true;
+        this._myStartTimer = new Timer(this._myDelayStart);
+        if (this._myDelayStart == 0) {
+            this._myStartTimer.end();
+            this._mySkipFirstUpdate = false;
+            this._start();
+        }
+    }
+
+    start() {
+        if (!this._myActive && Globals.isDebugEnabled(this.engine)) {
+            this._init();
         }
     }
 
     update(dt) {
+        if (!Globals.isDebugEnabled(this.engine)) return;
+
         if (this._myActive) {
             if (this._mySkipFirstUpdate) {
                 this._mySkipFirstUpdate = false;

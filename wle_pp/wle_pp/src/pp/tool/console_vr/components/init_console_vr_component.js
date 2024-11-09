@@ -12,16 +12,17 @@ export class InitConsoleVRComponent extends Component {
         this._myConsoleVR = null;
 
         if (this._myInit) {
-            // Prevents double global from same engine
-            if (!Globals.hasConsoleVR(this.engine)) {
-                this._myConsoleVR = new ConsoleVR(this.engine);
-
-                Globals.setConsoleVR(this._myConsoleVR, this.engine);
-            }
+            this._myConsoleVR = new ConsoleVR(this.engine);
         }
     }
 
-    onDestroy() {
+    onActivate() {
+        if (this._myConsoleVR != null && !Globals.hasConsoleVR(this.engine)) {
+            Globals.setConsoleVR(this._myConsoleVR, this.engine);
+        }
+    }
+
+    onDeactivate() {
         if (this._myConsoleVR != null && Globals.getConsoleVR(this.engine) == this._myConsoleVR) {
             Globals.removeConsoleVR(this.engine);
         }

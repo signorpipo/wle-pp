@@ -2,6 +2,13 @@ import { Globals } from "../../pp/globals.js";
 import { ConsoleOriginalFunctions } from "./console_original_functions.js";
 
 export class ConsoleVR {
+    static myOriginalLog = ConsoleVR.prototype.log;
+    static myOriginalError = ConsoleVR.prototype.error;
+    static myOriginalWarn = ConsoleVR.prototype.warn;
+    static myOriginalInfo = ConsoleVR.prototype.info;
+    static myOriginalDebug = ConsoleVR.prototype.debug;
+    static myOriginalAssert = ConsoleVR.prototype.assert;
+    static myOriginalClear = ConsoleVR.prototype.clear;
 
     constructor(engine = Globals.getMainEngine()) {
         this._myEngine = engine;

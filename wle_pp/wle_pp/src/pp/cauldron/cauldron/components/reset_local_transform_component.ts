@@ -1,5 +1,4 @@
-import { Component, Object3D } from "@wonderlandengine/api";
-import { property } from "@wonderlandengine/api/decorators.js";
+import { Component, Object3D, property } from "@wonderlandengine/api";
 import { XRUtils } from "../../utils/xr_utils.js";
 
 export class ResetLocalTransformComponent extends Component {
@@ -24,14 +23,6 @@ export class ResetLocalTransformComponent extends Component {
     public override start(): void {
         if (this._myResetLocalTransformWhen == 1) {
             this._resetLocalTransform();
-        }
-
-        if (this._myResetLocalTransformWhen == 3 || this._myResetLocalTransformWhen == 5) {
-            XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, true, this.engine);
-        }
-
-        if (this._myResetLocalTransformWhen == 4 || this._myResetLocalTransformWhen == 6) {
-            XRUtils.registerSessionEndEventListener(this, this._onXRSessionEnd.bind(this), this.engine);
         }
     }
 
@@ -76,7 +67,17 @@ export class ResetLocalTransformComponent extends Component {
         }
     }
 
-    public override onDestroy(): void {
+    public override onActivate(): void {
+        if (this._myResetLocalTransformWhen == 3 || this._myResetLocalTransformWhen == 5) {
+            XRUtils.registerSessionStartEventListener(this, this._onXRSessionStart.bind(this), true, true, this.engine);
+        }
+
+        if (this._myResetLocalTransformWhen == 4 || this._myResetLocalTransformWhen == 6) {
+            XRUtils.registerSessionEndEventListener(this, this._onXRSessionEnd.bind(this), this.engine);
+        }
+    }
+
+    public override onDeactivate(): void {
         XRUtils.unregisterSessionStartEndEventListeners(this, this.engine);
     }
 }

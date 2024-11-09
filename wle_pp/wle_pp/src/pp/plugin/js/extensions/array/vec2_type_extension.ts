@@ -12,6 +12,8 @@ export interface Vector2Extension<VectorType extends Vector2> {
     vec2_copy<T extends VectorType>(this: T, vector: Readonly<Vector2>): this;
     vec2_clone<T extends VectorType>(this: Readonly<T>): T;
 
+    vec2_equals<T extends VectorType>(this: Readonly<T>, vector: Readonly<Vector2>, epsilon?: number): boolean;
+
     vec2_length<T extends VectorType>(this: Readonly<T>): number;
 
     vec2_normalize<T extends VectorType>(this: Readonly<T>): T;

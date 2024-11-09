@@ -150,7 +150,43 @@ export class Keyboard {
         this._myOnKeyDownEventListener = null;
         this._myOnKeyUpEventListener = null;
 
+        this._myActive = true;
+
         this._myDestroyed = false;
+    }
+
+    setActive(active) {
+        if (this._myActive != active) {
+            this._myActive = active;
+
+            if (this._myActive) {
+                this._myOnKeyDownEventListener = this._keyDown.bind(this);
+                window.addEventListener("keydown", this._myOnKeyDownEventListener);
+                this._myOnKeyUpEventListener = this._keyUp.bind(this);
+                window.addEventListener("keyup", this._myOnKeyUpEventListener);
+            } else {
+                for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
+                    let id = this._myKeyInfosIDs[i];
+                    let keyInfo = this._myKeyInfos[id];
+                    keyInfo.myPressed = false;
+                    keyInfo.myPressStart = false;
+                    keyInfo.myPressEnd = false;
+                    keyInfo.myPressStartToProcess = false;
+                    keyInfo.myPressEndToProcess = false;
+                }
+
+                window.removeEventListener("keydown", this._myOnKeyDownEventListener);
+                window.removeEventListener("keyup", this._myOnKeyUpEventListener);
+
+                this._myOnKeyDownEventListener = null;
+                this._myOnKeyUpEventListener = null;
+
+            }
+        }
+    }
+
+    isActive() {
+        return this._myActive;
     }
 
     isKeyPressed(keyID) {
@@ -189,13 +225,13 @@ export class Keyboard {
     }
 
     start() {
-        this._myOnKeyDownEventListener = this._keyDown.bind(this);
-        window.addEventListener("keydown", this._myOnKeyDownEventListener);
-        this._myOnKeyUpEventListener = this._keyUp.bind(this);
-        window.addEventListener("keyup", this._myOnKeyUpEventListener);
+        this._myActive = false;
+        this.setActive(true);
     }
 
     update(dt) {
+        if (!this._myActive) return;
+
         if (!document.hasFocus()) {
             for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
                 let id = this._myKeyInfosIDs[i];
@@ -256,8 +292,7 @@ export class Keyboard {
     destroy() {
         this._myDestroyed = true;
 
-        window.removeEventListener("keydown", this._myOnKeyDownEventListener);
-        window.removeEventListener("keyup", this._myOnKeyUpEventListener);
+        this.setActive(false);
     }
 
     isDestroyed() {

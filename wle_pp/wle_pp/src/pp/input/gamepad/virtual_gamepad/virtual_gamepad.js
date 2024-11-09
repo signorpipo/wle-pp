@@ -24,6 +24,7 @@ export class VirtualGamepad {
         this._myParams = params;
 
         this._myVisible = true;
+
         this._myVirtualGamepadContainer = null;
 
         this._myVirtualGamepadVirtualButtons = [];
@@ -64,12 +65,6 @@ export class VirtualGamepad {
             this._myVisible = visible;
 
             if (this._myVirtualGamepadContainer != null) {
-                if (this._myVisible) {
-                    this._myVirtualGamepadContainer.style.display = "block";
-                } else {
-                    this._myVirtualGamepadContainer.style.display = "none";
-                }
-
                 for (let handedness in this._myVirtualGamepadVirtualButtons) {
                     for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
                         let button = this._myVirtualGamepadVirtualButtons[handedness][virtualGamepadButtonID];
@@ -87,6 +82,18 @@ export class VirtualGamepad {
                         }
                     }
                 }
+
+                if (this._myVisible) {
+                    document.body.appendChild(this._myVirtualGamepadContainer);
+                } else {
+                    this._myVirtualGamepadContainer?.remove();
+                }
+            }
+
+            if (this._myVisible) {
+                document.addEventListener("gesturestart", this._myGestureStartEventListener);
+            } else {
+                document.removeEventListener("gesturestart", this._myGestureStartEventListener);
             }
         }
     }
@@ -209,7 +216,6 @@ export class VirtualGamepad {
     _setupDocumentBody() {
         document.body.style.overflow = "hidden";
         document.body.style.userSelect = "none";
-        // eslint-disable-next-line deprecation/deprecation
         document.body.style.webkitUserSelect = "none";
         document.body.style.webkitTapHighlightColor = "transparent";
         document.body.style.touchAction = "none";
@@ -285,7 +291,7 @@ export class VirtualGamepad {
     destroy() {
         this._myDestroyed = true;
 
-        document.removeEventListener("gesturestart", this._myGestureStartEventListener);
+        this.setVisible(false);
 
         for (let handedness in this._myVirtualGamepadVirtualButtons) {
             for (let virtualGamepadButtonID in this._myVirtualGamepadVirtualButtons[handedness]) {
@@ -304,8 +310,6 @@ export class VirtualGamepad {
                 }
             }
         }
-
-        this._myVirtualGamepadContainer.remove();
     }
 
     isDestroyed() {

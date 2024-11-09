@@ -7,7 +7,6 @@ import { Globals } from "../../../../../pp/globals.js";
 export class PlayerLocomotionRotateParams {
 
     constructor(engine = Globals.getMainEngine()) {
-        this.myPlayerHeadManager = null;
         this.myPlayerTransformManager = null;
 
         this.myHorizontalRotationEnabled = true;
@@ -73,7 +72,7 @@ export class PlayerLocomotionRotate {
             this._rotateHeadHorizontally(dt);
         }
 
-        if (this._myParams.myVerticalRotationEnabled && this._myParams.myPlayerHeadManager.canRotateHead()) {
+        if (this._myParams.myVerticalRotationEnabled && this._myParams.myPlayerTransformManager.getPlayerHeadManager().canRotateHead()) {
             this._rotateHeadVertically(dt);
         }
     }
@@ -92,10 +91,11 @@ export class PlayerLocomotionRotate {
 // IMPLEMENTATION
 
 PlayerLocomotionRotate.prototype._rotateHeadHorizontally = function () {
+    let playerRotationQuat = quat_create();
     let playerUp = vec3_create();
     let headRotation = quat_create();
     return function _rotateHeadHorizontally(dt) {
-        playerUp = this._myParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
+        playerUp = this._myParams.myPlayerTransformManager.getRotationQuat(playerRotationQuat).quat_getUp(playerUp);
 
         headRotation.quat_identity();
 
@@ -153,18 +153,20 @@ PlayerLocomotionRotate.prototype._rotateHeadHorizontally = function () {
 PlayerLocomotionRotate.prototype._rotateHeadVertically = function () {
     let headForward = vec3_create();
     let headUp = vec3_create();
+
+    let playerRotationQuat = quat_create();
     let referenceUp = vec3_create();
     let referenceUpNegate = vec3_create();
     let referenceRight = vec3_create();
     let newUp = vec3_create();
     let headRotation = quat_create();
     return function _rotateHeadVertically(dt) {
-        let head = this._myParams.myPlayerHeadManager.getHead();
+        let head = this._myParams.myPlayerTransformManager.getPlayerHeadManager().getHead();
 
         headForward = head.pp_getForward(headForward);
         headUp = head.pp_getUp(headUp);
 
-        referenceUp = this._myParams.myPlayerHeadManager.getPlayer().pp_getUp(referenceUp);
+        referenceUp = this._myParams.myPlayerTransformManager.getRotationRealQuat(playerRotationQuat).quat_getUp(referenceUp);
         referenceUpNegate = referenceUp.vec3_negate(referenceUpNegate);
         referenceRight = headForward.vec3_cross(referenceUp, referenceRight);
 
@@ -240,7 +242,7 @@ PlayerLocomotionRotate.prototype._rotateHeadVertically = function () {
 
         if (angleToRotate != 0) {
             headRotation.quat_fromAxis(angleToRotate, referenceRight);
-            this._myParams.myPlayerHeadManager.rotateHeadQuat(headRotation);
+            this._myParams.myPlayerTransformManager.getPlayerHeadManager().rotateHeadQuat(headRotation);
 
             if (this._myParams.myClampVerticalAngle) {
                 let maxVerticalAngle = Math.max(0, this._myParams.myMaxVerticalAngle - 0.0001);
@@ -249,7 +251,7 @@ PlayerLocomotionRotate.prototype._rotateHeadVertically = function () {
                 if (Math.abs(angleWithUp) > maxVerticalAngle) {
                     let fixAngle = (Math.abs(angleWithUp) - maxVerticalAngle) * Math.pp_sign(angleWithUp);
                     headRotation.quat_fromAxis(fixAngle, referenceRight);
-                    this._myParams.myPlayerHeadManager.rotateHeadQuat(headRotation);
+                    this._myParams.myPlayerTransformManager.getPlayerHeadManager().rotateHeadQuat(headRotation);
                 }
             }
         }

@@ -4,6 +4,7 @@ import { Globals } from "../../pp/globals.js";
 import { ToolHandedness } from "../cauldron/tool_types.js";
 import { WidgetFrame, WidgetParams } from "../widget_frame/widget_frame.js";
 import { ConsoleOriginalFunctions } from "./console_original_functions.js";
+import { ConsoleVR } from "./console_vr.js";
 import { ConsoleVRWidgetConsoleFunction, ConsoleVRWidgetMessageType, ConsoleVRWidgetPulseOnNewMessage, ConsoleVRWidgetSender, OverrideBrowserConsoleFunctions } from "./console_vr_types.js";
 import { ConsoleVRWidgetConfig } from "./console_vr_widget_config.js";
 import { ConsoleVRWidgetUI } from "./console_vr_widget_ui.js";
@@ -18,7 +19,11 @@ export class ConsoleVRWidgetParams extends WidgetParams {
         this.myShowVisibilityButton = false;
         this.myPulseOnNewMessage = ConsoleVRWidgetPulseOnNewMessage.NEVER;
 
-        this.myResetBrowserConsoleOriginalFunctionsOnDestroy = true;
+        this.myResetToOverwrittenConsoleFunctionsOnDeactivate = false;
+        this.myResetToConsoleOriginalFunctionsOnDeactivate = true;
+
+        this.myResetToOverwrittenConsoleFunctionsOnDestroy = false;
+        this.myResetToConsoleOriginalFunctionsOnDestroy = false;
     }
 }
 
@@ -99,11 +104,21 @@ export class ConsoleVRWidget {
 
         this._myEngine = engine;
 
+        this._myStarted = false;
+        this._myActive = true;
+        this._myVisibleBackup = null;
+
+        this._myUnhoverCallbacks = [];
+
         this._myDestroyed = false;
     }
 
     setVisible(visible) {
-        this._myWidgetFrame.setVisible(visible);
+        if (this._myActive) {
+            this._myWidgetFrame.setVisible(visible);
+        } else {
+            this._myVisibleBackup = visible;
+        }
     }
 
     isVisible() {
@@ -125,9 +140,13 @@ export class ConsoleVRWidget {
         this._addListeners();
 
         this._overrideConsolesFunctions();
+
+        this._myStarted = true;
     }
 
     update(dt) {
+        if (!this._myActive) return;
+
         if (this._myConsolePrintAddMessageEnabledReset) {
             this._myConsolePrintAddMessageEnabledReset = false;
             this._myConsolePrintAddMessageEnabled = true;
@@ -144,6 +163,90 @@ export class ConsoleVRWidget {
         }
 
         this._updateGamepadsExtraActions(dt);
+    }
+
+    isActive() {
+        return this._myActive;
+    }
+
+    setActive(active) {
+        if (!this._myStarted) return;
+
+        this._myUI.setActive(active);
+        this._myWidgetFrame.setActive(active);
+
+        if (this._myActive != active) {
+            if (active) {
+                this._myActive = active;
+                if (this._myVisibleBackup != null) {
+                    this.setVisible(false);
+                    this.setVisible(this._myVisibleBackup);
+
+                    this._myVisibleBackup = null;
+                }
+            } else {
+                if (this._myVisibleBackup == null) {
+                    this._myVisibleBackup = this.isVisible();
+                }
+
+                if (this.isVisible()) {
+                    this.setVisible(false);
+                }
+                this._myActive = active;
+            }
+
+            if (active) {
+                if (this._myParams.myResetToConsoleOriginalFunctionsOnDeactivate || this._myParams.myResetToOverwrittenConsoleFunctionsOnDeactivate) {
+                    this._overrideConsolesFunctions();
+                } else {
+                    if (this._myParams.myOverrideBrowserConsoleFunctions != OverrideBrowserConsoleFunctions.NONE) {
+                        window.addEventListener("error", this._myErrorEventListener);
+                        window.addEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+                    }
+                }
+            } else {
+                window.removeEventListener("error", this._myErrorEventListener);
+                window.removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
+
+                if (this._myParams.myResetToConsoleOriginalFunctionsOnDeactivate) {
+                    console.log = ConsoleOriginalFunctions.getLog(this._myEngine);
+                    console.error = ConsoleOriginalFunctions.getError(this._myEngine);
+                    console.warn = ConsoleOriginalFunctions.getWarn(this._myEngine);
+                    console.info = ConsoleOriginalFunctions.getInfo(this._myEngine);
+                    console.debug = ConsoleOriginalFunctions.getDebug(this._myEngine);
+                    console.assert = ConsoleOriginalFunctions.getAssert(this._myEngine);
+                    console.clear = ConsoleOriginalFunctions.getClear(this._myEngine);
+
+                    if (Globals.getConsoleVR(this._myEngine) != null) {
+                        Globals.getConsoleVR(this._myEngine).log = ConsoleVR.myOriginalLog;
+                        Globals.getConsoleVR(this._myEngine).error = ConsoleVR.myOriginalError;
+                        Globals.getConsoleVR(this._myEngine).warn = ConsoleVR.myOriginalWarn;
+                        Globals.getConsoleVR(this._myEngine).info = ConsoleVR.myOriginalInfo;
+                        Globals.getConsoleVR(this._myEngine).debug = ConsoleVR.myOriginalDebug;
+                        Globals.getConsoleVR(this._myEngine).assert = ConsoleVR.myOriginalAssert;
+                        Globals.getConsoleVR(this._myEngine).clear = ConsoleVR.myOriginalClear;
+                    }
+                } else if (this._myParams.myResetToOverwrittenConsoleFunctionsOnDeactivate) {
+                    console.log = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.LOG];
+                    console.error = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ERROR];
+                    console.warn = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.WARN];
+                    console.info = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.INFO];
+                    console.debug = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.DEBUG];
+                    console.assert = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ASSERT];
+                    console.clear = this._myOldBrowserConsoleClear;
+
+                    if (Globals.getConsoleVR(this._myEngine) != null) {
+                        Globals.getConsoleVR(this._myEngine).log = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG];
+                        Globals.getConsoleVR(this._myEngine).error = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ERROR];
+                        Globals.getConsoleVR(this._myEngine).warn = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.WARN];
+                        Globals.getConsoleVR(this._myEngine).info = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.INFO];
+                        Globals.getConsoleVR(this._myEngine).debug = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.DEBUG];
+                        Globals.getConsoleVR(this._myEngine).assert = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ASSERT];
+                        Globals.getConsoleVR(this._myEngine).clear = this._myOldConsoleVRClear;
+                    }
+                }
+            }
+        }
     }
 
     // This must be done only when all the setup is complete, to avoid issues with other part of the code calling the console and then triggering the console vr while not ready yet
@@ -298,6 +401,10 @@ export class ConsoleVRWidget {
     }
 
     _consolePrint(consoleFunction, sender, ...args) {
+        if (!this._myActive && sender == ConsoleVRWidgetSender.CONSOLE_VR) {
+            this._deactivateFix();
+        }
+
         switch (sender) {
             case ConsoleVRWidgetSender.BROWSER_CONSOLE:
                 this._myOldBrowserConsole[consoleFunction].apply(console, args);
@@ -310,7 +417,7 @@ export class ConsoleVRWidget {
                 break;
         }
 
-        if (this._myConsolePrintAddMessageEnabled && (consoleFunction != ConsoleVRWidgetConsoleFunction.ASSERT || (args.length > 0 && !args[0]))) {
+        if (this._myActive && this._myConsolePrintAddMessageEnabled && (consoleFunction != ConsoleVRWidgetConsoleFunction.ASSERT || (args.length > 0 && !args[0]))) {
             this._myTextDirty = true;
             this._pulseGamepad();
 
@@ -571,59 +678,71 @@ export class ConsoleVRWidget {
             let backgroundMaterial = ui.myFilterButtonsBackgroundComponents[ConsoleVRWidgetMessageType[key]].material;
             let textMaterial = ui.myFilterButtonsTextComponents[ConsoleVRWidgetMessageType[key]].material;
 
-            cursorTarget.onSingleClick.add(this._toggleFilter.bind(this, ConsoleVRWidgetMessageType[key], textMaterial));
-            cursorTarget.onDoubleClick.add(this._filterAllButOne.bind(this, ConsoleVRWidgetMessageType[key], textMaterial));
-            cursorTarget.onTripleClick.add(this._resetFilters.bind(this, ConsoleVRWidgetMessageType[key]));
-            cursorTarget.onHover.add(this._filterHover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
-            cursorTarget.onUnhover.add(this._filterUnhover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
+            cursorTarget.onSingleClick.add(this._toggleFilter.bind(this, ConsoleVRWidgetMessageType[key], textMaterial), { id: this });
+            cursorTarget.onDoubleClick.add(this._filterAllButOne.bind(this, ConsoleVRWidgetMessageType[key], textMaterial), { id: this });
+            cursorTarget.onTripleClick.add(this._resetFilters.bind(this, ConsoleVRWidgetMessageType[key]), { id: this });
+            cursorTarget.onHover.add(this._filterHover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial), { id: this });
+            cursorTarget.onUnhover.add(this._filterUnhover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial), { id: this });
+
+            this._myUnhoverCallbacks.push(this._filterUnhover.bind(this, ConsoleVRWidgetMessageType[key], backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myClearButtonCursorTargetComponent;
             let backgroundMaterial = ui.myClearButtonBackgroundComponent.material;
 
-            cursorTarget.onClick.add(this._clearConsole.bind(this, false, null));
-            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial));
+            cursorTarget.onClick.add(this._clearConsole.bind(this, false, null), { id: this });
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
+            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
+
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myUpButtonCursorTargetComponent;
             let backgroundMaterial = ui.myUpButtonBackgroundComponent.material;
 
-            cursorTarget.onDoubleClick.add(this._instantScrollUp.bind(this, true));
-            cursorTarget.onDown.add(this._setScrollUp.bind(this, true));
-            cursorTarget.onDownOnHover.add(this._setScrollUp.bind(this, true));
-            cursorTarget.onUp.add(this._setScrollUp.bind(this, false));
-            cursorTarget.onUnhover.add(this._setScrollUp.bind(this, false));
-            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial));
+            cursorTarget.onDoubleClick.add(this._instantScrollUp.bind(this, true), { id: this });
+            cursorTarget.onDown.add(this._setScrollUp.bind(this, true), { id: this });
+            cursorTarget.onDownOnHover.add(this._setScrollUp.bind(this, true), { id: this });
+            cursorTarget.onUp.add(this._setScrollUp.bind(this, false), { id: this });
+            cursorTarget.onUnhover.add(this._setScrollUp.bind(this, false), { id: this });
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
+            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
+
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myDownButtonCursorTargetComponent;
             let backgroundMaterial = ui.myDownButtonBackgroundComponent.material;
 
-            cursorTarget.onDoubleClick.add(this._instantScrollDown.bind(this));
-            cursorTarget.onDown.add(this._setScrollDown.bind(this, true));
-            cursorTarget.onDownOnHover.add(this._setScrollDown.bind(this, true));
-            cursorTarget.onUp.add(this._setScrollDown.bind(this, false));
-            cursorTarget.onUnhover.add(this._setScrollDown.bind(this, false));
-            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial));
+            cursorTarget.onDoubleClick.add(this._instantScrollDown.bind(this), { id: this });
+            cursorTarget.onDown.add(this._setScrollDown.bind(this, true), { id: this });
+            cursorTarget.onDownOnHover.add(this._setScrollDown.bind(this, true), { id: this });
+            cursorTarget.onUp.add(this._setScrollDown.bind(this, false), { id: this });
+            cursorTarget.onUnhover.add(this._setScrollDown.bind(this, false), { id: this });
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
+            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
+
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
         }
 
         {
             let cursorTarget = ui.myNotifyIconCursorTargetComponent;
             let backgroundMaterial = ui.myNotifyIconBackgroundComponent.material;
 
-            cursorTarget.onClick.add(this._instantScrollDown.bind(this));
-            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial));
-            cursorTarget.onUnhover.add(this._notifyIconUnhover.bind(this));
+            cursorTarget.onClick.add(this._instantScrollDown.bind(this), { id: this });
+            cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
+            cursorTarget.onUnhover.add(this._notifyIconUnhover.bind(this), { id: this });
+
+            this._myUnhoverCallbacks.push(this._notifyIconUnhover.bind(this));
         }
 
-        ui.myPointerCursorTargetComponent.onHover.add(this._setGamepadScrollEnabled.bind(this, true));
-        ui.myPointerCursorTargetComponent.onUnhover.add(this._setGamepadScrollEnabled.bind(this, false));
+        ui.myPointerCursorTargetComponent.onHover.add(this._setGamepadScrollEnabled.bind(this, true), { id: this });
+        ui.myPointerCursorTargetComponent.onUnhover.add(this._setGamepadScrollEnabled.bind(this, false), { id: this });
+
+        this._myUnhoverCallbacks.push(this._setGamepadScrollEnabled.bind(this, false));
     }
 
     _resetFilters(messageType) {
@@ -787,6 +906,11 @@ export class ConsoleVRWidget {
 
     _widgetVisibleChanged(visible) {
         this._myUI.setVisible(visible);
+
+        for (const unhoverCallback of this._myUnhoverCallbacks) {
+            unhoverCallback();
+        }
+
         if (visible) {
             this._updateAllTexts();
         }
@@ -897,16 +1021,43 @@ export class ConsoleVRWidget {
         }
     }
 
+    _deactivateFix() {
+        if (this._myParams.myResetToConsoleOriginalFunctionsOnDeactivate || this._myParams.myResetToOverwrittenConsoleFunctionsOnDeactivate) {
+            if (this._myParams.myResetToConsoleOriginalFunctionsOnDeactivate) {
+                Globals.getConsoleVR(this._myEngine).log = ConsoleVR.myOriginalLog;
+                Globals.getConsoleVR(this._myEngine).error = ConsoleVR.myOriginalError;
+                Globals.getConsoleVR(this._myEngine).warn = ConsoleVR.myOriginalWarn;
+                Globals.getConsoleVR(this._myEngine).info = ConsoleVR.myOriginalInfo;
+                Globals.getConsoleVR(this._myEngine).debug = ConsoleVR.myOriginalDebug;
+                Globals.getConsoleVR(this._myEngine).assert = ConsoleVR.myOriginalAssert;
+                Globals.getConsoleVR(this._myEngine).clear = ConsoleVR.myOriginalClear;
+            } else if (this._myParams.myResetToOverwrittenConsoleFunctionsOnDeactivate) {
+                Globals.getConsoleVR(this._myEngine).log = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG];
+                Globals.getConsoleVR(this._myEngine).error = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ERROR];
+                Globals.getConsoleVR(this._myEngine).warn = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.WARN];
+                Globals.getConsoleVR(this._myEngine).info = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.INFO];
+                Globals.getConsoleVR(this._myEngine).debug = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.DEBUG];
+                Globals.getConsoleVR(this._myEngine).assert = this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ASSERT];
+                Globals.getConsoleVR(this._myEngine).clear = this._myOldConsoleVRClear;
+            }
+
+            this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.LOG] = Globals.getConsoleVR(this._myEngine).log;
+            this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ERROR] = Globals.getConsoleVR(this._myEngine).error;
+            this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.WARN] = Globals.getConsoleVR(this._myEngine).warn;
+            this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.INFO] = Globals.getConsoleVR(this._myEngine).info;
+            this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.DEBUG] = Globals.getConsoleVR(this._myEngine).debug;
+            this._myOldConsoleVR[ConsoleVRWidgetConsoleFunction.ASSERT] = Globals.getConsoleVR(this._myEngine).assert;
+            this._myOldConsoleVRClear = Globals.getConsoleVR(this._myEngine).clear;
+        }
+    }
+
     destroy() {
         this._myDestroyed = true;
-
-        window.removeEventListener("error", this._myErrorEventListener);
-        window.removeEventListener("unhandledrejection", this._myUnhandledRejectionEventListener);
 
         this._myUI.destroy();
         this._myWidgetFrame.destroy();
 
-        if (this._myParams.myResetBrowserConsoleOriginalFunctionsOnDestroy) {
+        if (this._myParams.myResetToConsoleOriginalFunctionsOnDestroy) {
             console.log = ConsoleOriginalFunctions.getLog(this._myEngine);
             console.error = ConsoleOriginalFunctions.getError(this._myEngine);
             console.warn = ConsoleOriginalFunctions.getWarn(this._myEngine);
@@ -914,7 +1065,15 @@ export class ConsoleVRWidget {
             console.debug = ConsoleOriginalFunctions.getDebug(this._myEngine);
             console.assert = ConsoleOriginalFunctions.getAssert(this._myEngine);
             console.clear = ConsoleOriginalFunctions.getClear(this._myEngine);
-        } else {
+
+            Globals.getConsoleVR(this._myEngine).log = ConsoleVR.myOriginalLog;
+            Globals.getConsoleVR(this._myEngine).error = ConsoleVR.myOriginalError;
+            Globals.getConsoleVR(this._myEngine).warn = ConsoleVR.myOriginalWarn;
+            Globals.getConsoleVR(this._myEngine).info = ConsoleVR.myOriginalInfo;
+            Globals.getConsoleVR(this._myEngine).debug = ConsoleVR.myOriginalDebug;
+            Globals.getConsoleVR(this._myEngine).assert = ConsoleVR.myOriginalAssert;
+            Globals.getConsoleVR(this._myEngine).clear = ConsoleVR.myOriginalClear;
+        } else if (this._myParams.myResetToOverwrittenConsoleFunctionsOnDestroy) {
             console.log = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.LOG];
             console.error = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ERROR];
             console.warn = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.WARN];
@@ -922,6 +1081,14 @@ export class ConsoleVRWidget {
             console.debug = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.DEBUG];
             console.assert = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ASSERT];
             console.clear = this._myOldBrowserConsoleClear;
+
+            Globals.getConsoleVR(this._myEngine).log = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.LOG];
+            Globals.getConsoleVR(this._myEngine).error = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ERROR];
+            Globals.getConsoleVR(this._myEngine).warn = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.WARN];
+            Globals.getConsoleVR(this._myEngine).info = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.INFO];
+            Globals.getConsoleVR(this._myEngine).debug = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.DEBUG];
+            Globals.getConsoleVR(this._myEngine).assert = this._myOldBrowserConsole[ConsoleVRWidgetConsoleFunction.ASSERT];
+            Globals.getConsoleVR(this._myEngine).clear = this._myOldConsoleVRClear;
         }
     }
 

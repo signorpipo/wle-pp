@@ -179,7 +179,11 @@ export function isRegistered(classOrType, engine = Globals.getMainEngine()) {
     return ComponentUtils.getClassFromType(type, engine) != null;
 }
 
-export function getJavascriptComponentInstances(engine = Globals.getMainEngine()) {
+export function getJavascriptComponentInstances(currentSceneOnly = true, engine = Globals.getMainEngine()) {
+    if (currentSceneOnly) {
+        return Globals.getScene(engine)._jsComponents;
+    }
+
     return Globals.getWASM(engine)._components;
 }
 
@@ -212,9 +216,9 @@ export function getJavascriptComponentTypeFromIndex(typeIndex, engine = Globals.
 }
 
 export function isWLNativeComponentRegistered(classOrType, engine = Globals.getMainEngine()) {
-    let wasm = Globals.getWASM(engine);
+    let scene = Globals.getScene(engine);
     let type = ComponentUtils.getTypeFromClassOrType(classOrType);
-    return wasm._wl_get_component_manager_index(wasm.tempUTF8(type)) >= 0;
+    return scene._components.getNativeManager(type) != null;
 }
 
 export function isCloneable(classOrType, defaultCloneValid = false, engine = Globals.getMainEngine()) {

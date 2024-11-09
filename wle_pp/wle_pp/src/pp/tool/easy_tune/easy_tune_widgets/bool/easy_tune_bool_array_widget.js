@@ -83,6 +83,8 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
         ui.myVariableLabelCursorTargetComponent.onHover.add(this._genericTextHover.bind(this, ui.myVariableLabelText));
         ui.myVariableLabelCursorTargetComponent.onUnhover.add(this._genericTextUnhover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
 
+        this._myUnhoverCallbacks.push(this._genericTextUnhover.bind(this, ui.myVariableLabelText, this._myConfig.myVariableLabelTextScale));
+
         for (let i = 0; i < this._myArraySize; i++) {
             ui.myValueIncreaseButtonCursorTargetComponents[i].onDown.add(this._setValueEditIntensity.bind(this, i, 1));
             ui.myValueIncreaseButtonCursorTargetComponents[i].onDownOnHover.add(this._setValueEditIntensity.bind(this, i, 1));
@@ -93,14 +95,21 @@ export class EasyTuneBoolArrayWidget extends EasyTuneBaseWidget {
             ui.myValueDecreaseButtonCursorTargetComponents[i].onUp.add(this._setValueEditIntensity.bind(this, i, 0));
             ui.myValueDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._setValueEditIntensity.bind(this, i, 0));
 
+            this._myUnhoverCallbacks.push(this._setValueEditIntensity.bind(this, i, 0));
+
             ui.myValueIncreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
             ui.myValueIncreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
             ui.myValueDecreaseButtonCursorTargetComponents[i].onHover.add(this._genericHover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
             ui.myValueDecreaseButtonCursorTargetComponents[i].onUnhover.add(this._genericUnhover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
 
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myValueIncreaseButtonBackgroundComponents[i].material));
+            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, ui.myValueDecreaseButtonBackgroundComponents[i].material));
+
             ui.myValueCursorTargetComponents[i].onClick.add(this._resetValue.bind(this, i));
             ui.myValueCursorTargetComponents[i].onHover.add(this._setValueEditEnabled.bind(this, i, ui.myValueTexts[i], true));
             ui.myValueCursorTargetComponents[i].onUnhover.add(this._setValueEditEnabled.bind(this, i, ui.myValueTexts[i], false));
+
+            this._myUnhoverCallbacks.push(this._setValueEditEnabled.bind(this, i, ui.myValueTexts[i], false));
         }
     }
 

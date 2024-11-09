@@ -10,7 +10,7 @@ export class ClassicGamepadCore extends GamepadCore {
 
         this._myGamepadIndex = gamepadIndex;    // null means any active gamepad
 
-        this._myCurrentGamepads = navigator.getGamepads();
+        this._myCurrentGamepads = null;
 
         // Support Variables
         this._myButtonData = new GamepadRawButtonData();
@@ -22,9 +22,17 @@ export class ClassicGamepadCore extends GamepadCore {
         this._myCurrentGamepads = navigator.getGamepads();
     }
 
+    _setActiveHook(active) {
+        if (this.isActive() != active) {
+            if (!active) {
+                this._myCurrentGamepads = null;
+            }
+        }
+    }
+
     isGamepadCoreActive() {
         let classicGamepad = this._getClassicGamepad();
-        return classicGamepad != null && (classicGamepad.connected == null || classicGamepad.connected);
+        return this.isActive() && classicGamepad != null && (classicGamepad.connected == null || classicGamepad.connected);
     }
 
     getButtonData(buttonID) {
@@ -151,6 +159,8 @@ export class ClassicGamepadCore extends GamepadCore {
     }
 
     _getClassicGamepad() {
+        if (this._myCurrentGamepads == null) return null;
+
         let classicGamepad = null;
 
         if (this._myGamepadIndex != null) {

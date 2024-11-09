@@ -8,18 +8,17 @@ export class EnableToolComponent extends Component {
     };
 
     init() {
-        this._myToolEnabled = null;
+        this._myToolEnabled = this._myEnable;
+    }
 
-        // Prevents double global from same engine
+    onActivate() {
         if (!Globals.hasToolEnabled(this.engine)) {
-            this._myToolEnabled = this._myEnable;
-
             Globals.setToolEnabled(this._myToolEnabled, this.engine);
         }
     }
 
-    onDestroy() {
-        if (this._myToolEnabled != null && Globals.isToolEnabled(this.engine) == this._myToolEnabled) {
+    onDeactivate() {
+        if (Globals.isToolEnabled(this.engine) == this._myToolEnabled) {
             Globals.removeToolEnabled(this.engine);
         }
     }

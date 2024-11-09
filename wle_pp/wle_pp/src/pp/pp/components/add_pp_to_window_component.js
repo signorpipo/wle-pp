@@ -8,9 +8,12 @@ export class AddPPToWindowComponent extends Component {
     };
 
     init() {
+        this._myPP = null;
         if (this._myAdd) {
-            window.PP = {};
+            this._myPP = {};
             this._addProperties(PPAPI);
+
+            window.PP = this._myPP;
         }
     }
 
@@ -18,12 +21,20 @@ export class AddPPToWindowComponent extends Component {
         let propertyNames = Object.getOwnPropertyNames(object);
         for (let propertyName of propertyNames) {
             if (object[propertyName] != undefined) {
-                window.PP[propertyName] = object[propertyName];
+                this._myPP[propertyName] = object[propertyName];
             }
         }
     }
 
-    onDestroy() {
-        window.PP = undefined;
+    onActivate() {
+        if (this._myPP != null) {
+            window.PP = this._myPP;
+        }
+    }
+
+    onDeactivate() {
+        if (this._myPP != null) {
+            delete window.PP;
+        }
     }
 }

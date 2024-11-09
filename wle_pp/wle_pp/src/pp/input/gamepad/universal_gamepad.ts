@@ -24,9 +24,11 @@ export class UniversalGamepad extends Gamepad {
     public addGamepadCore(id: string, gamepadCore: GamepadCore): void {
         if (gamepadCore.getHandedness() == this.getHandedness()) {
             this._myGamepadCores[id] = gamepadCore;
-            this._myGamepadCoresIDs.push(id);
+            this._myGamepadCoresIDs.pp_pushUnique(id);
+
             if (this._myStarted) {
                 gamepadCore.start();
+                gamepadCore.setActive(this.isActive());
             }
         }
     }
@@ -69,11 +71,20 @@ export class UniversalGamepad extends Gamepad {
         return handPose;
     }
 
+    protected override _setActiveHook(active: boolean): void {
+        for (let i = 0; i < this._myGamepadCoresIDs.length; i++) {
+            const id = this._myGamepadCoresIDs[i];
+            const core = this._myGamepadCores[id];
+            core.setActive(active);
+        }
+    }
+
     protected override _startHook(): void {
         for (let i = 0; i < this._myGamepadCoresIDs.length; i++) {
             const id = this._myGamepadCoresIDs[i];
             const core = this._myGamepadCores[id];
             core.start();
+            core.setActive(this.isActive());
         }
 
         this._myStarted = true;

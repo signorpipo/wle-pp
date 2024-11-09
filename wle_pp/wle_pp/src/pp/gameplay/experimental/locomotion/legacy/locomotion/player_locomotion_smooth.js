@@ -3,7 +3,7 @@ import { XRUtils } from "../../../../../cauldron/utils/xr_utils.js";
 import { Handedness } from "../../../../../input/cauldron/input_types.js";
 import { InputUtils } from "../../../../../input/cauldron/input_utils.js";
 import { GamepadAxesID, GamepadButtonID } from "../../../../../input/gamepad/gamepad_buttons.js";
-import { quat2_create, vec3_create } from "../../../../../plugin/js/extensions/array/vec_create_extension.js";
+import { quat2_create, quat_create, vec3_create } from "../../../../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../../../../pp/globals.js";
 import { Direction2DTo3DConverter, Direction2DTo3DConverterParams } from "../../../../cauldron/cauldron/direction_2D_to_3D_converter.js";
 import { PlayerLocomotionDirectionReferenceType } from "./player_locomotion.js";
@@ -12,7 +12,6 @@ import { PlayerLocomotionMovement } from "./player_locomotion_movement.js";
 export class PlayerLocomotionSmoothParams {
 
     constructor(engine = Globals.getMainEngine()) {
-        this.myPlayerHeadManager = null;
         this.myPlayerTransformManager = null;
 
         this.myMaxSpeed = 0;
@@ -87,12 +86,24 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
 
         this._myDestroyed = false;
 
-        XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myParams.myEngine);
+        this.setActive(true);
     }
 
     start() {
         this._myCurrentSpeed = 0;
         this._myLastHorizontalMovement.vec3_zero();
+    }
+
+    setActive(active) {
+        if (this.isActive() != active) {
+            if (active) {
+                XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, false, this._myParams.myEngine);
+            } else {
+                XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+            }
+        }
+
+        super.setActive(active);
     }
 
     getParams() {
@@ -137,7 +148,7 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
     destroy() {
         this._myDestroyed = true;
 
-        XRUtils.unregisterSessionStartEndEventListeners(this, this._myParams.myEngine);
+        this.setActive(false);
     }
 
     isDestroyed() {
@@ -150,21 +161,23 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
 // IMPLEMENTATION
 
 PlayerLocomotionSmooth.prototype.update = function () {
+    let playerRotationQuat = quat_create();
     let playerUp = vec3_create();
     let headMovement = vec3_create();
     let direction = vec3_create();
     let directionOnUp = vec3_create();
     let verticalMovement = vec3_create();
-    let feetTransformQuat = quat2_create();
 
     let directionReferenceTransformQuat = quat2_create();
     return function update(dt) {
+        if (!this.isActive()) return;
+
         let debugFlyEnabled = this._myDebugFlyEnabled && Globals.isDebugEnabled(this._myParams.myEngine);
 
         this._myCurrentSpeed = 0;
         this._myLastHorizontalMovement.vec3_zero();
 
-        playerUp = this._myParams.myPlayerHeadManager.getPlayer().pp_getUp(playerUp);
+        playerUp = this._myParams.myPlayerTransformManager.getRotationQuat(playerRotationQuat).quat_getUp(playerUp);
 
         headMovement.vec3_zero();
 
@@ -188,6 +201,8 @@ PlayerLocomotionSmooth.prototype.update = function () {
             maxSpeed = this._myParams.myMaxSpeed;
         }
 
+        const collisionRuntimeParams = this._myParams.myPlayerTransformManager.getCollisionRuntimeParams();
+
         if (!axes.vec2_isZero()) {
             this._myStickIdleTimer.start();
 
@@ -202,10 +217,10 @@ PlayerLocomotionSmooth.prototype.update = function () {
                 let movementIntensity = axes.vec2_length();
                 this._myCurrentSpeed = Math.pp_lerp(0, maxSpeed, movementIntensity);
 
-                if (this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsSliding && this._myParams.mySpeedSlowDownPercentageOnWallSlid != 1) {
+                if (collisionRuntimeParams.myIsSliding && this._myParams.mySpeedSlowDownPercentageOnWallSlid != 1) {
                     let slowPercentage = this._myParams.mySpeedSlowDownPercentageOnWallSlid;
 
-                    let slidStrength = Math.pp_mapToRange(Math.abs(this._myLocomotionRuntimeParams.myCollisionRuntimeParams.mySlidingMovementAngle), 0, 90, 0, 1);
+                    let slidStrength = Math.pp_mapToRange(Math.abs(collisionRuntimeParams.mySlidingMovementAngle), 0, 90, 0, 1);
                     slowPercentage = Math.pp_lerp(1, slowPercentage, slidStrength);
 
                     this._myCurrentSpeed = this._myCurrentSpeed * slowPercentage;
@@ -250,7 +265,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
         } else if ((this._myParams.myMoveThroughCollisionShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine) &&
             Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed())
             || debugFlyEnabled) {
-            this._myParams.myPlayerTransformManager.move(headMovement, this._myLocomotionRuntimeParams.myCollisionRuntimeParams, true);
+            this._myParams.myPlayerTransformManager.move(headMovement, true);
             if (isManuallyMoving) {
                 this._myParams.myPlayerTransformManager.resetReal();
             }
@@ -268,25 +283,23 @@ PlayerLocomotionSmooth.prototype.update = function () {
                 this._myLocomotionRuntimeParams.myGravitySpeed = 0;
             }
 
-            feetTransformQuat = this._myParams.myPlayerTransformManager.getTransformQuat(feetTransformQuat);
-
-            this._myParams.myPlayerTransformManager.move(headMovement, this._myLocomotionRuntimeParams.myCollisionRuntimeParams);
+            this._myParams.myPlayerTransformManager.move(headMovement, false);
             if (isManuallyMoving) {
                 this._myParams.myPlayerTransformManager.resetReal();
 
-                this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myFixedMovement.vec3_removeComponentAlongAxis(
-                    this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myOriginalUp,
+                collisionRuntimeParams.myFixedMovement.vec3_removeComponentAlongAxis(
+                    collisionRuntimeParams.myOriginalUp,
                     this._myLastHorizontalMovement
                 );
             }
 
-            if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnCeiling ||
-                this._myLocomotionRuntimeParams.myGravitySpeed < 0 && this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnGround) {
+            if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && collisionRuntimeParams.myIsOnCeiling ||
+                this._myLocomotionRuntimeParams.myGravitySpeed < 0 && collisionRuntimeParams.myIsOnGround) {
                 this._myLocomotionRuntimeParams.myGravitySpeed = 0;
             }
         }
 
-        if (this._myLocomotionRuntimeParams.myCollisionRuntimeParams.myIsOnGround) {
+        if (collisionRuntimeParams.myIsOnGround) {
             this._myLocomotionRuntimeParams.myIsFlying = false;
             this._myCurrentDirectionConverter.resetFly();
         }

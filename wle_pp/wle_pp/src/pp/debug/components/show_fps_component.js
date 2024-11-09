@@ -1,4 +1,4 @@
-import { Alignment, Component, Justification, Property } from "@wonderlandengine/api";
+import { Alignment, Component, Property, VerticalAlignment } from "@wonderlandengine/api";
 import { Timer } from "../../cauldron/cauldron/timer.js";
 import { vec3_create, vec4_create } from "../../plugin/js/extensions/array/vec_create_extension.js";
 import { Globals } from "../../pp/globals.js";
@@ -44,7 +44,7 @@ export class ShowFPSComponent extends Component {
                 this._myFrames = 0;
             }
 
-            Globals.getDebugVisualManager(this.engine).drawUIText(0, this._myCurrentFPS.toFixed(0), this._myScreenPosition, this._myScale, this._myColor, Alignment.Right, Justification.Bottom);
+            Globals.getDebugVisualManager(this.engine).drawUIText(0, this._myCurrentFPS.toFixed(0), this._myScreenPosition, this._myScale, this._myColor, Alignment.Right, VerticalAlignment.Bottom);
         }
     }
 }
