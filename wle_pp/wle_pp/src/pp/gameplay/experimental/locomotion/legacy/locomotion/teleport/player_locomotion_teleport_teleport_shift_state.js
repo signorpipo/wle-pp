@@ -80,14 +80,6 @@ export class PlayerLocomotionTeleportTeleportShiftState extends PlayerLocomotion
         this._myParentFSM.performDelayed("done");
     }
 
-    _teleport() {
-        this._myLocomotionRuntimeParams.myIsTeleporting = false;
-        this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
-        this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myTeleportRuntimeParams.myTeleportForward);
-
-        this._myTeleportParams.myPlayerTransformManager.resetReal();
-    }
-
     _shiftingUpdate(dt, fsm) {
         // Implemented outside class definition
     }

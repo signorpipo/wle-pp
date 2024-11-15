@@ -26,6 +26,9 @@ export class PlayerLocomotionComponent extends Component {
     @property.bool(true)
     private readonly _mySwitchLocomotionTypeShortcutEnabled!: boolean;
 
+    @property.bool(false)
+    private readonly _myStartIdle!: boolean;
+
     @property.string("0, 0, 0, 0, 0, 0, 0, 0")
     private readonly _myPhysicsBlockLayerFlags!: string;
 
@@ -211,12 +214,11 @@ export class PlayerLocomotionComponent extends Component {
 
     /**
      * To avoid occlusion issues when moving when touching a tilted ceiling (which is not commong anyway),  
-     * this would be better to be less or equal than the feet radius of the character (usually half of {@link _myCharacterRadius})
-     * Increasing {@link _myColliderExtraHeight} can help reducing the view occlusion
+     * this value should be a bit lower than {@link _myCharacterFeetRadius}
      * 
      * If you have a high camera near value, you might need to increase this value, even though the view occlusion might become more aggressive
      */
-    @property.float(0.15)
+    @property.float(0.145)
     private readonly _myViewOcclusionHeadRadius!: number;
 
     /**
@@ -295,6 +297,9 @@ export class PlayerLocomotionComponent extends Component {
     @property.float(0.1)
     private readonly _myColliderMaxDistanceToSnapOnGround!: number;
 
+    @property.float(0.2)
+    private readonly _myColliderMaxDistanceToPopOutGround!: number;
+
     @property.float(0.1)
     private readonly _myColliderMaxWalkableGroundStepHeight!: number;
 
@@ -371,7 +376,7 @@ export class PlayerLocomotionComponent extends Component {
 
 
 
-    private readonly _myPlayerLocomotion!: PlayerLocomotion;
+    private readonly _myPlayerLocomotion: PlayerLocomotion | null = null;
 
     private _myRegisterToPostPoseUpdateOnNextUpdate: boolean = false;
     private _myActivateOnNextPostPoseUpdate: boolean = false;
@@ -388,6 +393,7 @@ export class PlayerLocomotionComponent extends Component {
         params.myDefaultLocomotionType = this._myDefaultLocomotionType;
         params.myAlwaysSmoothForNonVR = this._myAlwaysSmoothForNonVR;
         params.mySwitchLocomotionTypeShortcutEnabled = this._mySwitchLocomotionTypeShortcutEnabled;
+        params.myStartIdle = this._myStartIdle;
 
         params.myDefaultHeight = this._myDefaultHeight;
         params.myMinHeight = this._myMinHeight;
@@ -464,6 +470,7 @@ export class PlayerLocomotionComponent extends Component {
         params.myColliderMaxTeleportableGroundAngle = this._myColliderMaxTeleportableGroundAngle < 0 ? null : this._myColliderMaxTeleportableGroundAngle;
         params.myColliderSnapOnGround = this._myColliderSnapOnGround;
         params.myColliderMaxDistanceToSnapOnGround = this._myColliderMaxDistanceToSnapOnGround;
+        params.myColliderMaxDistanceToPopOutGround = this._myColliderMaxDistanceToPopOutGround;
         params.myColliderMaxWalkableGroundStepHeight = this._myColliderMaxWalkableGroundStepHeight;
         params.myColliderMaxWalkableCeilingStepHeight = this._myColliderMaxWalkableCeilingStepHeight;
         params.myColliderPreventFallingFromEdges = this._myColliderPreventFallingFromEdges;
@@ -504,13 +511,14 @@ export class PlayerLocomotionComponent extends Component {
 
         if (manualUpdate) return;
 
+        let setPlayerLocomotionOnGlobals = false;
         if (this._myActivateOnNextPostPoseUpdate) {
-            this._onActivate();
+            setPlayerLocomotionOnGlobals = this._onActivate();
 
             this._myActivateOnNextPostPoseUpdate = false;
         }
 
-        if (Globals.getPlayerLocomotion(this.engine) != this._myPlayerLocomotion) return;
+        if (!setPlayerLocomotionOnGlobals && Globals.hasPlayerLocomotion(this.engine) && Globals.getPlayerLocomotion(this.engine) != this._myPlayerLocomotion) return;
 
         let startTime = 0;
         if (this._myPerformanceLogEnabled && Globals.isDebugEnabled(this.engine)) {
@@ -527,11 +535,11 @@ export class PlayerLocomotionComponent extends Component {
             PhysicsUtils.resetRaycastCount(this.engine.physics!);
         }
 
-        if (!this._myPlayerLocomotion.isStarted()) {
-            this._myPlayerLocomotion.start();
+        if (!this._myPlayerLocomotion!.isStarted()) {
+            this._myPlayerLocomotion!.start();
         }
 
-        this._myPlayerLocomotion.update(dt);
+        this._myPlayerLocomotion!.update(dt);
 
         if (this._myPerformanceLogEnabled && Globals.isDebugEnabled(this.engine)) {
             const endTime = window.performance.now();
@@ -559,9 +567,17 @@ export class PlayerLocomotionComponent extends Component {
             console.log("Raycast count: " + PhysicsUtils.getRaycastCount(this.engine.physics!));
             PhysicsUtils.resetRaycastCount(this.engine.physics!);
         }
+
+        if (setPlayerLocomotionOnGlobals && !Globals.hasPlayerLocomotion(this.engine)) {
+            // This is done to only set the global when the locomotion is active and updated, so "ready"
+            Globals.setPlayerLocomotion(this._myPlayerLocomotion!, this.engine);
+        } else if (setPlayerLocomotionOnGlobals && Globals.getPlayerLocomotion(this.engine) != this._myPlayerLocomotion) {
+            // If someone in some way managed to set the globals, just deactivate this one, which was just being activated since the flag is true
+            this._myPlayerLocomotion!.setActive(false);
+        }
     }
 
-    public getPlayerLocomotion(): PlayerLocomotion {
+    public getPlayerLocomotion(): PlayerLocomotion | null {
         return this._myPlayerLocomotion;
     }
 
@@ -582,15 +598,19 @@ export class PlayerLocomotionComponent extends Component {
         }
     }
 
-    private _onActivate(): void {
+    private _onActivate(): boolean {
+        let setPlayerLocomotionOnGlobals = false;
+
         if (this._myPlayerLocomotion == null) {
             this._start();
         }
 
         if (!Globals.hasPlayerLocomotion(this.engine)) {
-            this._myPlayerLocomotion.setActive(true);
-            Globals.setPlayerLocomotion(this._myPlayerLocomotion, this.engine);
+            this._myPlayerLocomotion!.setActive(true);
+            setPlayerLocomotionOnGlobals = true;
         }
+
+        return setPlayerLocomotionOnGlobals;
     }
 
     private _getPhysicsBlockLayersFlags(): PhysicsLayerFlags {

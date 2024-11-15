@@ -30,7 +30,7 @@ export class ShowFPSComponent extends Component {
     }
 
     update(dt) {
-        if (Globals.isDebugEnabled(this.engine)) {
+        if (Globals.isDebugEnabled(this.engine) && Globals.getDebugVisualManager(this.engine) != null) {
             this._myTotalDT += dt;
             this._myFrames++;
 

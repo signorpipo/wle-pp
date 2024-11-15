@@ -11,7 +11,6 @@ export class InputManagerComponent extends Component {
         _myPoseForwardFixed: Property.bool(true),
         _myPreventMouseContextMenu: Property.bool(true),
         _myPreventMouseMiddleButtonScroll: Property.bool(true),
-        _mySwitchToTrackedHandDelay: Property.float(0),
         _myEnableTrackedHandPoses: Property.bool(true)
     };
 
@@ -64,10 +63,6 @@ export class InputManagerComponent extends Component {
         if (this._myInputManager == null) {
             this._myInputManager = new InputManager(this.engine);
             this._myInputManager.setTrackedHandPosesEnabled(this._myEnableTrackedHandPoses);
-            this._myInputManager.getLeftHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-            this._myInputManager.getRightHandPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-            this._myInputManager.getLeftHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
-            this._myInputManager.getRightHandRayPose().setSwitchToTrackedHandDelay(this._mySwitchToTrackedHandDelay);
 
             this._myInputManager.start();
 

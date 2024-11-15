@@ -21,13 +21,18 @@ export class DebugManagerComponent extends Component {
         this._myInitDone = true;
     }
 
-    start() {
+    update(dt) {
         if (!this._myInitDone && Globals.isDebugEnabled(this.engine)) {
             this._init();
-        }
-    }
 
-    update(dt) {
+            if (this._myDebugManager != null && !Globals.hasDebugManager(this.engine)) {
+                Globals.setDebugManager(this._myDebugManager, this.engine);
+            }
+        } else if (this._myDebugManager != null && !Globals.hasDebugManager(this.engine) &&
+            Globals.isDebugEnabled(this.engine) && this._myCurrentActive != Globals.isDebugEnabled(this.engine)) {
+            Globals.setDebugManager(this._myDebugManager, this.engine);
+        }
+
         if (this._myDebugManager != null && Globals.getDebugManager(this.engine) == this._myDebugManager) {
             if (this._myCurrentActive != Globals.isDebugEnabled(this.engine)) {
                 this._myCurrentActive = Globals.isDebugEnabled(this.engine);
@@ -46,14 +51,6 @@ export class DebugManagerComponent extends Component {
             }
 
             this._myDebugManager.update(dt);
-        } else if (!this._myInitDone && Globals.isDebugEnabled(this.engine)) {
-            this._init();
-        }
-    }
-
-    onActivate() {
-        if (this._myDebugManager != null && !Globals.hasDebugManager(this.engine)) {
-            Globals.setDebugManager(this._myDebugManager, this.engine);
         }
     }
 

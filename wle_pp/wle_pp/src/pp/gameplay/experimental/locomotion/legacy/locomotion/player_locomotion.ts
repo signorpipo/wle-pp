@@ -41,6 +41,9 @@ export class PlayerLocomotionParams {
     /** Double press main hand thumbstick (default: left) to switch */
     public mySwitchLocomotionTypeShortcutEnabled: boolean = true;
 
+    public myStartIdle: boolean = false;
+
+
     public myPhysicsBlockLayerFlags: Readonly<PhysicsLayerFlags> = new PhysicsLayerFlags();
 
 
@@ -137,8 +140,7 @@ export class PlayerLocomotionParams {
 
     /**
      * To avoid occlusion issues when moving when touching a tilted ceiling (which is not commong anyway),  
-     * this would be better to be less or equal than the feet radius of the character (usually half of {@link myCharacterRadius})
-     * Increasing {@link myColliderExtraHeight} can help reducing the view occlusion
+     * this value should be a bit lower than {@link myCharacterFeetRadius}
      * 
      * If you have a high camera near value, you might need to increase this value, even though the view occlusion might become more aggressive
      */
@@ -197,6 +199,7 @@ export class PlayerLocomotionParams {
     public myColliderMaxTeleportableGroundAngle: number | null = null;
     public myColliderSnapOnGround: boolean = false;
     public myColliderMaxDistanceToSnapOnGround: number = 0;
+    public myColliderMaxDistanceToPopOutGround: number = 0;
     public myColliderMaxWalkableGroundStepHeight: number = 0;
 
     /**
@@ -607,6 +610,10 @@ export class PlayerLocomotion {
             this._myLocomotionMovementFSM.perform("startTeleport");
         }
 
+        if (this._myParams.myStartIdle) {
+            this.setIdle(true);
+        }
+
         this._myStarted = true;
 
         const currentActive = this._myActive;
@@ -662,6 +669,62 @@ export class PlayerLocomotion {
         }
 
         return canStop;
+    }
+
+    public isIdle(): boolean {
+        return this._myIdle;
+    }
+
+    public setIdle(idle: boolean): void {
+        if (this._myIdle != idle) {
+            this._myIdle = idle;
+
+            if (idle) {
+                this._myLocomotionMovementFSM.perform("idle");
+            } else {
+                this._myLocomotionMovementFSM.perform("resume");
+            }
+        }
+    }
+
+    public getPlayerLocomotionSmooth(): PlayerLocomotionSmooth {
+        return this._myPlayerLocomotionSmooth;
+    }
+
+    public getPlayerLocomotionTeleport(): PlayerLocomotionTeleport {
+        return this._myPlayerLocomotionTeleport;
+    }
+
+    public getPlayerTransformManager(): PlayerTransformManager {
+        return this._myPlayerTransformManager;
+    }
+
+    public getPlayerLocomotionRotate(): PlayerLocomotionRotate {
+        return this._myPlayerLocomotionRotate;
+    }
+
+    public getPlayerHeadManager(): PlayerHeadManager {
+        return this._myPlayerHeadManager;
+    }
+
+    public getPlayerObscureManager(): PlayerObscureManager {
+        return this._myPlayerObscureManager;
+    }
+
+    public registerPreUpdateCallback(id: unknown, callback: (dt: number, playerLocomotion: PlayerLocomotion) => void): void {
+        this._myPreUpdateEmitter.add(callback, { id: id });
+    }
+
+    public unregisterPreUpdateCallback(id: unknown): void {
+        this._myPreUpdateEmitter.remove(id);
+    }
+
+    public registerPostUpdateCallback(id: unknown, callback: (dt: number, playerLocomotion: PlayerLocomotion) => void): void {
+        this._myPostUpdateEmitter.add(callback, { id: id });
+    }
+
+    public unregisterPostUpdateCallback(id: unknown): void {
+        this._myPostUpdateEmitter.remove(id);
     }
 
     public update(dt: number): void {
@@ -748,56 +811,6 @@ export class PlayerLocomotion {
         this._myPostUpdateEmitter.notify(dt, this);
     }
 
-    public setIdle(idle: boolean): void {
-        this._myIdle = idle;
-
-        if (idle) {
-            this._myLocomotionMovementFSM.perform("idle");
-        } else {
-            this._myLocomotionMovementFSM.perform("resume");
-        }
-    }
-
-    public getPlayerLocomotionSmooth(): PlayerLocomotionSmooth {
-        return this._myPlayerLocomotionSmooth;
-    }
-
-    public getPlayerLocomotionTeleport(): PlayerLocomotionTeleport {
-        return this._myPlayerLocomotionTeleport;
-    }
-
-    public getPlayerTransformManager(): PlayerTransformManager {
-        return this._myPlayerTransformManager;
-    }
-
-    public getPlayerLocomotionRotate(): PlayerLocomotionRotate {
-        return this._myPlayerLocomotionRotate;
-    }
-
-    public getPlayerHeadManager(): PlayerHeadManager {
-        return this._myPlayerHeadManager;
-    }
-
-    public getPlayerObscureManager(): PlayerObscureManager {
-        return this._myPlayerObscureManager;
-    }
-
-    public registerPreUpdateCallback(id: unknown, callback: (dt: number, playerLocomotion: PlayerLocomotion) => void): void {
-        this._myPreUpdateEmitter.add(callback, { id: id });
-    }
-
-    public unregisterPreUpdateCallback(id: unknown): void {
-        this._myPreUpdateEmitter.remove(id);
-    }
-
-    public registerPostUpdateCallback(id: unknown, callback: (dt: number, playerLocomotion: PlayerLocomotion) => void): void {
-        this._myPostUpdateEmitter.add(callback, { id: id });
-    }
-
-    public unregisterPostUpdateCallback(id: unknown): void {
-        this._myPostUpdateEmitter.remove(id);
-    }
-
     private _setupCollisionCheckParamsMovement(): CollisionCheckParams {
         const simplifiedParams = new CharacterColliderSetupSimplifiedCreationParams();
 
@@ -816,8 +829,8 @@ export class PlayerLocomotion {
 
         simplifiedParams.myCollectGroundInfo = true;
         simplifiedParams.myMaxWalkableGroundAngle = this._myParams.myColliderMaxWalkableGroundAngle;
-        simplifiedParams.myShouldSnapOnGround = this._myParams.myColliderSnapOnGround;
         simplifiedParams.myMaxDistanceToSnapOnGround = this._myParams.myColliderMaxDistanceToSnapOnGround;
+        simplifiedParams.myMaxDistanceToPopOutGround = this._myParams.myColliderMaxDistanceToPopOutGround;
         simplifiedParams.myMaxWalkableGroundStepHeight = this._myParams.myColliderMaxWalkableGroundStepHeight;
         simplifiedParams.myMaxWalkableCeilingStepHeight = this._myParams.myColliderMaxWalkableCeilingStepHeight;
         simplifiedParams.myShouldNotFallFromEdges = this._myParams.myColliderPreventFallingFromEdges;

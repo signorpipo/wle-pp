@@ -41,13 +41,13 @@ export class VisualManager {
 
     public setActive(active: boolean): void {
         if (this._myActive != active) {
-            this._myActive = active;
-
-            if (!this._myActive) {
+            if (!active) {
                 this.clearAllVisualElements();
             } else {
                 this._myVisualElementsParent = Globals.getSceneObjects(this._myEngine)?.myVisualElements ?? null;
             }
+
+            this._myActive = active;
         }
     }
 

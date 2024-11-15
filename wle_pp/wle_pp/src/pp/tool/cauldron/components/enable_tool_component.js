@@ -2,24 +2,25 @@ import { Component, Property } from "@wonderlandengine/api";
 import { Globals } from "../../../pp/globals.js";
 
 export class EnableToolComponent extends Component {
-    static TypeName = "pp-enable-tools";
+    static TypeName = "pp-enable-tool";
     static Properties = {
         _myEnable: Property.bool(true)
     };
 
-    init() {
+    start() {
+        this._myHasToolEnabled = this._myEnable;
         this._myToolEnabled = this._myEnable;
     }
 
     onActivate() {
-        if (!Globals.hasToolEnabled(this.engine)) {
+        if (this._myHasToolEnabled) {
             Globals.setToolEnabled(this._myToolEnabled, this.engine);
         }
     }
 
     onDeactivate() {
-        if (Globals.isToolEnabled(this.engine) == this._myToolEnabled) {
-            Globals.removeToolEnabled(this.engine);
-        }
+        this._myHasToolEnabled = Globals.hasToolEnabled();
+        this._myToolEnabled = Globals.isToolEnabled();
+        Globals.removeToolEnabled(this.engine);
     }
 }

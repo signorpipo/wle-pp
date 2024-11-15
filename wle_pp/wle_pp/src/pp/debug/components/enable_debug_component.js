@@ -7,19 +7,20 @@ export class EnableDebugComponent extends Component {
         _myEnable: Property.bool(true)
     };
 
-    init() {
+    start() {
+        this._myHasDebugEnabled = this._myEnable;
         this._myDebugEnabled = this._myEnable;
     }
 
     onActivate() {
-        if (!Globals.hasDebugEnabled(this.engine)) {
+        if (this._myHasDebugEnabled) {
             Globals.setDebugEnabled(this._myDebugEnabled, this.engine);
         }
     }
 
     onDeactivate() {
-        if (Globals.isDebugEnabled(this.engine) == this._myDebugEnabled) {
-            Globals.removeDebugEnabled(this.engine);
-        }
+        this._myHasDebugEnabled = Globals.hasDebugEnabled();
+        this._myDebugEnabled = Globals.isDebugEnabled();
+        Globals.removeDebugEnabled(this.engine);
     }
 }

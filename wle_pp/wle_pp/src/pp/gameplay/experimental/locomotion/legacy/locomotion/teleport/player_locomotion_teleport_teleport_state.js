@@ -116,7 +116,6 @@ export class PlayerLocomotionTeleportTeleportState extends PlayerLocomotionTelep
 
     completeTeleport() {
         this._myFSM.perform("stop");
-        this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myTeleportRuntimeParams.myTeleportForward);
     }
 
     _startInstantTeleport() {
@@ -124,19 +123,16 @@ export class PlayerLocomotionTeleportTeleportState extends PlayerLocomotionTelep
     }
 
     _instantUpdate(dt, fsm) {
-        this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myTeleportRuntimeParams.myTeleportForward);
-        this._myLocomotionRuntimeParams.myIsTeleporting = false;
-        this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
+        this._teleport();
+
         fsm.perform("done");
     }
 
     _instantStop(fsm) {
-        this._instantUpdate(0, fsm);
+        this._teleport();
     }
 
     _teleportDone() {
-        this._myTeleportParams.myPlayerTransformManager.resetReal();
-
         this._myParentFSM.performDelayed("done");
     }
 

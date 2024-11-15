@@ -8,6 +8,8 @@ import { Globals } from "../../../../pp/globals.js";
 import { mat4_create, quat2_create, vec3_create } from "../../../js/extensions/array/vec_create_extension.js";
 import { PluginUtils } from "../../../utils/plugin_utils.js";
 
+import "./cursor_component_type_extension.js";
+
 export function initCursorComponentMod() {
     _initCursorComponentModPrototype();
 }
@@ -24,6 +26,8 @@ function _initCursorComponentModPrototype() {
         this.hitTestTarget = this.object.pp_addComponent(CursorTarget);
         this.hoveringObject = null;
         this.hoveringObjectTarget = null;
+
+        this.handednessTyped = null;
 
         this.cursorPos = vec3_create();
 
@@ -93,6 +97,7 @@ function _initCursorComponentModPrototype() {
             let inputComp = this.object.pp_getComponent(InputComponent);
             if (!inputComp) {
                 console.warn("cursor component on object " + this.object.pp_getName() + " was configured with handedness \"input component\", " + "but object has no input component.");
+                this.handedness = null;
             } else {
                 this.handedness = inputComp.handedness;
                 this.input = inputComp;
@@ -100,6 +105,8 @@ function _initCursorComponentModPrototype() {
         } else {
             this.handedness = InputUtils.getHandednessByIndex(this.handedness - 1);
         }
+
+        this.handednessTyped = this.handedness;
 
         this.pp_setViewComponent(this.object.pp_getComponent(ViewComponent));
         this._viewComponentBackup = null;

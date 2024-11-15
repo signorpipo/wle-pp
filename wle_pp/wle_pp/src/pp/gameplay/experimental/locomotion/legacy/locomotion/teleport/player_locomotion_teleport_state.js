@@ -16,6 +16,14 @@ export class PlayerLocomotionTeleportState {
 
     }
 
+    _teleport() {
+        this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myTeleportRuntimeParams.myTeleportForward);
+        this._myLocomotionRuntimeParams.myIsTeleporting = false;
+        this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
+
+        this._myTeleportParams.myPlayerTransformManager.resetReal();
+    }
+
     _checkTeleport(teleportPosition, teleportRotationQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
         // Implemented outside class definition
     }
@@ -38,7 +46,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleport = function () {
     return function _checkTeleport(teleportPosition, teleportRotationQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
         teleportTransformQuat.quat2_setPositionRotationQuat(teleportPosition, teleportRotationQuat);
 
-        this._myTeleportParams.myPlayerTransformManager.checkTeleportToTransformQuat(teleportTransformQuat, undefined, undefined, undefined, collisionRuntimeParams);
+        this._myTeleportParams.myPlayerTransformManager.checkTeleportToTransformQuat(teleportTransformQuat, undefined, undefined, true, collisionRuntimeParams);
 
         if (checkTeleportCollisionRuntimeParams != null) {
             checkTeleportCollisionRuntimeParams.copy(collisionRuntimeParams);
@@ -93,7 +101,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function () {
                     // This is used for the perform teleport as movement, so it needs to be able to do as many steps needed based on teleport distance
                     movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled = true;
 
-                    this._myTeleportParams.myPlayerTransformManager.checkMovement(teleportMovement, movementFeetTransformQuat, undefined, undefined, checkTeleportMovementCollisionRuntimeParams);
+                    this._myTeleportParams.myPlayerTransformManager.checkMovement(teleportMovement, movementFeetTransformQuat, undefined, true, checkTeleportMovementCollisionRuntimeParams);
 
                     movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled = internalSplitMovementMaxStepsDisabledBackup;
                 }
@@ -138,6 +146,6 @@ PlayerLocomotionTeleportState.prototype._teleportToPosition = function () {
 
         newFeetTransformQuat.quat2_setPositionRotationQuat(teleportPosition, newFeetRotationQuat);
 
-        this._myTeleportParams.myPlayerTransformManager.teleportTransformQuat(newFeetTransformQuat);
+        this._myTeleportParams.myPlayerTransformManager.teleportTransformQuat(newFeetTransformQuat, undefined, undefined, true);
     };
 }();

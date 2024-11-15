@@ -37,6 +37,8 @@ export class PlayerLocomotionSmoothParams {
 
         this.myHandedness = Handedness.LEFT;
 
+        this.myAttemptMoveAgainWhenFailedDueToCeilingPopOut = true;
+
         this.myDebugFlyMaxSpeedMultiplier = 5;
         this.myMoveThroughCollisionShortcutEnabled = false;
         this.myMoveHeadShortcutEnabled = false;
@@ -163,6 +165,7 @@ export class PlayerLocomotionSmooth extends PlayerLocomotionMovement {
 PlayerLocomotionSmooth.prototype.update = function () {
     let playerRotationQuat = quat_create();
     let playerUp = vec3_create();
+    let horizontalMovement = vec3_create();
     let headMovement = vec3_create();
     let direction = vec3_create();
     let directionOnUp = vec3_create();
@@ -179,6 +182,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
 
         playerUp = this._myParams.myPlayerTransformManager.getRotationQuat(playerRotationQuat).quat_getUp(playerUp);
 
+        horizontalMovement.vec3_zero();
         headMovement.vec3_zero();
 
         let axes = Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getAxesInfo(GamepadAxesID.THUMBSTICK).getAxes();
@@ -226,7 +230,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
                     this._myCurrentSpeed = this._myCurrentSpeed * slowPercentage;
                 }
 
-                headMovement = direction.vec3_scale(this._myCurrentSpeed * dt, headMovement);
+                horizontalMovement = direction.vec3_scale(this._myCurrentSpeed * dt, horizontalMovement);
 
                 isManuallyMoving = true;
             }
@@ -239,14 +243,16 @@ PlayerLocomotionSmooth.prototype.update = function () {
             }
         }
 
+        headMovement = headMovement.vec3_add(horizontalMovement, headMovement);
+
         if ((this._myParams.myFlyEnabled && this._myParams.myFlyWithButtonsEnabled) || debugFlyEnabled) {
-            if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
+            if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
                 verticalMovement = playerUp.vec3_scale(maxSpeed * dt, verticalMovement);
                 headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 this._myLocomotionRuntimeParams.myIsFlying = true;
 
                 isManuallyMoving = true;
-            } else if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
+            } else if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
                 verticalMovement = playerUp.vec3_scale(-maxSpeed * dt, verticalMovement);
                 headMovement = headMovement.vec3_add(verticalMovement, headMovement);
                 this._myLocomotionRuntimeParams.myIsFlying = true;
@@ -254,7 +260,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
                 isManuallyMoving = true;
             }
 
-            if (Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
+            if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
                 this._myLocomotionRuntimeParams.myIsFlying = false;
             }
         }
@@ -265,7 +271,8 @@ PlayerLocomotionSmooth.prototype.update = function () {
         } else if ((this._myParams.myMoveThroughCollisionShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine) &&
             Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed())
             || debugFlyEnabled) {
-            this._myParams.myPlayerTransformManager.move(headMovement, true);
+            this._myParams.myPlayerTransformManager.move(headMovement, true, isManuallyMoving ? true : false);
+
             if (isManuallyMoving) {
                 this._myParams.myPlayerTransformManager.resetReal();
             }
@@ -283,7 +290,19 @@ PlayerLocomotionSmooth.prototype.update = function () {
                 this._myLocomotionRuntimeParams.myGravitySpeed = 0;
             }
 
-            this._myParams.myPlayerTransformManager.move(headMovement, false);
+            this._myParams.myPlayerTransformManager.move(headMovement, false, isManuallyMoving ? true : false);
+            if (this._myParams.myAttemptMoveAgainWhenFailedDueToCeilingPopOut && isManuallyMoving && !horizontalMovement.vec3_isZero(0.000001)) {
+                const collisionRuntimeParams = this._myParams.myPlayerTransformManager.getCollisionRuntimeParams();
+                if (collisionRuntimeParams.myHorizontalMovementCanceled &&
+                    !collisionRuntimeParams.myVerticalMovementCanceled &&
+                    collisionRuntimeParams.myHasPoppedOutCeiling
+                ) {
+                    // The pop out means it was inside a ceiling, can happen due to moving the head up when close to the ceiling
+                    // the pop fixes this but the horizontal movement is canceled before that, so we try it again
+                    this._myParams.myPlayerTransformManager.move(horizontalMovement, false, isManuallyMoving ? true : false);
+                }
+            }
+
             if (isManuallyMoving) {
                 this._myParams.myPlayerTransformManager.resetReal();
 
