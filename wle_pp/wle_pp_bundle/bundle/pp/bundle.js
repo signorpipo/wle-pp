@@ -17698,13 +17698,13 @@ var convertCharacterColliderSetupToCollisionCheckParams = /* @__PURE__ */ functi
     outCollisionCheckParams.myVerticalObjectsToIgnore.pp_copy(characterColliderSetup.myVerticalCheckParams.myVerticalCheckObjectsToIgnore);
     outCollisionCheckParams.myHorizontalBlockColliderType = characterColliderSetup.myHorizontalCheckParams.myHorizontalBlockColliderType;
     outCollisionCheckParams.myVerticalBlockColliderType = characterColliderSetup.myVerticalCheckParams.myVerticalBlockColliderType;
-    outCollisionCheckParams.mySnapOnGroundEnabled = characterColliderSetup.myGroundParams.mySurfaceSnapEnabled;
+    outCollisionCheckParams.mySnapOnGroundEnabled = characterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance > 0;
     outCollisionCheckParams.mySnapOnGroundExtraDistance = characterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance;
-    outCollisionCheckParams.mySnapOnCeilingEnabled = characterColliderSetup.myCeilingParams.mySurfaceSnapEnabled;
+    outCollisionCheckParams.mySnapOnCeilingEnabled = characterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance > 0;
     outCollisionCheckParams.mySnapOnCeilingExtraDistance = characterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance;
-    outCollisionCheckParams.myGroundPopOutEnabled = characterColliderSetup.myGroundParams.mySurfacePopOutEnabled;
+    outCollisionCheckParams.myGroundPopOutEnabled = characterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance > 0;
     outCollisionCheckParams.myGroundPopOutExtraDistance = characterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance;
-    outCollisionCheckParams.myCeilingPopOutEnabled = characterColliderSetup.myCeilingParams.mySurfacePopOutEnabled;
+    outCollisionCheckParams.myCeilingPopOutEnabled = characterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance > 0;
     outCollisionCheckParams.myCeilingPopOutExtraDistance = characterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance;
     outCollisionCheckParams.myGroundAngleToIgnore = characterColliderSetup.myGroundParams.mySurfaceAngleToIgnore;
     outCollisionCheckParams.myGroundAngleToIgnoreWithPerceivedAngle = characterColliderSetup.myGroundParams.mySurfaceAngleToIgnoreWithSurfacePerceivedAngle;
@@ -20803,12 +20803,14 @@ var Mouse = class {
   }
   setContextMenuActive(active) {
     if (this._myContextMenuActive != active) {
-      if (active) {
-        document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
-      } else {
-        document.body.addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
-      }
       this._myContextMenuActive = active;
+      if (this._myActive) {
+        if (active) {
+          document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+        } else {
+          document.body.addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
+        }
+      }
     }
   }
   isMiddleButtonScrollActive() {
@@ -20816,12 +20818,14 @@ var Mouse = class {
   }
   setMiddleButtonScrollActive(active) {
     if (this._myMiddleButtonScrollActive != active) {
-      if (active) {
-        document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
-      } else {
-        document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
-      }
       this._myMiddleButtonScrollActive = active;
+      if (this._myActive) {
+        if (active) {
+          document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+        } else {
+          document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
+        }
+      }
     }
   }
   setResetMovingDelay(delay) {
@@ -20970,7 +20974,7 @@ var InputManager = class {
   _myTrackedHandPoses;
   _myGamepadsManager = new GamepadsManager();
   _myStarted = false;
-  _myActive = true;
+  _myActive = false;
   _myTrackedHandPosesEnabled = true;
   _myTrackedHandPosesStarted = false;
   _myPreUpdateEmitter = new Emitter6();
@@ -21054,6 +21058,9 @@ var InputManager = class {
     }
     this._myGamepadsManager.start();
     this._myStarted = true;
+    const currentActive = this._myActive;
+    this._myActive = !this._myActive;
+    this.setActive(currentActive);
   }
   update(dt) {
     if (!this._myActive)
@@ -21156,6 +21163,9 @@ var InputManager = class {
         this._myTrackedHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine).myReferenceSpace);
         this._myTrackedHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
         this._myTrackedHandPoses[handedness].start();
+        if (this._myStarted) {
+          this._myTrackedHandPoses[handedness].setActive(this._myActive);
+        }
       }
       this._myTrackedHandPosesStarted = true;
     }
@@ -21206,7 +21216,6 @@ var InputManagerComponent = class extends Component14 {
   };
   init() {
     this._myInputManager = null;
-    this._myPoseForwardFixedGlobal = this._myPoseForwardFixed;
   }
   update(dt) {
     if (Globals.getInputManager(this.engine) == this._myInputManager) {
@@ -21250,7 +21259,7 @@ var InputManagerComponent = class extends Component14 {
       Globals.setInputManager(this._myInputManager, this.engine);
     }
     if (!Globals.hasPoseForwardFixed(this.engine)) {
-      Globals.setPoseForwardFixed(this._myPoseForwardFixedGlobal, this.engine);
+      Globals.setPoseForwardFixed(this._myPoseForwardFixed, this.engine);
     }
   }
   onDeactivate() {
@@ -21260,7 +21269,7 @@ var InputManagerComponent = class extends Component14 {
         Globals.removeInputManager(this.engine);
       }
     }
-    if (Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixedGlobal) {
+    if (Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixed) {
       Globals.removePoseForwardFixed(this.engine);
     }
   }
@@ -24191,21 +24200,16 @@ function _initEmitterModPrototype() {
     add(listener, opts = {}) {
       const { once = false, id = void 0 } = opts;
       const data = { id, once, callback: listener };
-      const _transactions = this._transactions;
-      if (data.id !== void 0) {
-        _transactions.pp_removeAll((elementToCheck) => {
-          return elementToCheck.data.id === data.id;
-        });
-        this._listeners.pp_removeAll((listener2) => {
-          return listener2.id === data.id;
-        });
-      }
       const _notifying = this._notifying;
       if (_notifying) {
+        const _transactions = this._transactions;
         _transactions.push({ type: 1, data });
-        return this;
+      } else {
+        this._listeners.pp_removeAll((listener2) => {
+          return data.id !== void 0 && listener2.id === data.id || data.id === void 0 && listener2.id === void 0 && listener2.callback === data.callback;
+        });
+        this._listeners.push(data);
       }
-      this._listeners.push(data);
       return this;
     },
     _flushTransactions() {
@@ -24214,6 +24218,9 @@ function _initEmitterModPrototype() {
       for (let i = 0; i < _transactions.length; i++) {
         const transaction = _transactions[i];
         if (transaction.type == 1) {
+          this._listeners.pp_removeAll((listener) => {
+            return transaction.data.id !== void 0 && listener.id === transaction.data.id || transaction.data.id === void 0 && listener.id === void 0 && listener.callback === transaction.data.callback;
+          });
           listeners.push(transaction.data);
         } else {
           this.remove(transaction.data);
@@ -24317,7 +24324,7 @@ function _initCursorComponentModPrototype() {
       this._tripleClickTimer -= dt;
     }
     if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null) {
-      if (Globals.getHandPose(this.handedness, this.engine).getInputSourceType() != null) {
+      if (this.handedness == null || Globals.getHandPose(this.handedness, this.engine).getInputSourceType() != null) {
         if (this.arTouchDown && this._pp_isAR()) {
           let axes = XRUtils.getSession(this.engine).inputSources[0].gamepad.axes;
           this._direction.vec3_set(axes[0], -axes[1], -1);
@@ -24366,7 +24373,7 @@ function _initCursorComponentModPrototype() {
       }
     }
     if (this.cursorRayObject) {
-      if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null || !XRUtils.isSessionActive(this.engine) && this._viewComponent != null && this.handedness != Handedness.LEFT && this.handedness != Handedness.RIGHT) {
+      if (XRUtils.isSessionActive(this.engine) && this._viewComponent == null || !XRUtils.isSessionActive(this.engine) && this._viewComponent != null && this.handedness == null) {
         this.cursorRayObject.pp_setActive(true);
       } else {
         this.cursorRayObject.pp_setActive(false);
@@ -25079,7 +25086,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.7.2";
+var PP_VERSION = "0.7.3";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -31720,9 +31727,7 @@ var CharacterColliderWallSlideParams = class {
 };
 var CharacterColliderSurfaceParams = class {
   constructor() {
-    this.mySurfaceSnapEnabled = false;
     this.mySurfaceSnapMaxDistance = 0;
-    this.mySurfacePopOutEnabled = false;
     this.mySurfacePopOutMaxDistance = 0;
     this.mySurfaceAngleToIgnore = 0;
     this.mySurfaceAngleToIgnoreWithSurfacePerceivedAngle = null;
@@ -31902,9 +31907,7 @@ CharacterColliderWallSlideParams.prototype.copy = function copy24(other) {
   this.my90DegreesWallSlideAdjustDirectionSign = other.my90DegreesWallSlideAdjustDirectionSign;
 };
 CharacterColliderSurfaceParams.prototype.copy = function copy25(other) {
-  this.mySurfaceSnapEnabled = other.mySurfaceSnapEnabled;
   this.mySurfaceSnapMaxDistance = other.mySurfaceSnapMaxDistance;
-  this.mySurfacePopOutEnabled = other.mySurfacePopOutEnabled;
   this.mySurfacePopOutMaxDistance = other.mySurfacePopOutMaxDistance;
   this.mySurfaceAngleToIgnore = other.mySurfaceAngleToIgnore;
   this.mySurfaceAngleToIgnoreWithSurfacePerceivedAngle = other.mySurfaceAngleToIgnoreWithSurfacePerceivedAngle;
@@ -32076,11 +32079,8 @@ function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = 
   }
   outCharacterColliderSetup.myWallSlideParams.myWallSlideEnabled = simplifiedCreationParams.myShouldSlideAlongWall;
   outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore = simplifiedCreationParams.myMaxWalkableGroundStepHeight;
-  outCharacterColliderSetup.myGroundParams.mySurfaceSnapEnabled = simplifiedCreationParams.myMaxDistanceToSnapOnGround > 0;
   outCharacterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance = simplifiedCreationParams.myMaxDistanceToSnapOnGround;
-  outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled = simplifiedCreationParams.myMaxDistanceToPopOutGround > 0;
-  outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = simplifiedCreationParams.myMaxDistanceToPopOutGround;
-  outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore);
+  outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = Math.max(simplifiedCreationParams.myMaxDistanceToPopOutGround, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore);
   outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = simplifiedCreationParams.myRadius * 0.75;
   outCharacterColliderSetup.myGroundParams.myCollectSurfaceInfo = simplifiedCreationParams.myCollectGroundInfo || simplifiedCreationParams.myMaxWalkableGroundAngle > 0;
   outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore = simplifiedCreationParams.myMaxWalkableGroundAngle;
@@ -32100,9 +32100,7 @@ function createSimplified(simplifiedCreationParams, outCharacterColliderSetup = 
   }
   outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore = simplifiedCreationParams.myMaxWalkableCeilingStepHeight;
   if (simplifiedCreationParams.myCheckCeilings) {
-    outCharacterColliderSetup.myCeilingParams.mySurfacePopOutEnabled = outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled;
-    outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = simplifiedCreationParams.myMaxDistanceToPopOutGround;
-    outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore);
+    outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = Math.max(simplifiedCreationParams.myMaxDistanceToPopOutGround, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore);
     outCharacterColliderSetup.myCeilingParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft;
     outCharacterColliderSetup.myCeilingParams.myCollectSurfaceInfo = outCharacterColliderSetup.myGroundParams.myCollectSurfaceInfo;
     outCharacterColliderSetup.myCeilingParams.mySurfaceAngleToIgnore = outCharacterColliderSetup.myGroundParams.mySurfaceAngleToIgnore;
@@ -33344,7 +33342,7 @@ var PlayerTransformManagerParams = class {
    */
   myHeadCollisionBlockLayerFlagsForResetToFeet = null;
   myRotateOnlyIfSynced = false;
-  myResetRealResetRotationIfUpChanged = true;
+  myResetRealResetRotationIfUpChanged = false;
   /**
    * This make it so the head must be able to reach from the feet to the real head, sort of
    * like you were teleported in a space squashed to your feet and then have to get up
@@ -33357,10 +33355,10 @@ var PlayerTransformManagerParams = class {
   /** This other flag is to fix the above issue, doing the "squash and get up" only if the head is not reachable normally
       The above issue can still happen but should be more rare, only if you teleport to a place where there could be garbage stuff */
   myResetHeadToFeetInsteadOfRealOnlyIfRealNotReachable = false;
-  myResetHeadToFeetMoveTowardReal = true;
+  myResetHeadToFeetMoveTowardReal = false;
   /* Can be used to specify that the head should reset a bit above the actual feet level, so to avoid small objects that could very frequently
      happen to be close to the floor */
-  myResetHeadToFeetUpOffset = 0.25;
+  myResetHeadToFeetUpOffset = 0;
   myResetHeadToFeetGroudnAngleIgnoreEnabled = false;
   myResetHeadToRealMinDistance = 0;
   // #TODO Set valid if head synced (head manager) (not sure what I meant with this?)
@@ -33370,7 +33368,7 @@ var PlayerTransformManagerParams = class {
   // #TODO Real movement apply vertical snap or not (other option to apply gravity) 
   // (gravity inside this class?) only when movement is applied not for head only)
   myUpdatePositionValid = false;
-  myUpdatePositionHeadValid = true;
+  myUpdatePositionHeadValid = false;
   myUpdateRealPositionValid = false;
   myUpdateRealPositionHeadValid = false;
   myMinHeight = null;
@@ -33414,31 +33412,6 @@ var PlayerTransformManagerParams = class {
   myEngine;
   constructor(engine = Globals.getMainEngine()) {
     this.myEngine = engine;
-    this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
-    this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
-    this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
-    this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
-    this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
-    this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
-    this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-    this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
-    this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
-    this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
-    this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-    this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
-    this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
-    this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
-    this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
-    this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-    this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-    this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
-    this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
-    this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
-    this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-    this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-    this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
-    this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
-    this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
   }
 };
 var PlayerTransformManager = class _PlayerTransformManager {
@@ -37440,9 +37413,9 @@ var PlayerLocomotionType;
 })(PlayerLocomotionType || (PlayerLocomotionType = {}));
 var PlayerLocomotionParams = class {
   myDefaultLocomotionType = PlayerLocomotionType.SMOOTH;
-  myAlwaysSmoothForNonVR = true;
+  myAlwaysSmoothForNonVR = false;
   /** Double press main hand thumbstick (default: left) to switch */
-  mySwitchLocomotionTypeShortcutEnabled = true;
+  mySwitchLocomotionTypeShortcutEnabled = false;
   myStartIdle = false;
   myPhysicsBlockLayerFlags = new PhysicsLayerFlags();
   myDefaultHeight = 0;
@@ -37453,7 +37426,7 @@ var PlayerLocomotionParams = class {
   myForeheadExtraHeight = 0;
   myMaxSpeed = 0;
   myMaxRotationSpeed = 0;
-  mySpeedSlowDownPercentageOnWallSlid = 1;
+  mySpeedSlowDownPercentageOnWallSlid = 0;
   myGravityAcceleration = 0;
   myMaxGravitySpeed = 0;
   myIsSnapTurn = false;
@@ -37470,7 +37443,7 @@ var PlayerLocomotionParams = class {
   myMinAngleToFlyDownVR = 0;
   myMinAngleToFlyRight = 0;
   myMainHand = Handedness.LEFT;
-  myDirectionInvertForwardWhenUpsideDown = true;
+  myDirectionInvertForwardWhenUpsideDown = false;
   myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
   myVRDirectionReferenceObject = null;
   myTeleportType = PlayerLocomotionTeleportTeleportType.INSTANT;
@@ -37483,7 +37456,7 @@ var PlayerLocomotionParams = class {
   myTeleportPositionObject = null;
   myTeleportPositionObjectRotateWithHead = false;
   myTeleportParableStartReferenceObject = null;
-  myResetRealOnStart = true;
+  myResetRealOnStart = false;
   /**
    * #WARN With `_myResetRealOnStartFramesAmount` at `1` it can happen that you enter the session like 1 frame before the game load
    * and the head pose might have not been properly initialized yet in the WebXR API, so the reset real will not happen has expected
@@ -37496,19 +37469,19 @@ var PlayerLocomotionParams = class {
    * For example, if u have a total fade at start and nothing can be seen aside the clear color for at least, let's say, 10 frames,
    * you can set this to `3` safely, since there will be no visible stutter to be seen (beside the clear color)
    */
-  myResetRealOnStartFramesAmount = 1;
+  myResetRealOnStartFramesAmount = 0;
   /** Can fix some head through floor issues, when you can move your head completely to the other side of the floor
       If the floors are thick enough that this can't happen, you can leave this to false  */
   myResetHeadToFeetInsteadOfReal = false;
   myResetHeadToRealMinDistance = 0;
   myMaxHeadToRealHeadSteps = null;
   /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space */
-  mySyncWithRealWorldPositionOnlyIfValid = true;
+  mySyncWithRealWorldPositionOnlyIfValid = false;
   /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space */
-  mySyncWithRealHeightOnlyIfValid = true;
+  mySyncWithRealHeightOnlyIfValid = false;
   mySnapRealPositionToGround = false;
   myPreventRealFromColliding = false;
-  myViewOcclusionInsideWallsEnabled = true;
+  myViewOcclusionInsideWallsEnabled = false;
   myViewOcclusionLayerFlags = new PhysicsLayerFlags();
   /**
    * To avoid occlusion issues when moving when touching a tilted ceiling (which is not commong anyway),
@@ -37581,7 +37554,7 @@ var PlayerLocomotionParams = class {
   myColliderExtraHeight = 0;
   /** Main hand (default: left) select + thumbstick press, auto switch to smooth */
   myDebugFlyShortcutEnabled = false;
-  myDebugFlyMaxSpeedMultiplier = 5;
+  myDebugFlyMaxSpeedMultiplier = 0;
   /** Main hand (default: left) thumbstick pressed while moving */
   myMoveThroughCollisionShortcutEnabled = false;
   /** Not main hand (default: right) thumbstick pressed while moving */
@@ -37645,6 +37618,31 @@ var PlayerLocomotion = class {
       params2.myTeleportCollisionCheckParamsCopyFromMovement = true;
       params2.myTeleportCollisionCheckParamsCheck360 = true;
       params2.myTeleportCollisionCheckParamsGroundAngleToIgnore = this._myParams.myColliderMaxTeleportableGroundAngle;
+      params2.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
+      params2.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
+      params2.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
+      params2.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
+      params2.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
+      params2.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
+      params2.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+      params2.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
+      params2.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
+      params2.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+      params2.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+      params2.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
+      params2.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+      params2.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+      params2.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+      params2.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+      params2.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+      params2.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+      params2.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+      params2.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+      params2.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+      params2.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+      params2.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+      params2.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+      params2.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
       params2.myHeadCollisionBlockLayerFlags.copy(this._myParams.myViewOcclusionLayerFlags);
       params2.myHeadCollisionObjectsToIgnore.pp_copy(params2.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore);
       const objectsEqualCallback = (first2, second) => first2 == second;
@@ -37666,8 +37664,8 @@ var PlayerLocomotion = class {
       if (!this._myParams.myViewOcclusionInsideWallsEnabled) {
         params2.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
         params2.myAlwaysSyncHeadPositionWithReal = true;
-        params2.myUpdatePositionHeadValid = false;
-        params2.myUpdateRealPositionHeadValid = false;
+      } else {
+        params2.myUpdatePositionHeadValid = true;
       }
       params2.myApplyRealToValidAdjustmentsToRealPositionToo = this._myParams.mySnapRealPositionToGround;
       params2.myPreventRealFromColliding = this._myParams.myPreventRealFromColliding;
@@ -37712,6 +37710,9 @@ var PlayerLocomotion = class {
       params2.myNeverResetRealPositionVR = false;
       params2.myNeverResetRealRotationVR = false;
       params2.myNeverResetRealHeightVR = true;
+      params2.myResetRealResetRotationIfUpChanged = true;
+      params2.myResetHeadToFeetMoveTowardReal = true;
+      params2.myResetHeadToFeetUpOffset = 0.25;
       params2.myDebugEnabled = false;
       this._myPlayerTransformManager = new PlayerTransformManager(params2);
     }
@@ -38624,6 +38625,9 @@ var PlayerLocomotionComponent = class extends Component43 {
       setPlayerLocomotionOnGlobals = this._onActivate();
       this._myActivateOnNextPostPoseUpdate = false;
     }
+    if (!this._myPlayerLocomotion.isStarted()) {
+      this._myPlayerLocomotion.start();
+    }
     if (!setPlayerLocomotionOnGlobals && Globals.hasPlayerLocomotion(this.engine) && Globals.getPlayerLocomotion(this.engine) != this._myPlayerLocomotion)
       return;
     let startTime = 0;
@@ -38637,9 +38641,6 @@ var PlayerLocomotionComponent = class extends Component43 {
     }
     if (this._myRaycastCountLogEnabled && Globals.isDebugEnabled(this.engine)) {
       PhysicsUtils.resetRaycastCount(this.engine.physics);
-    }
-    if (!this._myPlayerLocomotion.isStarted()) {
-      this._myPlayerLocomotion.start();
     }
     this._myPlayerLocomotion.update(dt);
     if (this._myPerformanceLogEnabled && Globals.isDebugEnabled(this.engine)) {
@@ -43380,10 +43381,15 @@ var ConsoleVRWidget = class {
       cursorTarget.onDown.add(this._setScrollUp.bind(this, true), { id: this });
       cursorTarget.onDownOnHover.add(this._setScrollUp.bind(this, true), { id: this });
       cursorTarget.onUp.add(this._setScrollUp.bind(this, false), { id: this });
-      cursorTarget.onUnhover.add(this._setScrollUp.bind(this, false), { id: this });
+      cursorTarget.onUnhover.add(() => {
+        this._setScrollUp(false);
+        this._genericUnhover(backgroundMaterial);
+      }, { id: this });
       cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
-      cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
-      this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
+      this._myUnhoverCallbacks.push(() => {
+        this._setScrollUp(false);
+        this._genericUnhover(backgroundMaterial);
+      });
     }
     {
       let cursorTarget = ui.myDownButtonCursorTargetComponent;
@@ -43392,10 +43398,15 @@ var ConsoleVRWidget = class {
       cursorTarget.onDown.add(this._setScrollDown.bind(this, true), { id: this });
       cursorTarget.onDownOnHover.add(this._setScrollDown.bind(this, true), { id: this });
       cursorTarget.onUp.add(this._setScrollDown.bind(this, false), { id: this });
-      cursorTarget.onUnhover.add(this._setScrollDown.bind(this, false), { id: this });
+      cursorTarget.onUnhover.add(() => {
+        this._setScrollDown(false);
+        this._genericUnhover(backgroundMaterial);
+      }, { id: this });
       cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
-      cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
-      this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
+      this._myUnhoverCallbacks.push(() => {
+        this._setScrollDown(false);
+        this._genericUnhover(backgroundMaterial);
+      });
     }
     {
       let cursorTarget = ui.myNotifyIconCursorTargetComponent;

@@ -16,8 +16,6 @@ export class InputManagerComponent extends Component {
 
     init() {
         this._myInputManager = null;
-
-        this._myPoseForwardFixedGlobal = this._myPoseForwardFixed;
     }
 
     update(dt) {
@@ -78,7 +76,7 @@ export class InputManagerComponent extends Component {
         }
 
         if (!Globals.hasPoseForwardFixed(this.engine)) {
-            Globals.setPoseForwardFixed(this._myPoseForwardFixedGlobal, this.engine);
+            Globals.setPoseForwardFixed(this._myPoseForwardFixed, this.engine);
         }
     }
 
@@ -91,7 +89,7 @@ export class InputManagerComponent extends Component {
             }
         }
 
-        if (Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixedGlobal) {
+        if (Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixed) {
             Globals.removePoseForwardFixed(this.engine);
         }
     }

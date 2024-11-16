@@ -36,10 +36,10 @@ export enum PlayerLocomotionType {
 export class PlayerLocomotionParams {
 
     public myDefaultLocomotionType: number = PlayerLocomotionType.SMOOTH;
-    public myAlwaysSmoothForNonVR: boolean = true;
+    public myAlwaysSmoothForNonVR: boolean = false;
 
     /** Double press main hand thumbstick (default: left) to switch */
-    public mySwitchLocomotionTypeShortcutEnabled: boolean = true;
+    public mySwitchLocomotionTypeShortcutEnabled: boolean = false;
 
     public myStartIdle: boolean = false;
 
@@ -59,7 +59,7 @@ export class PlayerLocomotionParams {
 
     public myMaxSpeed: number = 0;
     public myMaxRotationSpeed: number = 0;
-    public mySpeedSlowDownPercentageOnWallSlid: number = 1;
+    public mySpeedSlowDownPercentageOnWallSlid: number = 0;
 
 
     public myGravityAcceleration: number = 0;
@@ -84,7 +84,7 @@ export class PlayerLocomotionParams {
 
 
     public myMainHand: Handedness = Handedness.LEFT;
-    public myDirectionInvertForwardWhenUpsideDown: boolean = true;
+    public myDirectionInvertForwardWhenUpsideDown: boolean = false;
     public myVRDirectionReferenceType: PlayerLocomotionDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
     public myVRDirectionReferenceObject: Readonly<Object3D> | null = null;
 
@@ -101,7 +101,7 @@ export class PlayerLocomotionParams {
     public myTeleportParableStartReferenceObject: Readonly<Object3D> | null = null;
 
 
-    public myResetRealOnStart: boolean = true;
+    public myResetRealOnStart: boolean = false;
 
     /**
      * #WARN With `_myResetRealOnStartFramesAmount` at `1` it can happen that you enter the session like 1 frame before the game load
@@ -115,7 +115,7 @@ export class PlayerLocomotionParams {
      * For example, if u have a total fade at start and nothing can be seen aside the clear color for at least, let's say, 10 frames, 
      * you can set this to `3` safely, since there will be no visible stutter to be seen (beside the clear color)
      */
-    public myResetRealOnStartFramesAmount: number = 1;
+    public myResetRealOnStartFramesAmount: number = 0;
 
     /** Can fix some head through floor issues, when you can move your head completely to the other side of the floor  
         If the floors are thick enough that this can't happen, you can leave this to false  */
@@ -127,15 +127,15 @@ export class PlayerLocomotionParams {
 
 
     /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space */
-    public mySyncWithRealWorldPositionOnlyIfValid: boolean = true;
+    public mySyncWithRealWorldPositionOnlyIfValid: boolean = false;
 
     /** Valid means, for example, that the real player has not moved inside a wall by moving in the real space */
-    public mySyncWithRealHeightOnlyIfValid: boolean = true;
+    public mySyncWithRealHeightOnlyIfValid: boolean = false;
 
     public mySnapRealPositionToGround: boolean = false;
     public myPreventRealFromColliding: boolean = false;
 
-    public myViewOcclusionInsideWallsEnabled: boolean = true;
+    public myViewOcclusionInsideWallsEnabled: boolean = false;
     public myViewOcclusionLayerFlags: Readonly<PhysicsLayerFlags> = new PhysicsLayerFlags();
 
     /**
@@ -227,7 +227,7 @@ export class PlayerLocomotionParams {
     /** Main hand (default: left) select + thumbstick press, auto switch to smooth */
     public myDebugFlyShortcutEnabled: boolean = false;
 
-    public myDebugFlyMaxSpeedMultiplier: number = 5;
+    public myDebugFlyMaxSpeedMultiplier: number = 0;
 
     /** Main hand (default: left) thumbstick pressed while moving */
     public myMoveThroughCollisionShortcutEnabled: boolean = false;
@@ -247,6 +247,7 @@ export class PlayerLocomotionParams {
     public myEngine: Readonly<WonderlandEngine>;
 
 
+
     constructor(engine: Readonly<WonderlandEngine> = Globals.getMainEngine()!) {
         this.myEngine = engine;
     }
@@ -256,9 +257,10 @@ export class PlayerLocomotionParams {
 // #TODO Add lerped snap on vertical over like half a second to avoid the "snap effect"
 // This could be done by detatching the actual vertical position of the player from the collision real one when a snap is detected above a certain threshold
 // with a timer, after which the vertical position is just copied, while during the detatching is lerped toward the collision vertical one
+
 /**
  * Tips  
- *   - Be sure that your colliders has faces on both sides of the mesh, this helps the collision check which otherise might be able to move through walls
+ *   - Be sure that your colliders have faces on both sides of the mesh, this helps the collision check which otherise might be able to move through walls
  */
 export class PlayerLocomotion {
 
@@ -333,6 +335,36 @@ export class PlayerLocomotion {
             params.myTeleportCollisionCheckParamsCheck360 = true;
             params.myTeleportCollisionCheckParamsGroundAngleToIgnore = this._myParams.myColliderMaxTeleportableGroundAngle;
 
+            params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
+            params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
+            params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
+            params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
+            params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
+
+            params.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
+            params.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+            params.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
+            params.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
+            params.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+
+            params.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+            params.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
+            params.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+            params.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+            params.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+
+            params.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+            params.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+            params.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+            params.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+            params.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
+
+            params.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
+            params.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
+            params.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
+            params.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
+            params.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
+
             params.myHeadCollisionBlockLayerFlags.copy(this._myParams.myViewOcclusionLayerFlags);
             params.myHeadCollisionObjectsToIgnore.pp_copy(params.myMovementCollisionCheckParams.myHorizontalObjectsToIgnore as any);
             const objectsEqualCallback = (first: Readonly<Object3D>, second: Readonly<Object3D>): boolean => first == second;
@@ -360,11 +392,9 @@ export class PlayerLocomotion {
 
             if (!this._myParams.myViewOcclusionInsideWallsEnabled) {
                 params.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-
                 params.myAlwaysSyncHeadPositionWithReal = true;
-
-                params.myUpdatePositionHeadValid = false;
-                params.myUpdateRealPositionHeadValid = false;
+            } else {
+                params.myUpdatePositionHeadValid = true;
             }
 
             params.myApplyRealToValidAdjustmentsToRealPositionToo = this._myParams.mySnapRealPositionToGround;
@@ -426,6 +456,10 @@ export class PlayerLocomotion {
             params.myNeverResetRealPositionVR = false;
             params.myNeverResetRealRotationVR = false;
             params.myNeverResetRealHeightVR = true;
+
+            params.myResetRealResetRotationIfUpChanged = true;
+            params.myResetHeadToFeetMoveTowardReal = true;
+            params.myResetHeadToFeetUpOffset = 0.25;
 
             params.myDebugEnabled = false;
 

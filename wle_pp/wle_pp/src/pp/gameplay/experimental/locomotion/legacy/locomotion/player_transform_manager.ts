@@ -139,7 +139,7 @@ export class PlayerTransformManagerParams {
 
 
     public myRotateOnlyIfSynced: boolean = false;
-    public myResetRealResetRotationIfUpChanged: boolean = true;
+    public myResetRealResetRotationIfUpChanged: boolean = false;
 
 
 
@@ -157,11 +157,11 @@ export class PlayerTransformManagerParams {
         The above issue can still happen but should be more rare, only if you teleport to a place where there could be garbage stuff */
     public myResetHeadToFeetInsteadOfRealOnlyIfRealNotReachable: boolean = false;
 
-    public myResetHeadToFeetMoveTowardReal: boolean = true;
+    public myResetHeadToFeetMoveTowardReal: boolean = false;
 
     /* Can be used to specify that the head should reset a bit above the actual feet level, so to avoid small objects that could very frequently  
        happen to be close to the floor */
-    public myResetHeadToFeetUpOffset: number = 0.25;
+    public myResetHeadToFeetUpOffset: number = 0;
 
     public myResetHeadToFeetGroudnAngleIgnoreEnabled: boolean = false;
 
@@ -180,7 +180,7 @@ export class PlayerTransformManagerParams {
     // (gravity inside this class?) only when movement is applied not for head only)
 
     public myUpdatePositionValid: boolean = false;
-    public myUpdatePositionHeadValid: boolean = true;
+    public myUpdatePositionHeadValid: boolean = false;
     public myUpdateRealPositionValid: boolean = false;
     public myUpdateRealPositionHeadValid: boolean = false;
 
@@ -246,36 +246,6 @@ export class PlayerTransformManagerParams {
 
     constructor(engine: Readonly<WonderlandEngine> = Globals.getMainEngine()!) {
         this.myEngine = engine;
-
-        this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
-        this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
-        this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
-        this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
-        this.mySyncEnabledFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
-
-        this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, true);
-        this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-        this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FAR, true);
-        this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, true);
-        this.mySyncPositionFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
-
-        this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-        this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, true);
-        this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
-        this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
-        this.mySyncPositionHeadFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
-
-        this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-        this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-        this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
-        this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
-        this.mySyncRotationFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, false);
-
-        this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.BODY_COLLIDING, false);
-        this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEAD_COLLIDING, false);
-        this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FAR, false);
-        this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.FLOATING, false);
-        this.mySyncHeightFlagMap.set(PlayerTransformManagerSyncFlag.HEIGHT_COLLIDING, true);
     }
 }
 

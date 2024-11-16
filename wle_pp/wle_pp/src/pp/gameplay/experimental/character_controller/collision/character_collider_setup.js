@@ -211,10 +211,7 @@ export class CharacterColliderWallSlideParams {
 export class CharacterColliderSurfaceParams {
 
     constructor() {
-        this.mySurfaceSnapEnabled = false;
         this.mySurfaceSnapMaxDistance = 0;
-
-        this.mySurfacePopOutEnabled = false;
         this.mySurfacePopOutMaxDistance = 0;
 
         this.mySurfaceAngleToIgnore = 0;
@@ -507,10 +504,7 @@ CharacterColliderWallSlideParams.prototype.copy = function copy(other) {
 };
 
 CharacterColliderSurfaceParams.prototype.copy = function copy(other) {
-    this.mySurfaceSnapEnabled = other.mySurfaceSnapEnabled;
     this.mySurfaceSnapMaxDistance = other.mySurfaceSnapMaxDistance;
-
-    this.mySurfacePopOutEnabled = other.mySurfacePopOutEnabled;
     this.mySurfacePopOutMaxDistance = other.mySurfacePopOutMaxDistance;
 
     this.mySurfaceAngleToIgnore = other.mySurfaceAngleToIgnore;

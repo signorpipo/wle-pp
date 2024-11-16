@@ -25,7 +25,7 @@ export class InputManager {
     private readonly _myGamepadsManager: GamepadsManager = new GamepadsManager();
 
     private _myStarted: boolean = false;
-    private _myActive: boolean = true;
+    private _myActive: boolean = false;
 
     private _myTrackedHandPosesEnabled: boolean = true;
     private _myTrackedHandPosesStarted: boolean = false;
@@ -134,6 +134,10 @@ export class InputManager {
         this._myGamepadsManager.start();
 
         this._myStarted = true;
+
+        const currentActive = this._myActive;
+        this._myActive = !this._myActive;
+        this.setActive(currentActive);
     }
 
     public update(dt: number): void {
@@ -269,6 +273,10 @@ export class InputManager {
                 this._myTrackedHandPoses[handedness].setReferenceObject(Globals.getPlayerObjects(this._myEngine)!.myReferenceSpace);
                 this._myTrackedHandPoses[handedness].setForwardFixed(Globals.isPoseForwardFixed(this._myEngine));
                 this._myTrackedHandPoses[handedness].start();
+
+                if (this._myStarted) {
+                    this._myTrackedHandPoses[handedness].setActive(this._myActive);
+                }
             }
 
             this._myTrackedHandPosesStarted = true;

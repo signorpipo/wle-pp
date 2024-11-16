@@ -86,11 +86,8 @@ export function createSimplified(simplifiedCreationParams: Readonly<CharacterCol
 
     outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore = simplifiedCreationParams.myMaxWalkableGroundStepHeight;
 
-    outCharacterColliderSetup.myGroundParams.mySurfaceSnapEnabled = simplifiedCreationParams.myMaxDistanceToSnapOnGround > 0;
     outCharacterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance = simplifiedCreationParams.myMaxDistanceToSnapOnGround;
-    outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled = simplifiedCreationParams.myMaxDistanceToPopOutGround > 0;
-    outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = simplifiedCreationParams.myMaxDistanceToPopOutGround;
-    outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore);
+    outCharacterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance = Math.max(simplifiedCreationParams.myMaxDistanceToPopOutGround, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckFeetDistanceToIgnore);
 
     outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = simplifiedCreationParams.myRadius * 0.75;
 
@@ -119,9 +116,7 @@ export function createSimplified(simplifiedCreationParams: Readonly<CharacterCol
     outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore = simplifiedCreationParams.myMaxWalkableCeilingStepHeight;
 
     if (simplifiedCreationParams.myCheckCeilings) {
-        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutEnabled = outCharacterColliderSetup.myGroundParams.mySurfacePopOutEnabled;
-        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = simplifiedCreationParams.myMaxDistanceToPopOutGround;
-        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = Math.max(outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore);
+        outCharacterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance = Math.max(simplifiedCreationParams.myMaxDistanceToPopOutGround, outCharacterColliderSetup.myHorizontalCheckParams.myHorizontalCheckHeadDistanceToIgnore);
 
         outCharacterColliderSetup.myCeilingParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft = outCharacterColliderSetup.myGroundParams.myHorizontalMovementSurfaceAngleToIgnoreMaxHorizontalMovementLeft;
 

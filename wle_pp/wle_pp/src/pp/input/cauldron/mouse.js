@@ -381,12 +381,15 @@ export class Mouse {
 
     setContextMenuActive(active) {
         if (this._myContextMenuActive != active) {
-            if (active) {
-                document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
-            } else {
-                document.body.addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
-            }
             this._myContextMenuActive = active;
+
+            if (this._myActive) {
+                if (active) {
+                    document.body.removeEventListener("contextmenu", this._myPreventContextMenuEventListener);
+                } else {
+                    document.body.addEventListener("contextmenu", this._myPreventContextMenuEventListener, false);
+                }
+            }
         }
     }
 
@@ -396,12 +399,15 @@ export class Mouse {
 
     setMiddleButtonScrollActive(active) {
         if (this._myMiddleButtonScrollActive != active) {
-            if (active) {
-                document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
-            } else {
-                document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
-            }
             this._myMiddleButtonScrollActive = active;
+
+            if (this._myActive) {
+                if (active) {
+                    document.body.removeEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener);
+                } else {
+                    document.body.addEventListener("mousedown", this._myPreventMiddleButtonScrollEventListener, false);
+                }
+            }
         }
     }
 

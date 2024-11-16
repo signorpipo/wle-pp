@@ -706,11 +706,16 @@ export class ConsoleVRWidget {
             cursorTarget.onDown.add(this._setScrollUp.bind(this, true), { id: this });
             cursorTarget.onDownOnHover.add(this._setScrollUp.bind(this, true), { id: this });
             cursorTarget.onUp.add(this._setScrollUp.bind(this, false), { id: this });
-            cursorTarget.onUnhover.add(this._setScrollUp.bind(this, false), { id: this });
+            cursorTarget.onUnhover.add(() => {
+                this._setScrollUp(false);
+                this._genericUnhover(backgroundMaterial);
+            }, { id: this });
             cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
-            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
 
-            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
+            this._myUnhoverCallbacks.push(() => {
+                this._setScrollUp(false);
+                this._genericUnhover(backgroundMaterial);
+            });
         }
 
         {
@@ -721,11 +726,16 @@ export class ConsoleVRWidget {
             cursorTarget.onDown.add(this._setScrollDown.bind(this, true), { id: this });
             cursorTarget.onDownOnHover.add(this._setScrollDown.bind(this, true), { id: this });
             cursorTarget.onUp.add(this._setScrollDown.bind(this, false), { id: this });
-            cursorTarget.onUnhover.add(this._setScrollDown.bind(this, false), { id: this });
+            cursorTarget.onUnhover.add(() => {
+                this._setScrollDown(false);
+                this._genericUnhover(backgroundMaterial);
+            }, { id: this });
             cursorTarget.onHover.add(this._genericHover.bind(this, backgroundMaterial), { id: this });
-            cursorTarget.onUnhover.add(this._genericUnhover.bind(this, backgroundMaterial), { id: this });
 
-            this._myUnhoverCallbacks.push(this._genericUnhover.bind(this, backgroundMaterial));
+            this._myUnhoverCallbacks.push(() => {
+                this._setScrollDown(false);
+                this._genericUnhover(backgroundMaterial);
+            });
         }
 
         {

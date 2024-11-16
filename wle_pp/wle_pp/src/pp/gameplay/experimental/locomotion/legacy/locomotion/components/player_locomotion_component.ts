@@ -9,12 +9,10 @@ import { PlayerLocomotion, PlayerLocomotionParams } from "../player_locomotion.j
 
 /**
  * Tips  
- *   - Be sure that your colliders has faces on both sides of the mesh, this helps the collision check which otherise might be able to move through walls
+ *   - Be sure that your colliders have faces on both sides of the mesh, this helps the collision check which otherise might be able to move through walls
  */
 export class PlayerLocomotionComponent extends Component {
     public static override TypeName = "pp-player-locomotion";
-
-
 
     @property.enum(["Smooth", "Teleport"], "Smooth")
     private readonly _myDefaultLocomotionType!: number;
@@ -518,6 +516,10 @@ export class PlayerLocomotionComponent extends Component {
             this._myActivateOnNextPostPoseUpdate = false;
         }
 
+        if (!this._myPlayerLocomotion!.isStarted()) {
+            this._myPlayerLocomotion!.start();
+        }
+
         if (!setPlayerLocomotionOnGlobals && Globals.hasPlayerLocomotion(this.engine) && Globals.getPlayerLocomotion(this.engine) != this._myPlayerLocomotion) return;
 
         let startTime = 0;
@@ -533,10 +535,6 @@ export class PlayerLocomotionComponent extends Component {
 
         if (this._myRaycastCountLogEnabled && Globals.isDebugEnabled(this.engine)) {
             PhysicsUtils.resetRaycastCount(this.engine.physics!);
-        }
-
-        if (!this._myPlayerLocomotion!.isStarted()) {
-            this._myPlayerLocomotion!.start();
         }
 
         this._myPlayerLocomotion!.update(dt);

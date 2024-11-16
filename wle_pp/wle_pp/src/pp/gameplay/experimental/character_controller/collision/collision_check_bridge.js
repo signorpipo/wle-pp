@@ -425,14 +425,14 @@ export let convertCharacterColliderSetupToCollisionCheckParams = function () {
         outCollisionCheckParams.myHorizontalBlockColliderType = characterColliderSetup.myHorizontalCheckParams.myHorizontalBlockColliderType;
         outCollisionCheckParams.myVerticalBlockColliderType = characterColliderSetup.myVerticalCheckParams.myVerticalBlockColliderType;
 
-        outCollisionCheckParams.mySnapOnGroundEnabled = characterColliderSetup.myGroundParams.mySurfaceSnapEnabled;
+        outCollisionCheckParams.mySnapOnGroundEnabled = characterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance > 0;
         outCollisionCheckParams.mySnapOnGroundExtraDistance = characterColliderSetup.myGroundParams.mySurfaceSnapMaxDistance;
-        outCollisionCheckParams.mySnapOnCeilingEnabled = characterColliderSetup.myCeilingParams.mySurfaceSnapEnabled;
+        outCollisionCheckParams.mySnapOnCeilingEnabled = characterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance > 0;
         outCollisionCheckParams.mySnapOnCeilingExtraDistance = characterColliderSetup.myCeilingParams.mySurfaceSnapMaxDistance;
 
-        outCollisionCheckParams.myGroundPopOutEnabled = characterColliderSetup.myGroundParams.mySurfacePopOutEnabled;
+        outCollisionCheckParams.myGroundPopOutEnabled = characterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance > 0;
         outCollisionCheckParams.myGroundPopOutExtraDistance = characterColliderSetup.myGroundParams.mySurfacePopOutMaxDistance;
-        outCollisionCheckParams.myCeilingPopOutEnabled = characterColliderSetup.myCeilingParams.mySurfacePopOutEnabled;
+        outCollisionCheckParams.myCeilingPopOutEnabled = characterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance > 0;
         outCollisionCheckParams.myCeilingPopOutExtraDistance = characterColliderSetup.myCeilingParams.mySurfacePopOutMaxDistance;
 
         outCollisionCheckParams.myGroundAngleToIgnore = characterColliderSetup.myGroundParams.mySurfaceAngleToIgnore;
