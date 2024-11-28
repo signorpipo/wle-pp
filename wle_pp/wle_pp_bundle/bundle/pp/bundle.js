@@ -9290,15 +9290,32 @@ var AudioManager = class {
   removeAudioSetup(id) {
     this._myAudioSetups.delete(id);
   }
+  /**
+   * Actually changes the volume of Howler, which means it changes it even for a new scene if you switch it
+   * and use a different audio manager
+   */
   setVolume(volume) {
     Howler2.volume(volume);
   }
+  /**
+   * Actually mute Howler, which means it changes it even for a new scene if you switch it
+   * and use a different audio manager
+   */
   setMute(mute) {
     Howler2.mute(mute);
   }
+  /**
+   * Actually stops Howler, which means it stops every audio, even for a new scene if you switch it
+   * and use a different audio manager
+   */
   stop() {
     Howler2.stop();
   }
+  /**
+   * Actually unload all audio sources in Howler, which means it unloads them even for other scenes
+   *
+   * Use this with caution
+   */
   unloadAllAudioSources() {
     Howler2.unload();
   }
@@ -9309,22 +9326,22 @@ var AudioManagerComponent = class extends Component2 {
   static TypeName = "pp-audio-manager";
   static Properties = {
     _myPreloadAudio: Property.bool(false),
-    _myCleanUpAudioSourcesOnActivate: Property.bool(false)
+    _myStopAudioOnDeactivate: Property.bool(false)
   };
-  init() {
+  start() {
     this._myAudioManager = new AudioManager(this._myPreloadAudio, this.engine);
   }
   onActivate() {
     if (!Globals.hasAudioManager(this.engine)) {
-      if (this._myCleanUpAudioSourcesOnActivate) {
-        this._myAudioManager.unloadAllAudioSources();
-      }
       Globals.setAudioManager(this._myAudioManager, this.engine);
     }
   }
   onDeactivate() {
-    if (Globals.getAudioManager(this.engine) == this._myAudioManager) {
+    if (this._myAudioManager != null && Globals.getAudioManager(this.engine) == this._myAudioManager) {
       Globals.removeAudioManager(this.engine);
+      if (this._myStopAudioOnDeactivate) {
+        this._myAudioManager.stop();
+      }
     }
   }
 };
@@ -9718,7 +9735,7 @@ var AnalyticsManagerComponent = class extends Component3 {
   static Properties = {
     _myDisableAnalyticsOnLocalhost: Property2.bool(true)
   };
-  init() {
+  start() {
     this._myAnalyticsManager = new AnalyticsManager();
   }
   update(dt) {
@@ -9735,8 +9752,11 @@ var AnalyticsManagerComponent = class extends Component3 {
     }
   }
   onDeactivate() {
-    if (Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
-      Globals.removeAnalyticsManager(this.engine);
+    if (this._myAnalyticsManager != null) {
+      this._myAnalyticsManager.clearAllEventCooldowns();
+      if (Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
+        Globals.removeAnalyticsManager(this.engine);
+      }
     }
   }
 };
@@ -9755,7 +9775,7 @@ var ClearConsoleComponent = class extends Component4 {
   _myFirstTimeOnly;
   _myFirstTimeDone = false;
   init() {
-    if (this._myWhen == 0) {
+    if (this.markedActive && this._myWhen == 0) {
       this._clearConsole();
     }
   }
@@ -10432,7 +10452,7 @@ var SaveManagerComponent = class extends Component5 {
     _mySaveID: Property3.string(""),
     _myAutoLoadSaves: Property3.bool(true)
   };
-  init() {
+  start() {
     this._mySaveManager = null;
     if (this._mySaveID.length > 0) {
       this._mySaveManager = new SaveManager(this._mySaveID, this._myAutoLoadSaves, this.engine);
@@ -10606,7 +10626,7 @@ var ObjectPoolManager = class {
 // dist/pp/cauldron/object_pool/components/object_pool_manager_component.js
 var ObjectPoolManagerComponent = class extends Component6 {
   static TypeName = "pp-object-pools-manager";
-  init() {
+  start() {
     this._myObjectPoolManager = new ObjectPoolManager();
   }
   onActivate() {
@@ -10615,13 +10635,17 @@ var ObjectPoolManagerComponent = class extends Component6 {
     }
   }
   onDeactivate() {
-    if (Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+    if (this._myObjectPoolManager != null) {
       this._myObjectPoolManager.releaseAll();
-      Globals.removeObjectPoolManager(this.engine);
+      if (Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+        Globals.removeObjectPoolManager(this.engine);
+      }
     }
   }
   onDestroy() {
-    this._myObjectPoolManager.destroy();
+    if (this._myObjectPoolManager != null) {
+      this._myObjectPoolManager.destroy();
+    }
   }
 };
 
@@ -12723,11 +12747,9 @@ var VisualResourcesMaterials = class {
 // dist/pp/cauldron/visual/components/visual_manager_component.js
 var VisualManagerComponent = class extends Component7 {
   static TypeName = "pp-visual-manager";
-  init() {
+  start() {
     this._myVisualManager = new VisualManager(this.engine);
     this._myVisualResources = new VisualResources();
-  }
-  start() {
     this._myVisualResources.myDefaultMaterials.myMesh = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
     this._myVisualResources.myDefaultMaterials.myText = Globals.getDefaultMaterials(this.engine).myText.clone();
     this._myVisualResources.myDefaultMaterials.myRight = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
@@ -12757,11 +12779,13 @@ var VisualManagerComponent = class extends Component7 {
     }
   }
   onDeactivate() {
-    this._myVisualManager.setActive(false);
-    if (Globals.getVisualManager(this.engine) == this._myVisualManager) {
-      Globals.removeVisualManager(this.engine);
+    if (this._myVisualManager != null) {
+      this._myVisualManager.setActive(false);
+      if (Globals.getVisualManager(this.engine) == this._myVisualManager) {
+        Globals.removeVisualManager(this.engine);
+      }
     }
-    if (Globals.getVisualResources(this.engine) == this._myVisualResources) {
+    if (this._myVisualResources != null && Globals.getVisualResources(this.engine) == this._myVisualResources) {
       Globals.removeVisualResources(this.engine);
     }
   }
@@ -12781,7 +12805,8 @@ var AddWLToWindowComponent = class extends Component8 {
   static Properties = {
     _myAdd: Property4.bool(true)
   };
-  init() {
+  start() {
+    this._myWL = null;
     if (this._myAdd) {
       this._myWL = {};
       this._addProperties(WLAPI);
@@ -12858,7 +12883,7 @@ var GetDefaultResourcesComponent = class extends Component9 {
     _myPhongOpaque: Property5.material(),
     _myText: Property5.material()
   };
-  init() {
+  start() {
     this._myDefaultResources = new DefaultResources();
     this._myDefaultResources.myMeshes.myPlane = MeshUtils.clone(this._myPlane);
     this._myDefaultResources.myMeshes.myCube = MeshUtils.clone(this._myCube);
@@ -12895,7 +12920,7 @@ var GetDefaultResourcesComponent = class extends Component9 {
     }
   }
   onDeactivate() {
-    if (Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
+    if (this._myDefaultResources != null && Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
       Globals.removeDefaultResources(this.engine);
     }
   }
@@ -13019,7 +13044,7 @@ var GetSceneObjectsComponent = class extends Component10 {
     _myHandRight: Property6.object(),
     _myHead: Property6.object()
   };
-  init() {
+  start() {
     this._mySceneObjects = new SceneObjects();
     this._mySceneObjects.myRoot = this._myRoot;
     this._mySceneObjects.myScene = this._myScene;
@@ -13059,7 +13084,7 @@ var GetSceneObjectsComponent = class extends Component10 {
     }
   }
   onDeactivate() {
-    if (Globals.getSceneObjects(this.engine) == this._mySceneObjects) {
+    if (this._mySceneObjects != null && Globals.getSceneObjects(this.engine) == this._mySceneObjects) {
       Globals.removeSceneObjects(this.engine);
     }
   }
@@ -17888,7 +17913,7 @@ CharacterCollisionSystem.prototype.checkTeleportToPosition = function() {
 // dist/pp/gameplay/experimental/character_controller/collision/components/character_collision_system_component.js
 var CharacterCollisionSystemComponent = class extends Component13 {
   static TypeName = "pp-character-collision-system";
-  init() {
+  start() {
     this._myCharacterCollisionSystem = new CharacterCollisionSystem(this.engine);
   }
   update(dt) {
@@ -17902,7 +17927,7 @@ var CharacterCollisionSystemComponent = class extends Component13 {
     }
   }
   onDeactivate() {
-    if (Globals.getCharacterCollisionSystem(this.engine) == this._myCharacterCollisionSystem) {
+    if (this._myCharacterCollisionSystem != null && Globals.getCharacterCollisionSystem(this.engine) == this._myCharacterCollisionSystem) {
       Globals.removeCharacterCollisionSystem(this.engine);
     }
   }
@@ -21215,6 +21240,8 @@ var InputManagerComponent = class extends Component14 {
     _myEnableTrackedHandPoses: Property8.bool(true)
   };
   init() {
+    this._myHasPoseForwardFixed = true;
+    this._myCurrentPoseForwardFixed = this._myPoseForwardFixed;
     this._myInputManager = null;
   }
   update(dt) {
@@ -21258,8 +21285,8 @@ var InputManagerComponent = class extends Component14 {
       this._myInputManager.setActive(true);
       Globals.setInputManager(this._myInputManager, this.engine);
     }
-    if (!Globals.hasPoseForwardFixed(this.engine)) {
-      Globals.setPoseForwardFixed(this._myPoseForwardFixed, this.engine);
+    if (this._myHasPoseForwardFixed) {
+      Globals.setPoseForwardFixed(this._myCurrentPoseForwardFixed, this.engine);
     }
   }
   onDeactivate() {
@@ -21269,9 +21296,9 @@ var InputManagerComponent = class extends Component14 {
         Globals.removeInputManager(this.engine);
       }
     }
-    if (Globals.isPoseForwardFixed(this.engine) == this._myPoseForwardFixed) {
-      Globals.removePoseForwardFixed(this.engine);
-    }
+    this._myHasPoseForwardFixed = Globals.hasPoseForwardFixed();
+    this._myCurrentPoseForwardFixed = Globals.isPoseForwardFixed();
+    Globals.removePoseForwardFixed(this.engine);
   }
   onDestroy() {
     if (this._myInputManager != null) {
@@ -21435,7 +21462,7 @@ var InitConsoleVRComponent = class extends Component16 {
   static Properties = {
     _myInit: Property10.bool(true)
   };
-  init() {
+  start() {
     this._myConsoleVR = null;
     if (this._myInit) {
       this._myConsoleVR = new ConsoleVR(this.engine);
@@ -21560,7 +21587,7 @@ var InitEasyTuneVariablesComponent = class extends Component17 {
   static Properties = {
     _myInit: Property11.bool(true)
   };
-  init() {
+  start() {
     this._myEasyTuneVariables = null;
     if (this._myInit) {
       this._myEasyTuneVariables = new EasyTuneVariables();
@@ -25086,7 +25113,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.7.3";
+var PP_VERSION = "0.7.5";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -25105,7 +25132,7 @@ var AddPPToWindowComponent = class extends Component18 {
   static Properties = {
     _myAdd: Property12.bool(true)
   };
-  init() {
+  start() {
     this._myPP = null;
     if (this._myAdd) {
       this._myPP = {};
@@ -25183,6 +25210,8 @@ var PPGatewayComponent = class extends Component19 {
     }
   }
   init() {
+    if (!this.markedActive)
+      return;
     if (this._myClearConsoleOnInit) {
       this._myClearConsoleComponent = this.object.pp_addComponent(ClearConsoleComponent, false);
     }
@@ -26308,7 +26337,7 @@ var AdjustHierarchyPhysXScaleComponent = class extends Component24 {
     _myWhen: Property16.enum(["Init", "Start", "First Update"], "Start")
   };
   init() {
-    if (this.active && this._myWhen == 0) {
+    if (this.markedActive && this._myWhen == 0) {
       this._adjustScale();
     }
   }
@@ -26355,7 +26384,7 @@ var ResetLocalTransformComponent = class extends Component25 {
   _myFirstXRStart = true;
   _myFirstXREnd = true;
   init() {
-    if (this.active && this._myResetLocalTransformWhen == 0) {
+    if (this.markedActive && this._myResetLocalTransformWhen == 0) {
       this._resetLocalTransform();
     }
   }
@@ -26426,7 +26455,7 @@ var SetActiveComponent = class extends Component26 {
     _mySetActiveWhen: Property17.enum(["Init", "Start", "First Update", "Enter XR", "Exit XR", "First Enter XR", "First Exit XR"], "Init")
   };
   init() {
-    if (this.active && this._mySetActiveWhen == 0) {
+    if (this.markedActive && this._mySetActiveWhen == 0) {
       this._setActive();
     }
   }
@@ -26501,6 +26530,8 @@ var SetEngineLogLevelComponent = class extends Component27 {
   _myWarnEnabled;
   _myErrorEnabled;
   init() {
+    if (!this.markedActive)
+      return;
     const logLevelsToDisable = [];
     if (!this._myInfoEnabled) {
       logLevelsToDisable.push(LogLevel.Info);
@@ -28961,6 +28992,8 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component32 {
     _myObjectsByReference: Property20.enum(["Code Driven"], "Code Driven")
   };
   init() {
+    if (!this.markedActive)
+      return;
     this._myActive = false;
     if (Globals.isDebugEnabled(this.engine)) {
       this._init();
@@ -29097,6 +29130,8 @@ var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component33 {
     _myResetMaxResultsShortcutEnabled: Property21.bool(false)
   };
   init() {
+    if (!this.markedActive)
+      return;
     this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
       _myObjectsByPath: "PP",
       _myDelayStart: this._myDelayStart,
@@ -29151,6 +29186,8 @@ var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component34 
     _myResetMaxResultsShortcutEnabled: Property22.bool(false)
   };
   init() {
+    if (!this.markedActive)
+      return;
     let classesByPath = "Array, Uint8ClampedArray, Uint8Array, Uint16Array, Uint32Array, Int8Array, Int16Array, Int32Array, Float32Array, Float64Array";
     if (this._myIncludeOnlyMainArrayTypes) {
       classesByPath = "Array, Uint8Array, Uint16Array, Float32Array";
@@ -29202,6 +29239,8 @@ var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component35
     _myResetMaxResultsShortcutEnabled: Property23.bool(false)
   };
   init() {
+    if (!this.markedActive)
+      return;
     this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
       _myObjectsByReference: [
         [Vec2Utils, "Vec2Utils"],
@@ -29259,6 +29298,8 @@ var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component36 {
     _myResetMaxResultsShortcutEnabled: Property24.bool(false)
   };
   init() {
+    if (!this.markedActive)
+      return;
     this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
       _myObjectsByPath: "WL",
       _myDelayStart: this._myDelayStart,
@@ -29314,6 +29355,8 @@ var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Compo
     _myResetMaxResultsShortcutEnabled: Property25.bool(false)
   };
   init() {
+    if (!this.markedActive)
+      return;
     this._myStartTimer = new Timer(this._myDelayStart);
     if (this._myDelayStart == 0) {
       this._myStartTimer.end();
@@ -33510,11 +33553,11 @@ var PlayerTransformManager = class _PlayerTransformManager {
     transformUp: vec3_create(),
     fixedVerticalMovement: vec3_create()
   };
-  move(movement, forceMove = false, useHighestHeight = false, outCollisionRuntimeParams = null) {
+  move(movement, forceMove = false, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams = null) {
     if (this._myPlayerLocomotionTeleport != null) {
       this._myPlayerLocomotionTeleport.cancelTeleport();
     }
-    this.checkMovement(movement, void 0, void 0, useHighestHeight, this._myCollisionRuntimeParams);
+    this.checkMovement(movement, void 0, useHighestHeight, collisionCheckParams, this._myCollisionRuntimeParams);
     if (outCollisionRuntimeParams != null) {
       outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
     }
@@ -33549,40 +33592,46 @@ var PlayerTransformManager = class _PlayerTransformManager {
   static _checkMovementSV = {
     currentTransformQuat: quat2_create()
   };
-  checkMovement(movement, currentTransformQuat, collisionCheckParams, useHighestHeight = false, outCollisionRuntimeParams) {
-    this._updateCollisionHeight(useHighestHeight);
+  checkMovement(movement, currentTransformQuat, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams) {
     if (currentTransformQuat == null) {
       currentTransformQuat = _PlayerTransformManager._checkMovementSV.currentTransformQuat;
       this.getTransformQuat(currentTransformQuat);
     }
+    let adjustedCollisionCheckParams = collisionCheckParams;
     if (collisionCheckParams == null) {
-      collisionCheckParams = this._myParams.myMovementCollisionCheckParams;
+      adjustedCollisionCheckParams = this._myParams.myMovementCollisionCheckParams;
+      this._updateCollisionHeight(useHighestHeight);
+    } else if (useHighestHeight) {
+      adjustedCollisionCheckParams = collisionCheckParams;
+      this._updateCollisionHeight(useHighestHeight, adjustedCollisionCheckParams);
     }
     if (outCollisionRuntimeParams == null) {
       outCollisionRuntimeParams = new CollisionRuntimeParams();
       outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
     }
-    CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movement, currentTransformQuat, collisionCheckParams, outCollisionRuntimeParams);
-    this._updateCollisionHeight();
+    CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).move(movement, currentTransformQuat, adjustedCollisionCheckParams, outCollisionRuntimeParams);
+    if (collisionCheckParams == null) {
+      this._updateCollisionHeight();
+    }
     return outCollisionRuntimeParams;
   }
   static _teleportPositionSV = {
     teleportTransformQuat: quat2_create()
   };
-  teleportPosition(teleportPosition, forceTeleport = false, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, outCollisionRuntimeParams = null) {
+  teleportPosition(teleportPosition, forceTeleport = false, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams = null) {
     const teleportTransformQuat = _PlayerTransformManager._teleportPositionSV.teleportTransformQuat;
     this.getTransformQuat(teleportTransformQuat);
     teleportTransformQuat.quat2_setPosition(teleportPosition);
-    this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, outCollisionRuntimeParams);
+    this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
   }
   static _teleportPositionRotationQuatSV = {
     teleportTransformQuat: quat2_create()
   };
-  teleportPositionRotationQuat(teleportPosition, rotationQuat, forceTeleport = false, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, outCollisionRuntimeParams = null) {
+  teleportPositionRotationQuat(teleportPosition, rotationQuat, forceTeleport = false, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams = null) {
     const teleportTransformQuat = _PlayerTransformManager._teleportPositionRotationQuatSV.teleportTransformQuat;
     this.getTransformQuat(teleportTransformQuat);
     teleportTransformQuat.quat2_setPositionRotationQuat(teleportPosition, rotationQuat);
-    this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, outCollisionRuntimeParams);
+    this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
   }
   static _teleportTransformQuatSV = {
     currentPosition: vec3_create(),
@@ -33593,12 +33642,12 @@ var PlayerTransformManager = class _PlayerTransformManager {
     transformUp: vec3_create(),
     flatTeleportForward: vec3_create()
   };
-  teleportTransformQuat(teleportTransformQuat, forceTeleport = false, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, outCollisionRuntimeParams = null) {
+  teleportTransformQuat(teleportTransformQuat, forceTeleport = false, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams = null) {
     if (this._myPlayerLocomotionTeleport != null) {
       this._myPlayerLocomotionTeleport.cancelTeleport();
     }
     if (!forceTeleport || !forceTeleportSkipCollisionCheck) {
-      this.checkTeleportToTransformQuat(teleportTransformQuat, void 0, void 0, useHighestHeight, this._myCollisionRuntimeParams);
+      this.checkTeleportToTransformQuat(teleportTransformQuat, void 0, useHighestHeight, collisionCheckParams, this._myCollisionRuntimeParams);
     }
     if (outCollisionRuntimeParams != null) {
       outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
@@ -33651,8 +33700,7 @@ var PlayerTransformManager = class _PlayerTransformManager {
     teleportRotation: quat_create(),
     rotatedTransformQuat: quat2_create()
   };
-  checkTeleportToTransformQuat(teleportTransformQuat, currentTransformQuat, collisionCheckParams, useHighestHeight = false, outCollisionRuntimeParams) {
-    this._updateCollisionHeight(useHighestHeight);
+  checkTeleportToTransformQuat(teleportTransformQuat, currentTransformQuat, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams) {
     if (currentTransformQuat == null) {
       currentTransformQuat = _PlayerTransformManager._checkTeleportToTransformQuatSV.currentTransformQuat;
       this.getTransformQuat(currentTransformQuat);
@@ -33665,15 +33713,22 @@ var PlayerTransformManager = class _PlayerTransformManager {
     teleportTransformQuat.quat2_getPosition(teleportPosition);
     teleportTransformQuat.quat2_getRotationQuat(teleportRotation);
     rotatedTransformQuat.quat2_setPositionRotationQuat(currentPosition, teleportRotation);
+    let adjustedCollisionCheckParams = collisionCheckParams;
     if (collisionCheckParams == null) {
-      collisionCheckParams = this._myParams.myTeleportCollisionCheckParams;
+      adjustedCollisionCheckParams = this._myParams.myTeleportCollisionCheckParams;
+      this._updateCollisionHeight(useHighestHeight);
+    } else if (useHighestHeight) {
+      adjustedCollisionCheckParams = collisionCheckParams;
+      this._updateCollisionHeight(useHighestHeight, adjustedCollisionCheckParams);
     }
     if (outCollisionRuntimeParams == null) {
       outCollisionRuntimeParams = new CollisionRuntimeParams();
       outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
     }
-    CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).teleport(teleportPosition, rotatedTransformQuat, collisionCheckParams, outCollisionRuntimeParams);
-    this._updateCollisionHeight();
+    CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine).teleport(teleportPosition, rotatedTransformQuat, adjustedCollisionCheckParams, outCollisionRuntimeParams);
+    if (collisionCheckParams == null) {
+      this._updateCollisionHeight();
+    }
     return outCollisionRuntimeParams;
   }
   checkTransformQuat(transformQuat2, collisionCheckParams, outCollisionRuntimeParams) {
@@ -33688,9 +33743,9 @@ var PlayerTransformManager = class _PlayerTransformManager {
     return outCollisionRuntimeParams;
   }
   /** Quick way to force teleport to a position and reset the real to this */
-  forceTeleportAndReset(teleportPosition, teleportRotationQuat, forceTeleportSkipCollisionCheck = false) {
-    this.teleportPositionRotationQuat(teleportPosition, teleportRotationQuat, true, forceTeleportSkipCollisionCheck);
-    this.resetReal(true, true, void 0, void 0, void 0, true);
+  forceTeleportAndReset(teleportPosition, teleportRotationQuat, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams = null) {
+    this.teleportPositionRotationQuat(teleportPosition, teleportRotationQuat, true, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
+    this.resetReal(true, true, void 0, true, void 0, true);
   }
   rotateQuat(rotationQuat) {
     this._myValidRotationQuat.quat_rotateQuat(rotationQuat, this._myValidRotationQuat);
@@ -33987,13 +34042,18 @@ var PlayerTransformManager = class _PlayerTransformManager {
   setPlayerLocomotionTeleport(playerLocomotionTeleport) {
     this._myPlayerLocomotionTeleport = playerLocomotionTeleport;
   }
-  _updateCollisionHeight(useHighestHeight = false) {
+  _updateCollisionHeight(useHighestHeight = false, collisionCheckParams) {
     const validHeight = this.getHeight();
     const realHeight = this.getHeightReal();
     const highestHeight = Math.max(validHeight, realHeight);
-    this._myParams.myMovementCollisionCheckParams.myHeight = (useHighestHeight ? highestHeight : validHeight) + this._myParams.myExtraHeight;
-    this._myParams.myTeleportCollisionCheckParams.myHeight = this._myParams.myMovementCollisionCheckParams.myHeight;
-    this._myRealMovementCollisionCheckParams.myHeight = Math.max(realHeight, this._myParams.myMinHeight ?? -Number.MAX_VALUE) + this._myParams.myExtraHeight;
+    const colliderHeight = (useHighestHeight ? highestHeight : validHeight) + this._myParams.myExtraHeight;
+    if (collisionCheckParams == null) {
+      this._myParams.myMovementCollisionCheckParams.myHeight = colliderHeight;
+      this._myParams.myTeleportCollisionCheckParams.myHeight = colliderHeight;
+      this._myRealMovementCollisionCheckParams.myHeight = Math.max(realHeight, this._myParams.myMinHeight ?? -Number.MAX_VALUE) + this._myParams.myExtraHeight;
+    } else {
+      collisionCheckParams.myHeight = colliderHeight;
+    }
   }
   _setupHeadCollisionCheckParams() {
     this._myHeadCollisionCheckParams = new CollisionCheckParams();
@@ -36078,7 +36138,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleport = function() {
   let teleportTransformQuat = quat2_create();
   return function _checkTeleport(teleportPosition, teleportRotationQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
     teleportTransformQuat.quat2_setPositionRotationQuat(teleportPosition, teleportRotationQuat);
-    this._myTeleportParams.myPlayerTransformManager.checkTeleportToTransformQuat(teleportTransformQuat, void 0, void 0, true, collisionRuntimeParams);
+    this._myTeleportParams.myPlayerTransformManager.checkTeleportToTransformQuat(teleportTransformQuat, void 0, true, void 0, collisionRuntimeParams);
     if (checkTeleportCollisionRuntimeParams != null) {
       checkTeleportCollisionRuntimeParams.copy(collisionRuntimeParams);
     }
@@ -36117,7 +36177,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function() {
           const movementCollisionCheckParams = this._myTeleportParams.myPlayerTransformManager.getMovementCollisionCheckParams();
           const internalSplitMovementMaxStepsDisabledBackup = movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled;
           movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled = true;
-          this._myTeleportParams.myPlayerTransformManager.checkMovement(teleportMovement, movementFeetTransformQuat, void 0, true, checkTeleportMovementCollisionRuntimeParams);
+          this._myTeleportParams.myPlayerTransformManager.checkMovement(teleportMovement, movementFeetTransformQuat, true, void 0, checkTeleportMovementCollisionRuntimeParams);
           movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled = internalSplitMovementMaxStepsDisabledBackup;
         }
         if (!checkTeleportMovementCollisionRuntimeParams.myHorizontalMovementCanceled && !checkTeleportMovementCollisionRuntimeParams.myVerticalMovementCanceled) {
@@ -37301,7 +37361,9 @@ var PlayerLocomotionTeleport = class extends PlayerLocomotionMovement {
   start() {
   }
   stop() {
+    this._myIsUpdating = true;
     this._myFSM.perform("stop");
+    this._myIsUpdating = false;
   }
   cancelTeleport() {
     if (!this._myIsUpdating && this._myFSM.isInState("teleport")) {
@@ -37391,7 +37453,7 @@ PlayerLocomotionTeleport.prototype._applyGravity = function() {
     } else {
       this._myLocomotionRuntimeParams.myGravitySpeed = 0;
     }
-    this._myTeleportParams.myPlayerTransformManager.move(gravityMovement, false);
+    this._myTeleportParams.myPlayerTransformManager.move(gravityMovement);
     const collisionRuntimeParams = this._myTeleportParams.myPlayerTransformManager.getCollisionRuntimeParams();
     if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && collisionRuntimeParams.myIsOnCeiling || this._myLocomotionRuntimeParams.myGravitySpeed < 0 && collisionRuntimeParams.myIsOnGround) {
       this._myLocomotionRuntimeParams.myGravitySpeed = 0;
@@ -37481,6 +37543,16 @@ var PlayerLocomotionParams = class {
   mySyncWithRealHeightOnlyIfValid = false;
   mySnapRealPositionToGround = false;
   myPreventRealFromColliding = false;
+  /**
+   * This make it so if you move your head inside the ceiling and try to move with the stick, the player will not move as it was stuck with you.
+   * It can be useful to avoid being able to move while the view is occluded and find yourself in random places afterwards.
+   *
+   * If this is set to `false` instead, the player can still move and, for example, exit the zone with the lower ceiling.
+   * When this is set to false, you very likely want also {@link myResetHeadToRealMinDistance} set to `0`, otherwise the view occlusion
+   * feature can fade to total black when moving in those situation (even if the move is now allowed and works).
+   * Setting {@link myResetHeadToRealMinDistance} to `0` is more expensive performance wise, so you might have to compromise.
+   */
+  myUseHighestColliderHeightWhenManuallyMovingHorizontally = false;
   myViewOcclusionInsideWallsEnabled = false;
   myViewOcclusionLayerFlags = new PhysicsLayerFlags();
   /**
@@ -37758,6 +37830,9 @@ var PlayerLocomotion = class {
         params2.myDirectionInvertForwardWhenUpsideDown = this._myParams.myDirectionInvertForwardWhenUpsideDown;
         params2.myVRDirectionReferenceType = this._myParams.myVRDirectionReferenceType;
         params2.myVRDirectionReferenceObject = this._myParams.myVRDirectionReferenceObject;
+        params2.myUseHighestColliderHeightWhenManuallyMovingHorizontally = this._myParams.myUseHighestColliderHeightWhenManuallyMovingHorizontally;
+        params2.myUseHighestColliderHeightWhenManuallyMovingVertically = false;
+        params2.myAttemptMoveAgainWhenFailedDueToCeilingPopOut = true;
         params2.myDebugFlyMaxSpeedMultiplier = this._myParams.myDebugFlyMaxSpeedMultiplier;
         params2.myMoveThroughCollisionShortcutEnabled = this._myParams.myMoveThroughCollisionShortcutEnabled;
         params2.myMoveHeadShortcutEnabled = this._myParams.myMoveHeadShortcutEnabled;
@@ -37882,12 +37957,19 @@ var PlayerLocomotion = class {
   }
   canStop() {
     let canStop = false;
-    if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
+    if (this.isSmooth() && this._myPlayerLocomotionSmooth.canStop()) {
       canStop = true;
-    } else if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
+    } else if (this.isTeleport() && this._myPlayerLocomotionTeleport.canStop()) {
       canStop = true;
     }
     return canStop;
+  }
+  stop() {
+    if (this.isSmooth()) {
+      this._myPlayerLocomotionSmooth.stop();
+    } else if (this.isTeleport()) {
+      this._myPlayerLocomotionTeleport.stop();
+    }
   }
   isIdle() {
     return this._myIdle;
@@ -37901,6 +37983,18 @@ var PlayerLocomotion = class {
         this._myLocomotionMovementFSM.perform("resume");
       }
     }
+  }
+  isSmooth() {
+    return this._myLocomotionMovementFSM.isInState("smooth") || this._myLocomotionMovementFSM.isInState("idleSmooth");
+  }
+  switchToSmooth() {
+    this._myLocomotionMovementFSM.perform("switchSmooth");
+  }
+  isTeleport() {
+    return this._myLocomotionMovementFSM.isInState("teleport") || this._myLocomotionMovementFSM.isInState("idleTeleport");
+  }
+  switchToTeleport() {
+    this._myLocomotionMovementFSM.perform("switchTeleport");
   }
   getPlayerLocomotionSmooth() {
     return this._myPlayerLocomotionSmooth;
@@ -37953,32 +38047,32 @@ var PlayerLocomotion = class {
       this._myPlayerTransformManager.update(dt);
       if (!this._myPlayerLocomotionSmooth.isDebugFlyEnabled() || !Globals.isDebugEnabled(this._myParams.myEngine)) {
         if (!this._myParams.myAlwaysSmoothForNonVR || XRUtils.isSessionActive(this._myParams.myEngine)) {
-          if (this._myParams.mySwitchLocomotionTypeShortcutEnabled && this._getMainHandGamepad().getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2)) {
-            if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
-              this._myLocomotionMovementFSM.perform("next");
-            } else if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
-              this._myLocomotionMovementFSM.perform("next");
+          if (this._myParams.mySwitchLocomotionTypeShortcutEnabled && this._getMainHandGamepad().getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2) && this.canStop()) {
+            if (this.isTeleport()) {
+              this.switchToSmooth();
+            } else {
+              this.switchToTeleport();
             }
           }
         }
         if (this._myParams.myAlwaysSmoothForNonVR && !XRUtils.isSessionActive(this._myParams.myEngine)) {
-          if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
+          if (this.isTeleport() && this.canStop()) {
             this._mySwitchToTeleportOnEnterSession = true;
-            this._myLocomotionMovementFSM.perform("next");
+            this.switchToSmooth();
           }
         } else if (this._mySwitchToTeleportOnEnterSession && XRUtils.isSessionActive(this._myParams.myEngine)) {
-          if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
+          if (this.isSmooth() && this.canStop()) {
             this._mySwitchToTeleportOnEnterSession = false;
-            this._myLocomotionMovementFSM.perform("next");
+            this.switchToTeleport();
           }
         }
       }
       if (this._myParams.myDebugFlyShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
         if (GamepadUtils.areButtonsPressEnd([this._getMainHandGamepad(), GamepadButtonID.SELECT, GamepadButtonID.THUMBSTICK])) {
-          if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
-            this._myLocomotionMovementFSM.perform("next");
+          if (this.isTeleport() && this.canStop()) {
+            this.switchToSmooth();
           }
-          if (this._myLocomotionMovementFSM.isInState("smooth")) {
+          if (this.isSmooth()) {
             this._myPlayerLocomotionSmooth.setDebugFlyEnabled(!this._myPlayerLocomotionSmooth.isDebugFlyEnabled());
             this._mySwitchToTeleportOnEnterSession = false;
           }
@@ -38058,11 +38152,11 @@ var PlayerLocomotion = class {
       this._myPlayerLocomotionSmooth.stop();
       this._myPlayerLocomotionTeleport.start();
     }.bind(this));
-    this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "next", function() {
+    this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "switchTeleport", function() {
       this._myPlayerLocomotionSmooth.stop();
       this._myPlayerLocomotionTeleport.start();
     }.bind(this));
-    this._myLocomotionMovementFSM.addTransition("teleport", "smooth", "next", function() {
+    this._myLocomotionMovementFSM.addTransition("teleport", "smooth", "switchSmooth", function() {
       this._myPlayerLocomotionTeleport.stop();
       this._myPlayerLocomotionSmooth.start();
     }.bind(this));
@@ -38078,6 +38172,8 @@ var PlayerLocomotion = class {
     this._myLocomotionMovementFSM.addTransition("idleTeleport", "teleport", "resume", function() {
       this._myPlayerLocomotionTeleport.start();
     }.bind(this));
+    this._myLocomotionMovementFSM.addTransition("idleSmooth", "idleTeleport", "switchTeleport");
+    this._myLocomotionMovementFSM.addTransition("idleTeleport", "idleSmooth", "switchSmooth");
     this._myLocomotionMovementFSM.init("init");
   }
   _getMainHandGamepad() {
@@ -38101,7 +38197,7 @@ var PlayerLocomotionSmoothParams = class {
   constructor(engine = Globals.getMainEngine()) {
     this.myPlayerTransformManager = null;
     this.myMaxSpeed = 0;
-    this.mySpeedSlowDownPercentageOnWallSlid = 1;
+    this.mySpeedSlowDownPercentageOnWallSlid = 0;
     this.myMovementMinStickIntensityThreshold = 0;
     this.myFlyEnabled = false;
     this.myFlyWithButtonsEnabled = false;
@@ -38113,12 +38209,14 @@ var PlayerLocomotionSmoothParams = class {
     this.myMinAngleToFlyRight = 0;
     this.myGravityAcceleration = 0;
     this.myMaxGravitySpeed = 0;
-    this.myDirectionInvertForwardWhenUpsideDown = true;
+    this.myDirectionInvertForwardWhenUpsideDown = false;
     this.myVRDirectionReferenceType = PlayerLocomotionDirectionReferenceType.HEAD;
     this.myVRDirectionReferenceObject = null;
     this.myHandedness = Handedness.LEFT;
-    this.myAttemptMoveAgainWhenFailedDueToCeilingPopOut = true;
-    this.myDebugFlyMaxSpeedMultiplier = 5;
+    this.myUseHighestColliderHeightWhenManuallyMovingHorizontally = false;
+    this.myUseHighestColliderHeightWhenManuallyMovingVertically = false;
+    this.myAttemptMoveAgainWhenFailedDueToCeilingPopOut = false;
+    this.myDebugFlyMaxSpeedMultiplier = 0;
     this.myMoveThroughCollisionShortcutEnabled = false;
     this.myMoveHeadShortcutEnabled = false;
     this.myTripleSpeedShortcutEnabled = false;
@@ -38208,11 +38306,12 @@ var PlayerLocomotionSmooth = class extends PlayerLocomotionMovement {
 PlayerLocomotionSmooth.prototype.update = function() {
   let playerRotationQuat = quat_create();
   let playerUp = vec3_create();
+  let totalMovement = vec3_create();
   let horizontalMovement = vec3_create();
+  let verticalMovement = vec3_create();
   let headMovement = vec3_create();
   let direction = vec3_create();
   let directionOnUp = vec3_create();
-  let verticalMovement = vec3_create();
   let directionReferenceTransformQuat = quat2_create();
   return function update(dt) {
     if (!this.isActive())
@@ -38221,12 +38320,15 @@ PlayerLocomotionSmooth.prototype.update = function() {
     this._myCurrentSpeed = 0;
     this._myLastHorizontalMovement.vec3_zero();
     playerUp = this._myParams.myPlayerTransformManager.getRotationQuat(playerRotationQuat).quat_getUp(playerUp);
+    totalMovement.vec3_zero();
     horizontalMovement.vec3_zero();
+    verticalMovement.vec3_zero();
     headMovement.vec3_zero();
     let axes = Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getAxesInfo(GamepadAxesID.THUMBSTICK).getAxes();
     axes[0] = Math.abs(axes[0]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[0] : 0;
     axes[1] = Math.abs(axes[1]) > this._myParams.myMovementMinStickIntensityThreshold ? axes[1] : 0;
-    let isManuallyMoving = false;
+    let isManuallyMovingHorizontally = false;
+    let isManuallyMovingVertically = false;
     let maxSpeed = this._myParams.myMaxSpeed;
     if (debugFlyEnabled) {
       maxSpeed = maxSpeed * this._myParams.myDebugFlyMaxSpeedMultiplier;
@@ -38256,8 +38358,16 @@ PlayerLocomotionSmooth.prototype.update = function() {
           slowPercentage = Math.pp_lerp(1, slowPercentage, slidStrength);
           this._myCurrentSpeed = this._myCurrentSpeed * slowPercentage;
         }
-        horizontalMovement = direction.vec3_scale(this._myCurrentSpeed * dt, horizontalMovement);
-        isManuallyMoving = true;
+        if (!this._myLocomotionRuntimeParams.myIsFlying) {
+          horizontalMovement = direction.vec3_scale(this._myCurrentSpeed * dt, horizontalMovement);
+          isManuallyMovingHorizontally = !horizontalMovement.vec3_isZero(1e-6);
+        } else {
+          totalMovement = direction.vec3_scale(this._myCurrentSpeed * dt, totalMovement);
+          horizontalMovement = totalMovement.vec3_removeComponentAlongAxis(playerUp, horizontalMovement);
+          verticalMovement = totalMovement.vec3_componentAlongAxis(playerUp, verticalMovement);
+          isManuallyMovingHorizontally = !horizontalMovement.vec3_isZero(1e-6);
+          isManuallyMovingVertically = !verticalMovement.vec3_isZero(1e-6);
+        }
       }
     } else {
       if (this._myStickIdleTimer.isRunning()) {
@@ -38267,28 +38377,29 @@ PlayerLocomotionSmooth.prototype.update = function() {
         }
       }
     }
-    headMovement = headMovement.vec3_add(horizontalMovement, headMovement);
     if (this._myParams.myFlyEnabled && this._myParams.myFlyWithButtonsEnabled || debugFlyEnabled) {
       if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.TOP_BUTTON).isPressed()) {
         verticalMovement = playerUp.vec3_scale(maxSpeed * dt, verticalMovement);
-        headMovement = headMovement.vec3_add(verticalMovement, headMovement);
         this._myLocomotionRuntimeParams.myIsFlying = true;
-        isManuallyMoving = true;
+        isManuallyMovingVertically = true;
       } else if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressed()) {
         verticalMovement = playerUp.vec3_scale(-maxSpeed * dt, verticalMovement);
-        headMovement = headMovement.vec3_add(verticalMovement, headMovement);
         this._myLocomotionRuntimeParams.myIsFlying = true;
-        isManuallyMoving = true;
+        isManuallyMovingVertically = true;
       }
       if (Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.BOTTOM_BUTTON).isPressEnd(2)) {
         this._myLocomotionRuntimeParams.myIsFlying = false;
       }
     }
     if (this._myParams.myMoveHeadShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine) && Globals.getGamepads(this._myParams.myEngine)[InputUtils.getOppositeHandedness(this._myParams.myHandedness)].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed()) {
+      headMovement = headMovement.vec3_add(horizontalMovement, headMovement);
+      headMovement = headMovement.vec3_add(verticalMovement, headMovement);
       this._myParams.myPlayerTransformManager.getPlayerHeadManager().moveFeet(headMovement);
     } else if (this._myParams.myMoveThroughCollisionShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine) && Globals.getGamepads(this._myParams.myEngine)[this._myParams.myHandedness].getButtonInfo(GamepadButtonID.THUMBSTICK).isPressed() || debugFlyEnabled) {
-      this._myParams.myPlayerTransformManager.move(headMovement, true, isManuallyMoving ? true : false);
-      if (isManuallyMoving) {
+      headMovement = headMovement.vec3_add(horizontalMovement, headMovement);
+      headMovement = headMovement.vec3_add(verticalMovement, headMovement);
+      this._myParams.myPlayerTransformManager.move(headMovement, true);
+      if (isManuallyMovingHorizontally || isManuallyMovingVertically) {
         this._myParams.myPlayerTransformManager.resetReal();
       }
     } else {
@@ -38298,18 +38409,20 @@ PlayerLocomotionSmooth.prototype.update = function() {
           this._myLocomotionRuntimeParams.myGravitySpeed = Math.pp_sign(this._myParams.myGravityAcceleration) * Math.abs(this._myParams.myMaxGravitySpeed);
         }
         verticalMovement = playerUp.vec3_scale(this._myLocomotionRuntimeParams.myGravitySpeed * dt, verticalMovement);
-        headMovement = headMovement.vec3_add(verticalMovement, headMovement);
       } else {
         this._myLocomotionRuntimeParams.myGravitySpeed = 0;
       }
-      this._myParams.myPlayerTransformManager.move(headMovement, false, isManuallyMoving ? true : false);
-      if (this._myParams.myAttemptMoveAgainWhenFailedDueToCeilingPopOut && isManuallyMoving && !horizontalMovement.vec3_isZero(1e-6)) {
+      let useHighestHeight = (this._myParams.myUseHighestColliderHeightWhenManuallyMovingHorizontally && isManuallyMovingHorizontally || this._myParams.myUseHighestColliderHeightWhenManuallyMovingVertically && isManuallyMovingVertically) && (!isManuallyMovingHorizontally || this._myParams.myUseHighestColliderHeightWhenManuallyMovingHorizontally) && (!isManuallyMovingVertically || this._myParams.myUseHighestColliderHeightWhenManuallyMovingVertically) && (this._myParams.myPlayerTransformManager.getCollisionRuntimeParams().myIsOnGround || this._myLocomotionRuntimeParams.myGravitySpeed == 0);
+      headMovement = headMovement.vec3_add(horizontalMovement, headMovement);
+      headMovement = headMovement.vec3_add(verticalMovement, headMovement);
+      this._myParams.myPlayerTransformManager.move(headMovement, false, useHighestHeight);
+      if (this._myParams.myAttemptMoveAgainWhenFailedDueToCeilingPopOut && isManuallyMovingHorizontally && !horizontalMovement.vec3_isZero(1e-6)) {
         const collisionRuntimeParams2 = this._myParams.myPlayerTransformManager.getCollisionRuntimeParams();
         if (collisionRuntimeParams2.myHorizontalMovementCanceled && !collisionRuntimeParams2.myVerticalMovementCanceled && collisionRuntimeParams2.myHasPoppedOutCeiling) {
-          this._myParams.myPlayerTransformManager.move(horizontalMovement, false, isManuallyMoving ? true : false);
+          this._myParams.myPlayerTransformManager.move(horizontalMovement, false, useHighestHeight);
         }
       }
-      if (isManuallyMoving) {
+      if (isManuallyMovingHorizontally || isManuallyMovingVertically) {
         this._myParams.myPlayerTransformManager.resetReal();
         collisionRuntimeParams.myFixedMovement.vec3_removeComponentAlongAxis(collisionRuntimeParams.myOriginalUp, this._myLastHorizontalMovement);
       }
@@ -38428,6 +38541,16 @@ var PlayerLocomotionComponent = class extends Component43 {
   _mySyncWithRealHeightOnlyIfValid;
   _mySnapRealPositionToGround;
   _myPreventRealFromColliding;
+  /**
+   * This make it so if you move your head inside the ceiling and try to move with the stick, the player will not move as it was stuck with you.
+   * It can be useful to avoid being able to move while the view is occluded and find yourself in random places afterwards.
+   *
+   * If this is set to `false` instead, the player can still move and, for example, exit the zone with the lower ceiling.
+   * When this is set to false, you very likely want also {@link _myResetHeadToRealMinDistance} set to `0`, otherwise the view occlusion
+   * feature can fade to total black when moving in those situation (even if the move is now allowed and works).
+   * Setting {@link _myResetHeadToRealMinDistance} to `0` is more expensive performance wise, so you might have to compromise.
+   */
+  _myUseHighestColliderHeightWhenManuallyMovingHorizontally;
   _myViewOcclusionInsideWallsEnabled;
   /** If empty use {@link _myPhysicsBlockLayerFlags} */
   _myViewOcclusionLayerFlags;
@@ -38572,6 +38695,7 @@ var PlayerLocomotionComponent = class extends Component43 {
     params.mySyncWithRealHeightOnlyIfValid = this._mySyncWithRealHeightOnlyIfValid;
     params.mySnapRealPositionToGround = this._mySnapRealPositionToGround;
     params.myPreventRealFromColliding = this._myPreventRealFromColliding;
+    params.myUseHighestColliderHeightWhenManuallyMovingHorizontally = this._myUseHighestColliderHeightWhenManuallyMovingHorizontally;
     params.myViewOcclusionInsideWallsEnabled = this._myViewOcclusionInsideWallsEnabled;
     params.myViewOcclusionHeadRadius = this._myViewOcclusionHeadRadius;
     params.myViewOcclusionHeadHeight = this._myViewOcclusionHeadHeight;
@@ -38880,6 +39004,9 @@ __decorate8([
 ], PlayerLocomotionComponent.prototype, "_myPreventRealFromColliding", void 0);
 __decorate8([
   property8.bool(true)
+], PlayerLocomotionComponent.prototype, "_myUseHighestColliderHeightWhenManuallyMovingHorizontally", void 0);
+__decorate8([
+  property8.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionInsideWallsEnabled", void 0);
 __decorate8([
   property8.string("")
@@ -38945,7 +39072,7 @@ __decorate8([
   property8.int(3)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxMovementSteps", void 0);
 __decorate8([
-  property8.float(0.025)
+  property8.float(0)
 ], PlayerLocomotionComponent.prototype, "_myColliderExtraHeight", void 0);
 __decorate8([
   property8.bool(false)
@@ -42851,6 +42978,7 @@ var ConsoleVRWidgetParams = class extends WidgetParams {
     this.myOverrideBrowserConsoleFunctions = false;
     this.myShowOnStart = false;
     this.myShowVisibilityButton = false;
+    this.myFilterByError = false;
     this.myPulseOnNewMessage = ConsoleVRWidgetPulseOnNewMessage.NEVER;
     this.myResetToOverwrittenConsoleFunctionsOnDeactivate = false;
     this.myResetToConsoleOriginalFunctionsOnDeactivate = true;
@@ -42931,6 +43059,9 @@ var ConsoleVRWidget = class {
     this._myUI.setVisible(this._myWidgetFrame.isVisible());
     this._setNotifyIconActive(false);
     this._addListeners();
+    if (this._myParams.myFilterByError) {
+      this._filterAllButOne(ConsoleVRWidgetMessageType.ERROR, true);
+    }
     this._overrideConsolesFunctions();
     this._myStarted = true;
   }
@@ -43435,8 +43566,8 @@ var ConsoleVRWidget = class {
       this._updateAllTexts();
     }
   }
-  _filterAllButOne(messageType) {
-    if (this._myWidgetFrame.isVisible()) {
+  _filterAllButOne(messageType, forceFilter = false) {
+    if (this._myWidgetFrame.isVisible() || forceFilter) {
       for (let key in ConsoleVRWidgetMessageType) {
         let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[ConsoleVRWidgetMessageType[key]].material;
         let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[ConsoleVRWidgetMessageType[key]].material;
@@ -43715,8 +43846,10 @@ var ConsoleVRToolComponent = class extends Component63 {
   static Properties = {
     _myHandedness: Property43.enum(["None", "Left", "Right"], "None"),
     _myOverrideBrowserConsoleFunctions: Property43.enum(["None", "All", "Errors & Warns"], "All"),
+    _myEnableOnlyForVR: Property43.bool(true),
     _myShowOnStart: Property43.bool(false),
     _myShowVisibilityButton: Property43.bool(false),
+    _myFilterByError: Property43.bool(false),
     _myPulseOnNewMessage: Property43.enum(["Never", "Always", "When Hidden"], "Never")
   };
   _start() {
@@ -43726,6 +43859,7 @@ var ConsoleVRToolComponent = class extends Component63 {
     params.myOverrideBrowserConsoleFunctions = this._myOverrideBrowserConsoleFunctions;
     params.myShowOnStart = this._myShowOnStart;
     params.myShowVisibilityButton = this._myShowVisibilityButton;
+    params.myFilterByError = this._myFilterByError;
     params.myPulseOnNewMessage = this._myPulseOnNewMessage;
     params.myPlaneMaterial = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
     params.myTextMaterial = Globals.getDefaultMaterials(this.engine).myText.clone();
@@ -43737,11 +43871,14 @@ var ConsoleVRToolComponent = class extends Component63 {
   }
   update(dt) {
     if (Globals.isToolEnabled(this.engine) && (!Globals.hasConsoleVRWidget(this.engine) || Globals.getConsoleVRWidget(this.engine) == this._myWidget)) {
-      if (this._myStarted) {
+      if (!this._myStarted) {
+        this._start();
+      }
+      if (!this._myEnableOnlyForVR || XRUtils.isSessionActive(this.engine)) {
         this._myWidget.setActive(true);
         this._myWidget.update(dt);
       } else {
-        this._start();
+        this._myWidget.setActive(false);
       }
     } else if (this._myStarted) {
       this._myWidget.setActive(false);
