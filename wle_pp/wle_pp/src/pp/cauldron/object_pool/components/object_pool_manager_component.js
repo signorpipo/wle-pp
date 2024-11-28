@@ -5,7 +5,7 @@ import { ObjectPoolManager } from "../object_pool_manager.js";
 export class ObjectPoolManagerComponent extends Component {
     static TypeName = "pp-object-pools-manager";
 
-    init() {
+    start() {
         this._myObjectPoolManager = new ObjectPoolManager();
     }
 
@@ -16,14 +16,18 @@ export class ObjectPoolManagerComponent extends Component {
     }
 
     onDeactivate() {
-        if (Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+        if (this._myObjectPoolManager != null) {
             this._myObjectPoolManager.releaseAll();
 
-            Globals.removeObjectPoolManager(this.engine);
+            if (Globals.getObjectPoolManager(this.engine) == this._myObjectPoolManager) {
+                Globals.removeObjectPoolManager(this.engine);
+            }
         }
     }
 
     onDestroy() {
-        this._myObjectPoolManager.destroy();
+        if (this._myObjectPoolManager != null) {
+            this._myObjectPoolManager.destroy();
+        }
     }
 }

@@ -100,10 +100,13 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
     }
 
     start() {
+
     }
 
     stop() {
+        this._myIsUpdating = true;
         this._myFSM.perform("stop");
+        this._myIsUpdating = false;
     }
 
     cancelTeleport() {
@@ -277,7 +280,7 @@ PlayerLocomotionTeleport.prototype._applyGravity = function () {
             this._myLocomotionRuntimeParams.myGravitySpeed = 0;
         }
 
-        this._myTeleportParams.myPlayerTransformManager.move(gravityMovement, false);
+        this._myTeleportParams.myPlayerTransformManager.move(gravityMovement);
 
         const collisionRuntimeParams = this._myTeleportParams.myPlayerTransformManager.getCollisionRuntimeParams();
         if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && collisionRuntimeParams.myIsOnCeiling ||

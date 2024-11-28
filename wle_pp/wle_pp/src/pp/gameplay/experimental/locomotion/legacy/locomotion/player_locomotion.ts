@@ -135,6 +135,20 @@ export class PlayerLocomotionParams {
     public mySnapRealPositionToGround: boolean = false;
     public myPreventRealFromColliding: boolean = false;
 
+
+    /**
+     * This make it so if you move your head inside the ceiling and try to move with the stick, the player will not move as it was stuck with you.  
+     * It can be useful to avoid being able to move while the view is occluded and find yourself in random places afterwards.
+     * 
+     * If this is set to `false` instead, the player can still move and, for example, exit the zone with the lower ceiling.
+     * When this is set to false, you very likely want also {@link myResetHeadToRealMinDistance} set to `0`, otherwise the view occlusion  
+     * feature can fade to total black when moving in those situation (even if the move is now allowed and works).
+     * Setting {@link myResetHeadToRealMinDistance} to `0` is more expensive performance wise, so you might have to compromise.
+     */
+    public myUseHighestColliderHeightWhenManuallyMovingHorizontally: boolean = false;
+
+
+
     public myViewOcclusionInsideWallsEnabled: boolean = false;
     public myViewOcclusionLayerFlags: Readonly<PhysicsLayerFlags> = new PhysicsLayerFlags();
 
@@ -524,6 +538,11 @@ export class PlayerLocomotion {
                 params.myVRDirectionReferenceType = this._myParams.myVRDirectionReferenceType;
                 params.myVRDirectionReferenceObject = this._myParams.myVRDirectionReferenceObject;
 
+                params.myUseHighestColliderHeightWhenManuallyMovingHorizontally = this._myParams.myUseHighestColliderHeightWhenManuallyMovingHorizontally;
+                params.myUseHighestColliderHeightWhenManuallyMovingVertically = false;
+
+                params.myAttemptMoveAgainWhenFailedDueToCeilingPopOut = true;
+
                 params.myDebugFlyMaxSpeedMultiplier = this._myParams.myDebugFlyMaxSpeedMultiplier;
                 params.myMoveThroughCollisionShortcutEnabled = this._myParams.myMoveThroughCollisionShortcutEnabled;
                 params.myMoveHeadShortcutEnabled = this._myParams.myMoveHeadShortcutEnabled;
@@ -696,13 +715,21 @@ export class PlayerLocomotion {
     public canStop(): boolean {
         let canStop = false;
 
-        if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
+        if (this.isSmooth() && this._myPlayerLocomotionSmooth.canStop()) {
             canStop = true;
-        } else if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
+        } else if (this.isTeleport() && this._myPlayerLocomotionTeleport.canStop()) {
             canStop = true;
         }
 
         return canStop;
+    }
+
+    public stop(): void {
+        if (this.isSmooth()) {
+            this._myPlayerLocomotionSmooth.stop();
+        } else if (this.isTeleport()) {
+            this._myPlayerLocomotionTeleport.stop();
+        }
     }
 
     public isIdle(): boolean {
@@ -719,6 +746,22 @@ export class PlayerLocomotion {
                 this._myLocomotionMovementFSM.perform("resume");
             }
         }
+    }
+
+    public isSmooth(): boolean {
+        return this._myLocomotionMovementFSM.isInState("smooth") || this._myLocomotionMovementFSM.isInState("idleSmooth");
+    }
+
+    public switchToSmooth(): void {
+        this._myLocomotionMovementFSM.perform("switchSmooth");
+    }
+
+    public isTeleport(): boolean {
+        return this._myLocomotionMovementFSM.isInState("teleport") || this._myLocomotionMovementFSM.isInState("idleTeleport");
+    }
+
+    public switchToTeleport(): void {
+        this._myLocomotionMovementFSM.perform("switchTeleport");
     }
 
     public getPlayerLocomotionSmooth(): PlayerLocomotionSmooth {
@@ -787,36 +830,35 @@ export class PlayerLocomotion {
 
             if (!this._myPlayerLocomotionSmooth.isDebugFlyEnabled() || !Globals.isDebugEnabled(this._myParams.myEngine)) {
                 if (!this._myParams.myAlwaysSmoothForNonVR || XRUtils.isSessionActive(this._myParams.myEngine)) {
-                    if (this._myParams.mySwitchLocomotionTypeShortcutEnabled &&
-                        this._getMainHandGamepad().getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2)) {
-                        if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
-                            this._myLocomotionMovementFSM.perform("next");
-                        } else if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
-                            this._myLocomotionMovementFSM.perform("next");
+                    if (this._myParams.mySwitchLocomotionTypeShortcutEnabled && this._getMainHandGamepad().getButtonInfo(GamepadButtonID.THUMBSTICK).isPressEnd(2) && this.canStop()) {
+                        if (this.isTeleport()) {
+                            this.switchToSmooth();
+                        } else {
+                            this.switchToTeleport();
                         }
                     }
                 }
 
                 if (this._myParams.myAlwaysSmoothForNonVR && !XRUtils.isSessionActive(this._myParams.myEngine)) {
-                    if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
+                    if (this.isTeleport() && this.canStop()) {
                         this._mySwitchToTeleportOnEnterSession = true;
-                        this._myLocomotionMovementFSM.perform("next");
+                        this.switchToSmooth();
                     }
                 } else if (this._mySwitchToTeleportOnEnterSession && XRUtils.isSessionActive(this._myParams.myEngine)) {
-                    if (this._myLocomotionMovementFSM.isInState("smooth") && this._myPlayerLocomotionSmooth.canStop()) {
+                    if (this.isSmooth() && this.canStop()) {
                         this._mySwitchToTeleportOnEnterSession = false;
-                        this._myLocomotionMovementFSM.perform("next");
+                        this.switchToTeleport();
                     }
                 }
             }
 
             if (this._myParams.myDebugFlyShortcutEnabled && Globals.isDebugEnabled(this._myParams.myEngine)) {
                 if (GamepadUtils.areButtonsPressEnd([this._getMainHandGamepad(), GamepadButtonID.SELECT, GamepadButtonID.THUMBSTICK])) {
-                    if (this._myLocomotionMovementFSM.isInState("teleport") && this._myPlayerLocomotionTeleport.canStop()) {
-                        this._myLocomotionMovementFSM.perform("next");
+                    if (this.isTeleport() && this.canStop()) {
+                        this.switchToSmooth();
                     }
 
-                    if (this._myLocomotionMovementFSM.isInState("smooth")) {
+                    if (this.isSmooth()) {
                         this._myPlayerLocomotionSmooth.setDebugFlyEnabled(!this._myPlayerLocomotionSmooth.isDebugFlyEnabled());
                         this._mySwitchToTeleportOnEnterSession = false;
                     }
@@ -923,12 +965,12 @@ export class PlayerLocomotion {
             this._myPlayerLocomotionTeleport.start();
         }.bind(this));
 
-        this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "next", function (this: PlayerLocomotion) {
+        this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "switchTeleport", function (this: PlayerLocomotion) {
             this._myPlayerLocomotionSmooth.stop();
             this._myPlayerLocomotionTeleport.start();
         }.bind(this));
 
-        this._myLocomotionMovementFSM.addTransition("teleport", "smooth", "next", function (this: PlayerLocomotion) {
+        this._myLocomotionMovementFSM.addTransition("teleport", "smooth", "switchSmooth", function (this: PlayerLocomotion) {
             this._myPlayerLocomotionTeleport.stop();
             this._myPlayerLocomotionSmooth.start();
         }.bind(this));
@@ -948,6 +990,9 @@ export class PlayerLocomotion {
         this._myLocomotionMovementFSM.addTransition("idleTeleport", "teleport", "resume", function (this: PlayerLocomotion) {
             this._myPlayerLocomotionTeleport.start();
         }.bind(this));
+
+        this._myLocomotionMovementFSM.addTransition("idleSmooth", "idleTeleport", "switchTeleport");
+        this._myLocomotionMovementFSM.addTransition("idleTeleport", "idleSmooth", "switchSmooth");
 
         this._myLocomotionMovementFSM.init("init");
     }

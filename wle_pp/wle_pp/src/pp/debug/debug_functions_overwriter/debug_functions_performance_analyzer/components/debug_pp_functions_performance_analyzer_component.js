@@ -24,6 +24,8 @@ export class DebugPPFunctionsPerformanceAnalyzerComponent extends Component {
     };
 
     init() {
+        if (!this.markedActive) return;
+
         this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
             _myObjectsByPath: "PP",
             _myDelayStart: this._myDelayStart,

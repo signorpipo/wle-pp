@@ -7,7 +7,7 @@ export class AddPPToWindowComponent extends Component {
         _myAdd: Property.bool(true)
     };
 
-    init() {
+    start() {
         this._myPP = null;
         if (this._myAdd) {
             this._myPP = {};

@@ -28,6 +28,8 @@ export class DebugPPArrayCreationPerformanceAnalyzerComponent extends Component 
     };
 
     init() {
+        if (!this.markedActive) return;
+
         this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
             _myObjectsByReference: [
                 [Vec2Utils, "Vec2Utils"],

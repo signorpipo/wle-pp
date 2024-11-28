@@ -7,13 +7,11 @@ import { VisualResources } from "../visual_resources.js";
 export class VisualManagerComponent extends Component {
     static TypeName = "pp-visual-manager";
 
-    init() {
+    start() {
         this._myVisualManager = new VisualManager(this.engine);
 
         this._myVisualResources = new VisualResources();
-    }
 
-    start() {
         this._myVisualResources.myDefaultMaterials.myMesh = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
 
         this._myVisualResources.myDefaultMaterials.myText = Globals.getDefaultMaterials(this.engine).myText.clone();
@@ -52,13 +50,15 @@ export class VisualManagerComponent extends Component {
     }
 
     onDeactivate() {
-        this._myVisualManager.setActive(false);
+        if (this._myVisualManager != null) {
+            this._myVisualManager.setActive(false);
 
-        if (Globals.getVisualManager(this.engine) == this._myVisualManager) {
-            Globals.removeVisualManager(this.engine);
+            if (Globals.getVisualManager(this.engine) == this._myVisualManager) {
+                Globals.removeVisualManager(this.engine);
+            }
         }
 
-        if (Globals.getVisualResources(this.engine) == this._myVisualResources) {
+        if (this._myVisualResources != null && Globals.getVisualResources(this.engine) == this._myVisualResources) {
             Globals.removeVisualResources(this.engine);
         }
     }

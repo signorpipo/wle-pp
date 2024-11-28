@@ -8,7 +8,7 @@ export class InitEasyTuneVariablesComponent extends Component {
         _myInit: Property.bool(true)
     };
 
-    init() {
+    start() {
         this._myEasyTuneVariables = null;
 
         if (this._myInit) {

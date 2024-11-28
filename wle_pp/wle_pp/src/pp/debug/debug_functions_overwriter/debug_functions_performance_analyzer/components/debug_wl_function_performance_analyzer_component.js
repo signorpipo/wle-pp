@@ -24,6 +24,8 @@ export class DebugWLFunctionsPerformanceAnalyzerComponent extends Component {
     };
 
     init() {
+        if (!this.markedActive) return;
+
         this.object.pp_addComponent(DebugFunctionsPerformanceAnalyzerComponent, {
             _myObjectsByPath: "WL",
             _myDelayStart: this._myDelayStart,

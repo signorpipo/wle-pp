@@ -5,7 +5,7 @@ import { CharacterCollisionSystem } from "../character_collision_system.js";
 export class CharacterCollisionSystemComponent extends Component {
     static TypeName = "pp-character-collision-system";
 
-    init() {
+    start() {
         this._myCharacterCollisionSystem = new CharacterCollisionSystem(this.engine);
     }
 
@@ -22,7 +22,7 @@ export class CharacterCollisionSystemComponent extends Component {
     }
 
     onDeactivate() {
-        if (Globals.getCharacterCollisionSystem(this.engine) == this._myCharacterCollisionSystem) {
+        if (this._myCharacterCollisionSystem != null && Globals.getCharacterCollisionSystem(this.engine) == this._myCharacterCollisionSystem) {
             Globals.removeCharacterCollisionSystem(this.engine);
         }
     }

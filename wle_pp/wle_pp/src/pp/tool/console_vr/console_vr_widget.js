@@ -17,6 +17,7 @@ export class ConsoleVRWidgetParams extends WidgetParams {
         this.myOverrideBrowserConsoleFunctions = false;
         this.myShowOnStart = false;
         this.myShowVisibilityButton = false;
+        this.myFilterByError = false;
         this.myPulseOnNewMessage = ConsoleVRWidgetPulseOnNewMessage.NEVER;
 
         this.myResetToOverwrittenConsoleFunctionsOnDeactivate = false;
@@ -138,6 +139,10 @@ export class ConsoleVRWidget {
         this._setNotifyIconActive(false);
 
         this._addListeners();
+
+        if (this._myParams.myFilterByError) {
+            this._filterAllButOne(ConsoleVRWidgetMessageType.ERROR, true);
+        }
 
         this._overrideConsolesFunctions();
 
@@ -773,8 +778,8 @@ export class ConsoleVRWidget {
         }
     }
 
-    _filterAllButOne(messageType) {
-        if (this._myWidgetFrame.isVisible()) {
+    _filterAllButOne(messageType, forceFilter = false) {
+        if (this._myWidgetFrame.isVisible() || forceFilter) {
             for (let key in ConsoleVRWidgetMessageType) {
                 let backgroundMaterial = this._myUI.myFilterButtonsBackgroundComponents[ConsoleVRWidgetMessageType[key]].material;
                 let filterTextMaterial = this._myUI.myFilterButtonsTextComponents[ConsoleVRWidgetMessageType[key]].material;

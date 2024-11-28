@@ -20,7 +20,7 @@ export class GetSceneObjectsComponent extends Component {
         _myHead: Property.object()
     };
 
-    init() {
+    start() {
         this._mySceneObjects = new SceneObjects();
 
         this._mySceneObjects.myRoot = this._myRoot;
@@ -74,7 +74,7 @@ export class GetSceneObjectsComponent extends Component {
     }
 
     onDeactivate() {
-        if (Globals.getSceneObjects(this.engine) == this._mySceneObjects) {
+        if (this._mySceneObjects != null && Globals.getSceneObjects(this.engine) == this._mySceneObjects) {
             Globals.removeSceneObjects(this.engine);
         }
     }

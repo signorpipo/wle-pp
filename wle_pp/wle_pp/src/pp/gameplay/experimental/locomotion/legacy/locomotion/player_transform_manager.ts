@@ -387,12 +387,12 @@ export class PlayerTransformManager {
             transformUp: vec3_create(),
             fixedVerticalMovement: vec3_create()
         };
-    public move(movement: Readonly<Vector3>, forceMove: boolean = false, useHighestHeight: boolean = false, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
+    public move(movement: Readonly<Vector3>, forceMove: boolean = false, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
         if (this._myPlayerLocomotionTeleport != null) {
             this._myPlayerLocomotionTeleport.cancelTeleport();
         }
 
-        this.checkMovement(movement, undefined, undefined, useHighestHeight, this._myCollisionRuntimeParams);
+        this.checkMovement(movement, undefined, useHighestHeight, collisionCheckParams, this._myCollisionRuntimeParams);
 
         if (outCollisionRuntimeParams != null) {
             outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
@@ -445,16 +445,19 @@ export class PlayerTransformManager {
         {
             currentTransformQuat: quat2_create()
         };
-    public checkMovement(movement: Readonly<Vector3>, currentTransformQuat?: Readonly<Quaternion2>, collisionCheckParams?: Readonly<CollisionCheckParams>, useHighestHeight: boolean = false, outCollisionRuntimeParams?: CollisionRuntimeParams): CollisionRuntimeParams {
-        this._updateCollisionHeight(useHighestHeight);
-
+    public checkMovement(movement: Readonly<Vector3>, currentTransformQuat?: Readonly<Quaternion2>, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams?: CollisionRuntimeParams): CollisionRuntimeParams {
         if (currentTransformQuat == null) {
             currentTransformQuat = PlayerTransformManager._checkMovementSV.currentTransformQuat;
             this.getTransformQuat(currentTransformQuat);
         }
 
+        let adjustedCollisionCheckParams = collisionCheckParams;
         if (collisionCheckParams == null) {
-            collisionCheckParams = this._myParams.myMovementCollisionCheckParams;
+            adjustedCollisionCheckParams = this._myParams.myMovementCollisionCheckParams;
+            this._updateCollisionHeight(useHighestHeight);
+        } else if (useHighestHeight) {
+            adjustedCollisionCheckParams = collisionCheckParams;
+            this._updateCollisionHeight(useHighestHeight, adjustedCollisionCheckParams);
         }
 
         if (outCollisionRuntimeParams == null) {
@@ -462,9 +465,11 @@ export class PlayerTransformManager {
             outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
         }
 
-        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine as any).move(movement, currentTransformQuat, collisionCheckParams, outCollisionRuntimeParams);
+        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine as any).move(movement, currentTransformQuat, adjustedCollisionCheckParams, outCollisionRuntimeParams);
 
-        this._updateCollisionHeight();
+        if (collisionCheckParams == null) {
+            this._updateCollisionHeight();
+        }
 
         return outCollisionRuntimeParams;
     }
@@ -473,22 +478,22 @@ export class PlayerTransformManager {
         {
             teleportTransformQuat: quat2_create()
         };
-    public teleportPosition(teleportPosition: Readonly<Vector3>, forceTeleport: boolean = false, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
+    public teleportPosition(teleportPosition: Readonly<Vector3>, forceTeleport: boolean = false, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
         const teleportTransformQuat = PlayerTransformManager._teleportPositionSV.teleportTransformQuat;
         this.getTransformQuat(teleportTransformQuat);
         teleportTransformQuat.quat2_setPosition(teleportPosition);
-        this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, outCollisionRuntimeParams);
+        this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
     }
 
     private static readonly _teleportPositionRotationQuatSV =
         {
             teleportTransformQuat: quat2_create()
         };
-    public teleportPositionRotationQuat(teleportPosition: Readonly<Vector3>, rotationQuat: Quaternion, forceTeleport: boolean = false, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
+    public teleportPositionRotationQuat(teleportPosition: Readonly<Vector3>, rotationQuat: Quaternion, forceTeleport: boolean = false, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
         const teleportTransformQuat = PlayerTransformManager._teleportPositionRotationQuatSV.teleportTransformQuat;
         this.getTransformQuat(teleportTransformQuat);
         teleportTransformQuat.quat2_setPositionRotationQuat(teleportPosition, rotationQuat);
-        this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, outCollisionRuntimeParams);
+        this.teleportTransformQuat(teleportTransformQuat, forceTeleport, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
     }
 
     private static readonly _teleportTransformQuatSV =
@@ -501,13 +506,13 @@ export class PlayerTransformManager {
             transformUp: vec3_create(),
             flatTeleportForward: vec3_create()
         };
-    public teleportTransformQuat(teleportTransformQuat: Readonly<Quaternion2>, forceTeleport: boolean = false, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
+    public teleportTransformQuat(teleportTransformQuat: Readonly<Quaternion2>, forceTeleport: boolean = false, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
         if (this._myPlayerLocomotionTeleport != null) {
             this._myPlayerLocomotionTeleport.cancelTeleport();
         }
 
         if (!forceTeleport || !forceTeleportSkipCollisionCheck) {
-            this.checkTeleportToTransformQuat(teleportTransformQuat, undefined, undefined, useHighestHeight, this._myCollisionRuntimeParams);
+            this.checkTeleportToTransformQuat(teleportTransformQuat, undefined, useHighestHeight, collisionCheckParams, this._myCollisionRuntimeParams);
         }
 
         if (outCollisionRuntimeParams != null) {
@@ -579,9 +584,7 @@ export class PlayerTransformManager {
             teleportRotation: quat_create(),
             rotatedTransformQuat: quat2_create()
         };
-    public checkTeleportToTransformQuat(teleportTransformQuat: Readonly<Quaternion2>, currentTransformQuat?: Readonly<Quaternion2>, collisionCheckParams?: Readonly<CollisionCheckParams>, useHighestHeight: boolean = false, outCollisionRuntimeParams?: CollisionRuntimeParams): CollisionRuntimeParams {
-        this._updateCollisionHeight(useHighestHeight);
-
+    public checkTeleportToTransformQuat(teleportTransformQuat: Readonly<Quaternion2>, currentTransformQuat?: Readonly<Quaternion2>, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams?: CollisionRuntimeParams): CollisionRuntimeParams {
         if (currentTransformQuat == null) {
             currentTransformQuat = PlayerTransformManager._checkTeleportToTransformQuatSV.currentTransformQuat;
             this.getTransformQuat(currentTransformQuat);
@@ -596,8 +599,13 @@ export class PlayerTransformManager {
         teleportTransformQuat.quat2_getRotationQuat(teleportRotation);
         rotatedTransformQuat.quat2_setPositionRotationQuat(currentPosition, teleportRotation);
 
+        let adjustedCollisionCheckParams = collisionCheckParams;
         if (collisionCheckParams == null) {
-            collisionCheckParams = this._myParams.myTeleportCollisionCheckParams!;
+            adjustedCollisionCheckParams = this._myParams.myTeleportCollisionCheckParams!;
+            this._updateCollisionHeight(useHighestHeight);
+        } else if (useHighestHeight) {
+            adjustedCollisionCheckParams = collisionCheckParams;
+            this._updateCollisionHeight(useHighestHeight, adjustedCollisionCheckParams);
         }
 
         if (outCollisionRuntimeParams == null) {
@@ -605,14 +613,16 @@ export class PlayerTransformManager {
             outCollisionRuntimeParams.copy(this._myCollisionRuntimeParams);
         }
 
-        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine as any).teleport(teleportPosition, rotatedTransformQuat, collisionCheckParams, outCollisionRuntimeParams);
+        CollisionCheckBridge.getCollisionCheck(this._myParams.myEngine as any).teleport(teleportPosition, rotatedTransformQuat, adjustedCollisionCheckParams, outCollisionRuntimeParams);
 
-        this._updateCollisionHeight();
+        if (collisionCheckParams == null) {
+            this._updateCollisionHeight();
+        }
 
         return outCollisionRuntimeParams;
     }
 
-    public checkTransformQuat(transformQuat: Readonly<Quaternion2>, collisionCheckParams?: Readonly<CollisionCheckParams>, outCollisionRuntimeParams?: CollisionRuntimeParams): CollisionRuntimeParams {
+    public checkTransformQuat(transformQuat: Readonly<Quaternion2>, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams?: CollisionRuntimeParams): CollisionRuntimeParams {
         if (collisionCheckParams == null) {
             collisionCheckParams = this._myParams.myMovementCollisionCheckParams;
         }
@@ -628,10 +638,10 @@ export class PlayerTransformManager {
     }
 
     /** Quick way to force teleport to a position and reset the real to this */
-    public forceTeleportAndReset(teleportPosition: Readonly<Vector3>, teleportRotationQuat: Readonly<Quaternion>, forceTeleportSkipCollisionCheck: boolean = false): void {
-        this.teleportPositionRotationQuat(teleportPosition, teleportRotationQuat, true, forceTeleportSkipCollisionCheck);
+    public forceTeleportAndReset(teleportPosition: Readonly<Vector3>, teleportRotationQuat: Readonly<Quaternion>, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
+        this.teleportPositionRotationQuat(teleportPosition, teleportRotationQuat, true, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
 
-        this.resetReal(true, true, undefined, undefined, undefined, true);
+        this.resetReal(true, true, undefined, true, undefined, true);
     }
 
     public rotateQuat(rotationQuat: Readonly<Quaternion>): void {
@@ -1022,16 +1032,22 @@ export class PlayerTransformManager {
         this._myPlayerLocomotionTeleport = playerLocomotionTeleport;
     }
 
-    private _updateCollisionHeight(useHighestHeight: boolean = false): void {
+    private _updateCollisionHeight(useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams): void {
         const validHeight = this.getHeight();
         const realHeight = this.getHeightReal();
 
         const highestHeight = Math.max(validHeight, realHeight);
 
-        this._myParams.myMovementCollisionCheckParams.myHeight = (useHighestHeight ? highestHeight : validHeight) + this._myParams.myExtraHeight;
-        this._myParams.myTeleportCollisionCheckParams!.myHeight = this._myParams.myMovementCollisionCheckParams.myHeight;
+        const colliderHeight = (useHighestHeight ? highestHeight : validHeight) + this._myParams.myExtraHeight;
 
-        this._myRealMovementCollisionCheckParams.myHeight = Math.max(realHeight, this._myParams.myMinHeight ?? -Number.MAX_VALUE) + this._myParams.myExtraHeight;
+        if (collisionCheckParams == null) {
+            this._myParams.myMovementCollisionCheckParams.myHeight = colliderHeight;
+            this._myParams.myTeleportCollisionCheckParams!.myHeight = colliderHeight;
+
+            this._myRealMovementCollisionCheckParams.myHeight = Math.max(realHeight, this._myParams.myMinHeight ?? -Number.MAX_VALUE) + this._myParams.myExtraHeight;
+        } else {
+            collisionCheckParams.myHeight = colliderHeight;
+        }
     }
 
     private _setupHeadCollisionCheckParams(): void {

@@ -8,7 +8,7 @@ export class InitConsoleVRComponent extends Component {
         _myInit: Property.bool(true)
     };
 
-    init() {
+    start() {
         this._myConsoleVR = null;
 
         if (this._myInit) {

@@ -203,6 +203,20 @@ export class PlayerLocomotionComponent extends Component {
     @property.bool(false)
     private readonly _myPreventRealFromColliding!: boolean;
 
+    /**
+     * This make it so if you move your head inside the ceiling and try to move with the stick, the player will not move as it was stuck with you.  
+     * It can be useful to avoid being able to move while the view is occluded and find yourself in random places afterwards.
+     * 
+     * If this is set to `false` instead, the player can still move and, for example, exit the zone with the lower ceiling.
+     * When this is set to false, you very likely want also {@link _myResetHeadToRealMinDistance} set to `0`, otherwise the view occlusion  
+     * feature can fade to total black when moving in those situation (even if the move is now allowed and works).
+     * Setting {@link _myResetHeadToRealMinDistance} to `0` is more expensive performance wise, so you might have to compromise.
+     */
+    @property.bool(true)
+    private readonly _myUseHighestColliderHeightWhenManuallyMovingHorizontally!: boolean;
+
+
+
     @property.bool(true)
     private readonly _myViewOcclusionInsideWallsEnabled!: boolean;
 
@@ -324,7 +338,7 @@ export class PlayerLocomotionComponent extends Component {
      * 
      * If you need to increase {@link _myViewOcclusionHeadRadius}, also increasing this can help preventing view occlusion happening when shouldn't
      */
-    @property.float(0.025)
+    @property.float(0)
     private readonly _myColliderExtraHeight!: number;
 
 
@@ -449,6 +463,9 @@ export class PlayerLocomotionComponent extends Component {
         params.mySyncWithRealHeightOnlyIfValid = this._mySyncWithRealHeightOnlyIfValid;
         params.mySnapRealPositionToGround = this._mySnapRealPositionToGround;
         params.myPreventRealFromColliding = this._myPreventRealFromColliding;
+        params.myUseHighestColliderHeightWhenManuallyMovingHorizontally = this._myUseHighestColliderHeightWhenManuallyMovingHorizontally;
+
+
         params.myViewOcclusionInsideWallsEnabled = this._myViewOcclusionInsideWallsEnabled;
         params.myViewOcclusionHeadRadius = this._myViewOcclusionHeadRadius;
         params.myViewOcclusionHeadHeight = this._myViewOcclusionHeadHeight;

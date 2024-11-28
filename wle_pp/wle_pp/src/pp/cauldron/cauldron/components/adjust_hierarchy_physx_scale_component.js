@@ -7,7 +7,7 @@ export class AdjustHierarchyPhysXScaleComponent extends Component {
     };
 
     init() {
-        if (this.active && this._myWhen == 0) {
+        if (this.markedActive && this._myWhen == 0) {
             this._adjustScale();
         }
     }

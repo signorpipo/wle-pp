@@ -19,7 +19,7 @@ export class GetDefaultResourcesComponent extends Component {
         _myText: Property.material()
     };
 
-    init() {
+    start() {
         this._myDefaultResources = new DefaultResources();
         this._myDefaultResources.myMeshes.myPlane = MeshUtils.clone(this._myPlane);
         this._myDefaultResources.myMeshes.myCube = MeshUtils.clone(this._myCube);
@@ -64,7 +64,7 @@ export class GetDefaultResourcesComponent extends Component {
     }
 
     onDeactivate() {
-        if (Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
+        if (this._myDefaultResources != null && Globals.getDefaultResources(this.engine) == this._myDefaultResources) {
             Globals.removeDefaultResources(this.engine);
         }
     }

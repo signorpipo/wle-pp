@@ -2,6 +2,9 @@ import { Howler } from "howler";
 import { Globals } from "../pp/globals.js";
 import { AudioPlayer } from "./audio_player.js";
 
+/**
+ * "Global" methods like {@link AudioManager.stop} do not support multi scene properly, so be careful
+ */
 export class AudioManager {
 
     constructor(preloadAudio = true, engine = Globals.getMainEngine()) {
@@ -37,18 +40,35 @@ export class AudioManager {
         this._myAudioSetups.delete(id);
     }
 
+    /**
+     * Actually changes the volume of Howler, which means it changes it even for a new scene if you switch it  
+     * and use a different audio manager
+     */
     setVolume(volume) {
         Howler.volume(volume);
     }
 
+    /**
+     * Actually mute Howler, which means it changes it even for a new scene if you switch it  
+     * and use a different audio manager
+     */
     setMute(mute) {
         Howler.mute(mute);
     }
 
+    /**
+     * Actually stops Howler, which means it stops every audio, even for a new scene if you switch it  
+     * and use a different audio manager
+     */
     stop() {
         Howler.stop();
     }
 
+    /**
+     * Actually unload all audio sources in Howler, which means it unloads them even for other scenes
+     * 
+     * Use this with caution
+     */
     unloadAllAudioSources() {
         Howler.unload();
     }

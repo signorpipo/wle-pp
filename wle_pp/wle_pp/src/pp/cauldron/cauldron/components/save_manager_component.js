@@ -9,7 +9,7 @@ export class SaveManagerComponent extends Component {
         _myAutoLoadSaves: Property.bool(true)
     };
 
-    init() {
+    start() {
         this._mySaveManager = null;
 
         if (this._mySaveID.length > 0) {

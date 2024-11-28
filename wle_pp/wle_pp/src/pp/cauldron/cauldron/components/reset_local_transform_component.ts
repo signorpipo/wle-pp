@@ -15,7 +15,7 @@ export class ResetLocalTransformComponent extends Component {
     private _myFirstXREnd: boolean = true;
 
     public override init(): void {
-        if (this.active && this._myResetLocalTransformWhen == 0) {
+        if (this.markedActive && this._myResetLocalTransformWhen == 0) {
             this._resetLocalTransform();
         }
     }

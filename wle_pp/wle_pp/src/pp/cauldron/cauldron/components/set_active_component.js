@@ -10,7 +10,7 @@ export class SetActiveComponent extends Component {
     };
 
     init() {
-        if (this.active && this._mySetActiveWhen == 0) {
+        if (this.markedActive && this._mySetActiveWhen == 0) {
             this._setActive();
         }
     }

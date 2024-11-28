@@ -13,6 +13,8 @@ export class SetEngineLogLevelComponent extends Component {
     private _myErrorEnabled!: boolean;
 
     public override init(): void {
+        if (!this.markedActive) return;
+
         const logLevelsToDisable = [];
 
         if (!this._myInfoEnabled) {

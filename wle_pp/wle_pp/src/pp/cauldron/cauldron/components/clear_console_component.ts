@@ -13,7 +13,7 @@ export class ClearConsoleComponent extends Component {
     private _myFirstTimeDone: boolean = false;
 
     public override init(): void {
-        if (this._myWhen == 0) {
+        if (this.markedActive && this._myWhen == 0) {
             this._clearConsole();
         }
     }

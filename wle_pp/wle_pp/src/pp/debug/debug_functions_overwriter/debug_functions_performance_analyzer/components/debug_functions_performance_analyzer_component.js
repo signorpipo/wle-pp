@@ -38,6 +38,8 @@ export class DebugFunctionsPerformanceAnalyzerComponent extends Component {
     };
 
     init() {
+        if (!this.markedActive) return;
+
         this._myActive = false;
 
         if (Globals.isDebugEnabled(this.engine)) {

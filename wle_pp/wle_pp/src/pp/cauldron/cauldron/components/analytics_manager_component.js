@@ -9,7 +9,7 @@ export class AnalyticsManagerComponent extends Component {
         _myDisableAnalyticsOnLocalhost: Property.bool(true)
     };
 
-    init() {
+    start() {
         this._myAnalyticsManager = new AnalyticsManager();
     }
 
@@ -30,8 +30,12 @@ export class AnalyticsManagerComponent extends Component {
     }
 
     onDeactivate() {
-        if (Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
-            Globals.removeAnalyticsManager(this.engine);
+        if (this._myAnalyticsManager != null) {
+            this._myAnalyticsManager.clearAllEventCooldowns();
+
+            if (Globals.getAnalyticsManager(this.engine) == this._myAnalyticsManager) {
+                Globals.removeAnalyticsManager(this.engine);
+            }
         }
     }
 }

@@ -46,7 +46,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleport = function () {
     return function _checkTeleport(teleportPosition, teleportRotationQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
         teleportTransformQuat.quat2_setPositionRotationQuat(teleportPosition, teleportRotationQuat);
 
-        this._myTeleportParams.myPlayerTransformManager.checkTeleportToTransformQuat(teleportTransformQuat, undefined, undefined, true, collisionRuntimeParams);
+        this._myTeleportParams.myPlayerTransformManager.checkTeleportToTransformQuat(teleportTransformQuat, undefined, true, undefined, collisionRuntimeParams);
 
         if (checkTeleportCollisionRuntimeParams != null) {
             checkTeleportCollisionRuntimeParams.copy(collisionRuntimeParams);
@@ -101,7 +101,7 @@ PlayerLocomotionTeleportState.prototype._checkTeleportAsMovement = function () {
                     // This is used for the perform teleport as movement, so it needs to be able to do as many steps needed based on teleport distance
                     movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled = true;
 
-                    this._myTeleportParams.myPlayerTransformManager.checkMovement(teleportMovement, movementFeetTransformQuat, undefined, true, checkTeleportMovementCollisionRuntimeParams);
+                    this._myTeleportParams.myPlayerTransformManager.checkMovement(teleportMovement, movementFeetTransformQuat, true, undefined, checkTeleportMovementCollisionRuntimeParams);
 
                     movementCollisionCheckParams._myInternalSplitMovementMaxStepsDisabled = internalSplitMovementMaxStepsDisabledBackup;
                 }
