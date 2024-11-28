@@ -25113,7 +25113,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.7.5";
+var PP_VERSION = "0.7.6";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
