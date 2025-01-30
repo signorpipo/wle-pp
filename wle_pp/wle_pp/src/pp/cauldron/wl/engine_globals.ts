@@ -1,4 +1,4 @@
-import { Physics, Scene, WASM, WonderlandEngine, XR } from "@wonderlandengine/api";
+import { Physics, Scene, WASM, WonderlandEngine, XRSessionState } from "@wonderlandengine/api";
 import { Globals } from "../../pp/globals.js";
 
 let _myMainEngine: WonderlandEngine | null = null;
@@ -93,9 +93,9 @@ export function getWASM(engine: Readonly<WonderlandEngine> | null = Globals.getM
     return wasm;
 }
 
-export function getXR(): XR | null;
-export function getXR(engine: Readonly<WonderlandEngine>): XR;
-export function getXR(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): XR | null {
+export function getXR(): XRSessionState | null;
+export function getXR(engine: Readonly<WonderlandEngine>): XRSessionState;
+export function getXR(engine: Readonly<WonderlandEngine> | null = Globals.getMainEngine()): XRSessionState | null {
     let xr = null;
 
     if (engine != null) {
