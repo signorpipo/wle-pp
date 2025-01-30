@@ -2,12 +2,6 @@ dist/
 
 wle_pp/wle_pp/bundle/
 
-cache/
-
-deploy/
-
 node_modules/
-
-.editor/
 
 imgui.ini
