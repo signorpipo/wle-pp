@@ -5,8 +5,8 @@ var __export = (target, all) => {
 };
 
 // dist/pp/index.js
-var pp_exports = {};
-__export(pp_exports, {
+var index_exports = {};
+__export(index_exports, {
   AddPPToWindowComponent: () => AddPPToWindowComponent,
   AddWLToWindowComponent: () => AddWLToWindowComponent,
   AdjustHierarchyPhysXScaleComponent: () => AdjustHierarchyPhysXScaleComponent,
@@ -25113,7 +25113,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.7.6";
+var PP_VERSION = "0.8.0";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -25136,7 +25136,7 @@ var AddPPToWindowComponent = class extends Component18 {
     this._myPP = null;
     if (this._myAdd) {
       this._myPP = {};
-      this._addProperties(pp_exports);
+      this._addProperties(index_exports);
       window.PP = this._myPP;
     }
   }
