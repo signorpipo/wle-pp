@@ -1,5 +1,5 @@
 import { Component, MeshComponent, Object3D, property, TextComponent, WonderlandEngine } from "@wonderlandengine/api";
-import { Cursor, CursorTarget } from "@wonderlandengine/components";
+import { Cursor, CursorTarget, FingerCursor } from "@wonderlandengine/components";
 import { AudioPlayer } from "../../../../audio/audio_player.js";
 import { AudioSetup } from "../../../../audio/audio_setup.js";
 import { Timer } from "../../../../cauldron/cauldron/timer.js";
@@ -395,7 +395,9 @@ export class CursorButtonComponent extends Component {
         }
     }
 
-    private _onUnhover(targetObject: Object3D, cursorComponent: Cursor): void {
+    private _onUnhover(targetObject: Object3D, cursorComponent: Cursor | FingerCursor): void {
+        if (cursorComponent instanceof FingerCursor) return;
+
         this._myHoverCursors.pp_removeEqual(cursorComponent);
         const cursorWasDown = this._myDownCursors.pp_removeEqual(cursorComponent);
 
@@ -420,7 +422,9 @@ export class CursorButtonComponent extends Component {
         }
     }
 
-    private _onHover(targetObject: Object3D, cursorComponent: Cursor): void {
+    private _onHover(targetObject: Object3D, cursorComponent: Cursor | FingerCursor): void {
+        if (cursorComponent instanceof FingerCursor) return;
+
         const isSecondaryCursor = this._myHoverCursors.length > 0;
 
         this._myHoverCursors.pp_pushUnique(cursorComponent);
@@ -428,7 +432,9 @@ export class CursorButtonComponent extends Component {
         this._addToTransitionQueue("hover", cursorComponent, isSecondaryCursor, false, this._onHoverStart.bind(this, null, null, cursorComponent, true, false));
     }
 
-    private _onDown(targetObject: Object3D, cursorComponent: Cursor): void {
+    private _onDown(targetObject: Object3D, cursorComponent: Cursor | FingerCursor): void {
+        if (cursorComponent instanceof FingerCursor) return;
+
         const isSecondaryCursor = this._myMainDownCursor != null && this._myMainDownCursor != cursorComponent;
 
         if (this._myMainDownCursor == null) {

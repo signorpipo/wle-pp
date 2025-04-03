@@ -199,6 +199,21 @@ export class Keyboard {
         return pressed;
     }
 
+    isAnyKeyPressed() {
+        let pressed = false;
+
+        for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
+            let id = this._myKeyInfosIDs[i];
+            let keyInfo = this._myKeyInfos[id];
+            if (keyInfo.myPressed) {
+                pressed = true;
+                break;
+            }
+        }
+
+        return pressed;
+    }
+
     isKeyPressStart(keyID) {
         let pressStart = false;
 

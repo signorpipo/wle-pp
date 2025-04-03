@@ -20,7 +20,7 @@ function _initArrayLikeExtensionProtoypes(): void {
         },
 
         pp_clone<ArrayType extends ArrayLike<T>, T>(this: Readonly<ArrayType>, cloneCallback?: (elementToClone: T) => T): ArrayType {
-            return ArrayUtils.clone(this, cloneCallback);
+            return ArrayUtils.clone(this, cloneCallback) as ArrayType;
         },
 
         pp_equals<T>(this: Readonly<ArrayLike<T>>, array: Readonly<ArrayLike<T>>, elementsEqualCallback?: (thisElement: T, arrayElement: T) => boolean): boolean {

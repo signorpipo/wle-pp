@@ -138,6 +138,8 @@ export class ObjectPool<PoolObjectType, PoolObjectCloneParamsType = unknown> imp
             this._setActive(busyObject, false);
             this._myAvailableObjects.push(busyObject);
         }
+
+        this._myBusyObjects.pp_clear();
     }
 
     public increase(amount: number): void {

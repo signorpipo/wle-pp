@@ -19,11 +19,13 @@ export function copy<ArrayType extends ArrayLike<T>, T>(from: Readonly<ArrayLike
     return to;
 }
 
-/** The overload where `ArrayType extends ArrayLike<number>` does also get `array` as `Readonly<ArrayType>`, but is not marked as such due to 
-    Typescript having issues with inferring the proper type of `ArrayType` when `Readonly` */
-export function clone<ArrayType extends ArrayLike<T>, T>(array: Readonly<ArrayType>, cloneCallback?: (elementToClone: T) => T): ArrayType;
-export function clone<T>(array: Readonly<T[]>, cloneCallback?: (elementToClone: T) => T): T[];
+/** If `array` is `Readonly`, due to typescript issues with `Readonly`, the return type might also be mistakenly marked as `Readonly`  
+    To avoid this, it is advised to simply specify the type of the `array` variable directly: `clone<MyArrayType>(...)`*/
 export function clone<ArrayType extends ArrayLike<number>>(array: ArrayType, cloneCallback?: (elementToClone: number) => number): ArrayType;
+export function clone<ArrayType extends ArrayLike<T>, T>(array: ArrayType, cloneCallback?: (elementToClone: T) => T): ArrayType;
+export function clone<T>(array: Readonly<T[]>, cloneCallback?: (elementToClone: T) => T): T[];
+export function clone<ArrayType extends ArrayLike<number>>(array: Readonly<ArrayType>, cloneCallback?: (elementToClone: number) => number): ArrayType;
+export function clone<ArrayType extends ArrayLike<T>, T>(array: Readonly<ArrayType>, cloneCallback?: (elementToClone: T) => T): ArrayType;
 export function clone<ArrayType extends ArrayLike<T>, T>(array: Readonly<ArrayType>, cloneCallback?: (elementToClone: T) => T): ArrayType {
     const clonedArray = array.slice(0) as ArrayType;
 

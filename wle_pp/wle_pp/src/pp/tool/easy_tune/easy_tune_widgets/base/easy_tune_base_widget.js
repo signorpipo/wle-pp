@@ -56,17 +56,19 @@ export class EasyTuneBaseWidget {
     }
 
     setEasyTuneVariable(variable, appendToVariableName) {
-        this._myVariable = variable;
+        if (this._myVariable != variable || this._myAppendToVariableName != appendToVariableName) {
+            this._myVariable = variable;
 
-        if (appendToVariableName != null) {
-            this._myAppendToVariableName = appendToVariableName;
-        } else {
-            this._myAppendToVariableName = "";
+            if (appendToVariableName != null) {
+                this._myAppendToVariableName = appendToVariableName;
+            } else {
+                this._myAppendToVariableName = "";
+            }
+
+            this._setEasyTuneVariableHook();
+
+            this._refreshUI();
         }
-
-        this._setEasyTuneVariableHook();
-
-        this._refreshUI();
     }
 
     isScrollVariableActive() {

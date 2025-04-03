@@ -9,7 +9,9 @@ import { Globals } from "../../pp/globals.js";
 export let MouseButtonID = {
     LEFT: 0,
     MIDDLE: 1,
-    RIGHT: 2
+    RIGHT: 2,
+    BACK: 3,
+    FORWARD: 4
 };
 
 // #TODO Refactor Mouse/Keyboard/Gamepad and create a sort of parent ButtonHandler that have the base ButtonInfo and all of them inherit
@@ -203,7 +205,7 @@ export class Mouse {
     isButtonPressed(buttonID) {
         let pressed = false;
 
-        if (this._myButtonInfosIDs[buttonID] != null) {
+        if (this._myButtonInfos[buttonID] != null) {
             pressed = this._myButtonInfos[buttonID].myPressed;
         }
 
@@ -228,7 +230,7 @@ export class Mouse {
     isButtonPressStart(buttonID) {
         let pressStart = false;
 
-        if (this._myButtonInfosIDs[buttonID] != null) {
+        if (this._myButtonInfos[buttonID] != null) {
             pressStart = this._myButtonInfos[buttonID].myPressStart;
         }
 
@@ -238,7 +240,7 @@ export class Mouse {
     isButtonPressEnd(buttonID = null) {
         let pressEnd = false;
 
-        if (this._myButtonInfosIDs[buttonID] != null) {
+        if (this._myButtonInfos[buttonID] != null) {
             pressEnd = this._myButtonInfos[buttonID].myPressEnd;
         }
 
@@ -455,7 +457,7 @@ export class Mouse {
 
     _onPointerDown(event) {
         let buttonInfo = this._myButtonInfos[event.button];
-        if (!buttonInfo.myPressed) {
+        if (buttonInfo != null && !buttonInfo.myPressed) {
             buttonInfo.myPressed = true;
             buttonInfo.myPressStartToProcess = true;
         }
@@ -463,7 +465,7 @@ export class Mouse {
 
     _onPointerUp(event) {
         let buttonInfo = this._myButtonInfos[event.button];
-        if (buttonInfo.myPressed) {
+        if (buttonInfo != null && buttonInfo.myPressed) {
             buttonInfo.myPressed = false;
             buttonInfo.myPressEndToProcess = true;
         }

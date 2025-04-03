@@ -98,6 +98,11 @@ export class AnimatedNumber {
 
             if (this._myAnimationTimer.isRunning() && this._myParams.myKeepAnimationEasingProgressOnTargetUpdate) {
                 this._myEasingStartValueToUse = this._myEasingNextStartValueToUse;
+
+                const maxValue = 1 - MathUtils.EPSILON;
+                if (this._myEasingStartValueToUse >= maxValue || this._myParams.myAnimationEasingFunction(this._myEasingStartValueToUse) >= maxValue) {
+                    this._myEasingStartValueToUse = 0;
+                }
             } else {
                 this._myEasingStartValueToUse = 0;
             }
