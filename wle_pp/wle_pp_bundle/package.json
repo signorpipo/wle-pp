@@ -1,6 +1,6 @@
 {
     "name": "wle-pp-bundle",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "author": "Pipo",
     "description": "A library for the Wonderland Engine - Bundled Version",
     "homepage": "https://github.com/signorpipo/wle-pp",
@@ -26,8 +26,8 @@
     "main": "./bundle/pp/bundle.js",
     "wonderlandengine": {},
     "peerDependencies": {
-        "@wonderlandengine/api": "~1.3.0",
-        "@wonderlandengine/components": "~1.2.0",
+        "@wonderlandengine/api": "~1.3.1",
+        "@wonderlandengine/components": "~1.2.1",
         "gl-matrix": "^3.4.3",
         "howler": "^2.2.4"
     }

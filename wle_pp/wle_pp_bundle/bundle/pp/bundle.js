@@ -10730,6 +10730,7 @@ var ObjectPool = class {
       this._setActive(busyObject, false);
       this._myAvailableObjects.push(busyObject);
     }
+    this._myBusyObjects.pp_clear();
   }
   increase(amount) {
     this._addToPool(amount, false);
@@ -18965,6 +18966,18 @@ var Keyboard = class {
     }
     return pressed;
   }
+  isAnyKeyPressed() {
+    let pressed = false;
+    for (let i = 0; i < this._myKeyInfosIDs.length; i++) {
+      let id = this._myKeyInfosIDs[i];
+      let keyInfo = this._myKeyInfos[id];
+      if (keyInfo.myPressed) {
+        pressed = true;
+        break;
+      }
+    }
+    return pressed;
+  }
   isKeyPressStart(keyID) {
     let pressStart = false;
     if (this._myKeyInfos[keyID] != null) {
@@ -20538,7 +20551,9 @@ import { ViewComponent as ViewComponent2 } from "@wonderlandengine/api";
 var MouseButtonID = {
   LEFT: 0,
   MIDDLE: 1,
-  RIGHT: 2
+  RIGHT: 2,
+  BACK: 3,
+  FORWARD: 4
 };
 var Mouse = class {
   constructor(engine = Globals.getMainEngine()) {
@@ -20687,7 +20702,7 @@ var Mouse = class {
   }
   isButtonPressed(buttonID) {
     let pressed = false;
-    if (this._myButtonInfosIDs[buttonID] != null) {
+    if (this._myButtonInfos[buttonID] != null) {
       pressed = this._myButtonInfos[buttonID].myPressed;
     }
     return pressed;
@@ -20706,14 +20721,14 @@ var Mouse = class {
   }
   isButtonPressStart(buttonID) {
     let pressStart = false;
-    if (this._myButtonInfosIDs[buttonID] != null) {
+    if (this._myButtonInfos[buttonID] != null) {
       pressStart = this._myButtonInfos[buttonID].myPressStart;
     }
     return pressStart;
   }
   isButtonPressEnd(buttonID = null) {
     let pressEnd = false;
-    if (this._myButtonInfosIDs[buttonID] != null) {
+    if (this._myButtonInfos[buttonID] != null) {
       pressEnd = this._myButtonInfos[buttonID].myPressEnd;
     }
     return pressEnd;
@@ -20892,14 +20907,14 @@ var Mouse = class {
   }
   _onPointerDown(event) {
     let buttonInfo = this._myButtonInfos[event.button];
-    if (!buttonInfo.myPressed) {
+    if (buttonInfo != null && !buttonInfo.myPressed) {
       buttonInfo.myPressed = true;
       buttonInfo.myPressStartToProcess = true;
     }
   }
   _onPointerUp(event) {
     let buttonInfo = this._myButtonInfos[event.button];
-    if (buttonInfo.myPressed) {
+    if (buttonInfo != null && buttonInfo.myPressed) {
       buttonInfo.myPressed = false;
       buttonInfo.myPressEndToProcess = true;
     }
@@ -25113,7 +25128,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.8.0";
+var PP_VERSION = "0.8.1";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -29925,6 +29940,10 @@ var AnimatedNumber = class {
       this._myStartValue = this._myCurrentValue;
       if (this._myAnimationTimer.isRunning() && this._myParams.myKeepAnimationEasingProgressOnTargetUpdate) {
         this._myEasingStartValueToUse = this._myEasingNextStartValueToUse;
+        const maxValue = 1 - MathUtils.EPSILON;
+        if (this._myEasingStartValueToUse >= maxValue || this._myParams.myAnimationEasingFunction(this._myEasingStartValueToUse) >= maxValue) {
+          this._myEasingStartValueToUse = 0;
+        }
       } else {
         this._myEasingStartValueToUse = 0;
       }
@@ -29948,7 +29967,7 @@ var AnimatedNumber = class {
 
 // dist/pp/gameplay/cauldron/cauldron/components/cursor_button_component.js
 import { Component as Component38, MeshComponent as MeshComponent10, property as property7, TextComponent as TextComponent8 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget5, FingerCursor as FingerCursor3 } from "@wonderlandengine/components";
 var __decorate7 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -30171,6 +30190,8 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
     }
   }
   _onUnhover(targetObject, cursorComponent) {
+    if (cursorComponent instanceof FingerCursor3)
+      return;
     this._myHoverCursors.pp_removeEqual(cursorComponent);
     const cursorWasDown = this._myDownCursors.pp_removeEqual(cursorComponent);
     const isMainCursorDown = this._myDownCursors.length == 0 && cursorWasDown || this._myMainDownCursor == cursorComponent && !this._myUpCursorIsMainOnlyIfLastDown && !this._myUpWithSecondaryCursorIsMain;
@@ -30190,11 +30211,15 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
     }
   }
   _onHover(targetObject, cursorComponent) {
+    if (cursorComponent instanceof FingerCursor3)
+      return;
     const isSecondaryCursor = this._myHoverCursors.length > 0;
     this._myHoverCursors.pp_pushUnique(cursorComponent);
     this._addToTransitionQueue("hover", cursorComponent, isSecondaryCursor, false, this._onHoverStart.bind(this, null, null, cursorComponent, true, false));
   }
   _onDown(targetObject, cursorComponent) {
+    if (cursorComponent instanceof FingerCursor3)
+      return;
     const isSecondaryCursor = this._myMainDownCursor != null && this._myMainDownCursor != cursorComponent;
     if (this._myMainDownCursor == null) {
       this._myMainDownCursor = cursorComponent;
@@ -43948,14 +43973,16 @@ var EasyTuneBaseWidget = class {
     this._myVisible = visible;
   }
   setEasyTuneVariable(variable, appendToVariableName) {
-    this._myVariable = variable;
-    if (appendToVariableName != null) {
-      this._myAppendToVariableName = appendToVariableName;
-    } else {
-      this._myAppendToVariableName = "";
+    if (this._myVariable != variable || this._myAppendToVariableName != appendToVariableName) {
+      this._myVariable = variable;
+      if (appendToVariableName != null) {
+        this._myAppendToVariableName = appendToVariableName;
+      } else {
+        this._myAppendToVariableName = "";
+      }
+      this._setEasyTuneVariableHook();
+      this._refreshUI();
     }
-    this._setEasyTuneVariableHook();
-    this._refreshUI();
   }
   isScrollVariableActive() {
     return this._myScrollVariableActive;
