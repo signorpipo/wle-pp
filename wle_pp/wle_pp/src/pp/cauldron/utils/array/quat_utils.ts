@@ -1030,7 +1030,18 @@ const _setAxes = function () {
             }
 
             const angleBetween = Vec3Utils.angleRadians(firstAxis, currentAxis);
-            if (angleBetween > MathUtils.EPSILON) {
+            if (angleBetween > (Math.PI - MathUtils.EPSILON)) {
+                if (priority[1] == 0) {
+                    QuatUtils.getLeft(quat, rotationAxis);
+                } else if (priority[1] == 1) {
+                    QuatUtils.getUp(quat, rotationAxis);
+                } else {
+                    QuatUtils.getForward(quat, rotationAxis);
+                }
+
+                QuatUtils.fromAxisRadians(Math.PI, rotationAxis, rotationQuat);
+                QuatUtils.rotateQuat(quat, rotationQuat, quat);
+            } else if (angleBetween > MathUtils.EPSILON) {
                 Vec3Utils.cross(currentAxis, firstAxis, rotationAxis);
                 Vec3Utils.normalize(rotationAxis, rotationAxis);
 

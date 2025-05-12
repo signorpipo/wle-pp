@@ -254,6 +254,8 @@ export class EasyTuneBaseWidgetUI {
         this.myExportButtonCollisionComponent.extents = this._myConfig.myImportExportButtonCollisionExtents;
 
         // Pointer
+        this.myPointerCursorTargetComponent = this.myPointerCursorTarget.pp_addComponent(CursorTarget);
+        this.myPointerCursorTargetComponent.isSurface = true;
 
         this.myPointerCollisionComponent = this.myPointerCursorTarget.pp_addComponent(CollisionComponent);
         this.myPointerCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;

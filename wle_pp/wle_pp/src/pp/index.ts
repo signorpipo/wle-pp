@@ -108,6 +108,7 @@ export * from "./cauldron/visual/components/visual_manager_component.js";
 //    WL
 export * from "./cauldron/wl/register_wl_components.js";
 export * from "./cauldron/wl/components/add_wl_to_window_component.js";
+export * from "./cauldron/wl/components/wl_cursor_target_wrapper_component.js";
 export { ObjectUtils, ObjectCloneParams } from "./cauldron/wl/utils/object_utils.js";
 export { ComponentUtils, ComponentDeepCloneParams, ComponentCustomCloneParams } from "./cauldron/wl/utils/component_utils.js";
 export { WLComponentDefaultCloneCallbacks } from "./cauldron/wl/utils/wl_component_default_clone_callbacks.js";
