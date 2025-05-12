@@ -364,6 +364,7 @@ __export(index_exports, {
   VisualTransform: () => VisualTransform,
   VisualTransformParams: () => VisualTransformParams,
   WLComponentDefaultCloneCallbacks: () => WLComponentDefaultCloneCallbacks,
+  WLCursorTargetWrapperComponent: () => WLCursorTargetWrapperComponent,
   WaveFunction: () => WaveFunction,
   WidgetFrame: () => WidgetFrame,
   WidgetFrameConfig: () => WidgetFrameConfig,
@@ -4308,7 +4309,17 @@ var _setAxes = function() {
         QuatUtils.getForward(quat, currentAxis);
       }
       const angleBetween = Vec3Utils.angleRadians(firstAxis, currentAxis);
-      if (angleBetween > MathUtils.EPSILON) {
+      if (angleBetween > Math.PI - MathUtils.EPSILON) {
+        if (priority[1] == 0) {
+          QuatUtils.getLeft(quat, rotationAxis);
+        } else if (priority[1] == 1) {
+          QuatUtils.getUp(quat, rotationAxis);
+        } else {
+          QuatUtils.getForward(quat, rotationAxis);
+        }
+        QuatUtils.fromAxisRadians(Math.PI, rotationAxis, rotationQuat);
+        QuatUtils.rotateQuat(quat, rotationQuat, quat);
+      } else if (angleBetween > MathUtils.EPSILON) {
         Vec3Utils.cross(currentAxis, firstAxis, rotationAxis);
         Vec3Utils.normalize(rotationAxis, rotationAxis);
         if (Vec3Utils.isZero(rotationAxis)) {
@@ -21671,16 +21682,16 @@ function getObjectPropertyDescriptor(object, propertyName) {
   return propertyDescriptor;
 }
 function getObjectProperty(object, propertyName) {
-  let property18 = void 0;
+  let property19 = void 0;
   let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
   if (propertyDescriptor != null) {
     if (propertyDescriptor.get != null) {
-      property18 = propertyDescriptor.get.bind(object)();
+      property19 = propertyDescriptor.get.bind(object)();
     } else {
-      property18 = propertyDescriptor.value;
+      property19 = propertyDescriptor.value;
     }
   }
-  return property18;
+  return property19;
 }
 function setObjectProperty(valueToSet, object, propertyName) {
   let propertyDescriptor = JSUtils.getObjectPropertyDescriptor(object, propertyName);
@@ -21861,17 +21872,17 @@ function isObjectByName(objectParent, objectName) {
   }
   return isObjectResult;
 }
-function isFunction(property18) {
-  return typeof property18 == "function" && !JSUtils.isClass(property18);
+function isFunction(property19) {
+  return typeof property19 == "function" && !JSUtils.isClass(property19);
 }
 var isClass = function() {
   let checkClassRegex = new RegExp("^class");
-  return function isClass2(property18) {
-    return typeof property18 == "function" && property18.prototype != null && typeof property18.prototype.constructor == "function" && property18.toString != null && typeof property18.toString == "function" && property18.toString()?.match(checkClassRegex) != null;
+  return function isClass2(property19) {
+    return typeof property19 == "function" && property19.prototype != null && typeof property19.prototype.constructor == "function" && property19.toString != null && typeof property19.toString == "function" && property19.toString()?.match(checkClassRegex) != null;
   };
 }();
-function isObject(property18) {
-  return typeof property18 == "object";
+function isObject(property19) {
+  return typeof property19 == "object";
 }
 var JSUtils = {
   getObjectPrototypes,
@@ -25128,7 +25139,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.8.1";
+var PP_VERSION = "0.8.2";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -27744,6 +27755,30 @@ var AnalyticsUtils = {
   isErrorsLogEnabled
 };
 
+// dist/pp/cauldron/wl/components/wl_cursor_target_wrapper_component.js
+import { Component as Component29, property as property6 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget5 } from "@wonderlandengine/components";
+var __decorate6 = function(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+  else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var WLCursorTargetWrapperComponent = class extends Component29 {
+  static TypeName = "pp-wl-cursor-target-wrapper";
+  _myIsSurface;
+  cursorTargetComponent = null;
+  init() {
+    if (this.markedActive) {
+      this.cursorTargetComponent = this.object.pp_addComponent(CursorTarget5);
+      this.cursorTargetComponent.isSurface = this._myIsSurface;
+    }
+  }
+};
+__decorate6([
+  property6.bool(false)
+], WLCursorTargetWrapperComponent.prototype, "_myIsSurface", void 0);
+
 // dist/pp/cauldron/wl/utils/material_utils.js
 import { MeshComponent as MeshComponent8, TextComponent as TextComponent5 } from "@wonderlandengine/api";
 var setAlpha = function() {
@@ -27878,8 +27913,8 @@ var TextUtils = {
 };
 
 // dist/pp/debug/components/debug_transform_component.js
-import { Component as Component29, Property as Property18 } from "@wonderlandengine/api";
-var DebugTransformComponent = class extends Component29 {
+import { Component as Component30, Property as Property18 } from "@wonderlandengine/api";
+var DebugTransformComponent = class extends Component30 {
   static TypeName = "pp-debug-transform";
   static Properties = {
     _myLength: Property18.float(0.1),
@@ -27918,8 +27953,8 @@ var DebugTransformComponent = class extends Component29 {
 };
 
 // dist/pp/debug/components/show_fps_component.js
-import { Alignment as Alignment4, Component as Component30, Property as Property19, VerticalAlignment as VerticalAlignment4 } from "@wonderlandengine/api";
-var ShowFPSComponent = class extends Component30 {
+import { Alignment as Alignment4, Component as Component31, Property as Property19, VerticalAlignment as VerticalAlignment4 } from "@wonderlandengine/api";
+var ShowFPSComponent = class extends Component31 {
   static TypeName = "pp-show-fps";
   static Properties = {
     _myRefreshSeconds: Property19.float(0.25),
@@ -27957,14 +27992,14 @@ var ShowFPSComponent = class extends Component30 {
 };
 
 // dist/pp/debug/components/toggle_active_on_button_press_component.js
-import { Component as Component31, property as property6 } from "@wonderlandengine/api";
-var __decorate6 = function(decorators, target, key, desc) {
+import { Component as Component32, property as property7 } from "@wonderlandengine/api";
+var __decorate7 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var ToggleActiveOnButtonPressComponent = class extends Component31 {
+var ToggleActiveOnButtonPressComponent = class extends Component32 {
   static TypeName = "toggle-active-on-button-press";
   _myHandedness;
   _myButton;
@@ -28007,14 +28042,14 @@ var ToggleActiveOnButtonPressComponent = class extends Component31 {
     }
   }
 };
-__decorate6([
-  property6.enum(["Left", "Right"], "Left")
+__decorate7([
+  property7.enum(["Left", "Right"], "Left")
 ], ToggleActiveOnButtonPressComponent.prototype, "_myHandedness", void 0);
-__decorate6([
-  property6.enum(["Select", "Squeeze", "Thumstick", "Top Button", "Bottom Button"], "Bottom Button")
+__decorate7([
+  property7.enum(["Select", "Squeeze", "Thumstick", "Top Button", "Bottom Button"], "Bottom Button")
 ], ToggleActiveOnButtonPressComponent.prototype, "_myButton", void 0);
-__decorate6([
-  property6.int(2)
+__decorate7([
+  property7.int(2)
 ], ToggleActiveOnButtonPressComponent.prototype, "_myMultiplePressCount", void 0);
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_overwriter.js
@@ -28456,16 +28491,16 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   resetResults() {
     this._updateDerivatesResults();
     this._updateMaxResults();
-    for (let property18 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      this._myFunctionPerformanceAnalysisResults.get(property18).reset();
+    for (let property19 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      this._myFunctionPerformanceAnalysisResults.get(property19).reset();
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset = 0;
     this._myTimeOfLastReset = window.performance.now();
   }
   resetMaxResults() {
     this._myMaxTimeElapsedSinceLastReset = 0;
-    for (let property18 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
-      this._myFunctionPerformanceAnalysisMaxResults.get(property18).reset();
+    for (let property19 of this._myFunctionPerformanceAnalysisMaxResults.keys()) {
+      this._myFunctionPerformanceAnalysisMaxResults.get(property19).reset();
     }
   }
   getResults(sortOrder = DebugFunctionsPerformanceAnalyzerSortOrder.NONE) {
@@ -28546,8 +28581,8 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   _updateDerivatesResults() {
     let timeElapsedSinceLastReset = this.getTimeElapsedSinceLastReset();
     let beforeTime = window.performance.now();
-    for (let property18 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      let results = this._myFunctionPerformanceAnalysisResults.get(property18);
+    for (let property19 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      let results = this._myFunctionPerformanceAnalysisResults.get(property19);
       if (timeElapsedSinceLastReset != 0) {
         results.myTotalExecutionTimePercentage = results.myTotalExecutionTime / timeElapsedSinceLastReset;
       } else {
@@ -28569,13 +28604,13 @@ var DebugFunctionsPerformanceAnalyzer = class _DebugFunctionsPerformanceAnalyzer
   _updateMaxResults() {
     let beforeTime = window.performance.now();
     this._myMaxTimeElapsedSinceLastReset = Math.max(this._myMaxTimeElapsedSinceLastReset, this.getTimeElapsedSinceLastReset());
-    for (let property18 of this._myFunctionPerformanceAnalysisResults.keys()) {
-      if (this._myFunctionPerformanceAnalysisMaxResults.has(property18)) {
-        this._myFunctionPerformanceAnalysisMaxResults.get(property18).max(this._myFunctionPerformanceAnalysisResults.get(property18));
+    for (let property19 of this._myFunctionPerformanceAnalysisResults.keys()) {
+      if (this._myFunctionPerformanceAnalysisMaxResults.has(property19)) {
+        this._myFunctionPerformanceAnalysisMaxResults.get(property19).max(this._myFunctionPerformanceAnalysisResults.get(property19));
       } else {
         let maxResults = new DebugFunctionPerformanceAnalysisResults();
-        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property18));
-        this._myFunctionPerformanceAnalysisMaxResults.set(property18, maxResults);
+        maxResults.copy(this._myFunctionPerformanceAnalysisResults.get(property19));
+        this._myFunctionPerformanceAnalysisMaxResults.set(property19, maxResults);
       }
     }
     this._myExecutionTimes.myOverheadExecutionTimeSinceLastReset += window.performance.now() - beforeTime;
@@ -28974,8 +29009,8 @@ var DebugFunctionsPerformanceAnalysisResultsLogger = class {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_functions_performance_analyzer_component.js
-import { Component as Component32, Property as Property20 } from "@wonderlandengine/api";
-var DebugFunctionsPerformanceAnalyzerComponent = class extends Component32 {
+import { Component as Component33, Property as Property20 } from "@wonderlandengine/api";
+var DebugFunctionsPerformanceAnalyzerComponent = class extends Component33 {
   static TypeName = "pp-debug-functions-performance-analyzer";
   static Properties = {
     _myObjectsByPath: Property20.string(""),
@@ -29122,8 +29157,8 @@ var DebugFunctionsPerformanceAnalyzerComponent = class extends Component32 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_functions_performance_analyzer_component.js
-import { Component as Component33, Property as Property21 } from "@wonderlandengine/api";
-var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component33 {
+import { Component as Component34, Property as Property21 } from "@wonderlandengine/api";
+var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component34 {
   static TypeName = "pp-debug-pp-functions-performance-analyzer";
   static Properties = {
     _myDelayStart: Property21.float(0),
@@ -29176,8 +29211,8 @@ var DebugPPFunctionsPerformanceAnalyzerComponent = class extends Component33 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_array_functions_performance_analyzer_component.js
-import { Component as Component34, Property as Property22 } from "@wonderlandengine/api";
-var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component34 {
+import { Component as Component35, Property as Property22 } from "@wonderlandengine/api";
+var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component35 {
   static TypeName = "pp-debug-array-functions-performance-analyzer";
   static Properties = {
     _myIncludeOnlyMainArrayTypes: Property22.bool(true),
@@ -29234,8 +29269,8 @@ var DebugArrayFunctionsPerformanceAnalyzerComponent = class extends Component34 
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_pp_array_creation_performance_analyzer_component.js
-import { Component as Component35, Property as Property23 } from "@wonderlandengine/api";
-var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component35 {
+import { Component as Component36, Property as Property23 } from "@wonderlandengine/api";
+var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component36 {
   static TypeName = "pp-debug-pp-array-creation-performance-analyzer";
   static Properties = {
     _myDelayStart: Property23.float(0),
@@ -29290,8 +29325,8 @@ var DebugPPArrayCreationPerformanceAnalyzerComponent = class extends Component35
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_function_performance_analyzer_component.js
-import { Component as Component36, Property as Property24 } from "@wonderlandengine/api";
-var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component36 {
+import { Component as Component37, Property as Property24 } from "@wonderlandengine/api";
+var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component37 {
   static TypeName = "pp-debug-wl-functions-performance-analyzer";
   static Properties = {
     _myDelayStart: Property24.float(0),
@@ -29344,8 +29379,8 @@ var DebugWLFunctionsPerformanceAnalyzerComponent = class extends Component36 {
 };
 
 // dist/pp/debug/debug_functions_overwriter/debug_functions_performance_analyzer/components/debug_wl_components_function_performance_analyzer_component.js
-import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component37, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent6, Property as Property25, TextComponent as TextComponent7, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
-var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component37 {
+import { AnimationComponent as AnimationComponent2, CollisionComponent as CollisionComponent2, Component as Component38, InputComponent as InputComponent3, LightComponent as LightComponent2, MeshComponent as MeshComponent9, PhysXComponent as PhysXComponent6, Property as Property25, TextComponent as TextComponent7, ViewComponent as ViewComponent4 } from "@wonderlandengine/api";
+var DebugWLComponentsFunctionsPerformanceAnalyzerComponent = class extends Component38 {
   static TypeName = "pp-debug-wl-components-functions-performance-analyzer";
   static Properties = {
     _myAnalyzeComponentTypes: Property25.bool(true),
@@ -29966,9 +30001,9 @@ var AnimatedNumber = class {
 };
 
 // dist/pp/gameplay/cauldron/cauldron/components/cursor_button_component.js
-import { Component as Component38, MeshComponent as MeshComponent10, property as property7, TextComponent as TextComponent8 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget5, FingerCursor as FingerCursor3 } from "@wonderlandengine/components";
-var __decorate7 = function(decorators, target, key, desc) {
+import { Component as Component39, MeshComponent as MeshComponent10, property as property8, TextComponent as TextComponent8 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget6, FingerCursor as FingerCursor3 } from "@wonderlandengine/components";
+var __decorate8 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -29981,7 +30016,7 @@ var CursorButtonState;
   CursorButtonState2[CursorButtonState2["DOWN"] = 2] = "DOWN";
   CursorButtonState2[CursorButtonState2["UP"] = 3] = "UP";
 })(CursorButtonState || (CursorButtonState = {}));
-var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
+var CursorButtonComponent = class _CursorButtonComponent extends Component39 {
   static TypeName = "pp-cursor-button";
   /** This can be either a name of a component that is found on the same object of the cursor button,
       or the name of an handler added through `CursorButtonComponent.addButtonActionHandler` */
@@ -30121,7 +30156,7 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
   }
   _start() {
     this._setupVisualsAndSFXs();
-    this._myCursorTarget = this.object.pp_getComponent(CursorTarget5);
+    this._myCursorTarget = this.object.pp_getComponent(CursorTarget6);
     this.onActivate();
   }
   static _updateSV = {
@@ -30533,91 +30568,91 @@ var CursorButtonComponent = class _CursorButtonComponent extends Component38 {
     }
   }
 };
-__decorate7([
-  property7.string("")
+__decorate8([
+  property8.string("")
 ], CursorButtonComponent.prototype, "_myButtonActionsHandlerNames", void 0);
-__decorate7([
-  property7.float(0.075)
+__decorate8([
+  property8.float(0.075)
 ], CursorButtonComponent.prototype, "_myScaleOffsetOnHover", void 0);
-__decorate7([
-  property7.float(-0.075)
+__decorate8([
+  property8.float(-0.075)
 ], CursorButtonComponent.prototype, "_myScaleOffsetOnDown", void 0);
-__decorate7([
-  property7.float(0.075)
+__decorate8([
+  property8.float(0.075)
 ], CursorButtonComponent.prototype, "_myScaleOffsetOnUp", void 0);
-__decorate7([
-  property7.float(0.1)
+__decorate8([
+  property8.float(0.1)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnHover", void 0);
-__decorate7([
-  property7.float(0)
+__decorate8([
+  property8.float(0)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnDown", void 0);
-__decorate7([
-  property7.float(0.1)
+__decorate8([
+  property8.float(0.1)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnUp", void 0);
-__decorate7([
-  property7.float(0)
+__decorate8([
+  property8.float(0)
 ], CursorButtonComponent.prototype, "_myPulseIntensityOnUnhover", void 0);
-__decorate7([
-  property7.float(-0.1)
+__decorate8([
+  property8.float(-0.1)
 ], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnHover", void 0);
-__decorate7([
-  property7.float(0)
+__decorate8([
+  property8.float(0)
 ], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnDown", void 0);
-__decorate7([
-  property7.float(-0.1)
+__decorate8([
+  property8.float(-0.1)
 ], CursorButtonComponent.prototype, "_myColorBrigthnessOffsetOnUp", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate8([
+  property8.bool(true)
 ], CursorButtonComponent.prototype, "_myUseSpatialAudio", void 0);
-__decorate7([
-  property7.float(1.5)
+__decorate8([
+  property8.float(1.5)
 ], CursorButtonComponent.prototype, "_mySpatialAudioReferenceDistance", void 0);
-__decorate7([
-  property7.string("")
+__decorate8([
+  property8.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnHover", void 0);
-__decorate7([
-  property7.string("")
+__decorate8([
+  property8.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnDown", void 0);
-__decorate7([
-  property7.string("")
+__decorate8([
+  property8.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnUp", void 0);
-__decorate7([
-  property7.string("")
+__decorate8([
+  property8.string("")
 ], CursorButtonComponent.prototype, "_mySFXOnUnhover", void 0);
-__decorate7([
-  property7.float(0)
+__decorate8([
+  property8.float(0)
 ], CursorButtonComponent.prototype, "_myMinHoverSecond", void 0);
-__decorate7([
-  property7.float(0.15)
+__decorate8([
+  property8.float(0.15)
 ], CursorButtonComponent.prototype, "_myMinDownSecond", void 0);
-__decorate7([
-  property7.float(0)
+__decorate8([
+  property8.float(0)
 ], CursorButtonComponent.prototype, "_myMinUpSecond", void 0);
-__decorate7([
-  property7.float(0)
+__decorate8([
+  property8.float(0)
 ], CursorButtonComponent.prototype, "_myMinUnhoverSecond", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate8([
+  property8.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnHover", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate8([
+  property8.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnDown", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate8([
+  property8.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnUp", void 0);
-__decorate7([
-  property7.bool(true)
+__decorate8([
+  property8.bool(true)
 ], CursorButtonComponent.prototype, "_myPerformDefaultSecondaryCursorFeedbackOnUnhover", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate8([
+  property8.bool(false)
 ], CursorButtonComponent.prototype, "_myUpCursorIsMainOnlyIfLastDown", void 0);
-__decorate7([
-  property7.bool(false)
+__decorate8([
+  property8.bool(false)
 ], CursorButtonComponent.prototype, "_myUpWithSecondaryCursorIsMain", void 0);
 
 // dist/pp/gameplay/cauldron/rough/components/scale_on_spawn_component.js
-import { Component as Component39, Property as Property26 } from "@wonderlandengine/api";
-var ScaleOnSpawnComponent = class extends Component39 {
+import { Component as Component40, Property as Property26 } from "@wonderlandengine/api";
+var ScaleOnSpawnComponent = class extends Component40 {
   static TypeName = "pp-scale-on-spawn";
   static Properties = {
     _myStartDelay: Property26.float(0),
@@ -30649,8 +30684,8 @@ var ScaleOnSpawnComponent = class extends Component39 {
 };
 
 // dist/pp/gameplay/grab_throw/grabbable_component.js
-import { Component as Component40, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property27 } from "@wonderlandengine/api";
-var GrabbableComponent = class extends Component40 {
+import { Component as Component41, Emitter as Emitter11, PhysXComponent as PhysXComponent7, Property as Property27 } from "@wonderlandengine/api";
+var GrabbableComponent = class extends Component41 {
   static TypeName = "pp-grabbable";
   static Properties = {
     _myThrowLinearVelocityMultiplier: Property27.float(1),
@@ -30778,8 +30813,8 @@ var GrabbableComponent = class extends Component40 {
 };
 
 // dist/pp/gameplay/grab_throw/grabber_hand_component.js
-import { Component as Component41, Emitter as Emitter12, PhysXComponent as PhysXComponent8, Property as Property28 } from "@wonderlandengine/api";
-var GrabberHandComponent = class extends Component41 {
+import { Component as Component42, Emitter as Emitter12, PhysXComponent as PhysXComponent8, Property as Property28 } from "@wonderlandengine/api";
+var GrabberHandComponent = class extends Component42 {
   static TypeName = "pp-grabber-hand";
   static Properties = {
     _myHandedness: Property28.enum(["Left", "Right"], "Left"),
@@ -31515,8 +31550,8 @@ var CADummyServer = class {
 };
 
 // dist/pp/gameplay/integrations/construct_arcade/ca_display_leaderboard_component.js
-import { Component as Component42, Property as Property29, TextComponent as TextComponent9 } from "@wonderlandengine/api";
-var CADisplayLeaderboardComponent = class extends Component42 {
+import { Component as Component43, Property as Property29, TextComponent as TextComponent9 } from "@wonderlandengine/api";
+var CADisplayLeaderboardComponent = class extends Component43 {
   static TypeName = "pp-ca-display-leaderboard";
   static Properties = {
     _myUsernamesTextObject: Property29.object(),
@@ -38487,14 +38522,14 @@ PlayerLocomotionSmooth.prototype._onXRSessionEnd = /* @__PURE__ */ function() {
 }();
 
 // dist/pp/gameplay/experimental/locomotion/legacy/locomotion/components/player_locomotion_component.js
-import { Component as Component43, property as property8 } from "@wonderlandengine/api";
-var __decorate8 = function(decorators, target, key, desc) {
+import { Component as Component44, property as property9 } from "@wonderlandengine/api";
+var __decorate9 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var PlayerLocomotionComponent = class extends Component43 {
+var PlayerLocomotionComponent = class extends Component44 {
   static TypeName = "pp-player-locomotion";
   _myDefaultLocomotionType;
   _myAlwaysSmoothForNonVR;
@@ -38874,275 +38909,275 @@ var PlayerLocomotionComponent = class extends Component43 {
     }
   }
 };
-__decorate8([
-  property8.enum(["Smooth", "Teleport"], "Smooth")
+__decorate9([
+  property9.enum(["Smooth", "Teleport"], "Smooth")
 ], PlayerLocomotionComponent.prototype, "_myDefaultLocomotionType", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myAlwaysSmoothForNonVR", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySwitchLocomotionTypeShortcutEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myStartIdle", void 0);
-__decorate8([
-  property8.string("0, 0, 0, 0, 0, 0, 0, 0")
+__decorate9([
+  property9.string("0, 0, 0, 0, 0, 0, 0, 0")
 ], PlayerLocomotionComponent.prototype, "_myPhysicsBlockLayerFlags", void 0);
-__decorate8([
-  property8.float(1.7)
+__decorate9([
+  property9.float(1.7)
 ], PlayerLocomotionComponent.prototype, "_myDefaultHeight", void 0);
-__decorate8([
-  property8.float(0.5)
+__decorate9([
+  property9.float(0.5)
 ], PlayerLocomotionComponent.prototype, "_myMinHeight", void 0);
-__decorate8([
-  property8.float(0.3)
+__decorate9([
+  property9.float(0.3)
 ], PlayerLocomotionComponent.prototype, "_myCharacterRadius", void 0);
-__decorate8([
-  property8.float(-1)
+__decorate9([
+  property9.float(-1)
 ], PlayerLocomotionComponent.prototype, "_myCharacterFeetRadius", void 0);
-__decorate8([
-  property8.float(0.1)
+__decorate9([
+  property9.float(0.1)
 ], PlayerLocomotionComponent.prototype, "_myForeheadExtraHeight", void 0);
-__decorate8([
-  property8.float(2)
+__decorate9([
+  property9.float(2)
 ], PlayerLocomotionComponent.prototype, "_myMaxSpeed", void 0);
-__decorate8([
-  property8.float(100)
+__decorate9([
+  property9.float(100)
 ], PlayerLocomotionComponent.prototype, "_myMaxRotationSpeed", void 0);
-__decorate8([
-  property8.float(1)
+__decorate9([
+  property9.float(1)
 ], PlayerLocomotionComponent.prototype, "_mySpeedSlowDownPercentageOnWallSlid", void 0);
-__decorate8([
-  property8.float(-20)
+__decorate9([
+  property9.float(-20)
 ], PlayerLocomotionComponent.prototype, "_myGravityAcceleration", void 0);
-__decorate8([
-  property8.float(-15)
+__decorate9([
+  property9.float(-15)
 ], PlayerLocomotionComponent.prototype, "_myMaxGravitySpeed", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myIsSnapTurn", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySnapTurnOnlyVR", void 0);
-__decorate8([
-  property8.float(30)
+__decorate9([
+  property9.float(30)
 ], PlayerLocomotionComponent.prototype, "_mySnapTurnAngle", void 0);
-__decorate8([
-  property8.float(0)
+__decorate9([
+  property9.float(0)
 ], PlayerLocomotionComponent.prototype, "_mySnapTurnSpeedDegrees", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myFlyEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myStartFlying", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myFlyWithButtonsEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myFlyWithViewAngleEnabled", void 0);
-__decorate8([
-  property8.float(30)
+__decorate9([
+  property9.float(30)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyUpNonVR", void 0);
-__decorate8([
-  property8.float(40)
+__decorate9([
+  property9.float(40)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyDownNonVR", void 0);
-__decorate8([
-  property8.float(30)
+__decorate9([
+  property9.float(30)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyUpVR", void 0);
-__decorate8([
-  property8.float(40)
+__decorate9([
+  property9.float(40)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyDownVR", void 0);
-__decorate8([
-  property8.float(90)
+__decorate9([
+  property9.float(90)
 ], PlayerLocomotionComponent.prototype, "_myMinAngleToFlyRight", void 0);
-__decorate8([
-  property8.enum(["Left", "Right"], "Left")
+__decorate9([
+  property9.enum(["Left", "Right"], "Left")
 ], PlayerLocomotionComponent.prototype, "_myMainHand", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myDirectionInvertForwardWhenUpsideDown", void 0);
-__decorate8([
-  property8.enum(["Head", "Hand", "Custom Object"], "Head")
+__decorate9([
+  property9.enum(["Head", "Hand", "Custom Object"], "Head")
 ], PlayerLocomotionComponent.prototype, "_myVRDirectionReferenceType", void 0);
-__decorate8([
-  property8.object()
+__decorate9([
+  property9.object()
 ], PlayerLocomotionComponent.prototype, "_myVRDirectionReferenceObject", void 0);
-__decorate8([
-  property8.enum(["Instant", "Blink", "Shift"], "Shift")
+__decorate9([
+  property9.enum(["Instant", "Blink", "Shift"], "Shift")
 ], PlayerLocomotionComponent.prototype, "_myTeleportType", void 0);
-__decorate8([
-  property8.float(3)
+__decorate9([
+  property9.float(3)
 ], PlayerLocomotionComponent.prototype, "_myTeleportMaxDistance", void 0);
-__decorate8([
-  property8.float(1.25)
+__decorate9([
+  property9.float(1.25)
 ], PlayerLocomotionComponent.prototype, "_myTeleportMaxHeightDifference", void 0);
-__decorate8([
-  property8.string("")
+__decorate9([
+  property9.string("")
 ], PlayerLocomotionComponent.prototype, "_myTeleportFloorLayerFlags", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myTeleportRotationOnUpEnabled", void 0);
-__decorate8([
-  property8.material()
+__decorate9([
+  property9.material()
 ], PlayerLocomotionComponent.prototype, "_myTeleportValidMaterial", void 0);
-__decorate8([
-  property8.material()
+__decorate9([
+  property9.material()
 ], PlayerLocomotionComponent.prototype, "_myTeleportInvalidMaterial", void 0);
-__decorate8([
-  property8.object()
+__decorate9([
+  property9.object()
 ], PlayerLocomotionComponent.prototype, "_myTeleportPositionObject", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myTeleportPositionObjectRotateWithHead", void 0);
-__decorate8([
-  property8.object()
+__decorate9([
+  property9.object()
 ], PlayerLocomotionComponent.prototype, "_myTeleportParableStartReferenceObject", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myResetRealOnStart", void 0);
-__decorate8([
-  property8.int(1)
+__decorate9([
+  property9.int(1)
 ], PlayerLocomotionComponent.prototype, "_myResetRealOnStartFramesAmount", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myResetHeadToFeetInsteadOfReal", void 0);
-__decorate8([
-  property8.float(0.25)
+__decorate9([
+  property9.float(0.25)
 ], PlayerLocomotionComponent.prototype, "_myResetHeadToRealMinDistance", void 0);
-__decorate8([
-  property8.int(-1)
+__decorate9([
+  property9.int(-1)
 ], PlayerLocomotionComponent.prototype, "_myMaxHeadToRealHeadSteps", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySyncWithRealWorldPositionOnlyIfValid", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySyncWithRealHeightOnlyIfValid", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_mySnapRealPositionToGround", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myPreventRealFromColliding", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myUseHighestColliderHeightWhenManuallyMovingHorizontally", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionInsideWallsEnabled", void 0);
-__decorate8([
-  property8.string("")
+__decorate9([
+  property9.string("")
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionLayerFlags", void 0);
-__decorate8([
-  property8.float(0.145)
+__decorate9([
+  property9.float(0.145)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionHeadRadius", void 0);
-__decorate8([
-  property8.float(0.15)
+__decorate9([
+  property9.float(0.15)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionHeadHeight", void 0);
-__decorate8([
-  property8.float(0.1)
+__decorate9([
+  property9.float(0.1)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionFadeOutSeconds", void 0);
-__decorate8([
-  property8.float(0.025)
+__decorate9([
+  property9.float(0.025)
 ], PlayerLocomotionComponent.prototype, "_myViewOcclusionMaxRealHeadDistance", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_mySyncNonVRHeightWithVROnExitSession", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_mySyncNonVRVerticalAngleWithVROnExitSession", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_mySyncHeadWithRealAfterLocomotionUpdateIfNeeded", void 0);
-__decorate8([
-  property8.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High")
+__decorate9([
+  property9.enum(["Very Low", "Low", "Medium", "High", "Very High"], "High")
 ], PlayerLocomotionComponent.prototype, "_myColliderAccuracy", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myColliderCheckOnlyFeet", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myColliderCheckCeilings", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myColliderSlideAlongWall", void 0);
-__decorate8([
-  property8.float(30)
+__decorate9([
+  property9.float(30)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableGroundAngle", void 0);
-__decorate8([
-  property8.float(-1)
+__decorate9([
+  property9.float(-1)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxTeleportableGroundAngle", void 0);
-__decorate8([
-  property8.bool(true)
+__decorate9([
+  property9.bool(true)
 ], PlayerLocomotionComponent.prototype, "_myColliderSnapOnGround", void 0);
-__decorate8([
-  property8.float(0.1)
+__decorate9([
+  property9.float(0.1)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxDistanceToSnapOnGround", void 0);
-__decorate8([
-  property8.float(0.2)
+__decorate9([
+  property9.float(0.2)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxDistanceToPopOutGround", void 0);
-__decorate8([
-  property8.float(0.1)
+__decorate9([
+  property9.float(0.1)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableGroundStepHeight", void 0);
-__decorate8([
-  property8.float(0)
+__decorate9([
+  property9.float(0)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxWalkableCeilingStepHeight", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myColliderPreventFallingFromEdges", void 0);
-__decorate8([
-  property8.int(3)
+__decorate9([
+  property9.int(3)
 ], PlayerLocomotionComponent.prototype, "_myColliderMaxMovementSteps", void 0);
-__decorate8([
-  property8.float(0)
+__decorate9([
+  property9.float(0)
 ], PlayerLocomotionComponent.prototype, "_myColliderExtraHeight", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myDebugFlyShortcutEnabled", void 0);
-__decorate8([
-  property8.float(5)
+__decorate9([
+  property9.float(5)
 ], PlayerLocomotionComponent.prototype, "_myDebugFlyMaxSpeedMultiplier", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myMoveThroughCollisionShortcutEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myMoveHeadShortcutEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myTripleSpeedShortcutEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myDebugHorizontalEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myDebugVerticalEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myCollisionCheckDisabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myRaycastCountLogEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myRaycastVisualDebugEnabled", void 0);
-__decorate8([
-  property8.bool(false)
+__decorate9([
+  property9.bool(false)
 ], PlayerLocomotionComponent.prototype, "_myPerformanceLogEnabled", void 0);
 
 // dist/pp/input/cauldron/components/overlap_cursor_component.js
-import { CollisionComponent as CollisionComponent3, Component as Component44, PhysXComponent as PhysXComponent11, property as property9 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget6 } from "@wonderlandengine/components";
-var __decorate9 = function(decorators, target, key, desc) {
+import { CollisionComponent as CollisionComponent3, Component as Component45, PhysXComponent as PhysXComponent11, property as property10 } from "@wonderlandengine/api";
+import { CursorTarget as CursorTarget7 } from "@wonderlandengine/components";
+var __decorate10 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var OverlapCursorComponent = class _OverlapCursorComponent extends Component44 {
+var OverlapCursorComponent = class _OverlapCursorComponent extends Component45 {
   static TypeName = "pp-overlap-cursor";
   /**
    * This is useful if you want to avoid the cursor entering and exiting the target when very close to the target,
@@ -39213,7 +39248,7 @@ var OverlapCursorComponent = class _OverlapCursorComponent extends Component44 {
       const collisions = this._myCollisionComponent.queryOverlaps();
       for (const collision of collisions) {
         if (collision.group & this._myCollisionComponent.group) {
-          const target = collision.object.pp_getComponentSelf(CursorTarget6);
+          const target = collision.object.pp_getComponentSelf(CursorTarget7);
           if (target != null && target.active) {
             processedCursorTargets.push(target);
             bestCursorTarget = this._pickBestCursorTarget(bestCursorTarget, target);
@@ -39225,7 +39260,7 @@ var OverlapCursorComponent = class _OverlapCursorComponent extends Component44 {
       this._myPhysicsCollisionCollector.update(dt);
       const collisions = this._myPhysicsCollisionCollector.getCollisions();
       for (const collision of collisions) {
-        const target = collision.object.pp_getComponentSelf(CursorTarget6);
+        const target = collision.object.pp_getComponentSelf(CursorTarget7);
         if (target != null && target.active) {
           processedCursorTargets.push(target);
           bestCursorTarget = this._pickBestCursorTarget(bestCursorTarget, target);
@@ -39348,23 +39383,23 @@ var OverlapCursorComponent = class _OverlapCursorComponent extends Component44 {
     return overlapAngle <= this._myValidOverlapAngleFromTargetForward;
   }
 };
-__decorate9([
-  property9.float(1.125)
+__decorate10([
+  property10.float(1.125)
 ], OverlapCursorComponent.prototype, "_myCollisionSizeMultiplierOnOverlap", void 0);
-__decorate9([
-  property9.float(90)
+__decorate10([
+  property10.float(90)
 ], OverlapCursorComponent.prototype, "_myValidOverlapAngleFromTargetForward", void 0);
 
 // dist/pp/input/cauldron/components/finger_cursor_component.js
-import { Collider, CollisionComponent as CollisionComponent4, Component as Component45, PhysXComponent as PhysXComponent12, property as property10, Shape as Shape2 } from "@wonderlandengine/api";
+import { Collider, CollisionComponent as CollisionComponent4, Component as Component46, PhysXComponent as PhysXComponent12, property as property11, Shape as Shape2 } from "@wonderlandengine/api";
 import { Cursor as Cursor4 } from "@wonderlandengine/components";
-var __decorate10 = function(decorators, target, key, desc) {
+var __decorate11 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var FingerCursorComponent = class _FingerCursorComponent extends Component45 {
+var FingerCursorComponent = class _FingerCursorComponent extends Component46 {
   static TypeName = "pp-finger-cursor";
   _myHandedness;
   _myFinger;
@@ -39503,40 +39538,40 @@ var FingerCursorComponent = class _FingerCursorComponent extends Component45 {
     }
   }
 };
-__decorate10([
-  property10.enum(["Left", "Right"], "Left")
+__decorate11([
+  property11.enum(["Left", "Right"], "Left")
 ], FingerCursorComponent.prototype, "_myHandedness", void 0);
-__decorate10([
-  property10.enum(["Thumb", "Index", "Middle", "Ring", "Pinky"], "Index")
+__decorate11([
+  property11.enum(["Thumb", "Index", "Middle", "Ring", "Pinky"], "Index")
 ], FingerCursorComponent.prototype, "_myFinger", void 0);
-__decorate10([
-  property10.enum(["PhysX", "Collision"], "PhysX")
+__decorate11([
+  property11.enum(["PhysX", "Collision"], "PhysX")
 ], FingerCursorComponent.prototype, "_myCollisionMode", void 0);
-__decorate10([
-  property10.string("0, 0, 0, 0, 0, 0, 0, 0")
+__decorate11([
+  property11.string("0, 0, 0, 0, 0, 0, 0, 0")
 ], FingerCursorComponent.prototype, "_myCollisionFlags", void 0);
-__decorate10([
-  property10.float(0.0125)
+__decorate11([
+  property11.float(0.0125)
 ], FingerCursorComponent.prototype, "_myCollisionSize", void 0);
-__decorate10([
-  property10.float(1.25)
+__decorate11([
+  property11.float(1.25)
 ], FingerCursorComponent.prototype, "_myCollisionSizeMultiplierOnOverlap", void 0);
-__decorate10([
-  property10.float(90)
+__decorate11([
+  property11.float(90)
 ], FingerCursorComponent.prototype, "_myValidOverlapAngleFromTargetForward", void 0);
-__decorate10([
-  property10.object()
+__decorate11([
+  property11.object()
 ], FingerCursorComponent.prototype, "_myCursorPointerObject", void 0);
-__decorate10([
-  property10.bool(true)
+__decorate11([
+  property11.bool(true)
 ], FingerCursorComponent.prototype, "_myDisableDefaultCursorOnTrackedHandDetected", void 0);
-__decorate10([
-  property10.object()
+__decorate11([
+  property11.object()
 ], FingerCursorComponent.prototype, "_myDefaultCursorObject", void 0);
 
 // dist/pp/input/cauldron/components/switch_hand_object_component.js
-import { Component as Component46, Property as Property30 } from "@wonderlandengine/api";
-var SwitchHandObjectComponent = class extends Component46 {
+import { Component as Component47, Property as Property30 } from "@wonderlandengine/api";
+var SwitchHandObjectComponent = class extends Component47 {
   static TypeName = "pp-switch-hand-object";
   static Properties = {
     _myHandedness: Property30.enum(["Left", "Right"], "Left"),
@@ -39618,8 +39653,8 @@ var SwitchHandObjectComponent = class extends Component46 {
 };
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_joint_component.js
-import { Component as Component47, MeshComponent as MeshComponent12, Property as Property31 } from "@wonderlandengine/api";
-var TrackedHandDrawJointComponent = class extends Component47 {
+import { Component as Component48, MeshComponent as MeshComponent12, Property as Property31 } from "@wonderlandengine/api";
+var TrackedHandDrawJointComponent = class extends Component48 {
   static TypeName = "pp-tracked-hand-draw-joint";
   static Properties = {
     _myHandedness: Property31.enum(["Left", "Right"], "Left"),
@@ -39678,8 +39713,8 @@ TrackedHandDrawJointComponent.prototype.update = function() {
 }();
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_all_joints_component.js
-import { Component as Component48, Property as Property32 } from "@wonderlandengine/api";
-var TrackedHandDrawAllJointsComponent = class extends Component48 {
+import { Component as Component49, Property as Property32 } from "@wonderlandengine/api";
+var TrackedHandDrawAllJointsComponent = class extends Component49 {
   static TypeName = "pp-tracked-hand-draw-all-joints";
   static Properties = {
     _myHandedness: Property32.enum(["Left", "Right"], "Left"),
@@ -39710,8 +39745,8 @@ var TrackedHandDrawAllJointsComponent = class extends Component48 {
 };
 
 // dist/pp/input/cauldron/components/tracked_hand_draw_skin_component.js
-import { Component as Component49, Property as Property33 } from "@wonderlandengine/api";
-var TrackedHandDrawSkinComponent = class extends Component49 {
+import { Component as Component50, Property as Property33 } from "@wonderlandengine/api";
+var TrackedHandDrawSkinComponent = class extends Component50 {
   static TypeName = "pp-tracked-hand-draw-skin";
   static Properties = {
     _myHandedness: Property33.enum(["Left", "Right"], "Left"),
@@ -39750,8 +39785,8 @@ TrackedHandDrawSkinComponent.prototype.update = function() {
 }();
 
 // dist/pp/input/gamepad/cauldron/gamepad_mesh_animator_component.js
-import { Component as Component50, Property as Property34 } from "@wonderlandengine/api";
-var GamepadMeshAnimatorComponent = class extends Component50 {
+import { Component as Component51, Property as Property34 } from "@wonderlandengine/api";
+var GamepadMeshAnimatorComponent = class extends Component51 {
   static TypeName = "pp-gamepad-mesh-animator";
   static Properties = {
     _myHandedness: Property34.enum(["Left", "Right"], "Left"),
@@ -39965,8 +40000,8 @@ GamepadMeshAnimatorComponent.prototype._thumbstickPressedStart = function() {
 }();
 
 // dist/pp/input/gamepad/cauldron/gamepad_control_scheme_component.js
-import { Alignment as Alignment5, Component as Component51, MeshComponent as MeshComponent13, Property as Property35, TextComponent as TextComponent10, VerticalAlignment as VerticalAlignment5 } from "@wonderlandengine/api";
-var GamepadControlSchemeComponent = class extends Component51 {
+import { Alignment as Alignment5, Component as Component52, MeshComponent as MeshComponent13, Property as Property35, TextComponent as TextComponent10, VerticalAlignment as VerticalAlignment5 } from "@wonderlandengine/api";
+var GamepadControlSchemeComponent = class extends Component52 {
   static TypeName = "pp-gamepad-control-scheme";
   static Properties = {
     _myShowOnStart: Property35.bool(true),
@@ -41234,8 +41269,8 @@ var VirtualGamepadGamepadCore = class extends GamepadCore {
 };
 
 // dist/pp/input/gamepad/virtual_gamepad/virtual_gamepad_component.js
-import { Component as Component52, Property as Property36 } from "@wonderlandengine/api";
-var VirtualGamepadComponent = class extends Component52 {
+import { Component as Component53, Property as Property36 } from "@wonderlandengine/api";
+var VirtualGamepadComponent = class extends Component53 {
   static TypeName = "pp-virtual-gamepad";
   static Properties = {
     _myShowOnDesktop: Property36.bool(false),
@@ -41636,8 +41671,8 @@ var VirtualGamepadComponent = class extends Component52 {
 };
 
 // dist/pp/input/pose/components/set_player_height_component.js
-import { Component as Component53, Property as Property37 } from "@wonderlandengine/api";
-var SetPlayerHeightComponent = class extends Component53 {
+import { Component as Component54, Property as Property37 } from "@wonderlandengine/api";
+var SetPlayerHeightComponent = class extends Component54 {
   static TypeName = "pp-set-player-height";
   static Properties = {
     _myEyesHeight: Property37.float(1.65),
@@ -41674,8 +41709,8 @@ var SetPlayerHeightComponent = class extends Component53 {
 };
 
 // dist/pp/input/pose/components/set_hand_local_transform_component.js
-import { Component as Component54, Property as Property38 } from "@wonderlandengine/api";
-var SetHandLocalTransformComponent = class extends Component54 {
+import { Component as Component55, Property as Property38 } from "@wonderlandengine/api";
+var SetHandLocalTransformComponent = class extends Component55 {
   static TypeName = "pp-set-hand-local-transform";
   static Properties = {
     _myHandedness: Property38.enum(["Left", "Right"], "Left")
@@ -41718,8 +41753,8 @@ SetHandLocalTransformComponent.prototype._onPoseUpdated = function() {
 }();
 
 // dist/pp/input/pose/components/set_hand_ray_local_transform_component.js
-import { Component as Component55, Property as Property39 } from "@wonderlandengine/api";
-var SetHandRayLocalTransformComponent = class extends Component55 {
+import { Component as Component56, Property as Property39 } from "@wonderlandengine/api";
+var SetHandRayLocalTransformComponent = class extends Component56 {
   static TypeName = "pp-set-hand-ray-local-transform";
   static Properties = {
     _myHandedness: Property39.enum(["Left", "Right"], "Left")
@@ -41762,8 +41797,8 @@ SetHandRayLocalTransformComponent.prototype._onPoseUpdated = function() {
 }();
 
 // dist/pp/input/pose/components/set_head_local_transform_component.js
-import { Component as Component56 } from "@wonderlandengine/api";
-var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component56 {
+import { Component as Component57 } from "@wonderlandengine/api";
+var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent extends Component57 {
   static TypeName = "pp-set-head-local-transform";
   _myActivateOnNextUpdate = false;
   update(dt) {
@@ -41813,8 +41848,8 @@ var SetHeadLocalTransformComponent = class _SetHeadLocalTransformComponent exten
 };
 
 // dist/pp/input/pose/components/set_tracked_hand_joint_local_transform_component.js
-import { Component as Component57, Property as Property40 } from "@wonderlandengine/api";
-var SetTrackedHandJointLocalTransformComponent = class extends Component57 {
+import { Component as Component58, Property as Property40 } from "@wonderlandengine/api";
+var SetTrackedHandJointLocalTransformComponent = class extends Component58 {
   static TypeName = "pp-set-tracked-hand-joint-local-transform";
   static Properties = {
     _myHandedness: Property40.enum(["Left", "Right"], "Left"),
@@ -41889,8 +41924,8 @@ SetTrackedHandJointLocalTransformComponent.prototype._onPoseUpdated = function()
 }();
 
 // dist/pp/input/pose/components/copy_hand_transform_component.js
-import { Component as Component58, Property as Property41 } from "@wonderlandengine/api";
-var CopyHandTransformComponent = class extends Component58 {
+import { Component as Component59, Property as Property41 } from "@wonderlandengine/api";
+var CopyHandTransformComponent = class extends Component59 {
   static TypeName = "pp-copy-hand-transform";
   static Properties = {
     _myHandedness: Property41.enum(["Left", "Right"], "Left")
@@ -41906,8 +41941,8 @@ var CopyHandTransformComponent = class extends Component58 {
 };
 
 // dist/pp/input/pose/components/copy_head_transform_component.js
-import { Component as Component59 } from "@wonderlandengine/api";
-var CopyHeadTransformComponent = class extends Component59 {
+import { Component as Component60 } from "@wonderlandengine/api";
+var CopyHeadTransformComponent = class extends Component60 {
   static TypeName = "pp-copy-head-transform";
   update(dt) {
     let head = Globals.getPlayerObjects(this.engine).myHead;
@@ -41917,8 +41952,8 @@ var CopyHeadTransformComponent = class extends Component59 {
 };
 
 // dist/pp/input/pose/components/copy_player_transform_component.js
-import { Component as Component60 } from "@wonderlandengine/api";
-var CopyPlayerTransformComponent = class extends Component60 {
+import { Component as Component61 } from "@wonderlandengine/api";
+var CopyPlayerTransformComponent = class extends Component61 {
   static TypeName = "pp-copy-player-transform";
   update(dt) {
     let player = Globals.getPlayerObjects(this.engine).myPlayer;
@@ -41928,8 +41963,8 @@ var CopyPlayerTransformComponent = class extends Component60 {
 };
 
 // dist/pp/input/pose/components/copy_reference_space_transform_component.js
-import { Component as Component61 } from "@wonderlandengine/api";
-var CopyReferenceSpaceTransformComponent = class extends Component61 {
+import { Component as Component62 } from "@wonderlandengine/api";
+var CopyReferenceSpaceTransformComponent = class extends Component62 {
   static TypeName = "pp-copy-reference-space-transform";
   update(dt) {
     let referenceSpace = Globals.getPlayerObjects(this.engine).myReferenceSpace;
@@ -41951,9 +41986,9 @@ var ToolInputSourceType = {
 };
 
 // dist/pp/tool/cauldron/components/tool_cursor_component.js
-import { Component as Component62, MeshComponent as MeshComponent14, Property as Property42, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
-import { Cursor as Cursor5, CursorTarget as CursorTarget7 } from "@wonderlandengine/components";
-var ToolCursorComponent = class extends Component62 {
+import { Component as Component63, MeshComponent as MeshComponent14, Property as Property42, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
+import { Cursor as Cursor5, CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
+var ToolCursorComponent = class extends Component63 {
   static TypeName = "pp-tool-cursor";
   static Properties = {
     _myHandedness: Property42.enum(["Left", "Right"], "Left"),
@@ -42057,7 +42092,7 @@ var ToolCursorComponent = class extends Component62 {
     return usingHand;
   }
   _pulseOnHover(object) {
-    let targetComponent = object.pp_getComponent(CursorTarget7);
+    let targetComponent = object.pp_getComponent(CursorTarget8);
     if (targetComponent && !targetComponent.isSurface) {
       if (this._myHandedness == 0) {
         if (Globals.getLeftGamepad(this.engine) != null) {
@@ -42278,7 +42313,7 @@ var ConsoleVRWidgetConfig = class {
 
 // dist/pp/tool/console_vr/console_vr_widget_ui.js
 import { CollisionComponent as CollisionComponent5, MeshComponent as MeshComponent15, TextComponent as TextComponent11 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget9 } from "@wonderlandengine/components";
 var ConsoleVRWidgetUI = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -42425,7 +42460,7 @@ var ConsoleVRWidgetUI = class {
     this.myNotifyIconBackgroundComponent.mesh = this._myPlaneMesh;
     this.myNotifyIconBackgroundComponent.material = this._myParams.myPlaneMaterial.clone();
     this.myNotifyIconBackgroundComponent.material.color = this._myConfig.myNotifyIconColor;
-    this.myNotifyIconCursorTargetComponent = this.myNotifyIconCursorTarget.pp_addComponent(CursorTarget8);
+    this.myNotifyIconCursorTargetComponent = this.myNotifyIconCursorTarget.pp_addComponent(CursorTarget9);
     this.myNotifyIconCollisionComponent = this.myNotifyIconCursorTarget.pp_addComponent(CollisionComponent5);
     this.myNotifyIconCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myNotifyIconCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -42445,7 +42480,7 @@ var ConsoleVRWidgetUI = class {
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.material.color = this._myConfig.myFilterButtonsTextColors[ConsoleVRWidgetMessageType[key]];
       buttonTextComp.text = this._myConfig.myFilterButtonsTextLabel[ConsoleVRWidgetMessageType[key]];
-      let buttonCursorTargetComp = this.myFilterButtonsCursorTargets[ConsoleVRWidgetMessageType[key]].pp_addComponent(CursorTarget8);
+      let buttonCursorTargetComp = this.myFilterButtonsCursorTargets[ConsoleVRWidgetMessageType[key]].pp_addComponent(CursorTarget9);
       let buttonCollisionComp = this.myFilterButtonsCursorTargets[ConsoleVRWidgetMessageType[key]].pp_addComponent(CollisionComponent5);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -42463,7 +42498,7 @@ var ConsoleVRWidgetUI = class {
       let buttonTextComp = this.myClearButtonText.pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.text = this._myConfig.myClearButtonTextLabel;
-      let buttonCursorTargetComp = this.myClearButtonCursorTarget.pp_addComponent(CursorTarget8);
+      let buttonCursorTargetComp = this.myClearButtonCursorTarget.pp_addComponent(CursorTarget9);
       let buttonCollisionComp = this.myClearButtonCursorTarget.pp_addComponent(CollisionComponent5);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -42481,7 +42516,7 @@ var ConsoleVRWidgetUI = class {
       let buttonTextComp = this.myUpButtonText.pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.text = this._myConfig.myUpButtonTextLabel;
-      let buttonCursorTargetComp = this.myUpButtonCursorTarget.pp_addComponent(CursorTarget8);
+      let buttonCursorTargetComp = this.myUpButtonCursorTarget.pp_addComponent(CursorTarget9);
       let buttonCollisionComp = this.myUpButtonCursorTarget.pp_addComponent(CollisionComponent5);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -42499,7 +42534,7 @@ var ConsoleVRWidgetUI = class {
       let buttonTextComp = this.myDownButtonText.pp_addComponent(TextComponent11);
       this._setupButtonTextComponent(buttonTextComp);
       buttonTextComp.text = this._myConfig.myDownButtonTextLabel;
-      let buttonCursorTargetComp = this.myDownButtonCursorTarget.pp_addComponent(CursorTarget8);
+      let buttonCursorTargetComp = this.myDownButtonCursorTarget.pp_addComponent(CursorTarget9);
       let buttonCollisionComp = this.myDownButtonCursorTarget.pp_addComponent(CollisionComponent5);
       buttonCollisionComp.collider = this._myConfig.myButtonsCollisionCollider;
       buttonCollisionComp.group = 1 << this._myConfig.myButtonsCollisionGroup;
@@ -42511,7 +42546,7 @@ var ConsoleVRWidgetUI = class {
     }
   }
   _addPointerComponents() {
-    this.myPointerCursorTargetComponent = this.myPointerCursorTarget.pp_addComponent(CursorTarget8);
+    this.myPointerCursorTargetComponent = this.myPointerCursorTarget.pp_addComponent(CursorTarget9);
     this.myPointerCursorTargetComponent.isSurface = true;
     let collisionComp = this.myPointerCursorTarget.pp_addComponent(CollisionComponent5);
     collisionComp.collider = this._myConfig.myPointerCollisionCollider;
@@ -42657,7 +42692,7 @@ var WidgetFrameConfig = class {
 
 // dist/pp/tool/widget_frame/widget_frame_ui.js
 import { CollisionComponent as CollisionComponent6, MeshComponent as MeshComponent16, TextComponent as TextComponent12 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget9 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget10 } from "@wonderlandengine/components";
 var WidgetFrameUI = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myInputSourceType = null;
@@ -42772,7 +42807,7 @@ var WidgetFrameUI = class {
     this.myVisibilityButtonTextComponent = this.myVisibilityButtonText.pp_addComponent(TextComponent12);
     this._setupButtonTextComponent(this.myVisibilityButtonTextComponent);
     this.myVisibilityButtonTextComponent.text = this._myConfig.myVisibilityButtonText;
-    this.myVisibilityButtonCursorTargetComponent = this.myVisibilityButtonCursorTarget.pp_addComponent(CursorTarget9);
+    this.myVisibilityButtonCursorTargetComponent = this.myVisibilityButtonCursorTarget.pp_addComponent(CursorTarget10);
     this.myVisibilityButtonCollisionComponent = this.myVisibilityButtonCursorTarget.pp_addComponent(CollisionComponent6);
     this.myVisibilityButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myVisibilityButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -42785,7 +42820,7 @@ var WidgetFrameUI = class {
     this._setupButtonTextComponent(this.myPinButtonTextComponent);
     this.myPinButtonTextComponent.material.color = this._myConfig.myButtonDisabledTextColor;
     this.myPinButtonTextComponent.text = this._myConfig.myPinButtonText;
-    this.myPinButtonCursorTargetComponent = this.myPinButtonCursorTarget.pp_addComponent(CursorTarget9);
+    this.myPinButtonCursorTargetComponent = this.myPinButtonCursorTarget.pp_addComponent(CursorTarget10);
     this.myPinButtonCollisionComponent = this.myPinButtonCursorTarget.pp_addComponent(CollisionComponent6);
     this.myPinButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPinButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -43865,8 +43900,8 @@ var ConsoleVRWidget = class {
 };
 
 // dist/pp/tool/console_vr/components/console_vr_tool_component.js
-import { Component as Component63, Property as Property43 } from "@wonderlandengine/api";
-var ConsoleVRToolComponent = class extends Component63 {
+import { Component as Component64, Property as Property43 } from "@wonderlandengine/api";
+var ConsoleVRToolComponent = class extends Component64 {
   static TypeName = "pp-console-vr-tool";
   static Properties = {
     _myHandedness: Property43.enum(["None", "Left", "Right"], "None"),
@@ -43932,7 +43967,7 @@ var ConsoleVRToolComponent = class extends Component63 {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
-import { Component as Component64, property as property11 } from "@wonderlandengine/api";
+import { Component as Component65, property as property12 } from "@wonderlandengine/api";
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget.js
 import { Emitter as Emitter15 } from "@wonderlandengine/api";
@@ -44512,11 +44547,11 @@ var EasyTuneBoolArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/bool/easy_tune_bool_array_widget_ui.js
 import { CollisionComponent as CollisionComponent8, MeshComponent as MeshComponent18, TextComponent as TextComponent14 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget11 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget12 } from "@wonderlandengine/components";
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/base/easy_tune_base_widget_ui.js
 import { CollisionComponent as CollisionComponent7, MeshComponent as MeshComponent17, TextComponent as TextComponent13 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget10 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget11 } from "@wonderlandengine/components";
 var EasyTuneBaseWidgetUI = class {
   constructor(engine = Globals.getMainEngine()) {
     this._myEngine = engine;
@@ -44630,7 +44665,7 @@ var EasyTuneBaseWidgetUI = class {
     this.myVariableLabelTextComponent = this.myVariableLabelText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myVariableLabelTextComponent);
     this.myVariableLabelTextComponent.text = " ";
-    this.myVariableLabelCursorTargetComponent = this.myVariableLabelCursorTarget.pp_addComponent(CursorTarget10);
+    this.myVariableLabelCursorTargetComponent = this.myVariableLabelCursorTarget.pp_addComponent(CursorTarget11);
     this.myVariableLabelCollisionComponent = this.myVariableLabelCursorTarget.pp_addComponent(CollisionComponent7);
     this.myVariableLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myVariableLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44642,7 +44677,7 @@ var EasyTuneBaseWidgetUI = class {
     this.myNextButtonTextComponent = this.myNextButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myNextButtonTextComponent);
     this.myNextButtonTextComponent.text = this._myConfig.myNextButtonText;
-    this.myNextButtonCursorTargetComponent = this.myNextButtonCursorTarget.pp_addComponent(CursorTarget10);
+    this.myNextButtonCursorTargetComponent = this.myNextButtonCursorTarget.pp_addComponent(CursorTarget11);
     this.myNextButtonCollisionComponent = this.myNextButtonCursorTarget.pp_addComponent(CollisionComponent7);
     this.myNextButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myNextButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44654,7 +44689,7 @@ var EasyTuneBaseWidgetUI = class {
     this.myPreviousButtonTextComponent = this.myPreviousButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myPreviousButtonTextComponent);
     this.myPreviousButtonTextComponent.text = this._myConfig.myPreviousButtonText;
-    this.myPreviousButtonCursorTargetComponent = this.myPreviousButtonCursorTarget.pp_addComponent(CursorTarget10);
+    this.myPreviousButtonCursorTargetComponent = this.myPreviousButtonCursorTarget.pp_addComponent(CursorTarget11);
     this.myPreviousButtonCollisionComponent = this.myPreviousButtonCursorTarget.pp_addComponent(CollisionComponent7);
     this.myPreviousButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPreviousButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44666,7 +44701,7 @@ var EasyTuneBaseWidgetUI = class {
     this.myImportButtonTextComponent = this.myImportButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myImportButtonTextComponent);
     this.myImportButtonTextComponent.text = this._myConfig.myImportButtonText;
-    this.myImportButtonCursorTargetComponent = this.myImportButtonCursorTarget.pp_addComponent(CursorTarget10);
+    this.myImportButtonCursorTargetComponent = this.myImportButtonCursorTarget.pp_addComponent(CursorTarget11);
     this.myImportButtonCollisionComponent = this.myImportButtonCursorTarget.pp_addComponent(CollisionComponent7);
     this.myImportButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myImportButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44678,11 +44713,13 @@ var EasyTuneBaseWidgetUI = class {
     this.myExportButtonTextComponent = this.myExportButtonText.pp_addComponent(TextComponent13);
     this._setupTextComponent(this.myExportButtonTextComponent);
     this.myExportButtonTextComponent.text = this._myConfig.myExportButtonText;
-    this.myExportButtonCursorTargetComponent = this.myExportButtonCursorTarget.pp_addComponent(CursorTarget10);
+    this.myExportButtonCursorTargetComponent = this.myExportButtonCursorTarget.pp_addComponent(CursorTarget11);
     this.myExportButtonCollisionComponent = this.myExportButtonCursorTarget.pp_addComponent(CollisionComponent7);
     this.myExportButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myExportButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
     this.myExportButtonCollisionComponent.extents = this._myConfig.myImportExportButtonCollisionExtents;
+    this.myPointerCursorTargetComponent = this.myPointerCursorTarget.pp_addComponent(CursorTarget11);
+    this.myPointerCursorTargetComponent.isSurface = true;
     this.myPointerCollisionComponent = this.myPointerCursorTarget.pp_addComponent(CollisionComponent7);
     this.myPointerCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPointerCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44803,7 +44840,7 @@ var EasyTuneBoolArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myValueTextComponents[i] = this.myValueTexts[i].pp_addComponent(TextComponent14);
       this._setupTextComponent(this.myValueTextComponents[i]);
       this.myValueTextComponents[i].text = " ";
-      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget11);
+      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget12);
       this.myValueCollisionComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CollisionComponent8);
       this.myValueCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44815,7 +44852,7 @@ var EasyTuneBoolArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myValueIncreaseButtonTextComponents[i] = this.myValueIncreaseButtonTexts[i].pp_addComponent(TextComponent14);
       this._setupTextComponent(this.myValueIncreaseButtonTextComponents[i]);
       this.myValueIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget11);
+      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
       this.myValueIncreaseButtonCollisionComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent8);
       this.myValueIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -44827,7 +44864,7 @@ var EasyTuneBoolArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myValueDecreaseButtonTextComponents[i] = this.myValueDecreaseButtonTexts[i].pp_addComponent(TextComponent14);
       this._setupTextComponent(this.myValueDecreaseButtonTextComponents[i]);
       this.myValueDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget11);
+      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
       this.myValueDecreaseButtonCollisionComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent8);
       this.myValueDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45104,7 +45141,7 @@ var EasyTuneNumberArrayWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/number/easy_tune_number_array_widget_ui.js
 import { CollisionComponent as CollisionComponent9, MeshComponent as MeshComponent19, TextComponent as TextComponent16 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget12 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget13 } from "@wonderlandengine/components";
 var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
     super(engine);
@@ -45206,7 +45243,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myValueTextComponents[i] = this.myValueTexts[i].pp_addComponent(TextComponent16);
       this._setupTextComponent(this.myValueTextComponents[i]);
       this.myValueTextComponents[i].text = " ";
-      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myValueCursorTargetComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myValueCollisionComponents[i] = this.myValueCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myValueCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45218,7 +45255,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myValueIncreaseButtonTextComponents[i] = this.myValueIncreaseButtonTexts[i].pp_addComponent(TextComponent16);
       this._setupTextComponent(this.myValueIncreaseButtonTextComponents[i]);
       this.myValueIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myValueIncreaseButtonCursorTargetComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myValueIncreaseButtonCollisionComponents[i] = this.myValueIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myValueIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45230,7 +45267,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myValueDecreaseButtonTextComponents[i] = this.myValueDecreaseButtonTexts[i].pp_addComponent(TextComponent16);
       this._setupTextComponent(this.myValueDecreaseButtonTextComponents[i]);
       this.myValueDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget12);
+      this.myValueDecreaseButtonCursorTargetComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
       this.myValueDecreaseButtonCollisionComponents[i] = this.myValueDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent9);
       this.myValueDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myValueDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45239,7 +45276,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myStepTextComponent = this.myStepText.pp_addComponent(TextComponent16);
     this._setupTextComponent(this.myStepTextComponent);
     this.myStepTextComponent.text = " ";
-    this.myStepCursorTargetComponent = this.myStepCursorTarget.pp_addComponent(CursorTarget12);
+    this.myStepCursorTargetComponent = this.myStepCursorTarget.pp_addComponent(CursorTarget13);
     this.myStepCollisionComponent = this.myStepCursorTarget.pp_addComponent(CollisionComponent9);
     this.myStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45251,7 +45288,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myStepIncreaseButtonTextComponent = this.myStepIncreaseButtonText.pp_addComponent(TextComponent16);
     this._setupTextComponent(this.myStepIncreaseButtonTextComponent);
     this.myStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myStepIncreaseButtonCursorTargetComponent = this.myStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myStepIncreaseButtonCursorTargetComponent = this.myStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myStepIncreaseButtonCollisionComponent = this.myStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45263,7 +45300,7 @@ var EasyTuneNumberArrayWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myStepDecreaseButtonTextComponent = this.myStepDecreaseButtonText.pp_addComponent(TextComponent16);
     this._setupTextComponent(this.myStepDecreaseButtonTextComponent);
     this.myStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myStepDecreaseButtonCursorTargetComponent = this.myStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget12);
+    this.myStepDecreaseButtonCursorTargetComponent = this.myStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
     this.myStepDecreaseButtonCollisionComponent = this.myStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent9);
     this.myStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45628,7 +45665,7 @@ var EasyTuneTransformWidgetConfig = class extends EasyTuneBaseWidgetConfig {
 
 // dist/pp/tool/easy_tune/easy_tune_widgets/transform/easy_tune_transform_widget_ui.js
 import { CollisionComponent as CollisionComponent10, MeshComponent as MeshComponent20, TextComponent as TextComponent17 } from "@wonderlandengine/api";
-import { CursorTarget as CursorTarget13 } from "@wonderlandengine/components";
+import { CursorTarget as CursorTarget14 } from "@wonderlandengine/components";
 var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
   constructor(engine) {
     super(engine);
@@ -45872,7 +45909,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionLabelTextComponent = this.myPositionLabelText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionLabelTextComponent);
     this.myPositionLabelTextComponent.text = this._myConfig.myPositionText;
-    this.myPositionLabelCursorTargetComponent = this.myPositionLabelCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionLabelCursorTargetComponent = this.myPositionLabelCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionLabelCollisionComponent = this.myPositionLabelCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45892,7 +45929,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myPositionTextComponents[i] = this.myPositionTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myPositionTextComponents[i]);
       this.myPositionTextComponents[i].text = " ";
-      this.myPositionCursorTargetComponents[i] = this.myPositionCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myPositionCursorTargetComponents[i] = this.myPositionCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myPositionCollisionComponents[i] = this.myPositionCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myPositionCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myPositionCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45904,7 +45941,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myPositionIncreaseButtonTextComponents[i] = this.myPositionIncreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myPositionIncreaseButtonTextComponents[i]);
       this.myPositionIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myPositionIncreaseButtonCursorTargetComponents[i] = this.myPositionIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myPositionIncreaseButtonCursorTargetComponents[i] = this.myPositionIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myPositionIncreaseButtonCollisionComponents[i] = this.myPositionIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myPositionIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myPositionIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45916,7 +45953,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myPositionDecreaseButtonTextComponents[i] = this.myPositionDecreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myPositionDecreaseButtonTextComponents[i]);
       this.myPositionDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myPositionDecreaseButtonCursorTargetComponents[i] = this.myPositionDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myPositionDecreaseButtonCursorTargetComponents[i] = this.myPositionDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myPositionDecreaseButtonCollisionComponents[i] = this.myPositionDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myPositionDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myPositionDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45925,7 +45962,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationLabelTextComponent = this.myRotationLabelText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationLabelTextComponent);
     this.myRotationLabelTextComponent.text = this._myConfig.myRotationText;
-    this.myRotationLabelCursorTargetComponent = this.myRotationLabelCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationLabelCursorTargetComponent = this.myRotationLabelCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationLabelCollisionComponent = this.myRotationLabelCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45945,7 +45982,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myRotationTextComponents[i] = this.myRotationTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myRotationTextComponents[i]);
       this.myRotationTextComponents[i].text = " ";
-      this.myRotationCursorTargetComponents[i] = this.myRotationCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myRotationCursorTargetComponents[i] = this.myRotationCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myRotationCollisionComponents[i] = this.myRotationCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myRotationCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myRotationCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45957,7 +45994,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myRotationIncreaseButtonTextComponents[i] = this.myRotationIncreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myRotationIncreaseButtonTextComponents[i]);
       this.myRotationIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myRotationIncreaseButtonCursorTargetComponents[i] = this.myRotationIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myRotationIncreaseButtonCursorTargetComponents[i] = this.myRotationIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myRotationIncreaseButtonCollisionComponents[i] = this.myRotationIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myRotationIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myRotationIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45969,7 +46006,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myRotationDecreaseButtonTextComponents[i] = this.myRotationDecreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myRotationDecreaseButtonTextComponents[i]);
       this.myRotationDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myRotationDecreaseButtonCursorTargetComponents[i] = this.myRotationDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myRotationDecreaseButtonCursorTargetComponents[i] = this.myRotationDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myRotationDecreaseButtonCollisionComponents[i] = this.myRotationDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myRotationDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myRotationDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45978,7 +46015,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleLabelTextComponent = this.myScaleLabelText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleLabelTextComponent);
     this.myScaleLabelTextComponent.text = this._myConfig.myScaleText;
-    this.myScaleLabelCursorTargetComponent = this.myScaleLabelCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleLabelCursorTargetComponent = this.myScaleLabelCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleLabelCollisionComponent = this.myScaleLabelCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleLabelCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleLabelCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -45998,7 +46035,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myScaleTextComponents[i] = this.myScaleTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myScaleTextComponents[i]);
       this.myScaleTextComponents[i].text = " ";
-      this.myScaleCursorTargetComponents[i] = this.myScaleCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myScaleCursorTargetComponents[i] = this.myScaleCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myScaleCollisionComponents[i] = this.myScaleCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myScaleCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myScaleCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46010,7 +46047,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myScaleIncreaseButtonTextComponents[i] = this.myScaleIncreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myScaleIncreaseButtonTextComponents[i]);
       this.myScaleIncreaseButtonTextComponents[i].text = this._myConfig.myIncreaseButtonText;
-      this.myScaleIncreaseButtonCursorTargetComponents[i] = this.myScaleIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myScaleIncreaseButtonCursorTargetComponents[i] = this.myScaleIncreaseButtonCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myScaleIncreaseButtonCollisionComponents[i] = this.myScaleIncreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myScaleIncreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myScaleIncreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46022,7 +46059,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
       this.myScaleDecreaseButtonTextComponents[i] = this.myScaleDecreaseButtonTexts[i].pp_addComponent(TextComponent17);
       this._setupTextComponent(this.myScaleDecreaseButtonTextComponents[i]);
       this.myScaleDecreaseButtonTextComponents[i].text = this._myConfig.myDecreaseButtonText;
-      this.myScaleDecreaseButtonCursorTargetComponents[i] = this.myScaleDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget13);
+      this.myScaleDecreaseButtonCursorTargetComponents[i] = this.myScaleDecreaseButtonCursorTargets[i].pp_addComponent(CursorTarget14);
       this.myScaleDecreaseButtonCollisionComponents[i] = this.myScaleDecreaseButtonCursorTargets[i].pp_addComponent(CollisionComponent10);
       this.myScaleDecreaseButtonCollisionComponents[i].collider = this._myConfig.myCursorTargetCollisionCollider;
       this.myScaleDecreaseButtonCollisionComponents[i].group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46031,7 +46068,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionStepTextComponent = this.myPositionStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepTextComponent);
     this.myPositionStepTextComponent.text = " ";
-    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionStepCollisionComponent = this.myPositionStepCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46043,7 +46080,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepIncreaseButtonTextComponent);
     this.myPositionStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionStepIncreaseButtonCollisionComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46055,7 +46092,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepDecreaseButtonTextComponent);
     this.myPositionStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionStepDecreaseButtonCollisionComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46063,7 +46100,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationStepTextComponent = this.myRotationStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepTextComponent);
     this.myRotationStepTextComponent.text = " ";
-    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationStepCollisionComponent = this.myRotationStepCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46075,7 +46112,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepIncreaseButtonTextComponent);
     this.myRotationStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationStepIncreaseButtonCollisionComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46087,7 +46124,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepDecreaseButtonTextComponent);
     this.myRotationStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationStepDecreaseButtonCollisionComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46095,7 +46132,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepTextComponent = this.myScaleStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepTextComponent);
     this.myScaleStepTextComponent.text = " ";
-    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleStepCollisionComponent = this.myScaleStepCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46107,7 +46144,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepIncreaseButtonTextComponent);
     this.myScaleStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleStepIncreaseButtonCollisionComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46119,7 +46156,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepDecreaseButtonTextComponent);
     this.myScaleStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleStepDecreaseButtonCollisionComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46129,7 +46166,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionStepTextComponent = this.myPositionStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepTextComponent);
     this.myPositionStepTextComponent.text = " ";
-    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionStepCursorTargetComponent = this.myPositionStepCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionStepCollisionComponent = this.myPositionStepCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46141,7 +46178,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionStepIncreaseButtonTextComponent = this.myPositionStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepIncreaseButtonTextComponent);
     this.myPositionStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionStepIncreaseButtonCursorTargetComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionStepIncreaseButtonCollisionComponent = this.myPositionStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46153,7 +46190,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myPositionStepDecreaseButtonTextComponent = this.myPositionStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myPositionStepDecreaseButtonTextComponent);
     this.myPositionStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myPositionStepDecreaseButtonCursorTargetComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myPositionStepDecreaseButtonCollisionComponent = this.myPositionStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myPositionStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myPositionStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46161,7 +46198,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationStepTextComponent = this.myRotationStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepTextComponent);
     this.myRotationStepTextComponent.text = " ";
-    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationStepCursorTargetComponent = this.myRotationStepCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationStepCollisionComponent = this.myRotationStepCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46173,7 +46210,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationStepIncreaseButtonTextComponent = this.myRotationStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepIncreaseButtonTextComponent);
     this.myRotationStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationStepIncreaseButtonCursorTargetComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationStepIncreaseButtonCollisionComponent = this.myRotationStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46185,7 +46222,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myRotationStepDecreaseButtonTextComponent = this.myRotationStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myRotationStepDecreaseButtonTextComponent);
     this.myRotationStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myRotationStepDecreaseButtonCursorTargetComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myRotationStepDecreaseButtonCollisionComponent = this.myRotationStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myRotationStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myRotationStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46193,7 +46230,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepTextComponent = this.myScaleStepText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepTextComponent);
     this.myScaleStepTextComponent.text = " ";
-    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleStepCursorTargetComponent = this.myScaleStepCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleStepCollisionComponent = this.myScaleStepCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleStepCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46205,7 +46242,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepIncreaseButtonTextComponent = this.myScaleStepIncreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepIncreaseButtonTextComponent);
     this.myScaleStepIncreaseButtonTextComponent.text = this._myConfig.myIncreaseButtonText;
-    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleStepIncreaseButtonCursorTargetComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleStepIncreaseButtonCollisionComponent = this.myScaleStepIncreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleStepIncreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepIncreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -46217,7 +46254,7 @@ var EasyTuneTransformWidgetUI = class extends EasyTuneBaseWidgetUI {
     this.myScaleStepDecreaseButtonTextComponent = this.myScaleStepDecreaseButtonText.pp_addComponent(TextComponent17);
     this._setupTextComponent(this.myScaleStepDecreaseButtonTextComponent);
     this.myScaleStepDecreaseButtonTextComponent.text = this._myConfig.myDecreaseButtonText;
-    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget13);
+    this.myScaleStepDecreaseButtonCursorTargetComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CursorTarget14);
     this.myScaleStepDecreaseButtonCollisionComponent = this.myScaleStepDecreaseButtonCursorTarget.pp_addComponent(CollisionComponent10);
     this.myScaleStepDecreaseButtonCollisionComponent.collider = this._myConfig.myCursorTargetCollisionCollider;
     this.myScaleStepDecreaseButtonCollisionComponent.group = 1 << this._myConfig.myCursorTargetCollisionGroup;
@@ -47044,13 +47081,13 @@ var EasyTuneWidget = class {
 };
 
 // dist/pp/tool/easy_tune/components/easy_tune_tool_component.js
-var __decorate11 = function(decorators, target, key, desc) {
+var __decorate12 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyTuneToolComponent = class extends Component64 {
+var EasyTuneToolComponent = class extends Component65 {
   static TypeName = "pp-easy-tune-tool";
   _myHandedness;
   _myShowOnStart;
@@ -47168,43 +47205,43 @@ var EasyTuneToolComponent = class extends Component64 {
     }
   }
 };
-__decorate11([
-  property11.enum(["None", "Left", "Right"], "None")
+__decorate12([
+  property12.enum(["None", "Left", "Right"], "None")
 ], EasyTuneToolComponent.prototype, "_myHandedness", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyTuneToolComponent.prototype, "_myShowOnStart", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyTuneToolComponent.prototype, "_myShowVisibilityButton", void 0);
-__decorate11([
-  property11.bool(true)
+__decorate12([
+  property12.bool(true)
 ], EasyTuneToolComponent.prototype, "_myGamepadScrollVariableEnabled", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyTuneToolComponent.prototype, "_myShowVariablesImportExportButtons", void 0);
-__decorate11([
-  property11.string("")
+__decorate12([
+  property12.string("")
 ], EasyTuneToolComponent.prototype, "_myVariablesImportURL", void 0);
-__decorate11([
-  property11.string("")
+__decorate12([
+  property12.string("")
 ], EasyTuneToolComponent.prototype, "_myVariablesExportURL", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyTuneToolComponent.prototype, "_myImportVariablesOnStart", void 0);
-__decorate11([
-  property11.bool(false)
+__decorate12([
+  property12.bool(false)
 ], EasyTuneToolComponent.prototype, "_myResetVariablesDefaultValueOnImport", void 0);
-__decorate11([
-  property11.bool(true)
+__decorate12([
+  property12.bool(true)
 ], EasyTuneToolComponent.prototype, "_myKeepImportVariablesOnExport", void 0);
-__decorate11([
-  property11.bool(true)
+__decorate12([
+  property12.bool(true)
 ], EasyTuneToolComponent.prototype, "_myAvoidExportingVariablesWithValueAsDefault", void 0);
 
 // dist/pp/tool/easy_tune/components/easy_tune_import_variables_component.js
-import { Component as Component65, Property as Property44 } from "@wonderlandengine/api";
-var EasyTuneImportVariablesComponent = class extends Component65 {
+import { Component as Component66, Property as Property44 } from "@wonderlandengine/api";
+var EasyTuneImportVariablesComponent = class extends Component66 {
   static TypeName = "pp-easy-tune-import-variables";
   static Properties = {
     _myVariablesImportURL: Property44.string(""),
@@ -47566,14 +47603,14 @@ var EasyTextColor = class _EasyTextColor extends EasyObjectTuner {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_attenuation_component.js
-import { Component as Component66, property as property12 } from "@wonderlandengine/api";
-var __decorate12 = function(decorators, target, key, desc) {
+import { Component as Component67, property as property13 } from "@wonderlandengine/api";
+var __decorate13 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyLightAttenuationComponent = class extends Component66 {
+var EasyLightAttenuationComponent = class extends Component67 {
   static TypeName = "pp-easy-light-attenuation";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -47607,25 +47644,25 @@ var EasyLightAttenuationComponent = class extends Component66 {
     return clonedComponent;
   }
 };
-__decorate12([
-  property12.string("")
+__decorate13([
+  property13.string("")
 ], EasyLightAttenuationComponent.prototype, "_myVariableName", void 0);
-__decorate12([
-  property12.bool(false)
+__decorate13([
+  property13.bool(false)
 ], EasyLightAttenuationComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate12([
-  property12.bool(false)
+__decorate13([
+  property13.bool(false)
 ], EasyLightAttenuationComponent.prototype, "_myUseTuneTarget", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_light_color_component.js
-import { Component as Component67, property as property13 } from "@wonderlandengine/api";
-var __decorate13 = function(decorators, target, key, desc) {
+import { Component as Component68, property as property14 } from "@wonderlandengine/api";
+var __decorate14 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyLightColorComponent = class extends Component67 {
+var EasyLightColorComponent = class extends Component68 {
   static TypeName = "pp-easy-light-color";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -47660,28 +47697,28 @@ var EasyLightColorComponent = class extends Component67 {
     return clonedComponent;
   }
 };
-__decorate13([
-  property13.string("")
+__decorate14([
+  property14.string("")
 ], EasyLightColorComponent.prototype, "_myVariableName", void 0);
-__decorate13([
-  property13.bool(false)
+__decorate14([
+  property14.bool(false)
 ], EasyLightColorComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate13([
-  property13.bool(false)
+__decorate14([
+  property14.bool(false)
 ], EasyLightColorComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate13([
-  property13.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
+__decorate14([
+  property14.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
 ], EasyLightColorComponent.prototype, "_myColorModel", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_mesh_color_component.js
-import { Component as Component68, property as property14 } from "@wonderlandengine/api";
-var __decorate14 = function(decorators, target, key, desc) {
+import { Component as Component69, property as property15 } from "@wonderlandengine/api";
+var __decorate15 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyMeshColorComponent = class extends Component68 {
+var EasyMeshColorComponent = class extends Component69 {
   static TypeName = "pp-easy-mesh-color";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -47717,31 +47754,31 @@ var EasyMeshColorComponent = class extends Component68 {
     return clonedComponent;
   }
 };
-__decorate14([
-  property14.string("")
+__decorate15([
+  property15.string("")
 ], EasyMeshColorComponent.prototype, "_myVariableName", void 0);
-__decorate14([
-  property14.bool(false)
+__decorate15([
+  property15.bool(false)
 ], EasyMeshColorComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate14([
-  property14.bool(false)
+__decorate15([
+  property15.bool(false)
 ], EasyMeshColorComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate14([
-  property14.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
+__decorate15([
+  property15.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
 ], EasyMeshColorComponent.prototype, "_myColorModel", void 0);
-__decorate14([
-  property14.enum(["Color", "Diffuse Color", "Ambient Color", "Specular Color", "Emissive Color", "Fog Color"], "Color")
+__decorate15([
+  property15.enum(["Color", "Diffuse Color", "Ambient Color", "Specular Color", "Emissive Color", "Fog Color"], "Color")
 ], EasyMeshColorComponent.prototype, "_myColorType", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_scale_component.js
-import { Component as Component69, property as property15 } from "@wonderlandengine/api";
-var __decorate15 = function(decorators, target, key, desc) {
+import { Component as Component70, property as property16 } from "@wonderlandengine/api";
+var __decorate16 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyScaleComponent = class extends Component69 {
+var EasyScaleComponent = class extends Component70 {
   static TypeName = "pp-easy-scale";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -47779,28 +47816,28 @@ var EasyScaleComponent = class extends Component69 {
     return clonedComponent;
   }
 };
-__decorate15([
-  property15.string("")
+__decorate16([
+  property16.string("")
 ], EasyScaleComponent.prototype, "_myVariableName", void 0);
-__decorate15([
-  property15.bool(false)
+__decorate16([
+  property16.bool(false)
 ], EasyScaleComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate15([
-  property15.bool(false)
+__decorate16([
+  property16.bool(false)
 ], EasyScaleComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate15([
-  property15.bool(true)
+__decorate16([
+  property16.bool(true)
 ], EasyScaleComponent.prototype, "_myLocal", void 0);
-__decorate15([
-  property15.bool(true)
+__decorate16([
+  property16.bool(true)
 ], EasyScaleComponent.prototype, "_myScaleAsOne", void 0);
-__decorate15([
-  property15.float(1)
+__decorate16([
+  property16.float(1)
 ], EasyScaleComponent.prototype, "_myStepPerSecond", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_child_number_component.js
-import { Component as Component70, Property as Property45 } from "@wonderlandengine/api";
-var EasySetTuneTargetChildNumberComponent = class extends Component70 {
+import { Component as Component71, Property as Property45 } from "@wonderlandengine/api";
+var EasySetTuneTargetChildNumberComponent = class extends Component71 {
   static TypeName = "pp-easy-set-tune-target-child-number";
   static Properties = {
     _myVariableName: Property45.string(""),
@@ -47871,8 +47908,8 @@ var EasySetTuneTargetChildNumberComponent = class extends Component70 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_set_tune_target_grab_component.js
-import { Component as Component71 } from "@wonderlandengine/api";
-var EasySetTuneTargeetGrabComponent = class extends Component71 {
+import { Component as Component72 } from "@wonderlandengine/api";
+var EasySetTuneTargeetGrabComponent = class extends Component72 {
   static TypeName = "pp-easy-set-tune-target-grab";
   start() {
     this._myGrabber = null;
@@ -47913,14 +47950,14 @@ var EasySetTuneTargeetGrabComponent = class extends Component71 {
 };
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_text_color_component.js
-import { Component as Component72, property as property16 } from "@wonderlandengine/api";
-var __decorate16 = function(decorators, target, key, desc) {
+import { Component as Component73, property as property17 } from "@wonderlandengine/api";
+var __decorate17 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyTextColorComponent = class extends Component72 {
+var EasyTextColorComponent = class extends Component73 {
   static TypeName = "pp-easy-text-color";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -47956,31 +47993,31 @@ var EasyTextColorComponent = class extends Component72 {
     return clonedComponent;
   }
 };
-__decorate16([
-  property16.string("")
+__decorate17([
+  property17.string("")
 ], EasyTextColorComponent.prototype, "_myVariableName", void 0);
-__decorate16([
-  property16.bool(false)
+__decorate17([
+  property17.bool(false)
 ], EasyTextColorComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate16([
-  property16.bool(false)
+__decorate17([
+  property17.bool(false)
 ], EasyTextColorComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate16([
-  property16.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
+__decorate17([
+  property17.enum([ColorModel[ColorModel.RGB], ColorModel[ColorModel.HSV]], ColorModel[ColorModel.HSV])
 ], EasyTextColorComponent.prototype, "_myColorModel", void 0);
-__decorate16([
-  property16.enum(["Color", "Effect Color"], "Color")
+__decorate17([
+  property17.enum(["Color", "Effect Color"], "Color")
 ], EasyTextColorComponent.prototype, "_myColorType", void 0);
 
 // dist/pp/tool/easy_tune/easy_object_tuners/components/easy_transform_component.js
-import { Component as Component73, property as property17 } from "@wonderlandengine/api";
-var __decorate17 = function(decorators, target, key, desc) {
+import { Component as Component74, property as property18 } from "@wonderlandengine/api";
+var __decorate18 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
   else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var EasyTransformComponent = class extends Component73 {
+var EasyTransformComponent = class extends Component74 {
   static TypeName = "pp-easy-transform";
   _myVariableName;
   _mySetAsWidgetCurrentVariable;
@@ -48020,29 +48057,29 @@ var EasyTransformComponent = class extends Component73 {
     return clonedComponent;
   }
 };
-__decorate17([
-  property17.string("")
+__decorate18([
+  property18.string("")
 ], EasyTransformComponent.prototype, "_myVariableName", void 0);
-__decorate17([
-  property17.bool(false)
+__decorate18([
+  property18.bool(false)
 ], EasyTransformComponent.prototype, "_mySetAsWidgetCurrentVariable", void 0);
-__decorate17([
-  property17.bool(false)
+__decorate18([
+  property18.bool(false)
 ], EasyTransformComponent.prototype, "_myUseTuneTarget", void 0);
-__decorate17([
-  property17.bool(true)
+__decorate18([
+  property18.bool(true)
 ], EasyTransformComponent.prototype, "_myLocal", void 0);
-__decorate17([
-  property17.bool(true)
+__decorate18([
+  property18.bool(true)
 ], EasyTransformComponent.prototype, "_myScaleAsOne", void 0);
-__decorate17([
-  property17.float(1)
+__decorate18([
+  property18.float(1)
 ], EasyTransformComponent.prototype, "_myPositionStepPerSecond", void 0);
-__decorate17([
-  property17.float(50)
+__decorate18([
+  property18.float(50)
 ], EasyTransformComponent.prototype, "_myRotationStepPerSecond", void 0);
-__decorate17([
-  property17.float(1)
+__decorate18([
+  property18.float(1)
 ], EasyTransformComponent.prototype, "_myScaleStepPerSecond", void 0);
 export {
   AddPPToWindowComponent,
@@ -48402,6 +48439,7 @@ export {
   VisualTransform,
   VisualTransformParams,
   WLComponentDefaultCloneCallbacks,
+  WLCursorTargetWrapperComponent,
   WaveFunction,
   WidgetFrame,
   WidgetFrameConfig,
