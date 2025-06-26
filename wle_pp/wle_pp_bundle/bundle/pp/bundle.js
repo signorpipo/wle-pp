@@ -9477,7 +9477,7 @@ var isMobile = function() {
   let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
   return function isMobile2() {
     let userAgent = navigator.userAgent;
-    return userAgent != null && userAgent.match(checkMobileRegex) != null;
+    return userAgent != null && checkMobileRegex.test(userAgent);
   };
 }();
 function isDesktop() {
@@ -24618,21 +24618,22 @@ function _initCursorComponentModPrototype() {
       if (this.hoveringObject == null || this.hoveringObject != hitObject) {
         if (this.hoveringObject != null) {
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget && !this.hoveringObjectTarget.isDestroyed && this.hoveringObjectTarget.active)
+            if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isDestroyed && this.hoveringObjectTarget.active)
               this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
           } else {
             this.hitTestTarget.onUnhover.notify(null, this, originalEvent);
           }
         }
-        hoveringObjectChanged = true;
         this.hoveringObject = hitObject;
         this.hoveringObjectTarget = this.hoveringObject.pp_getComponentSelf(CursorTarget3);
         if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.active) {
           this.hoveringObjectTarget = null;
         }
+        hoveringObjectChanged = true;
+        this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
         if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
+          if (this.hoveringObjectTarget != null)
             this.hoveringObjectTarget.onHover.notify(this.hoveringObject, this, originalEvent);
           this.globalTarget.onHover.notify(this.hoveringObject, this, originalEvent);
         } else {
@@ -24645,7 +24646,7 @@ function _initCursorComponentModPrototype() {
           this._isDownForUpWithDown = false;
           this._isUpWithNoDown = false;
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onDownOnHover.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onDownOnHover.notify(this.hoveringObject, this, originalEvent);
           } else {
@@ -24658,7 +24659,7 @@ function _initCursorComponentModPrototype() {
       }
       if (!hoveringObjectChanged && this._pp_isMoving(hitLocation)) {
         if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
+          if (this.hoveringObjectTarget != null)
             this.hoveringObjectTarget.onMove.notify(this.hoveringObject, this, originalEvent);
           this.globalTarget.onMove.notify(this.hoveringObject, this, originalEvent);
         } else {
@@ -24667,14 +24668,14 @@ function _initCursorComponentModPrototype() {
       }
       if (this._pp_isDownToProcess()) {
         if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
+          if (this.hoveringObjectTarget != null)
             this.hoveringObjectTarget.onDown.notify(this.hoveringObject, this, originalEvent);
           this.globalTarget.onDown.notify(this.hoveringObject, this, originalEvent);
         } else {
           this.hitTestTarget.onDown.notify(hitTestResults, this, originalEvent);
         }
         if (!this.hoveringReality) {
-          if (this.hoveringObjectTarget)
+          if (this.hoveringObjectTarget != null)
             this.hoveringObjectTarget.onClick.notify(this.hoveringObject, this, originalEvent);
           this.globalTarget.onClick.notify(this.hoveringObject, this, originalEvent);
         } else {
@@ -24682,7 +24683,7 @@ function _initCursorComponentModPrototype() {
         }
         if (this._tripleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject == this.hoveringObject) {
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onTripleClick.notify(this.hoveringObject, this, originalEvent);
           } else {
@@ -24691,7 +24692,7 @@ function _initCursorComponentModPrototype() {
           this._tripleClickTimer = 0;
         } else if (this._doubleClickTimer > 0 && this._multipleClickObject && this._multipleClickObject == this.hoveringObject) {
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onDoubleClick.notify(this.hoveringObject, this, originalEvent);
           } else {
@@ -24701,7 +24702,7 @@ function _initCursorComponentModPrototype() {
           this._doubleClickTimer = 0;
         } else {
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onSingleClick.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onSingleClick.notify(this.hoveringObject, this, originalEvent);
           } else {
@@ -24714,10 +24715,10 @@ function _initCursorComponentModPrototype() {
       } else {
         if (!this._isUpWithNoDown && !hoveringObjectChanged && this._pp_isUpToProcess()) {
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onUp.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onUp.notify(this.hoveringObject, this, originalEvent);
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onUpWithDown.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onUpWithDown.notify(this.hoveringObject, this, originalEvent);
           } else {
@@ -24726,10 +24727,10 @@ function _initCursorComponentModPrototype() {
           }
         } else if (this._isUpWithNoDown || hoveringObjectChanged && this._pp_isUpToProcess()) {
           if (!this.hoveringReality) {
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onUp.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onUp.notify(this.hoveringObject, this, originalEvent);
-            if (this.hoveringObjectTarget)
+            if (this.hoveringObjectTarget != null)
               this.hoveringObjectTarget.onUpWithNoDown.notify(this.hoveringObject, this, originalEvent);
             this.globalTarget.onUpWithNoDown.notify(this.hoveringObject, this, originalEvent);
           } else {
@@ -24738,10 +24739,12 @@ function _initCursorComponentModPrototype() {
           }
         }
       }
-      this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
+      if (this.hoveringObject != null) {
+        this._prevHitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, this._prevHitLocationLocalToTarget);
+      }
     } else if (this.hoveringObject != null && (forceUnhover || hitObject == null)) {
       if (!this.hoveringReality) {
-        if (this.hoveringObjectTarget && !this.hoveringObjectTarget.isDestroyed && this.hoveringObjectTarget.active)
+        if (this.hoveringObjectTarget != null && !this.hoveringObjectTarget.isDestroyed && this.hoveringObjectTarget.active)
           this.hoveringObjectTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
         this.globalTarget.onUnhover.notify(this.hoveringObject, this, originalEvent);
       } else {
@@ -24897,9 +24900,11 @@ function _initCursorComponentModPrototype() {
     let hitLocationLocalToTarget = vec3_create();
     return function _pp_isMoving(hitLocation) {
       let moving = false;
-      hitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, hitLocationLocalToTarget);
-      if (!hitLocationLocalToTarget.vec_equals(this._prevHitLocationLocalToTarget, 1e-4)) {
-        moving = true;
+      if (this.hoveringObject != null) {
+        hitLocationLocalToTarget = this.hoveringObject.pp_convertPositionWorldToLocal(hitLocation, hitLocationLocalToTarget);
+        if (!hitLocationLocalToTarget.vec_equals(this._prevHitLocationLocalToTarget, 1e-4)) {
+          moving = true;
+        }
       }
       return moving;
     };
@@ -25139,7 +25144,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.8.2";
+var PP_VERSION = "0.8.3";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -32428,7 +32433,7 @@ var PlayerHeadManager = class _PlayerHeadManager {
     this._setHeightHeadVRWithoutFloor(this._myParams.myDefaultHeightVRWithoutFloor);
     this._setHeightHeadVRWithFloor(this._myParams.myDefaultHeightVRWithFloor);
     this._updateHeightOffset();
-    this._setCameraNonXRHeight(this._myHeightNonVR);
+    this._setCameraNonXRHeight(this._myHeightNonVR, XRUtils.isSessionActive(this._myParams.myEngine));
     this._myActive = false;
     this.setActive(true);
   }
@@ -32715,13 +32720,14 @@ var PlayerHeadManager = class _PlayerHeadManager {
   rotateHeadQuat(rotationQuat) {
     if (this.canRotateHead()) {
       this._myCurrentHead.pp_rotateQuat(rotationQuat);
-      const newHeadRotation = _PlayerHeadManager._rotateHeadQuatSV.newHeadRotation;
-      this._myCurrentHead.pp_getRotationQuat(newHeadRotation);
-      Globals.getPlayerObjects(this._myParams.myEngine).myHead.pp_setRotationQuat(newHeadRotation);
       if (!this._mySessionActive) {
         const newHeadUp = _PlayerHeadManager._rotateHeadQuatSV.newHeadUp;
-        newHeadRotation.quat_rotateAxisRadians(Math.PI, newHeadRotation.quat_getUp(newHeadUp), newHeadRotation);
-        Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_setRotationQuat(newHeadRotation);
+        const newHeadRotation = _PlayerHeadManager._rotateHeadQuatSV.newHeadRotation;
+        this._myCurrentHead.pp_getRotationLocalQuat(newHeadRotation);
+        if (Globals.isPoseForwardFixed(this._myParams.myEngine)) {
+          newHeadRotation.quat_rotateAxisRadians(Math.PI, newHeadRotation.quat_getUp(newHeadUp), newHeadRotation);
+        }
+        Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_setRotationLocalQuat(newHeadRotation);
       }
     }
   }
@@ -32793,8 +32799,18 @@ var PlayerHeadManager = class _PlayerHeadManager {
     headRotation.quat_setForward(direction, up);
     this.setRotationHeadQuat(headRotation);
   }
+  static _resetCameraNonXR = {
+    cameraNonXRUp: vec3_create()
+  };
   resetCameraNonXR() {
     Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_resetTransformLocal();
+    if (!this._mySessionActive) {
+      this._myCurrentHead.pp_resetTransformLocal();
+      if (Globals.isPoseForwardFixed(this._myParams.myEngine)) {
+        const cameraNonXRUp = _PlayerHeadManager._resetCameraNonXR.cameraNonXRUp;
+        this._myCurrentHead.pp_rotateAxisLocalRadians(Math.PI, this._myCurrentHead.pp_getUpLocal(cameraNonXRUp));
+      }
+    }
     this._setCameraNonXRHeight(this._myHeightNonVR);
   }
   cancelSync() {
@@ -32930,7 +32946,7 @@ var PlayerHeadManager = class _PlayerHeadManager {
     adjustedCameraNonVRPosition: vec3_create(),
     playerTranform: mat4_create()
   };
-  _setCameraNonXRHeight(height) {
+  _setCameraNonXRHeight(height, ignoreHeadUpdate = false) {
     const eyeHeight = height - this._myParams.myForeheadExtraHeight;
     const cameraNonVRPosition = _PlayerHeadManager._setCameraNonXRHeightSV.cameraNonVRPosition;
     const cameraNonVRPositionLocalToPlayer = _PlayerHeadManager._setCameraNonXRHeightSV.cameraNonVRPositionLocalToPlayer;
@@ -32941,6 +32957,9 @@ var PlayerHeadManager = class _PlayerHeadManager {
     cameraNonVRPositionLocalToPlayer.vec3_set(cameraNonVRPositionLocalToPlayer[0], eyeHeight, cameraNonVRPositionLocalToPlayer[2]);
     cameraNonVRPositionLocalToPlayer.vec3_convertPositionToWorld(this.getPlayer().pp_getTransform(playerTranform), adjustedCameraNonVRPosition);
     Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_setPosition(adjustedCameraNonVRPosition);
+    if (!this._mySessionActive && !ignoreHeadUpdate) {
+      this._myCurrentHead.pp_setPosition(adjustedCameraNonVRPosition);
+    }
   }
   static _getPositionEyesHeightSV = {
     playerPosition: vec3_create(),
@@ -33209,6 +33228,9 @@ var PlayerHeadManager = class _PlayerHeadManager {
         flatResyncHeadPosition.vec3_add(playerPosition.vec3_componentAlongAxis(playerUp, newPlayerPosition), newPlayerPosition);
         this.getPlayer().pp_setPosition(newPlayerPosition);
         Globals.getPlayerObjects(this._myParams.myEngine).myCameraNonXR.pp_resetPositionLocal();
+        if (!this._mySessionActive) {
+          this._myCurrentHead.pp_resetPositionLocal();
+        }
         if (this._myParams.myExitSessionResyncHeight) {
           const resyncHeadHeight = this._getPositionEyesHeight(resyncHeadPosition);
           this._myHeightNonVR = resyncHeadHeight + this._myParams.myForeheadExtraHeight;
@@ -33492,6 +33514,7 @@ var PlayerTransformManagerParams = class {
   myIsHoppingExtraCheckCallback = null;
   myIsFarExtraCheckCallback = null;
   myAllowUpdateValidToRealWhenBlurred = false;
+  myResetToValidOnActivate = false;
   myResetToValidOnEnterSession = false;
   myResetToValidOnExitSession = false;
   myResetToValidOnSessionHiddenEnd = false;
@@ -33567,6 +33590,13 @@ var PlayerTransformManager = class _PlayerTransformManager {
       this._myActive = active;
       if (this._myActive) {
         XRUtils.registerSessionStartEndEventListeners(this, this._onXRSessionStart.bind(this), this._onXRSessionEnd.bind(this), true, true, this._myParams.myEngine);
+        if (this._myParams.myResetToValidOnActivate) {
+          if (XRUtils.isSessionActive(this._myParams.myEngine)) {
+            this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true);
+          } else {
+            this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR, true);
+          }
+        }
       } else {
         if (this._myVisibilityChangeEventListener != null) {
           XRUtils.getSession(this._myParams.myEngine)?.removeEventListener("visibilitychange", this._myVisibilityChangeEventListener);
@@ -37823,6 +37853,7 @@ var PlayerLocomotion = class {
       params2.myMinHeight = this._myParams.myMinHeight;
       params2.myIsBodyCollidingWhenHeightBelowValue = null;
       params2.myIsBodyCollidingWhenHeightAboveValue = null;
+      params2.myResetToValidOnActivate = true;
       params2.myResetToValidOnEnterSession = true;
       params2.myResetToValidOnExitSession = true;
       params2.myResetToValidOnSessionHiddenEnd = true;
@@ -39392,7 +39423,6 @@ __decorate10([
 
 // dist/pp/input/cauldron/components/finger_cursor_component.js
 import { Collider, CollisionComponent as CollisionComponent4, Component as Component46, PhysXComponent as PhysXComponent12, property as property11, Shape as Shape2 } from "@wonderlandengine/api";
-import { Cursor as Cursor4 } from "@wonderlandengine/components";
 var __decorate11 = function(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -39409,13 +39439,9 @@ var FingerCursorComponent = class _FingerCursorComponent extends Component46 {
   _myCollisionSizeMultiplierOnOverlap;
   _myValidOverlapAngleFromTargetForward;
   _myCursorPointerObject;
-  _myDisableDefaultCursorOnTrackedHandDetected;
-  _myDefaultCursorObject;
   _myHandednessType;
   _myFingerJointID;
-  _myDefaultCursorComponent = null;
   _myHandInputSource = null;
-  _myForceRefreshActiveCursor = true;
   _myCursorParentObject;
   _myActualCursorParentObject;
   _myOverlapCursorComponent;
@@ -39466,18 +39492,10 @@ var FingerCursorComponent = class _FingerCursorComponent extends Component46 {
       collisionComponent.extents = vec3_create(this._myCollisionSize, this._myCollisionSize, this._myCollisionSize);
       collisionComponent.group = physicsFlags.getMask();
     }
-    if (this._myDisableDefaultCursorOnTrackedHandDetected) {
-      let defaultCursorObject = this.object;
-      if (this._myDefaultCursorObject != null) {
-        defaultCursorObject = this._myDefaultCursorObject;
-      }
-      this._myDefaultCursorComponent = defaultCursorObject.pp_getComponent(Cursor4);
-    }
     this._myOverlapCursorComponent = this._myActualCursorParentObject.pp_addComponent(OverlapCursorComponent, {
       _myCollisionSizeMultiplierOnOverlap: this._myCollisionSizeMultiplierOnOverlap,
       _myValidOverlapAngleFromTargetForward: this._myValidOverlapAngleFromTargetForward
     });
-    this._myCursorParentObject.pp_setActive(false);
   }
   static _updateSV = {
     transformQuat: quat2_create()
@@ -39487,30 +39505,11 @@ var FingerCursorComponent = class _FingerCursorComponent extends Component46 {
     this._myCursorParentObject.pp_setTransformQuat(Globals.getPlayerObjects(this.engine).myReferenceSpace.pp_getTransformQuat(transformQuat2));
     this._updateHand();
   }
-  onActivate() {
-    this._myForceRefreshActiveCursor = true;
-  }
-  onDeactivate() {
-    if (this._myCursorParentObject != null) {
-      this._myCursorParentObject.pp_setActive(false);
-    }
-  }
   _updateHand() {
     let newHandInputSource = null;
     const handPose = Globals.getHandPoses(this.engine)[this._myHandednessType];
     if (handPose.getInputSourceType() == InputSourceType.TRACKED_HAND) {
       newHandInputSource = handPose.getInputSource();
-    }
-    if (newHandInputSource != null && (this._myHandInputSource == null || this._myForceRefreshActiveCursor)) {
-      if (this._myDefaultCursorComponent != null) {
-        this._myDefaultCursorComponent.active = false;
-      }
-      this._myCursorParentObject.pp_setActive(true);
-    } else if (newHandInputSource == null && (this._myHandInputSource != null || this._myForceRefreshActiveCursor)) {
-      this._myCursorParentObject.pp_setActive(false);
-      if (this._myDefaultCursorComponent != null) {
-        this._myDefaultCursorComponent.active = true;
-      }
     }
     this._myHandInputSource = newHandInputSource;
     if (this._myHandInputSource != null) {
@@ -39562,12 +39561,6 @@ __decorate11([
 __decorate11([
   property11.object()
 ], FingerCursorComponent.prototype, "_myCursorPointerObject", void 0);
-__decorate11([
-  property11.bool(true)
-], FingerCursorComponent.prototype, "_myDisableDefaultCursorOnTrackedHandDetected", void 0);
-__decorate11([
-  property11.object()
-], FingerCursorComponent.prototype, "_myDefaultCursorObject", void 0);
 
 // dist/pp/input/cauldron/components/switch_hand_object_component.js
 import { Component as Component47, Property as Property30 } from "@wonderlandengine/api";
@@ -41987,7 +41980,7 @@ var ToolInputSourceType = {
 
 // dist/pp/tool/cauldron/components/tool_cursor_component.js
 import { Component as Component63, MeshComponent as MeshComponent14, Property as Property42, ViewComponent as ViewComponent5 } from "@wonderlandengine/api";
-import { Cursor as Cursor5, CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
+import { Cursor as Cursor4, CursorTarget as CursorTarget8 } from "@wonderlandengine/components";
 var ToolCursorComponent = class extends Component63 {
   static TypeName = "pp-tool-cursor";
   static Properties = {
@@ -42021,7 +42014,7 @@ var ToolCursorComponent = class extends Component63 {
         cursorMeshComponent.mesh = Globals.getDefaultMeshes(this.engine).mySphere;
         cursorMeshComponent.material = Globals.getDefaultMaterials(this.engine).myFlatOpaque.clone();
         cursorMeshComponent.material.color = this._myCursorColor;
-        this._myCursorComponentXR = this._myCursorObjectXR.pp_addComponent(Cursor5, {
+        this._myCursorComponentXR = this._myCursorObjectXR.pp_addComponent(Cursor4, {
           "collisionGroup": this._myCursorTargetCollisionGroup,
           "handedness": this._myHandedness + 1,
           "cursorObject": this._myCursorMeshobject,
@@ -42031,7 +42024,7 @@ var ToolCursorComponent = class extends Component63 {
       }
       this._myCursorObjectNonXR = this._myToolCursorObject.pp_addChild();
       {
-        this._myCursorComponentNonXR = this._myCursorObjectNonXR.pp_addComponent(Cursor5, {
+        this._myCursorComponentNonXR = this._myCursorObjectNonXR.pp_addComponent(Cursor4, {
           "collisionGroup": this._myCursorTargetCollisionGroup,
           "handedness": this._myHandedness + 1,
           "styleCursor": this._myUpdatePointerCursorStyle
