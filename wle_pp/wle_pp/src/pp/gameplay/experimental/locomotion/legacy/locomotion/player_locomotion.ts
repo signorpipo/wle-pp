@@ -445,6 +445,7 @@ export class PlayerLocomotion {
             params.myIsBodyCollidingWhenHeightBelowValue = null;
             params.myIsBodyCollidingWhenHeightAboveValue = null;
 
+            params.myResetToValidOnActivate = true;
             params.myResetToValidOnEnterSession = true;
             params.myResetToValidOnExitSession = true;
             params.myResetToValidOnSessionHiddenEnd = true;

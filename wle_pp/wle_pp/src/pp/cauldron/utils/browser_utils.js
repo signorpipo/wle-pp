@@ -5,7 +5,7 @@ export let isMobile = function () {
     let checkMobileRegex = new RegExp("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", "i");
     return function isMobile() {
         let userAgent = navigator.userAgent;
-        return userAgent != null && userAgent.match(checkMobileRegex) != null;
+        return userAgent != null && checkMobileRegex.test(userAgent);
     };
 }();
 

@@ -1,5 +1,4 @@
 import { Collider, CollisionComponent, Component, Object3D, PhysXComponent, property, Shape } from "@wonderlandengine/api";
-import { Cursor } from "@wonderlandengine/components";
 import { PhysicsLayerFlags } from "../../../cauldron/physics/physics_layer_flags.js";
 import { XRUtils } from "../../../cauldron/utils/xr_utils.js";
 import { quat2_create, vec3_create } from "../../../plugin/js/extensions/array/vec_create_extension.js";
@@ -36,17 +35,9 @@ export class FingerCursorComponent extends Component {
     @property.object()
     private readonly _myCursorPointerObject!: Object3D;
 
-    @property.bool(true)
-    private readonly _myDisableDefaultCursorOnTrackedHandDetected!: boolean;
-
-    @property.object()
-    private readonly _myDefaultCursorObject!: Readonly<Object3D>;
-
     private readonly _myHandednessType!: Handedness;
     private readonly _myFingerJointID!: TrackedHandJointID;
-    private _myDefaultCursorComponent: Cursor | null = null;
     private _myHandInputSource: Readonly<XRInputSource> | null = null;
-    private _myForceRefreshActiveCursor: boolean = true;
 
     private readonly _myCursorParentObject!: Object3D;
     private readonly _myActualCursorParentObject!: Object3D;
@@ -106,21 +97,10 @@ export class FingerCursorComponent extends Component {
             collisionComponent.group = physicsFlags.getMask();
         }
 
-        if (this._myDisableDefaultCursorOnTrackedHandDetected) {
-            let defaultCursorObject: Readonly<Object3D> = this.object;
-            if (this._myDefaultCursorObject != null) {
-                defaultCursorObject = this._myDefaultCursorObject;
-            }
-
-            this._myDefaultCursorComponent = defaultCursorObject.pp_getComponent(Cursor);
-        }
-
         (this._myOverlapCursorComponent as OverlapCursorComponent) = this._myActualCursorParentObject.pp_addComponent(OverlapCursorComponent, {
             _myCollisionSizeMultiplierOnOverlap: this._myCollisionSizeMultiplierOnOverlap,
             _myValidOverlapAngleFromTargetForward: this._myValidOverlapAngleFromTargetForward,
         })!;
-
-        this._myCursorParentObject.pp_setActive(false);
     }
 
     private static readonly _updateSV =
@@ -133,36 +113,12 @@ export class FingerCursorComponent extends Component {
         this._updateHand();
     }
 
-    public override onActivate(): void {
-        this._myForceRefreshActiveCursor = true;
-    }
-
-    public override onDeactivate(): void {
-        if (this._myCursorParentObject != null) {
-            this._myCursorParentObject.pp_setActive(false);
-        }
-    }
-
     private _updateHand(): void {
         let newHandInputSource = null;
 
         const handPose = Globals.getHandPoses(this.engine)![this._myHandednessType];
         if (handPose.getInputSourceType() == InputSourceType.TRACKED_HAND) {
             newHandInputSource = handPose.getInputSource();
-        }
-
-        if (newHandInputSource != null && (this._myHandInputSource == null || this._myForceRefreshActiveCursor)) {
-            if (this._myDefaultCursorComponent != null) {
-                this._myDefaultCursorComponent.active = false;
-            }
-
-            this._myCursorParentObject.pp_setActive(true);
-        } else if (newHandInputSource == null && (this._myHandInputSource != null || this._myForceRefreshActiveCursor)) {
-            this._myCursorParentObject.pp_setActive(false);
-
-            if (this._myDefaultCursorComponent != null) {
-                this._myDefaultCursorComponent.active = true;
-            }
         }
 
         this._myHandInputSource = newHandInputSource;
