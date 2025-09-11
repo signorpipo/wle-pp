@@ -25144,7 +25144,7 @@ function initPlugins() {
 }
 
 // dist/pp/pp/pp_version.js
-var PP_VERSION = "0.8.3";
+var PP_VERSION = "0.8.4";
 
 // dist/pp/pp/init_pp.js
 function initPP(engine) {
@@ -33619,9 +33619,9 @@ var PlayerTransformManager = class _PlayerTransformManager {
       if (this.getPlayerHeadManager().isSynced()) {
         this._myResetRealOnHeadSynced = false;
         if (XRUtils.isSessionActive(this._myParams.myEngine)) {
-          this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true, true);
+          this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true, true, false);
         } else {
-          this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR && this._myParams.myResetRealHeightNonVROnExitSession, true, true);
+          this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR && this._myParams.myResetRealHeightNonVROnExitSession, true, true, false);
         }
       }
     }
@@ -33672,9 +33672,9 @@ var PlayerTransformManager = class _PlayerTransformManager {
     if (this._myParams.myResetRealOnMove) {
       if (!this.isSynced()) {
         if (XRUtils.isSessionActive(this._myParams.myEngine)) {
-          this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true);
+          this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true, void 0, false);
         } else {
-          this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR, true);
+          this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR, true, void 0, false);
         }
       }
     }
@@ -33776,9 +33776,9 @@ var PlayerTransformManager = class _PlayerTransformManager {
     if (this._myParams.myResetRealOnTeleport) {
       if (!this.isSynced()) {
         if (XRUtils.isSessionActive(this._myParams.myEngine)) {
-          this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true);
+          this.resetReal(!this._myParams.myNeverResetRealPositionVR, !this._myParams.myNeverResetRealRotationVR, !this._myParams.myNeverResetRealHeightVR, true, void 0, false);
         } else {
-          this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR, true);
+          this.resetReal(!this._myParams.myNeverResetRealPositionNonVR, !this._myParams.myNeverResetRealRotationNonVR, !this._myParams.myNeverResetRealHeightNonVR, true, void 0, false);
         }
       }
     }
@@ -33835,7 +33835,7 @@ var PlayerTransformManager = class _PlayerTransformManager {
   /** Quick way to force teleport to a position and reset the real to this */
   forceTeleportAndReset(teleportPosition, teleportRotationQuat, forceTeleportSkipCollisionCheck = false, useHighestHeight = false, collisionCheckParams, outCollisionRuntimeParams = null) {
     this.teleportPositionRotationQuat(teleportPosition, teleportRotationQuat, true, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
-    this.resetReal(true, true, void 0, true, void 0, true);
+    this.resetReal();
   }
   rotateQuat(rotationQuat) {
     this._myValidRotationQuat.quat_rotateQuat(rotationQuat, this._myValidRotationQuat);
@@ -33945,7 +33945,7 @@ var PlayerTransformManager = class _PlayerTransformManager {
     positionHeadReal: vec3_create(),
     validPositionHeadBackupForResetToFeet: vec3_create()
   };
-  resetReal(resetPosition2 = true, resetRotation2 = false, resetHeight = false, resetHeadToReal = true, updateValidToReal = false, ignoreResetHeadMinDistance = false) {
+  resetReal(resetPosition2 = true, resetRotation2 = true, resetHeight = false, resetHeadToReal = true, updateValidToReal = false, ignoreResetHeadMinDistance = true) {
     const playerHeadManager = this.getPlayerHeadManager();
     const position = _PlayerTransformManager._resetRealSV.position;
     if (resetPosition2) {
@@ -35651,6 +35651,7 @@ var PlayerObscureManager = class {
   }
   destroy() {
     this._myDestroyed = true;
+    this.setActive(false);
     this._myObscureVisual.destroy();
   }
   isDestroyed() {
@@ -36215,7 +36216,7 @@ var PlayerLocomotionTeleportState = class {
     this._teleportToPosition(this._myTeleportRuntimeParams.myTeleportPosition, this._myTeleportRuntimeParams.myTeleportForward);
     this._myLocomotionRuntimeParams.myIsTeleporting = false;
     this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
-    this._myTeleportParams.myPlayerTransformManager.resetReal();
+    this._myTeleportParams.myPlayerTransformManager.resetReal(void 0, false, void 0, void 0, void 0, false);
   }
   _checkTeleport(teleportPosition, teleportRotationQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {
   }
@@ -36386,7 +36387,7 @@ var PlayerLocomotionTeleportDetectionState = class extends PlayerLocomotionTelep
     this._myDetectionRuntimeParams.myParable.setSpeed(this._myTeleportParams.myDetectionParams.myTeleportParableSpeed);
     this._myDetectionRuntimeParams.myParable.setGravity(this._myTeleportParams.myDetectionParams.myTeleportParableGravity);
     this._myDetectionRuntimeParams.myParable.setStepLength(this._myTeleportParams.myDetectionParams.myTeleportParableStepLength);
-    this._myTeleportParams.myPlayerTransformManager.resetReal();
+    this._myTeleportParams.myPlayerTransformManager.resetReal(void 0, false, void 0, void 0, void 0, false);
     this._myVisualizer.start();
   }
   end() {
@@ -37521,6 +37522,7 @@ var PlayerLocomotionTeleport = class extends PlayerLocomotionMovement {
   }
   destroy() {
     this._myDestroyed = true;
+    this.setActive(false);
     this._myDetectionState.destroy();
   }
   isDestroyed() {
@@ -38079,12 +38081,14 @@ var PlayerLocomotion = class {
     return this._myLocomotionMovementFSM.isInState("smooth") || this._myLocomotionMovementFSM.isInState("idleSmooth");
   }
   switchToSmooth() {
+    this._mySwitchToTeleportOnEnterSession = false;
     this._myLocomotionMovementFSM.perform("switchSmooth");
   }
   isTeleport() {
     return this._myLocomotionMovementFSM.isInState("teleport") || this._myLocomotionMovementFSM.isInState("idleTeleport");
   }
   switchToTeleport() {
+    this._mySwitchToTeleportOnEnterSession = false;
     this._myLocomotionMovementFSM.perform("switchTeleport");
   }
   getPlayerLocomotionSmooth() {
@@ -38132,7 +38136,7 @@ var PlayerLocomotion = class {
     this._myPlayerHeadManager.update(dt);
     if (this._myParams.myResetRealOnStart && this._myResetRealOnStartCounter > 0) {
       this._myResetRealOnStartCounter--;
-      this._myPlayerTransformManager.resetReal(true, true, void 0, void 0, void 0, true);
+      this._myPlayerTransformManager.resetReal();
       this._myPlayerTransformManager.update(dt);
     } else {
       this._myPlayerTransformManager.update(dt);
@@ -38148,12 +38152,11 @@ var PlayerLocomotion = class {
         }
         if (this._myParams.myAlwaysSmoothForNonVR && !XRUtils.isSessionActive(this._myParams.myEngine)) {
           if (this.isTeleport() && this.canStop()) {
-            this._mySwitchToTeleportOnEnterSession = true;
             this.switchToSmooth();
+            this._mySwitchToTeleportOnEnterSession = true;
           }
         } else if (this._mySwitchToTeleportOnEnterSession && XRUtils.isSessionActive(this._myParams.myEngine)) {
           if (this.isSmooth() && this.canStop()) {
-            this._mySwitchToTeleportOnEnterSession = false;
             this.switchToTeleport();
           }
         }
@@ -38165,7 +38168,6 @@ var PlayerLocomotion = class {
           }
           if (this.isSmooth()) {
             this._myPlayerLocomotionSmooth.setDebugFlyEnabled(!this._myPlayerLocomotionSmooth.isDebugFlyEnabled());
-            this._mySwitchToTeleportOnEnterSession = false;
           }
         }
       }
@@ -38246,10 +38248,12 @@ var PlayerLocomotion = class {
     this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "switchTeleport", function() {
       this._myPlayerLocomotionSmooth.stop();
       this._myPlayerLocomotionTeleport.start();
+      this._mySwitchToTeleportOnEnterSession = false;
     }.bind(this));
     this._myLocomotionMovementFSM.addTransition("teleport", "smooth", "switchSmooth", function() {
       this._myPlayerLocomotionTeleport.stop();
       this._myPlayerLocomotionSmooth.start();
+      this._mySwitchToTeleportOnEnterSession = false;
     }.bind(this));
     this._myLocomotionMovementFSM.addTransition("smooth", "idleSmooth", "idle", function() {
       this._myPlayerLocomotionSmooth.stop();
@@ -38272,6 +38276,7 @@ var PlayerLocomotion = class {
   }
   destroy() {
     this._myDestroyed = true;
+    this.setActive(false);
     this._myPlayerHeadManager.destroy();
     this._myPlayerLocomotionSmooth.destroy();
     this._myPlayerTransformManager.destroy();
@@ -38491,7 +38496,7 @@ PlayerLocomotionSmooth.prototype.update = function() {
       headMovement = headMovement.vec3_add(verticalMovement, headMovement);
       this._myParams.myPlayerTransformManager.move(headMovement, true);
       if (isManuallyMovingHorizontally || isManuallyMovingVertically) {
-        this._myParams.myPlayerTransformManager.resetReal();
+        this._myParams.myPlayerTransformManager.resetReal(void 0, false, void 0, void 0, void 0, false);
       }
     } else {
       if (!this._myLocomotionRuntimeParams.myIsFlying) {
@@ -38514,7 +38519,7 @@ PlayerLocomotionSmooth.prototype.update = function() {
         }
       }
       if (isManuallyMovingHorizontally || isManuallyMovingVertically) {
-        this._myParams.myPlayerTransformManager.resetReal();
+        this._myParams.myPlayerTransformManager.resetReal(void 0, false, void 0, void 0, void 0, false);
         collisionRuntimeParams.myFixedMovement.vec3_removeComponentAlongAxis(collisionRuntimeParams.myOriginalUp, this._myLastHorizontalMovement);
       }
       if (this._myLocomotionRuntimeParams.myGravitySpeed > 0 && collisionRuntimeParams.myIsOnCeiling || this._myLocomotionRuntimeParams.myGravitySpeed < 0 && collisionRuntimeParams.myIsOnGround) {
@@ -38824,17 +38829,15 @@ var PlayerLocomotionComponent = class extends Component44 {
   }
   update(dt) {
     if (this._myRegisterToPostPoseUpdateOnNextUpdate) {
-      Globals.getHeadPose(this.engine).registerPostPoseUpdatedEventListener(this, this.onPostPoseUpdatedEvent.bind(this));
+      Globals.getInputManager(this.engine).registerPostUpdateCallback(this, this.onPostUpdatedEvent.bind(this));
       this._myRegisterToPostPoseUpdateOnNextUpdate = false;
     }
   }
-  onPostPoseUpdatedEvent(dt, pose, manualUpdate) {
+  onPostUpdatedEvent(dt) {
     if (!this.active || this._myRegisterToPostPoseUpdateOnNextUpdate) {
-      Globals.getHeadPose(this.engine)?.unregisterPostPoseUpdatedEventListener(this);
+      Globals.getInputManager(this.engine)?.unregisterPostUpdateCallback(this);
       return;
     }
-    if (manualUpdate)
-      return;
     let setPlayerLocomotionOnGlobals = false;
     if (this._myActivateOnNextPostPoseUpdate) {
       setPlayerLocomotionOnGlobals = this._onActivate();
@@ -38892,7 +38895,7 @@ var PlayerLocomotionComponent = class extends Component44 {
     this._myActivateOnNextPostPoseUpdate = true;
   }
   onDeactivate() {
-    Globals.getHeadPose(this.engine)?.unregisterPostPoseUpdatedEventListener(this);
+    Globals.getInputManager(this.engine)?.unregisterPostUpdateCallback(this);
     if (this._myPlayerLocomotion != null) {
       this._myPlayerLocomotion.setActive(false);
       if (Globals.getPlayerLocomotion(this.engine) == this._myPlayerLocomotion) {
