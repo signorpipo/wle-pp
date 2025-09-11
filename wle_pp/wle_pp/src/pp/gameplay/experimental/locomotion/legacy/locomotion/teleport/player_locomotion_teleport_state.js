@@ -21,7 +21,7 @@ export class PlayerLocomotionTeleportState {
         this._myLocomotionRuntimeParams.myIsTeleporting = false;
         this._myLocomotionRuntimeParams.myTeleportJustPerformed = true;
 
-        this._myTeleportParams.myPlayerTransformManager.resetReal();
+        this._myTeleportParams.myPlayerTransformManager.resetReal(undefined, false, undefined, undefined, undefined, false);
     }
 
     _checkTeleport(teleportPosition, teleportRotationQuat, collisionRuntimeParams, checkTeleportCollisionRuntimeParams = null) {

@@ -370,14 +370,16 @@ export class PlayerTransformManager {
                         !this._myParams.myNeverResetRealRotationVR,
                         !this._myParams.myNeverResetRealHeightVR,
                         true,
-                        true);
+                        true,
+                        false);
                 } else {
                     this.resetReal(
                         !this._myParams.myNeverResetRealPositionNonVR,
                         !this._myParams.myNeverResetRealRotationNonVR,
                         !this._myParams.myNeverResetRealHeightNonVR && this._myParams.myResetRealHeightNonVROnExitSession,
                         true,
-                        true);
+                        true,
+                        false);
                 }
             }
         }
@@ -444,13 +446,17 @@ export class PlayerTransformManager {
                         !this._myParams.myNeverResetRealPositionVR,
                         !this._myParams.myNeverResetRealRotationVR,
                         !this._myParams.myNeverResetRealHeightVR,
-                        true);
+                        true,
+                        undefined,
+                        false);
                 } else {
                     this.resetReal(
                         !this._myParams.myNeverResetRealPositionNonVR,
                         !this._myParams.myNeverResetRealRotationNonVR,
                         !this._myParams.myNeverResetRealHeightNonVR,
-                        true);
+                        true,
+                        undefined,
+                        false);
                 }
             }
         }
@@ -579,13 +585,17 @@ export class PlayerTransformManager {
                         !this._myParams.myNeverResetRealPositionVR,
                         !this._myParams.myNeverResetRealRotationVR,
                         !this._myParams.myNeverResetRealHeightVR,
-                        true);
+                        true,
+                        undefined,
+                        false);
                 } else {
                     this.resetReal(
                         !this._myParams.myNeverResetRealPositionNonVR,
                         !this._myParams.myNeverResetRealRotationNonVR,
                         !this._myParams.myNeverResetRealHeightNonVR,
-                        true);
+                        true,
+                        undefined,
+                        false);
                 }
             }
         }
@@ -658,7 +668,7 @@ export class PlayerTransformManager {
     public forceTeleportAndReset(teleportPosition: Readonly<Vector3>, teleportRotationQuat: Readonly<Quaternion>, forceTeleportSkipCollisionCheck: boolean = false, useHighestHeight: boolean = false, collisionCheckParams?: CollisionCheckParams, outCollisionRuntimeParams: CollisionRuntimeParams | null = null): void {
         this.teleportPositionRotationQuat(teleportPosition, teleportRotationQuat, true, forceTeleportSkipCollisionCheck, useHighestHeight, collisionCheckParams, outCollisionRuntimeParams);
 
-        this.resetReal(true, true, undefined, true, undefined, true);
+        this.resetReal();
     }
 
     public rotateQuat(rotationQuat: Readonly<Quaternion>): void {
@@ -815,7 +825,7 @@ export class PlayerTransformManager {
             positionHeadReal: vec3_create(),
             validPositionHeadBackupForResetToFeet: vec3_create()
         };
-    public resetReal(resetPosition = true, resetRotation = false, resetHeight = false, resetHeadToReal = true, updateValidToReal = false, ignoreResetHeadMinDistance = false): void {
+    public resetReal(resetPosition = true, resetRotation = true, resetHeight = false, resetHeadToReal = true, updateValidToReal = false, ignoreResetHeadMinDistance = true): void {
         const playerHeadManager = this.getPlayerHeadManager();
 
         const position = PlayerTransformManager._resetRealSV.position;

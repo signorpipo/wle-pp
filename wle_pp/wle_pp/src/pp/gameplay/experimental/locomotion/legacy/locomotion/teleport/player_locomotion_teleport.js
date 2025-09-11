@@ -245,6 +245,8 @@ export class PlayerLocomotionTeleport extends PlayerLocomotionMovement {
     destroy() {
         this._myDestroyed = true;
 
+        this.setActive(false);
+
         this._myDetectionState.destroy();
 
     }

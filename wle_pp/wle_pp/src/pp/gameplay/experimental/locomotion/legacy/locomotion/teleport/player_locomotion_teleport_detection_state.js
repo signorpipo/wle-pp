@@ -131,7 +131,7 @@ export class PlayerLocomotionTeleportDetectionState extends PlayerLocomotionTele
         this._myDetectionRuntimeParams.myParable.setGravity(this._myTeleportParams.myDetectionParams.myTeleportParableGravity);
         this._myDetectionRuntimeParams.myParable.setStepLength(this._myTeleportParams.myDetectionParams.myTeleportParableStepLength);
 
-        this._myTeleportParams.myPlayerTransformManager.resetReal();
+        this._myTeleportParams.myPlayerTransformManager.resetReal(undefined, false, undefined, undefined, undefined, false);
 
         this._myVisualizer.start();
     }

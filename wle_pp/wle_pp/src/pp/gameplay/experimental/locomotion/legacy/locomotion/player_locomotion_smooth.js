@@ -300,7 +300,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
             this._myParams.myPlayerTransformManager.move(headMovement, true);
 
             if (isManuallyMovingHorizontally || isManuallyMovingVertically) {
-                this._myParams.myPlayerTransformManager.resetReal();
+                this._myParams.myPlayerTransformManager.resetReal(undefined, false, undefined, undefined, undefined, false);
             }
         } else {
             if (!this._myLocomotionRuntimeParams.myIsFlying) {
@@ -339,7 +339,7 @@ PlayerLocomotionSmooth.prototype.update = function () {
             }
 
             if (isManuallyMovingHorizontally || isManuallyMovingVertically) {
-                this._myParams.myPlayerTransformManager.resetReal();
+                this._myParams.myPlayerTransformManager.resetReal(undefined, false, undefined, undefined, undefined, false);
 
                 collisionRuntimeParams.myFixedMovement.vec3_removeComponentAlongAxis(
                     collisionRuntimeParams.myOriginalUp,

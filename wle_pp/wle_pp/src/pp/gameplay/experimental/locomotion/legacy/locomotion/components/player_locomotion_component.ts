@@ -3,7 +3,6 @@ import { Timer } from "../../../../../../cauldron/cauldron/timer.js";
 import { PhysicsLayerFlags } from "../../../../../../cauldron/physics/physics_layer_flags.js";
 import { PhysicsUtils } from "../../../../../../cauldron/physics/physics_utils.js";
 import { InputUtils } from "../../../../../../input/cauldron/input_utils.js";
-import { BasePose } from "../../../../../../input/pose/base_pose.js";
 import { Globals } from "../../../../../../pp/globals.js";
 import { PlayerLocomotion, PlayerLocomotionParams } from "../player_locomotion.js";
 
@@ -512,19 +511,17 @@ export class PlayerLocomotionComponent extends Component {
 
     public override update(dt: number): void {
         if (this._myRegisterToPostPoseUpdateOnNextUpdate) {
-            Globals.getHeadPose(this.engine)!.registerPostPoseUpdatedEventListener(this, this.onPostPoseUpdatedEvent.bind(this));
+            Globals.getInputManager(this.engine)!.registerPostUpdateCallback(this, this.onPostUpdatedEvent.bind(this));
 
             this._myRegisterToPostPoseUpdateOnNextUpdate = false;
         }
     }
 
-    public onPostPoseUpdatedEvent(dt: number, pose: Readonly<BasePose>, manualUpdate: boolean): void {
+    public onPostUpdatedEvent(dt: number): void {
         if (!this.active || this._myRegisterToPostPoseUpdateOnNextUpdate) {
-            Globals.getHeadPose(this.engine)?.unregisterPostPoseUpdatedEventListener(this);
+            Globals.getInputManager(this.engine)?.unregisterPostUpdateCallback(this);
             return;
         }
-
-        if (manualUpdate) return;
 
         let setPlayerLocomotionOnGlobals = false;
         if (this._myActivateOnNextPostPoseUpdate) {
@@ -602,7 +599,7 @@ export class PlayerLocomotionComponent extends Component {
     }
 
     public override onDeactivate(): void {
-        Globals.getHeadPose(this.engine)?.unregisterPostPoseUpdatedEventListener(this);
+        Globals.getInputManager(this.engine)?.unregisterPostUpdateCallback(this);
 
         if (this._myPlayerLocomotion != null) {
             this._myPlayerLocomotion.setActive(false);

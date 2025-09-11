@@ -438,6 +438,8 @@ export class PlayerObscureManager {
     destroy() {
         this._myDestroyed = true;
 
+        this.setActive(false);
+
         this._myObscureVisual.destroy();
     }
 

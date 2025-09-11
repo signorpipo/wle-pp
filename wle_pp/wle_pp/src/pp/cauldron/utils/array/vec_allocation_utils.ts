@@ -13,7 +13,7 @@ export function getVectorAllocationFunction(): (length: number) => Vector {
 
 
 
-export let _myVector2AllocationFunction: () => Vector2 = gl_vec2.create;
+export let _myVector2AllocationFunction: () => Vector2 = gl_vec2.create as () => Vector2;
 
 export function setVector2AllocationFunction(allocationFunction: () => Vector2): void {
     _myVector2AllocationFunction = allocationFunction;
@@ -25,7 +25,7 @@ export function getVector2AllocationFunction(): () => Vector2 {
 
 
 
-export let _myVector3AllocationFunction: () => Vector3 = gl_vec3.create;
+export let _myVector3AllocationFunction: () => Vector3 = gl_vec3.create as () => Vector3;
 
 export function setVector3AllocationFunction(allocationFunction: () => Vector3): void {
     _myVector3AllocationFunction = allocationFunction;
@@ -37,7 +37,7 @@ export function getVector3AllocationFunction(): () => Vector3 {
 
 
 
-export let _myVector4AllocationFunction: () => Vector4 = gl_vec4.create;
+export let _myVector4AllocationFunction: () => Vector4 = gl_vec4.create as () => Vector4;
 
 export function setVector4AllocationFunction(allocationFunction: () => Vector4): void {
     _myVector4AllocationFunction = allocationFunction;
@@ -49,7 +49,7 @@ export function getVector4AllocationFunction(): () => Vector4 {
 
 
 
-export let _myQuaternionAllocationFunction: () => Quaternion = gl_quat.create;
+export let _myQuaternionAllocationFunction: () => Quaternion = gl_quat.create as () => Quaternion;
 
 export function setQuaternionAllocationFunction(allocationFunction: () => Quaternion): void {
     _myQuaternionAllocationFunction = allocationFunction;
@@ -61,7 +61,7 @@ export function getQuaternionAllocationFunction(): () => Quaternion {
 
 
 
-export let _myQuaternion2AllocationFunction: () => Quaternion2 = gl_quat2.create;
+export let _myQuaternion2AllocationFunction: () => Quaternion2 = gl_quat2.create as () => Quaternion2;
 
 export function setQuaternion2AllocationFunction(allocationFunction: () => Quaternion2): void {
     _myQuaternion2AllocationFunction = allocationFunction;
@@ -73,7 +73,7 @@ export function getQuaternion2AllocationFunction(): () => Quaternion2 {
 
 
 
-export let _myMatrix3AllocationFunction: () => Matrix3 = gl_mat3.create;
+export let _myMatrix3AllocationFunction: () => Matrix3 = gl_mat3.create as () => Matrix3;
 
 export function setMatrix3AllocationFunction(allocationFunction: () => Matrix3): void {
     _myMatrix3AllocationFunction = allocationFunction;
@@ -85,7 +85,7 @@ export function getMatrix3AllocationFunction(): () => Matrix3 {
 
 
 
-export let _myMatrix4AllocationFunction: () => Matrix4 = gl_mat4.create;
+export let _myMatrix4AllocationFunction: () => Matrix4 = gl_mat4.create as () => Matrix4;
 
 export function setMatrix4AllocationFunction(allocationFunction: () => Matrix4): void {
     _myMatrix4AllocationFunction = allocationFunction;

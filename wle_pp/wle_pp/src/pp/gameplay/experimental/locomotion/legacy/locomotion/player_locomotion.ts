@@ -35,7 +35,7 @@ export enum PlayerLocomotionType {
 
 export class PlayerLocomotionParams {
 
-    public myDefaultLocomotionType: number = PlayerLocomotionType.SMOOTH;
+    public myDefaultLocomotionType: PlayerLocomotionType = PlayerLocomotionType.SMOOTH;
     public myAlwaysSmoothForNonVR: boolean = false;
 
     /** Double press main hand thumbstick (default: left) to switch */
@@ -754,6 +754,7 @@ export class PlayerLocomotion {
     }
 
     public switchToSmooth(): void {
+        this._mySwitchToTeleportOnEnterSession = false;
         this._myLocomotionMovementFSM.perform("switchSmooth");
     }
 
@@ -762,6 +763,7 @@ export class PlayerLocomotion {
     }
 
     public switchToTeleport(): void {
+        this._mySwitchToTeleportOnEnterSession = false;
         this._myLocomotionMovementFSM.perform("switchTeleport");
     }
 
@@ -824,7 +826,7 @@ export class PlayerLocomotion {
         if (this._myParams.myResetRealOnStart && this._myResetRealOnStartCounter > 0) {
             this._myResetRealOnStartCounter--;
 
-            this._myPlayerTransformManager.resetReal(true, true, undefined, undefined, undefined, true);
+            this._myPlayerTransformManager.resetReal();
             this._myPlayerTransformManager.update(dt);
         } else {
             this._myPlayerTransformManager.update(dt);
@@ -842,12 +844,11 @@ export class PlayerLocomotion {
 
                 if (this._myParams.myAlwaysSmoothForNonVR && !XRUtils.isSessionActive(this._myParams.myEngine)) {
                     if (this.isTeleport() && this.canStop()) {
-                        this._mySwitchToTeleportOnEnterSession = true;
                         this.switchToSmooth();
+                        this._mySwitchToTeleportOnEnterSession = true;
                     }
                 } else if (this._mySwitchToTeleportOnEnterSession && XRUtils.isSessionActive(this._myParams.myEngine)) {
                     if (this.isSmooth() && this.canStop()) {
-                        this._mySwitchToTeleportOnEnterSession = false;
                         this.switchToTeleport();
                     }
                 }
@@ -861,7 +862,6 @@ export class PlayerLocomotion {
 
                     if (this.isSmooth()) {
                         this._myPlayerLocomotionSmooth.setDebugFlyEnabled(!this._myPlayerLocomotionSmooth.isDebugFlyEnabled());
-                        this._mySwitchToTeleportOnEnterSession = false;
                     }
                 }
             }
@@ -969,11 +969,15 @@ export class PlayerLocomotion {
         this._myLocomotionMovementFSM.addTransition("smooth", "teleport", "switchTeleport", function (this: PlayerLocomotion) {
             this._myPlayerLocomotionSmooth.stop();
             this._myPlayerLocomotionTeleport.start();
+
+            this._mySwitchToTeleportOnEnterSession = false;
         }.bind(this));
 
         this._myLocomotionMovementFSM.addTransition("teleport", "smooth", "switchSmooth", function (this: PlayerLocomotion) {
             this._myPlayerLocomotionTeleport.stop();
             this._myPlayerLocomotionSmooth.start();
+
+            this._mySwitchToTeleportOnEnterSession = false;
         }.bind(this));
 
         this._myLocomotionMovementFSM.addTransition("smooth", "idleSmooth", "idle", function (this: PlayerLocomotion) {
@@ -1004,6 +1008,8 @@ export class PlayerLocomotion {
 
     public destroy(): void {
         this._myDestroyed = true;
+
+        this.setActive(false);
 
         this._myPlayerHeadManager.destroy();
         this._myPlayerLocomotionSmooth.destroy();
